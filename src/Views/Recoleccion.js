@@ -62,8 +62,8 @@ import { obtenerEstatusRecoleccion } from "../Util/Contexts/EstatusContext";
 import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
 import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
 import { agregarRecoleccion, modificarRecoleccion, obtenerRecoleccionCancelada, cancelarRecoleccion, eliminarRecoleccion, obtenerRecoleccionId, obtenerRecoleccionFiltro, obtenerRecoleccion } from "../Util/Contexts/RecoleccionContext";
-import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
-import {obtenerUnidades, obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
+import {obtenerTipoUnidades, obtenerTipoUnidadesId} from "../Util/Contexts/TipoUnidadContext";
+import {obtenerUnidades, obtenerUnidadesId, obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import { obtenerTipoCambio } from "../Util/Contexts/TipoCambioContext";
 import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
@@ -452,19 +452,21 @@ function Recoleccion() {
     //setea todos los datos del remitente seleccionado
     function handleSelectRemitente(newValue) {
         obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                nombreRemitente: newValue,
-                RFCRemitente: newValue.m_sRFC,
-                domicilioRemitente: newValue.m_sDomicilio,
+                    nombreRemitente: newValue,
+                    RFCRemitente: newValue.m_sRFC,
+                    domicilioRemitente: newValue.m_sDomicilio,
 
-                codigoPostalRemitente: respuesta.data,
+                    codigoPostalRemitente: respuesta.data,
 
-                ciudadRemitente: respuesta.data.m_nIdCiudad,
+                    ciudadRemitente: respuesta.data.m_nIdCiudad,
 
-                correoRemitente: newValue.m_sCorreoElectronico,
-                telefonoRemitente: newValue.m_sTelefono,
-                contactoRemitente: newValue.m_sContacto,
+                    correoRemitente: newValue.m_sCorreoElectronico,
+                    telefonoRemitente: newValue.m_sTelefono,
+                    contactoRemitente: newValue.m_sContacto,
+                }
             })
         })
 
@@ -474,19 +476,21 @@ function Recoleccion() {
     //setea todos los datos del destinatario seleccionado
     function handleSelectDestinatario(newValue) {
         obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
-            setState({
+            setState(state => {
+                return {
                 ...state,
-                nombreDestinatario: newValue,
-                RFCDestinatario: newValue.m_sRFC,
-                domicilioDestinatario: newValue.m_sDomicilio,
+                    nombreDestinatario: newValue,
+                    RFCDestinatario: newValue.m_sRFC,
+                    domicilioDestinatario: newValue.m_sDomicilio,
 
-                codigoPostalDestinatario: respuesta.data,
+                    codigoPostalDestinatario: respuesta.data,
 
-                ciudadDestinatario: respuesta.data.m_nIdCiudad,
+                    ciudadDestinatario: respuesta.data.m_nIdCiudad,
 
-                correoDestinatario: newValue.m_sCorreoElectronico,
-                telefonoDestinatario: newValue.m_sTelefono,
-                contactoDestinatario: newValue.m_sContacto,
+                    correoDestinatario: newValue.m_sCorreoElectronico,
+                    telefonoDestinatario: newValue.m_sTelefono,
+                    contactoDestinatario: newValue.m_sContacto,
+                }
             })
         })
     }
@@ -865,135 +869,15 @@ function Recoleccion() {
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         obtenerRecoleccionId(id).then((respuesta) => {
-            console.log(respuesta.data);
-            // debugger;
-            setState({
-                ...state,
-                agregar: "Modificar",
-                idRecoleccion: id,
-                idSucursalAgregar: respuesta.data.m_nIdSucursal,
-                folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-                folioEmbarque: respuesta.data.m_nIdEmbarque,
-                folioGuia: respuesta.data.m_nIdGuia,
-                folioInforme: respuesta.data.m_nIdInforme,
-                fechaHoraCreacion:
-                    respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.slice(0, 5),
-                estatusRecoleccion: respuesta.data.m_nIdEstatusRecoleccion,
-                moneda: respuesta.data.m_nMoneda,
-                tipoCambio: respuesta.data.m_rTipoCambio,
-                tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-                nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente),
-                RFCRemitente: respuesta.data.m_sRFCRemitente,
-                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                /*codigoPostalRemitente: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
-                ),*/
-                /*ciudadRemitente: dataCiudad.find(
-                    (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente
-                ),*/
-                ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
-                correoRemitente: respuesta.data.m_sCorreoRemitente,
-                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                contactoRemitente: respuesta.data.m_sContactoRemitente,
-                origenRemitente: dataCiudad.find(
-                    (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen
-                ),
-                nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario),
-                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                //ERROR PORQUE NO HAY UNIDAD REGISTRADA
-                tipoUnidad: respuesta.data.m_nIdUnidad ? dataTipoUnidad.find(o => o.m_nIdTipoUnidad == (dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)).m_nIdTipoUnidad) : {},
-                unidad: dataUnidad.find(
-                    (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
-                ) || {},
-
-                //ERROR PORQUE NO HAY OPERADOR REGISTRADO
-                operador: respuesta.data.m_nIdOperador ? dataOperador.find(
-                    (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
-                ) : {},
-
-                /*codigoPostalDestinatario: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
-                ),*/
-                /*ciudadDestinatario: dataCiudad.find(
-                    (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestinatario
-                ),*/
-                ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
-                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                destinoDestinatario: dataCiudad.find(
-                    (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino
-                ),
-                /*codigoPostalRecoleccion: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleRecoleccion
-                ),*/
-                ciudadRecoleccion: respuesta.data.m_nIdCiudadDetalleRecoleccion,
-                zonaRecoleccion: respuesta.data.m_nIdZonaDetalleRecoleccion,
-                domicilioRecoleccion: respuesta.data.m_sDomicilioDetalleRecoleccion,
-                recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
-                datosAdicionalesRecoleccion:
-                    respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
-                /*codigoPostalEntrega: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega
-                ),*/
-                ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
-                zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
-                domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
-                entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
-                datosAdicionalesEntrega:
-                    respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-                fechaHoraSalida:
-                    respuesta.data.m_dFechaElaboracionSalidaRecoleccion +
-                    "T" +
-                    respuesta.data.m_tHoraElaboracionSalidaRecoleccion.slice(0, 5),
-                fechaHoraLlegada:
-                    respuesta.data.m_dFechaElaboracionLlegadaRecoleccion +
-                    "T" +
-                    respuesta.data.m_tHoraElaboracionLlegadaRecoleccion.slice(0, 5),
-
-                fechaHoraRegistro:
-                    respuesta.data.m_dFechaRegistro +
-                    "T" +
-                    respuesta.data.m_tHoraRegistro.slice(0, 5),
-                fechaRecoleccion:
-                    respuesta.data.m_dFechaDetalleRecoleccion +
-                    "T" +
-                    respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
-                paquetes: respuesta.data.m_parrPaquetes,
-                sobres: respuesta.data.m_parrSobres,
-                countPaquetes: respuesta.data.m_parrPaquetes.length,
-                countSobres: respuesta.data.m_parrSobres.length,
-            });
-
-           /* obtenerCodigoPostalId(respuesta.data.m_sIdCodigoPostalRemitente).then(cp => {
-                setState({
+            console.log('Recoleccion: ', respuesta.data);
+            setState(state => {
+                return {
                     ...state,
-                    codigoPostalRemitente: cp
-                })
+                    agregar: "Modificar",
+                }
             })
-            obtenerCodigoPostalId(respuesta.data.m_sIdCodigoPostalDestinatario).then(cp => {
-                setState({
-                    ...state,
-                    codigoPostalDestinatario: cp
-                })
-            })
-            if (respuesta.data.m_nIdCPDetalleRecoleccion != respuesta.data.m_sIdCodigoPostalRemitente){
-                obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleRecoleccion).then(cp => {
-                    setState({
-                        ...state,
-                        codigoPostalRecoleccion: cp
-                    })
-                })
-            }
-            if (respuesta.data.m_sIdCodigoPostalDestinatario != respuesta.data.m_nIdCPDetalleEntrega){
-                obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then(cp => {
-                    setState({
-                        ...state,
-                        codigoPostalEntrega: cp
-                    })
-                })
-            }*/
+            setRecoleccionDataParaConsultaModificacion(respuesta)
+
         });
     }
 
@@ -1003,96 +887,112 @@ function Recoleccion() {
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         obtenerRecoleccionId(id).then((respuesta) => {
-            console.log(respuesta.data);
-            setState({
+            console.log('Recoleccion: ', respuesta.data);
+            setState(state => {
+                return {
+                    ...state,
+                    agregar: "Consultar",
+                }
+            })
+            setRecoleccionDataParaConsultaModificacion(respuesta)
+
+        });
+    }
+
+    const setRecoleccionDataParaConsultaModificacion = (respuesta) => {
+        const remitente = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente)
+        handleSelectRemitente(remitente)
+
+        const destinatario = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario)
+        handleSelectDestinatario(destinatario)
+
+        obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleRecoleccion).then((cp) => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalRecoleccion: cp.data
+                }
+            })
+        })
+        obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalEntrega: cp.data
+                }
+            })
+        })
+        obtenerUnidadesId(respuesta.data.m_nIdUnidad).then((unit) => {
+            setState(state => {
+                return {
+                    ...state,
+                    unidad: unit.data
+                }
+            })
+
+            obtenerTipoUnidadesId(unit.data.m_nIdTipoUnidad).then((tipoUnidad) => {
+                console.log('tipoUnidad: ', tipoUnidad)
+                setState(state => {
+                    return {
+                        ...state,
+                        tipoUnidad: tipoUnidad.data
+                    }
+                })
+            })
+        })
+
+        setState(state =>{
+            return {
                 ...state,
-                agregar: "Consultar",
-                idRecoleccion: id,
+                idRecoleccion: respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.m_nIdSucursal,
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
                 folioEmbarque: respuesta.data.m_nIdEmbarque,
                 folioGuia: respuesta.data.m_nIdGuia,
                 folioInforme: respuesta.data.m_nIdInforme,
-                fechaHoraCreacion:
-                    respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.slice(0, 5),
+                fechaHoraRegistro: respuesta.data.m_dFechaRegistro + "T" + respuesta.data.m_tHoraRegistro.slice(0, 5),
                 estatusRecoleccion: respuesta.data.m_nIdEstatusRecoleccion,
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-                nombreRemitente: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente),
-                RFCRemitente: respuesta.data.m_sRFCRemitente,
-                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                /*codigoPostalRemitente: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalRemitente
-                ),*/
-                ciudadRemitente: dataCiudad.find(
-                    (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadRemitente
-                ),
-                correoRemitente: respuesta.data.m_sCorreoRemitente,
-                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                contactoRemitente: respuesta.data.m_sContactoRemitente,
-                origenRemitente: dataCiudad.find(
-                    (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen
-                ),
-                nombreDestinatario: dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario),
-                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                tipoUnidad: dataTipoUnidad.find(o => o.m_nIdTipoUnidad == (dataUnidad.find(o => o.m_nIdUnidad == respuesta.data.m_nIdUnidad)).m_nIdTipoUnidad),
-                unidad: dataUnidad.find(
-                    (o) => o.m_nIdUnidad == respuesta.data.m_nIdUnidad
-                ),
-                operador: dataOperador.find(
-                    (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
-                ),
-                /*codigoPostalDestinatario: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP == respuesta.data.m_sIdCodigoPostalDestinatario
-                ),*/
-                ciudadDestinatario: dataCiudad.find(
-                    (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestinatario
-                ),
-                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                destinoDestinatario: dataCiudad.find(
-                    (o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino
-                ),
-                /*codigoPostalRecoleccion: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleRecoleccion
-                ),*/
-                ciudadRecoleccion: respuesta.data.m_nIdCiudadDetalleRecoleccion,
-                zonaRecoleccion: respuesta.data.m_nIdZonaDetalleRecoleccion,
-                domicilioRecoleccion: respuesta.data.m_sDomicilioDetalleRecoleccion,
-                recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
-                datosAdicionalesRecoleccion:
-                    respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
-                /*codigoPostalEntrega: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP == respuesta.data.m_nIdCPDetalleEntrega
-                ),*/
+
+                //Remitente
+                origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+                //Destinatario
+                destinoDestinatario: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
+
+                //Paquetes/Sobres
+                countPaquetes: respuesta.data.m_parrPaquetes.length,
+                countSobres: respuesta.data.m_parrSobres.length,
+                mismoPaquete: false,
+                mismoSobre: false,
+                paquetes: respuesta.data.m_parrPaquetes, //agrega la variable de tipo
+                sobres: respuesta.data.m_parrSobres, // agregar variable de tipo
+
+                //Entrega
+                diferenteEntrega: true,
                 ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
                 zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
                 domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
                 entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
-                datosAdicionalesEntrega:
-                    respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-                fechaHoraSalida:
-                    respuesta.data.m_dFechaElaboracionSalidaRecoleccion +
-                    "T" +
-                    respuesta.data.m_tHoraElaboracionSalidaRecoleccion.slice(0, 5),
-                fechaHoraLlegada:
-                    respuesta.data.m_dFechaElaboracionLlegadaRecoleccion +
-                    "T" +
-                    respuesta.data.m_tHoraElaboracionLlegadaRecoleccion.slice(0, 5),
-                fechaRecoleccion:
-                    respuesta.data.m_dFechaDetalleRecoleccion +
-                    "T" +
-                    respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
-                paquetes: respuesta.data.m_parrPaquetes,
-                sobres: respuesta.data.m_parrSobres,
-                countPaquetes: respuesta.data.m_parrPaquetes.length,
-                countSobres: respuesta.data.m_parrSobres.length,
-            });
-            console.log("tipoUnidad:")
-            console.log(dataTipoUnidad)
+                datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+
+                //Recoleccion
+                diferenteRecoleccion: true,
+                fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
+                ciudadRecoleccion: respuesta.data.m_nIdCiudadDetalleRecoleccion,
+                zonaRecoleccion: respuesta.data.m_nIdZonaDetalleRecoleccion,
+                domicilioRecoleccion: respuesta.data.m_sDomicilioDetalleRecoleccion,
+                recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
+                datosAdicionalesRecoleccion: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+
+                //Operador
+                operador: dataOperador.find((o) => o.m_nIdOperador == respuesta.data.m_nIdOperador),
+                fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida.slice(0, 5),
+                fechaHoraLlegada: respuesta.data.m_dFechaLlegada + "T" + respuesta.data.m_tHoraLlegada.slice(0, 5),
+
+
+            }
         });
     }
 
@@ -2485,7 +2385,7 @@ function Recoleccion() {
                                 label="Tipo de Embalaje"
                                 labelId="m_nIdTipoEmbalajeLabel"
                                 className="form-control"
-                                value={state.paquetes[index].m_nIdTIpoEmpaque}
+                                value={state.paquetes[index].m_nIdTipoEmbalaje}
                                 disabled={state.agregar === "Consultar"}
                                 onChange={(event) => handleChangePaquete(event, index)}
                                 id="m_nIdTipoEmbalaje"
