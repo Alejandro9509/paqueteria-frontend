@@ -1440,7 +1440,6 @@ function Embarque(props) {
         setState({
             ...state,
             ciudadRemitente: event.target.value,
-            codigoPostalRemitente: null
         });
     }
 
@@ -1449,7 +1448,6 @@ function Embarque(props) {
         setState({
             ...state,
             ciudadDestinatario: event.target.value,
-            codigoPostalDestinatario: null
         });
     }
 
@@ -1458,7 +1456,6 @@ function Embarque(props) {
         setState({
             ...state,
             ciudadEntrega: event.target.value,
-            codigoPostalEntrega: null
         });
     }
 
