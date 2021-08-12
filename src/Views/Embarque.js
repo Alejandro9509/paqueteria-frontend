@@ -1068,98 +1068,20 @@ function Embarque(props) {
     /*=TABS NAVEGACION=*/
 
     function handleShowConsultar(id) {
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
         limpiarCamposAgregar()
         obtenerEmbarquesId(id).then((respuesta) => {
-            console.log(respuesta)
+            console.log('Embarque: ', respuesta)
             setState({
                 ...state,
                 agregar: "Consultar",
-                idEmbarque: id,
-                idSucursalAgregar: respuesta.data.IdSucursal,
-                folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
-                folioEmbarque: respuesta.data.m_nFolioEmbarque,
-                folioGuia: respuesta.data.m_nFolioGuia,
-                folioInforme: respuesta.data.m_nFolioInforme,
-                fechaHoraCreacion: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora.split(":")[0] + ":" + respuesta.data.m_tHora.split(":")[1],
-                moneda: respuesta.data.m_nIdMoneda,
-                tipoCambio: respuesta.data.m_cTIpoCambio,
-                tipoCobro: respuesta.data.m_nIdTIpoCobro,
-                estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
-                nombreRemitente: dataRemitenteDestinatario.find(
-                    (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
-                ),
-                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                /*codigoPostalRemitente: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalRemitente
-                ),*/
-                ciudadRemitente: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nCiudadRemitente
-                ),
-                correoRemitente: respuesta.data.m_sCorreoRemitente,
-                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                contactoRemitente: respuesta.data.m_sContactoRemitente,
-                ciudadOrigen: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
-                ),
-                RFCRemitente : respuesta.data.m_sRFCRemitente,
-                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                nombreDestinatario: dataRemitenteDestinatario.find(
-                    (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
-                ),
-                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                /*codigoPostalDestinatario: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalDestinatario
-                ),*/
-                ciudadDestinatario: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCIudadDestinatario
-                ),
-                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-
-                ciudadDestino: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
-                ),
-                zonaEntrega: respuesta.data.IdZonaEntrega,
-                domicilioEntrega: respuesta.data.DomicilioEntrega,
-                entregaEn: respuesta.data.EntregarEn,
-                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
-                /*fechaEntrega:
-                    respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,*/
-                /*codigoPostalEntrega: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.CodigoPostalEntrega
-                ),*/
-                ciudadEntrega: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.IdCiudadEntrega
-                ),
-                /*fechaHoraSalida:
-                    respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,*/
-                /*fechaHoraLlegada:
-                    respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,*/
-                /*idOperador: dataOperador.find(
-                    (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
-                ),*/
-              /*   idTipoUnidad: dataTipoUnidad.find(
-                    (o) =>
-                        o.m_sTipoUnidad ==
-                        dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad)
-                            .m_sTipoUnidad
-                ),
-                idUnidad: dataUnidad.find(
-                    (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
-                ), */
-                // paquetes: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 2),
-                // sobres: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 1),
-                //Las de abajo reemplazan a la de arriba, se puede quitar la de arriba cuando ya no se use asi
-                paquetes: respuesta.data.m_arrPaquetes,
-                sobres: respuesta.data.m_arrSobres,
-                entregaEnSucursal: respuesta.m_bEntregaEnSucursal,
-                diferenteEntrega: false,
-                idSucursalEntrega : respuesta.m_nIdSucursalEntrega,
             });
-            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+            setDataParaConsultarModificar(respuesta)
+
         });
-        console.log(state)
     }
 
     function handleShowAgregar() {
@@ -1180,113 +1102,22 @@ function Embarque(props) {
     }
 
     function handleShowModificar(id) {
-        console.log(id);
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
         limpiarCamposAgregar()
         obtenerEmbarquesId(id).then((respuesta) => {
+            console.log('Embarque: ', respuesta)
             setState({
                 ...state,
                 agregar: "Modificar",
-                idEmbarque: id,
-                idSucursalAgregar: respuesta.data.IdSucursal,
-                folioRecoleccion: respuesta.data.m_nFolioRecoleccion,
-                folioEmbarque: respuesta.data.m_nFolioEmbarque,
-                folioGuia: respuesta.data.m_nFolioGuia,
-                folioInforme: respuesta.data.m_nFolioInforme,
-                fechaHoraCreacion:
-                    respuesta.data.m_dFecha +
-                    "T" +
-                    respuesta.data.m_tHora.split(":")[0] +
-                    ":" +
-                    respuesta.data.m_tHora.split(":")[1],
-                fechaHoraRegistro:
-                    respuesta.data.m_dFechaRegistro +
-                    "T" +
-                    respuesta.data.m_tHoraRegistro.slice(0, 5),
-                moneda: respuesta.data.m_nIdMoneda,
-                tipoCambio: respuesta.data.m_cTIpoCambio,
-                tipoCobro: respuesta.data.m_nIdTIpoCobro,
-                estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
-
-
-                nombreRemitente: dataRemitenteDestinatario.find(
-                    (o) => o.m_sRFC === respuesta.data.m_sRFCRemitente
-                ),
-                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                /*codigoPostalRemitente: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalRemitente
-                ),*/
-                ciudadRemitente: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nCiudadRemitente
-                ).m_nIdCiudad,
-                correoRemitente: respuesta.data.m_sCorreoRemitente,
-                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                contactoRemitente: respuesta.data.m_sContactoRemitente,
-                ciudadOrigen: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadOrigen
-                ),
-
-                RFCRemitente: respuesta.data.m_sRFCRemitente,
-                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                nombreDestinatario: dataRemitenteDestinatario.find(
-                    (o) => o.m_sRFC === respuesta.data.m_sRFCDestinatario
-                ),
-                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                /*codigoPostalDestinatario: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.m_nIdCodigoPostalDestinatario
-                ),*/
-                ciudadDestinatario: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCIudadDestinatario
-                ).m_nIdCiudad,
-                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-
-                ciudadDestino: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.m_nIdCiudadDestino
-                ),
-                zonaEntrega: respuesta.data.IdZonaEntrega,
-                domicilioEntrega: respuesta.data.DomicilioEntrega,
-                entregaEn: respuesta.data.EntregarEn,
-                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
-                /*fechaEntrega:
-                    respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,*/
-                /*codigoPostalEntrega: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP === respuesta.data.CodigoPostalEntrega
-                ),*/
-               /* ciudadEntrega: dataCiudad.find(
-                    (o) => o.m_nIdCiudad === respuesta.data.IdCiudadEntrega
-                ).m_nIdCiudad,*/
-                /*fechaHoraSalida:
-                    respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,*/
-                /*fechaHoraLlegada:
-                    respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,*/
-                /*idOperador: dataOperador.find(
-                    (o) => o.m_nIdOperador === respuesta.data.m_nIdOperador
-                ),*/
-                // idTipoUnidad: dataTipoUnidad.find(
-                //     (o) =>
-                //         o.m_nIdTipoUnidad ==
-                //             dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad) ?
-                //             dataUnidad.find((o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad).m_nIdTipoUnidad : 0
-                // ),
-                // idUnidad: dataUnidad.find(
-                //     (o) => o.m_nIdUnidad === respuesta.data.m_nIdUnidad
-                // ),
-                // paquetes: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 2),
-                // sobres: respuesta.data.m_arrClsDetalle.filter(d => d.m_nTipo == 1),
-                //Las de abajo reemplazan a la de arriba, se puede quitar la de arriba cuando ya no se use asi
-                paquetes: respuesta.data.m_arrPaquetes,
-                sobres: respuesta.data.m_arrSobres,
-                entregaEnSucursal: respuesta.m_bEntregaEnSucursal,
-                diferenteEntrega: false,
-                idSucursalEntrega : respuesta.m_nIdSucursalEntrega,
             });
-            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
+            setDataParaConsultarModificar(respuesta)
         });
-        console.log(state)
     }
 
+    //Funcion para mostrar datos de recoleccion para crear embarque
     function setDataRecoleccionOnState(respuesta){
         const {m_parrPaquetes, m_parrSobres } = respuesta.data;
         /*let paquetesModificado = m_parrPaquetes
@@ -1363,6 +1194,102 @@ function Embarque(props) {
                 datosAdicionalesEntrega: '',
                 codigoPostalEntrega: '',
                 ciudadEntrega: '',
+            }
+        });
+
+        //si el cp de entrega es igual al de destinatario significa que no es entrega en diferente domicilio
+        if (respuesta.data.m_nIdCPDetalleEntrega != respuesta.data.m_sIdCodigoPostalDestinatario){
+            obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then(cp => {
+                setState(state => {
+                    return{
+                        ...state,
+                        diferenteEntrega: true,
+                        zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
+                        domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
+                        entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
+                        datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                        // fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
+                        codigoPostalEntrega: cp.data,
+                        ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
+                    }
+                })
+            })
+        }
+    }
+
+    //Funcion para mostrar datos de embarque para consultar o modificar
+    const setDataParaConsultarModificar = (respuesta) => {
+
+        handleSelectRemitente(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente))
+        handleSelectDestinatario(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario))
+
+        obtenerCodigoPostalId(respuesta.data.CodigoPostalEntrega).then((cp) => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalEntrega: cp.data
+                }
+            })
+        })
+
+        respuesta.data.m_arrPaquetes.forEach(p => {
+            p["m_nCantidad"] = p.ctd
+        })
+
+        setState(state => {
+            return{
+                ...state,
+                idEmbarque: respuesta.data.m_nIdEmbarque,
+                idRecoleccion: respuesta.data.m_nIdRecoleccion,
+                idSucursalAgregar: respuesta.data.IdSucursal,
+                folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
+                folioEmbarque: dataFolioEmbarque.length !== 0 ? dataFolioEmbarque[0].m_sFolioEmbarque : null,
+                folioGuia: respuesta.data.m_sFolioGuia,
+                folioInforme: respuesta.data.m_nFolioInforme,
+                fechaHoraRegistro: respuesta.data.m_dFechaRegistro + "T" + respuesta.data.m_tHoraRegistro.slice(0, 5),
+                estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
+                moneda: respuesta.data.m_nIdMoneda,
+                tipoCambio: respuesta.data.m_cTIpoCambio,
+                tipoCobro: respuesta.data.m_nIdTIpoCobro,
+
+                //Remitente
+                /*nombreRemitente: '',
+                RFCRemitente: '',
+                domicilioRemitente: '',
+                ciudadRemitente: '',
+                codigoPostalRemitente: '',
+                correoRemitente: '',
+                telefonoRemitente: '',
+                contactoRemitente: '',*/
+                ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+
+                //Destinatario
+                /*nombreDestinatario: '',
+                RFCDestinatario: '',
+                domicilioDestinatario: '',
+                ciudadDestinatario: '',
+                codigoPostalDestinatario: '',
+                correoDestinatario: '',
+                telefonoDestinatario: '',
+                contactoDestinatario: '',*/
+                ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
+
+                //Entrega
+                entregaEnSucursal: false,
+                idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
+                diferenteEntrega: !respuesta.data.EntregarMismoDomicilio,
+                ciudadEntrega: respuesta.data.IdCiudadEntrega,
+                zonaEntrega: respuesta.data.IdZonaEntrega,
+                domicilioEntrega: respuesta.data.DomicilioEntrega,
+                entregaEn: respuesta.data.EntregarEn,
+                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
+
+                //Paquetes/sobres
+                paquetes: respuesta.data.m_arrPaquetes,
+                sobres: respuesta.data.m_arrSobres,
+                countPaquetes: respuesta.data.m_nNoPaquetes,
+                countSobres: respuesta.data.m_nNoSobres,
+                fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
             }
         });
 
