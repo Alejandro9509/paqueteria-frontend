@@ -43,7 +43,7 @@ function obtenerTipoUnidades(){
 }
 
 function obtenerTipoUnidadesId(id){
-    const url = `${process.env.REACT_APP_API_URL}/TipoUnidades/GetById/` + id;
+    const url = `${process.env.REACT_APP_API_URL}/TipoUnidad/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
