@@ -832,37 +832,28 @@ function Guia(props) {
     const setDataFromEmbarque = (respuesta, respuestaConceptos) => {
         console.log('Embarque datos:')
         console.log(respuesta.data)
-        const paquetesTemp = [];
-        const sobresTemp = [];
         let valorDeclaradoTotal = 0
 
         const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
 
         paquetes.forEach((paq) => {
-            if (!(paq.m_nIdEmbarqueDetalle === "" || paq.m_nIdEmbarqueDetalle === "0")) {
-                paquetesTemp.push({
-                    peso: paq.m_xPeso,
-                    largo: paq.m_xLargo,
-                    ancho: paq.m_xAncho,
-                    alto: paq.m_xAlto,
-                    volumen: paq.m_xVolumen,
-                    tipoEmbalaje: paq.m_nTipo,
-                    valorDeclarado: paq.m_cValorDeclarado,
-                    descripcionPaquete: paq.m_sDescripcion,
-                    id: paq.m_nIdEmbarqueDetalle,
-                    ctd: paq.ctd
-                })
-                valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
-            }
-        })
+            paq["peso"] = paq.m_xPeso
+            paq["largo"] = paq.m_xLargo
+            paq["ancho"] = paq.m_xAncho
+            paq["alto"] = paq.m_xAlto
+            paq["volumen"] = paq.m_xVolumen
+            paq["tipoEmbalaje"] = paq.m_nTipo
+            paq["valorDeclarado"] = paq.m_cValorDeclarado
+            paq["descripcionPaquete"] = paq.m_sDescripcion
+            paq["observacionesPaquete"] = paq.m_sObservaciones
+            paq["id"] = paq.m_nIdEmbarqueDetalle
+            valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
+
+            })
 
         sobres.forEach((sob) => {
-            if (!(sob.m_nIdEmbarqueDetalle === "" || sob.m_nIdEmbarqueDetalle === "0")) {
-                sobresTemp.push({
-                    descripcionSobre: sob.m_sDescripcion,
-                    id: sob.m_nIdEmbarqueDetalle
-                })
-            }
+            sob["descripcionSobre"] = sob.m_sDescripcion
+            sob["id"] = sob.m_nIdEmbarqueDetalle
         })
 
         obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(respuesta => {
@@ -891,7 +882,7 @@ function Guia(props) {
                 idMoneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
-                folioInforme: respuesta.data.m_nFolioInforme != "" ? respuesta.data.m_nFolioInforme : '',
+                folioInforme: respuesta.data.m_nFolioInforme,
 
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
@@ -911,8 +902,8 @@ function Guia(props) {
                 sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 CiudadDestino: respuesta.data.m_sCiudadDestino,
 
-                paquetes: paquetesTemp,
-                sobres: sobresTemp,
+                paquetes: paquetes,
+                sobres: sobres,
 
                 IdEmbarque: respuesta.data.m_nIdEmbarque,
                 ValorDeclarado: valorDeclaradoTotal,
@@ -926,7 +917,7 @@ function Guia(props) {
             }
         })
 
-        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, respuestaConceptos, paquetesTemp, respuesta.data)
+        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, respuestaConceptos, paquetes, respuesta.data)
     }
 
     const [dataTodosConceptosByEmbarque, setDataTodosConceptosByEmbarque] = useState([])
