@@ -63,7 +63,7 @@ import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
 import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
 import { agregarRecoleccion, modificarRecoleccion, obtenerRecoleccionCancelada, cancelarRecoleccion, eliminarRecoleccion, obtenerRecoleccionId, obtenerRecoleccionFiltro, obtenerRecoleccion } from "../Util/Contexts/RecoleccionContext";
 import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
-import { obtenerUnidadesTipo } from "../Util/Contexts/UnidadesContext";
+import {obtenerUnidades, obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import { obtenerTipoCambio } from "../Util/Contexts/TipoCambioContext";
 import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
@@ -1771,6 +1771,7 @@ function Recoleccion() {
             }else{
                 setDataTipoUnidad(respuesta.data)
             }
+            console.log("tipos unidades listado: ", respuesta.data)
             // getAllUnidades(1);
         });
     }
@@ -2235,7 +2236,7 @@ function Recoleccion() {
                                 prepareRow(row);
                                 return (
                                     <tr style={{ backgroundColor: row.original.m_nIdUnidad === select ? "orange" : "white" }} {...row.getRowProps()}
-                                        onClick={handleSelectCP.bind(this, row.origina, false)}
+                                        onClick={handleSelectCP.bind(this, row.original, false)}
                                         onDoubleClick={handleSelectCP.bind(this, row.original, true)}>
                                         {row.cells.map(cell => {
                                             return (

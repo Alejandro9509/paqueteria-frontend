@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Los conceptos de maniobra, entrega, y recoleccion ahora se pueden modificar">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se arregló problema par que se vea el listado de unidades por id de tipo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
     </list>
@@ -373,7 +373,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628399351166</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="*Se arregló problema par que se vea el listado de unidades por id de tipo">
+      <created>1628749514212</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1628749514212</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -417,7 +424,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos" />
     <MESSAGE value="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona" />
     <MESSAGE value="Ajustes" />
     <MESSAGE value="Se autocompleta la informacion de remitente y destinatario al seleccionar" />
@@ -442,14 +448,15 @@
     <MESSAGE value="*Las localidades ya se acumulan" />
     <MESSAGE value="*Limpieza de código" />
     <MESSAGE value="*Se arregló validacion para que mande a modificar o agregar respectivamente" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Se arregló validacion para que mande a modificar o agregar respectivamente" />
+    <MESSAGE value="*Se arregló problema par que se vea el listado de unidades por id de tipo" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se arregló problema par que se vea el listado de unidades por id de tipo" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/Views/Recoleccion.js</url>
-          <line>2832</line>
+          <line>2839</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
