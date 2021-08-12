@@ -215,7 +215,6 @@ function Guia(props) {
 
     const handleAceptar = (e) => {
         e.preventDefault()
-        console.log(state.conceptosAdicionales)
         let params = {
             "TIpoCambio": state.tipoCambio,
             "FolioGuia": state.folioGuia,
@@ -259,8 +258,6 @@ function Guia(props) {
                 console.log(err)
                 showSuccess(err)
             });
-            /*showSuccess('Guia agregada')
-            limpiarCamposAgregar()*/
         } else {
             modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
@@ -403,12 +400,10 @@ function Guia(props) {
 
     const setDataGuiaParaConsultarModificar = (respuesta) => {
         console.log('Guia datos:',respuesta.data )
-        console.log('Tracking', respuesta.data.m_nTracking)
-        console.log('m_nFolioGuia', respuesta.data.m_nFolioGuia)
 
         const paquetes = []
         const sobres = []
-        const {m_arrClsDetalle} = respuesta.data
+        const {m_arrClsDetalle, m_arClsGuiaConceptos} = respuesta.data
 
         m_arrClsDetalle.forEach((item) => {
             if (item.m_nTipo == 1){
@@ -453,6 +448,23 @@ function Guia(props) {
                 }
             })
         })
+        const conceptosAdicionales = []
+
+        m_arClsGuiaConceptos.forEach((element) => {
+            conceptosAdicionales.push({
+                concepto: element,
+                idConcepto: element.m_nIdConceptosFacturacion,
+                importe: element.m_cImporte,
+                retiene: element.m_nIdImpuestoRetiene,
+                traslada: element.m_nIdImpuestoTraslada,
+                importeRet: element.m_cImporteRetiene,
+                importeIVA: element.m_cImporteIva,
+                rangoMinimo: element.m_xnRangoMinimo,
+                rangoMaximo: element.m_xnRangoMaximo,
+                nombreConcepto: element.m_sConcepto,
+                tipoCalculo: element.m_nIdTipoCalculo
+            })
+        })
 
         setState(state => {
             return {
@@ -495,7 +507,7 @@ function Guia(props) {
                 idTipoServicio: respuesta.data.m_nIdTipoServicio,
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
 
-                conceptosAdicionales: respuesta.data.m_arClsGuiaConceptos,
+                conceptosAdicionales: conceptosAdicionales,
 
 
             }
