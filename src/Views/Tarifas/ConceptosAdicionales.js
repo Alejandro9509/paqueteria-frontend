@@ -177,7 +177,6 @@ class ConceptosAdicionales extends Component {
     }
 
     render() {
-        console.log('conceptos a listar: ', this.props.conceptosAdicionales)
         return (
             <div>
                 <Dialog open={this.state.openDialog} onClose={() => this.setState({ openDialog: false })}>
