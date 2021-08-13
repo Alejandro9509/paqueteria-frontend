@@ -528,7 +528,7 @@ function Clientes(props) {
                     respuesta.data.m_bPermitirAgruparCantidadPorConcepto,
                 ajustarImporte2Dec: respuesta.data.m_bAjustarImportes2DecimalesXML,
             });
-            getAllEstados()
+            // getAllEstados()
             $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
 
         });
