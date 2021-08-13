@@ -1104,8 +1104,8 @@ function Recoleccion() {
                 folioGuia: '',
                 folioInforme: '',
                 fechaHoraRegistro: '',
-                estatusRecoleccion: '',
-                moneda: '',
+                estatusRecoleccion: 1,
+                moneda: 1,
                 tipoCambio: '',
                 tipoCobro: '',
 
@@ -3179,7 +3179,7 @@ function Recoleccion() {
                                                                                 estatusRecoleccion: event.target.value,
                                                                             });
                                                                         }}
-                                                                        disabled={state.agregar === "Consultar"}
+                                                                        disabled={!(state.agregar === "Modificar")}
                                                                         id="estatusRecoleccion"
                                                                     >
                                                                         {dataEstatusRecoleccion.map((estatus) => (
