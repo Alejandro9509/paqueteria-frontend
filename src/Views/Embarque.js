@@ -1494,6 +1494,7 @@ function Embarque(props) {
 
     async function getAllEstatusEmbarque() {
         obtenerEstatusEmbarque().then((respuesta) => {
+            // const filter
             setEstatusEmbarque(respuesta.data);
         });
     }
@@ -3238,7 +3239,7 @@ function Embarque(props) {
                                                                             name: "estatusEmbarque"
                                                                         }}
                                                                     >
-                                                                        {dataEstatusEmbarque.map((estatus) => (
+                                                                        {dataEstatusEmbarque.filter(e => e.m_nIdEstatusEmbarque < 17 ).map((estatus) => (
                                                                             <option
                                                                                 key={estatus.m_nIdEstatusEmbarque}
                                                                                 value={estatus.m_nIdEstatusEmbarque}
