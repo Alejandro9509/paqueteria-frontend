@@ -60,4 +60,13 @@ function validarPermisos(state){
     return result
 }
 
-export {modificarUsuarios, agregarUsuarios, eliminarUsuarios, obtenerUsuarios, obtenerUsuariosId, validarPermisos}
+function obtenerTipoUsuarios(){
+    const url = `${process.env.REACT_APP_API_URL}/TipoUsuario/GetListado`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export {modificarUsuarios, agregarUsuarios, eliminarUsuarios, obtenerUsuarios, obtenerUsuariosId, validarPermisos, obtenerTipoUsuarios}
