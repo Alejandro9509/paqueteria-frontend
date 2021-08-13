@@ -293,6 +293,21 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Viajes.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Viajes/TablaUnidadViajes.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/Zonas.js">
           <value>
             <set />

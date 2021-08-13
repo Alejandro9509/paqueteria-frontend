@@ -52,7 +52,8 @@ class AgregarViaje extends Component {
             dataCodigoPostal: [],
             dataSucursal: [],
             dataEstatusViaje: [],
-            dataInformes: [],
+            dataInformesPorAsignar:[],
+            dataInformesAsignados: [],
             dataInformesSeleccionados: [],
             showPopUp: false,
             showDialog: false,
@@ -114,7 +115,7 @@ class AgregarViaje extends Component {
                 m_sIdentificador : this.state.identificadorViaje,
                 m_sNumViajeCliente : this.state.viajeCliente,
                 CreadoPor : this.state.CreadoPor,
-                m_arrInformes : this.state.dataInformes
+                m_arrInformes : this.state.dataInformesAsignados
         
         }
 
@@ -209,7 +210,7 @@ class AgregarViaje extends Component {
 
         axios.get(url, { headers }).then((respuesta) => {
 
-            this.setState({ dataInformes: respuesta.data })
+            this.setState({ dataInformesAsignados: respuesta.data })
         });
     }
 
@@ -287,56 +288,27 @@ class AgregarViaje extends Component {
             {
                 headerName: "Folio/Serie",
                 field: "m_sFolioInforme",
-                width: 125,
+                flex: 1,
             },
             {
                 headerName: "Ruta",
                 field: "m_sRuta",
-                width: 150,
+                flex: 1,
             },
             {
                 headerName: "Origen",
                 field: "m_sCiudadOrigen",
-                width: 125,
+                flex: 1,
             },
             {
                 headerName: "Destino",
                 field: "m_sCiudadDestino",
-                width: 125,
+                flex: 1,
             },
             {
                 headerName: "Operador",
                 field: "m_sNombreCompleto",
-                width: 250,
-            },
-
-        ];
-
-        const columns2 = [
-            {
-                headerName: "Folio/Serie",
-                field: "m_sFolioInforme",
-                width: 125,
-            },
-            {
-                headerName: "Ruta",
-                field: "m_sRuta",
-                width: 150,
-            },
-            {
-                headerName: "Origen",
-                field: "m_sCiudadOrigen",
-                width: 125,
-            },
-            {
-                headerName: "Destino",
-                field: "m_sCiudadDestino",
-                width: 125,
-            },
-            {
-                headerName: "Operador",
-                field: "m_sNombreCompleto",
-                width: 250,
+                flex: 1,
             },
 
         ];
@@ -1146,11 +1118,11 @@ class AgregarViaje extends Component {
                                 <h2 color={'#717171'} >Informes para asignación</h2>
                             </div>
 
-                            <div className="row" style={{ height: this.state.height - 450, width: '100%' }}>
-                                {this.state.dataInformes.length != 0 ? (
+                            <div className="row" style={{ height: "200px", width: '100%' }}>
+                                {this.state.dataInformesPorAsignar.length != 0 ? (
                                     <DataGrid
                                         localeText={dataGridLocaleText}
-                                        rows={this.state.dataInformes}
+                                        rows={this.state.dataInformesPorAsignar}
                                         columns={columns}
                                         density="compact"
                                         pageSize={Math.floor((this.state.height - 310) / 30)}
@@ -1180,11 +1152,11 @@ class AgregarViaje extends Component {
                                 <h2 color={'#717171'} >Detalle de paradas</h2>
                             </div>
 
-                            <div className="row" style={{ height: this.state.height - 450, width: '100%' }}>
-                                {this.state.dataInformes.length != 0 ? (
+                            <div className="row" style={{ height: "200px", width: '100%' }}>
+                                {this.state.dataInformesAsignados.length != 0 ? (
                                     <DataGrid
                                         localeText={dataGridLocaleText}
-                                        rows={this.state.dataInformes}
+                                        rows={this.state.dataInformesAsignados}
                                         columns={columns}
                                         density="compact"
                                         pageSize={Math.floor((this.state.height - 310) / 30)}
@@ -1192,33 +1164,34 @@ class AgregarViaje extends Component {
                                         onRowSelected={(row) => {
                                             this.setState({
                                                 idInforme: row.data.m_nIdInforme
-                                               
+
                                             })
-                                            
+
                                         }}
                                     />
                                 ) : (
                                     <div>No se encontró ningún registro</div>
                                 )}
-                                {/**Para mostrar el boton nomas cuando haya registros*/}
-                                {this.state.dataInformes.length != 0 ? (
-                                      <Button
-                                      variant={"contained"}
-                                      color={"primary"}
-                                      onClick={() => this.setState({showAsignarOperadorDialog: true})}>Asignar operador unidad</Button>
 
-                                  
-                                ): (<div/>)}
-                                   {this.state.dataInformes.length != 0 ? (
-                                 
-                                    <button
-                                        type="submit"
-                                        className="btn btn-primary primary-btn"
-                                        onClick={() => this.setState({openHistoryDialog: true })}>Historial</button>
-                                ): (<div/>)}
                             </div>
+                            {/**Para mostrar el boton nomas cuando haya registros*/}
+                            {this.state.dataInformesAsignados.length != 0 ? (
+                                <Button
+                                    variant={"contained"}
+                                    color={"primary"}
+                                    onClick={() => this.setState({showAsignarOperadorDialog: true})}>Asignar operador unidad</Button>
 
-                          
+
+                            ): (<div/>)}
+                            {this.state.dataInformesAsignados.length != 0 ? (
+
+                                <Button
+                                    type="submit"
+                                    color={"primary"}
+                                    onClick={() => this.setState({openHistoryDialog: true })}>Historial</Button>
+                            ): (<div/>)}
+
+
                         </div>
                     </div>
                 </div>

@@ -159,7 +159,7 @@ function Informes({ history }) {
                         </a>
                         <a
                             className="btn btn-default btn-xs"
-                            onClick={() => handleShowModificar(row.row.m_nIdInforme)}
+                            onClick={() => handleShowConsultar(row.row.m_nIdInforme)}
                         >
                             <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
                         </a>
@@ -255,8 +255,6 @@ function Informes({ history }) {
             ...state,
             [state.identificadorModal]: id,
         });
-        console.log(id);
-        console.log(state.identificadorModal);
     }
 
 
@@ -569,7 +567,6 @@ function Informes({ history }) {
             m_nCreadoPor: state.CreadoPor,
             m_arrClsProInformeGuia: dataGuias,
         };
-        console.log(JSON.stringify(params))
 
         if (state.IdInforme != 0) {
             modificarInformes(state.IdInforme, params)
@@ -1297,6 +1294,20 @@ function Informes({ history }) {
             GrupoUnidad: "",
             Color: "",
             IdOperador: 0,
+            fechaHora: data.m_sFechayHora,
+            IdCiudadDestino: {},
+            IdCiudadOrigen: {},
+            IdSucursalEmisora: {},
+            IdSucursalReceptora: {},
+            IdRemolque1: {},
+            IdRemolque2:{},
+            IdTipoUnidad: {},
+            IdRuta: {},
+            IdEstatusInforme: "",
+            PlacasRemolque1:"",
+            PlacasRemolque2:"",
+            PlacasDolly: "",
+            FolioInforme: "",
         });
         $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
 
@@ -1307,11 +1318,59 @@ function Informes({ history }) {
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
-        obtenerInformesId(id).then((respuesta) => {
+        obtenerInformesId(id).then(({data}) => {
+            console.log(data.m_arrClsProGuia)
+            setDataGuias(data.m_arrClsProGuia)
             setState({
                 ...state,
+                fechaHora: data.m_sFechayHora,
+                IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
+                IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
+                IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
+                IdSucursalEmisora: dataSucursal.find(c => c.m_nIdSucursal === data.m_nIdSucursalEmisora),
+                IdSucursalReceptora: dataSucursal.find(c => c.m_nIdSucursal === data.m_nIdSucursalReceptora),
+                IdRemolque1: dataUnidadesRem.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
+                IdRemolque2: dataUnidadesRem.find(c => c.m_nIdUnidad === data.m_nIdRemolque2),
+                IdTipoUnidad: dataUnidadesDol.find(c => c.m_nIdUnidad === data.m_nIdDolly),
+                IdRuta: dataRutas.find(c => c.m_nIdRuta === data.m_nIdRuta),
+                IdEstatusInforme: dataEstatusInformes.find(c => c.m_nIdEstatusInforme === data.m_nIdEstatusInforme),
+                PlacasRemolque1: data.m_sPlacasRemolque1,
+                PlacasRemolque2: data.m_sPlacasRemolque2,
+                PlacasDolly: data.m_sPlacasDolly ,
+                FolioInforme: data.m_sFolioInforme,
                 agregar: "Modificar"
             });
+
+        });
+    }
+    function handleShowConsultar(id) {
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
+        obtenerInformesId(id).then(({data}) => {
+            console.log(data.m_arrClsProGuia)
+            setDataGuias(data.m_arrClsProGuia)
+            setState({
+                ...state,
+                fechaHora: data.m_sFechayHora,
+                IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
+                IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
+                IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
+                IdSucursalEmisora: dataSucursal.find(c => c.m_nIdSucursal === data.m_nIdSucursalEmisora),
+                IdSucursalReceptora: dataSucursal.find(c => c.m_nIdSucursal === data.m_nIdSucursalReceptora),
+                IdRemolque1: dataUnidadesRem.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
+                IdRemolque2: dataUnidadesRem.find(c => c.m_nIdUnidad === data.m_nIdRemolque2),
+                IdTipoUnidad: dataUnidadesDol.find(c => c.m_nIdUnidad === data.m_nIdDolly),
+                IdRuta: dataRutas.find(c => c.m_nIdRuta === data.m_nIdRuta),
+                IdEstatusInforme: dataEstatusInformes.find(c => c.m_nIdEstatusInforme === data.m_nIdEstatusInforme),
+                PlacasRemolque1: data.m_sPlacasRemolque1,
+                PlacasRemolque2: data.m_sPlacasRemolque2,
+                PlacasDolly: data.m_sPlacasDolly ,
+                FolioInforme: data.m_sFolioInforme,
+                agregar: "Consultar"
+            });
+
         });
     }
 
@@ -1909,18 +1968,18 @@ function Informes({ history }) {
                                                                             <div className="col-sm-6 col-md-3 unit">
 
                                                                                 <label className="input select">
-                                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                                    <FormControl required fullWidth variant="outlined" margin="dense">
                                                                                         <InputLabel id="EstatusInformeLabel">Estatus</InputLabel>
                                                                                         <Select
                                                                                             labelId="EstatusInformeLabel"
                                                                                             label="Estatus"
                                                                                             className="form-control"
-                                                                                            v
+                                                                                            required
                                                                                             onChange={handleSelectEstatus}
                                                                                             value={state.EstatusInforme}
                                                                                             id="EstatusInforme"
                                                                                         >
-                                                                                            <option value="0">Todos</option>
+                                                                                            <option value="">Seleccionar</option>
                                                                                             {dataEstatusInformes.map(
                                                                                                 (EstatusInforme) => (
                                                                                                     <option

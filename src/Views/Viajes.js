@@ -338,8 +338,8 @@ function Viajes() {
         getAllSucursales();
         getAllEstatusViaje();
         getAllEstatusDocumento();
-
-        // getEstatusEquipoListado();
+        getInventarioUnidades()
+        //getEstatusEquipoListado();
         // getDispEquipoListado();
 
         // getInventarioUnidades();
@@ -352,18 +352,7 @@ function Viajes() {
         });
     };
 
-    const FilterComponent = ({ filterText, onFilter, onClear }) => (
-        <>
-            <input
-                id="search"
-                type="text"
-                placeholder="Filter By Name"
-                aria-label="Search Input"
-                value={filterText}
-                onChange={handleChange} />
-            <button type="button" onClick={onClear}>X</button>
-        </>
-    );
+
 
     const headers = {
         'Content-Type': 'application/json',
@@ -387,88 +376,6 @@ function Viajes() {
         )
     }
 
-    function Table({ columns, data }) {
-
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        )
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn
-            },
-            useFilters,
-            useSortBy
-        )
-
-        return (
-            <div className="col-md-12">
-
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                        {headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map(column => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render()}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
-                                            {column.isSorted
-                                                ? column.isSortedDesc
-                                                    ? <i className="fa fa-caret-up" />
-                                                    : <i className="fa fa-caret-down" />
-                                                : ''}
-                                        </span>
-                                        <div>{column.canFilter ? column.render() : null}</div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {rows.map(
-                            (row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr {...row.getRowProps()}
-                                        onClick={handleSelectRow.bind(this, row.original.m_nIdViaje)}
-                                        className={state.idViaje === row.original.m_nIdViaje ? classes.seleccionado : classes.noSeleccionado}>
-                                        <td>
-                                            <div>
-                                                <a href="#Agregar" className="btn btn-default btn-sm" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdViaje))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-sm" onClick={() => (handleShowConsultar(row.original.m_nIdViaje))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdViaje))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                                            </div>
-                                        </td>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render()}</td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            }
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        )
-    }
 
     /**DISPONIBILIDAD DE EQUIPO*/
 
@@ -495,28 +402,28 @@ function Viajes() {
         },
         {
             headerName: "Unidad",
-            field: "unidad",
+            field: "m_sCodigoUnidad",
             width: 100,
         },
         {
             headerName: "Tipo unidad",
-            field: "nameTipoUnidad",
+            field: "m_sTipoUnidad",
             width: 150,
         }, {
             headerName: "Estado",
-            field: "nameEstatus",
+            field: "m_sEstatus",
             width: 150,
         }, {
             headerName: "Días",
-            field: "dias",
+            field: "m_nDias",
             width: 100,
         }, {
             headerName: "Ubicación",
-            field: "ubicacion",
+            field: "m_sUbicacion",
             width: 200,
         }, {
             headerName: "Desde",
-            field: "desde",
+            field: "m_dDesde",
             width: 150,
         },
     ]
@@ -529,50 +436,10 @@ function Viajes() {
         showAsignarOperadorDialog: false,
     });
 
-    function getDispEquipoListado(){
-        setEquipoListado([
-            {
-                id: 0,
-                unidad: "JT-5545",
-                idIipoUnidad: 0,
-                nameTipoUnidad: "Contenedor",
-                idEstatus: 1,
-                nameEstatus: "Documentado",
-                dias: "944.0",
-                ubicacion: "Mexicali, Baja California",
-                desde: "12/12/2020",
-                origen: "origen 1",
-            },
-            {
-                id: 1,
-                unidad: "JT-5545",
-                idIipoUnidad: 0,
-                nameTipoUnidad: "Contenedor",
-                idEstatus: 0,
-                nameEstatus: "Documentado",
-                dias: "944.0",
-                ubicacion: "Mexicali, Baja California",
-                desde: "12/12/2020",
-                origen: "origen 2",
-            },
-            {
-                id: 2,
-                unidad: "JT-5545",
-                idIipoUnidad: 0,
-                nameTipoUnidad: "Contenedor",
-                idEstatus: 0,
-                nameEstatus: "Documentado",
-                dias: "944.0",
-                ubicacion: "Mexicali, Baja California",
-                desde: "12/12/2020",
-                origen: "origen 3"
-            }
-        ]);
-    }
+
 
     function updateEquipoData(equipo){
-        console.log("Actualizar:");
-        console.log(equipo);
+        //TODO: Integrar servicio de cambiar disponibilidad de equipo
     }
 
     const showActualizarDispEquipo = (equipo) => {
@@ -583,6 +450,8 @@ function Viajes() {
     const closeActualizarDispEquipo = () =>{
         setEventOptions({...eventOptions, showDispEquipoDialog: false});
     }
+
+
 
     /**DETALLE DE PARADAS*/
 
@@ -657,20 +526,6 @@ function Viajes() {
     const [paradaData, setParadaData] = React.useState();
 
     function getParadasListado(){
-        /*setParadasListado([
-            {
-                m_nIdInforme: 0,
-                m_sUnidadIdentificador: "JT-55455",
-                m_sNombreCompleto: "Gonzalez Claudio",
-                m_nIdCiudadOrigen: "Asignar",
-                m_dFechaSalida: "12/12/2020",
-                m_sCiudadOrigen: "Mexicali,Baja California",
-                m_nIdCiudadDestino: "Asignar",
-                m_dFechaLlegada: "12/12/2021",
-                m_sCiudadDestino: "Tijuana. Baja California",
-                m_sNumeroNombreOperador: "",
-            }
-        ]);*/
         const url = `${process.env.REACT_APP_API_URL}/Informes/GetByIdViaje/${state.idViaje}`;
         axios.get(url, { headers }).then(respuesta => {
             console.log(respuesta.data);
@@ -680,8 +535,8 @@ function Viajes() {
 
     function getInventarioUnidades(){
         const url = `${process.env.REACT_APP_API_URL}/InventarioUnidades/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data);
+        axios.get(url, { headers }).then(({data}) => {
+            setEquipoListado(data)
         });
     }
 
@@ -998,7 +853,7 @@ function Viajes() {
                                         </form>
                                     </div>
 
-                                    <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                                    <div className="row" style={{ height: "400px", width: '100%' }}>
                                         {data.length != 0 ? (
                                             <DataGrid
                                                 localeText={dataGridLocaleText}
@@ -1026,18 +881,18 @@ function Viajes() {
                                     <label className="label" style={{ color: '#717171' }}>Disponibilidad del Equipo</label>
                                     <div className="widget-wrap">
                                         <div className="widget-content">
-                                            <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                                            <div className="row" style={{ height: "300px", width: '100%' }}>
                                                 {equipoListado.length !== 0 ? (
                                                   <DataGrid
                                                     rows={equipoListado}
                                                     columns={columnsEquipo}
                                                     density="compact"
                                                     pageSize={ Math.floor((state.height - 310)/30)}
-                                                    getRowId={(row) => row.m_nIdEquipo}
+                                                    getRowId={(row) => row.m_nIdInventarioUnidad}
                                                     onRowSelected={(row) => {
                                                       setState({
                                                         ...state,
-                                                        idEquipo: row.data.m_nIdEquipo
+                                                        idEquipo: row.data.m_nIdInventarioUnidad
                                                       })
                                                     }}
                                                   />
@@ -1053,7 +908,7 @@ function Viajes() {
                                     <label className="label" style={{ color: '#717171' }} >Detalle de Paradas</label>
                                     <div className="widget-wrap">
                                         <div className="widget-content">
-                                            <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                                            <div className="row" style={{ height: "300px", width: '100%' }}>
                                                 <DataGrid
                                                     rows={paradasListado}
                                                     columns={columnsParadas}

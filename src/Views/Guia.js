@@ -739,7 +739,6 @@ function Guia(props) {
             })
         })*/
        guia.m_arrClsDetalle.forEach(p => {
-           console.log(TICKET_ZABRA_TAMPLATE(guia, p))
            selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p), undefined, errorCallback);
        })
 
@@ -752,6 +751,7 @@ function Guia(props) {
         {
             headerName: "Acciones",
             sortable: false, filterable: false,
+            width: 200,
             field: "",
             renderCell: (row) => {
                 return (
