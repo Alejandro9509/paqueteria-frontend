@@ -425,14 +425,14 @@ class ZonasAgregar extends Component {
                                                 <div className="col-md-12 col-sm-12">
                                                 </div>
 
-                                                <button
+                                                {/*<button
                                                     type="button"
                                                     className="btn btn-secondary secondary-btn"
                                                     role="tab" data-toggle="tab"
                                                     href="#Listado"
                                                 >
                                                     Cancelar
-                                                </button>
+                                                </button>*/}
                                                 <button
                                                     type="submit"
                                                     className="btn btn-primary primary-btn"
