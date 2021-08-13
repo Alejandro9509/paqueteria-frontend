@@ -48,9 +48,9 @@ class Zonas extends Component {
           renderCell: (row) => {
             return (
               <div>
-                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (this.handleShowModificar(row.row.m_nIdZona))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (this.handleShowConsultar(row.row.m_nIdZona))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdZona))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                <a  onClick={() => (this.handleShowModificar(row.row.m_nIdZona))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                <a  className="btn btn-default btn-xs" onClick={() => (this.handleShowConsultar(row.row.m_nIdZona))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                <a onClick={() => (this.handleEliminar(row.row.m_nIdZona))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
               </div>
             )
           }
@@ -274,12 +274,12 @@ class Zonas extends Component {
 
             <ul className="nav navStatica nav-tabs">
               <li className="active">
-                <a data-toggle="tab" data_id="1" href="#Listado" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                <a onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
                   <i className="fa fa-list" /> Listado
               </a>
               </li>
               <li >
-                <a data-toggle="tab" data_id="2" href="#Agregar" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
+                <a  onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
                   <i className="fa fa-plus-circle" /> {this.state.agregar}
                 </a>
               </li>

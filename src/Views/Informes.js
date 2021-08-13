@@ -2845,7 +2845,7 @@ function Informes({ history }) {
                                                                                                         <div className="input">
 
                                                                                                             <TextField variant="outlined" margin="dense" label="Total"
-                                                                                                                value={value.total}
+                                                                                                                value={dataGuias[index].m_arClsGuiaConceptos.reduce((a,b) => +a + +b.m_cTotal,0)}
                                                                                                                 disabled="true"
                                                                                                                 className="form-control"
                                                                                                                 type="text"
@@ -2956,7 +2956,7 @@ function Informes({ history }) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    {"$350"}
+                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a,b) => +a + +b.m_cTotal,0) : 0),0)}
                                                                                 </Grid>
                                                                                 <Grid
                                                                                     item
@@ -2978,7 +2978,7 @@ function Informes({ history }) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    {"$350"}
+                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a,b) => +a + +b.m_cTotal,0) : 0),0)}
                                                                                 </Grid>
                                                                                 <Grid
                                                                                     item
@@ -3000,8 +3000,9 @@ function Informes({ history }) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    {"$350"}
+                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a,b) => +a + +b.m_cTotal,0) : 0),0)}
                                                                                 </Grid>
+
                                                                                 <Grid
                                                                                     item
                                                                                     sm={6}
@@ -3022,29 +3023,7 @@ function Informes({ history }) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    {"$350"}
-                                                                                </Grid>
-                                                                                <Grid
-                                                                                    item
-                                                                                    sm={6}
-                                                                                    style={{
-                                                                                        justifyContent: "left",
-                                                                                        alignItems: "left",
-                                                                                        textAlign: "left",
-                                                                                    }}
-                                                                                >
-                                                                                    Total Unidad Completa
-                                        </Grid>
-                                                                                <Grid
-                                                                                    item
-                                                                                    sm={6}
-                                                                                    style={{
-                                                                                        justifyContent: "right",
-                                                                                        alignItems: "right",
-                                                                                        textAlign: "right",
-                                                                                    }}
-                                                                                >
-                                                                                    {"$350"}
+                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a,b) => +a + +b.m_cTotal,0) : 0),0)}
                                                                                 </Grid>
                                                                                 <Grid
                                                                                     item
@@ -3068,7 +3047,7 @@ function Informes({ history }) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    {"$350"}
+                                                                                    ${dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a,b) => +a + +b.m_cTotal,0) : 0),0)}
                                                                                 </Grid>
                                                                             </Grid>
                                                                         </Grid>
