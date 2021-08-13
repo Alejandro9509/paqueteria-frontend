@@ -38,13 +38,13 @@ render(){
                   return (<Route exact key={key} path={r.path} component={r.component} />)
               })}
             {catalogdRoutes.map((r, key) => {
-                return (<Route exact key={key} path={r.path} component={r.component} />)
+                return (<Route exact key={r.path} path={r.path} component={r.component} />)
             })}
             {configuracionRoutes.map((r, key) => {
-                return (<Route exact key={key} path={r.path} component={r.component} />)
+                return (<Route exact key={r.path} path={r.path} component={r.component} />)
             })}
             {cabeceraRoutes.map((r, key) => {
-              return (<Route exact key={key} path={r.path} component={r.component} />)
+              return (<Route exact key={r.path} path={r.path} component={r.component} />)
             })}
             <Redirect from="/" to="/Indicadores"/>
           </Switch>

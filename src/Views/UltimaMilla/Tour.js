@@ -1,21 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {MapContainer, Polyline, Popup} from "react-leaflet";
-import MarkerImage from '../../iconos/Mapa/marker.png';
+import MarkerImage from '../../iconos/Mapa/sucursalMarcador.png';
 import L from "leaflet";
 import {calcularRuta, randomColor} from "../../Util/Contexts/UltimaMillaContext";
 import Marker from 'react-leaflet-enhanced-marker'
 
-const MarkerIcon = new L.Icon({
-    iconUrl: MarkerImage,
-    iconRetinaUrl: MarkerImage,
-    iconAnchor: null,
-    popupAnchor: null,
-    shadowUrl: null,
-    shadowSize: null,
-    shadowAnchor: null,
-    iconSize: new L.Point(30, 30),
-});
+
 
 class Tour extends Component {
     constructor(props) {
@@ -49,7 +40,7 @@ class Tour extends Component {
                     return true;
             })
         })
-        if (result.length !== 1) {
+        if (result.length !== 0) {
             calcularRuta(result, this.props.data).then((result) => {
                 result.polyline.plain.polyline.map(c => {
                     polygon.push([c.y, c.x])
@@ -79,10 +70,6 @@ class Tour extends Component {
                     )
                 }
 
-                <Marker key={"sucursalPoint"}
-                        icon={<MarkerComponent color={this.props.tour.color} index={"s"}/>}
-                        position={[this.props.data.lat, this.props.data.lng]}>
-                </Marker>
 
                 {
                     this.state.polygon.length !== 0 &&
@@ -120,3 +107,4 @@ class MarkerComponent extends Component {
         return <div align={"center"} style={markerStyle}>{this.props.index}</div>;
     }
 }
+

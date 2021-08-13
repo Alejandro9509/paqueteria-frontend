@@ -170,7 +170,7 @@ class FiltersMap extends Component {
     }
 
     selectCiudad(sucursal) {
-        this.setState({sucursalSeleccionada: sucursal, openSucursales: false})
+        this.setState({sucursalSeleccionada: sucursal, openSucursales: false, zonasSeleccionada:[], paquetesSeleccionadas:[], unidadesSeleccionadas:[]})
         this.props.changeMapLocation(sucursal)
     }
 

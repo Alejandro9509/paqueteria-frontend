@@ -42,7 +42,7 @@ function Catalogo() {
                     <div style={{ display: "flex", flexWrap: "wrap" }}>
                         {catalogRoutes.map((r, index) => {
                             return (
-                                <Link to={r.path}>
+                                <Link to={r.path} key={index}>
                                     <div className="caja-boton">
                                         <button
                                             type="button"

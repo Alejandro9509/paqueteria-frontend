@@ -38,6 +38,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/App.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Components/Map/SwipeableBottomSheet.js">
           <value>
             <set />
@@ -49,6 +54,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Components/Template/BarraLateralIzquierda.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Constants/index.js">
           <value>
             <set />
           </value>
@@ -79,6 +89,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Util/Util.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Catalogos.js">
           <value>
             <set />
           </value>
@@ -124,6 +139,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/GrupoCliente.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Guia.js">
           <value>
             <set />
           </value>
@@ -278,6 +298,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Zonas/Zonas.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg">
           <value>
             <set />
@@ -324,6 +349,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/routes.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/routesCatalogos.js">
           <value>
             <set />
           </value>
@@ -473,6 +503,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/package-lock.json">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/package.json">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/app/routes.js">
           <value>
             <set />
@@ -489,6 +529,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/app/views/category/categoryList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/app/views/ticket/CreateTicket.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/app/views/ticket/Ticket.js">
           <value>
             <set />
           </value>

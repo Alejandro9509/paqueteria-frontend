@@ -78,7 +78,7 @@ async function obtenerGuiasUbicacion(paquetes) {
     var guias = []
     for (var i = 0; i < paquetes.length; i++) {
         var g = paquetes[i]
-        var location = await searchLocationAddress(g.m_sDomicilioDestinatario)
+        var location = await searchLocation(g.m_sCiudadDestino,g.m_sDomicilioDestinatario)
         guias.push({
             idGuia: g.m_nIdGuia,
             index: i,
