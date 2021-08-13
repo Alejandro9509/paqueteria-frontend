@@ -953,7 +953,7 @@ function Embarque(props) {
         minutes = minutes < 10 ? "0" + minutes : minutes;
         var strTime = hours + ":" + minutes + " " + ampm;
         $('.nav-tabs li ').removeClass('active');
-        $('.nav-tabs li').eq(2).addClass('active');
+        $('.nav-tabs li').eq(4).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Cancelar').addClass('in show');
 
