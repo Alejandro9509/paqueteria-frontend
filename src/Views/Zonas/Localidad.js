@@ -51,14 +51,14 @@ class Localidad extends Component {
     }
 
     render() {
-        const {seleccionarTodoLocalidades, dataLocalidades, handleChange, consult, editar, localidadesSeleccionado} = this.props
+        const {seleccionarTodoLocalidades, dataLocalidades, handleChange, editar, localidadesSeleccionado} = this.props
 
         return (
             <table style={{ overflow: "scroll", width: "100%" }}>
                 <tr>
                     <th>
                         <label className="checkbox">
-                            <input disabled={consult} type="checkbox" onChange={(event) => handleChange(event, 0, dataLocalidades, true)} checked={seleccionarTodoLocalidades} />
+                            <input disabled={editar} type="checkbox" onChange={(event) => handleChange(event, 0, dataLocalidades, true)} checked={seleccionarTodoLocalidades} />
                             <i />
                         </label>
                     </th>
