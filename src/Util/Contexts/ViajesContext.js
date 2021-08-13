@@ -15,7 +15,29 @@ function agregarViaje( params){
     return result
 }
 
+function agregarViajeSalida( params){
+    const url = `${process.env.REACT_APP_API_URL}/Viajes/AgregarSalida`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, params), { headers })
+        );
+    return result
+
+    }
+
+    
+    
+function agregarViajeLlegada( params){
+    const url = `${process.env.REACT_APP_API_URL}/Viajes/AgregarLlegada`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, params), { headers })
+        );
+    return result
+}
 
 
 
-export {agregarViaje }
+
+
+export {agregarViaje,agregarViajeSalida,agregarViajeLlegada}
