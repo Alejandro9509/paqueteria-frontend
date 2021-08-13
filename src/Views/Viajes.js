@@ -27,6 +27,8 @@ import ActualizarDiponibilidadEquipo from "./Viajes/ActualizarDiponibilidadEquip
 import SalidaParadas from "./Viajes/SalidaParadas";
 import LlegadaParadas from "./Viajes/LlegadaParadas";
 import AsignarOperador from "./Viajes/AsignarOperador";
+import { agregarViajeSalida,agregarViajeLlegada} from "../Util/Contexts/ViajesContext";
+
 
 function showSuccess(mensaje) {
     new Noty({
@@ -458,32 +460,32 @@ function Viajes() {
     const columnsParadas = [
         {
             headerName: "Camión",
-            field: "m_sUnidadIdentificador",
+            field: "m_sCamion",
             renderCell: (row) => {
                 return (
-                    <a onClick={() => showCamionDialog()}>{row.row.m_sUnidadIdentificador}</a>
-                );
+                    <a onClick={() => showCamionDialog()}>{row.row.m_sCamion}</a>
+                 );
             },
             width: 100,
         },
         {
             headerName: "Operador",
-            field: "m_sNombreCompleto",
+            field: "m_sOperador",
             width: 150,
             renderCell: (row) => {
-              return (
-                  <a onClick={() => showAsignarOperadorDialog(row.row)}>{row.row.m_sNombreCompleto}</a>
+               return (
+                   <a onClick={() => showAsignarOperadorDialog(row.row)}>{row.row.m_sOperador}</a>
               )
             },
-        },
+        } ,
         {
             headerName: "Salida",
-            field: "m_nIdCiudadOrigen",
+            field: "m_nIdOrigen",
             width: 100,
             renderCell: (row) => {
-                return(
-                    <a onClick={() => showSalidaDialog(row.row)}>{row.row.m_nIdEstatusViaje === 0 ? "Asignar" : "Quitar"}</a>
-                )
+                 return(
+                    <a onClick={() => showSalidaDialog(row.row)}>{row.row.m_dFechaSalida == "0000-00-00" ? "Asignar" : "Quitar"}</a>
+                 )
             }
         },
         {
@@ -493,16 +495,16 @@ function Viajes() {
         },
         {
             headerName: "Origen",
-            field: "m_sCiudadOrigen",
+            field: "m_sOrigen",
             width: 200,
         },
         {
             headerName: "Llegada",
-            field: "m_nIdCiudadDestino",
+            field: "m_nIdDestino",
             width: 100,
             renderCell: (row) => {
-                return(
-                    <a onClick={() => showLlegadaDialog(row.row)}>{row.row.m_nIdCiudadDestino === 0 ? "Asignar" : "Quitar"}</a>
+                 return(
+                     <a onClick={() => showLlegadaDialog(row.row)}>{row.row.m_dFechaLlegada == "0000-00-00" ? "Asignar" : "Quitar"}</a>
                     )
             }
         },
@@ -513,20 +515,20 @@ function Viajes() {
         },
         {
             headerName: "Destino",
-            field: "m_sCiudadDestino",
+            field: "m_sDestino",
             width: 200,
         },
-        {
-            headerName: "Liq",
-            field: "m_sNumeroNombreOperador",
-            width: 80,
-        },
+        // {
+        //     headerName: "Liq",
+        //     field: "m_sNumeroNombreOperador",
+        //     width: 80,
+        // }, */
     ]
     const [paradasListado, setParadasListado] = React.useState([]);
     const [paradaData, setParadaData] = React.useState();
 
-    function getParadasListado(){
-        const url = `${process.env.REACT_APP_API_URL}/Informes/GetByIdViaje/${state.idViaje}`;
+    function getParadasListado(row){
+        const url = `${process.env.REACT_APP_API_URL}/Viajes/GetParadasByIdViaje/${row}`;
         axios.get(url, { headers }).then(respuesta => {
             console.log(respuesta.data);
             setParadasListado(respuesta.data);
@@ -565,13 +567,101 @@ function Viajes() {
     }
 
     function updateSalida(data) {
-        console.log("Actualizar datos da salida");
-        console.log(data);
+
+
+
+        //e.preventDefault();
+        var params = {
+            m_dFecha: this.state.fechaHoraRegistro.split("T")[0],
+            m_tHora: this.state.fechaHoraRegistro.split("T")[1],
+            m_nIdViaje:0,
+            m_nCV1Km:0,
+            m_nCV2Km:0,
+            m_nCV1Millas:0,
+            m_nCV2Millas:0,
+            m_bCV1Estatus:0,
+            m_bCV2Estatus:0,
+            m_dFechaSalida:0,
+            m_tHoraSalida:0,
+            m_nIdEstatusSalida:0,
+            m_nKmViaje:0,
+            m_nMillasViaje:0,
+            m_sMotivoRetraso:0,
+
+
+
+            // m_nIdEstatusViaje: this.state.estatusListado,
+            // m_nIdSucursal : this.state.idSucursalAgregar,
+            // m_sCandadoOficial : this.state.candadoOficial,
+            // m_sFolioViaje : this.state.folioViaje,
+            // m_sIdentificador : this.state.identificadorViaje,
+            // m_sNumViajeCliente : this.state.viajeCliente,
+            // CreadoPor : this.state.CreadoPor,
+            // m_arrInformes : this.state.dataInformes
+
+    }
+
+
+    if (state.IdViajeSalida != 0) {
+        //modificarSalida(state.IdViajeSalida, params)
+
+    } else {
+        agregarViajeSalida(params)
+            .then((respuesta) => {
+                showSuccess(respuesta.data);
+                console.log(respuesta.data);
+
+            })
+            .catch((err) => {
+                console.log(err);
+                showSuccess(err);
+            });
+    }
+
+
+
+
+
+
+
     }
 
     function updateLlegada(data) {
-        console.log("Actualizar datos da llegada");
+        console.log("Actualizar datos de llegada");
         console.log(data);
+
+        var params = {
+            m_dFecha: this.state.fechaHoraRegistro.split("T")[0],
+            m_tHora: this.state.fechaHoraRegistro.split("T")[1],
+            m_nIdEstatusViaje: this.state.estatusListado,
+            m_nIdSucursal : this.state.idSucursalAgregar,
+            m_sCandadoOficial : this.state.candadoOficial,
+            m_sFolioViaje : this.state.folioViaje,
+            m_sIdentificador : this.state.identificadorViaje,
+            m_sNumViajeCliente : this.state.viajeCliente,
+            CreadoPor : this.state.CreadoPor,
+            m_arrInformes : this.state.dataInformes
+
+    }
+
+
+
+
+        if (state.IdViajeLlegada != 0) {
+            //modificarSalida(state.IdViajeSalida, params)
+
+        } else {
+            agregarViajeLlegada(params)
+                .then((respuesta) => {
+                    showSuccess(respuesta.data);
+                    console.log(respuesta.data);
+
+                })
+                .catch((err) => {
+                    console.log(err);
+                    showSuccess(err);
+                });
+        }
     }
 
     const showAsignarOperadorDialog = (data) => {
@@ -863,11 +953,11 @@ function Viajes() {
                                                 pageSize={Math.floor((state.height - 310) / 30)}
                                                 getRowId={(row) => row.m_nIdViaje}
                                                 onRowSelected={(row) => {
-                                                    setState({
+                                                   /*  setState({
                                                         ...state,
                                                         idViaje: row.data.m_nIdViaje
-                                                    });
-                                                    getParadasListado();
+                                                    }) */
+                                                    getParadasListado(row.data.m_nIdViaje)
                                                 }}
                                             />
                                         ) : (
@@ -914,7 +1004,7 @@ function Viajes() {
                                                     columns={columnsParadas}
                                                     density="compact"
                                                     pageSize={ Math.floor((state.height - 310)/30)}
-                                                    getRowId={(row) => row.m_nIdInforme}
+                                                    getRowId={(row) => row.m_nIdViajeParadas}
                                                     // onRowSelected={(row) => {
                                                     //   setState({
                                                     //     ...state,

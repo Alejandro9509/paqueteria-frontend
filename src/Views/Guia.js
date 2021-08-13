@@ -695,57 +695,7 @@ function Guia(props) {
         });
     };
 
-    useEffect(value => {
-        BrowserPrint.getDefaultDevice("printer", function(device)
-        {
 
-            //Add device to list of devices and to html select element
-            selected_device = device;
-            devices.push(device);
-
-            //Discover any other devices available to the application
-            BrowserPrint.getLocalDevices(function(device_list){
-                for(var i = 0; i < device_list.length; i++)
-                {
-                    //Add device to list of devices and to html select element
-                    var device = device_list[i];
-                    if(!selected_device || device.uid != selected_device.uid)
-                    {
-                        devices.push(device);
-                    }
-                }
-
-            }, function(){alert("Error getting local devices")},"printer");
-
-        }, function(error){
-            alert(error);
-        })
-    },[])
-
-    function printTicket(guia) {
-       /* EB = window.EB
-        EB.PrinterZebra.searchPrinters({
-            "deviceAddress": "192.148.1.143",
-            "devicePort": 9100,
-            "connectionType": EB.Printer.CONNECTION_TYPE_TCP
-        }, function (cb) {
-
-            var myPrinter = EB.PrinterZebra.getPrinterByID(cb.printerID)
-            myPrinter.connect(function (cb) {
-
-                myPrinter.printRawString(TICKET_ZABRA_TAMPLATE, {}, function (cb) {
-
-                })
-            })
-        })*/
-       guia.m_arrClsDetalle.forEach(p => {
-           selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p), undefined, errorCallback);
-       })
-
-    }
-    var errorCallback = function(errorMessage){
-        alert("Error: " + errorMessage);
-    }
 
     const columns = React.useMemo(() => [
         {
@@ -850,31 +800,71 @@ function Guia(props) {
         getFormatosImpresion()
     }, []);
 
-    const getConceptosDefecto = () => {
-        obtenerConceptosDefectoListado().then(conceptosDefecto => {
-            setDataConceptosDefecto(conceptosDefecto.data)
-            if (props.location.idEmbarque != undefined) {
+    useEffect(value => {
+        if (props.location.idEmbarque != undefined) {
+            obtenerEmbarquesId(props.location.idEmbarque).then(respuesta => {
+                console.log('Embarque datos:')
+                console.log(respuesta.data)
 
-                obtenerEmbarquesId(props.location.idEmbarque).then(respuesta => {
-                    setState(state => {
-                        return {
-                            ...state,
-                            fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-                        }
-                    })
+                setDataFromEmbarque(respuesta)
+                obtenerEmbarqueMoneda(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, state.idGuia).then(respuesta => {
+                    setDataEmbarque(respuesta.data)
+                })
+            });
+        }
+    }, []);
 
-                    console.log('Embarque datos:')
-                    console.log(respuesta.data)
+    useEffect(value => {
+        BrowserPrint.getDefaultDevice("printer", function(device)
+        {
 
+            //Add device to list of devices and to html select element
+            selected_device = device;
+            devices.push(device);
 
-                    setDataFromEmbarque(respuesta, conceptosDefecto.data)
-                    obtenerEmbarqueMoneda(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, state.idGuia).then(respuesta => {
-                        setDataEmbarque(respuesta.data)
-                    })
+            //Discover any other devices available to the application
+            BrowserPrint.getLocalDevices(function(device_list){
+                for(var i = 0; i < device_list.length; i++)
+                {
+                    //Add device to list of devices and to html select element
+                    var device = device_list[i];
+                    if(!selected_device || device.uid != selected_device.uid)
+                    {
+                        devices.push(device);
+                    }
+                }
 
-                });
-            }
+            }, function(){alert("Error getting local devices")},"printer");
+
+        }, function(error){
+            alert(error);
         })
+    },[])
+
+    function printTicket(guia) {
+        /* EB = window.EB
+         EB.PrinterZebra.searchPrinters({
+             "deviceAddress": "192.148.1.143",
+             "devicePort": 9100,
+             "connectionType": EB.Printer.CONNECTION_TYPE_TCP
+         }, function (cb) {
+
+             var myPrinter = EB.PrinterZebra.getPrinterByID(cb.printerID)
+             myPrinter.connect(function (cb) {
+
+                 myPrinter.printRawString(TICKET_ZABRA_TAMPLATE, {}, function (cb) {
+
+                 })
+             })
+         })*/
+        guia.m_arrClsDetalle.forEach(p => {
+            console.log(TICKET_ZABRA_TAMPLATE(guia, p))
+            selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p), undefined, errorCallback);
+        })
+
+    }
+    var errorCallback = function(errorMessage){
+        alert("Error: " + errorMessage);
     }
 
     async function getAllData() {
@@ -948,11 +938,11 @@ function Guia(props) {
     //Recibe el id de embarque para obtener sus datos del servidor y mostrarlos en pantalla
     function handleEmbarque(embarque) {
         obtenerEmbarquesId(embarque).then(respuesta => {
-            setDataFromEmbarque(respuesta, dataConceptosDefecto)
+            setDataFromEmbarque(respuesta)
         });
     }
 
-    const setDataFromEmbarque = (respuesta, respuestaConceptos) => {
+    const setDataFromEmbarque = (respuesta) => {
         console.log('Embarque datos:')
         console.log(respuesta.data)
         let valorDeclaradoTotal = 0
@@ -1038,12 +1028,12 @@ function Guia(props) {
             }
         })
 
-        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, respuestaConceptos, paquetes, respuesta.data)
+        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, paquetes)
     }
 
     const [dataTodosConceptosByEmbarque, setDataTodosConceptosByEmbarque] = useState([])
 
-    const obtenerTarifasPorEmbarque = (idEmbarque, respuestaConceptos,paquetesTemp, embarque) => {
+    const obtenerTarifasPorEmbarque = (idEmbarque,paquetesTemp) => {
         const conceptosTemp = []
         let ivaTraslada = []
         let ivaRetiene = []
@@ -1229,12 +1219,17 @@ function Guia(props) {
         console.log('pesoTotal: ', pesoTotal)
         const conceptosDentroRango = []
         axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetById/${idTarifa}`, { headers }).then(tarifa => {
-            console.log(tarifa.data)
+            console.log("Tarifas/GetById ", tarifa)
 
             tarifa.data.m_arrArConceptos.forEach( element => {
-                if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
+                if (element.m_nIdAgregadoDesde == 0){
                     conceptosDentroRango.push(element)
+                }else {
+                    if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
+                        conceptosDentroRango.push(element)
+                    }
                 }
+
             })
 
             setDataTodosConceptosByEmbarque(conceptosDentroRango)
@@ -2356,7 +2351,7 @@ function Guia(props) {
                                                                         }}
                                                                     >
                                                                         <option value=""></option>
-                                                                        {dataEstatusGuia.map(
+                                                                        {dataEstatusGuia.filter(e => e.m_nIdEstatusGuia == 4).map(
                                                                             (estatusGuia) => (
                                                                                 <option
                                                                                     key={estatusGuia.m_nIdEstatusGuia}

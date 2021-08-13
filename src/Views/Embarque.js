@@ -953,7 +953,7 @@ function Embarque(props) {
         minutes = minutes < 10 ? "0" + minutes : minutes;
         var strTime = hours + ":" + minutes + " " + ampm;
         $('.nav-tabs li ').removeClass('active');
-        $('.nav-tabs li').eq(2).addClass('active');
+        $('.nav-tabs li').eq(4).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Cancelar').addClass('in show');
 
@@ -1494,6 +1494,7 @@ function Embarque(props) {
 
     async function getAllEstatusEmbarque() {
         obtenerEstatusEmbarque().then((respuesta) => {
+            // const filter
             setEstatusEmbarque(respuesta.data);
         });
     }
@@ -3238,7 +3239,7 @@ function Embarque(props) {
                                                                             name: "estatusEmbarque"
                                                                         }}
                                                                     >
-                                                                        {dataEstatusEmbarque.map((estatus) => (
+                                                                        {dataEstatusEmbarque.filter(e => e.m_nIdEstatusEmbarque < 17 ).map((estatus) => (
                                                                             <option
                                                                                 key={estatus.m_nIdEstatusEmbarque}
                                                                                 value={estatus.m_nIdEstatusEmbarque}

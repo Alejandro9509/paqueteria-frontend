@@ -100,6 +100,8 @@ class Zonas extends Component {
     this.handleShowConsultar = this.handleShowConsultar.bind(this)
     this.handleEliminar = this.handleEliminar.bind(this)
     this.handleAceptar = this.handleAceptar.bind(this)
+    this.handleShowListado = this.handleShowListado.bind(this)
+    this.handleShowAgregar = this.handleShowAgregar.bind(this)
   }
 
   componentWillMount() {
@@ -134,29 +136,23 @@ class Zonas extends Component {
     console.log(JSON.stringify(params))
     if (this.state.idZona != 0 && this.state.idZona != '' && this.state.idZona != undefined) {
       const url = `${process.env.REACT_APP_API_URL}/Zonas/Modificar/` + this.state.idZona;
-      console.log(url)
       axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         showSuccess(respuesta.data)
-        this.getAllData()
+        this.handleShowListado()
       }).catch(err => {
         console.log(err)
         showSuccess("err")
       });
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Zonas/Agregar`;
-      console.log(url)
       axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         showSuccess(respuesta.data)
-        this.getAllData()
+        this.handleShowListado()
       }).catch(err => {
         console.log(err)
         showSuccess(err)
       });
-      this.setState({pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
-      $('.nav-tabs li ').removeClass('active');
-      $('.nav-tabs li').eq(0).addClass('active');
-      $('.tab-content div ').removeClass('in show');
-      $('#Listado').addClass('in show');
+
     }
 
   }
@@ -241,6 +237,35 @@ class Zonas extends Component {
     });
   };
 
+  handleShowListado(event){
+    this.getAllData()
+    this.setState({
+      pantalla: 1,
+      edit: false,
+      consult: false,
+      agregar: "Agregar",
+      idZona: 0,
+    });
+    $('.nav-tabs li ').removeClass('active');
+    $('.nav-tabs li').eq(0).addClass('active');
+    $('.tab-content div ').removeClass('in show');
+    $('#Listado').addClass('in show');
+  }
+
+  handleShowAgregar(){
+    this.setState({
+      pantalla: 2,
+      edit: false,
+      consult: false,
+      agregar: "Agregar",
+      idZona: 0,
+    });
+    $('.nav-tabs li ').removeClass('active');
+    $('.nav-tabs li').eq(1).addClass('active');
+    $('.tab-content div ').removeClass('in show');
+    $('#Agregar').addClass('in show');
+  }
+
   render() {
     const { height, data, columns, edit, consult } = this.state
     return (
@@ -274,12 +299,12 @@ class Zonas extends Component {
 
             <ul className="nav navStatica nav-tabs">
               <li className="active">
-                <a onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                <a onClick={this.handleShowListado}>
                   <i className="fa fa-list" /> Listado
               </a>
               </li>
               <li >
-                <a  onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
+                <a onClick={this.handleShowAgregar}>
                   <i className="fa fa-plus-circle" /> {this.state.agregar}
                 </a>
               </li>
