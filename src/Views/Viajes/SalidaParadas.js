@@ -217,7 +217,7 @@ export default function SalidaParadas(props){
                 </Grid>
                 <Grid item xs={4}/>
 
-                <Grid item xs={8}>
+              {/*   <Grid item xs={8}>
                     <TextField
                         id={"cliente"}
                         InputProps={{readOnly: true}}
@@ -228,7 +228,7 @@ export default function SalidaParadas(props){
                         value={data.cliente}
                     />
                 </Grid>
-                <Grid item xs={4}/>
+                <Grid item xs={4}/> */}
 
                 <Grid item xs={8}>
                     <TextField

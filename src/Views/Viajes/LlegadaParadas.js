@@ -272,7 +272,7 @@ export default function LlegadaParadas(props){
                         value={data.hora}/>
                 </Grid>
 
-                <Grid item xs={7}>
+               {/*  <Grid item xs={7}>
                     <TextField
                         id={"cliente"}
                         margin={"dense"}
@@ -282,7 +282,7 @@ export default function LlegadaParadas(props){
                         variant={"outlined"}
                         value={data.cliente}/>
                 </Grid>
-                <Grid item xs={5}/>
+                <Grid item xs={5}/> */}
 
                 <Grid item xs={7}>
                     <TextField
