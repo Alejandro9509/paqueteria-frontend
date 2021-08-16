@@ -1007,6 +1007,7 @@ function Clientes(props) {
                                                                                value={state.idCliente}
                                                                                id="idCliente"
                                                                                name="idCliente"
+                                                                               disabled={state.agregar == "Modificar"}
 
                                                                     />
                                                                 </div>
