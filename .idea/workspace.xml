@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Correcciones menores">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/UsuarioContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/UsuarioContext.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Usuarios.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Usuarios.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Usuarios/Derechos.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Usuarios/Derechos.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -411,10 +408,10 @@
             <State>
               <option name="FILTERS">
                 <map>
-                  <entry key="user">
+                  <entry key="branch">
                     <value>
                       <list>
-                        <option value="*" />
+                        <option value="develop" />
                       </list>
                     </value>
                   </entry>
