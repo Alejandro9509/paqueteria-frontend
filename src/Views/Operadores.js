@@ -789,24 +789,21 @@ function Operadores(props) {
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <form
-                                                            action="#"
-                                                            className="j-forms"
-                                                            noValidate
-                                                        >
+                                                        {/*<form action="#" className="j-forms" noValidate>*/}
                                                             <div className="form-content">
                                                                 {/* start text password */}
                                                                 <div className="row">
-                                                                    <div className="col-sm-12 col-md-2-5 ">
+                                                                    <div className="col-sm-12 col-md-2-5 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense" label="Número"
+                                                                                className="form-control"
                                                                                 onChange={handleChange}
                                                                                 onBlur={handleChangeNumero}
                                                                                 value={state.NumeroOperador}
                                                                                 name="NumeroOperador"
-                                                                                className="form-control"
                                                                                 type="number"
                                                                                 min="0"
+                                                                                       native
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -875,9 +872,7 @@ function Operadores(props) {
                                                                         <TextField variant="outlined" margin="dense" label="Apellido Paterno"
                                                                             className="form-control"
                                                                             onChange={handleChange}
-                                                                            value={
-                                                                                state.ApellidoPaterno
-                                                                            }
+                                                                            value={state.ApellidoPaterno}
                                                                             name="ApellidoPaterno"
                                                                             type="text"
                                                                             placeholder="Apellido Paterno"
@@ -1154,7 +1149,7 @@ function Operadores(props) {
                                                                 </div>
                                                             </div>
                                                             {/* end textarea */}
-                                                        </form>
+                                                        {/*</form>*/}
                                                     </div>
                                                 </div>
                                             </div>
@@ -1175,320 +1170,321 @@ function Operadores(props) {
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <form
-                                                            action="#"
-                                                            className="j-forms"
-                                                            noValidate
-                                                        >
+                                                        {/*<form action="#" className="j-forms" noValidate>*/}
                                                             <div className="form-content">
                                                                 {/* start text password */}
                                                                 <div className="row">
-                                                                    <div className="col-lg-4 col-md-6 col-sm-12 unit ">
-                                                                        <div className="row">
-                                                                            <div className="w-section-header">
-                                                                                <h3>Documentos</h3>
-                                                                            </div>
-                                                                            <div className="col-md-6 unit">
-                                                                                <div className="input">
-                                                                                    <TextField variant="outlined" margin="dense" label="Licencia"
-                                                                                        onChange={handleChange}
-                                                                                        value={state.Licencia}
-                                                                                        name="Licencia"
-                                                                                        className="form-control"
-                                                                                        type="text"
-                                                                                        placeholder=""
-                                                                                        id="text"
-                                                                                        native
-                                                                                    />
-                                                                                </div>{" "}
-                                                                            </div>
-                                                                            <div className="col-md-6 unit">
-                                                                                <div className="input">
-                                                                                    <TextField variant="outlined" margin="dense" label="Vencimiento"
-                                                                                        onChange={handleChange}
-                                                                                        value={
-                                                                                            state.LicenciaVencimiento
-                                                                                        }
-                                                                                        InputLabelProps={{
-                                                                                            shrink: true,
-                                                                                        }}
-                                                                                        name="LicenciaVencimiento"
-                                                                                        class="form-control"
-                                                                                        type="datetime-local"
-                                                                                        id="date-icon"
-                                                                                    />
-                                                                                </div>
+                                                                    <div className="w-section-header">
+                                                                        <h3>Documentos</h3>
+                                                                    </div>
+                                                                    <div className="col-md-6 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense" label="Licencia"
+                                                                                       onChange={handleChange}
+                                                                                       value={state.Licencia}
+                                                                                       name="Licencia"
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       placeholder=""
+                                                                                       id="text"
+                                                                                       native
+                                                                            />
+                                                                        </div>{" "}
+                                                                    </div>
+                                                                    <div className="col-md-6 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense" label="Vencimiento"
+                                                                                       onChange={handleChange}
+                                                                                       value={
+                                                                                           state.LicenciaVencimiento
+                                                                                       }
+                                                                                       InputLabelProps={{
+                                                                                           shrink: true,
+                                                                                       }}
+                                                                                       name="LicenciaVencimiento"
+                                                                                       class="form-control"
+                                                                                       type="datetime-local"
+                                                                                       id="date-icon"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="unit">
+                                                                        <div className="inline-group">
+                                                                            <label className="label">
+                                                                                Tipo de Licencia
+                                                                            </label>
+                                                                            <label className="checkbox">
+                                                                                <input
+                                                                                    onChange={
+                                                                                        handleChangeLicenciaA
+                                                                                    }
+                                                                                    value={state.LicenciaA}
+                                                                                    name="LicenciaA"
+                                                                                    type="checkbox"
+                                                                                    defaultChecked
+                                                                                />
+                                                                                <i />A
+                                                                            </label>
+                                                                            <label className="checkbox">
+                                                                                <input
+                                                                                    onChange={
+                                                                                        handleChangeLicenciaB
+                                                                                    }
+                                                                                    value={state.LicenciaB}
+                                                                                    name="LicenciaB"
+                                                                                    type="checkbox"
+                                                                                />
+                                                                                <i />B
+                                                                            </label>
+                                                                            <label className="checkbox">
+                                                                                <input
+                                                                                    onChange={
+                                                                                        handleChangeLicenciaC
+                                                                                    }
+                                                                                    value={state.LicenciaC}
+                                                                                    name="LicenciaC"
+                                                                                    type="checkbox"
+                                                                                />
+                                                                                <i />C
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="row">
+                                                                        <div className="col-md-6 unit">
+                                                                            <div className="input">
+                                                                                <TextField variant="outlined" margin="dense" label="Pasaporte"
+                                                                                           onChange={
+                                                                                               handleChangeLicenciaA
+                                                                                           }
+                                                                                           value={state.Pasaporte}
+                                                                                           name="Pasaporte"
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           placeholder=""
+                                                                                           id="text"
+                                                                                           native
+                                                                                />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="unit">
-                                                                            <div className="inline-group">
-                                                                                <label className="label">
-                                                                                    Tipo de Licencia
-                                                    </label>
-                                                                                <label className="checkbox">
-                                                                                    <input
-                                                                                        onChange={
-                                                                                            handleChangeLicenciaA
-                                                                                        }
-                                                                                        value={state.LicenciaA}
-                                                                                        name="LicenciaA"
-                                                                                        type="checkbox"
-                                                                                        defaultChecked
-                                                                                    />
-                                                                                    <i />A
-                                                    </label>
-                                                                                <label className="checkbox">
-                                                                                    <input
-                                                                                        onChange={
-                                                                                            handleChangeLicenciaB
-                                                                                        }
-                                                                                        value={state.LicenciaB}
-                                                                                        name="LicenciaB"
-                                                                                        type="checkbox"
-                                                                                    />
-                                                                                    <i />B
-                                                    </label>
-                                                                                <label className="checkbox">
-                                                                                    <input
-                                                                                        onChange={
-                                                                                            handleChangeLicenciaC
-                                                                                        }
-                                                                                        value={state.LicenciaC}
-                                                                                        name="LicenciaC"
-                                                                                        type="checkbox"
-                                                                                    />
-                                                                                    <i />C
-                                                    </label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="row">
-                                                                            <div className="col-md-6 unit">
-                                                                                <div className="input">
-                                                                                    <TextField variant="outlined" margin="dense" label="Pasaporte"
-                                                                                        onChange={
-                                                                                            handleChangeLicenciaA
-                                                                                        }
-                                                                                        value={state.Pasaporte}
-                                                                                        name="Pasaporte"
-                                                                                        className="form-control"
-                                                                                        type="text"
-                                                                                        placeholder=""
-                                                                                        id="text"
-                                                                                        native
-                                                                                    />
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="col-md-6 unit">
-                                                                                <div className="input">
-                                                                                    <TextField variant="outlined" margin="dense" label="Vencimiento"
-                                                                                        onChange={handleChange}
-                                                                                        value={
-                                                                                            state.PasaporteVencimiento
-                                                                                        }
-                                                                                        InputLabelProps={{
-                                                                                            shrink: true,
-                                                                                        }}
-                                                                                        name="PasaporteVencimiento"
-                                                                                        class="form-control"
-                                                                                        type="datetime-local"
-                                                                                        id="date-icon"
-                                                                                    />
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="row">
-                                                                            <div className="w-section-header">
-                                                                                <h3>Datos Hospitalarios</h3>
-                                                                            </div>
-                                                                            <div className="col-md-4 unit">
-                                                                                <div className="input">
-                                                                                    <TextField variant="outlined" margin="dense" label="Núm. IMSS"
-                                                                                        onChange={handleChange}
-                                                                                        value={state.NSS}
-                                                                                        name="NSS"
-                                                                                        className="form-control"
-                                                                                        type="text"
-                                                                                        placeholder=""
-                                                                                        id="text"
-                                                                                        native
-                                                                                    />
-                                                                                </div>{" "}
-                                                                            </div>
-                                                                            <div className="col-md-8 unit">
-
-                                                                                <label className="input select">
-                                                                                    <FormControl fullWidth variant="outlined"
-                                                                                        margin="dense">
-                                                                                        <InputLabel id="GrupoSanguineoLabel">Grupo Sanguineo</InputLabel>
-                                                                                        <Select
-                                                                                            labelId="GrupoSanguineoLabel"
-                                                                                            label="Grupo Sanguine"
-                                                                                            onChange={handleChange}
-                                                                                            value={
-                                                                                                state.GrupoSanguineo
-                                                                                            }
-                                                                                            name="GrupoSanguineo"
-                                                                                            native
-                                                                                            className="form-control"
-                                                                                        >
-                                                                                            <option value="A+">
-                                                                                                A positivo
-                                                        </option>
-                                                                                            <option value="A-">
-                                                                                                A Negativo
-                                                        </option>
-                                                                                            <option value="B+">
-                                                                                                B Positivo
-                                                        </option>
-                                                                                            <option value="B-">
-                                                                                                B Negativo
-                                                        </option>
-                                                                                            <option value="O+">
-                                                                                                O Positivo
-                                                        </option>
-                                                                                            <option value="O-">
-                                                                                                O Negativo
-                                                        </option>
-                                                                                        </Select>
-                                                                                    </FormControl>
-                                                                                </label>
+                                                                        <div className="col-md-6 unit">
+                                                                            <div className="input">
+                                                                                <TextField variant="outlined" margin="dense" label="Vencimiento"
+                                                                                           onChange={handleChange}
+                                                                                           value={
+                                                                                               state.PasaporteVencimiento
+                                                                                           }
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           name="PasaporteVencimiento"
+                                                                                           class="form-control"
+                                                                                           type="datetime-local"
+                                                                                           id="date-icon"
+                                                                                />
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="col-lg-4 col-md-6 col-sm-12 unit bordeslaterales">
+                                                                    <div className="row">
+                                                                        <div className="w-section-header">
+                                                                            <h3>Datos Hospitalarios</h3>
+                                                                        </div>
+                                                                        <div className="col-md-4 unit">
+                                                                            <div className="input">
+                                                                                <TextField variant="outlined" margin="dense" label="Núm. IMSS"
+                                                                                           onChange={handleChange}
+                                                                                           value={state.NSS}
+                                                                                           name="NSS"
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           placeholder=""
+                                                                                           id="text"
+                                                                                           native
+                                                                                />
+                                                                            </div>{" "}
+                                                                        </div>
+                                                                        <div className="col-md-8 unit">
+
+                                                                            <label className="input select">
+                                                                                <FormControl fullWidth variant="outlined"
+                                                                                             margin="dense">
+                                                                                    <InputLabel id="GrupoSanguineoLabel">Grupo Sanguineo</InputLabel>
+                                                                                    <Select
+                                                                                        labelId="GrupoSanguineoLabel"
+                                                                                        label="Grupo Sanguine"
+                                                                                        onChange={handleChange}
+                                                                                        value={
+                                                                                            state.GrupoSanguineo
+                                                                                        }
+                                                                                        name="GrupoSanguineo"
+                                                                                        native
+                                                                                        className="form-control"
+                                                                                    >
+                                                                                        <option value="A+">
+                                                                                            A positivo
+                                                                                        </option>
+                                                                                        <option value="A-">
+                                                                                            A Negativo
+                                                                                        </option>
+                                                                                        <option value="B+">
+                                                                                            B Positivo
+                                                                                        </option>
+                                                                                        <option value="B-">
+                                                                                            B Negativo
+                                                                                        </option>
+                                                                                        <option value="O+">
+                                                                                            O Positivo
+                                                                                        </option>
+                                                                                        <option value="O-">
+                                                                                            O Negativo
+                                                                                        </option>
+                                                                                    </Select>
+                                                                                </FormControl>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    {/*<div className="col-lg-4 col-md-6 col-sm-12 unit ">
                                                                         <div className="row">
-                                                                            <div className="w-section-header">
-                                                                                <h3>Cuenta Bancaria</h3>
-                                                                            </div>
-                                                                            <div className="col-sm-12 col-md-6 unit">
-                                                                                <div className="input">
-                                                                                    <TextField variant="outlined" margin="dense" label="Núm. IMSS"
-                                                                                        onChange={handleChange}
-                                                                                        value={state.IdBanco}
-                                                                                        name="IdBanco"
-                                                                                        className="form-control"
-                                                                                        type="text"
-                                                                                        placeholder=""
-                                                                                        id="text"
-                                                                                        disabled
-                                                                                        native
-                                                                                    />
-                                                                                </div>{" "}
-                                                                            </div>
-                                                                            <div className="col-sm-12 col-md-6 unit">
-                                                                                <div className="input">
-                                                                                    <TextField variant="outlined" margin="dense" label="Cuenta CLABE"
-                                                                                        onChange={handleChange}
-                                                                                        value={
-                                                                                            state.NumeroCuentaBancaria
-                                                                                        }
-                                                                                        name="NumeroCuentaBancaria"
-                                                                                        className="form-control"
-                                                                                        type="text"
-                                                                                        placeholder=""
-                                                                                        id="text"
-                                                                                        native
-                                                                                        disabled
-                                                                                    />
-                                                                                </div>{" "}
-                                                                            </div>
-                                                                            <div className="col-sm-12 col-md-6 unit">
-                                                                                <div className="input">
-                                                                                    <TextField variant="outlined" margin="dense" label="Núm. Tarjeta"
-                                                                                        onChange={handleChange}
-                                                                                        value={state.NoTarjeta}
-                                                                                        name="NoTarjeta"
-                                                                                        className="form-control"
-                                                                                        type="text"
-                                                                                        placeholder=""
-                                                                                        id="text"
-                                                                                        native
-                                                                                        disabled
-                                                                                    />
-                                                                                </div>{" "}
-                                                                            </div>
-                                                                            <div className="col-sm-12 col-md-8 unit">
-                                                                                <div className="w-section-header">
-                                                                                    <h3>Observaciones</h3>
-                                                                                </div>
-                                                                                <div className="input">
-                                                                                    <TextField variant="outlined" margin="dense" label=""
-                                                                                        onChange={handleChange}
-                                                                                        value={
-                                                                                            state.Observaciones
-                                                                                        }
-                                                                                        name="Observaciones"
-                                                                                        className="form-control"
-                                                                                        type="text"
-                                                                                        placeholder=""
-                                                                                        id="text"
-                                                                                        native
-                                                                                        disabled
-                                                                                    />
-                                                                                </div>{" "}
+
+                                                                        </div>
+
+                                                                    </div>*/}
+                                                                </div>
+                                                                <div className={"row"}>
+                                                                    <div className="w-section-header">
+                                                                        <h3>Cuenta Bancaria</h3>
+                                                                    </div>
+                                                                    <div className="col-sm-12 col-md-6 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense" label="Núm. IMSS"
+                                                                                       onChange={handleChange}
+                                                                                       value={state.IdBanco}
+                                                                                       name="IdBanco"
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       placeholder=""
+                                                                                       id="text"
+                                                                                       disabled
+                                                                                       native
+                                                                            />
+                                                                        </div>{" "}
+                                                                    </div>
+                                                                    <div className="col-sm-12 col-md-6 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense" label="Cuenta CLABE"
+                                                                                       onChange={handleChange}
+                                                                                       value={
+                                                                                           state.NumeroCuentaBancaria
+                                                                                       }
+                                                                                       name="NumeroCuentaBancaria"
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       placeholder=""
+                                                                                       id="text"
+                                                                                       native
+                                                                                       disabled
+                                                                            />
+                                                                        </div>{" "}
+                                                                    </div>
+                                                                    <div className="col-sm-12 col-md-6 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense" label="Núm. Tarjeta"
+                                                                                       onChange={handleChange}
+                                                                                       value={state.NoTarjeta}
+                                                                                       name="NoTarjeta"
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       placeholder=""
+                                                                                       id="text"
+                                                                                       native
+                                                                                       disabled
+                                                                            />
+                                                                        </div>{" "}
+                                                                    </div>
+                                                                    <div className="col-sm-12 col-md-8 unit">
+                                                                        <div className="w-section-header">
+                                                                            <h3>Observaciones</h3>
+                                                                        </div>
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense" label=""
+                                                                                       onChange={handleChange}
+                                                                                       value={
+                                                                                           state.Observaciones
+                                                                                       }
+                                                                                       name="Observaciones"
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       placeholder=""
+                                                                                       id="text"
+                                                                                       native
+                                                                                       disabled
+                                                                            />
+                                                                        </div>{" "}
+                                                                    </div>
+
+                                                                </div>
+                                                                <div className={"row"}>
+                                                                    <div className="w-section-header">
+                                                                        <h3>
+                                                                            Vencimiento de Documentos
+                                                                        </h3>
+                                                                    </div>
+                                                                    <div className="span4 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense" label=""
+                                                                                       disabled
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       placeholder="Documento"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="span3 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense" label=""
+                                                                                       disabled
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       placeholder="Nombre"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="span2 unit">
+                                                                        <div className="input">
+                                                                            <label className="checkbox">
+                                                                                <input
+                                                                                    required
+                                                                                    native
+                                                                                    name="Activo"
+                                                                                    type="checkbox"
+                                                                                    disabled
+                                                                                />
+                                                                                Activo
+                                                                                <i />
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="span3 unit">
+                                                                        <div className="input">
+                                                                            <div className="input">
+                                                                                <TextField variant="outlined" margin="dense" label=""
+                                                                                           class="form-control"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           type="datetime-local"
+                                                                                           id="date-icon"
+                                                                                           readonly=""
+                                                                                />
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
-                                                                    <div className="col-lg-4 col-md-12 col-sm-12 unit " >
+                                                                    {/*<div className="col-lg-4 col-md-12 col-sm-12 unit " >
                                                                         <div className="row" style={{ paddingLeft: "10px" }}>
-                                                                            <div className="w-section-header">
-                                                                                <h3>
-                                                                                    Vencimiento de Documentos
-                                                    </h3>
-                                                                            </div>
+
                                                                             <div className="unit">
+
                                                                                 <div className="j-row toclone-widget-right toclone">
-                                                                                    <div className="span4 unit">
-                                                                                        <div className="input">
-                                                                                            <TextField variant="outlined" margin="dense" label=""
-                                                                                                disabled
-                                                                                                className="form-control"
-                                                                                                type="text"
-                                                                                                placeholder="Documento"
-                                                                                            />
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div className="span3 unit">
-                                                                                        <div className="input">
-                                                                                            <TextField variant="outlined" margin="dense" label=""
-                                                                                                disabled
-                                                                                                className="form-control"
-                                                                                                type="text"
-                                                                                                placeholder="Nombre"
-                                                                                            />
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div className="span2 unit">
-                                                                                        <div className="input">
-                                                                                            <label className="checkbox">
-                                                                                                <input
-                                                                                                    required
-                                                                                                    native
-                                                                                                    name="Activo"
-                                                                                                    type="checkbox"
-                                                                                                    disabled
-                                                                                                />
-                                                                                                Activo
-                                                                                                <i />
-                                                                                            </label>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div className="span3 unit">
-                                                                                        <div className="input">
-                                                                                            <div className="input">
-                                                                                                <TextField variant="outlined" margin="dense" label=""
-                                                                                                    class="form-control"
-                                                                                                    InputLabelProps={{
-                                                                                                        shrink: true,
-                                                                                                    }}
-                                                                                                    type="datetime-local"
-                                                                                                    id="date-icon"
-                                                                                                    readonly=""
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
+
                                                                                     <button
                                                                                         type="button"
                                                                                         className="btn btn-primary clone-btn-right clone"
@@ -1504,10 +1500,10 @@ function Operadores(props) {
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </div>*/}
                                                                 </div>
                                                             </div>
-                                                        </form>
+                                                        {/*</form>*/}
                                                     </div>
                                                 </div>
                                             </div>
@@ -1527,11 +1523,7 @@ function Operadores(props) {
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <form
-                                                            action="#"
-                                                            className="j-forms"
-                                                            noValidate
-                                                        >
+                                                        {/*<form action="#" className="j-forms" noValidate>*/}
                                                             <div className="form-content">
                                                                 {/* start text password */}
                                                                 <div className="col-sm-12 col-md-2-5 unit">
@@ -1744,7 +1736,7 @@ function Operadores(props) {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </form>
+                                                        {/*</form>*/}
                                                     </div>
                                                 </div>
                                             </div>
@@ -1764,11 +1756,7 @@ function Operadores(props) {
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <form
-                                                            action="#"
-                                                            className="j-forms"
-                                                            noValidate
-                                                        >
+                                                        {/*<form action="#" className="j-forms" noValidate>*/}
                                                             <div className="form-content">
                                                                 {/* start text password */}
                                                                 <div className="col-sm-12 col-md-2-5 unit">
@@ -1966,7 +1954,7 @@ function Operadores(props) {
 
                                                                 {/* end textarea */}
                                                             </div>
-                                                        </form>
+                                                        {/*</form>*/}
                                                     </div>
                                                 </div>
                                             </div>
@@ -1986,11 +1974,7 @@ function Operadores(props) {
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <form
-                                                            action="#"
-                                                            className="j-forms"
-                                                            noValidate
-                                                        >
+                                                        {/*<form action="#" className="j-forms" noValidate>*/}
                                                             <div className="form-content">
                                                                 {/* start text password */}
                                                                 <div className="unit">
@@ -2067,7 +2051,7 @@ function Operadores(props) {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </form>
+                                                        {/*</form>*/}
                                                     </div>
                                                 </div>
                                             </div>
@@ -2087,11 +2071,7 @@ function Operadores(props) {
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <form
-                                                            action="#"
-                                                            className="j-forms"
-                                                            noValidate
-                                                        >
+                                                        {/*<form action="#" className="j-forms" noValidate>*/}
                                                             <div className="form-content">
                                                                 <div className="row">
                                                                     <div className="col-md-2 unit">
@@ -2194,7 +2174,7 @@ function Operadores(props) {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </form>
+                                                        {/*</form>*/}
                                                     </div>
                                                 </div>
                                             </div>
@@ -2214,11 +2194,7 @@ function Operadores(props) {
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <form
-                                                            action="#"
-                                                            className="j-forms"
-                                                            noValidate
-                                                        >
+                                                        {/*<form action="#" className="j-forms" noValidate>*/}
                                                             <div className="form-content">
                                                                 {/* start text password */}
                                                                 <div className="j-row toclone-widget-right toclone">
@@ -2282,7 +2258,7 @@ function Operadores(props) {
                                                                     </button>
                                                                 </div>
                                                             </div>
-                                                        </form>
+                                                        {/*</form>*/}
                                                     </div>
                                                 </div>
                                             </div>
