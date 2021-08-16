@@ -478,7 +478,7 @@ function Viajes() {
     const columnsParadas = [
         {
             headerName: "Camión",
-            field: "m_sCamion",
+            field: "m_sRemolque1",
             renderCell: (row) => {
                 return (
                     <a onClick={() => showCamionDialog()}>{row.row.m_sCamion}</a>
@@ -488,7 +488,7 @@ function Viajes() {
         },
         {
             headerName: "Operador",
-            field: "m_sOperador",
+            field: "m_sNombreCompleto",
             width: 150,
             renderCell: (row) => {
                 return (
@@ -513,7 +513,7 @@ function Viajes() {
         },
         {
             headerName: "Origen",
-            field: "m_sOrigen",
+            field: "m_sCiudadOrigen",
             width: 200,
         },
         {
@@ -533,7 +533,7 @@ function Viajes() {
         },
         {
             headerName: "Destino",
-            field: "m_sDestino",
+            field: "m_sCiudadDestino",
             width: 200,
         },
         // {
@@ -986,7 +986,7 @@ function Viajes() {
                                     <div className="widget-wrap">
                                         <div className="widget-content">
                                             <div className="row" style={{height: "300px", width: '100%'}}>
-                                                <List>
+                                               {/* <List>
                                                     {
                                                         paradasListado.map((p, index) => {
 
@@ -1007,8 +1007,25 @@ function Viajes() {
                                                         })
                                                     }
 
-                                                </List>
+                                                </List>*/}
 
+                                                    {equipoListado.length !== 0 ? (
+                                                        <DataGrid
+                                                            rows={paradasListado}
+                                                            columns={columnsParadas}
+                                                            density="compact"
+                                                            pageSize={Math.floor((state.height - 310) / 30)}
+                                                            getRowId={(row) => row.m_nIdInforme}
+                                                            onRowSelected={(row) => {
+                                                                setState({
+                                                                    ...state,
+                                                                    idEquipo: row.data.m_nIdInventarioUnidad
+                                                                })
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <div>No se encontró ningún registro</div>
+                                                    )}
                                             </div>
                                         </div>
                                     </div>
