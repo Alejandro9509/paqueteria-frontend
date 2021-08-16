@@ -780,7 +780,7 @@ function Clientes(props) {
             importar: "",
         };
         console.log(JSON.stringify(params))
-        if (state.idCliente != 0) {
+        if (state.agregar == "Modificar") {
             modificarCliente(state.idCliente, params)
                 .then((respuesta) => {
                     alert(respuesta.data);
