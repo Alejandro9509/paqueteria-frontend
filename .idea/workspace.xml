@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Correcciones menores">
-      <change beforePath="$PROJECT_DIR$/.idea/sonarIssues.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Validacion para cuando se agrega o se modifica">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Viajes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Clientes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Clientes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Operadores.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Operadores.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,7 +104,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -396,7 +396,28 @@
       <option name="project" value="LOCAL" />
       <updated>1628794437290</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="*Se agregó nuevo campo al agregar cliente">
+      <created>1629142976131</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1629142976131</updated>
+    </task>
+    <task id="LOCAL-00040" summary="*Se agregó nuevo campo al agregar cliente">
+      <created>1629143002256</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1629143002256</updated>
+    </task>
+    <task id="LOCAL-00041" summary="*Validacion para cuando se agrega o se modifica">
+      <created>1629143129984</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1629143129984</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -419,7 +440,6 @@
                   </entry>
                 </map>
               </option>
-              <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
@@ -461,10 +481,9 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se autocompleta la informacion de remitente y destinatario al seleccionar" />
-    <MESSAGE value="Se agregó validacion para hacer la fecha de vencimiento obligatoria" />
     <MESSAGE value="Se arreglo relleno de datos al modificar sucursal" />
     <MESSAGE value="Ajustes al agregar usuarios" />
     <MESSAGE value="Ajustes en crear embarque" />
@@ -488,29 +507,9 @@
     <MESSAGE value="*Se arregló problema par que se vea el listado de unidades por id de tipo" />
     <MESSAGE value="*Se arregló problema que impedia seleccionar unidad" />
     <MESSAGE value="*Se corrigieron datos al agregar embarque" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Se corrigieron datos al agregar embarque" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629094409870">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629094409870" />
-    <state x="432" y="170" key="MultipleFileMergeDialog" timestamp="1629094420139">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900@0.0.1440.900" timestamp="1629094420139" />
-    <state x="426" y="164" key="RollbackChangesDialog" timestamp="1629094408714">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="426" y="164" key="RollbackChangesDialog/0.0.1440.900@0.0.1440.900" timestamp="1629094408714" />
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629091155839">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629091155839" />
-    <state x="446" y="167" key="git4idea.branch.GitSmartOperationDialog" timestamp="1629094416441">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="446" y="167" key="git4idea.branch.GitSmartOperationDialog/0.0.1440.900@0.0.1440.900" timestamp="1629094416441" />
+    <MESSAGE value="*Se agregó nuevo campo al agregar cliente" />
+    <MESSAGE value="*Validacion para cuando se agrega o se modifica" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Validacion para cuando se agrega o se modifica" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

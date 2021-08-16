@@ -683,9 +683,34 @@ function Clientes(props) {
             });
     };
 
+    const handleChangeIdCliente = (event) => {
+        event.preventDefault()
+        /*validarNumeroCliente(state)
+            .then((respuesta) => {
+                if (respuesta.data != "") {
+                    showSuccess(respuesta.data.m_sMensaje);
+                    console.log(respuesta.data);
+                    setState({
+                        ...state,
+
+                        numeroCliente: respuesta.data.m_nNumero,
+                    });
+                }
+            }).catch((err) => {
+                showSuccess(err);
+            });*/
+
+        console.log(event.target.name + " : " + event.target.value);
+        setState({
+            ...state,
+            idCliente: event.target.value,
+        });
+    };
+
     const handleAceptar = (e) => {
         e.preventDefault();
-        var params = {
+        let params = {
+            m_nIdCliente: state.idCliente,
             m_nCreadoPor: state.CreadoPor,
             m_nModificadoPor: state.ModificadoPor,
             m_nNumeroCliente: state.numeroCliente,
@@ -754,7 +779,8 @@ function Clientes(props) {
             agregar: "Agregar",
             importar: "",
         };
-        if (state.idCliente != 0) {
+        console.log(JSON.stringify(params))
+        if (state.agregar == "Modificar") {
             modificarCliente(state.idCliente, params)
                 .then((respuesta) => {
                     alert(respuesta.data);
@@ -972,10 +998,29 @@ function Clientes(props) {
 
                                                                 <div className="input">
                                                                     <TextField variant="outlined" margin="dense"
+                                                                               onChange={handleChange}
+                                                                               label="Identificador de Cliente"
+                                                                               // onBlur={handleChangeIdCliente}
+                                                                               className="form-control"
+                                                                               type="number"
+                                                                               required
+                                                                               value={state.idCliente}
+                                                                               id="idCliente"
+                                                                               name="idCliente"
+                                                                               disabled={state.agregar == "Modificar"}
+
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-sm-4 col-md-2-5 unit">
+
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
                                                                         onChange={handleChange}
                                                                         label="Número de Cliente"
                                                                         onBlur={handleChangeCodigo}
                                                                         className="form-control"
+                                                                               required
                                                                         type="text"
                                                                         value={state.numeroCliente}
                                                                         id="numeroCliente"
