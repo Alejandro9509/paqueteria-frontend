@@ -50,6 +50,23 @@ function obtenerInformes(){
         );
     return result
 }
+function obtenerInformesPorViaje(id){
+    const url = `${process.env.REACT_APP_API_URL}/Informes/GetByIdViaje/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+function obtenerInformesDisponiblesViajes(idOrigen, idDestino, idRuta){
+    const url = `${process.env.REACT_APP_API_URL}/Informes/GetListadoDisponiblesViaje`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, {idOrigen: idOrigen, idDestino: idDestino, idRuta: idRuta }), { headers })
+    );
+    return result
+}
 
 function obtenerInformesId(id){
     const url = `${process.env.REACT_APP_API_URL}/Informes/GetById/${id}`;
@@ -60,4 +77,4 @@ function obtenerInformesId(id){
     return result
 }
 
-export {modificarInformes, agregarInformes, eliminarInformes, obtenerInformes, obtenerInformesId, cancelarInformes }
+export {modificarInformes, agregarInformes, eliminarInformes, obtenerInformes, obtenerInformesId, cancelarInformes, obtenerInformesDisponiblesViajes, obtenerInformesPorViaje }

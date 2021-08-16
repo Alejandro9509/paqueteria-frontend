@@ -12,7 +12,8 @@ import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
 import { agregarEstatusViaje, eliminarEstatusViaje, modificarEstatusViaje, obtenerEstatusViajeId, obtenerEstatusViaje } from "../Util/Contexts/EstatusViajeContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
-
+import $ from "jquery";
+window.jQuery = window.$ = $;
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -68,7 +69,6 @@ function EstatusViaje() {
             "CreadoPor": state.CreadoPor,
             "ModificadoPor": state.ModificadoPor
         }
-        console.log(params)
         if (state.idEstatusViaje != 0) {
             modificarEstatusViaje(state.idEstatusViaje, params).then(respuesta => {
                 showSuccess(respuesta.data)
@@ -536,7 +536,9 @@ function EstatusViaje() {
                                                 </div>
                                                 <br></br>
                                                 <div className="form-footer" className="col-12 col-sm-12 col-md-10 unit">
-                                                    <button href="#Listado" role="tab" data-toggle="tab" href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn">
+                                                    <button
+                                                        onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
+                                                        className="btn btn-secondary secondary-btn">
                                                         Cancelar</button>
                                                     <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
                                                 </div>
