@@ -152,19 +152,15 @@ class ConceptosAdicionales extends Component {
         })
     }
 
-    removeConcepto(event, index) {
+    removeConcepto(event, item) {
         event.preventDefault()
-        console.log('eliminar concepto: ', index)
-        this.props.removeConcepto(index)
+        this.props.removeConcepto(item)
     }
 
     handleRowClick(event, index, concepto) {
         const {removeConcepto} = this.props
-        removeConcepto(index)
+        removeConcepto(concepto)
         const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
-        console.log('concepto click', conceptoSelect)
-        console.log('concepto completo', concepto)
-        console.log('conceptos ', this.state.conceptos)
         this.setState({
             concepto: conceptoSelect,
             importe: concepto.importe,
@@ -212,7 +208,6 @@ class ConceptosAdicionales extends Component {
                                     value={this.state.concepto}
                                     freeSolo
                                     onChange={(event, newValue) => {
-                                        console.log(newValue)
                                         this.setState({
                                             concepto: newValue,
                                             importe: newValue.m_cImporte,
@@ -435,7 +430,10 @@ class ConceptosAdicionales extends Component {
                                             <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)).m_sImpuesto : "No Aplica")}</td>
                                             <td style={{ textAlign: "left" }}>${parseFloat(c.importeRet).toFixed(2)}</td>
                                             <td>
-                                                <IconButton onClick={(e) => this.removeConcepto(e,index)}>
+                                                <IconButton onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    this.removeConcepto(e, c)
+                                                }}>
                                                     <CancelIcon style={{ fill: "red", fontSize: "x-large" }} />
                                                 </IconButton>
                                             </td>

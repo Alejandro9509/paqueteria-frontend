@@ -69,6 +69,7 @@ class CrearTarifa extends Component {
         this.handleChangeChecboxTiposServicio = this.handleChangeChecboxTiposServicio.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
         this.castConceptos = this.castConceptos.bind(this)
+        this.filtrarConceptoAdicional = this.filtrarConceptoAdicional.bind(this)
     }
 
     castConceptos(){
@@ -301,41 +302,55 @@ class CrearTarifa extends Component {
 
     }
 
+    filtrarConceptoAdicional(c, item){
+        let valid =  c.idConcepto == item.idConcepto
+            && c.importe == item.importe
+            && c.importeRet == item.importeRet
+            && c.retiene == item.retiene
+            && c.traslada == item.traslada
+            && c.importeIVA == item.importeIVA
+        return !valid
+    }
+
+    filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item){
+        let valid =  c.idConcepto == item.idConcepto
+            && c.importe == item.importe
+            && c.importeRet == item.importeRet
+            && c.retiene == item.retiene
+            && c.traslada == item.traslada
+            && c.importeIVA == item.importeIVA
+            && c.rangoMinimo == item.rangoMinimo
+            && c.rangoMaximo == item.rangoMaximo
+            && c.tipoCalculo == item.tipoCalculo
+        return !valid
+    }
     //Metodo remover para listado de conceptos adicionales
-    removeConceptoAdicional(index) {
+    removeConceptoAdicional(item) {
         const { conceptosAdicionales, todosConceptos } = this.state
-        const concepto = conceptosAdicionales[index]
-        const ind = todosConceptos.indexOf(concepto)
-        todosConceptos.splice(ind, 1)
-        conceptosAdicionales.splice(index, 1)
-        this.setState({ conceptosAdicionales: conceptosAdicionales, todosConceptos: todosConceptos })
+        const newArrayConceptos = conceptosAdicionales.filter(c => this.filtrarConceptoAdicional(c, item))
+        const newArrayTodosConceptos = todosConceptos.filter(c => this.filtrarConceptoAdicional(c, item))
+        this.setState({ conceptosAdicionales: newArrayConceptos, todosConceptos: newArrayTodosConceptos })
     }
     //Metodo remover para listado de conceptos de maniobra
-    removeConceptoManiobra(index) {
+    removeConceptoManiobra(item) {
         const { conceptosManiobra, todosConceptos } = this.state
-        const concepto = conceptosManiobra[index]
-        const ind = todosConceptos.indexOf(concepto)
-        todosConceptos.splice(ind, 1)
-        conceptosManiobra.splice(index, 1)
-        this.setState({ conceptosManiobra: conceptosManiobra, todosConceptos: todosConceptos })
+        const newArrayConceptos = conceptosManiobra.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
+        const newArrayTodosConceptos = todosConceptos.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
+        this.setState({ conceptosManiobra: newArrayConceptos, todosConceptos: newArrayTodosConceptos })
     }
     //Metodo remover para listado de conceptos entrega
-    removeConceptoEntrega(index) {
+    removeConceptoEntrega(item) {
         const { conceptosEntrega, todosConceptos } = this.state
-        const concepto = conceptosEntrega[index]
-        const ind = todosConceptos.indexOf(concepto)
-        todosConceptos.splice(ind, 1)
-        conceptosEntrega.splice(index, 1)
-        this.setState({ conceptosEntrega: conceptosEntrega, todosConceptos: todosConceptos })
+        const newArrayConceptos = conceptosEntrega.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
+        const newArrayTodosConceptos = todosConceptos.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
+        this.setState({ conceptosEntrega: newArrayConceptos, todosConceptos: newArrayTodosConceptos })
     }
     //Metodo remover para listado de conceptos recoleccion
-    removeConceptoRecoleccion(index) {
+    removeConceptoRecoleccion(item) {
         const { conceptosRecoleccion, todosConceptos } = this.state
-        const concepto = conceptosRecoleccion[index]
-        const ind = todosConceptos.indexOf(concepto)
-        todosConceptos.splice(ind, 1)
-        conceptosRecoleccion.splice(index, 1)
-        this.setState({ conceptosRecoleccion: conceptosRecoleccion, todosConceptos: todosConceptos })
+        const newArrayConceptos = conceptosRecoleccion.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
+        const newArrayTodosConceptos = todosConceptos.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
+        this.setState({ conceptosRecoleccion: newArrayConceptos, todosConceptos: newArrayTodosConceptos })
     }
 
     getAllCiudades() {
@@ -416,9 +431,6 @@ class CrearTarifa extends Component {
         if (!consult && !edit){
             consult = disabled
         }
-        console.log(conceptosAdicionales)
-        console.log("aqui")
-        console.log(this.props.consult)
         return (
             <form className="j-forms" onSubmit={this.onSubmit}>
                 <div className="main-container" style={{ marginLeft: "0px", padding: "0px" }}>
