@@ -50,7 +50,7 @@ import Noty from "noty";
 import { dataGridLocaleText } from "../Constants";
 import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
 import { obtenerEstatusInforme } from "../Util/Contexts/EstatusContext";
-import { obtenerGuia, obtenerGuiaPendientes } from "../Util/Contexts/GuiaContext";
+import {obtenerGuia, obtenerGuiaPendientes, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
 import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
 import { obtenerUnidadesTipo } from "../Util/Contexts/UnidadesContext";
 import { obtenerRutas } from "../Util/Contexts/RutasContext";
@@ -1205,7 +1205,7 @@ function Informes({ history }) {
                 setDataGuias(respuesta.data);
             })
         } else {
-            obtenerGuia().then(async (respuesta) => {
+            obtenerGuiasFiltro(0,0,0,4).then(async (respuesta) => {
                 setDataGuias(respuesta.data);
                 if (cubicar) {
                      cubicarGuias(

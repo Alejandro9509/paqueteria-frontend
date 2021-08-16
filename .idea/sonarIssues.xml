@@ -68,6 +68,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/InformesContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/MensajesConetext.js">
           <value>
             <set />
@@ -133,6 +138,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/EstatusViaje.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/Folios/Folios.js">
           <value>
             <set />
@@ -149,6 +159,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/Informes.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Login.js">
           <value>
             <set />
           </value>
@@ -299,6 +314,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Viajes/InformesPorAsignar.js">
           <value>
             <set />
           </value>

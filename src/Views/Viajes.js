@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, {useEffect, useState, useMemo} from "react";
 import DataTable from 'react-data-table-component';
 import DataTableExtensions from "react-data-table-component-extensions";
 import axios from "axios";
@@ -9,26 +9,40 @@ import BasicTable from "./BasicTable";
 import ExportCSV from '../Components/Template/Export';
 import ExportPDF from "../Components/Template/ExportPDF";
 import * as XLSX from 'xlsx';
-import { useTable, useFilters, useSortBy } from 'react-table'
-import { makeStyles } from "@material-ui/core/styles";
-import { DataGrid } from '@material-ui/data-grid';
+import {useTable, useFilters, useSortBy} from 'react-table'
+import {makeStyles} from "@material-ui/core/styles";
+import {DataGrid} from '@material-ui/data-grid';
 import Noty from 'noty';
 import AgregarViaje from "./Viajes/AgregarViaje";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
-import { dataGridLocaleText } from "../Constants";
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip, ButtonBase} from "@material-ui/core";
-import { obtenerEstatusDocumentos } from "../Util/Contexts/EstatusContext";
+import {dataGridLocaleText} from "../Constants";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Tooltip,
+    ButtonBase,
+    List,
+    ListItem,
+    Collapse,
+    ListItemText
+} from "@material-ui/core";
+import {obtenerEstatusDocumentos} from "../Util/Contexts/EstatusContext";
 import Historial from "./Viajes/Historial";
 import {confirmAlert} from "react-confirm-alert";
 import ActualizarDiponibilidadEquipo from "./Viajes/ActualizarDiponibilidadEquipo";
 import SalidaParadas from "./Viajes/SalidaParadas";
 import LlegadaParadas from "./Viajes/LlegadaParadas";
 import AsignarOperador from "./Viajes/AsignarOperador";
-import { agregarViajeSalida,agregarViajeLlegada} from "../Util/Contexts/ViajesContext";
-
+import {agregarViajeSalida, agregarViajeLlegada} from "../Util/Contexts/ViajesContext";
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import {obtenerInformesPorViaje} from "../Util/Contexts/InformesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -54,6 +68,7 @@ function Viajes() {
     const classes = useStyles();
     const [data, setData] = React.useState([])
     const [dataSucursal, setDataSucursal] = React.useState([]);
+    const [indexOpen, setIndexOpen] = React.useState(-1);
     const [dataEstatusViaje, setEstatusViaje] = React.useState([]);
     const [dataEstatusDocumento, setEstatusDocumento] = React.useState([]);
     const [state, setState] = React.useState({
@@ -75,15 +90,14 @@ function Viajes() {
         idEquipo: 0,
 
 
-
     })
     const [fileUploaded, setFileUploaded] = React.useState([])
 
     function getAllEstatusViaje() {
-         const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
-        axios.get(url, { headers }).then((respuesta) => {
-             setEstatusViaje(respuesta.data);
-         });
+        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
+        axios.get(url, {headers}).then((respuesta) => {
+            setEstatusViaje(respuesta.data);
+        });
     }
 
     function getAllEstatusDocumento() {
@@ -94,7 +108,7 @@ function Viajes() {
 
     function getAllSucursales() {
         const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             setDataSucursal(respuesta.data);
         });
     }
@@ -204,7 +218,7 @@ function Viajes() {
     async function getViajesByFiltro(fechaInicial, fechaFinal, sucursal, estatus) {
         const url = `${process.env.REACT_APP_API_URL}/Viajes/GetByFiltro/` +
             fechaInicial + "/" + fechaFinal + "/" + sucursal + "/" + estatus;
-        await axios.get(url, { headers }).then(respuesta => {
+        await axios.get(url, {headers}).then(respuesta => {
             setData(respuesta.data)
         })
         console.log(url)
@@ -276,15 +290,22 @@ function Viajes() {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdViaje))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a href="#Agregar" role="tab" data-toggle="tab"
+                               onClick={() => (handleShowModificar(row.row.m_nIdViaje))}
+                               className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
+                                                                     style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdViaje))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs"
+                               onClick={() => (handleShowConsultar(row.row.m_nIdViaje))}><i className="fa fa-eye"
+                                                                                            style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdViaje))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            <a href="#" className="btn btn-default btn-xs"
+                               onClick={() => (handleEliminar(row.row.m_nIdViaje))}><i className="zmdi zmdi-delete"
+                                                                                       style={{color: "#F30B0B"}}/></a>
 
                         </Tooltip>
                     </div>
@@ -349,11 +370,10 @@ function Viajes() {
 
     function getAllData() {
         const url = `${process.env.REACT_APP_API_URL}/Viajes/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        axios.get(url, {headers}).then(respuesta => {
             setData(respuesta.data)
         });
     };
-
 
 
     const headers = {
@@ -362,8 +382,8 @@ function Viajes() {
     }
 
     function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
+                                     column: {filterValue, preFilteredRows, setFilter},
+                                 }) {
         const count = preFilteredRows.length
 
         return (
@@ -382,7 +402,7 @@ function Viajes() {
     /**DISPONIBILIDAD DE EQUIPO*/
 
     const columnsEquipo = [
-        {
+        /*{
             headerName: "Acciones",
             sortable: false, filterable: false,
             field: "",
@@ -401,7 +421,7 @@ function Viajes() {
                 );
             },
             width: 100,
-        },
+        },*/
         {
             headerName: "Unidad",
             field: "m_sCodigoUnidad",
@@ -432,15 +452,14 @@ function Viajes() {
     const [equipoListado, setEquipoListado] = React.useState([]);
     const [equipoSelected, setEquipoSelected] = React.useState();
     const [eventOptions, setEventOptions] = React.useState({
-        showDispEquipoDialog : false,
+        showDispEquipoDialog: false,
         showSalidaParadasDialog: false,
         showLlegadaParadasDialog: false,
         showAsignarOperadorDialog: false,
     });
 
 
-
-    function updateEquipoData(equipo){
+    function updateEquipoData(equipo) {
         //TODO: Integrar servicio de cambiar disponibilidad de equipo
     }
 
@@ -449,10 +468,9 @@ function Viajes() {
         setEventOptions({...eventOptions, showDispEquipoDialog: true});
     }
 
-    const closeActualizarDispEquipo = () =>{
+    const closeActualizarDispEquipo = () => {
         setEventOptions({...eventOptions, showDispEquipoDialog: false});
     }
-
 
 
     /**DETALLE DE PARADAS*/
@@ -460,32 +478,32 @@ function Viajes() {
     const columnsParadas = [
         {
             headerName: "Camión",
-            field: "m_sCamion",
+            field: "m_sRemolque1",
             renderCell: (row) => {
                 return (
                     <a onClick={() => showCamionDialog()}>{row.row.m_sCamion}</a>
-                 );
+                );
             },
             width: 100,
         },
         {
             headerName: "Operador",
-            field: "m_sOperador",
+            field: "m_sNombreCompleto",
             width: 150,
             renderCell: (row) => {
-               return (
-                   <a onClick={() => showAsignarOperadorDialog(row.row)}>{row.row.m_sOperador}</a>
-              )
+                return (
+                    <a onClick={() => showAsignarOperadorDialog(row.row)}>{row.row.m_sOperador}</a>
+                )
             },
-        } ,
+        },
         {
             headerName: "Salida",
             field: "m_nIdOrigen",
             width: 100,
             renderCell: (row) => {
-                 return(
+                return (
                     <a onClick={() => showSalidaDialog(row.row)}>{row.row.m_dFechaSalida == "0000-00-00" ? "Asignar" : "Quitar"}</a>
-                 )
+                )
             }
         },
         {
@@ -495,7 +513,7 @@ function Viajes() {
         },
         {
             headerName: "Origen",
-            field: "m_sOrigen",
+            field: "m_sCiudadOrigen",
             width: 200,
         },
         {
@@ -503,9 +521,9 @@ function Viajes() {
             field: "m_nIdDestino",
             width: 100,
             renderCell: (row) => {
-                 return(
-                     <a onClick={() => showLlegadaDialog(row.row)}>{row.row.m_dFechaLlegada == "0000-00-00" ? "Asignar" : "Quitar"}</a>
-                    )
+                return (
+                    <a onClick={() => showLlegadaDialog(row.row)}>{row.row.m_dFechaLlegada == "0000-00-00" ? "Asignar" : "Quitar"}</a>
+                )
             }
         },
         {
@@ -515,7 +533,7 @@ function Viajes() {
         },
         {
             headerName: "Destino",
-            field: "m_sDestino",
+            field: "m_sCiudadDestino",
             width: 200,
         },
         // {
@@ -527,22 +545,20 @@ function Viajes() {
     const [paradasListado, setParadasListado] = React.useState([]);
     const [paradaData, setParadaData] = React.useState();
 
-    function getParadasListado(row){
-        const url = `${process.env.REACT_APP_API_URL}/Viajes/GetParadasByIdViaje/${row}`;
-        axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta.data);
+    function getParadasListado(row) {
+        obtenerInformesPorViaje(row).then(respuesta => {
             setParadasListado(respuesta.data);
         });
     }
 
-    function getInventarioUnidades(){
+    function getInventarioUnidades() {
         const url = `${process.env.REACT_APP_API_URL}/InventarioUnidades/GetListado`;
-        axios.get(url, { headers }).then(({data}) => {
+        axios.get(url, {headers}).then(({data}) => {
             setEquipoListado(data)
         });
     }
 
-    const showCamionDialog = () =>{
+    const showCamionDialog = () => {
         console.log("Espero se haya abierto el dialogo al clickear camion");
     }
 
@@ -553,7 +569,7 @@ function Viajes() {
 
     }
 
-    const closeSalidaDialog = () =>{
+    const closeSalidaDialog = () => {
         setEventOptions({...eventOptions, showSalidaParadasDialog: false});
     }
 
@@ -562,32 +578,30 @@ function Viajes() {
         setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
     }
 
-    const closeLlegadaDialog = () =>{
+    const closeLlegadaDialog = () => {
         setEventOptions({...eventOptions, showLlegadaParadasDialog: false});
     }
 
     function updateSalida(data) {
 
 
-
         //e.preventDefault();
         var params = {
             m_dFecha: this.state.fechaHoraRegistro.split("T")[0],
             m_tHora: this.state.fechaHoraRegistro.split("T")[1],
-            m_nIdViaje:0,
-            m_nCV1Km:0,
-            m_nCV2Km:0,
-            m_nCV1Millas:0,
-            m_nCV2Millas:0,
-            m_bCV1Estatus:0,
-            m_bCV2Estatus:0,
-            m_dFechaSalida:0,
-            m_tHoraSalida:0,
-            m_nIdEstatusSalida:0,
-            m_nKmViaje:0,
-            m_nMillasViaje:0,
-            m_sMotivoRetraso:0,
-
+            m_nIdViaje: 0,
+            m_nCV1Km: 0,
+            m_nCV2Km: 0,
+            m_nCV1Millas: 0,
+            m_nCV2Millas: 0,
+            m_bCV1Estatus: 0,
+            m_bCV2Estatus: 0,
+            m_dFechaSalida: 0,
+            m_tHoraSalida: 0,
+            m_nIdEstatusSalida: 0,
+            m_nKmViaje: 0,
+            m_nMillasViaje: 0,
+            m_sMotivoRetraso: 0,
 
 
             // m_nIdEstatusViaje: this.state.estatusListado,
@@ -599,29 +613,24 @@ function Viajes() {
             // CreadoPor : this.state.CreadoPor,
             // m_arrInformes : this.state.dataInformes
 
-    }
+        }
 
 
-    if (state.IdViajeSalida != 0) {
-        //modificarSalida(state.IdViajeSalida, params)
+        if (state.IdViajeSalida != 0) {
+            //modificarSalida(state.IdViajeSalida, params)
 
-    } else {
-        agregarViajeSalida(params)
-            .then((respuesta) => {
-                showSuccess(respuesta.data);
-                console.log(respuesta.data);
+        } else {
+            agregarViajeSalida(params)
+                .then((respuesta) => {
+                    showSuccess(respuesta.data);
+                    console.log(respuesta.data);
 
-            })
-            .catch((err) => {
-                console.log(err);
-                showSuccess(err);
-            });
-    }
-
-
-
-
-
+                })
+                .catch((err) => {
+                    console.log(err);
+                    showSuccess(err);
+                });
+        }
 
 
     }
@@ -634,17 +643,15 @@ function Viajes() {
             m_dFecha: this.state.fechaHoraRegistro.split("T")[0],
             m_tHora: this.state.fechaHoraRegistro.split("T")[1],
             m_nIdEstatusViaje: this.state.estatusListado,
-            m_nIdSucursal : this.state.idSucursalAgregar,
-            m_sCandadoOficial : this.state.candadoOficial,
-            m_sFolioViaje : this.state.folioViaje,
-            m_sIdentificador : this.state.identificadorViaje,
-            m_sNumViajeCliente : this.state.viajeCliente,
-            CreadoPor : this.state.CreadoPor,
-            m_arrInformes : this.state.dataInformes
+            m_nIdSucursal: this.state.idSucursalAgregar,
+            m_sCandadoOficial: this.state.candadoOficial,
+            m_sFolioViaje: this.state.folioViaje,
+            m_sIdentificador: this.state.identificadorViaje,
+            m_sNumViajeCliente: this.state.viajeCliente,
+            CreadoPor: this.state.CreadoPor,
+            m_arrInformes: this.state.dataInformes
 
-    }
-
-
+        }
 
 
         if (state.IdViajeLlegada != 0) {
@@ -679,13 +686,13 @@ function Viajes() {
         })
     }
 
-    function submitOperadorUnidad(data){
+    function submitOperadorUnidad(data) {
         console.log("Llamar servicio operador unidad");
         console.log(data);
     }
 
     return (
-        <div >
+        <div>
             <Dialog open={eventOptions.showDispEquipoDialog}
                     onClose={closeActualizarDispEquipo}
                     fullWidth={true}
@@ -697,7 +704,8 @@ function Viajes() {
                                 variant={'contained'} color={'primary'}
                                 type="submit"
                                 onClick={closeActualizarDispEquipo}>Aceptar</Button>
-                            <Button variant={'outlined'} color={'primary'} onClick={closeActualizarDispEquipo}>Cancelar</Button>
+                            <Button variant={'outlined'} color={'primary'}
+                                    onClick={closeActualizarDispEquipo}>Cancelar</Button>
                         </DialogActions>
                     </ActualizarDiponibilidadEquipo>
                 </DialogContent>
@@ -731,7 +739,8 @@ function Viajes() {
                                 variant={'contained'} color={'primary'}
                                 type="submit"
                                 onClick={closeLlegadaDialog}>Aceptar</Button>
-                            <Button variant={'outlined'} color={'primary'} onClick={closeLlegadaDialog}>Cancelar</Button>
+                            <Button variant={'outlined'} color={'primary'}
+                                    onClick={closeLlegadaDialog}>Cancelar</Button>
                         </DialogActions>
                     </LlegadaParadas>
                 </DialogContent>
@@ -740,9 +749,9 @@ function Viajes() {
                     onClose={closeAsignarOperadorDialog}
                     fullWidth={true}
                     maxWidth={'xl'}>
-                <DialogTitle style={{display:"flex", flexDirection: "row", justifyContent:"space-between"}}>
+                <DialogTitle style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                     {/*<h3>Origen: {paradaData.m_sCiudadOrigen} Destino: {paradaData.m_sCiudadDestino}</h3>*/}
-                    <h3>Origen:  Destino: </h3>
+                    <h3>Origen: Destino: </h3>
 
                 </DialogTitle>
                 <DialogContent>
@@ -759,12 +768,12 @@ function Viajes() {
             </Dialog>
 
             <header className="topbar clearfix">
-                <Cabecera titulo="Viajes" >
+                <Cabecera titulo="Viajes">
                     <div className="page-header">
                         <ul className="list-page-breadcrumb">
                             <li>
                                 <a href="/Catalogos" className="color-mapeo">
-                                    Catálogos <i className="zmdi zmdi-chevron-right" />
+                                    Catálogos <i className="zmdi zmdi-chevron-right"/>
                                 </a>
                             </li>
                             <li className="active-page">Viajes</li>
@@ -775,7 +784,7 @@ function Viajes() {
 
             {/*Leftbar Start Here*/}
             <aside className="iconic-leftbar">
-                <BarraLateralIzquierda />
+                <BarraLateralIzquierda/>
             </aside>
             {/*Leftbar End Here*/}
 
@@ -787,12 +796,12 @@ function Viajes() {
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
                             <a data-toggle="tab" href="#Listado">
-                                <i className="fa fa-list" /> Listado
+                                <i className="fa fa-list"/> Listado
                             </a>
                         </li>
                         <li>
                             <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
-                                <i className="fa fa-plus-circle" /> {state.agregar}
+                                <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
                         <li>
@@ -805,7 +814,7 @@ function Viajes() {
                                     openDialog: true
                                 });
                             }}>
-                                <i className="fa fa-print" /> Imprimir
+                                <i className="fa fa-print"/> Imprimir
                             </a>
                         </li>
 
@@ -816,10 +825,10 @@ function Viajes() {
                             <div className="widget-wrap">
                                 <div className="widget-content">
 
-                                    <div className="row" style={{ paddingLeft: "8px" }}>
+                                    <div className="row" style={{paddingLeft: "8px"}}>
                                         <form className="j-forms">
-                                            <div className="row" style={{ display: "flex" }}>
-                                                <div className="col-sm-6 col-md-2 " style={{ paddingLeft: "0px" }}>
+                                            <div className="row" style={{display: "flex"}}>
+                                                <div className="col-sm-6 col-md-2 " style={{paddingLeft: "0px"}}>
                                                     <div className="input">
                                                         <TextField
                                                             autoFocus
@@ -838,7 +847,7 @@ function Viajes() {
                                                     </div>
                                                 </div>
 
-                                                <div className="col-sm-6 col-md-2 " style={{ paddingLeft: "0px" }}>
+                                                <div className="col-sm-6 col-md-2 " style={{paddingLeft: "0px"}}>
                                                     <div className="input">
                                                         <TextField
                                                             autoFocus
@@ -857,10 +866,11 @@ function Viajes() {
                                                     </div>
                                                 </div>
 
-                                                <div className="col-sm-6 col-md-2 " style={{ paddingLeft: "0px" }}>
+                                                <div className="col-sm-6 col-md-2 " style={{paddingLeft: "0px"}}>
                                                     <label className="input select">
                                                         <FormControl fullWidth variant="outlined" margin="dense">
-                                                            <InputLabel id="idSucursalAgregarLabel">Sucursal</InputLabel>
+                                                            <InputLabel
+                                                                id="idSucursalAgregarLabel">Sucursal</InputLabel>
                                                             <Select
                                                                 labelId="idSucursalAgregarLabel"
                                                                 className="form-control"
@@ -884,10 +894,11 @@ function Viajes() {
                                                     </label>
                                                 </div>
 
-                                                <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
+                                                <div className="col-sm-6 col-md-3 " style={{paddingLeft: "0px"}}>
                                                     <label className="input select">
                                                         <FormControl fullWidth variant="outlined" margin="dense">
-                                                            <InputLabel id="idEstatusViajeLabel">Estatus Viaje</InputLabel>
+                                                            <InputLabel id="idEstatusViajeLabel">Estatus
+                                                                Viaje</InputLabel>
                                                             <Select
                                                                 labelId="idEstatusViajeLabel"
                                                                 className="form-control"
@@ -911,10 +922,11 @@ function Viajes() {
                                                     </label>
                                                 </div>
 
-                                                <div className="col-sm-6 col-md-3 " style={{ paddingLeft: "0px" }}>
+                                                <div className="col-sm-6 col-md-3 " style={{paddingLeft: "0px"}}>
                                                     <label className="input select">
                                                         <FormControl fullWidth variant="outlined" margin="dense">
-                                                            <InputLabel id="idEstatusDocumentoLabel">Estatus Documento</InputLabel>
+                                                            <InputLabel id="idEstatusDocumentoLabel">Estatus
+                                                                Documento</InputLabel>
                                                             <Select
                                                                 labelId="idEstatusDocumentoLabel"
                                                                 className="form-control"
@@ -943,7 +955,7 @@ function Viajes() {
                                         </form>
                                     </div>
 
-                                    <div className="row" style={{ height: "400px", width: '100%' }}>
+                                    <div className="row" style={{height: "400px", width: '100%'}}>
                                         {data.length != 0 ? (
                                             <DataGrid
                                                 localeText={dataGridLocaleText}
@@ -953,10 +965,10 @@ function Viajes() {
                                                 pageSize={Math.floor((state.height - 310) / 30)}
                                                 getRowId={(row) => row.m_nIdViaje}
                                                 onRowSelected={(row) => {
-                                                   /*  setState({
-                                                        ...state,
-                                                        idViaje: row.data.m_nIdViaje
-                                                    }) */
+                                                    /*  setState({
+                                                         ...state,
+                                                         idViaje: row.data.m_nIdViaje
+                                                     }) */
                                                     getParadasListado(row.data.m_nIdViaje)
                                                 }}
                                             />
@@ -967,62 +979,91 @@ function Viajes() {
                                 </div>
                             </div>
                             <div className="row">
+
+
                                 <div className="col-md-6">
-                                    <label className="label" style={{ color: '#717171' }}>Disponibilidad del Equipo</label>
+                                    <label className="label" style={{color: '#717171'}}>Detalle de Paradas</label>
                                     <div className="widget-wrap">
                                         <div className="widget-content">
-                                            <div className="row" style={{ height: "300px", width: '100%' }}>
+                                            <div className="row" style={{height: "300px", width: '100%'}}>
+                                               {/* <List>
+                                                    {
+                                                        paradasListado.map((p, index) => {
+
+                                                            return (
+                                                                <div>
+                                                                    <ListItem button
+                                                                              onClick={() => setIndexOpen(index === indexOpen ? -1 : index)}>
+
+                                                                        <ListItemText primary="Inbox"/>
+                                                                        {indexOpen === index ? <ExpandLess/> : <ExpandMore/>}
+                                                                    </ListItem>
+                                                                    <Collapse in={indexOpen === index}
+                                                                              timeout="auto" unmountOnExit>
+
+                                                                    </Collapse>
+                                                                </div>
+                                                            )
+                                                        })
+                                                    }
+
+                                                </List>*/}
+
+                                                    {equipoListado.length !== 0 ? (
+                                                        <DataGrid
+                                                            rows={paradasListado}
+                                                            columns={columnsParadas}
+                                                            density="compact"
+                                                            pageSize={Math.floor((state.height - 310) / 30)}
+                                                            getRowId={(row) => row.m_nIdInforme}
+                                                            onRowSelected={(row) => {
+                                                                setState({
+                                                                    ...state,
+                                                                    idEquipo: row.data.m_nIdInventarioUnidad
+                                                                })
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <div>No se encontró ningún registro</div>
+                                                    )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-6">
+                                    <label className="label" style={{color: '#717171'}}>Disponibilidad del
+                                        Equipo</label>
+                                    <div className="widget-wrap">
+                                        <div className="widget-content">
+                                            <div className="row" style={{height: "300px", width: '100%'}}>
                                                 {equipoListado.length !== 0 ? (
-                                                  <DataGrid
-                                                    rows={equipoListado}
-                                                    columns={columnsEquipo}
-                                                    density="compact"
-                                                    pageSize={ Math.floor((state.height - 310)/30)}
-                                                    getRowId={(row) => row.m_nIdInventarioUnidad}
-                                                    onRowSelected={(row) => {
-                                                      setState({
-                                                        ...state,
-                                                        idEquipo: row.data.m_nIdInventarioUnidad
-                                                      })
-                                                    }}
-                                                  />
+                                                    <DataGrid
+                                                        rows={equipoListado}
+                                                        columns={columnsEquipo}
+                                                        density="compact"
+                                                        pageSize={Math.floor((state.height - 310) / 30)}
+                                                        getRowId={(row) => row.m_nIdInventarioUnidad}
+                                                        onRowSelected={(row) => {
+                                                            setState({
+                                                                ...state,
+                                                                idEquipo: row.data.m_nIdInventarioUnidad
+                                                            })
+                                                        }}
+                                                    />
                                                 ) : (
-                                                  <div>No se encontró ningún registro</div>
+                                                    <div>No se encontró ningún registro</div>
                                                 )}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div className="col-md-6">
-                                    <label className="label" style={{ color: '#717171' }} >Detalle de Paradas</label>
-                                    <div className="widget-wrap">
-                                        <div className="widget-content">
-                                            <div className="row" style={{ height: "300px", width: '100%' }}>
-                                                <DataGrid
-                                                    rows={paradasListado}
-                                                    columns={columnsParadas}
-                                                    density="compact"
-                                                    pageSize={ Math.floor((state.height - 310)/30)}
-                                                    getRowId={(row) => row.m_nIdViajeParadas}
-                                                    // onRowSelected={(row) => {
-                                                    //   setState({
-                                                    //     ...state,
-                                                    //       idViaje: row.data.m_nIdDepartamento
-                                                    //   })
-                                                    // }}
-                                                />
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
+
                         </div>
 
                         <div className="widget-wrap" id="Agregar" className="tab-pane fade">
 
-                            <AgregarViaje />
+                            <AgregarViaje/>
 
                         </div>
 
@@ -1036,7 +1077,7 @@ function Viajes() {
                                                     <div className="col-sm-12 col-md-12 unit">
                                                         <label className="label">
                                                             Importar
-                          </label>
+                                                        </label>
                                                         <div className="input">
                                                             <input
                                                                 //onChange={handleUpload}
@@ -1050,9 +1091,15 @@ function Viajes() {
                                                 </div>
                                                 <br></br>
                                                 <div className="form-footer" className="col-md-12">
-                                                    <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                                                    <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
-                                                    <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                                                    <button className="btn btn-default btn-block ex-noty"
+                                                            data-layout="topCenter" data-type="information">Notificación
+                                                    </button>
+                                                    <button data-layout="topCenter" data-type="information"
+                                                            className="btn btn-secondary secondary-btn"> Cancelar
+                                                    </button>
+                                                    <button onClick={handleAceptar}
+                                                            className="btn btn-primary primary-btn">Aceptar
+                                                    </button>
                                                 </div>
                                             </form>
                                         </div>
@@ -1069,7 +1116,7 @@ function Viajes() {
 
             {/*Rightbar Start Here*/}
             <aside className="rightbar">
-                <BarraLateralDerecha />
+                <BarraLateralDerecha/>
             </aside>
 
         </div>

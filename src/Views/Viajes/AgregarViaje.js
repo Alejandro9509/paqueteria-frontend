@@ -5,7 +5,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import axios from "axios";
 import PageviewIcon from "@material-ui/icons/Pageview";
-import {Button, Dialog, DialogActions, DialogContent} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, Tooltip} from "@material-ui/core";
 import TableCiudades from "./TableCiudades";
 import TableCiudadesViajes from "./TableCiudades";
 import FormControl from "@material-ui/core/FormControl";
@@ -21,6 +21,8 @@ import AsignarOperadorUnidad from "./AsignarOperadorUnidad";
 import { cancelarEmbarque, eliminarEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, obtenerEmbarqueCancelado, agregarViaje, modificarEmbarques, obtenerEmbarquesFiltro, obtenerEmbarques } from "../../Util/Contexts/ViajesContext";
 
 import { ContactsOutlined } from "@material-ui/icons";
+import {obtenerInformesDisponiblesViajes} from "../../Util/Contexts/InformesContext";
+import InformesPorAsignar from "./InformesPorAsignar";
   <Button
                                 variant={"contained"}
                                 color={"primary"}
@@ -92,6 +94,9 @@ class AgregarViaje extends Component {
         this.handleOrigenFiltro = this.handleOrigenFiltro.bind(this);
         this.handleDestinoFiltro = this.handleDestinoFiltro.bind(this);
         this.handleDollyFiltro = this.handleDollyFiltro.bind(this);
+        this.handleAgregarInforme = this.handleAgregarInforme.bind(this);
+        this.handleEliminarInforme = this.handleEliminarInforme.bind(this);
+
     }
 
     componentWillMount() {
@@ -119,8 +124,6 @@ class AgregarViaje extends Component {
         
         }
 
-
-        console.log(JSON.stringify(params))
 
      
             agregarViaje(params)
@@ -203,13 +206,16 @@ class AgregarViaje extends Component {
         });
     }
 
+    getInformesDisponibles(nIdRuta, nIdCiudadOrigen, nIdCiudadDestino){
+        obtenerInformesDisponiblesViajes(nIdCiudadOrigen, nIdCiudadDestino, nIdRuta).then(({data}) => {
+            this.setState({dataInformesPorAsignar: data})
+        })
+    }
+
     getInformesByFiltro(nIdRuta, nIdCiudadOrigen, nIdCiudadDestino, nIdRemolque1, nIdRemolque2, nIdDolly) {
         const url = `${process.env.REACT_APP_API_URL}/Informes/GetByFiltro` + "/" + nIdRuta + "/" +
             nIdCiudadOrigen + "/" + nIdCiudadDestino + "/" + nIdRemolque1 + "/" + nIdRemolque2 + "/" + nIdDolly;
-        console.log(url)
-
         axios.get(url, { headers }).then((respuesta) => {
-
             this.setState({ dataInformesAsignados: respuesta.data })
         });
     }
@@ -222,34 +228,20 @@ class AgregarViaje extends Component {
     };
 
     handleRutaFiltro (event, newValue) {
-        event.preventDefault();
-        console.log(event)
         this.setState({ idRuta: newValue });
-        if (newValue.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
-            this.getInformesByFiltro(newValue.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
-                this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
-            
-        }
+        this.getInformesDisponibles(newValue.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad)
     }
 
     handleOrigenFiltro (event, newValue) {
-        event.preventDefault();
         this.setState({ origen: newValue });
-        if (this.state.idRuta.m_nIdRuta && newValue.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
+        this.getInformesDisponibles(this.state.idRuta.m_nIdRuta, newValue.m_nIdCiudad, this.state.destino.m_nIdCiudad)
 
-        this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, newValue.m_nIdCiudad, this.state.destino.m_nIdCiudad,
-            this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
-        }
     }
 
     handleDestinoFiltro (event, newValue) {
         event.preventDefault();
         this.setState({ destino: newValue });
-        if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && newValue.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
-
-        this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, newValue.m_nIdCiudad,
-            this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
-        }
+        this.getInformesDisponibles(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, newValue.m_nIdCiudad)
     }
 
     handleRemolqueUnoFiltro (event, newValue)  {
@@ -282,9 +274,22 @@ class AgregarViaje extends Component {
         }
     }
 
+    handleAgregarInforme(id){
+        var arrayInformesAsignados = this.state.dataInformesAsignados
+        var informeAsignar = this.state.dataInformesPorAsignar.find(i => i.m_nIdInforme === id)
+        arrayInformesAsignados.push(informeAsignar)
+        this.setState({dataInformesAsignados: arrayInformesAsignados})
+    }
+
+    handleEliminarInforme(id){
+        var dataInformesAsignados = [...this.state.dataInformesAsignados]
+        dataInformesAsignados.splice(dataInformesAsignados.findIndex(i => i.m_nIdInforme === id), 1)
+        this.setState({dataInformesAsignados: dataInformesAsignados})
+    }
+
     render() {
 
-        const columns = [
+        const columnspRorAsignar = [
             {
                 headerName: "Folio/Serie",
                 field: "m_sFolioInforme",
@@ -310,8 +315,76 @@ class AgregarViaje extends Component {
                 field: "m_sNombreCompleto",
                 flex: 1,
             },
+            {
+                headerName: "Acciones",
+                flex: 1,
+                field: "",
+                renderCell: (row) => {
+                    return (
+                        <div>
+                            <Tooltip title={"Asignar"}>
+                                <a
+                                    onClick={() => this.handleAgregarInforme(row.row.m_nIdInforme)}
+                                    className="btn btn-default btn-xs">
+                                    <i className={"fa fa-plus"}
+                                       style={{ color: "#F9A03E" }}/>
+                                </a>
+                            </Tooltip>
+                        </div>
+                    );
+                },
+                width: 100,
+            }
 
-        ];
+        ]
+        const columnspAsignadas = [
+            {
+                headerName: "Folio/Serie",
+                field: "m_sFolioInforme",
+                flex: 1,
+            },
+            {
+                headerName: "Ruta",
+                field: "m_sRuta",
+                flex: 1,
+            },
+            {
+                headerName: "Origen",
+                field: "m_sCiudadOrigen",
+                flex: 1,
+            },
+            {
+                headerName: "Destino",
+                field: "m_sCiudadDestino",
+                flex: 1,
+            },
+            {
+                headerName: "Operador",
+                field: "m_sNombreCompleto",
+                flex: 1,
+            },
+            {
+                headerName: "Acciones",
+                flex: 1,
+                field: "",
+                renderCell: (row) => {
+                    return (
+                        <div>
+                            <Tooltip title={"Desasignar" }>
+                                <a
+                                    onClick={() => this.handleEliminarInforme(row.row.m_nIdInforme) }
+                                    className="btn btn-default btn-xs">
+                                    <i className={"fa fa-trash"}
+                                       style={{ color: "#F9A03E" }}/>
+                                </a>
+                            </Tooltip>
+                        </div>
+                    );
+                },
+                width: 100,
+            }
+
+        ]
 
 
         return (
@@ -1123,7 +1196,7 @@ class AgregarViaje extends Component {
                                     <DataGrid
                                         localeText={dataGridLocaleText}
                                         rows={this.state.dataInformesPorAsignar}
-                                        columns={columns}
+                                        columns={columnspRorAsignar}
                                         density="compact"
                                         pageSize={Math.floor((this.state.height - 310) / 30)}
                                         getRowId={(row) => row.m_nIdInforme}
@@ -1154,20 +1227,7 @@ class AgregarViaje extends Component {
 
                             <div className="row" style={{ height: "200px", width: '100%' }}>
                                 {this.state.dataInformesAsignados.length != 0 ? (
-                                    <DataGrid
-                                        localeText={dataGridLocaleText}
-                                        rows={this.state.dataInformesAsignados}
-                                        columns={columns}
-                                        density="compact"
-                                        pageSize={Math.floor((this.state.height - 310) / 30)}
-                                        getRowId={(row) => row.m_nIdInforme}
-                                        onRowSelected={(row) => {
-                                            this.setState({
-                                                idInforme: row.data.m_nIdInforme
-
-                                            })
-
-                                        }}
+                                    <InformesPorAsignar {...this.props} columns={columnspAsignadas} dataInformesAsignados={this.state.dataInformesAsignados}
                                     />
                                 ) : (
                                     <div>No se encontró ningún registro</div>
