@@ -833,7 +833,7 @@ function Usuarios() {
                                                                             id="idTipoUsuario"
                                                                             name="idTipoUsuario"
                                                                         >
-                                                                            {dataListadoTipoUsuarios.map((tipo) => (
+                                                                            {dataListadoTipoUsuarios.filter(u => u.m_nIdTipoUsuario != 3).map((tipo) => (
                                                                                 <option
                                                                                     key={tipo.m_nIdTipoUsuario}
                                                                                     value={tipo.m_nIdTipoUsuario}
