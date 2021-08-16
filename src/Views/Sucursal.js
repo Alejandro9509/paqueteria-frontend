@@ -93,9 +93,7 @@ function Sucursal(props) {
 
     const handleAceptar = (e) => {
         e.preventDefault()
-        console.log(state.zonaHoraria.split("|"))
         var params = {
-
             "Sucursal": state.sucursal,
             "Abreviacion": state.abreviacion,
             "Calle": state.calle,
@@ -113,7 +111,6 @@ function Sucursal(props) {
             "DescripcionZonaHoraria": state.zonaHoraria.split("|")[1],
             "IdCodigoPostal": state.codigoPostal.m_nIdCP,
         }
-        console.log(JSON.stringify(params))
 
         if (state.idSucursal != 0) {
             modificarSucursales(state.idSucursal, params).then(respuesta => {

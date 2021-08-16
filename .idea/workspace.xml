@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Correcciones menores">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Ajuste en viajes">
       <change beforePath="$PROJECT_DIR$/.idea/sonarIssues.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Sucursal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Sucursal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Viajes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -110,7 +112,6 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="94d8e9cf-07c8-4a10-b81b-63018b1e29c3" name="Default Changelist" comment="" />
       <created>1622499461827</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -129,6 +130,7 @@
       <workItem from="1625678512731" duration="595000" />
       <workItem from="1625854871315" duration="946000" />
       <workItem from="1628006996868" duration="13293000" />
+      <workItem from="1629125426621" duration="3741000" />
     </task>
     <task id="LOCAL-00001" summary="*Algunos pedazos de codigos se sustituyeron con componentes.&#10;*Listado de formatos se muestra correctamente&#10;*Mejor acomodo en pestaña domicilios">
       <created>1624952066000</created>
@@ -396,11 +398,18 @@
       <option name="project" value="LOCAL" />
       <updated>1628794437290</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Ajuste en viajes">
+      <created>1629094799183</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1629094799183</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
+    <option name="version" value="1" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -463,7 +472,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se autocompleta la informacion de remitente y destinatario al seleccionar" />
     <MESSAGE value="Se agregó validacion para hacer la fecha de vencimiento obligatoria" />
     <MESSAGE value="Se arreglo relleno de datos al modificar sucursal" />
     <MESSAGE value="Ajustes al agregar usuarios" />
@@ -488,25 +496,46 @@
     <MESSAGE value="*Se arregló problema par que se vea el listado de unidades por id de tipo" />
     <MESSAGE value="*Se arregló problema que impedia seleccionar unidad" />
     <MESSAGE value="*Se corrigieron datos al agregar embarque" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Se corrigieron datos al agregar embarque" />
+    <MESSAGE value="Ajuste en viajes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajuste en viajes" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629094409870">
+    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629094798887">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629094409870" />
-    <state x="432" y="170" key="MultipleFileMergeDialog" timestamp="1629094420139">
+    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629094798887" />
+    <state x="144" y="76" key="DiffContextDialog" timestamp="1629094832243">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900@0.0.1440.900" timestamp="1629094420139" />
+    <state x="144" y="76" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1629094832243" />
+    <state width="1419" height="212" key="GridCell.Tab.0.bottom" timestamp="1629125317295">
+      <screen x="50" y="25" width="1390" height="875" />
+    </state>
+    <state width="1419" height="212" key="GridCell.Tab.0.bottom/50.25.1390.875@50.25.1390.875" timestamp="1629125317295" />
+    <state width="1419" height="212" key="GridCell.Tab.0.center" timestamp="1629125317294">
+      <screen x="50" y="25" width="1390" height="875" />
+    </state>
+    <state width="1419" height="212" key="GridCell.Tab.0.center/50.25.1390.875@50.25.1390.875" timestamp="1629125317294" />
+    <state width="1419" height="212" key="GridCell.Tab.0.left" timestamp="1629125317293">
+      <screen x="50" y="25" width="1390" height="875" />
+    </state>
+    <state width="1419" height="212" key="GridCell.Tab.0.left/50.25.1390.875@50.25.1390.875" timestamp="1629125317293" />
+    <state width="1419" height="212" key="GridCell.Tab.0.right" timestamp="1629125317295">
+      <screen x="50" y="25" width="1390" height="875" />
+    </state>
+    <state width="1419" height="212" key="GridCell.Tab.0.right/50.25.1390.875@50.25.1390.875" timestamp="1629125317295" />
+    <state x="432" y="170" key="MultipleFileMergeDialog" timestamp="1629094809243">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900@0.0.1440.900" timestamp="1629094809243" />
     <state x="426" y="164" key="RollbackChangesDialog" timestamp="1629094408714">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="426" y="164" key="RollbackChangesDialog/0.0.1440.900@0.0.1440.900" timestamp="1629094408714" />
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629091155839">
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629094836368">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629091155839" />
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629094836368" />
     <state x="446" y="167" key="git4idea.branch.GitSmartOperationDialog" timestamp="1629094416441">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

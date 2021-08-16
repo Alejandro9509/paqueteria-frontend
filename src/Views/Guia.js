@@ -954,6 +954,7 @@ function Guia(props) {
             paq["largo"] = paq.m_xLargo
             paq["ancho"] = paq.m_xAncho
             paq["alto"] = paq.m_xAlto
+            paq["cdt"] = paq.ctd
             paq["volumen"] = paq.m_xVolumen
             paq["tipoEmbalaje"] = paq.m_nTipo
             paq["valorDeclarado"] = paq.m_cValorDeclarado
@@ -1042,8 +1043,9 @@ function Guia(props) {
             console.log(tarifa.data)
             let pesoTotal = 0
             paquetesTemp.forEach((p) => {
-                pesoTotal = pesoTotal + p.peso
+                pesoTotal = pesoTotal + p.peso * p.cdt
             })
+            console.log(pesoTotal)
             obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal)
             if (tarifa.data.length !== 0) {
                 //se recorre el listado de conceptos de la tarifa del embarque
@@ -1225,13 +1227,12 @@ function Guia(props) {
                 if (element.m_nIdAgregadoDesde == 0){
                     conceptosDentroRango.push(element)
                 }else {
-                    if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
+                    if (element.m_xnRangoMinimo <= pesoTotal && element.m_xnRangoMaximo >= pesoTotal) {
                         conceptosDentroRango.push(element)
                     }
                 }
 
             })
-
             setDataTodosConceptosByEmbarque(conceptosDentroRango)
 
         })
