@@ -352,7 +352,15 @@ class Tarifas extends Component {
                             <div id="Agregar" className="tab-pane fade">
                                 {
                                     this.state.pantalla == 2 &&
-                                    <CrearTarifa edit={edit} consult={consult} select={this.state.selected} onSubmit={this.handleAceptar} onCancel={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}></CrearTarifa>
+                                    <CrearTarifa edit={edit} consult={consult} select={this.state.selected}
+                                                 onSubmit={this.handleAceptar} onCancel={(event) => {
+                                        event.stopPropagation();
+                                        this.setState({pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
+                                        $('.nav-tabs li ').removeClass('active');
+                                        $('.nav-tabs li').eq(0).addClass('active');
+                                        $('.tab-content div ').removeClass('in show');
+                                        $('#Listado').addClass('in show');
+                                    }}></CrearTarifa>
                                 }
 
                             </div>

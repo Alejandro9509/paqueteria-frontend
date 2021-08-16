@@ -174,14 +174,14 @@ class ConceptosAdicionales extends Component {
         })
     }
 
-    removeConcepto(event) {
+    removeConcepto(event, item) {
         event.preventDefault()
-        this.props.removeConcepto(this.state)
+        this.props.removeConcepto(item)
     }
 
     handleRowClick(event, index, concepto) {
-        const {conceptosAdicionales,removeConcepto} = this.props
-        removeConcepto(index)
+        const {removeConcepto} = this.props
+        removeConcepto(concepto)
         const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
         console.log('concepto click', conceptoSelect)
         console.log('concepto completo', concepto)
@@ -528,7 +528,10 @@ class ConceptosAdicionales extends Component {
                                             <td style={{ textAlign: "left" }}>${parseFloat(c.importeRet).toFixed(2)}</td>
                                             <td style={{ textAlign: "left" }}>{c.tipoCalculo == 1 ? "Fijo" : c.tipoCalculo == 2 ? "Factor" : ""}</td>
                                             <td>
-                                                <IconButton onClick={this.removeConcepto}>
+                                                <IconButton onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    this.removeConcepto(e, c)
+                                                }}>
                                                     <CancelIcon style={{ fill: "red", fontSize: "x-large" }} />
                                                 </IconButton>
                                             </td>
