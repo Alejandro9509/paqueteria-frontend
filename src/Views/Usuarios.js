@@ -19,7 +19,7 @@ import { FormControl, InputLabel, Select, TextField, Tooltip } from "@material-u
 import {
     agregarUsuarios,
     eliminarUsuarios,
-    modificarUsuarios,
+    modificarUsuarios, obtenerTipoUsuarios,
     obtenerUsuarios,
     obtenerUsuariosId,
     validarPermisos
@@ -68,7 +68,7 @@ function Usuarios() {
         password: "",
         confirmarPassword: "",
         correoElectronico: "",
-        idTipoUsuario: 1,
+        idTipoUsuario: "",
         filtrarPorIP: false,
         ip: "",
         filtrarPorDiaHora: false,
@@ -113,6 +113,7 @@ function Usuarios() {
     const [fileUploaded, setFileUploaded] = React.useState([])
     const [selectedFile, setSelectedFile] = useState();
     const [isFilePicked, setIsFilePicked] = useState(false);
+    const [dataListadoTipoUsuarios, setDataListadoTipoUsuarios] = useState([])
 
     const handleAceptar = (e) => {
         e.preventDefault()
@@ -125,7 +126,7 @@ function Usuarios() {
             "APaterno": state.apellidoPaternoUsuario,
             "AMaterno": state.apellidoMaternoUsuario,
             "Contrasena": state.password,
-            "TipoUsuario": 1,
+            "TipoUsuario": state.idTipoUsuario,
             "CorreoElectronico": state.correoElectronico,
             "IdSucursal": state.idSucursal,
             "Activo": state.activo,
@@ -380,6 +381,15 @@ function Usuarios() {
         })
     }
 
+    const handleShowListado = () => {
+        getAllData();
+        setState({
+            ...state,
+            agregar: "Agregar",
+            idUsuario: 0,
+        })
+    }
+
     const handleChange = event => {
         console.log(event)
         console.log(event.target.name + " : " + event.target.value)
@@ -483,7 +493,14 @@ function Usuarios() {
         }
         getAllSucursalData();
         getAllData();
+        getAllTiposUsuario()
     }, []);
+
+    const getAllTiposUsuario = () => {
+        obtenerTipoUsuarios().then(respuesta => {
+            setDataListadoTipoUsuarios(respuesta.data)
+        })
+    }
 
     async function getAllData() {
         obtenerUsuarios().then(respuesta => {
@@ -570,9 +587,9 @@ function Usuarios() {
                 <div className="container-fluid">
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" href="#Listado">
+                            <a data-toggle="tab" href="#Listado" onClick={handleShowListado}>
                                 <i className="fa fa-list" /> Listado
-            </a>
+                            </a>
                         </li>
                         <li>
                             <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
@@ -806,23 +823,22 @@ function Usuarios() {
                                                                     <FormControl fullWidth variant="outlined" margin="dense">
                                                                         <InputLabel id="sucursalListadoLabel">Tipo Usuario</InputLabel>
                                                                         <Select
-                                                                            labelId="sucursalListadoLabel"
+                                                                            labelId="tipoUsuarioLabel"
                                                                             label="Tipo Usuario"
                                                                             className="form-control"
                                                                             required
-                                                                            value={state.sucursalListado}
-                                                                            // onChange={handleChange}
+                                                                            value={state.idTipoUsuario}
+                                                                            onChange={handleChange}
                                                                             disabled={state.agregar == "Consultar"}
-                                                                            id="sucursalListado"
-                                                                            name="sucursalListado"
+                                                                            id="idTipoUsuario"
+                                                                            name="idTipoUsuario"
                                                                         >
-                                                                            <option value="0">Todas</option>
-                                                                            {dataSucursal.map((sucursal) => (
+                                                                            {dataListadoTipoUsuarios.filter(u => u.m_nIdTipoUsuario != 3).map((tipo) => (
                                                                                 <option
-                                                                                    key={sucursal.m_nIdSucursal}
-                                                                                    value={sucursal.m_nIdSucursal}
+                                                                                    key={tipo.m_nIdTipoUsuario}
+                                                                                    value={tipo.m_nIdTipoUsuario}
                                                                                 >
-                                                                                    {sucursal.m_sSucursal}
+                                                                                    {tipo.m_sTipoUsuario}
                                                                                 </option>
                                                                             ))}
                                                                         </Select>

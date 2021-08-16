@@ -19,6 +19,7 @@ class Derechos extends Component {
         this.getAllNombreDerechos = this.getAllNombreDerechos.bind(this)
         this.handleChangeChecboxModulos = this.handleChangeChecboxModulos.bind(this)
         this.handleChangeChecboxProcesos = this.handleChangeChecboxProcesos.bind(this)
+        this.onSubmit = this.onSubmit.bind(this)
     }
 
     componentDidMount() {
@@ -108,16 +109,29 @@ class Derechos extends Component {
 
     }
 
+    onSubmit(event){
+        event.preventDefault()
+        const {moduloSeleccionados, procesosSeleccionados, accionesSeleccionados} = this.state
+        console.log('moduloSeleccionados: ', moduloSeleccionados)
+        console.log('procesosSeleccionados: ', procesosSeleccionados)
+        console.log('accionesSeleccionados: ', accionesSeleccionados)
+    }
+
     render() {
         return (
-            <div>
+            <form onSubmit={this.onSubmit}>
                 <div className="col-md-4 col-sm-12" >
 
                     <table style={{ overflow: "auto", width: "100%" }}>
                         <tr>
                             <th>
                                 <label className="checkbox">
-                                    <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxModulos(event, 0, true)} checked={this.state.moduloAll} />
+                                    <input type="checkbox"
+                                           onChange={(event) => this.handleChangeChecboxModulos(event, 0, true)}
+                                           checked={this.state.moduloAll}
+                                           // disabled={this.props.consult}
+                                           disabled
+                                    />
                                     <i />
                                 </label>
 
@@ -130,8 +144,11 @@ class Derechos extends Component {
                                     <tr key={i.m_nIdModulo}>
                                         <td style={{ width: "50px" }}>
                                             <label className="checkbox">
-                                                <input disabled={this.props.consult} type="checkbox" onChange={(event) => this.handleChangeChecboxModulos(event, index, false)} checked={this.state.moduloSeleccionados.find(t => t.m_nIdModulo === i.m_nIdModulo) != null} />
+                                                <input disabled={this.props.consult} type="checkbox"
+                                                       onChange={(event) => this.handleChangeChecboxModulos(event, index, false)}
+                                                       checked={this.state.moduloSeleccionados.find(t => t.m_nIdModulo === i.m_nIdModulo) != null}/>
                                                 <i />
+
                                             </label>
                                         </td>
                                         <td>{i.m_sTituloModulo}</td>
@@ -241,13 +258,13 @@ class Derechos extends Component {
                 
                 <div className="col-md-12 col-sm-12" style={{ padding: "5px", display: "inline-flex" }}>
                     <div className="form-footer " className="col-md-12" style={{ padding: "10px" }}>
-                        <button
+                        {/*<button
                             type="button"
                             className="btn btn-secondary secondary-btn"
                             onClick={this.props.onCancel}
                         >
                             Cancelar
-                                    </button>
+                                    </button>*/}
                         <button
                             type="submit"
 
@@ -259,7 +276,7 @@ class Derechos extends Component {
 
                     </div>
                 </div>
-            </div>
+            </form>
         );
     }
 }

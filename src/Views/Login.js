@@ -39,7 +39,8 @@ function Login() {
     e.preventDefault();
     const user = $("#usuario").val();
     const rfc = $("#rfc").val();
-    const pass = sha512($("#password").val());
+    //const pass = sha512($("#password").val());
+    const pass = $("#password").val();
 
     const url = `${process.env.REACT_APP_API_URL}/Usuarios/ValidarLogin/` + user + "/" + pass + "/" + rfc;
     axios.get(url, { headers }).then(respuesta => {
