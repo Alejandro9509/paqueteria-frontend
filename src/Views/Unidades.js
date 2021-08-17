@@ -606,8 +606,8 @@ function Unidades(props) {
             TelefonosCompaniaSeguros1: state.telefono1,
             NumeroSeguro1: state.numeroSeguro1,
             VencimientoSeguro1: state.vencimientoSeguro1,
-            TipoCoberturaSeguro1: state.tipoCobertura1,
-            CompaniaSeguros: state.companiaSeguros,
+            TipoCoberturaSeguro1: state.TipoCoberturaSeguro1,
+            CompaniaSeguros: state.CompaniaSeguros,
             TelefonosCompaniaSeguros: state.telefono,
             NumeroSeguro: state.numeroSeguro,
             VencimientoSeguro: state.vencimientoSeguro,
@@ -1757,14 +1757,13 @@ function Unidades(props) {
                                                                             <input
                                                                                 onChange={handleChange}
                                                                                 type="radio"
-                                                                                name="i-radio1"
                                                                                 defaultChecked
                                                                                 value="1"
                                                                                 placeholder={
-                                                                                    state.TipoCoberturaSeguro1
+                                                                                    state.tipoCobertura1
                                                                                 }
-                                                                                id="TipoCoberturaSeguro1"
-                                                                                name="TipoCoberturaSeguro1"
+                                                                                id="tipoCobertura1"
+                                                                                name="tipoCobertura1"
                                                                             />
                                                                             <i />
                                                   Amplia
@@ -1772,15 +1771,13 @@ function Unidades(props) {
                                                                         <label className="radio">
                                                                             <input
                                                                                 onChange={handleChange}
-                                                                                onChange={handleChange}
                                                                                 type="radio"
-                                                                                name="i-radio1"
                                                                                 value="2"
                                                                                 placeholder={
-                                                                                    state.TipoCoberturaSeguro1
+                                                                                    state.tipoCobertura1
                                                                                 }
-                                                                                id="TipoCoberturaSeguro1"
-                                                                                name="TipoCoberturaSeguro1"
+                                                                                id="tipoCobertura1"
+                                                                                name="tipoCobertura1"
                                                                             />
                                                                             <i />
                                                   Limitada
@@ -1789,13 +1786,12 @@ function Unidades(props) {
                                                                             <input
                                                                                 onChange={handleChange}
                                                                                 type="radio"
-                                                                                name="i-radio1"
                                                                                 value="3"
                                                                                 placeholder={
-                                                                                    state.TipoCoberturaSeguro1
+                                                                                    state.tipoCobertura1
                                                                                 }
-                                                                                id="TipoCoberturaSeguro1"
-                                                                                name="TipoCoberturaSeguro1"
+                                                                                id="tipoCobertura1"
+                                                                                name="tipoCobertura1"
                                                                             />
                                                                             <i />
                                                   S/Cobertura
@@ -1810,9 +1806,9 @@ function Unidades(props) {
                                                                             onChange={handleChange}
                                                                             className="form-control"
                                                                             type="text"
-                                                                            value={state.CompaniaSeguros}
-                                                                            id="CompaniaSeguros"
-                                                                            name="CompaniaSeguros"
+                                                                            value={state.companiaSeguros}
+                                                                            id="companiaSeguros"
+                                                                            name="companiaSeguros"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -1867,7 +1863,6 @@ function Unidades(props) {
                                                                             <input
                                                                                 onChange={handleChange}
                                                                                 type="radio"
-                                                                                name="i-radio"
                                                                                 value="1"
                                                                                 defaultChecked
                                                                                 placeholder={
@@ -1883,7 +1878,6 @@ function Unidades(props) {
                                                                             <input
                                                                                 onChange={handleChange}
                                                                                 type="radio"
-                                                                                name="i-radio"
                                                                                 value="2"
                                                                                 placeholder={
                                                                                     state.tipoCobertura
@@ -1898,7 +1892,6 @@ function Unidades(props) {
                                                                             <input
                                                                                 onChange={handleChange}
                                                                                 type="radio"
-                                                                                name="i-radio"
                                                                                 value="3"
                                                                                 placeholder={
                                                                                     state.tipoCobertura
