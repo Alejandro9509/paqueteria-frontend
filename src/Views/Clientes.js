@@ -645,6 +645,10 @@ function Clientes(props) {
 
     const handleSelectChange = (event) => {
         console.log("onChangeSelect");
+        setState({
+            ...state,
+            idPais: event.target.value
+        })
         getAllEstados(event.target.value);
     };
 
@@ -1826,19 +1830,18 @@ function Clientes(props) {
                                                                                                         <Select
                                                                                                             labelId="idPaisLabel"
                                                                                                             label="Pais"
-                                                                                                            onChange={
-                                                                                                                handleSelectChange
-                                                                                                            }
+                                                                                                            onChange={handleSelectChange}
                                                                                                             className="form-control"
                                                                                                             native
                                                                                                             value={state.idPais}
                                                                                                             id="idPais"
                                                                                                             name="idPais"
                                                                                                         >
-                                                                                                            <option value={''}></option>
+                                                                                                            <option value={0}></option>
                                                                                                             {dataPais.map((pais) => (
                                                                                                                 <option
                                                                                                                     value={pais.m_nIdPais}
+                                                                                                                    key={pais.m_nIdPais}
                                                                                                                 >
                                                                                                                     {pais.m_sPais}
                                                                                                                 </option>

@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se agregó seccion de seguros para clientes">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Ajustes menores en clientes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Clientes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Clientes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/RemitentesDestinatarios.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/RemitentesDestinatarios.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
