@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Ajustes menores en clientes">
-      <change beforePath="$PROJECT_DIR$/src/Views/Clientes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Clientes.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Ajustes en clientes">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/RemitentesDestinatarios.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/RemitentesDestinatarios.js" afterDir="false" />
     </list>
@@ -438,7 +438,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629243201109</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="*Ajustes en clientes">
+      <created>1629244185051</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1629244185051</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -505,7 +512,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ajustes en embarque al agregar uno nuevo:&#10;*Campo moneda se modifica correctamente.&#10;*los sobres se agregan al listado de paquetes y se mandan a la base de datos." />
     <MESSAGE value="Ajustes en embarque al mostrar informacion para modificar" />
     <MESSAGE value="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita" />
     <MESSAGE value="Ajustes al crear guia a partir de embarque" />
@@ -530,7 +536,8 @@
     <MESSAGE value="Correcciones de variables en variables para registrar seguro, en unidades" />
     <MESSAGE value="Se agregó seccion de seguros para clientes" />
     <MESSAGE value="*Ajustes menores en clientes" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Ajustes menores en clientes" />
+    <MESSAGE value="*Ajustes en clientes" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Ajustes en clientes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
