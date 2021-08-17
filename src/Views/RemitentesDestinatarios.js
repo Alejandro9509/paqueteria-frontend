@@ -84,6 +84,7 @@ function RemitenteDestinatario(props) {
         telefono: "",
         agregar: "Agregar",
         importar: "",
+        alias: "",
         height: window.innerHeight
     });
 
@@ -146,6 +147,7 @@ function RemitenteDestinatario(props) {
             noInterior: newValue.m_sNoInterior,
             telefono: newValue.m_sCelular,
             correoElectronico: newValue.m_sCorreoElectronico,
+            alias: newValue.m_sAlias
         })
     }
 
@@ -221,6 +223,7 @@ function RemitenteDestinatario(props) {
             Telefono: state.telefono,
             agregar: "Agregar",
             importar: "",
+            alias: state.alias
         };
         console.log(JSON.stringify(params))
         if (state.idRemitenteDestinatario != 0) {
@@ -293,6 +296,7 @@ function RemitenteDestinatario(props) {
                 numero: respuesta.data.m_nNumero,
                 nombre: respuesta.data.m_sNombre,
                 rfc: respuesta.data.m_sRFC,
+                alias: respuesta.data.m_sAlias,
                 activo: respuesta.data.m_bActivo,
                 calle: respuesta.data.m_sCalle,
                 noExterior: respuesta.data.m_sNoExterior,
@@ -331,6 +335,7 @@ function RemitenteDestinatario(props) {
                 numero: respuesta.data.m_nNumero,
                 nombre: respuesta.data.m_sNombre,
                 rfc: respuesta.data.m_sRFC,
+                alias: respuesta.data.m_sAlias,
                 activo: respuesta.data.m_bActivo,
                 calle: respuesta.data.m_sCalle,
                 noExterior: respuesta.data.m_sNoExterior,
@@ -387,6 +392,11 @@ function RemitenteDestinatario(props) {
         {
             headerName: "RFC",
             field: "m_sRFC",
+            width: 200,
+        },
+        {
+            headerName: "Alias",
+            field: "m_sAlias",
             width: 200,
         },
         {
@@ -900,6 +910,22 @@ function RemitenteDestinatario(props) {
                                                                                 maxlength="4"
                                                                                 required
                                                                                 disabled={state.agregar === "Consultar"}
+
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-6 col-md-2-5 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense" label="Alias"
+                                                                                       onChange={handleChange}
+                                                                                       type="text"
+                                                                                       className="form-control"
+                                                                                       value={state.alias}
+                                                                                       id="alias"
+                                                                                       name={"alias"}
+                                                                                       maxlength="4"
+                                                                                       required
+                                                                                       disabled={state.agregar === "Consultar"}
 
                                                                             />
                                                                         </div>
