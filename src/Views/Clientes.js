@@ -414,7 +414,6 @@ function Clientes(props) {
         setState(state => {
             return {
                 ...state,
-                agregar: "Agregar",
                 idCliente: 0,
                 numeroCliente: 0,
                 tipoCliente: 0,
@@ -443,9 +442,9 @@ function Clientes(props) {
                 bancoOrdenante: "",
                 rfcBancoOrdenante: "",
                 cuentaBancoOrdenante: "",
-                idPais: 0,
+                idPais: '',
                 codigoPostal: 0,
-                idEstado: 0,
+                idEstado: '',
                 municipio: "",
                 localidad: "",
                 colonia: "",
@@ -495,6 +494,12 @@ function Clientes(props) {
     }
 
     function handleShowAgregar() {
+        setState(state =>{
+            return{
+                ...state,
+                agregar: "Agregar",
+            }
+        })
         limpiarCamposAgregar()
         $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
 
@@ -925,7 +930,20 @@ function Clientes(props) {
         );
     }
 
-
+    const handleShowListado = (event) => {
+        event.stopPropagation();
+        setState(state =>{
+            return {
+                ...state,
+                agregar: "Agregar"
+            }
+        });
+        limpiarCamposAgregar()
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
+    }
 
     return (
         <div>
@@ -955,14 +973,7 @@ function Clientes(props) {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a onClick={(event) => {
-                                event.stopPropagation();
-                                setState({...state, agregar: "Agregar"});
-                                $('.nav-tabs li ').removeClass('active');
-                                $('.nav-tabs li').eq(0).addClass('active');
-                                $('.tab-content div ').removeClass('in show');
-                                $('#Listado').addClass('in show');
-                            }}>
+                            <a onClick={(event) => handleShowListado(event)}>
                                 <i className="fa fa-list" /> Listado
                             </a>
                         </li>
@@ -3092,7 +3103,7 @@ function Clientes(props) {
                                                         </div>
                                                     </div>*/}
                                                     <div className="form-footer" className="col-md-12">
-                                                        <button
+                                                        {/*<button
                                                             type="button"
                                                             onClick={(event) => {
                                                                 event.stopPropagation();
@@ -3103,7 +3114,7 @@ function Clientes(props) {
                                                                 $('#Listado').addClass('in show');
                                                             }}
                                                             className="btn btn-secondary secondary-btn">Cancelar
-                                                        </button>
+                                                        </button>*/}
                                                         <button
                                                             type="submit"
                                                             className="btn btn-primary primary-btn">Aceptar
