@@ -64,6 +64,15 @@ function obtenerUnidadesId(id) {
     return result
 }
 
+function obtenerEstatusUnidadeId(id) {
+    const url = `${process.env.REACT_APP_API_URL}/InventarioUnidades/GetByIdUnidad/` + id;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 function obtenerUnidadesTipo(id) {
     const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
     let result;
@@ -73,4 +82,4 @@ function obtenerUnidadesTipo(id) {
     return result
 }
 
-export { modificarUnidades, agregarUnidades, eliminarUnidades, obtenerUnidadesId, obtenerUnidades, validaCodigoUnidad, obtenerUnidadesTipo }
+export { modificarUnidades, agregarUnidades, eliminarUnidades, obtenerUnidadesId, obtenerUnidades, validaCodigoUnidad, obtenerUnidadesTipo, obtenerEstatusUnidadeId }

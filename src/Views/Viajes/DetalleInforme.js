@@ -1,0 +1,129 @@
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import {ButtonBase, Grid} from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
+
+class DetalleInforme extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+
+    render() {
+        return (
+            <div>
+                {
+                    this.props.guias.map((value, index) => {
+                        return (
+                            <div style={{
+                                width: "100%",
+                                borderRadius: "10px",
+                            }}>
+                                <Grid container spacing={2}>
+
+                                    <Grid
+                                        item
+                                        sm={12}
+                                        style={{
+                                            width: "100%",
+                                        }}
+                                    >
+                                        <Grid container spacing={2}>
+                                            <Grid item sm={12} md={4}>
+                                                <div className="input">
+
+                                                    <TextField variant="outlined" margin="dense" label="Folio Guía"
+                                                               value={value.m_nFolioGuia}
+                                                               className="form-control"
+                                                               type="text"
+                                                               disabled="true"
+                                                               id={"folio-" + index}
+                                                    />
+                                                </div>
+                                            </Grid>
+                                            <Grid item sm={12} md={4}>
+                                                <div className="input">
+
+                                                    <TextField variant="outlined" margin="dense" label="Estatus Guía"
+                                                               className="form-control"
+                                                               type="text"
+                                                               disabled="true"
+                                                               value={
+                                                                   value.m_sEstatusGuia
+                                                               }
+                                                               id={"estatus-" + index}
+                                                    />
+                                                </div>
+                                            </Grid>
+                                            <Grid item sm={12} md={4}>
+                                                <div className="input">
+
+                                                    <TextField variant="outlined" margin="dense" label="Total"
+                                                               value={value.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0)}
+                                                               disabled="true"
+                                                               className="form-control"
+                                                               type="text"
+                                                               id={"total-" + index}
+                                                    />
+                                                </div>
+                                            </Grid>
+                                            <Grid item sm={12} md={6}>
+                                                <div className="input">
+
+                                                    <TextField variant="outlined" margin="dense" label="Destino"
+                                                               value={value.m_sCiudadDestino}
+                                                               className="form-control"
+                                                               type="text"
+                                                               disabled="true"
+                                                               id={"destino-" + index}
+                                                    />
+                                                </div>
+                                            </Grid>
+                                            <Grid item sm={12} md={6}>
+                                                <div className="input">
+
+                                                    <TextField variant="outlined" margin="dense"
+                                                               label="Tipo de Servicio"
+                                                               disabled="true"
+                                                               value={value.m_sTipoServicio}
+                                                               className="form-control"
+                                                               type="text"
+                                                               id={"servicio-" + index}
+                                                    />
+                                                </div>
+                                            </Grid>
+                                            <Grid item sm={12} md={12}>
+                                                <div className="input">
+
+                                                    <TextField variant="outlined" margin="dense" label="Observaciones"
+                                                               disabled="true"
+                                                               value={
+                                                                   value.m_sObservaciones
+                                                               }
+                                                               className="form-control"
+                                                               type="text"
+                                                               id={
+                                                                   "observacion-" + index
+                                                               }
+                                                    />
+                                                </div>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </div>
+                        )
+                    })
+                }
+
+                {
+                    this.props.children
+                }
+            </div>
+        );
+    }
+}
+
+DetalleInforme.propTypes = {};
+
+export default DetalleInforme;

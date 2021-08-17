@@ -4,12 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Ajuste en viajes">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se realizo el ajuste de multiplicar el peso por la cantidad de paquetes">
+      <change afterPath="$PROJECT_DIR$/src/Views/Viajes/DetalleInforme.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarIssues.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Sucursal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Sucursal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/UnidadesContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/UnidadesContext.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Viajes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Viajes/AsignarOperadorUnidad.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes/AsignarOperadorUnidad.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Viajes/Historial.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes/Historial.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +133,7 @@
       <workItem from="1625678512731" duration="595000" />
       <workItem from="1625854871315" duration="946000" />
       <workItem from="1628006996868" duration="13293000" />
-      <workItem from="1629125426621" duration="3741000" />
+      <workItem from="1629125426621" duration="20705000" />
     </task>
     <task id="LOCAL-00001" summary="*Algunos pedazos de codigos se sustituyeron con componentes.&#10;*Listado de formatos se muestra correctamente&#10;*Mejor acomodo en pestaña domicilios">
       <created>1624952066000</created>
@@ -405,11 +408,28 @@
       <option name="project" value="LOCAL" />
       <updated>1629094799183</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Se realizo el ajuste de multiplicar el peso por la cantidad de paquetes">
+      <created>1629136704580</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1629136704580</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -472,7 +492,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se agregó validacion para hacer la fecha de vencimiento obligatoria" />
     <MESSAGE value="Se arreglo relleno de datos al modificar sucursal" />
     <MESSAGE value="Ajustes al agregar usuarios" />
     <MESSAGE value="Ajustes en crear embarque" />
@@ -497,33 +516,39 @@
     <MESSAGE value="*Se arregló problema que impedia seleccionar unidad" />
     <MESSAGE value="*Se corrigieron datos al agregar embarque" />
     <MESSAGE value="Ajuste en viajes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajuste en viajes" />
+    <MESSAGE value="Se realizo el ajuste de multiplicar el peso por la cantidad de paquetes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se realizo el ajuste de multiplicar el peso por la cantidad de paquetes" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629094798887">
+    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629136703995">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629094798887" />
-    <state x="144" y="76" key="DiffContextDialog" timestamp="1629094832243">
+    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629136703995" />
+    <state x="144" y="76" width="1152" height="720" key="DiffContextDialog" timestamp="1629145768531">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="144" y="76" width="1152" height="720" key="DiffContextDialog/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629145768531" />
     <state x="144" y="76" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1629094832243" />
-    <state width="1419" height="212" key="GridCell.Tab.0.bottom" timestamp="1629125317295">
+    <state width="1419" height="133" key="GridCell.Tab.0.bottom" timestamp="1629211509626">
       <screen x="50" y="25" width="1390" height="875" />
     </state>
-    <state width="1419" height="212" key="GridCell.Tab.0.bottom/50.25.1390.875@50.25.1390.875" timestamp="1629125317295" />
-    <state width="1419" height="212" key="GridCell.Tab.0.center" timestamp="1629125317294">
+    <state width="1419" height="133" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629145735259" />
+    <state width="1419" height="133" key="GridCell.Tab.0.bottom/50.25.1390.875@50.25.1390.875" timestamp="1629211509626" />
+    <state width="1419" height="133" key="GridCell.Tab.0.center" timestamp="1629211509625">
       <screen x="50" y="25" width="1390" height="875" />
     </state>
-    <state width="1419" height="212" key="GridCell.Tab.0.center/50.25.1390.875@50.25.1390.875" timestamp="1629125317294" />
-    <state width="1419" height="212" key="GridCell.Tab.0.left" timestamp="1629125317293">
+    <state width="1419" height="133" key="GridCell.Tab.0.center/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629145735257" />
+    <state width="1419" height="133" key="GridCell.Tab.0.center/50.25.1390.875@50.25.1390.875" timestamp="1629211509625" />
+    <state width="1419" height="133" key="GridCell.Tab.0.left" timestamp="1629211509623">
       <screen x="50" y="25" width="1390" height="875" />
     </state>
-    <state width="1419" height="212" key="GridCell.Tab.0.left/50.25.1390.875@50.25.1390.875" timestamp="1629125317293" />
-    <state width="1419" height="212" key="GridCell.Tab.0.right" timestamp="1629125317295">
+    <state width="1419" height="133" key="GridCell.Tab.0.left/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629145735256" />
+    <state width="1419" height="133" key="GridCell.Tab.0.left/50.25.1390.875@50.25.1390.875" timestamp="1629211509623" />
+    <state width="1419" height="133" key="GridCell.Tab.0.right" timestamp="1629211509625">
       <screen x="50" y="25" width="1390" height="875" />
     </state>
-    <state width="1419" height="212" key="GridCell.Tab.0.right/50.25.1390.875@50.25.1390.875" timestamp="1629125317295" />
+    <state width="1419" height="133" key="GridCell.Tab.0.right/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629145735258" />
+    <state width="1419" height="133" key="GridCell.Tab.0.right/50.25.1390.875@50.25.1390.875" timestamp="1629211509625" />
     <state x="432" y="170" key="MultipleFileMergeDialog" timestamp="1629094809243">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -536,6 +561,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629094836368" />
+    <state x="383" y="207" width="674" height="486" key="find.popup" timestamp="1629155873333">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="383" y="207" width="674" height="486" key="find.popup/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629155873333" />
     <state x="446" y="167" key="git4idea.branch.GitSmartOperationDialog" timestamp="1629094416441">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

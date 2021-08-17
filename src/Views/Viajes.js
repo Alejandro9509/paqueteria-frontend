@@ -19,6 +19,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import {dataGridLocaleText} from "../Constants";
+import $ from "jquery";
 import {
     Button,
     Dialog,
@@ -30,7 +31,7 @@ import {
     List,
     ListItem,
     Collapse,
-    ListItemText
+    ListItemText, Link
 } from "@material-ui/core";
 import {obtenerEstatusDocumentos} from "../Util/Contexts/EstatusContext";
 import Historial from "./Viajes/Historial";
@@ -43,6 +44,8 @@ import {agregarViajeSalida, agregarViajeLlegada} from "../Util/Contexts/ViajesCo
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import {obtenerInformesPorViaje} from "../Util/Contexts/InformesContext";
+import {getUniqueListBy} from "../Util/Util";
+import DetalleInforme from "./Viajes/DetalleInforme";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -62,12 +65,13 @@ const styles = {
     }
 };
 const useStyles = makeStyles(styles);
-
+window.jQuery = window.$ = $;
 function Viajes() {
     const [data, setData] = React.useState([])
     const [dataSucursal, setDataSucursal] = React.useState([]);
     const [indexOpen, setIndexOpen] = React.useState(-1);
     const [dataEstatusViaje, setEstatusViaje] = React.useState([]);
+    const [informeSeleccionado, setInformeSeleccionado] = React.useState(null);
     const [dataEstatusDocumento, setEstatusDocumento] = React.useState([]);
     const [state, setState] = React.useState({
         showPopUp: false,
@@ -86,6 +90,7 @@ function Viajes() {
         estatusListado: 0,
         estatusDocumentoListado: 0,
         idEquipo: 0,
+
 
 
     })
@@ -271,13 +276,6 @@ function Viajes() {
 
     }
 
-    function handleSelectRow(id, event) {
-        setState({
-            ...state,
-            idViaje: id
-        });
-    }
-
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -453,6 +451,7 @@ function Viajes() {
         showSalidaParadasDialog: false,
         showLlegadaParadasDialog: false,
         showAsignarOperadorDialog: false,
+        showDetalleGuias: false,
     });
 
 
@@ -474,39 +473,9 @@ function Viajes() {
 
     const columnsParadas = [
         {
-            headerName: "Camión",
-            field: "m_sRemolque1",
-            renderCell: (row) => {
-                return (
-                    <a onClick={() => showCamionDialog()}>{row.row.m_sCamion}</a>
-                );
-            },
-            width: 100,
-        },
-        {
-            headerName: "Operador",
-            field: "m_sNombreCompleto",
-            width: 150,
-            renderCell: (row) => {
-                return (
-                    <a onClick={() => showAsignarOperadorDialog(row.row)}>{row.row.m_sOperador}</a>
-                )
-            },
-        },
-        {
-            headerName: "Salida",
-            field: "m_nIdOrigen",
-            width: 100,
-            renderCell: (row) => {
-                return (
-                    <a onClick={() => showSalidaDialog(row.row)}>{row.row.m_dFechaSalida == "0000-00-00" ? "Asignar" : "Quitar"}</a>
-                )
-            }
-        },
-        {
-            headerName: "Fecha",
-            field: "m_dFechaSalida",
-            width: 150,
+            headerName: "Folio Informe",
+            field: "m_sFolioInforme",
+            width: 200,
         },
         {
             headerName: "Origen",
@@ -514,24 +483,45 @@ function Viajes() {
             width: 200,
         },
         {
-            headerName: "Llegada",
-            field: "m_nIdDestino",
-            width: 100,
-            renderCell: (row) => {
-                return (
-                    <a onClick={() => showLlegadaDialog(row.row)}>{row.row.m_dFechaLlegada == "0000-00-00" ? "Asignar" : "Quitar"}</a>
-                )
-            }
+            headerName: "Salida",
+            field: "m_dFechaSalida",
+            valueFormatter: row => row.value.startsWith("0000") ? "Sin definir" : row.value
         },
         {
-            headerName: "Fecha",
+            headerName: "Llegada",
             field: "m_dFechaLlegada",
+            width: 100,
+            valueFormatter: row => row.value.startsWith("0000") ? "Sin definir" : row.value
+        },
+        {
+            headerName: "Guías",
+            field: "m_sRemolque2",
             width: 150,
+            renderCell: (row) => {
+                return (
+                    <Link style={{cursor: "pointer"}} onClick={() => {
+                        setInformeSeleccionado(row.row);
+                        setEventOptions({...eventOptions, showDetalleGuias: true})
+                    }}>
+                        Ver Guías
+                    </Link>
+                )
+            }
         },
         {
             headerName: "Destino",
             field: "m_sCiudadDestino",
             width: 200,
+        },
+        {
+            headerName: "Camión",
+            field: "m_sRemolque1",
+            width: 150,
+        },
+        {
+            headerName: "Operador",
+            field: "m_sNombreCompleto",
+            width: 150
         },
         // {
         //     headerName: "Liq",
@@ -540,11 +530,16 @@ function Viajes() {
         // }, */
     ]
     const [paradasListado, setParadasListado] = React.useState([]);
+
     const [paradaData, setParadaData] = React.useState();
 
     function getParadasListado(row) {
         obtenerInformesPorViaje(row).then(respuesta => {
-            setParadasListado(respuesta.data);
+            var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdRuta")
+            arrayInformes.forEach(a => {
+                a["informes"] = respuesta.data.filter(r => r.m_nIdRuta === a.m_nIdRuta)
+            })
+            setParadasListado(arrayInformes);
         });
     }
 
@@ -555,9 +550,6 @@ function Viajes() {
         });
     }
 
-    const showCamionDialog = () => {
-        console.log("Espero se haya abierto el dialogo al clickear camion");
-    }
 
     const showSalidaDialog = (data) => {
         console.log(data);
@@ -690,6 +682,31 @@ function Viajes() {
 
     return (
         <div>
+            {
+                informeSeleccionado &&
+                <Dialog open={eventOptions.showDetalleGuias}
+                        onClose={() => setEventOptions({...eventOptions, showDetalleGuias: false})}
+                        fullWidth={true}
+                        maxWidth={'md'}>
+                    <DialogTitle>
+                        Detalle de Informe - {informeSeleccionado.m_sFolioInforme}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DetalleInforme guias={informeSeleccionado.m_arrClsProGuia}>
+                            <DialogActions>
+                                <Button
+                                    variant={'contained'} color={'primary'}
+                                    type="submit"
+                                    onClick={() => setEventOptions({
+                                        ...eventOptions,
+                                        showDetalleGuias: false
+                                    })}>Aceptar</Button>
+                            </DialogActions>
+                        </DetalleInforme>
+                    </DialogContent>
+                </Dialog>
+            }
+
             <Dialog open={eventOptions.showDispEquipoDialog}
                     onClose={closeActualizarDispEquipo}
                     fullWidth={true}
@@ -979,24 +996,54 @@ function Viajes() {
 
 
                                 <div className="col-md-6">
-                                    <label className="label" style={{color: '#717171'}}>Detalle de Paradas</label>
+                                    <div style={{color: '#717171', marginBottom: "10px", fontSize: "18px"}}>Detalle de
+                                        Paradas
+                                    </div>
                                     <div className="widget-wrap">
                                         <div className="widget-content">
                                             <div className="row" style={{height: "300px", width: '100%'}}>
-                                               {/* <List>
+                                                <List>
                                                     {
                                                         paradasListado.map((p, index) => {
 
                                                             return (
                                                                 <div>
-                                                                    <ListItem button
-                                                                              onClick={() => setIndexOpen(index === indexOpen ? -1 : index)}>
+                                                                    <ListItem
+                                                                    >
 
-                                                                        <ListItemText primary="Inbox"/>
-                                                                        {indexOpen === index ? <ExpandLess/> : <ExpandMore/>}
+                                                                        <ListItemText primary={`Ruta: ${p.m_sRuta}`}/>
+                                                                        {
+                                                                            p.m_dFechaSalida.startsWith("0000") &&
+
+                                                                            <Link style={{cursor: "pointer"}} onClick={() => showSalidaDialog(p)}>Marcar
+                                                                                Salida</Link>
+                                                                        }
+
+                                                                        /
+
+                                                                        {
+                                                                            p.m_dFechaLlegada.startsWith("0000") &&
+
+                                                                            <Link style={{cursor: "pointer"}} onClick={() => showLlegadaDialog(p)}>Marcar
+                                                                                Llegada</Link>
+                                                                        }
+                                                                        {indexOpen === index ?
+                                                                            <ExpandLess style={{cursor: "pointer"}}
+                                                                                        onClick={() => setIndexOpen(index === indexOpen ? -1 : index)}/> :
+                                                                            <ExpandMore style={{cursor: "pointer"}}
+                                                                                        onClick={() => setIndexOpen(index === indexOpen ? -1 : index)}/>}
                                                                     </ListItem>
                                                                     <Collapse in={indexOpen === index}
                                                                               timeout="auto" unmountOnExit>
+                                                                        <div style={{height: "300px"}}>
+                                                                            <DataGrid
+                                                                                localeText={dataGridLocaleText}
+                                                                                rows={p.informes}
+                                                                                columns={columnsParadas}
+                                                                                density="compact"
+                                                                                getRowId={(row) => row.m_nIdInforme}
+                                                                            />
+                                                                        </div>
 
                                                                     </Collapse>
                                                                 </div>
@@ -1004,9 +1051,9 @@ function Viajes() {
                                                         })
                                                     }
 
-                                                </List>*/}
+                                                </List>
 
-                                                    {equipoListado.length !== 0 ? (
+                                                {/*{equipoListado.length !== 0 ? (
                                                         <DataGrid
                                                             rows={paradasListado}
                                                             columns={columnsParadas}
@@ -1022,30 +1069,31 @@ function Viajes() {
                                                         />
                                                     ) : (
                                                         <div>No se encontró ningún registro</div>
-                                                    )}
+                                                    )}*/}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-md-6">
-                                    <label className="label" style={{color: '#717171'}}>Disponibilidad del
-                                        Equipo</label>
+                                    <div style={{
+                                        color: '#717171',
+                                        marginBottom: "10px",
+                                        fontSize: "18px"
+                                    }}>Disponibilidad del
+                                        Equipo
+                                    </div>
                                     <div className="widget-wrap">
                                         <div className="widget-content">
                                             <div className="row" style={{height: "300px", width: '100%'}}>
                                                 {equipoListado.length !== 0 ? (
                                                     <DataGrid
                                                         rows={equipoListado}
+                                                        localeText={dataGridLocaleText}
                                                         columns={columnsEquipo}
                                                         density="compact"
                                                         pageSize={Math.floor((state.height - 310) / 30)}
                                                         getRowId={(row) => row.m_nIdInventarioUnidad}
-                                                        onRowSelected={(row) => {
-                                                            setState({
-                                                                ...state,
-                                                                idEquipo: row.data.m_nIdInventarioUnidad
-                                                            })
-                                                        }}
+
                                                     />
                                                 ) : (
                                                     <div>No se encontró ningún registro</div>

@@ -83,6 +83,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/UnidadesContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/ZonasContext.js">
           <value>
             <set />
@@ -319,6 +324,21 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Viajes/AsignarOperadorUnidad.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Viajes/DetalleInforme.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Viajes/Historial.js">
           <value>
             <set />
           </value>
