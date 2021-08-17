@@ -346,6 +346,7 @@ function Clientes(props) {
 
         codigoPostal: 0,
         idEstado: 0,
+        idPais: 0,
 
         municipio: "",
         localidad: "",
@@ -382,6 +383,18 @@ function Clientes(props) {
         PermitirVerPortal: 0,
         RecibirCartaPorte: 0,
 
+        //Variables seguro
+        companiaSeguros1: "",
+        telefonoSeguro1: "",
+        numeroSeguro1: "",
+        vencimientoSeguro1: "",
+        tipoCobertura1: "",
+        companiaSeguros2:"",
+        telefonoSeguro2: "",
+        numeroSeguro2: "",
+        vencimientoSeguro2: "",
+        tipoCobertura2: "",
+
         contactos: [
             {
                 m_sNombre: "",
@@ -397,84 +410,115 @@ function Clientes(props) {
         ],
     });
 
+    const limpiarCamposAgregar = () => {
+        setState(state => {
+            return {
+                ...state,
+                agregar: "Agregar",
+                idCliente: 0,
+                numeroCliente: 0,
+                tipoCliente: 0,
+                rfc: "",
+                activo: false,
+                operadorLogistico: false,
+                nombreFiscal: "",
+                nombreCorto: "",
+                idSucursal: 0,
+                idMoneda: 0,
+                idImpuestoTransladado: 0,
+                aplicarDetalleMaterialesCadaViajeXML: false,
+
+                //ver variable
+                aplicarDetalleConceptoCadaViajeXML: false,
+                idGrupoCliente: {},
+                metodoPago: "",
+                diasCredito: 0,
+                credito: 0,
+                creditoDlls: 0,
+                saldoCredito: 0,
+                saldoCreditoDLLS: 0,
+                pendFacturar: 0,
+                pendFacturarDLLS: 0,
+
+                bancoOrdenante: "",
+                rfcBancoOrdenante: "",
+                cuentaBancoOrdenante: "",
+                idPais: 0,
+                codigoPostal: 0,
+                idEstado: 0,
+                municipio: "",
+                localidad: "",
+                colonia: "",
+                calle: "",
+                numeroExterior: "",
+                numeroInterior: "",
+                telefono: "",
+                celular: "",
+                nextel: "",
+                correoElectronico: "",
+
+                tableformatos: "",
+                frecuenciaEnvioDias: "",
+                enviarApartir: "",
+
+                envioAutomaticoSeguimiento: "",
+                excluirNodo: 0,
+
+                idUSOCFDI: "",
+                agruparCantidadPorConcepto: "",
+                ajustarImporte2Dec: "",
+
+                formatoSelect: false,
+                contactoNombre: "",
+                contactoCorreo: "",
+                contactoTelefono: "",
+                RecibirFactura: 0,
+                RecibirEstadoCuenta: 0,
+                PermitirSeguimiento: 0,
+                UsoServicioWeb: 0,
+                PermitirVerPortal: 0,
+                RecibirCartaPorte: 0,
+
+                //Variables seguro
+                companiaSeguros1: "",
+                telefonoSeguro1: "",
+                numeroSeguro1: "",
+                vencimientoSeguro1: "",
+                tipoCobertura1: "1",
+                companiaSeguros2:"",
+                telefonoSeguro2: "",
+                numeroSeguro2: "",
+                vencimientoSeguro2: "",
+                tipoCobertura2: "1",
+        }
+    });
+    }
+
     function handleShowAgregar() {
-        setState({
-            ...state,
-            agregar: "Agregar",
-            idCliente: 0,
-            numeroCliente: 0,
-            tipoCliente: 0,
-            rfc: "",
-            activo: false,
-            operadorLogistico: false,
-            nombreFiscal: "",
-            nombreCorto: "",
-            idSucursal: 0,
-            idMoneda: 0,
-            idImpuestoTransladado: 0,
-            aplicarDetalleMaterialesCadaViajeXML: false,
-
-            //ver variable
-            aplicarDetalleConceptoCadaViajeXML: false,
-            idGrupoCliente: {},
-            metodoPago: "",
-            diasCredito: 0,
-            credito: 0,
-            creditoDlls: 0,
-            saldoCredito: 0,
-            saldoCreditoDLLS: 0,
-            pendFacturar: 0,
-            pendFacturarDLLS: 0,
-
-            bancoOrdenante: "",
-            rfcBancoOrdenante: "",
-            cuentaBancoOrdenante: "",
-            codigoPostal: 0,
-            idEstado: 0,
-            municipio: "",
-            localidad: "",
-            colonia: "",
-            calle: "",
-            numeroExterior: "",
-            numeroInterior: "",
-            telefono: "",
-            celular: "",
-            nextel: "",
-            correoElectronico: "",
-
-            tableformatos: "",
-            frecuenciaEnvioDias: "",
-            enviarApartir: "",
-
-            envioAutomaticoSeguimiento: "",
-            excluirNodo: 0,
-
-            idUSOCFDI: "",
-            agruparCantidadPorConcepto: "",
-            ajustarImporte2Dec: "",
-
-            formatoSelect: false,
-            contactoNombre: "",
-            contactoCorreo: "",
-            contactoTelefono: "",
-            RecibirFactura: 0,
-            RecibirEstadoCuenta: 0,
-            PermitirSeguimiento: 0,
-            UsoServicioWeb: 0,
-            PermitirVerPortal: 0,
-            RecibirCartaPorte: 0,
-        });
+        limpiarCamposAgregar()
         $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
 
     }
 
     function handleShowModificar(id) {
         obtenerClienteId(id).then((respuesta) => {
-            console.log(respuesta)
-            setState({
+            setState(state =>{
+                return{
+                    ...state,
+                    agregar: "Modificar",
+                }
+            })
+            mostrarInfo(respuesta)
+            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
+        });
+    }
+
+    const mostrarInfo = (respuesta) => {
+        setState(state => {
+            return {
                 ...state,
                 //idCliente: id,
-                agregar: "Modificar",
                 idCliente: respuesta.data.m_nIdCliente,
                 numeroCliente: respuesta.data.m_nNumeroCliente,
                 tipoCliente: respuesta.data.m_nTipoCliente,
@@ -487,13 +531,13 @@ function Clientes(props) {
                 idMoneda: respuesta.data.m_nIdMoneda,
                 idImpuestoTransladado: respuesta.data.m_nIdImpuestoTransladado,
                 aplicarDetalleMaterialesCadaViajeXML:
-                    respuesta.data.m_bAplicarDetalleMaterialesCadaViajeXML,
-                //idEstado: respuesta.data.m_nIdEstado,
-                //idGrupoCliente: respuesta.data.m_nIdGrupoCliente,
+                respuesta.data.m_bAplicarDetalleMaterialesCadaViajeXML,
+                    //idEstado: respuesta.data.m_nIdEstado,
+                    //idGrupoCliente: respuesta.data.m_nIdGrupoCliente,
 
-                idGrupoCliente: dataGrupoClientes.find(
-                    (o) => o.m_nIdGrupoCliente == respuesta.data.m_nIdGrupoCliente
-                ),
+                    idGrupoCliente: dataGrupoClientes.find(
+                (o) => o.m_nIdGrupoCliente == respuesta.data.m_nIdGrupoCliente
+            ),
                 metodoPago: respuesta.data.m_sMetodoPago,
                 diasCredito: respuesta.data.m_nDiasCredito,
                 credito: respuesta.data.m_cyCredito,
@@ -521,16 +565,23 @@ function Clientes(props) {
                 frecuenciaEnvioDias: respuesta.data.m_nEnvioCorreoDias,
                 enviarApartir: respuesta.data.m_sFechaEnvioCorreoApartir,
                 envioAutomaticoSeguimiento:
-                    respuesta.data.m_bEnvioAutomaticoSeguimientoViajesActivar,
-                excluirNodo: respuesta.data.m_bExcluirNodoCondicionesPagoXML,
+                respuesta.data.m_bEnvioAutomaticoSeguimientoViajesActivar,
+                    excluirNodo: respuesta.data.m_bExcluirNodoCondicionesPagoXML,
                 idUSOCFDI: respuesta.data.m_sIdUsoCFDI,
                 agruparCantidadPorConcepto:
-                    respuesta.data.m_bPermitirAgruparCantidadPorConcepto,
-                ajustarImporte2Dec: respuesta.data.m_bAjustarImportes2DecimalesXML,
-            });
-            // getAllEstados()
-            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
+                respuesta.data.m_bPermitirAgruparCantidadPorConcepto,
+                    ajustarImporte2Dec: respuesta.data.m_bAjustarImportes2DecimalesXML,
+                companiaSeguros1: respuesta.data.m_sCompaniaSeguros1,
+                telefonoSeguros1: respuesta.data.m_sTelefonosCompaniaSeguros1,
+                numeroSeguro1: respuesta.data.m_sNumeroSeguro1,
+                vencimientoSeguro1: respuesta.data.m_dtVencimientoSeguro1,
+                tipoCobertura1: respuesta.data.m_nTipoCoberturaSeguro1,
+                companiaSeguros2: respuesta.data.m_sCompaniaSeguros,
+                telefonoSeguro2: respuesta.data.m_sTelefonosCompaniaSeguros,
+                numeroSeguro2: respuesta.data.m_sNumeroSeguro,
+                vencimientoSeguro2: respuesta.data.m_dtVencimientoSeguro,
+                tipoCobertura2: respuesta.data.m_nTipoCoberturaSeguro,
+            }
         });
     }
 
@@ -775,6 +826,17 @@ function Clientes(props) {
             m_bUsoServicioWeb: state.UsoServicioWeb,
             m_bPermitirVerPortal: state.m_bPermitirVerPortal,
             m_bRecibirCartaPorte: state.RecibirCartaPorte,
+
+            CompaniaSeguros1: state.companiaSeguros1,
+            TelefonosCompaniaSeguros1: state.telefonoSeguro1,
+            NumeroSeguro1: state.numeroSeguro1,
+            VencimientoSeguro1: state.vencimientoSeguro1,
+            TipoCoberturaSeguro1: state.tipoCobertura1,
+            CompaniaSeguros: state.companiaSeguros2,
+            TelefonosCompaniaSeguros: state.telefonoSeguro2,
+            NumeroSeguro: state.numeroSeguro2,
+            VencimientoSeguro: state.vencimientoSeguro2,
+            TipoCoberturaSeguro: state.tipoCobertura2,
 
             agregar: "Agregar",
             importar: "",
@@ -1732,8 +1794,20 @@ function Clientes(props) {
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        {/*Este componente son las tabs*/}
-                                                        <NavTabs/>
+                                                        <ul className="nav nav-tabs">
+                                                            <li className="active">
+                                                                <a data-toggle="tab" href="#Domicilio">Domicilio</a>
+                                                            </li>
+                                                            <li>
+                                                                <a data-toggle="tab" href="#Formatos">Formatos</a>
+                                                            </li>
+                                                            <li>
+                                                                <a data-toggle="tab" href="#Especiales">Procesos Especiales</a>
+                                                            </li>
+                                                            <li>
+                                                                <a data-toggle="tab" href="#Adicional">Inf. Adicional</a>
+                                                            </li>
+                                                        </ul>
                                                         <div className="form-content">
                                                             {/* start text password */}
                                                             <div className="widget-wrap">
@@ -1761,6 +1835,7 @@ function Clientes(props) {
                                                                                                             id="idPais"
                                                                                                             name="idPais"
                                                                                                         >
+                                                                                                            <option value={''}></option>
                                                                                                             {dataPais.map((pais) => (
                                                                                                                 <option
                                                                                                                     value={pais.m_nIdPais}
@@ -2397,6 +2472,236 @@ function Clientes(props) {
                                         </div>
                                     </div>
                                     {/*Fin de ejemplo*/}
+
+                                    <div className="widget-wrap" id="seguros">
+                                        {/*<div className="widget-header block-header margin-bottom-0 clearfix">
+                                            <div className="pull-left">
+                                                <h3>Seguros</h3>
+                                            </div>
+
+                                        </div>*/}
+                                        <BlockHeaderH3>{'Seguros'}</BlockHeaderH3>
+                                        <div className="widget-container">
+                                            <div className="widget-content">
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <div className="form-content">
+                                                            {/* start text password */}
+                                                            <div className="row">
+                                                                <div className="col-sm-6 col-md-2 col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Aseguradora"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   placeholder={
+                                                                                       state.companiaSeguros1
+                                                                                   }
+                                                                                   id="companiaSeguros1"
+                                                                                   name="companiaSeguros1"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-2 col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Teléfonos"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   value={state.telefonoSeguro1}
+                                                                                   id="telefonoSeguro1"
+                                                                                   name="telefonoSeguro1"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-2 col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Núm. Seguro"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   value={state.numeroSeguro1}
+                                                                                   id="numeroSeguro1"
+                                                                                   name="numeroSeguro1"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-2  col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Vencimiento"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="datetime-local"
+                                                                                   value={
+                                                                                       state.vencimientoSeguro1
+                                                                                   }
+                                                                                   InputLabelProps={{
+                                                                                       shrink: true,
+                                                                                   }}
+                                                                                   id="vencimientoSeguro1"
+                                                                                   name="vencimientoSeguro1"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-12 col-md-4 col-lg-4 unit">
+                                                                    <div className="inline-group">
+                                                                        <label className="label">
+                                                                            Tipo de Cobertura
+                                                                        </label>
+                                                                        <label className="radio">
+                                                                            <input
+                                                                                onChange={handleChange}
+                                                                                type="radio"
+                                                                                defaultChecked
+                                                                                value="1"
+                                                                                placeholder={state.tipoCobertura1}
+                                                                                id="tipoCobertura1"
+                                                                                name="tipoCobertura1"
+                                                                            />
+                                                                            <i />
+                                                                            Amplia
+                                                                        </label>
+                                                                        <label className="radio">
+                                                                            <input
+                                                                                onChange={handleChange}
+                                                                                type="radio"
+                                                                                value="2"
+                                                                                placeholder={state.tipoCobertura1}
+                                                                                id="tipoCobertura1"
+                                                                                name="tipoCobertura1"
+                                                                            />
+                                                                            <i />
+                                                                            Limitada
+                                                                        </label>
+                                                                        <label className="radio">
+                                                                            <input
+                                                                                onChange={handleChange}
+                                                                                type="radio"
+                                                                                value="3"
+                                                                                placeholder={state.tipoCobertura1}
+                                                                                id="tipoCobertura1"
+                                                                                name="tipoCobertura1"
+                                                                            />
+                                                                            <i />
+                                                                            S/Cobertura
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="row">
+                                                                <div className="col-sm-6 col-md-2 col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Aseguradora"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   value={state.companiaSeguros2}
+                                                                                   id="companiaSeguros2"
+                                                                                   name="companiaSeguros2"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-2 col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Teléfonos"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   value={state.telefonoSeguro2}
+                                                                                   id="telefonoSeguro2"
+                                                                                   name="telefonoSeguro2"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-2 col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Núm. Seguro"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   value={state.numeroSeguro2}
+                                                                                   id="numeroSeguro2"
+                                                                                   name="numeroSeguro2"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-2  col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Vencimiento"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="datetime-local"
+                                                                                   placeholder=""
+                                                                                   value={state.vencimientoSeguro2}
+                                                                                   InputLabelProps={{
+                                                                                       shrink: true,
+                                                                                   }}
+                                                                                   id="vencimientoSeguro2"
+                                                                                   name="vencimientoSeguro2"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-12 col-md-4 col-lg-4 unit">
+                                                                    <div className="inline-group">
+                                                                        <label className="label">
+                                                                            Tipo de cobertura
+                                                                        </label>
+                                                                        <label className="radio">
+                                                                            <input
+                                                                                onChange={handleChange}
+                                                                                type="radio"
+                                                                                value="1"
+                                                                                defaultChecked
+                                                                                placeholder={
+                                                                                    state.tipoCobertura2
+                                                                                }
+                                                                                id="tipoCobertura2"
+                                                                                name="tipoCobertura2"
+                                                                            />
+                                                                            <i />
+                                                                            Amplia
+                                                                        </label>
+                                                                        <label className="radio">
+                                                                            <input
+                                                                                onChange={handleChange}
+                                                                                type="radio"
+                                                                                value="2"
+                                                                                placeholder={
+                                                                                    state.tipoCobertura2
+                                                                                }
+                                                                                id="tipoCobertura2"
+                                                                                name="tipoCobertura2"
+                                                                            />
+                                                                            <i />
+                                                                            Limitada
+                                                                        </label>
+                                                                        <label className="radio">
+                                                                            <input
+                                                                                onChange={handleChange}
+                                                                                type="radio"
+                                                                                value="3"
+                                                                                placeholder={
+                                                                                    state.tipoCobertura2
+                                                                                }
+                                                                                id="tipoCobertura2"
+                                                                                name="tipoCobertura2"
+                                                                            />
+                                                                            <i />
+                                                                            S/Cobertura
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {/* end text password */}
+                                                            {/* start email url */}
+
+                                                            {/* end textarea */}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <div className="widget-wrap" id="otros">
                                         {/*<div className="widget-header block-header margin-bottom-0 clearfix">
