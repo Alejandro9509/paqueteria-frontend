@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Correcciones de variables en variables para registrar seguro, en unidades">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se agregó seccion de seguros para clientes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Clientes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Clientes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/RemitentesDestinatarios.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/RemitentesDestinatarios.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Unidades.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Unidades.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -425,7 +424,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629223854497</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="Se agregó seccion de seguros para clientes">
+      <created>1629225467213</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1629225467213</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -492,7 +498,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ajustes al agregar usuarios" />
     <MESSAGE value="Ajustes en crear embarque" />
     <MESSAGE value="Ajustes en embarque al agregar uno nuevo:&#10;*Campo moneda se modifica correctamente.&#10;*los sobres se agregan al listado de paquetes y se mandan a la base de datos." />
     <MESSAGE value="Ajustes en embarque al mostrar informacion para modificar" />
@@ -517,7 +522,8 @@
     <MESSAGE value="*Se agregó nuevo campo al agregar cliente" />
     <MESSAGE value="*Validacion para cuando se agrega o se modifica" />
     <MESSAGE value="Correcciones de variables en variables para registrar seguro, en unidades" />
-    <option name="LAST_COMMIT_MESSAGE" value="Correcciones de variables en variables para registrar seguro, en unidades" />
+    <MESSAGE value="Se agregó seccion de seguros para clientes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se agregó seccion de seguros para clientes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

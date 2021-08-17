@@ -346,6 +346,7 @@ function Clientes(props) {
 
         codigoPostal: 0,
         idEstado: 0,
+        idPais: 0,
 
         municipio: "",
         localidad: "",
@@ -442,6 +443,7 @@ function Clientes(props) {
                 bancoOrdenante: "",
                 rfcBancoOrdenante: "",
                 cuentaBancoOrdenante: "",
+                idPais: 0,
                 codigoPostal: 0,
                 idEstado: 0,
                 municipio: "",
@@ -1792,8 +1794,20 @@ function Clientes(props) {
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        {/*Este componente son las tabs*/}
-                                                        <NavTabs/>
+                                                        <ul className="nav nav-tabs">
+                                                            <li className="active">
+                                                                <a data-toggle="tab" href="#Domicilio">Domicilio</a>
+                                                            </li>
+                                                            <li>
+                                                                <a data-toggle="tab" href="#Formatos">Formatos</a>
+                                                            </li>
+                                                            <li>
+                                                                <a data-toggle="tab" href="#Especiales">Procesos Especiales</a>
+                                                            </li>
+                                                            <li>
+                                                                <a data-toggle="tab" href="#Adicional">Inf. Adicional</a>
+                                                            </li>
+                                                        </ul>
                                                         <div className="form-content">
                                                             {/* start text password */}
                                                             <div className="widget-wrap">
@@ -1821,6 +1835,7 @@ function Clientes(props) {
                                                                                                             id="idPais"
                                                                                                             name="idPais"
                                                                                                         >
+                                                                                                            <option value={''}></option>
                                                                                                             {dataPais.map((pais) => (
                                                                                                                 <option
                                                                                                                     value={pais.m_nIdPais}
