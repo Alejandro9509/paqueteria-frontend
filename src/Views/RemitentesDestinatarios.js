@@ -73,7 +73,7 @@ function RemitenteDestinatario(props) {
         localidad: "",
         municipio: "",
         idPais: 0,
-        idEstado: 0,
+        idEstado: '',
         codigoPostal: {},
         creadoPor: localStorage.getItem("UsuarioId"),
         creadoEl: "",
@@ -84,42 +84,68 @@ function RemitenteDestinatario(props) {
         telefono: "",
         agregar: "Agregar",
         importar: "",
+        alias: "",
         height: window.innerHeight
     });
 
     function handleShowAgregar() {
-        setState({
-            ...state,
-            idRemitenteDestinatario: 0,
-            idCliente: {},
-            cliente: dataClientes[0],
-
-            numero: 0,
-            nombre: "",
-            rfc: "",
-            activo: false,
-            calle: "",
-            noExterior: 0,
-            noInterior: 0,
-            colonia: "",
-            localidad: "",
-            municipio: "",
-            idPais: 0,
-            idEstado: 21,
-            idCodigoPostal: {},
-            creadoPor: state.creadoPor,
-            creadoEl: "",
-            modificadoPor: state.modificadoPor,
-            modificadoEl: "",
-            contacto: "",
-            correoElectronico: "",
-            telefono: "",
-            agregar: "Agregar",
-            importar: "",
-        });
+        setState(state => {
+            return {
+                ...state,
+                agregar: "Agregar",
+            }
+        })
+        limpiarCamposAgregar()
         $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
 
     }
+
+    const limpiarCamposAgregar = () => {
+        setState(state => {
+            return {
+                ...state,
+                idRemitenteDestinatario: 0,
+                idCliente: {},
+                cliente: {},
+                numero: 0,
+                nombre: "",
+                rfc: "",
+                activo: false,
+                calle: "",
+                noExterior: 0,
+                noInterior: 0,
+                colonia: "",
+                localidad: "",
+                municipio: "",
+                idPais: 0,
+                idEstado: '',
+                idCodigoPostal: {},
+                creadoPor: state.creadoPor,
+                creadoEl: "",
+                modificadoPor: state.modificadoPor,
+                modificadoEl: "",
+                contacto: "",
+                correoElectronico: "",
+                telefono: "",
+                importar: "",
+                alias: "",
+            }
+        });
+    }
+
+    const handleShowListado = (event) => {
+        event.stopPropagation();
+        limpiarCamposAgregar()
+        getAllDataRemDes()
+        setState(state => {
+            return {...state, agregar: "Agregar"}
+        });
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
+    }
+
     function getAllClientes() {
         obtenerCliente().then((respuesta) => {
             console.log(respuesta);
@@ -146,12 +172,11 @@ function RemitenteDestinatario(props) {
             noInterior: newValue.m_sNoInterior,
             telefono: newValue.m_sCelular,
             correoElectronico: newValue.m_sCorreoElectronico,
+            alias: newValue.m_sAlias
         })
     }
 
-
     function handleSelectCodigoPostal() {
-
     }
 
     function handleSelectCP(id, cp) {
@@ -185,6 +210,7 @@ function RemitenteDestinatario(props) {
             }
         });
     };
+
     const handleChangeActivoCheckboxChange = (event) => {
         console.log(event.target.name + " " + state.activo);
         setState({
@@ -195,10 +221,9 @@ function RemitenteDestinatario(props) {
 
     const history = useHistory()
 
-
     const handleAceptar = (e) => {
         e.preventDefault();
-        var params = {
+        let params = {
             IdCliente: state.cliente.m_nIdCliente,
             Numero: state.numero,
             Nombre: state.nombre,
@@ -221,18 +246,13 @@ function RemitenteDestinatario(props) {
             Telefono: state.telefono,
             agregar: "Agregar",
             importar: "",
+            alias: state.alias
         };
         console.log(JSON.stringify(params))
         if (state.idRemitenteDestinatario != 0) {
             modificarRemitentesDestinatarios(state.idRemitenteDestinatario, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
-                    getAllDataRemDes();
-                    $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(0).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');
-                    //window.location.reload();
                 })
                 .catch((err) => {
                     console.log(err);
@@ -242,12 +262,6 @@ function RemitenteDestinatario(props) {
             agregarRemitentesDestinatarios(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
-                    $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(0).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');
-                    getAllDataRemDes();
-                    //window.location.reload();
                 })
                 .catch((err) => {
                     console.log(err);
@@ -280,80 +294,69 @@ function RemitenteDestinatario(props) {
         });
     }
 
-    function handleShowModificar(id) {
-        obtenerRemitentesDestinatariosId(id).then((respuesta) => {
+    const mostrarDatos = (id) => {
+        obtenerRemitentesDestinatariosId(id).then((respuesta) =>{
             getAllEstados(respuesta.data.m_nIdPais);
-            setState({
-                ...state,
-                agregar: "Modificar",
-                idRemitenteDestinatario: id,
-                cliente: dataClientes.find(
-                    (o) => o.m_nIdCliente == respuesta.data.m_nIdCliente
-                ),
-                numero: respuesta.data.m_nNumero,
-                nombre: respuesta.data.m_sNombre,
-                rfc: respuesta.data.m_sRFC,
-                activo: respuesta.data.m_bActivo,
-                calle: respuesta.data.m_sCalle,
-                noExterior: respuesta.data.m_sNoExterior,
-                noInterior: respuesta.data.m_sNoInterior,
-                colonia: respuesta.data.m_sColonia,
-                localidad: respuesta.data.m_sLocalidad,
-                municipio: respuesta.data.m_sMunicipio,
-                idPais: respuesta.data.m_nIdPais,
-                idEstado: respuesta.data.m_nIdEstado,
-                idCodigoPostal: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP == respuesta.data.m_nIdCP
-                ),
-                creadoPor: respuesta.data.m_nCreadoPor,
-                creadoEl: respuesta.data.m_dtCreadoEl,
-                modificadoPor: respuesta.data.m_nModificadoPor,
-                modificadoEl: respuesta.data.m_dtModificadoEl,
-                contacto: respuesta.data.m_sContacto,
-                correoElectronico: respuesta.data.m_sCorreoElectronico,
-                telefono: respuesta.data.m_sTelefono,
+            let cp = dataCodigoPostal.find((o) => o.m_nIdCP == respuesta.data.m_nIdCP)
+            console.log('cp: ',cp)
+            console.log('remitente: ',respuesta.data)
+            setState(state => {
+                return {
+                    ...state,
+                    idRemitenteDestinatario: id,
+                    cliente: dataClientes.find((o) => o.m_nIdCliente == respuesta.data.m_nIdCliente),
+                    numero: respuesta.data.m_nNumero,
+                    nombre: respuesta.data.m_sNombre,
+                    rfc: respuesta.data.m_sRFC,
+                    alias: respuesta.data.m_sAlias,
+                    activo: respuesta.data.m_bActivo,
+                    calle: respuesta.data.m_sCalle,
+                    noExterior: respuesta.data.m_sNoExterior,
+                    noInterior: respuesta.data.m_sNoInterior,
+                    colonia: respuesta.data.m_sColonia,
+                    localidad: respuesta.data.m_sLocalidad,
+                    municipio: respuesta.data.m_sMunicipio,
+                    idPais: respuesta.data.m_nIdPais,
+                    idEstado: respuesta.data.m_nIdEstado,
+                    idCodigoPostal: dataCodigoPostal.find((o) => o.m_nIdCP == respuesta.data.m_nIdCP),
+                    creadoPor: respuesta.data.m_nCreadoPor,
+                    creadoEl: respuesta.data.m_dtCreadoEl,
+                    modificadoPor: respuesta.data.m_nModificadoPor,
+                    modificadoEl: respuesta.data.m_dtModificadoEl,
+                    contacto: respuesta.data.m_sContacto,
+                    correoElectronico: respuesta.data.m_sCorreoElectronico,
+                    telefono: respuesta.data.m_sTelefono,
+                }
             });
-            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
         });
     }
 
+    function handleShowModificar(id) {
+        setState(state => {
+            return {
+                ...state,
+                agregar: "Modificar",
+            }
+        })
+        mostrarDatos(id)
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
+    }
+
     function handleShowConsultar(id) {
-        obtenerRemitentesDestinatariosId(id).then((respuesta) => {
-            getAllEstados(respuesta.data.m_nIdPais);
-            setState({
+        setState(state => {
+            return {
                 ...state,
                 agregar: "Consultar",
-                idRemitenteDestinatario: id,
-                cliente: dataClientes.find(
-                    (o) => o.m_nIdCliente == respuesta.data.m_nIdCliente
-                ),
-                numero: respuesta.data.m_nNumero,
-                nombre: respuesta.data.m_sNombre,
-                rfc: respuesta.data.m_sRFC,
-                activo: respuesta.data.m_bActivo,
-                calle: respuesta.data.m_sCalle,
-                noExterior: respuesta.data.m_sNoExterior,
-                noInterior: respuesta.data.m_sNoInterior,
-                colonia: respuesta.data.m_sColonia,
-                localidad: respuesta.data.m_sLocalidad,
-                municipio: respuesta.data.m_sMunicipio,
-                idPais: respuesta.data.m_nIdPais,
-                idEstado: respuesta.data.m_nIdEstado,
-                idCodigoPostal: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP == respuesta.data.m_nIdCP
-                ),
-                creadoPor: respuesta.data.m_nCreadoPor,
-                creadoEl: respuesta.data.m_dtCreadoEl,
-                modificadoPor: respuesta.data.m_nModificadoPor,
-                modificadoEl: respuesta.data.m_dtModificadoEl,
-                contacto: respuesta.data.m_sContacto,
-                correoElectronico: respuesta.data.m_sCorreoElectronico,
-                telefono: respuesta.data.m_sTelefono,
-            });
-            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
-        });
+            }
+        })
+        mostrarDatos(id)
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
     }
 
     const columns = React.useMemo(() => [
@@ -387,6 +390,11 @@ function RemitenteDestinatario(props) {
         {
             headerName: "RFC",
             field: "m_sRFC",
+            width: 200,
+        },
+        {
+            headerName: "Alias",
+            field: "m_sAlias",
             width: 200,
         },
         {
@@ -683,6 +691,19 @@ function RemitenteDestinatario(props) {
 
     }, []);
 
+    useEffect((value) => {
+        if (state.idPais != 0 && state.idPais != '' && state.idPais != undefined){
+            getAllEstados(state.idPais)
+        }
+
+    }, [state.idPais])
+
+    useEffect((value) => {
+        if (state.idEstado != 0 && state.idEstado != '' && state.idEstado != undefined ) {
+            getAllCodigosPostales(state.idEstado)
+        }
+    }, [state.idEstado]);
+
     function getAllDataRemDes() {
         obtenerRemitentesDestinatarios().then((respuesta) => {
             setData(respuesta.data);
@@ -691,8 +712,7 @@ function RemitenteDestinatario(props) {
 
     function getAllPaises() {
         obtenerPaises().then((respuesta) => {
-            setDataPais(respuesta.data);
-            getAllEstados(respuesta.data[0].m_nIdPais);
+            setDataPais(respuesta.data)
         });
     }
 
@@ -713,11 +733,9 @@ function RemitenteDestinatario(props) {
     };
 
     function getAllEstados(id) {
-        console.log(id);
         obtenerEstadosPais(id).then((respuesta) => {
-            console.log(respuesta.data);
+            console.log('estados ', respuesta.data)
             setDataEstado(respuesta.data);
-            getAllCodigosPostales(21)
         });
     }
 
@@ -782,10 +800,10 @@ function RemitenteDestinatario(props) {
 
                 <ul className="nav navStatica nav-tabs">
                     <li className="active">
-                        <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
-                            <i className="fa fa-list" />
-              Listado
-            </a>
+                        <a onClick={(event) => handleShowListado(event)}>
+                            <i className="fa fa-list"/>
+                            Listado
+                        </a>
                     </li>
                     <li>
                         <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
@@ -900,6 +918,22 @@ function RemitenteDestinatario(props) {
                                                                                 maxlength="4"
                                                                                 required
                                                                                 disabled={state.agregar === "Consultar"}
+
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-6 col-md-2-5 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense" label="Alias"
+                                                                                       onChange={handleChange}
+                                                                                       type="text"
+                                                                                       className="form-control"
+                                                                                       value={state.alias}
+                                                                                       id="alias"
+                                                                                       name={"alias"}
+                                                                                       maxlength="4"
+                                                                                       required
+                                                                                       disabled={state.agregar === "Consultar"}
 
                                                                             />
                                                                         </div>
@@ -1086,15 +1120,18 @@ function RemitenteDestinatario(props) {
                                                                                     value={state.idEstado}
                                                                                     id="idEstado"
                                                                                 >
-                                                                                    {dataEstado.length < 1 ? (
-                                                                                        <option value="none">Estados</option>
-                                                                                    ) : (
-                                                                                        dataEstado.map((estado) => (
-                                                                                            <option value={estado.m_nIdEstado}>
-                                                                                                {estado.m_sEstado}
-                                                                                            </option>
-                                                                                        ))
-                                                                                    )}
+                                                                                    <option
+                                                                                        value={''}
+                                                                                        key={''}
+                                                                                    />
+                                                                                    {dataEstado.map((estado) => (
+                                                                                        <option
+                                                                                            value={estado.m_nIdEstado}
+                                                                                            key={estado.m_nIdEstado}
+                                                                                        >
+                                                                                            {estado.m_sEstado}
+                                                                                        </option>
+                                                                                    ))}
                                                                                 </Select>
                                                                             </FormControl>
                                                                         </label>
@@ -1297,13 +1334,22 @@ function RemitenteDestinatario(props) {
                                                                         className="form-footer"
                                                                         className="col-md-12"
                                                                     >
-                                                                        <button
+                                                                        {/*<button
                                                                             type="button"
-                                                                            onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
+                                                                            onClick={(event) => {
+                                                                                event.stopPropagation();
+                                                                                setState({
+                                                                                    ...state,
+                                                                                    agregar: "Agregar"
+                                                                                });
+                                                                                $('.nav-tabs li ').removeClass('active');
+                                                                                $('.nav-tabs li').eq(0).addClass('active');
+                                                                                $('.tab-content div ').removeClass('in show');
+                                                                                $('#Listado').addClass('in show');
+                                                                            }}
                                                                             className="btn btn-secondary secondary-btn"
                                                                         >
-                                                                            Cancelar
-                                    </button>
+                                                                            Cancelar</button>*/}
                                                                         <button
                                                                             type="submit"
                                                                             className="btn btn-primary primary-btn"

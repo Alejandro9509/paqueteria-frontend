@@ -902,10 +902,19 @@ function Guia(props) {
         })
     }
 
-    function removeConcepto(index) {
+    const filtrarConceptoAdicional = (c, item) => {
+        let valid =  c.idConcepto == item.idConcepto
+            && c.importe == item.importe
+            && c.importeRet == item.importeRet
+            && c.retiene == item.retiene
+            && c.traslada == item.traslada
+            && c.importeIVA == item.importeIVA
+        return !valid
+    }
+    function removeConcepto(item) {
         const {conceptosAdicionales} = state
-        conceptosAdicionales.splice(index, 1)
-        setState({...state, conceptosAdicionales: conceptosAdicionales})
+        const newArrayConceptos = conceptosAdicionales.filter(c => filtrarConceptoAdicional(c, item))
+        setState({...state, conceptosAdicionales: newArrayConceptos})
     }
 
     const handleUpload = (e) => {

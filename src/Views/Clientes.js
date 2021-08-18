@@ -346,6 +346,7 @@ function Clientes(props) {
 
         codigoPostal: 0,
         idEstado: 0,
+        idPais: 0,
 
         municipio: "",
         localidad: "",
@@ -382,6 +383,18 @@ function Clientes(props) {
         PermitirVerPortal: 0,
         RecibirCartaPorte: 0,
 
+        //Variables seguro
+        companiaSeguros1: "",
+        telefonoSeguro1: "",
+        numeroSeguro1: "",
+        vencimientoSeguro1: "",
+        tipoCobertura1: "",
+        companiaSeguros2:"",
+        telefonoSeguro2: "",
+        numeroSeguro2: "",
+        vencimientoSeguro2: "",
+        tipoCobertura2: "",
+
         contactos: [
             {
                 m_sNombre: "",
@@ -397,84 +410,120 @@ function Clientes(props) {
         ],
     });
 
+    const limpiarCamposAgregar = () => {
+        setState(state => {
+            return {
+                ...state,
+                idCliente: 0,
+                numeroCliente: 0,
+                tipoCliente: '',
+                rfc: "",
+                activo: false,
+                operadorLogistico: false,
+                nombreFiscal: "",
+                nombreCorto: "",
+                idSucursal: '',
+                idMoneda: '',
+                idImpuestoTransladado: '',
+                aplicarDetalleMaterialesCadaViajeXML: false,
+
+                //ver variable
+                aplicarDetalleConceptoCadaViajeXML: false,
+                idGrupoCliente: {},
+                metodoPago: "",
+                diasCredito: 0,
+                credito: 0,
+                creditoDlls: 0,
+                saldoCredito: 0,
+                saldoCreditoDLLS: 0,
+                pendFacturar: 0,
+                pendFacturarDLLS: 0,
+
+                bancoOrdenante: "",
+                rfcBancoOrdenante: "",
+                cuentaBancoOrdenante: "",
+                idPais: '',
+                codigoPostal: 0,
+                idEstado: '',
+                municipio: "",
+                localidad: "",
+                colonia: "",
+                calle: "",
+                numeroExterior: "",
+                numeroInterior: "",
+                telefono: "",
+                celular: "",
+                nextel: "",
+                correoElectronico: "",
+
+                tableformatos: "",
+                frecuenciaEnvioDias: "",
+                enviarApartir: "",
+
+                envioAutomaticoSeguimiento: "",
+                excluirNodo: 0,
+
+                idUSOCFDI: "",
+                agruparCantidadPorConcepto: "",
+                ajustarImporte2Dec: "",
+
+                formatoSelect: false,
+                contactoNombre: "",
+                contactoCorreo: "",
+                contactoTelefono: "",
+                RecibirFactura: 0,
+                RecibirEstadoCuenta: 0,
+                PermitirSeguimiento: 0,
+                UsoServicioWeb: 0,
+                PermitirVerPortal: 0,
+                RecibirCartaPorte: 0,
+
+                //Variables seguro
+                companiaSeguros1: "",
+                telefonoSeguro1: "",
+                numeroSeguro1: "",
+                vencimientoSeguro1: "",
+                tipoCobertura1: "1",
+                companiaSeguros2:"",
+                telefonoSeguro2: "",
+                numeroSeguro2: "",
+                vencimientoSeguro2: "",
+                tipoCobertura2: "1",
+        }
+    });
+    }
+
     function handleShowAgregar() {
-        setState({
-            ...state,
-            agregar: "Agregar",
-            idCliente: 0,
-            numeroCliente: 0,
-            tipoCliente: 0,
-            rfc: "",
-            activo: false,
-            operadorLogistico: false,
-            nombreFiscal: "",
-            nombreCorto: "",
-            idSucursal: 0,
-            idMoneda: 0,
-            idImpuestoTransladado: 0,
-            aplicarDetalleMaterialesCadaViajeXML: false,
-
-            //ver variable
-            aplicarDetalleConceptoCadaViajeXML: false,
-            idGrupoCliente: {},
-            metodoPago: "",
-            diasCredito: 0,
-            credito: 0,
-            creditoDlls: 0,
-            saldoCredito: 0,
-            saldoCreditoDLLS: 0,
-            pendFacturar: 0,
-            pendFacturarDLLS: 0,
-
-            bancoOrdenante: "",
-            rfcBancoOrdenante: "",
-            cuentaBancoOrdenante: "",
-            codigoPostal: 0,
-            idEstado: 0,
-            municipio: "",
-            localidad: "",
-            colonia: "",
-            calle: "",
-            numeroExterior: "",
-            numeroInterior: "",
-            telefono: "",
-            celular: "",
-            nextel: "",
-            correoElectronico: "",
-
-            tableformatos: "",
-            frecuenciaEnvioDias: "",
-            enviarApartir: "",
-
-            envioAutomaticoSeguimiento: "",
-            excluirNodo: 0,
-
-            idUSOCFDI: "",
-            agruparCantidadPorConcepto: "",
-            ajustarImporte2Dec: "",
-
-            formatoSelect: false,
-            contactoNombre: "",
-            contactoCorreo: "",
-            contactoTelefono: "",
-            RecibirFactura: 0,
-            RecibirEstadoCuenta: 0,
-            PermitirSeguimiento: 0,
-            UsoServicioWeb: 0,
-            PermitirVerPortal: 0,
-            RecibirCartaPorte: 0,
-        });
+        setState(state =>{
+            return{
+                ...state,
+                agregar: "Agregar",
+            }
+        })
+        limpiarCamposAgregar()
         $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
 
     }
 
     function handleShowModificar(id) {
         obtenerClienteId(id).then((respuesta) => {
-            console.log(respuesta)
-            setState({
+            setState(state =>{
+                return{
+                    ...state,
+                    agregar: "Modificar",
+                }
+            })
+            mostrarInfo(respuesta)
+            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+
+        });
+    }
+
+    const mostrarInfo = (respuesta) => {
+        console.log('cliente ',respuesta.data)
+        setState(state => {
+            return {
                 ...state,
-                //idCliente: id,
-                agregar: "Modificar",
                 idCliente: respuesta.data.m_nIdCliente,
                 numeroCliente: respuesta.data.m_nNumeroCliente,
                 tipoCliente: respuesta.data.m_nTipoCliente,
@@ -486,14 +535,8 @@ function Clientes(props) {
                 idSucursal: respuesta.data.m_nIdSucursal,
                 idMoneda: respuesta.data.m_nIdMoneda,
                 idImpuestoTransladado: respuesta.data.m_nIdImpuestoTransladado,
-                aplicarDetalleMaterialesCadaViajeXML:
-                    respuesta.data.m_bAplicarDetalleMaterialesCadaViajeXML,
-                //idEstado: respuesta.data.m_nIdEstado,
-                //idGrupoCliente: respuesta.data.m_nIdGrupoCliente,
-
-                idGrupoCliente: dataGrupoClientes.find(
-                    (o) => o.m_nIdGrupoCliente == respuesta.data.m_nIdGrupoCliente
-                ),
+                aplicarDetalleMaterialesCadaViajeXML: respuesta.data.m_bAplicarDetalleMaterialesCadaViajeXML,
+                idGrupoCliente: dataGrupoClientes.find((o) => o.m_nIdGrupoCliente == respuesta.data.m_nIdGrupoCliente),
                 metodoPago: respuesta.data.m_sMetodoPago,
                 diasCredito: respuesta.data.m_nDiasCredito,
                 credito: respuesta.data.m_cyCredito,
@@ -520,17 +563,22 @@ function Clientes(props) {
                 tableformatos: respuesta.data.m_sTableFormatos,
                 frecuenciaEnvioDias: respuesta.data.m_nEnvioCorreoDias,
                 enviarApartir: respuesta.data.m_sFechaEnvioCorreoApartir,
-                envioAutomaticoSeguimiento:
-                    respuesta.data.m_bEnvioAutomaticoSeguimientoViajesActivar,
+                envioAutomaticoSeguimiento: respuesta.data.m_bEnvioAutomaticoSeguimientoViajesActivar,
                 excluirNodo: respuesta.data.m_bExcluirNodoCondicionesPagoXML,
                 idUSOCFDI: respuesta.data.m_sIdUsoCFDI,
-                agruparCantidadPorConcepto:
-                    respuesta.data.m_bPermitirAgruparCantidadPorConcepto,
+                agruparCantidadPorConcepto: respuesta.data.m_bPermitirAgruparCantidadPorConcepto,
                 ajustarImporte2Dec: respuesta.data.m_bAjustarImportes2DecimalesXML,
-            });
-            // getAllEstados()
-            $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
-
+                companiaSeguros1: respuesta.data.m_sCompaniaSeguros1,
+                telefonoSeguro1: respuesta.data.m_sTelefonosCompaniaSeguros1,
+                numeroSeguro1: respuesta.data.m_sNumeroSeguro1,
+                vencimientoSeguro1: respuesta.data.m_dtVencimientoSeguro1,
+                tipoCobertura1: respuesta.data.m_nTipoCoberturaSeguro1,
+                companiaSeguros2: respuesta.data.m_sCompaniaSeguros,
+                telefonoSeguro2: respuesta.data.m_sTelefonosCompaniaSeguros,
+                numeroSeguro2: respuesta.data.m_sNumeroSeguro,
+                vencimientoSeguro2: respuesta.data.m_dtVencimientoSeguro,
+                tipoCobertura2: respuesta.data.m_nTipoCoberturaSeguro,
+            }
         });
     }
 
@@ -594,6 +642,10 @@ function Clientes(props) {
 
     const handleSelectChange = (event) => {
         console.log("onChangeSelect");
+        setState({
+            ...state,
+            idPais: event.target.value
+        })
         getAllEstados(event.target.value);
     };
 
@@ -642,6 +694,7 @@ function Clientes(props) {
 
                 eliminarCliente(id, state.CreadoPor)
                     .then((respuesta) => {
+                        console.log('eliminar ', respuesta.data)
                         showSuccess(respuesta.data);
                         getAllClientes();
                     })
@@ -683,9 +736,34 @@ function Clientes(props) {
             });
     };
 
+    const handleChangeIdCliente = (event) => {
+        event.preventDefault()
+        /*validarNumeroCliente(state)
+            .then((respuesta) => {
+                if (respuesta.data != "") {
+                    showSuccess(respuesta.data.m_sMensaje);
+                    console.log(respuesta.data);
+                    setState({
+                        ...state,
+
+                        numeroCliente: respuesta.data.m_nNumero,
+                    });
+                }
+            }).catch((err) => {
+                showSuccess(err);
+            });*/
+
+        console.log(event.target.name + " : " + event.target.value);
+        setState({
+            ...state,
+            idCliente: event.target.value,
+        });
+    };
+
     const handleAceptar = (e) => {
         e.preventDefault();
-        var params = {
+        let params = {
+            m_nIdCliente: state.idCliente,
             m_nCreadoPor: state.CreadoPor,
             m_nModificadoPor: state.ModificadoPor,
             m_nNumeroCliente: state.numeroCliente,
@@ -751,18 +829,31 @@ function Clientes(props) {
             m_bPermitirVerPortal: state.m_bPermitirVerPortal,
             m_bRecibirCartaPorte: state.RecibirCartaPorte,
 
+            CompaniaSeguros1: state.companiaSeguros1,
+            TelefonosCompaniaSeguros1: state.telefonoSeguro1,
+            NumeroSeguro1: state.numeroSeguro1,
+            VencimientoSeguro1: state.vencimientoSeguro1,
+            TipoCoberturaSeguro1: state.tipoCobertura1,
+            CompaniaSeguros: state.companiaSeguros2,
+            TelefonosCompaniaSeguros: state.telefonoSeguro2,
+            NumeroSeguro: state.numeroSeguro2,
+            VencimientoSeguro: state.vencimientoSeguro2,
+            TipoCoberturaSeguro: state.tipoCobertura2,
+
             agregar: "Agregar",
             importar: "",
         };
-        if (state.idCliente != 0) {
+        console.log(JSON.stringify(params))
+        if (state.agregar == "Modificar") {
             modificarCliente(state.idCliente, params)
                 .then((respuesta) => {
                     alert(respuesta.data);
-                    $('.nav-tabs li ').removeClass('active');
+                    /*$('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');
+                    $('#Listado').addClass('in show');*/
                     // window.location.reload();
+                    limpiarCamposAgregar()
                 })
                 .catch((err) => {
                     console.log(err);
@@ -772,10 +863,11 @@ function Clientes(props) {
             agregarCliente(params)
                 .then((respuesta) => {
                     alert(respuesta.data);
-                    $('.nav-tabs li ').removeClass('active');
+                    limpiarCamposAgregar()
+                    /*$('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');
+                    $('#Listado').addClass('in show');*/
                     //window.location.reload();
                 })
                 .catch((err) => {
@@ -833,7 +925,21 @@ function Clientes(props) {
         );
     }
 
-
+    const handleShowListado = (event) => {
+        event.stopPropagation();
+        setState(state =>{
+            return {
+                ...state,
+                agregar: "Agregar"
+            }
+        });
+        getAllClientes()
+        limpiarCamposAgregar()
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
+    }
 
     return (
         <div>
@@ -863,14 +969,7 @@ function Clientes(props) {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a onClick={(event) => {
-                                event.stopPropagation();
-                                setState({...state, agregar: "Agregar"});
-                                $('.nav-tabs li ').removeClass('active');
-                                $('.nav-tabs li').eq(0).addClass('active');
-                                $('.tab-content div ').removeClass('in show');
-                                $('#Listado').addClass('in show');
-                            }}>
+                            <a onClick={(event) => handleShowListado(event)}>
                                 <i className="fa fa-list" /> Listado
                             </a>
                         </li>
@@ -972,10 +1071,29 @@ function Clientes(props) {
 
                                                                 <div className="input">
                                                                     <TextField variant="outlined" margin="dense"
+                                                                               onChange={handleChange}
+                                                                               label="Identificador de Cliente"
+                                                                               // onBlur={handleChangeIdCliente}
+                                                                               className="form-control"
+                                                                               type="number"
+                                                                               required
+                                                                               value={state.idCliente}
+                                                                               id="idCliente"
+                                                                               name="idCliente"
+                                                                               disabled={state.agregar == "Modificar"}
+
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-sm-4 col-md-2-5 unit">
+
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
                                                                         onChange={handleChange}
                                                                         label="Número de Cliente"
                                                                         onBlur={handleChangeCodigo}
                                                                         className="form-control"
+                                                                               required
                                                                         type="text"
                                                                         value={state.numeroCliente}
                                                                         id="numeroCliente"
@@ -1033,11 +1151,10 @@ function Clientes(props) {
 
                                                             <div className="col-sm-4 col-md-2-5 unit">
                                                                 <label className="input select">
-                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <FormControl required fullWidth variant="outlined" margin="dense">
                                                                         <InputLabel id="tipoClienteLabel">Tipo de Cliente</InputLabel>
                                                                         <Select
                                                                             labelId="tipoClienteLabel"
-                                                                            label="Tipo de Cliente"
                                                                             onChange={handleChange}
                                                                             className="form-control"
                                                                             value={state.tipoCliente}
@@ -1048,6 +1165,7 @@ function Clientes(props) {
                                                                             name="tipoCliente"
                                                                             id="tipoCliente"
                                                                         >
+                                                                            <option value=""></option>
                                                                             <option value="1">Nacional</option>
                                                                             <option value="2">Extranjero</option>
                                                                         </Select>
@@ -1057,7 +1175,7 @@ function Clientes(props) {
 
                                                             <div className="col-sm-4 col-md-2-5 unit">
                                                                 <label className="input select">
-                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <FormControl required fullWidth variant="outlined" margin="dense">
                                                                         <InputLabel id="idSucursalLabel">Sucursal</InputLabel>
                                                                         <Select
                                                                             labelId="idSucursalLabel"
@@ -1072,7 +1190,7 @@ function Clientes(props) {
                                                                             name="idSucursal"
                                                                             required
                                                                         >
-
+                                                                            <option value=""></option>
                                                                             {dataSucursales.map((sucursal) => (
                                                                                 <option value={sucursal.m_nIdSucursal}>
                                                                                     {sucursal.m_sSucursal}
@@ -1084,7 +1202,7 @@ function Clientes(props) {
                                                             </div>
                                                             <div className="col-sm-4 col-md-2-5  unit">
                                                                 <label className="input select">
-                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <FormControl required fullWidth variant="outlined" margin="dense">
                                                                         <InputLabel id="idMonedaLabel">Moneda</InputLabel>
                                                                         <Select
                                                                             labelId="idMonedaLabel"
@@ -1099,6 +1217,7 @@ function Clientes(props) {
                                                                             name="idMoneda"
                                                                             required
                                                                         >
+                                                                            <option value=""></option>
                                                                             {dataTipoMoneda.map((moneda) => (
                                                                                 <option
                                                                                     key={moneda.m_nIdMoneda}
@@ -1113,7 +1232,7 @@ function Clientes(props) {
                                                             </div>
                                                             <div className="col-sm-4 col-md-2-5 unit">
                                                                 <label className="input select">
-                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <FormControl required fullWidth variant="outlined" margin="dense">
                                                                         <InputLabel id="idImpuestoTransladadoLabel">IVA</InputLabel>
                                                                         <Select
                                                                             labelId="idImpuestoTransladadoLabel"
@@ -1687,8 +1806,20 @@ function Clientes(props) {
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        {/*Este componente son las tabs*/}
-                                                        <NavTabs/>
+                                                        <ul className="nav nav-tabs">
+                                                            <li className="active">
+                                                                <a data-toggle="tab" href="#Domicilio">Domicilio</a>
+                                                            </li>
+                                                            <li>
+                                                                <a data-toggle="tab" href="#Formatos">Formatos</a>
+                                                            </li>
+                                                            <li>
+                                                                <a data-toggle="tab" href="#Especiales">Procesos Especiales</a>
+                                                            </li>
+                                                            <li>
+                                                                <a data-toggle="tab" href="#Adicional">Inf. Adicional</a>
+                                                            </li>
+                                                        </ul>
                                                         <div className="form-content">
                                                             {/* start text password */}
                                                             <div className="widget-wrap">
@@ -1707,18 +1838,18 @@ function Clientes(props) {
                                                                                                         <Select
                                                                                                             labelId="idPaisLabel"
                                                                                                             label="Pais"
-                                                                                                            onChange={
-                                                                                                                handleSelectChange
-                                                                                                            }
+                                                                                                            onChange={handleSelectChange}
                                                                                                             className="form-control"
                                                                                                             native
                                                                                                             value={state.idPais}
                                                                                                             id="idPais"
                                                                                                             name="idPais"
                                                                                                         >
+                                                                                                            <option value={0}></option>
                                                                                                             {dataPais.map((pais) => (
                                                                                                                 <option
                                                                                                                     value={pais.m_nIdPais}
+                                                                                                                    key={pais.m_nIdPais}
                                                                                                                 >
                                                                                                                     {pais.m_sPais}
                                                                                                                 </option>
@@ -2353,6 +2484,234 @@ function Clientes(props) {
                                     </div>
                                     {/*Fin de ejemplo*/}
 
+                                    <div className="widget-wrap" id="seguros">
+                                        {/*<div className="widget-header block-header margin-bottom-0 clearfix">
+                                            <div className="pull-left">
+                                                <h3>Seguros</h3>
+                                            </div>
+
+                                        </div>*/}
+                                        <BlockHeaderH3>{'Seguros'}</BlockHeaderH3>
+                                        <div className="widget-container">
+                                            <div className="widget-content">
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <div className="form-content">
+                                                            {/* start text password */}
+                                                            <div className="row">
+                                                                <div className="col-sm-6 col-md-2 col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Aseguradora"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   value={state.companiaSeguros1}
+                                                                                   id="companiaSeguros1"
+                                                                                   name="companiaSeguros1"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-2 col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Teléfonos"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   value={state.telefonoSeguro1}
+                                                                                   id="telefonoSeguro1"
+                                                                                   name="telefonoSeguro1"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-2 col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Núm. Seguro"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   value={state.numeroSeguro1}
+                                                                                   id="numeroSeguro1"
+                                                                                   name="numeroSeguro1"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-2  col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Vencimiento"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="datetime-local"
+                                                                                   value={
+                                                                                       state.vencimientoSeguro1
+                                                                                   }
+                                                                                   InputLabelProps={{
+                                                                                       shrink: true,
+                                                                                   }}
+                                                                                   id="vencimientoSeguro1"
+                                                                                   name="vencimientoSeguro1"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-12 col-md-4 col-lg-4 unit">
+                                                                    <div className="inline-group">
+                                                                        <label className="label">
+                                                                            Tipo de Cobertura
+                                                                        </label>
+                                                                        <label className="radio">
+                                                                            <input
+                                                                                onChange={handleChange}
+                                                                                type="radio"
+                                                                                defaultChecked
+                                                                                value="1"
+                                                                                placeholder={state.tipoCobertura1}
+                                                                                checked={state.tipoCobertura1 == 1}
+                                                                                id="tipoCobertura1"
+                                                                                name="tipoCobertura1"
+                                                                            />
+                                                                            <i />
+                                                                            Amplia
+                                                                        </label>
+                                                                        <label className="radio">
+                                                                            <input
+                                                                                onChange={handleChange}
+                                                                                type="radio"
+                                                                                value="2"
+                                                                                placeholder={state.tipoCobertura1}
+                                                                                checked={state.tipoCobertura1 == 2}
+                                                                                id="tipoCobertura1"
+                                                                                name="tipoCobertura1"
+                                                                            />
+                                                                            <i />
+                                                                            Limitada
+                                                                        </label>
+                                                                        <label className="radio">
+                                                                            <input
+                                                                                onChange={handleChange}
+                                                                                type="radio"
+                                                                                value="3"
+                                                                                placeholder={state.tipoCobertura1}
+                                                                                checked={state.tipoCobertura1 == 3}
+                                                                                id="tipoCobertura1"
+                                                                                name="tipoCobertura1"
+                                                                            />
+                                                                            <i />
+                                                                            S/Cobertura
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="row">
+                                                                <div className="col-sm-6 col-md-2 col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Aseguradora"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   value={state.companiaSeguros2}
+                                                                                   id="companiaSeguros2"
+                                                                                   name="companiaSeguros2"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-2 col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Teléfonos"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   value={state.telefonoSeguro2}
+                                                                                   id="telefonoSeguro2"
+                                                                                   name="telefonoSeguro2"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-2 col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Núm. Seguro"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   value={state.numeroSeguro2}
+                                                                                   id="numeroSeguro2"
+                                                                                   name="numeroSeguro2"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-2  col-lg-2 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense" label="Vencimiento"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="datetime-local"
+                                                                                   placeholder=""
+                                                                                   value={state.vencimientoSeguro2}
+                                                                                   InputLabelProps={{
+                                                                                       shrink: true,
+                                                                                   }}
+                                                                                   id="vencimientoSeguro2"
+                                                                                   name="vencimientoSeguro2"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-12 col-md-4 col-lg-4 unit">
+                                                                    <div className="inline-group">
+                                                                        <label className="label">
+                                                                            Tipo de cobertura
+                                                                        </label>
+                                                                        <label className="radio">
+                                                                            <input
+                                                                                onChange={handleChange}
+                                                                                type="radio"
+                                                                                value="1"
+                                                                                defaultChecked
+                                                                                placeholder={state.tipoCobertura2}
+                                                                                checked={state.tipoCobertura2 == 1}
+                                                                                id="tipoCobertura2"
+                                                                                name="tipoCobertura2"
+                                                                            />
+                                                                            <i />
+                                                                            Amplia
+                                                                        </label>
+                                                                        <label className="radio">
+                                                                            <input
+                                                                                onChange={handleChange}
+                                                                                type="radio"
+                                                                                value="2"
+                                                                                placeholder={state.tipoCobertura2}
+                                                                                checked={state.tipoCobertura2 == 2}
+                                                                                id="tipoCobertura2"
+                                                                                name="tipoCobertura2"
+                                                                            />
+                                                                            <i />
+                                                                            Limitada
+                                                                        </label>
+                                                                        <label className="radio">
+                                                                            <input
+                                                                                onChange={handleChange}
+                                                                                type="radio"
+                                                                                value="3"
+                                                                                placeholder={state.tipoCobertura2}
+                                                                                checked={state.tipoCobertura2 == 3}
+                                                                                id="tipoCobertura2"
+                                                                                name="tipoCobertura2"
+                                                                            />
+                                                                            <i />
+                                                                            S/Cobertura
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {/* end text password */}
+                                                            {/* start email url */}
+
+                                                            {/* end textarea */}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div className="widget-wrap" id="otros">
                                         {/*<div className="widget-header block-header margin-bottom-0 clearfix">
                                             <div className="pull-left">
@@ -2739,7 +3098,7 @@ function Clientes(props) {
                                                         </div>
                                                     </div>*/}
                                                     <div className="form-footer" className="col-md-12">
-                                                        <button
+                                                        {/*<button
                                                             type="button"
                                                             onClick={(event) => {
                                                                 event.stopPropagation();
@@ -2750,7 +3109,7 @@ function Clientes(props) {
                                                                 $('#Listado').addClass('in show');
                                                             }}
                                                             className="btn btn-secondary secondary-btn">Cancelar
-                                                        </button>
+                                                        </button>*/}
                                                         <button
                                                             type="submit"
                                                             className="btn btn-primary primary-btn">Aceptar

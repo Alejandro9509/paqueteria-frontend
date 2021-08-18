@@ -155,7 +155,7 @@ function Impuestos() {
         }
         setState({
             ...state,
-            [event.target.id]: event.target.value,
+            [event.target.name]: event.target.value,
             tipoDeCalculo: valor
         });
     }
