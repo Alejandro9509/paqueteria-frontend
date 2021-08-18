@@ -3389,7 +3389,7 @@ function Embarque(props) {
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 options={dataRemitenteDestinatario}
                                                                                 getOptionLabel={(option) =>
-                                                                                    option.m_sNombreFiscal
+                                                                                    option.m_sAlias + " (" + option.m_sNombre + ")"
                                                                                 }
                                                                                 variant="outlined"
                                                                                 style={{
@@ -3847,7 +3847,7 @@ function Embarque(props) {
                                                                             forcePopupIcon={false}
                                                                             options={dataRemitenteDestinatario}
                                                                             getOptionLabel={(option) =>
-                                                                                option.m_sNombreFiscal
+                                                                                option.m_sAlias + " (" + option.m_sNombre + ")"
                                                                             }
                                                                             variant="outlined"
                                                                             style={{
