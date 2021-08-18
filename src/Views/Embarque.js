@@ -2872,7 +2872,7 @@ function Embarque(props) {
 
 
                         <li className={props.location.idRecoleccion != undefined ? "active" : ""}>
-                            <a data-toggle="tab" href="#Agregar" onClick={() => handleShowAgregar()}>
+                            <a onClick={() => handleShowAgregar()}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
@@ -2918,7 +2918,7 @@ function Embarque(props) {
                     </ul>
 
                     <div className="row tab-content">
-                        <div id="Listado" className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in active"}>
+                        <div id="Listado" className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in show"}>
 
                             <div className="widget-wrap">
                                 <div className="widget-content">
@@ -3067,7 +3067,7 @@ function Embarque(props) {
                             </div>
                         </div>
 
-                        <div id="Agregar" className={props.location.idRecoleccion != undefined ? "tab-pane fade in active" : "tab-pane fade"}>
+                        <div id="Agregar" className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
 
                             <form className="j-forms row" onSubmit={handleAceptar}>
                                 <div className="form-content">
