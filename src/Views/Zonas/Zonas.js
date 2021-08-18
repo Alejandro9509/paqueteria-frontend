@@ -136,22 +136,22 @@ class Zonas extends Component {
     console.log(JSON.stringify(params))
     if (this.state.idZona != 0 && this.state.idZona != '' && this.state.idZona != undefined) {
       const url = `${process.env.REACT_APP_API_URL}/Zonas/Modificar/` + this.state.idZona;
-      axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+      /*axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
         showSuccess(respuesta.data)
         this.handleShowListado()
       }).catch(err => {
         console.log(err)
         showSuccess("err")
-      });
+      });*/
     } else {
       const url = `${process.env.REACT_APP_API_URL}/Zonas/Agregar`;
-      axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+      /*axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
         showSuccess(respuesta.data)
         this.handleShowListado()
       }).catch(err => {
         console.log(err)
         showSuccess(err)
-      });
+      });*/
 
     }
 
@@ -245,6 +245,7 @@ class Zonas extends Component {
       consult: false,
       agregar: "Agregar",
       idZona: 0,
+      selected: {},
     });
     $('.nav-tabs li ').removeClass('active');
     $('.nav-tabs li').eq(0).addClass('active');
@@ -259,6 +260,7 @@ class Zonas extends Component {
       consult: false,
       agregar: "Agregar",
       idZona: 0,
+      selected: {},
     });
     $('.nav-tabs li ').removeClass('active');
     $('.nav-tabs li').eq(1).addClass('active');
