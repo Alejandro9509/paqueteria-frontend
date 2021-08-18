@@ -3337,9 +3337,7 @@ function Recoleccion() {
                                                                                 label="Nombre"
                                                                                 forcePopupIcon={false}
                                                                                 options={dataRemitenteDestinatario}
-                                                                                getOptionLabel={(option) =>
-                                                                                    option.m_sNombreFiscal
-                                                                                }
+                                                                                getOptionLabel={(option) => option.m_sAlias + " (" + option.m_sNombre + ")"}
                                                                                 style={{
                                                                                     transform: "translate(14px, 10px) scale(1) !important"
                                                                                 }}
@@ -3726,7 +3724,7 @@ function Recoleccion() {
                                                                             forcePopupIcon={false}
                                                                             options={dataRemitenteDestinatario}
                                                                             getOptionLabel={(option) =>
-                                                                                option.m_sNombreFiscal
+                                                                                option.m_sAlias + " (" + option.m_sNombre + ")"
                                                                             }
                                                                             variant="outlined"
                                                                             style={{
