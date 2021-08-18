@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Ajustes en clientes">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Correccion de bugs en Remitente destinatario">
       <change beforePath="$PROJECT_DIR$/src/Views/RemitentesDestinatarios.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/RemitentesDestinatarios.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -445,7 +443,21 @@
       <option name="project" value="LOCAL" />
       <updated>1629244185051</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="En recoleccion se muestra alias">
+      <created>1629244786948</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1629244786948</updated>
+    </task>
+    <task id="LOCAL-00047" summary="En embarque se muestra alias">
+      <created>1629244862496</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1629244862496</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -512,9 +524,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ajustes en embarque al mostrar informacion para modificar" />
-    <MESSAGE value="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita" />
-    <MESSAGE value="Ajustes al crear guia a partir de embarque" />
     <MESSAGE value="Se recuperan las opciones de impuestos de los servicios en sucursales" />
     <MESSAGE value="Ajustes para registrar embarque cuando es entrega en domicilio" />
     <MESSAGE value="Se recupera dato Tipo de servicio al modificar/ consultar una guia" />
@@ -537,7 +546,10 @@
     <MESSAGE value="Se agregó seccion de seguros para clientes" />
     <MESSAGE value="*Ajustes menores en clientes" />
     <MESSAGE value="*Ajustes en clientes" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Ajustes en clientes" />
+    <MESSAGE value="En recoleccion se muestra alias" />
+    <MESSAGE value="En embarque se muestra alias" />
+    <MESSAGE value="Correccion de bugs en Remitente destinatario" />
+    <option name="LAST_COMMIT_MESSAGE" value="Correccion de bugs en Remitente destinatario" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
