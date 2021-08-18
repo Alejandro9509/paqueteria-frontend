@@ -929,6 +929,9 @@ function RemitenteDestinatario(props) {
                                                                                        type="text"
                                                                                        className="form-control"
                                                                                        value={state.alias}
+                                                                                       InputLabelProps={{
+                                                                                           shrink: true,
+                                                                                       }}
                                                                                        id="alias"
                                                                                        name={"alias"}
                                                                                        maxlength="4"

@@ -515,7 +515,7 @@ function Recoleccion() {
             m_nIdTipoDeCobro: state.tipoCobro,
 
             //Remitente
-            m_sNombreRemitente: state.nombreRemitente.m_sNombreFiscal,
+            m_sNombreRemitente: state.nombreRemitente.m_sNombre,
             m_sRFCRemitente: state.RFCRemitente,
             m_sDomicilioRemitente: state.domicilioRemitente,
             m_sIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
@@ -526,7 +526,7 @@ function Recoleccion() {
             m_nIdCiudadOrigen: state.origenRemitente.m_nIdCiudad,
 
             //Destinatario
-            m_sNombreDestinatario: state.nombreDestinatario.m_sNombreFiscal,
+            m_sNombreDestinatario: state.nombreDestinatario.m_sNombre,
             m_sRFCDestinatario: state.RFCDestinatario,
             m_sDomicilioDestinatario: state.domicilioDestinatario,
             m_sIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
@@ -611,7 +611,7 @@ function Recoleccion() {
         console.log(infoGeneral)
 
         const remitente = {
-            m_sNombreRemitente: state.nombreRemitente.m_sNombreFiscal,
+            m_sNombreRemitente: state.nombreRemitente.m_sNombre,
             m_sRFCRemitente: state.RFCRemitente,
             m_sDomicilioRemitente: state.domicilioRemitente,
             m_sIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
@@ -625,7 +625,7 @@ function Recoleccion() {
         console.log(remitente)
 
         const destinatario = {
-            m_sNombreDestinatario: state.nombreDestinatario.m_sNombreFiscal,
+            m_sNombreDestinatario: state.nombreDestinatario.m_sNombre,
             m_sRFCDestinatario: state.RFCDestinatario,
             m_sDomicilioDestinatario: state.domicilioDestinatario,
             m_sIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
@@ -1531,7 +1531,7 @@ function Recoleccion() {
         },
         {
             Name: "Cliente",
-            accessor: "m_sNombreFiscal",
+            accessor: "m_sNombre",
         },
     ]);
 

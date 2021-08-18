@@ -198,6 +198,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/Tarifas/Tarifas.js">
           <value>
             <set />
@@ -314,6 +319,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Viajes/AsignarOperadorUnidad.js">
           <value>
             <set />
           </value>

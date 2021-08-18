@@ -64,8 +64,6 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 function Viajes() {
-
-    const classes = useStyles();
     const [data, setData] = React.useState([])
     const [dataSucursal, setDataSucursal] = React.useState([]);
     const [indexOpen, setIndexOpen] = React.useState(-1);
@@ -91,7 +89,6 @@ function Viajes() {
 
 
     })
-    const [fileUploaded, setFileUploaded] = React.useState([])
 
     function getAllEstatusViaje() {
         const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;

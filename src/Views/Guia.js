@@ -707,26 +707,26 @@ function Guia(props) {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab"
+                            <a  data-toggle="tab"
                                onClick={() => (handleShowModificar(row.row.m_nIdGuia))}
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs"
+                            <a  className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row.m_nIdGuia))}><i className="fa fa-eye"
                                                                                            style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="iMPRIMIR">
-                            <a href="#" className="btn btn-default btn-xs"
+                            <a  className="btn btn-default btn-xs"
                                onClick={() => printTicket(row.row)}><i className="zmdi zmdi-print"
                                                                 style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs"
+                            <a className="btn btn-default btn-xs"
                                onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete"
                                                                                       style={{color: "#F30B0B"}}/></a>
 
@@ -963,6 +963,7 @@ function Guia(props) {
             paq["largo"] = paq.m_xLargo
             paq["ancho"] = paq.m_xAncho
             paq["alto"] = paq.m_xAlto
+            paq["cdt"] = paq.ctd
             paq["volumen"] = paq.m_xVolumen
             paq["tipoEmbalaje"] = paq.m_nTipo
             paq["valorDeclarado"] = paq.m_cValorDeclarado
@@ -1051,8 +1052,9 @@ function Guia(props) {
             console.log(tarifa.data)
             let pesoTotal = 0
             paquetesTemp.forEach((p) => {
-                pesoTotal = pesoTotal + p.peso
+                pesoTotal = pesoTotal + p.peso * p.cdt
             })
+            console.log(pesoTotal)
             obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal)
             if (tarifa.data.length !== 0) {
                 //se recorre el listado de conceptos de la tarifa del embarque
@@ -1234,13 +1236,12 @@ function Guia(props) {
                 if (element.m_nIdAgregadoDesde == 0){
                     conceptosDentroRango.push(element)
                 }else {
-                    if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
+                    if (element.m_xnRangoMinimo <= pesoTotal && element.m_xnRangoMaximo >= pesoTotal) {
                         conceptosDentroRango.push(element)
                     }
                 }
 
             })
-
             setDataTodosConceptosByEmbarque(conceptosDentroRango)
 
         })

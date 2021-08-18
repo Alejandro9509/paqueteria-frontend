@@ -273,7 +273,7 @@ function Embarque(props) {
         },
         {
             Name: "Cliente",
-            accessor: "m_sNombreFiscal",
+            accessor: "m_sNombre",
         },
     ]);
     const columnsCP = React.useMemo(() => [
@@ -591,7 +591,7 @@ function Embarque(props) {
             m_dFecha: state.fechaHoraCreacion.split("T")[0],
             m_tHora: state.fechaHoraCreacion.split("T")[1],
 
-            m_sNOmbreRemitente: state.nombreRemitente.m_sNombreFiscal,
+            m_sNOmbreRemitente: state.nombreRemitente.m_sNombre,
             m_sRFCRemitente: state.RFCRemitente,
             m_sDomicilioRemitente: state.domicilioRemitente,
             m_nIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
@@ -601,7 +601,7 @@ function Embarque(props) {
             m_sContactoRemitente: state.contactoRemitente,
             m_nIdCiudadOrigen: state.ciudadOrigen.m_nIdCiudad,
 
-            m_sNombreDestinatario: state.nombreDestinatario.m_sNombreFiscal,
+            m_sNombreDestinatario: state.nombreDestinatario.m_sNombre,
             m_sRFCDestinatario: state.RFCDestinatario,
             m_sDomicilioDestinatario: state.domicilioDestinatario,
             m_nIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
