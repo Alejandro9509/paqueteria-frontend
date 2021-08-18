@@ -46,6 +46,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import {obtenerInformesPorViaje} from "../Util/Contexts/InformesContext";
 import {getUniqueListBy} from "../Util/Util";
 import DetalleInforme from "./Viajes/DetalleInforme";
+import {obtenerDetalleParadasIdInformes, obtenerDetalleParadasIdViaje} from "../Util/Contexts/DetalleParadasContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -281,6 +282,7 @@ function Viajes() {
             headerName: "Acciones",
             sortable: false, filterable: false,
             field: "",
+            width: 150,
             renderCell: (row) => {
                 return (
                     <div>
@@ -357,10 +359,6 @@ function Viajes() {
         getAllEstatusViaje();
         getAllEstatusDocumento();
         getInventarioUnidades()
-        //getEstatusEquipoListado();
-        // getDispEquipoListado();
-
-        // getInventarioUnidades();
     }, []);
 
     function getAllData() {
@@ -376,22 +374,6 @@ function Viajes() {
         //    'access-control-allow-origin': '*'
     }
 
-    function DefaultColumnFilter({
-                                     column: {filterValue, preFilteredRows, setFilter},
-                                 }) {
-        const count = preFilteredRows.length
-
-        return (
-            <input
-                className="form-control"
-                value={filterValue || ''}
-                onChange={e => {
-                    setFilter(e.target.value || undefined)
-                }}
-                placeholder={`Buscar ${count} registros...`}
-            />
-        )
-    }
 
 
     /**DISPONIBILIDAD DE EQUIPO*/
@@ -474,12 +456,13 @@ function Viajes() {
     const columnsParadas = [
         {
             headerName: "Folio Informe",
-            field: "m_sFolioInforme",
+            field: "m_clsInforme",
             width: 200,
+            valueFormatter: row => row.value.m_sFolioInforme
         },
         {
             headerName: "Origen",
-            field: "m_sCiudadOrigen",
+            field: "m_sOrigen",
             width: 200,
         },
         {
@@ -495,7 +478,7 @@ function Viajes() {
         },
         {
             headerName: "Guías",
-            field: "m_sRemolque2",
+            field: "m_sCamion",
             width: 150,
             renderCell: (row) => {
                 return (
@@ -510,12 +493,12 @@ function Viajes() {
         },
         {
             headerName: "Destino",
-            field: "m_sCiudadDestino",
+            field: "m_sDestino",
             width: 200,
         },
         {
             headerName: "Camión",
-            field: "m_sRemolque1",
+            field: "m_sCamion",
             width: 150,
         },
         {
@@ -534,7 +517,7 @@ function Viajes() {
     const [paradaData, setParadaData] = React.useState();
 
     function getParadasListado(row) {
-        obtenerInformesPorViaje(row).then(respuesta => {
+        obtenerDetalleParadasIdViaje(row).then(respuesta => {
             var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdRuta")
             arrayInformes.forEach(a => {
                 a["informes"] = respuesta.data.filter(r => r.m_nIdRuta === a.m_nIdRuta)
@@ -689,7 +672,7 @@ function Viajes() {
                         fullWidth={true}
                         maxWidth={'md'}>
                     <DialogTitle>
-                        Detalle de Informe - {informeSeleccionado.m_sFolioInforme}
+                        Detalle de Informe - {informeSeleccionado.m_clsInforme.m_sFolioInforme}
                     </DialogTitle>
                     <DialogContent>
                         <DetalleInforme guias={informeSeleccionado.m_arrClsProGuia}>
@@ -970,13 +953,11 @@ function Viajes() {
                                     </div>
 
                                     <div className="row" style={{height: "400px", width: '100%'}}>
-                                        {data.length != 0 ? (
                                             <DataGrid
                                                 localeText={dataGridLocaleText}
                                                 rows={data}
                                                 columns={columns}
                                                 density="compact"
-                                                pageSize={Math.floor((state.height - 310) / 30)}
                                                 getRowId={(row) => row.m_nIdViaje}
                                                 onRowSelected={(row) => {
                                                     /*  setState({
@@ -986,9 +967,7 @@ function Viajes() {
                                                     getParadasListado(row.data.m_nIdViaje)
                                                 }}
                                             />
-                                        ) : (
-                                            <div>No se encontró ningún registro</div>
-                                        )}
+
                                     </div>
                                 </div>
                             </div>
@@ -1091,7 +1070,6 @@ function Viajes() {
                                                         localeText={dataGridLocaleText}
                                                         columns={columnsEquipo}
                                                         density="compact"
-                                                        pageSize={Math.floor((state.height - 310) / 30)}
                                                         getRowId={(row) => row.m_nIdInventarioUnidad}
 
                                                     />
@@ -1108,7 +1086,7 @@ function Viajes() {
 
                         <div className="widget-wrap" id="Agregar" className="tab-pane fade">
 
-                            <AgregarViaje/>
+                            <AgregarViaje reload={getAllData}/>
 
                         </div>
 

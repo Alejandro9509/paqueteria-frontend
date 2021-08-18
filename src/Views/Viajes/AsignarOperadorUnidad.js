@@ -225,18 +225,19 @@ export default function AsignarOperadorUnidad(props) {
             cargadoVacioRemolqueDos: e.target.checked
         });
     }
-    const handleOperador = (e) => {
+    const handleOperador = (e, value) => {
+        console.log(value)
         setData({
             ...data,
-            operador: e.target.value
+            operador: value
         });
     }
     const handleUnidad = (e, value) => {
         obtenerEstatusUnidadeId(value.m_nIdUnidad).then((resultado) => {
             setData({
                 ...data,
-                unidad: e.target.value,
-                placaIntUnidad: e.target.value.m_sPlacas,
+                unidad: value,
+                placaIntUnidad: value.m_sPlacas,
                 estatusUnidad: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus
 
             });
@@ -929,7 +930,7 @@ export default function AsignarOperadorUnidad(props) {
                         </Grid>
                     </Grid>
                 </TabPanel>
-                <TabPanel value={tabActive} index={1}>
+                {/*<TabPanel value={tabActive} index={1}>
                     <Grid container spacing={2}>
                         <Grid item xs={3}>
                             <TextField
@@ -1029,7 +1030,7 @@ export default function AsignarOperadorUnidad(props) {
                         </Grid>
                         <Grid item xs={2}/>
                     </Grid>
-                </TabPanel>
+                </TabPanel>*/}
                 {props.children}
             </form>
         </div>

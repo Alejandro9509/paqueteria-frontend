@@ -34,6 +34,7 @@ import {ContactsOutlined} from "@material-ui/icons";
 import {obtenerInformesDisponiblesViajes} from "../../Util/Contexts/InformesContext";
 import InformesPorAsignar from "./InformesPorAsignar";
 import Noty from "noty";
+import {obtenerEstatusUnidadeId} from "../../Util/Contexts/UnidadesContext";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -130,6 +131,10 @@ class AgregarViaje extends Component {
 
     handleAceptar = (e) => {
         e.preventDefault();
+        if (Object.keys(this.state.asignacionEquipo).length === 0 ) {
+            showSuccess("Debe asignar una unidad y un operador al viaje")
+            return
+        }
         var params = {
             m_dFecha: this.state.fechaHoraRegistro.split("T")[0],
             m_tHora: this.state.fechaHoraRegistro.split("T")[1],
@@ -164,6 +169,7 @@ class AgregarViaje extends Component {
                 //showSuccess(respuesta.data);
                 //console.log(respuesta.data);
                 //getAllEmbarque();
+                this.props.reload()
                 $('.nav-tabs li ').removeClass('active');
                 $('.nav-tabs li').eq(0).addClass('active');
                 $('.tab-content div ').removeClass('in show');
@@ -279,7 +285,9 @@ class AgregarViaje extends Component {
 
     handleRemolqueUnoFiltro(event, newValue) {
         event.preventDefault();
-        this.setState({IdRemolque1: newValue, placasRemolque1: newValue.m_sPlacas})
+        obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
+            this.setState({IdRemolque1: newValue, placasRemolque1: newValue.m_sPlacas,  estatusRemolque1: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus})
+        })
         if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && newValue.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
             this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
@@ -289,7 +297,10 @@ class AgregarViaje extends Component {
 
     handleRemolqueDosFiltro(event, newValue) {
         event.preventDefault();
-        this.setState({IdRemolque2: newValue, placasRemolque2: newValue.m_sPlacas})
+        obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
+            this.setState({IdRemolque2: newValue, placasRemolque2: newValue.m_sPlacas,  estatusRemolque2: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus})
+        })
+
         if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
             this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
@@ -585,6 +596,7 @@ class AgregarViaje extends Component {
                                                        onChange={this.handleChange}
                                                        className="form-control"
                                                        type="text"
+                                                       required
                                                        label="Núm. Viaje Cliente"
                                                        value={this.state.viajeCliente}
                                                        id="viajeCliente"
@@ -975,9 +987,9 @@ class AgregarViaje extends Component {
                                         <div className="col-sm-12 col-md-3 unit">
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
-                                                           onChange={this.handleChange}
                                                            className="form-control"
                                                            type="text"
+                                                           disabled
                                                            label="Placas Int"
                                                            value={this.state.placasRemolque1}
                                                            name="placasRemolque1"
@@ -989,12 +1001,12 @@ class AgregarViaje extends Component {
                                         <div className="col-sm-12 col-md-3 unit">
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
-                                                           onChange={this.handleChange}
                                                            className="form-control"
                                                            type="text"
                                                            label="Estatus"
-                                                           value={this.state.estatusRemolque2}
-                                                           name="estatusRemolque2"
+                                                           disabled
+                                                           value={this.state.estatusRemolque1}
+                                                           name="estatusRemolque1"
                                                 />
                                             </div>
                                         </div>
@@ -1082,7 +1094,7 @@ class AgregarViaje extends Component {
                                         <div className="col-sm-12 col-md-3 unit">
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
-                                                           onChange={this.handleChange}
+                                                           disabled
                                                            className="form-control"
                                                            type="text"
                                                            label="Placas Int"
@@ -1096,7 +1108,7 @@ class AgregarViaje extends Component {
                                         <div className="col-sm-12 col-md-3 unit">
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
-                                                           onChange={this.handleChange}
+                                                           disabled
                                                            className="form-control"
                                                            type="text"
                                                            label="Estatus"
