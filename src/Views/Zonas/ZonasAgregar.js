@@ -439,7 +439,7 @@ class ZonasAgregar extends Component {
                                                         />
                                                     </div>
                                                 </div>
-                                                {/*<div className="col-md-2 col-sm-2"
+                                                <div className="col-md-2 col-sm-2"
                                                      style={{float: "right", padding: "5px"}}>
 
                                                     <div className="input">
@@ -455,8 +455,7 @@ class ZonasAgregar extends Component {
                                                                    name="costoEntregar"
                                                         />
                                                     </div>
-                                                </div>*/}
-
+                                                </div>
                                                 <div className="col-md-12 col-sm-12">
                                                 </div>
 
