@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Correccion al agregar recolección">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Correccion al agregar embarque">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -408,7 +409,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629136704580</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="Correccion al agregar embarque">
+      <created>1629307018255</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1629307018255</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -485,7 +493,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se arreglo relleno de datos al modificar sucursal" />
     <MESSAGE value="Ajustes al agregar usuarios" />
     <MESSAGE value="Ajustes en crear embarque" />
     <MESSAGE value="Ajustes en embarque al agregar uno nuevo:&#10;*Campo moneda se modifica correctamente.&#10;*los sobres se agregan al listado de paquetes y se mandan a la base de datos." />
@@ -510,12 +517,14 @@
     <MESSAGE value="*Se corrigieron datos al agregar embarque" />
     <MESSAGE value="Ajuste en viajes" />
     <MESSAGE value="Se realizo el ajuste de multiplicar el peso por la cantidad de paquetes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se realizo el ajuste de multiplicar el peso por la cantidad de paquetes" />
+    <MESSAGE value="Correccion al agregar embarque" />
+    <option name="LAST_COMMIT_MESSAGE" value="Correccion al agregar embarque" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629301938184">
+    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629307017515">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629307017515" />
     <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629301938184" />
     <state x="144" y="76" width="1152" height="720" key="DiffContextDialog" timestamp="1629145768531">
       <screen x="0" y="0" width="1440" height="900" />
@@ -550,9 +559,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="426" y="164" key="RollbackChangesDialog/0.0.1440.900@0.0.1440.900" timestamp="1629301934246" />
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629094836368">
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629307024805">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629307024805" />
     <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629094836368" />
     <state x="506" y="371" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1629301998689">
       <screen x="0" y="0" width="1440" height="900" />
@@ -568,17 +578,6 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="446" y="167" key="git4idea.branch.GitSmartOperationDialog/0.0.1440.900@0.0.1440.900" timestamp="1629301943338" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/Views/Recoleccion.js</url>
-          <line>2653</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -707,26 +707,26 @@ function Guia(props) {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab"
+                            <a  data-toggle="tab"
                                onClick={() => (handleShowModificar(row.row.m_nIdGuia))}
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs"
+                            <a  className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row.m_nIdGuia))}><i className="fa fa-eye"
                                                                                            style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="iMPRIMIR">
-                            <a href="#" className="btn btn-default btn-xs"
+                            <a  className="btn btn-default btn-xs"
                                onClick={() => printTicket(row.row)}><i className="zmdi zmdi-print"
                                                                 style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs"
+                            <a className="btn btn-default btn-xs"
                                onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete"
                                                                                       style={{color: "#F30B0B"}}/></a>
 
