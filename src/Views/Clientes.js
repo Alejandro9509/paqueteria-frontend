@@ -416,15 +416,15 @@ function Clientes(props) {
                 ...state,
                 idCliente: 0,
                 numeroCliente: 0,
-                tipoCliente: 0,
+                tipoCliente: '',
                 rfc: "",
                 activo: false,
                 operadorLogistico: false,
                 nombreFiscal: "",
                 nombreCorto: "",
-                idSucursal: 0,
-                idMoneda: 0,
-                idImpuestoTransladado: 0,
+                idSucursal: '',
+                idMoneda: '',
+                idImpuestoTransladado: '',
                 aplicarDetalleMaterialesCadaViajeXML: false,
 
                 //ver variable
@@ -520,10 +520,10 @@ function Clientes(props) {
     }
 
     const mostrarInfo = (respuesta) => {
+        console.log('cliente ',respuesta.data)
         setState(state => {
             return {
                 ...state,
-                //idCliente: id,
                 idCliente: respuesta.data.m_nIdCliente,
                 numeroCliente: respuesta.data.m_nNumeroCliente,
                 tipoCliente: respuesta.data.m_nTipoCliente,
@@ -535,14 +535,8 @@ function Clientes(props) {
                 idSucursal: respuesta.data.m_nIdSucursal,
                 idMoneda: respuesta.data.m_nIdMoneda,
                 idImpuestoTransladado: respuesta.data.m_nIdImpuestoTransladado,
-                aplicarDetalleMaterialesCadaViajeXML:
-                respuesta.data.m_bAplicarDetalleMaterialesCadaViajeXML,
-                    //idEstado: respuesta.data.m_nIdEstado,
-                    //idGrupoCliente: respuesta.data.m_nIdGrupoCliente,
-
-                    idGrupoCliente: dataGrupoClientes.find(
-                (o) => o.m_nIdGrupoCliente == respuesta.data.m_nIdGrupoCliente
-            ),
+                aplicarDetalleMaterialesCadaViajeXML: respuesta.data.m_bAplicarDetalleMaterialesCadaViajeXML,
+                idGrupoCliente: dataGrupoClientes.find((o) => o.m_nIdGrupoCliente == respuesta.data.m_nIdGrupoCliente),
                 metodoPago: respuesta.data.m_sMetodoPago,
                 diasCredito: respuesta.data.m_nDiasCredito,
                 credito: respuesta.data.m_cyCredito,
@@ -569,15 +563,13 @@ function Clientes(props) {
                 tableformatos: respuesta.data.m_sTableFormatos,
                 frecuenciaEnvioDias: respuesta.data.m_nEnvioCorreoDias,
                 enviarApartir: respuesta.data.m_sFechaEnvioCorreoApartir,
-                envioAutomaticoSeguimiento:
-                respuesta.data.m_bEnvioAutomaticoSeguimientoViajesActivar,
-                    excluirNodo: respuesta.data.m_bExcluirNodoCondicionesPagoXML,
+                envioAutomaticoSeguimiento: respuesta.data.m_bEnvioAutomaticoSeguimientoViajesActivar,
+                excluirNodo: respuesta.data.m_bExcluirNodoCondicionesPagoXML,
                 idUSOCFDI: respuesta.data.m_sIdUsoCFDI,
-                agruparCantidadPorConcepto:
-                respuesta.data.m_bPermitirAgruparCantidadPorConcepto,
-                    ajustarImporte2Dec: respuesta.data.m_bAjustarImportes2DecimalesXML,
+                agruparCantidadPorConcepto: respuesta.data.m_bPermitirAgruparCantidadPorConcepto,
+                ajustarImporte2Dec: respuesta.data.m_bAjustarImportes2DecimalesXML,
                 companiaSeguros1: respuesta.data.m_sCompaniaSeguros1,
-                telefonoSeguros1: respuesta.data.m_sTelefonosCompaniaSeguros1,
+                telefonoSeguro1: respuesta.data.m_sTelefonosCompaniaSeguros1,
                 numeroSeguro1: respuesta.data.m_sNumeroSeguro1,
                 vencimientoSeguro1: respuesta.data.m_dtVencimientoSeguro1,
                 tipoCobertura1: respuesta.data.m_nTipoCoberturaSeguro1,
@@ -702,6 +694,7 @@ function Clientes(props) {
 
                 eliminarCliente(id, state.CreadoPor)
                     .then((respuesta) => {
+                        console.log('eliminar ', respuesta.data)
                         showSuccess(respuesta.data);
                         getAllClientes();
                     })
@@ -855,11 +848,12 @@ function Clientes(props) {
             modificarCliente(state.idCliente, params)
                 .then((respuesta) => {
                     alert(respuesta.data);
-                    $('.nav-tabs li ').removeClass('active');
+                    /*$('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');
+                    $('#Listado').addClass('in show');*/
                     // window.location.reload();
+                    limpiarCamposAgregar()
                 })
                 .catch((err) => {
                     console.log(err);
@@ -869,10 +863,11 @@ function Clientes(props) {
             agregarCliente(params)
                 .then((respuesta) => {
                     alert(respuesta.data);
-                    $('.nav-tabs li ').removeClass('active');
+                    limpiarCamposAgregar()
+                    /*$('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');
+                    $('#Listado').addClass('in show');*/
                     //window.location.reload();
                 })
                 .catch((err) => {
@@ -938,6 +933,7 @@ function Clientes(props) {
                 agregar: "Agregar"
             }
         });
+        getAllClientes()
         limpiarCamposAgregar()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
@@ -1155,11 +1151,10 @@ function Clientes(props) {
 
                                                             <div className="col-sm-4 col-md-2-5 unit">
                                                                 <label className="input select">
-                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <FormControl required fullWidth variant="outlined" margin="dense">
                                                                         <InputLabel id="tipoClienteLabel">Tipo de Cliente</InputLabel>
                                                                         <Select
                                                                             labelId="tipoClienteLabel"
-                                                                            label="Tipo de Cliente"
                                                                             onChange={handleChange}
                                                                             className="form-control"
                                                                             value={state.tipoCliente}
@@ -1170,6 +1165,7 @@ function Clientes(props) {
                                                                             name="tipoCliente"
                                                                             id="tipoCliente"
                                                                         >
+                                                                            <option value=""></option>
                                                                             <option value="1">Nacional</option>
                                                                             <option value="2">Extranjero</option>
                                                                         </Select>
@@ -1179,7 +1175,7 @@ function Clientes(props) {
 
                                                             <div className="col-sm-4 col-md-2-5 unit">
                                                                 <label className="input select">
-                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <FormControl required fullWidth variant="outlined" margin="dense">
                                                                         <InputLabel id="idSucursalLabel">Sucursal</InputLabel>
                                                                         <Select
                                                                             labelId="idSucursalLabel"
@@ -1194,7 +1190,7 @@ function Clientes(props) {
                                                                             name="idSucursal"
                                                                             required
                                                                         >
-
+                                                                            <option value=""></option>
                                                                             {dataSucursales.map((sucursal) => (
                                                                                 <option value={sucursal.m_nIdSucursal}>
                                                                                     {sucursal.m_sSucursal}
@@ -1206,7 +1202,7 @@ function Clientes(props) {
                                                             </div>
                                                             <div className="col-sm-4 col-md-2-5  unit">
                                                                 <label className="input select">
-                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <FormControl required fullWidth variant="outlined" margin="dense">
                                                                         <InputLabel id="idMonedaLabel">Moneda</InputLabel>
                                                                         <Select
                                                                             labelId="idMonedaLabel"
@@ -1221,6 +1217,7 @@ function Clientes(props) {
                                                                             name="idMoneda"
                                                                             required
                                                                         >
+                                                                            <option value=""></option>
                                                                             {dataTipoMoneda.map((moneda) => (
                                                                                 <option
                                                                                     key={moneda.m_nIdMoneda}
@@ -1235,7 +1232,7 @@ function Clientes(props) {
                                                             </div>
                                                             <div className="col-sm-4 col-md-2-5 unit">
                                                                 <label className="input select">
-                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <FormControl required fullWidth variant="outlined" margin="dense">
                                                                         <InputLabel id="idImpuestoTransladadoLabel">IVA</InputLabel>
                                                                         <Select
                                                                             labelId="idImpuestoTransladadoLabel"
@@ -2508,9 +2505,7 @@ function Clientes(props) {
                                                                                    onChange={handleChange}
                                                                                    className="form-control"
                                                                                    type="text"
-                                                                                   placeholder={
-                                                                                       state.companiaSeguros1
-                                                                                   }
+                                                                                   value={state.companiaSeguros1}
                                                                                    id="companiaSeguros1"
                                                                                    name="companiaSeguros1"
                                                                         />
@@ -2569,6 +2564,7 @@ function Clientes(props) {
                                                                                 defaultChecked
                                                                                 value="1"
                                                                                 placeholder={state.tipoCobertura1}
+                                                                                checked={state.tipoCobertura1 == 1}
                                                                                 id="tipoCobertura1"
                                                                                 name="tipoCobertura1"
                                                                             />
@@ -2581,6 +2577,7 @@ function Clientes(props) {
                                                                                 type="radio"
                                                                                 value="2"
                                                                                 placeholder={state.tipoCobertura1}
+                                                                                checked={state.tipoCobertura1 == 2}
                                                                                 id="tipoCobertura1"
                                                                                 name="tipoCobertura1"
                                                                             />
@@ -2593,6 +2590,7 @@ function Clientes(props) {
                                                                                 type="radio"
                                                                                 value="3"
                                                                                 placeholder={state.tipoCobertura1}
+                                                                                checked={state.tipoCobertura1 == 3}
                                                                                 id="tipoCobertura1"
                                                                                 name="tipoCobertura1"
                                                                             />
@@ -2666,9 +2664,8 @@ function Clientes(props) {
                                                                                 type="radio"
                                                                                 value="1"
                                                                                 defaultChecked
-                                                                                placeholder={
-                                                                                    state.tipoCobertura2
-                                                                                }
+                                                                                placeholder={state.tipoCobertura2}
+                                                                                checked={state.tipoCobertura2 == 1}
                                                                                 id="tipoCobertura2"
                                                                                 name="tipoCobertura2"
                                                                             />
@@ -2680,9 +2677,8 @@ function Clientes(props) {
                                                                                 onChange={handleChange}
                                                                                 type="radio"
                                                                                 value="2"
-                                                                                placeholder={
-                                                                                    state.tipoCobertura2
-                                                                                }
+                                                                                placeholder={state.tipoCobertura2}
+                                                                                checked={state.tipoCobertura2 == 2}
                                                                                 id="tipoCobertura2"
                                                                                 name="tipoCobertura2"
                                                                             />
@@ -2694,9 +2690,8 @@ function Clientes(props) {
                                                                                 onChange={handleChange}
                                                                                 type="radio"
                                                                                 value="3"
-                                                                                placeholder={
-                                                                                    state.tipoCobertura2
-                                                                                }
+                                                                                placeholder={state.tipoCobertura2}
+                                                                                checked={state.tipoCobertura2 == 3}
                                                                                 id="tipoCobertura2"
                                                                                 name="tipoCobertura2"
                                                                             />
