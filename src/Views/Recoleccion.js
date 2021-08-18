@@ -1203,6 +1203,7 @@ function Recoleccion() {
     const handleChangePaquete = (event, index) => {
         var { paquetes } = state;
         paquetes[index][event.target.name] = event.target.value;
+        paquetes[index].m_rVolumen = paquetes[index].m_rLargo * paquetes[index].m_rAlto * paquetes[index].m_rAncho;
         setState({
             ...state,
             paquetes: paquetes,
@@ -2323,7 +2324,7 @@ function Recoleccion() {
                             required
                             label="Largo"
                             disabled={state.agregar === "Consultar"}
-                            placeholder="mts"
+                            placeholder="cms"
                             name="m_rLargo"
                         />
                     </div>
@@ -2339,7 +2340,7 @@ function Recoleccion() {
                             value={state.paquetes[index].m_rAncho}
                             required
                             disabled={state.agregar === "Consultar"}
-                            placeholder="mts"
+                            placeholder="cms"
                             name="m_rAncho"
                         />
                     </div>
@@ -2355,7 +2356,7 @@ function Recoleccion() {
                             required
                             label="Alto"
                             disabled={state.agregar === "Consultar"}
-                            placeholder="mts"
+                            placeholder="cms"
                             name="m_rAlto"
                         />
                     </div>
@@ -2364,14 +2365,14 @@ function Recoleccion() {
                 <div className="col-sm-4 col-md-2-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
-                            onChange={(event) => handleChangePaquete(event, index)}
+                            // onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
                             value={state.paquetes[index].m_rVolumen}
                             required
                             label="Volumen"
-                            disabled={state.agregar === "Consultar"}
-                            placeholder="mts3"
+                            disabled
+                            placeholder="cm3"
                             name="m_rVolumen"
                         />
                     </div>

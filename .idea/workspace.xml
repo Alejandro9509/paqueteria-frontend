@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Correccion de bugs en Clientes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Zonas/Zonas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Zonas/Zonas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -564,7 +565,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/Views/Recoleccion.js</url>
-          <line>2653</line>
+          <line>2654</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
