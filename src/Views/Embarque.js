@@ -2224,6 +2224,7 @@ function Embarque(props) {
     const handleChangePaquete = (event, index) => {
         var { paquetes } = state;
         paquetes[index][event.target.name] = event.target.value;
+        paquetes[index].m_xVolumen = paquetes[index].m_xLargo * paquetes[index].m_xAlto * paquetes[index].m_xAncho;
         setState({
             ...state,
             paquetes: paquetes,
@@ -2270,7 +2271,7 @@ function Embarque(props) {
                             type="text"
                             value={state.paquetes[index].m_xLargo}
                             disabled={state.agregar === "Consultar"}
-                            placeholder="mts"
+                            placeholder="cms"
                             name="m_xLargo"
                         />
                     </div>
@@ -2284,7 +2285,7 @@ function Embarque(props) {
                             type="text"
                             value={state.paquetes[index].m_xAncho}
                             disabled={state.agregar === "Consultar"}
-                            placeholder="mts"
+                            placeholder="cms"
                             name="m_xAncho"
                         />
                     </div>
@@ -2298,7 +2299,7 @@ function Embarque(props) {
                             type="text"
                             value={state.paquetes[index].m_xAlto}
                             disabled={state.agregar === "Consultar"}
-                            placeholder="mts"
+                            placeholder="cms"
                             name="m_xAlto"
                         />
                     </div>
@@ -2307,12 +2308,12 @@ function Embarque(props) {
                 <div className="col-sm-4 col-md-2-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense" label="Volumen"
-                            onChange={(event) => handleChangePaquete(event, index)}
+                            // onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
                             value={state.paquetes[index].m_xVolumen}
-                            disabled={state.agregar === "Consultar"}
-                            placeholder="mts3"
+                            disabled
+                            placeholder="cms3"
                             name="m_xVolumen"
                         />
                     </div>
