@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Correccion de bugs en Remitente destinatario">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Clientes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Clientes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/RemitentesDestinatarios.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/RemitentesDestinatarios.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +30,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="feature/viaje" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -103,7 +102,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
+  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -488,6 +487,7 @@
                   </entry>
                 </map>
               </option>
+              <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
@@ -529,7 +529,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Se recuperan las opciones de impuestos de los servicios en sucursales" />
@@ -559,16 +558,15 @@
     <MESSAGE value="Correccion de bugs en Remitente destinatario" />
     <option name="LAST_COMMIT_MESSAGE" value="Correccion de bugs en Remitente destinatario" />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/Views/Recoleccion.js</url>
-          <line>2653</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="WindowStateProjectService">
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629299666920">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629299666920" />
+    <state x="418" y="167" key="git4idea.branch.GitSmartOperationDialog" timestamp="1629299682684">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="418" y="167" key="git4idea.branch.GitSmartOperationDialog/0.0.1440.900@0.0.1440.900" timestamp="1629299682684" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
