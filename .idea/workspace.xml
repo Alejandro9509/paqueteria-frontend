@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se corrigio espacio al presionar consultar o editar en guias">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/project-style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/project-style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -561,10 +560,10 @@
     </state>
     <state width="1419" height="133" key="GridCell.Tab.0.right/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629145735258" />
     <state width="1419" height="133" key="GridCell.Tab.0.right/50.25.1390.875@50.25.1390.875" timestamp="1629211509625" />
-    <state x="432" y="170" key="MultipleFileMergeDialog" timestamp="1629301947296">
+    <state x="432" y="170" key="MultipleFileMergeDialog" timestamp="1629383896074">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900@0.0.1440.900" timestamp="1629301947296" />
+    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900@0.0.1440.900" timestamp="1629383896074" />
     <state x="426" y="164" key="RollbackChangesDialog" timestamp="1629301934246">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -579,17 +578,21 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="506" y="371" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1440.900@0.0.1440.900" timestamp="1629301998689" />
-    <state x="383" y="207" width="674" height="486" key="find.popup" timestamp="1629252823223">
+    <state x="383" y="207" width="674" height="486" key="find.popup" timestamp="1629385447916">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="383" y="207" width="674" height="486" key="find.popup/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629155873333" />
-    <state x="383" y="207" width="674" height="486" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1629252823223" />
+    <state x="383" y="207" width="674" height="486" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1629385447916" />
     <state x="383" y="207" width="674" height="486" key="find.popup/1440.0.1920.1080/0.0.1440.900@0.0.1440.900" timestamp="1629237326262" />
     <state x="446" y="167" key="git4idea.branch.GitSmartOperationDialog" timestamp="1629314048354">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="446" y="167" key="git4idea.branch.GitSmartOperationDialog/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629314048354" />
     <state x="446" y="167" key="git4idea.branch.GitSmartOperationDialog/0.0.1440.900@0.0.1440.900" timestamp="1629301943338" />
+    <state x="366" y="245" key="git4idea.merge.GitPullDialog" timestamp="1629383891026">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900@0.0.1440.900" timestamp="1629383891026" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

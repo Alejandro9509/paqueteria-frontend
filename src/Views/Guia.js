@@ -1075,8 +1075,8 @@ function Guia(props) {
                         importe: element.m_cImporte,
                         retiene: element.m_nIdImpuestoRetiene,
                         traslada: element.m_nIdImpuestoTraslada,
-                        importeRet: element.m_cImporteRetiene,
-                        importeIVA: element.m_cImporteIva,
+                        importeIVA: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoTraslada).m_xPorcentaje / 100) * element.m_cImporte,
+                        importeRet: element.m_cImporteIva = (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoRetiene).m_xPorcentaje / 100) * element.m_cImporte,
                         rangoMinimo: element.m_xnRangoMinimo,
                         rangoMaximo: element.m_xnRangoMaximo,
                         nombreConcepto: element.m_sConcepto,
@@ -1249,7 +1249,14 @@ function Guia(props) {
                 }else {
                     if (element.m_xnRangoMinimo <= pesoTotal && element.m_xnRangoMaximo >= pesoTotal) {
                         if (element.m_nIdTipoCalculo == 2){
-                            element.m_cImporte = (pesoTotal/1000) * element.m_cImporte
+                            if ((pesoTotal/1000) * element.m_cImporte < 51.5) {
+                                element.m_cImporte = 51.5
+                            }else {
+                                element.m_cImporte = (pesoTotal/1000) * element.m_cImporte
+                            }
+                            element.m_cImporteIva = (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoRetiene).m_xPorcentaje / 100) * element.m_cImporte
+                            element.m_cImporteRetiene = (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoTraslada).m_xPorcentaje / 100) * element.m_cImporte
+
                         }
                         conceptosDentroRango.push(element)
                     }
