@@ -91,7 +91,7 @@ export const GITHUB_AUTH_URL = API_BASE_URL + '/oauth2/authorize/github?redirect
 export const dataGridLocaleText = {
     // Root
     rootGridLabel: 'grid',
-    noRowsLabel: 'Sin registro',
+    noRowsLabel: 'No se encontró ningún registro',
     errorOverlayDefaultLabel: 'A ocurrido un error al cargar los datos.',
 
     // Filters toolbar button text

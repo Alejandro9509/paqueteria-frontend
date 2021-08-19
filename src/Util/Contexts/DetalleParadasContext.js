@@ -16,5 +16,15 @@ function obtenerDetalleParadasIdInformes(id) {
         );
     return result
 }
+function obtenerDetalleParadasIdViaje(id) {
+    const url =
+        `${process.env.REACT_APP_API_URL}/Viajes/GetParadasByIdViaje/` +
+        id;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 
-export { obtenerDetalleParadasIdInformes}
+export { obtenerDetalleParadasIdInformes, obtenerDetalleParadasIdViaje}

@@ -11,17 +11,28 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import {Checkbox, FormControlLabel, Grid, TextField} from "@material-ui/core";
-import { obtenerDetalleParadasIdInformes } from "../../Util/Contexts/DetalleParadasContext";
-import { obtenerCiudades } from "../../Util/Contexts/CiudadesContext";
-import { obtenerOperadores } from "../../Util/Contexts/OperadoresContext";
-import { obtenerUnidades } from "../../Util/Contexts/UnidadesContext";
+import {
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle, FormControl,
+    FormControlLabel,
+    Grid, InputLabel, Select,
+    TextField
+} from "@material-ui/core";
+import {obtenerDetalleParadasIdInformes} from "../../Util/Contexts/DetalleParadasContext";
+import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
+import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
+import {obtenerEstatusUnidadeId, obtenerUnidades, obtenerUnidadesTipo} from "../../Util/Contexts/UnidadesContext";
+import {useFilters, useSortBy, useTable} from "react-table";
+import {obtenerEstatusUnidadesId} from "../../Util/Contexts/EstatusContext";
 
 //import { data } from '@here/maps-api-for-javascript';
 
 
 function TabPanel(props) {
-    const { children, value, index, ...other } = props;
+    const {children, value, index, ...other} = props;
 
     return (
         <div
@@ -52,14 +63,9 @@ function a11yProps(index) {
     };
 }
 
+let timer;
 
-export default function AsignarOperadorUnidad(props){
- 
-    
-    
- 
-
-
+export default function AsignarOperadorUnidad(props) {
 
 
     const [tabActive, setTabActive] = React.useState(0);
@@ -82,8 +88,8 @@ export default function AsignarOperadorUnidad(props){
         horasEnRuta: "",
     });*/
     const [data, setData] = React.useState({
-        origen: {},
-        destino: {},
+        origen: "",
+        destino: "",
         operador: {},
         cargadoVacioRemolqueUno: false,
         cargadoVacioRemolqueDos: false,
@@ -110,9 +116,12 @@ export default function AsignarOperadorUnidad(props){
         estatusInforme: "",
         dataCiudad: [],
         dataOperador: [],
-        dataUnidad: []
+        dataUnidad: [],
+        openDialog: false
 
     });
+    const [dataUnidadesRem, setDataUnidadesRem] = React.useState([]);
+    const [dataOperadores, setDataOperadores] = React.useState([]);
     /*const [informeData, setInformeData] = React.useState({
         fechaInforme: "",
         horaInforme: "",
@@ -125,57 +134,30 @@ export default function AsignarOperadorUnidad(props){
         estatus: "",
     });*/
     useEffect((value) => {
-        handleshowDetalleParadas(props.idInforme)
-        getAllUnidades()
-        getAllCiudades()
         getAllOperadores()
-        
+        getAllUnidadesTipo(4);
+        setData({
+            ...data,
+            origen: props.rutaSeleccionada.m_sOrigen,
+            destino: props.rutaSeleccionada.m_sDestino,
+
+        })
     }, []);
-  
 
-    function handleshowDetalleParadas(id) {
-
-        obtenerDetalleParadasIdInformes(id).then((respuesta) => {
-            console.log(respuesta.data);
-            //alert(respuesta.data);
-            setData({
-                ...data,
-                kms:respuesta.data[0].m_nCVR1
-            });
-            });
-    }
-
-   function getAllCiudades() {
-        obtenerCiudades().then((respuesta) => {
-            setData({...data,dataCiudad: respuesta.data})
-            console.log(data.dataCiudad)
-       /*  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
-            this.setState({ dataCiudad: respuesta.data }) */
+    function getAllUnidadesTipo(id) {
+        obtenerUnidadesTipo(id).then((respuesta) => {
+            setDataUnidadesRem(respuesta.data);
         });
     }
+
     function getAllOperadores() {
         obtenerOperadores().then((respuesta) => {
-            console.log(respuesta.data)
-            setData({...data,dataOperador: respuesta.data})
-            // console.log(data.dataOperador)
-       /*  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
-            this.setState({ dataCiudad: respuesta.data }) */
+            setDataOperadores(respuesta.data);
         });
     }
-    function getAllUnidades() {
-        obtenerUnidades().then((respuesta) => {
-            console.log(respuesta.data)
-            setData({...data,dataUnidad: respuesta.data})
-            // console.log(data.dataOperador)
-       /*  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
-            this.setState({ dataCiudad: respuesta.data }) */
-        });
-    }
-    
-    
+
+
+
     const handleFechaInforme = (e) => {
         console.log(props)
         setData({
@@ -187,7 +169,7 @@ export default function AsignarOperadorUnidad(props){
         setData({
             ...data,
             horaInforme: e.target.value
-            });
+        });
     }
     const handleFolioInforme = (e) => {
         setData({
@@ -231,73 +213,39 @@ export default function AsignarOperadorUnidad(props){
             estatusInforme: e.target.value
         });
     }
-
-    const handleOrigen = (e) => {
-        setData({
-            ...data,
-            origen: e.target.value
-        });
-    }
-    const handleDestino = (e) => {
-        setData({
-            ...data,
-            destino: e.target.value
-        });
-    }
     const handleRemolqueUno = (e) => {
         setData({
             ...data,
-            cargadoVacioRemolqueUno: e.target.value
+            cargadoVacioRemolqueUno: e.target.checked
         });
     }
     const handleRemolqueDos = (e) => {
         setData({
             ...data,
-            cargadoVacioRemolqueDos: e.target.value
+            cargadoVacioRemolqueDos: e.target.checked
         });
     }
-    const handleOperador = (e) => {
+    const handleOperador = (e, value) => {
+        console.log(value)
         setData({
             ...data,
-            operador: e.target.value
+            operador: value
         });
     }
-    const handleUnidad = (e) => {
-        setData({
-            ...data,
-            unidad: e.target.value
-        });
+    const handleUnidad = (e, value) => {
+        obtenerEstatusUnidadeId(value.m_nIdUnidad).then((resultado) => {
+            setData({
+                ...data,
+                unidad: value,
+                placaIntUnidad: value.m_sPlacas,
+                estatusUnidad: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus
+
+            });
+        })
+
     }
-    const handlePlacasUnidad = (e) => {
-        setData({
-            ...data,
-            placaIntUnidad: e.target.value
-        });
-    }
-    const handleEstatus = (e) => {
-        setData({
-            ...data,
-            estatusUnidad: e.target.value
-        });
-    }
-    const handleReferencia = (e) => {
-        setData({
-            ...data,
-            referencia: e.target.value
-        });
-    }
-    const handleKilometros = (e) => {
-        setData({
-            ...data,
-            kms: e.target.value
-        });
-    }
-    const handleHoras = (e) => {
-        setData({
-            ...data,
-            horas: e.target.value
-        });
-    }
+
+
     const handleFechaCarga = (e) => {
         setData({
             ...data,
@@ -313,13 +261,13 @@ export default function AsignarOperadorUnidad(props){
     const handleFechaEntrega = (e) => {
         setData({
             ...data,
-            fechaEntrega: e.target.value
+            fechaEntregaGeneral: e.target.value
         });
     }
     const handleHoraEntrega = (e) => {
         setData({
             ...data,
-            horaEntrega: e.target.value
+            horaEntregaGeneral: e.target.value
         });
     }
     const handleHorasEnRuta = (e) => {
@@ -329,7 +277,7 @@ export default function AsignarOperadorUnidad(props){
         });
     }
 
-    function submit(event){
+    function submit(event) {
         event.preventDefault();
         props.onSubmit(data);
     }
@@ -337,154 +285,376 @@ export default function AsignarOperadorUnidad(props){
     const handleChangeTab = (event, newValue) => {
         setTabActive(newValue);
     };
+
+    function handleSelectCP(id, dobleClick, e) {
+        clearTimeout(timer);
+        if (e.detail === 1) {
+            timer = setTimeout(() => {
+                setData({
+                    ...data,
+                    [data.identificadorModal]: id,
+                    openDialog: true,
+                });
+            }, 200);
+        } else if (e.detail === 2) {
+            setData({
+                ...data,
+                [data.identificadorModal]: id,
+                openDialog: false,
+            });
+        }
+    }
+
+    const columnsUnidades = React.useMemo(() => [
+        {
+            Name: "Descripcion",
+            accessor: "m_sDescripcion",
+        },
+        {
+            Name: "Codigo",
+            accessor: "m_sCodigo",
+        },
+        {
+            Name: "Tipo de unidad",
+            accessor: "m_nIdTipoUnidad",
+        },
+        {
+            Name: "Estatus",
+            accessor: "m_bActivo",
+        },
+    ]);
+
+    const columnsOperadores = React.useMemo(() => [
+        {
+            Name: "Numero Operador",
+            accessor: "m_nNumeroOperador",
+        },
+        {
+            Name: "Nombre",
+            accessor: "m_sNombreCompleto",
+        },
+        {
+            Name: "Sucursal",
+            accessor: "m_nIdSucursal",
+        },
+        {
+            Name: "Activo",
+            accessor: "m_nIdEstado",
+        },
+    ]);
+    function TableOperadores({ columns, data, select }) {
+        const defaultColumn = React.useMemo(
+            () => ({
+                // Default Filter UI
+                Filter: DefaultColumnFilter,
+            }),
+            []
+        );
+
+        const {
+            getTableProps,
+            getTableBodyProps,
+            headerGroups,
+            rows,
+            prepareRow,
+            state,
+        } = useTable(
+            {
+                columns,
+                data,
+                defaultColumn,
+            },
+            useFilters,
+            useSortBy
+        );
+
+        return (
+            <div
+                className="col-md-12"
+                style={{ maxHeight: "300px", overflow: "auto" }}
+            >
+                <table className="table" {...getTableProps()}>
+                    <thead>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            <th>Acciones</th>
+                            {headerGroup.headers.map((column) => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
+                                            {column.isSorted ? (
+                                                column.isSortedDesc ? (
+                                                    <i className="fa fa-caret-up" />
+                                                ) : (
+                                                    <i className="fa fa-caret-down" />
+                                                )
+                                            ) : (
+                                                ""
+                                            )}
+                                        </span>
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr
+                                style={{
+                                    backgroundColor:
+                                        row.original.m_nIdOperador === select
+                                            ? "#FCC88F"
+                                            : "white",
+                                }}
+                                {...row.getRowProps()}
+                                onClick={handleSelectCP.bind(this, row.original, false)}
+                                onDoubleClick={handleSelectCP.bind(this, row.original, true)}
+                            >
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+
+    function DefaultColumnFilter({
+                                     column: {filterValue, preFilteredRows, setFilter},
+                                 }) {
+        const count = preFilteredRows.length;
+
+        return (
+            <input
+                className="form-control"
+                value={filterValue || ""}
+                onChange={(e) => {
+                    setFilter(e.target.value || undefined);
+                }}
+                placeholder={`Buscar ${count} registros...`}
+            />
+        );
+    }
+
+    function TableUnidad({columns, data, select}) {
+        const defaultColumn = React.useMemo(
+            () => ({
+                // Default Filter UI
+                Filter: DefaultColumnFilter,
+            }),
+            []
+        );
+
+        const {
+            getTableProps,
+            getTableBodyProps,
+            headerGroups,
+            rows,
+            prepareRow,
+            state,
+        } = useTable(
+            {
+                columns,
+                data,
+                defaultColumn,
+            },
+            useFilters,
+            useSortBy
+        );
+
+        return (
+            <div
+                className="col-md-12"
+                style={{maxHeight: "300px", overflow: "auto"}}
+            >
+                <table className="table" {...getTableProps()}>
+                    <thead>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
+                                            {column.isSorted ? (
+                                                column.isSortedDesc ? (
+                                                    <i className="fa fa-caret-up"/>
+                                                ) : (
+                                                    <i className="fa fa-caret-down"/>
+                                                )
+                                            ) : (
+                                                ""
+                                            )}
+                                        </span>
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr
+                                style={{
+                                    backgroundColor:
+                                        row.original.m_nIdUnidad === select ? "orange" : "white",
+                                }}
+                                {...row.getRowProps()}
+                                onClick={handleSelectCP( row.original, false)}
+                                onDoubleClick={handleSelectCP( row.original, true)}
+                            >
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+
     return (
         <div>
+            <Dialog
+                open={data.openDialog}
+                onClose={() => setData({...data, openDialog: false})}
+                fullWidth maxWidth="md"
+            >
+                <DialogContent>
+
+                    {data.tipoModal == 2 && (
+                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
+                            <div align="right">
+                                <button
+                                    onClick={() => {
+                                        props.history.push("/Operadores");
+                                    }}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Agregar
+                                </button>
+                            </div>
+
+                            {dataOperadores.length != 0 ? (
+                                <TableOperadores
+                                    select={
+                                        data[data.identificadorModal] &&
+                                        data[data.identificadorModal].m_nIdOperador
+                                    }
+                                    columns={columnsOperadores}
+                                    data={dataOperadores}
+                                    identificadorModal={data.identificadorModal}
+                                />
+                            ) : (
+                                <div>No se encontró ningún registro</div>
+                            )}
+                            <DialogActions style={{justifyContent: "left"}}>
+                                <button
+                                    onClick={() => setData({...data, openDialog: false})}
+                                    className="btn btn-secondary secondary-btn"
+                                >
+                                    Cerrar
+                                </button>
+                                <button
+                                    onClick={() => setData({...data, openDialog: false})}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Aceptar
+                                </button>
+                            </DialogActions>
+                        </div>
+                    )}
+                    {data.tipoModal == 4 && (
+                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
+                            <div align="right">
+                                <button
+                                    onClick={() => {
+                                        props.history.push("/Unidades");
+                                    }}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Agregar
+                                </button>
+                            </div>
+
+                            {dataUnidadesRem.length != 0 ? (
+                                <TableUnidad
+                                    select={
+                                        data[data.identificadorModal] &&
+                                        data[data.identificadorModal].m_nIdUnidad
+                                    }
+                                    columns={columnsUnidades}
+                                    data={dataUnidadesRem}
+                                    identificadorModal={data.identificadorModal}
+                                />
+                            ) : (
+                                <div>No se encontró ningún registro</div>
+                            )}
+                            <DialogActions style={{justifyContent: "left"}}>
+                                <button
+                                    onClick={() => setData({...data, openDialog: false})}
+                                    className="btn btn-secondary secondary-btn"
+                                >
+                                    Cerrar
+                                </button>
+                                <button
+                                    onClick={() => setData({...data, openDialog: false})}
+                                    className="btn btn-primary primary-btn"
+                                >
+                                    Aceptar
+                                </button>
+                            </DialogActions>
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
+
             <Tabs
                 value={tabActive}
-                onChange={handleChangeTab}
-                aria-label="simple tabs example">
+                onChange={handleChangeTab}>
                 <Tab label="General" {...a11yProps(0)} />
-                <Tab label="Informes" {...a11yProps(1)} />
             </Tabs>
             <form onSubmit={submit}>
                 <TabPanel value={tabActive} index={0}>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
-                        <Autocomplete
-                                                freeSolo
-                                                onChange={handleOrigen}
-                                                value={data.origen}
-                                                //disabled={state.agregar == "Consultar"}
-                                                id="origen"
-                                                disableClearable
-                                                forcePopupIcon={false}
-                                                options={data.dataCiudad}
-                                                getOptionLabel={(option) =>
-                                                    option.m_sCiudad
-                                                }
-                                                style={{
-                                                    transform: "translate(14px, 10px) scale(1) !important"
-                                                }}
-                                                renderInput={(params) => (
-                                                    <div>
-                                                        <TextField
-                                                            label="Origen"
-                                                            margin="dense"
-                                                            variant="outlined"
-                                                            {...params}
-                                                            InputProps={{
-                                                                ...params.InputProps,
-                                                                style: { height: "33px", fontSize: "14px" },
-                                                                type: "search",
-                                                                value: data.origen,
-                                                                //disabled: state.agregar == "Consultar",
-                                                                disableUnderline: true,
-                                                                endAdornment: (
-                                                                    <InputAdornment position="end">
-                                                                        <IconButton
-                                                                            padding="0px"
-                                                                            style={{
-                                                                                paddingRight: "0px",
-                                                                            }}
-                                                                            //disabled={state.agregar == "Consultar"}
-                                                                            onClick={() => {
-                                                                                setData({
-                                                                                    ...data,
-                                                                                    identificadorModal:
-                                                                                        "origen",
-                                                                                    tipoModal: 1,
-                                                                                    openDialog: true
-                                                                                })
-                                                                            }}
-                                                                        >
-                                                                            <PageviewIcon
-                                                                                style={{
-                                                                                    color: "#F9A03E",
-                                                                                    fontSize: 32,
-                                                                                    paddingInlineEnd: 0,
-                                                                                    paddingRight: 0,
-                                                                                    paddingBlockEnd: 0,
-                                                                                    paddingLeft: 0,
-                                                                                    paddingBlock: 0,
-                                                                                }}
-                                                                            />
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                ),
-                                                            }}
-                                                        />
-                                                    </div>
-                                                )}
-                                            />
+                            <TextField
+                                margin={"dense"}
+                                variant={"outlined"}
+                                label={"Origen"}
+                                disabled
+                                value={data.origen}/>
                         </Grid>
                         <Grid item xs={6}>
-                        <Autocomplete
-                                                freeSolo
-                                                onChange={handleDestino}
-
-                                                value={data.destino}
-                                                //disabled={state.agregar == "Consultar"}
-                                                id="destino"
-                                                disableClearable
-                                                forcePopupIcon={false}
-                                                options={data.dataCiudad}
-                                                getOptionLabel={(option) =>
-                                                    option.m_sCiudad
-                                                }
-                                                style={{
-                                                    transform: "translate(14px, 10px) scale(1) !important"
-                                                }}
-                                                renderInput={(params) => (
-                                                    <div>
-                                                        <TextField
-                                                            label="Destino"
-                                                            margin="dense"
-                                                            variant="outlined"
-                                                            {...params}
-                                                            InputProps={{
-                                                                ...params.InputProps,
-                                                                style: { height: "33px", fontSize: "14px" },
-                                                                type: "search",
-                                                                value: data.destino,
-                                                                //disabled: state.agregar == "Consultar",
-                                                                disableUnderline: true,
-                                                                endAdornment: (
-                                                                    <InputAdornment position="end">
-                                                                        <IconButton
-                                                                            padding="0px"
-                                                                            style={{
-                                                                                paddingRight: "0px",
-                                                                            }}
-                                                                            //disabled={state.agregar == "Consultar"}
-                                                                            onClick={() => {
-                                                                               setData({
-                                                                                   ...data,
-                                                                                    identificadorModal:
-                                                                                        "destino",
-                                                                                    tipoModal: 1,
-                                                                                    openDialog: true
-                                                                                })
-                                                                            }}
-                                                                        >
-                                                                            <PageviewIcon
-                                                                                style={{
-                                                                                    color: "#F9A03E",
-                                                                                    fontSize: 32,
-                                                                                    paddingInlineEnd: 0,
-                                                                                    paddingRight: 0,
-                                                                                    paddingBlockEnd: 0,
-                                                                                    paddingLeft: 0,
-                                                                                    paddingBlock: 0,
-                                                                                }}
-                                                                            />
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                ),
-                                                            }}
-                                                        />
-                                                    </div>
-                                                )}
-                                            />
+                            <TextField
+                                margin={"dense"}
+                                variant={"outlined"}
+                                label={"Destino"}
+                                disabled
+                                value={data.destino}/>
                         </Grid>
 
                         <Grid item xs={3}>
@@ -512,143 +682,151 @@ export default function AsignarOperadorUnidad(props){
                         <Grid item xs={6}/>
 
                         <Grid item xs={6}>
-                        <Autocomplete
-                                                freeSolo
-                                                onChange={handleOperador}
+                            <Autocomplete
+                                freeSolo
+                                onChange={handleOperador}
 
-                                                value={data.operador}
-                                                //disabled={state.agregar == "Consultar"}
-                                                id="operador"
-                                                disableClearable
-                                                forcePopupIcon={false}
-                                                options={data.dataOperador}
-                                                getOptionLabel={(option) =>
-                                                    option.m_sNombreCompleto
-                                                }
-                                                style={{
-                                                    transform: "translate(14px, 10px) scale(1) !important"
-                                                }}
-                                                renderInput={(params) => (
-                                                    <div>
-                                                        <TextField
-                                                            label="Operador"
-                                                            margin="dense"
-                                                            variant="outlined"
-                                                            {...params}
-                                                            InputProps={{
-                                                                ...params.InputProps,
-                                                                style: { height: "33px", fontSize: "14px" },
-                                                                type: "search",
-                                                                value: data.operador,
-                                                                //disabled: state.agregar == "Consultar",
-                                                                disableUnderline: true,
-                                                                endAdornment: (
-                                                                    <InputAdornment position="end">
-                                                                        <IconButton
-                                                                            padding="0px"
-                                                                            style={{
-                                                                                paddingRight: "0px",
-                                                                            }}
-                                                                            //disabled={state.agregar == "Consultar"}
-                                                                        >
-                                                                            <PageviewIcon
-                                                                                style={{
-                                                                                    color: "#F9A03E",
-                                                                                    fontSize: 32,
-                                                                                    paddingInlineEnd: 0,
-                                                                                    paddingRight: 0,
-                                                                                    paddingBlockEnd: 0,
-                                                                                    paddingLeft: 0,
-                                                                                    paddingBlock: 0,
-                                                                                }}
-                                                                            />
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                ),
+                                value={data.operador}
+                                //disabled={state.agregar == "Consultar"}
+                                id="dataOperador"
+                                disableClearable
+                                forcePopupIcon={false}
+                                options={dataOperadores}
+                                getOptionLabel={(option) =>
+                                    option.m_sNombreCompleto
+                                }
+                                style={{
+                                    transform: "translate(14px, 10px) scale(1) !important"
+                                }}
+                                renderInput={(params) => (
+                                    <div>
+                                        <TextField
+                                            label="Operador"
+                                            margin="dense"
+                                            variant="outlined"
+                                            {...params}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                style: {height: "33px", fontSize: "14px"},
+                                                type: "search",
+                                                value: data.operador,
+                                                //disabled: state.agregar == "Consultar",
+                                                disableUnderline: true,
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            padding="0px"
+                                                            style={{
+                                                                paddingRight: "0px",
                                                             }}
-                                                        />
-                                                    </div>
-                                                )}
-                                            />
+                                                            onClick={() => {
+                                                                setData({
+                                                                    ...data,
+                                                                    identificadorModal:
+                                                                        "dataOperador",
+                                                                    tipoModal: 0,
+                                                                    openDialog: true
+                                                                })
+                                                            }}
+                                                            //disabled={state.agregar == "Consultar"}
+                                                        >
+                                                            <PageviewIcon
+                                                                style={{
+                                                                    color: "#F9A03E",
+                                                                    fontSize: 32,
+                                                                    paddingInlineEnd: 0,
+                                                                    paddingRight: 0,
+                                                                    paddingBlockEnd: 0,
+                                                                    paddingLeft: 0,
+                                                                    paddingBlock: 0,
+                                                                }}
+                                                            />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                        />
+                                    </div>
+                                )}
+                            />
                         </Grid>
                         <Grid item xs={6}/>
 
                         <Grid item xs={6}>
-                        <Autocomplete
-                                                freeSolo
-                                                onChange={handleUnidad}
+                            <Autocomplete
+                                freeSolo
+                                onChange={handleUnidad}
 
-                                                value={data.unidad}
-                                                //disabled={state.agregar == "Consultar"}
-                                                id="unidad"
-                                                disableClearable
-                                                forcePopupIcon={false}
-                                                options={data.dataUnidad}
-                                                getOptionLabel={(option) =>
-                                                    option.m_sDescripcion
-                                                }
-                                                style={{
-                                                    transform: "translate(14px, 10px) scale(1) !important"
-                                                }}
-                                                renderInput={(params) => (
-                                                    <div>
-                                                        <TextField
-                                                            label="Unidad"
-                                                            margin="dense"
-                                                            variant="outlined"
-                                                            {...params}
-                                                            InputProps={{
-                                                                ...params.InputProps,
-                                                                style: { height: "33px", fontSize: "14px" },
-                                                                type: "search",
-                                                                value: data.unidad,
-                                                                //disabled: state.agregar == "Consultar",
-                                                                disableUnderline: true,
-                                                                endAdornment: (
-                                                                    <InputAdornment position="end">
-                                                                        <IconButton
-                                                                            padding="0px"
-                                                                            style={{
-                                                                                paddingRight: "0px",
-                                                                            }}
-                                                                            //disabled={state.agregar == "Consultar"}
-                                                                            onClick={() => {
-                                                                               setData({
-                                                                                   ...data,
-                                                                                    identificadorModal:
-                                                                                        "destino",
-                                                                                    tipoModal: 1,
-                                                                                    openDialog: true
-                                                                                })
-                                                                            }}
-                                                                        >
-                                                                            <PageviewIcon
-                                                                                style={{
-                                                                                    color: "#F9A03E",
-                                                                                    fontSize: 32,
-                                                                                    paddingInlineEnd: 0,
-                                                                                    paddingRight: 0,
-                                                                                    paddingBlockEnd: 0,
-                                                                                    paddingLeft: 0,
-                                                                                    paddingBlock: 0,
-                                                                                }}
-                                                                            />
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                ),
+                                value={data.unidad}
+                                //disabled={state.agregar == "Consultar"}
+                                id="unidad"
+                                disableClearable
+                                forcePopupIcon={false}
+                                options={dataUnidadesRem}
+                                getOptionLabel={(option) =>
+                                    option.m_sDescripcion
+                                }
+                                style={{
+                                    transform: "translate(14px, 10px) scale(1) !important"
+                                }}
+                                renderInput={(params) => (
+                                    <div>
+                                        <TextField
+                                            label="Unidad"
+                                            margin="dense"
+                                            variant="outlined"
+                                            {...params}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                style: {height: "33px", fontSize: "14px"},
+                                                type: "search",
+                                                value: data.unidad,
+                                                //disabled: state.agregar == "Consultar",
+                                                disableUnderline: true,
+                                                endAdornment: (
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            padding="0px"
+                                                            style={{
+                                                                paddingRight: "0px",
                                                             }}
-                                                        />
-                                                    </div>
-                                                )}
-                                            />
+                                                            //disabled={state.agregar == "Consultar"}
+                                                            onClick={() => {
+                                                                setData({
+                                                                    ...data,
+                                                                    identificadorModal:
+                                                                        "unidad",
+                                                                    tipoModal: 1,
+                                                                    openDialog: true
+                                                                })
+                                                            }}
+                                                        >
+                                                            <PageviewIcon
+                                                                style={{
+                                                                    color: "#F9A03E",
+                                                                    fontSize: 32,
+                                                                    paddingInlineEnd: 0,
+                                                                    paddingRight: 0,
+                                                                    paddingBlockEnd: 0,
+                                                                    paddingLeft: 0,
+                                                                    paddingBlock: 0,
+                                                                }}
+                                                            />
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                ),
+                                            }}
+                                        />
+                                    </div>
+                                )}
+                            />
                         </Grid>
                         <Grid item xs={2}>
                             <TextField
                                 margin={"dense"}
                                 variant={"outlined"}
                                 label={"Placa int"}
-                                required
-                                onChange={handlePlacasUnidad}
+                                disabled
                                 value={data.placaIntUnidad}/>
                         </Grid>
                         <Grid item xs={3}>
@@ -656,8 +834,7 @@ export default function AsignarOperadorUnidad(props){
                                 margin={"dense"}
                                 variant={"outlined"}
                                 label={"Estatus"}
-                                required
-                                onChange={handleEstatus}
+                                disabled
                                 value={data.estatusUnidad}/>
                         </Grid>
                         <Grid item xs={1}/>
@@ -667,8 +844,7 @@ export default function AsignarOperadorUnidad(props){
                                 margin={"dense"}
                                 variant={"outlined"}
                                 label={"Referencia"}
-                                required
-                                onChange={handleReferencia}
+                                onChange={(e) => setData({...data, referencia: e.target.value})}
                                 value={data.referencia}/>
                         </Grid>
                         <Grid item xs={3}>
@@ -677,7 +853,7 @@ export default function AsignarOperadorUnidad(props){
                                 variant={"outlined"}
                                 label={"Kilómetros"}
                                 required
-                                onChange={handleKilometros}
+                                onChange={(e) => setData({...data, kms: e.target.value})}
                                 value={data.kms}/>
                         </Grid>
                         <Grid item xs={2}>
@@ -685,8 +861,8 @@ export default function AsignarOperadorUnidad(props){
                                 margin={"dense"}
                                 variant={"outlined"}
                                 label={"Horas"}
+                                onChange={(e) => setData({...data, horas: e.target.value})}
                                 required
-                                onChange={handleHoras}
                                 value={data.horas}/>
                         </Grid>
                         <Grid item xs={4}/>
@@ -754,7 +930,7 @@ export default function AsignarOperadorUnidad(props){
                         </Grid>
                     </Grid>
                 </TabPanel>
-                <TabPanel value={tabActive} index={1}>
+                {/*<TabPanel value={tabActive} index={1}>
                     <Grid container spacing={2}>
                         <Grid item xs={3}>
                             <TextField
@@ -854,7 +1030,7 @@ export default function AsignarOperadorUnidad(props){
                         </Grid>
                         <Grid item xs={2}/>
                     </Grid>
-                </TabPanel>
+                </TabPanel>*/}
                 {props.children}
             </form>
         </div>

@@ -1,5 +1,5 @@
-import React, { useEffect, useState, setData, useMemo, Component } from "react";
-import { cubicarGuias, remove_array_element } from "../Util/Util";
+import React, {useEffect, useState, setData, useMemo, Component} from "react";
+import {cubicarGuias, remove_array_element} from "../Util/Util";
 import {
     ButtonBase,
     Checkbox,
@@ -26,7 +26,7 @@ import {
 
 import DataTable from "react-data-table-component";
 import $ from "jquery";
-import { useTable, useFilters, useSortBy } from "react-table";
+import {useTable, useFilters, useSortBy} from "react-table";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -41,23 +41,30 @@ import ExportPDF from "../Components/Template/ExportPDF";
 import Carousel from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import * as XLSX from "xlsx";
-import { render } from "react-dom";
+import {render} from "react-dom";
 import SearchIcon from "@material-ui/icons/Search";
-import { DataGrid } from "@material-ui/data-grid";
+import {DataGrid} from "@material-ui/data-grid";
 import Noty from "noty";
-import { dataGridLocaleText } from "../Constants";
-import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
-import { obtenerEstatusInforme } from "../Util/Contexts/EstatusContext";
+import {API_BASE_URL, dataGridLocaleText} from "../Constants";
+import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
+import {obtenerEstatusInforme} from "../Util/Contexts/EstatusContext";
 import {obtenerGuia, obtenerGuiaPendientes, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
-import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
-import { obtenerUnidadesTipo } from "../Util/Contexts/UnidadesContext";
-import { obtenerRutas } from "../Util/Contexts/RutasContext";
-import { agregarInformes, cancelarInformes, eliminarInformes, modificarInformes, obtenerInformes, obtenerInformesId } from "../Util/Contexts/InformesContext";
-import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
-import { validarPermisos } from "../Util/Contexts/UsuarioContext";
-import { imprimirFormatosId, obtenerFormatosImpresion } from "../Util/Contexts/FormatosImpresionContext";
+import {obtenerOperadores} from "../Util/Contexts/OperadoresContext";
+import {obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
+import {obtenerRutas} from "../Util/Contexts/RutasContext";
+import {
+    agregarInformes,
+    cancelarInformes,
+    eliminarInformes,
+    modificarInformes,
+    obtenerInformes,
+    obtenerInformesId
+} from "../Util/Contexts/InformesContext";
+import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
+import {validarPermisos} from "../Util/Contexts/UsuarioContext";
+import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -89,7 +96,7 @@ const headers = {
 };
 let timer;
 
-function Informes({ history }) {
+function Informes({history}) {
     const classes = useStyles();
     const [stepActive, setStepActive] = React.useState(1);
     const [data, setData] = React.useState([]);
@@ -154,21 +161,21 @@ function Informes({ history }) {
                         >
                             <i
                                 className="fa fa-pencil-square-o"
-                                style={{ color: "#F9A03E" }}
+                                style={{color: "#F9A03E"}}
                             />
                         </a>
                         <a
                             className="btn btn-default btn-xs"
                             onClick={() => handleShowConsultar(row.row.m_nIdInforme)}
                         >
-                            <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                            <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                         </a>
                         <a
                             href="#"
                             className="btn btn-default btn-xs"
                             onClick={() => handleEliminar(row.row.m_nIdInforme)}
                         >
-                            <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
+                            <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>
                         </a>
                     </div>
                 );
@@ -258,7 +265,6 @@ function Informes({ history }) {
     }
 
 
-
     const columnsCiudades = React.useMemo(() => [
         {
             Name: "Codigo",
@@ -336,8 +342,8 @@ function Informes({ history }) {
     ]);
 
     function DefaultColumnFilter({
-        column: { filterValue, preFilteredRows, setFilter },
-    }) {
+                                     column: {filterValue, preFilteredRows, setFilter},
+                                 }) {
         const count = preFilteredRows.length;
 
         return (
@@ -352,7 +358,7 @@ function Informes({ history }) {
         );
     }
 
-    function TableOperadores({ columns, data, select }) {
+    function TableOperadores({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -381,104 +387,103 @@ function Informes({ history }) {
         return (
             <div
                 className="col-md-12"
-                style={{ maxHeight: "300px", overflow: "auto" }}
+                style={{maxHeight: "300px", overflow: "auto"}}
             >
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            <th>Acciones</th>
+                            {headerGroup.headers.map((column) => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr
-                                    style={{
-                                        backgroundColor:
-                                            row.original.m_nIdOperador === select
-                                                ? "#FCC88F"
-                                                : "white",
-                                    }}
-                                    {...row.getRowProps()}
-                                    onClick={handleSelectCP.bind(this, row.original, false)}
-                                    onDoubleClick={handleSelectCP.bind(this, row.original, true)}
-                                >
-                                    <td>
-                                        <div>
-                                            <a
-                                                onClick={() =>
-                                                    handleShowModificar(row.original.m_nIdRecoleccion)
-                                                }
-                                                className="btn btn-default"
-                                            >
-                                                <i
-                                                    className="fa fa-pencil-square-o"
-                                                    style={{ color: "#F9A03E" }}
-                                                />
-                                            </a>
-                                            <a
-                                                href="#"
-                                                className="btn btn-default btn-sm m-user-delete"
-                                                onClick={() =>
-                                                    handleEliminar(row.original.m_nIdRecoleccion)
-                                                }
-                                            >
-                                                <i
-                                                    className="zmdi zmdi-delete"
-                                                    style={{ color: "#F30B0B" }}
-                                                />
-                                            </a>
-                                            <a
-                                                href="#"
-                                                className="btn btn-default btn-sm m-user-delete"
-                                                onClick={() =>
-                                                    handleEliminar(row.original.m_nIdRecoleccion)
-                                                }
-                                            >
-                                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                                            </a>
-                                        </div>
-                                    </td>
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr
+                                style={{
+                                    backgroundColor:
+                                        row.original.m_nIdOperador === select
+                                            ? "#FCC88F"
+                                            : "white",
+                                }}
+                                {...row.getRowProps()}
+                                onClick={handleSelectCP.bind(this, row.original, false)}
+                                onDoubleClick={handleSelectCP.bind(this, row.original, true)}
+                            >
+                                <td>
+                                    <div>
+                                        <a
+                                            onClick={() =>
+                                                handleShowModificar(row.original.m_nIdRecoleccion)
+                                            }
+                                            className="btn btn-default"
+                                        >
+                                            <i
+                                                className="fa fa-pencil-square-o"
+                                                style={{color: "#F9A03E"}}
+                                            />
+                                        </a>
+                                        <a
+                                            href="#"
+                                            className="btn btn-default btn-sm m-user-delete"
+                                            onClick={() =>
+                                                handleEliminar(row.original.m_nIdRecoleccion)
+                                            }
+                                        >
+                                            <i
+                                                className="zmdi zmdi-delete"
+                                                style={{color: "#F30B0B"}}
+                                            />
+                                        </a>
+                                        <a
+                                            href="#"
+                                            className="btn btn-default btn-sm m-user-delete"
+                                            onClick={() =>
+                                                handleEliminar(row.original.m_nIdRecoleccion)
+                                            }
+                                        >
+                                            <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
+                                        </a>
+                                    </div>
+                                </td>
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>
         );
     }
 
-    
 
     const [state, setState] = React.useState({
         showPopUp: false,
@@ -533,7 +538,7 @@ function Informes({ history }) {
         sucursalCancelacion: {},
         sePuedeCancelar: false,
         Informes: [],
-        indexCubicar:0,
+        indexCubicar: 0,
     });
 
     const handleAceptar = (e) => {
@@ -552,7 +557,7 @@ function Informes({ history }) {
             m_nIdRemolque2: state.IdRemolque2.m_nIdUnidad,
             m_sPlacasRemolque1: state.PlacasRemolque1,
             m_sPlacasRemolque2: state.PlacasRemolque2,
-            m_nIdRuta: state.idRuta.m_nIdRuta,
+            m_nIdRuta: state.IdRuta.m_nIdRuta,
             m_nIdSucursalEmisora: state.sucursalEmisora,
             m_nIdSucursalReceptora: state.sucursalReceptora,
             m_nIdDolly: state.IdTipoUnidad.m_nIdUnidad,
@@ -586,9 +591,9 @@ function Informes({ history }) {
             agregarInformes(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
-                    if(state.cuibicar && state.indexCubicar < informes.length) {
+                    if (state.cuibicar && state.indexCubicar < informes.length) {
                         showAgregarFromCubicar(state.indexCubicar++)
-                    }else {
+                    } else {
                         getAllData();
                         $('.nav-tabs li ').removeClass('active');
                         $('.nav-tabs li').eq(0).addClass('active');
@@ -610,7 +615,7 @@ function Informes({ history }) {
         });
     };
 
-    function showAgregarFromCubicar(index){
+    function showAgregarFromCubicar(index) {
         setState({
             ...state,
             index: index
@@ -626,14 +631,14 @@ function Informes({ history }) {
             ...state,
             sucursalEmisora: event.target.value
         });
-      
+
     }
     const handleSelectSucursalReceptora = event => {
         setState({
             ...state,
             sucursalReceptora: event.target.value
         });
-      
+
     }
 
     const handleSelectEstatus = event => {
@@ -641,11 +646,11 @@ function Informes({ history }) {
             ...state,
             EstatusInforme: event.target.value
         });
-      
+
     }
 
 
-    function TableCiudades({ columns, data, select }) {
+    function TableCiudades({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -674,57 +679,57 @@ function Informes({ history }) {
         return (
             <div
                 className="col-md-12"
-                style={{ maxHeight: "300px", overflow: "auto" }}
+                style={{maxHeight: "300px", overflow: "auto"}}
             >
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr
-                                    style={{
-                                        backgroundColor:
-                                            row.original.m_nIdCiudad === select ? "orange" : "white",
-                                    }}
-                                    {...row.getRowProps()}
-                                    onClick={handleSelectDatos.bind(this, row.original)}
-                                >
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr
+                                style={{
+                                    backgroundColor:
+                                        row.original.m_nIdCiudad === select ? "orange" : "white",
+                                }}
+                                {...row.getRowProps()}
+                                onClick={handleSelectDatos.bind(this, row.original)}
+                            >
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>
@@ -740,7 +745,7 @@ function Informes({ history }) {
         })
     }, [state.IdRemolque1, state.IdRemolque2, state.IdTipoUnidad])
 
-    function TableOperadores({ columns, data, select }) {
+    function TableOperadores({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -769,107 +774,107 @@ function Informes({ history }) {
         return (
             <div
                 className="col-md-12"
-                style={{ maxHeight: "300px", overflow: "auto" }}
+                style={{maxHeight: "300px", overflow: "auto"}}
             >
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            <th>Acciones</th>
+                            {headerGroup.headers.map((column) => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr
-                                    style={{
-                                        backgroundColor:
-                                            row.original.m_nIdOperador === select
-                                                ? "#FCC88F"
-                                                : "white",
-                                    }}
-                                    {...row.getRowProps()}
-                                    onClick={handleSelectCP.bind(this, row.original, false)}
-                                    onDoubleClick={handleSelectCP.bind(this, row.original, true)}
-                                >
-                                    <td>
-                                        <div>
-                                            <a
-                                                href="#Agregar"
-                                                role="tab"
-                                                data-toggle="tab"
-                                                onClick={() =>
-                                                    handleShowModificar(row.original.m_nIdRecoleccion)
-                                                }
-                                                className="btn btn-default"
-                                            >
-                                                <i
-                                                    className="fa fa-pencil-square-o"
-                                                    style={{ color: "#F9A03E" }}
-                                                />
-                                            </a>
-                                            <a
-                                                href="#"
-                                                className="btn btn-default btn-sm m-user-delete"
-                                                onClick={() =>
-                                                    handleEliminar(row.original.m_nIdRecoleccion)
-                                                }
-                                            >
-                                                <i
-                                                    className="zmdi zmdi-delete"
-                                                    style={{ color: "#F30B0B" }}
-                                                />
-                                            </a>
-                                            <a
-                                                href="#"
-                                                className="btn btn-default btn-sm m-user-delete"
-                                                onClick={() =>
-                                                    handleEliminar(row.original.m_nIdRecoleccion)
-                                                }
-                                            >
-                                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                                            </a>
-                                        </div>
-                                    </td>
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr
+                                style={{
+                                    backgroundColor:
+                                        row.original.m_nIdOperador === select
+                                            ? "#FCC88F"
+                                            : "white",
+                                }}
+                                {...row.getRowProps()}
+                                onClick={handleSelectCP.bind(this, row.original, false)}
+                                onDoubleClick={handleSelectCP.bind(this, row.original, true)}
+                            >
+                                <td>
+                                    <div>
+                                        <a
+                                            href="#Agregar"
+                                            role="tab"
+                                            data-toggle="tab"
+                                            onClick={() =>
+                                                handleShowModificar(row.original.m_nIdRecoleccion)
+                                            }
+                                            className="btn btn-default"
+                                        >
+                                            <i
+                                                className="fa fa-pencil-square-o"
+                                                style={{color: "#F9A03E"}}
+                                            />
+                                        </a>
+                                        <a
+                                            href="#"
+                                            className="btn btn-default btn-sm m-user-delete"
+                                            onClick={() =>
+                                                handleEliminar(row.original.m_nIdRecoleccion)
+                                            }
+                                        >
+                                            <i
+                                                className="zmdi zmdi-delete"
+                                                style={{color: "#F30B0B"}}
+                                            />
+                                        </a>
+                                        <a
+                                            href="#"
+                                            className="btn btn-default btn-sm m-user-delete"
+                                            onClick={() =>
+                                                handleEliminar(row.original.m_nIdRecoleccion)
+                                            }
+                                        >
+                                            <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
+                                        </a>
+                                    </div>
+                                </td>
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>
         );
     }
 
-    function TableTipoUnidad({ columns, data, select }) {
+    function TableTipoUnidad({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -899,102 +904,103 @@ function Informes({ history }) {
             <div className="col-md-12">
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                <th>Acciones</th>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            <th>Acciones</th>
+                            {headerGroup.headers.map((column) => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr
-                                    style={{
-                                        backgroundColor:
-                                            row.original.m_nIdTipoUnidad === select
-                                                ? "#FCC88F"
-                                                : "white",
-                                    }}
-                                    {...row.getRowProps()}
-                                    onClick={handleSelectCP.bind(this, row.original, false)}
-                                    onDoubleClick={handleSelectCP.bind(this, row.original, true)}
-                                >
-                                    <td>
-                                        <div>
-                                            <a
-                                                href="#Agregar"
-                                                role="tab"
-                                                data-toggle="tab"
-                                                onClick={() =>
-                                                    handleShowModificar(row.original.m_nIdRecoleccion)
-                                                }
-                                                className="btn btn-default"
-                                            >
-                                                <i
-                                                    className="fa fa-pencil-square-o"
-                                                    style={{ color: "#F9A03E" }}
-                                                />
-                                            </a>
-                                            <a
-                                                href="#"
-                                                className="btn btn-default btn-sm m-user-delete"
-                                                onClick={() =>
-                                                    handleEliminar(row.original.m_nIdRecoleccion)
-                                                }
-                                            >
-                                                <i
-                                                    className="zmdi zmdi-delete"
-                                                    style={{ color: "#F30B0B" }}
-                                                />
-                                            </a>
-                                            <a
-                                                href="#"
-                                                className="btn btn-default btn-sm m-user-delete"
-                                                onClick={() =>
-                                                    handleEliminar(row.original.m_nIdRecoleccion)
-                                                }
-                                            >
-                                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
-                                            </a>
-                                        </div>
-                                    </td>
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr
+                                style={{
+                                    backgroundColor:
+                                        row.original.m_nIdTipoUnidad === select
+                                            ? "#FCC88F"
+                                            : "white",
+                                }}
+                                {...row.getRowProps()}
+                                onClick={handleSelectCP.bind(this, row.original, false)}
+                                onDoubleClick={handleSelectCP.bind(this, row.original, true)}
+                            >
+                                <td>
+                                    <div>
+                                        <a
+                                            href="#Agregar"
+                                            role="tab"
+                                            data-toggle="tab"
+                                            onClick={() =>
+                                                handleShowModificar(row.original.m_nIdRecoleccion)
+                                            }
+                                            className="btn btn-default"
+                                        >
+                                            <i
+                                                className="fa fa-pencil-square-o"
+                                                style={{color: "#F9A03E"}}
+                                            />
+                                        </a>
+                                        <a
+                                            href="#"
+                                            className="btn btn-default btn-sm m-user-delete"
+                                            onClick={() =>
+                                                handleEliminar(row.original.m_nIdRecoleccion)
+                                            }
+                                        >
+                                            <i
+                                                className="zmdi zmdi-delete"
+                                                style={{color: "#F30B0B"}}
+                                            />
+                                        </a>
+                                        <a
+                                            href="#"
+                                            className="btn btn-default btn-sm m-user-delete"
+                                            onClick={() =>
+                                                handleEliminar(row.original.m_nIdRecoleccion)
+                                            }
+                                        >
+                                            <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
+                                        </a>
+                                    </div>
+                                </td>
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>
         );
     }
-    function TableUnidad({ columns, data, select }) {
+
+    function TableUnidad({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -1023,58 +1029,58 @@ function Informes({ history }) {
         return (
             <div
                 className="col-md-12"
-                style={{ maxHeight: "300px", overflow: "auto" }}
+                style={{maxHeight: "300px", overflow: "auto"}}
             >
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr
-                                    style={{
-                                        backgroundColor:
-                                            row.original.m_nIdUnidad === select ? "orange" : "white",
-                                    }}
-                                    {...row.getRowProps()}
-                                    onClick={handleSelectCP.bind(this, row.original, false)}
-                                    onDoubleClick={handleSelectCP.bind(this, row.original, true)}
-                                >
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr
+                                style={{
+                                    backgroundColor:
+                                        row.original.m_nIdUnidad === select ? "orange" : "white",
+                                }}
+                                {...row.getRowProps()}
+                                onClick={handleSelectCP.bind(this, row.original, false)}
+                                onDoubleClick={handleSelectCP.bind(this, row.original, true)}
+                            >
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>
@@ -1089,8 +1095,9 @@ function Informes({ history }) {
         e.preventDefault();
         getAllGuiasFrom(true);
     }
+
     function addInformeGuia() {
-        const { Informes } = state;
+        const {Informes} = state;
         Informes.push({
             ruta2: "",
             operador2: "",
@@ -1136,10 +1143,9 @@ function Informes({ history }) {
             sucursalCancelacion: {},
             sePuedeCancelar: false,
         });
-        setState({ ...state, Informes: Informes });
+        setState({...state, Informes: Informes});
     }
 
-    
 
     const selectGuia = (index) => {
         const newGuia = [...dataGuias];
@@ -1148,7 +1154,6 @@ function Informes({ history }) {
         setDataGuias(newGuia);
     };
 
-    
 
     function handleShowCancelar(event) {
         event.stopPropagation()
@@ -1205,10 +1210,10 @@ function Informes({ history }) {
                 setDataGuias(respuesta.data);
             })
         } else {
-            obtenerGuiasFiltro(0,0,0,4).then(async (respuesta) => {
+            obtenerGuiasFiltro(0, 0, 0, 4).then(async (respuesta) => {
                 setDataGuias(respuesta.data);
                 if (cubicar) {
-                     cubicarGuias(
+                    cubicarGuias(
                         respuesta.data,
                         state.IdCiudadOrigen,
                         state.IdCiudadDestino,
@@ -1247,7 +1252,7 @@ function Informes({ history }) {
         });
       }
      */
-     function getAllUnidadesTipo(id) {
+    function getAllUnidadesTipo(id) {
         obtenerUnidadesTipo(id).then((respuesta) => {
             setDataUnidadesRem(respuesta.data);
         });
@@ -1278,11 +1283,26 @@ function Informes({ history }) {
     }
 
     function getAllViajesOrigenDestino(origen, destino) {
-        const url = `http://localhost/Informes/GetViajes/` + origen + `/` + destino;
-        axios.get(url, { headers }).then((respuesta) => {
+        const url = `${API_BASE_URL}/Informes/GetViajes/` + origen + `/` + destino;
+        axios.get(url, {headers}).then((respuesta) => {
             setDataViajes(respuesta.data);
         });
     }
+
+    useEffect(value => {
+        if (state.IdCiudadOrigen && state.IdCiudadDestino && state.IdRuta) {
+            getAllGuiasFrom();
+
+        }
+        if (state.IdCiudadOrigen && state.IdCiudadDestino) {
+            getAllViajesOrigenDestino(
+                state.IdCiudadOrigen
+                    .m_nIdCiudad,
+                state.IdCiudadDestino
+                    .m_nIdCiudad
+            );
+        }
+    }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.IdRuta])
 
     function handleShowAgregar() {
         setState({
@@ -1300,16 +1320,19 @@ function Informes({ history }) {
             IdSucursalEmisora: {},
             IdSucursalReceptora: {},
             IdRemolque1: {},
-            IdRemolque2:{},
+            IdRemolque2: {},
             IdTipoUnidad: {},
             IdRuta: {},
             IdEstatusInforme: "",
-            PlacasRemolque1:"",
-            PlacasRemolque2:"",
+            PlacasRemolque1: "",
+            PlacasRemolque2: "",
             PlacasDolly: "",
             FolioInforme: "",
         });
-        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
 
     }
 
@@ -1319,13 +1342,12 @@ function Informes({ history }) {
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         obtenerInformesId(id).then(({data}) => {
-            console.log(data.m_arrClsProGuia)
             setDataGuias(data.m_arrClsProGuia)
             setState({
                 ...state,
                 fechaHora: data.m_sFechayHora,
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
-                IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
+                IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadOrigen),
                 IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
                 IdSucursalEmisora: dataSucursal.find(c => c.m_nIdSucursal === data.m_nIdSucursalEmisora),
                 IdSucursalReceptora: dataSucursal.find(c => c.m_nIdSucursal === data.m_nIdSucursalReceptora),
@@ -1336,13 +1358,14 @@ function Informes({ history }) {
                 IdEstatusInforme: dataEstatusInformes.find(c => c.m_nIdEstatusInforme === data.m_nIdEstatusInforme),
                 PlacasRemolque1: data.m_sPlacasRemolque1,
                 PlacasRemolque2: data.m_sPlacasRemolque2,
-                PlacasDolly: data.m_sPlacasDolly ,
+                PlacasDolly: data.m_sPlacasDolly,
                 FolioInforme: data.m_sFolioInforme,
                 agregar: "Modificar"
             });
 
         });
     }
+
     function handleShowConsultar(id) {
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
@@ -1366,7 +1389,7 @@ function Informes({ history }) {
                 IdEstatusInforme: dataEstatusInformes.find(c => c.m_nIdEstatusInforme === data.m_nIdEstatusInforme),
                 PlacasRemolque1: data.m_sPlacasRemolque1,
                 PlacasRemolque2: data.m_sPlacasRemolque2,
-                PlacasDolly: data.m_sPlacasDolly ,
+                PlacasDolly: data.m_sPlacasDolly,
                 FolioInforme: data.m_sFolioInforme,
                 agregar: "Consultar"
             });
@@ -1458,16 +1481,16 @@ function Informes({ history }) {
 
 
     return (
-        <div >
+        <div>
 
             <Dialog
                 open={state.openDialog}
-                onClose={() => setState({ ...state, openDialog: false })}
+                onClose={() => setState({...state, openDialog: false})}
                 fullWidth maxWidth="md"
             >
                 <DialogContent>
                     {state.tipoModal == 1 && (
-                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
                                     onClick={() => {
@@ -1476,7 +1499,7 @@ function Informes({ history }) {
                                     className="btn btn-primary primary-btn"
                                 >
                                     Agregar
-                </button>
+                                </button>
                             </div>
 
                             {dataOrigenes.length != 0 ? (
@@ -1492,24 +1515,24 @@ function Informes({ history }) {
                             ) : (
                                 <div>No se encontró ningún registro</div>
                             )}
-                            <DialogActions style={{ justifyContent: "left" }}>
+                            <DialogActions style={{justifyContent: "left"}}>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-secondary secondary-btn"
                                 >
                                     Cerrar
-                </button>
+                                </button>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-primary primary-btn"
                                 >
                                     Aceptar
-                </button>
+                                </button>
                             </DialogActions>
                         </div>
                     )}
                     {state.tipoModal == 2 && (
-                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
                                     onClick={() => {
@@ -1518,7 +1541,7 @@ function Informes({ history }) {
                                     className="btn btn-primary primary-btn"
                                 >
                                     Agregar
-                </button>
+                                </button>
                             </div>
 
                             {dataOperadores.length != 0 ? (
@@ -1534,24 +1557,24 @@ function Informes({ history }) {
                             ) : (
                                 <div>No se encontró ningún registro</div>
                             )}
-                            <DialogActions style={{ justifyContent: "left" }}>
+                            <DialogActions style={{justifyContent: "left"}}>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-secondary secondary-btn"
                                 >
                                     Cerrar
-                </button>
+                                </button>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-primary primary-btn"
                                 >
                                     Aceptar
-                </button>
+                                </button>
                             </DialogActions>
                         </div>
                     )}
                     {state.tipoModal == 3 && (
-                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
                                     onClick={() => {
@@ -1560,7 +1583,7 @@ function Informes({ history }) {
                                     className="btn btn-primary primary-btn"
                                 >
                                     Agregar
-                </button>
+                                </button>
                             </div>
                             {dataTipoUnidad.length != 0 ? (
                                 <TableTipoUnidad
@@ -1575,24 +1598,24 @@ function Informes({ history }) {
                             ) : (
                                 <div>No se encontró ningún registro</div>
                             )}
-                            <DialogActions style={{ justifyContent: "left" }}>
+                            <DialogActions style={{justifyContent: "left"}}>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-secondary secondary-btn"
                                 >
                                     Cerrar
-                </button>
+                                </button>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-primary primary-btn"
                                 >
                                     Aceptar
-                </button>
+                                </button>
                             </DialogActions>
                         </div>
                     )}
                     {state.tipoModal == 4 && (
-                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
                                     onClick={() => {
@@ -1601,7 +1624,7 @@ function Informes({ history }) {
                                     className="btn btn-primary primary-btn"
                                 >
                                     Agregar
-                </button>
+                                </button>
                             </div>
 
                             {dataUnidadesRem.length != 0 ? (
@@ -1617,69 +1640,72 @@ function Informes({ history }) {
                             ) : (
                                 <div>No se encontró ningún registro</div>
                             )}
-                            <DialogActions style={{ justifyContent: "left" }}>
+                            <DialogActions style={{justifyContent: "left"}}>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-secondary secondary-btn"
                                 >
                                     Cerrar
-                </button>
+                                </button>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-primary primary-btn"
                                 >
                                     Aceptar
-                </button>
+                                </button>
                             </DialogActions>
                         </div>
                     )}
                     {state.tipoModal === 6 &&
-                        <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-                            <DialogTitle style={{padding:"0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
-                            <div>
-                                <label className="input select" style={{ width: "100%" }}>
-                                    <FormControl fullWidth variant="outlined" margin="dense">
-                                        <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
-                                        <Select
-                                            labelId="sucursalListadoLabel"
-                                            label="Formato"
-                                            className="form-control"
-                                            required
-                                            value={state.formatoSeleccionado}
-                                            onChange={(event) => setState({ ...state, formatoSeleccionado: event.target.value })}
-                                            id="formatoSeleccionado"
-                                            name="formatoSeleccionado"
-                                        >
-                                            {dataFormatos.map((formato) => (
-                                                <option
-                                                    key={formato.m_nIdFormato}
-                                                    value={formato.m_nIdFormato}
-                                                >
-                                                    {formato.m_sFormato}
-                                                </option>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    <i></i>
-                                </label>
-                            </div>
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <DialogTitle style={{padding: "0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
+                        <div>
+                            <label className="input select" style={{width: "100%"}}>
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                    <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
+                                    <Select
+                                        labelId="sucursalListadoLabel"
+                                        label="Formato"
+                                        className="form-control"
+                                        required
+                                        value={state.formatoSeleccionado}
+                                        onChange={(event) => setState({
+                                            ...state,
+                                            formatoSeleccionado: event.target.value
+                                        })}
+                                        id="formatoSeleccionado"
+                                        name="formatoSeleccionado"
+                                    >
+                                        {dataFormatos.map((formato) => (
+                                            <option
+                                                key={formato.m_nIdFormato}
+                                                value={formato.m_nIdFormato}
+                                            >
+                                                {formato.m_sFormato}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <i></i>
+                            </label>
+                        </div>
 
-                            <DialogActions style={{ justifyContent: "left" }}>
+                        <DialogActions style={{justifyContent: "left"}}>
 
-                                <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
+                            <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
                             </button>
-                                <button onClick={() => setState({ ...state, openDialog: false })}
+                            <button onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-secondary secondary-btn">Cerrar
                             </button>
 
-                            </DialogActions>
-                        </div>
+                        </DialogActions>
+                    </div>
                     }
                 </DialogContent>
             </Dialog>
 
             <header className="topbar clearfix">
-                <Cabecera titulo="Informes" >
+                <Cabecera titulo="Informes">
                     <div className="page-header">
                         <ul className="list-page-breadcrumb">
                             <li className="active-page"> Informes</li>
@@ -1690,7 +1716,7 @@ function Informes({ history }) {
             {/*Topbar End Here*/}
             {/*Leftbar Start Here*/}
             <aside className="iconic-leftbar">
-                <BarraLateralIzquierda />
+                <BarraLateralIzquierda/>
             </aside>
 
             <section className="main-container">
@@ -1699,13 +1725,20 @@ function Informes({ history }) {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
-                                <i className="fa fa-list" /> Listado
-              </a>
+                            <a onClick={(event) => {
+                                event.stopPropagation();
+                                setState({...state, agregar: "Agregar"});
+                                $('.nav-tabs li ').removeClass('active');
+                                $('.nav-tabs li').eq(0).addClass('active');
+                                $('.tab-content div ').removeClass('in show');
+                                $('#Listado').addClass('in show');
+                            }}>
+                                <i className="fa fa-list"/> Listado
+                            </a>
                         </li>
                         <li>
                             <a onClick={handleShowAgregar}>
-                                <i className="fa fa-plus-circle" /> {state.agregar}
+                                <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
 
@@ -1720,7 +1753,7 @@ function Informes({ history }) {
                                     openDialog: true
                                 });
                             }}>
-                                <i className="fa fa-print" /> Imprimir
+                                <i className="fa fa-print"/> Imprimir
                             </a>
                         </li>
 
@@ -1731,14 +1764,21 @@ function Informes({ history }) {
                                 onClick={handleShowCancelar}
                                 className={state.IdInforme == 0 ? classes.disabled : ""}
                             >
-                                <i className="fa fa-ban" /> Cancelar
-              </a>
+                                <i className="fa fa-ban"/> Cancelar
+                            </a>
                         </li>
 
                         <li>
-                            <a data-toggle="tab" href="#Cubicar" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(4).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Cubicar').addClass('in show'); }}>
-                                <i className="fa fa-adjust" /> Cubicar / Optimizar Rutas
-              </a>
+                            <a data-toggle="tab" href="#Cubicar" onClick={(event) => {
+                                event.stopPropagation();
+                                setState({...state, agregar: "Agregar"});
+                                $('.nav-tabs li ').removeClass('active');
+                                $('.nav-tabs li').eq(4).addClass('active');
+                                $('.tab-content div ').removeClass('in show');
+                                $('#Cubicar').addClass('in show');
+                            }}>
+                                <i className="fa fa-adjust"/> Cubicar / Optimizar Rutas
+                            </a>
                         </li>
                     </ul>
 
@@ -1752,7 +1792,7 @@ function Informes({ history }) {
                                 <div className="widget-content">
                                     <div
                                         className="row"
-                                        style={{ height: state.height - 250, width: "100%" }}
+                                        style={{height: state.height - 250, width: "100%"}}
                                     >
                                         {data.length != 0 ? (
                                             <DataGrid
@@ -1778,7 +1818,7 @@ function Informes({ history }) {
                         </div>
                         <div id="Importar" className="tab-pane fade ">
                             Importar
-            </div>
+                        </div>
                         <div id="Agregar" className="tab-pane fade ">
                             {/*INICIO DE ESTRUCTURA */}
 
@@ -1801,8 +1841,9 @@ function Informes({ history }) {
                                             <Stepper activeStep={stepActive - 1}>
                                                 {
                                                     ["Información De Envio", "Asignar a un Viaje", "Detalles de Guias"].map((s, index) => (
-                                                        <Step key={s} completed={false} onClick={() => openSection(index + 1)}>
-                                                            <StepLabel >{s}</StepLabel>
+                                                        <Step key={s} completed={false}
+                                                              onClick={() => openSection(index + 1)}>
+                                                            <StepLabel>{s}</StepLabel>
                                                         </Step>
                                                     ))
                                                 }
@@ -1817,7 +1858,8 @@ function Informes({ history }) {
                                         <div className="widget-wrap">
                                             <div className="widget-container margin-top-0">
                                                 <div className="widget-content">
-                                                    <div className="widget-header block-header margin-bottom-0 clearfix">
+                                                    <div
+                                                        className="widget-header block-header margin-bottom-0 clearfix">
                                                         <div className="pull-left">
                                                             <h3>Información De Envio</h3>
                                                         </div>
@@ -1835,10 +1877,14 @@ function Informes({ history }) {
                                                                         <div className="form-content">
                                                                             <div className="row">
                                                                                 {/*****************************************Sucursal**********************************************************/}
-                                                                                <div className="col-sm-12 col-md-5 unit">
+                                                                                <div
+                                                                                    className="col-sm-12 col-md-5 unit">
                                                                                     <label className="input select">
-                                                                                        <FormControl fullWidth variant="outlined" margin="dense">
-                                                                                            <InputLabel id="IdSucursalLabel">Sucursal</InputLabel>
+                                                                                        <FormControl fullWidth
+                                                                                                     variant="outlined"
+                                                                                                     margin="dense">
+                                                                                            <InputLabel
+                                                                                                id="IdSucursalLabel">Sucursal</InputLabel>
                                                                                             <Select
                                                                                                 labelId="IdSucursalLabel"
                                                                                                 label="Sucursal"
@@ -1848,7 +1894,9 @@ function Informes({ history }) {
                                                                                                 value={state.IdSucursal}
                                                                                                 disabled
                                                                                             >
-                                                                                                <option value="0">Todas</option>
+                                                                                                <option
+                                                                                                    value="0">Todas
+                                                                                                </option>
                                                                                                 {dataSucursal.map((sucursal) => (
                                                                                                     <option
                                                                                                         key={sucursal.m_nIdSucursal}
@@ -1865,30 +1913,34 @@ function Informes({ history }) {
                                                                             {/*****************************************Folio************************************************************/}
                                                                             <div className="col-sm-12 col-md-3 unit">
                                                                                 <div className="input">
-                                                                                    <TextField variant="outlined" margin="dense" label="Folio"
-                                                                                        className="form-control"
-                                                                                        type="text"
-                                                                                        id="Folio"
-                                                                                        disabled
+                                                                                    <TextField variant="outlined"
+                                                                                               margin="dense"
+                                                                                               label="Folio"
+                                                                                               className="form-control"
+                                                                                               type="text"
+                                                                                               id="Folio"
+                                                                                               disabled
                                                                                     />
                                                                                 </div>
                                                                             </div>
                                                                             {/*****************************************Fecha*******************************************************/}
                                                                             <div className="col-sm-12 col-md-6 unit">
                                                                                 <div className="input">
-                                                                                    <TextField variant="outlined" margin="dense" label="Fecha y Hora"
-                                                                                        onChange={handleChange}
-                                                                                        className="form-control"
-                                                                                        type="datetime-local"
-                                                                                        required
-                                                                                        InputLabelProps={{
-                                                                                            shrink: true,
-                                                                                        }}
-                                                                                        value={state.fechaHora}
-                                                                                        disabled={
-                                                                                            state.agregar == "Consultar"
-                                                                                        }
-                                                                                        id="fechaHora"
+                                                                                    <TextField variant="outlined"
+                                                                                               margin="dense"
+                                                                                               label="Fecha y Hora"
+                                                                                               onChange={handleChange}
+                                                                                               className="form-control"
+                                                                                               type="datetime-local"
+                                                                                               required
+                                                                                               InputLabelProps={{
+                                                                                                   shrink: true,
+                                                                                               }}
+                                                                                               value={state.fechaHora}
+                                                                                               disabled={
+                                                                                                   state.agregar == "Consultar"
+                                                                                               }
+                                                                                               id="fechaHora"
                                                                                     />
                                                                                 </div>
                                                                             </div>
@@ -1898,8 +1950,12 @@ function Informes({ history }) {
                                                                             <div className="col-sm-6 col-md-3 unit">
 
                                                                                 <label className="input select">
-                                                                                    <FormControl fullWidth variant="outlined" margin="dense">
-                                                                                        <InputLabel id="sucursalEmisoraLabel">Oficina Emisora</InputLabel>
+                                                                                    <FormControl fullWidth
+                                                                                                 variant="outlined"
+                                                                                                 margin="dense">
+                                                                                        <InputLabel
+                                                                                            id="sucursalEmisoraLabel">Oficina
+                                                                                            Emisora</InputLabel>
                                                                                         <Select
                                                                                             labelId="sucursalEmisoraLabel"
                                                                                             label="Oficina Emisora"
@@ -1908,7 +1964,8 @@ function Informes({ history }) {
                                                                                             id="sucursalEmisora"
                                                                                             onChange={handleSelectSucursalEmisora}
                                                                                         >
-                                                                                            <option value="0">Todas</option>
+                                                                                            <option value="0">Todas
+                                                                                            </option>
                                                                                             {dataSucursal.map(
                                                                                                 (sucursalEmisora) => (
                                                                                                     <option
@@ -1933,8 +1990,12 @@ function Informes({ history }) {
                                                                             <div className="col-sm-6 col-md-3 unit">
 
                                                                                 <label className="input select">
-                                                                                    <FormControl fullWidth variant="outlined" margin="dense">
-                                                                                        <InputLabel id="sucursalReceptoraLabel">Oficina Receptora</InputLabel>
+                                                                                    <FormControl fullWidth
+                                                                                                 variant="outlined"
+                                                                                                 margin="dense">
+                                                                                        <InputLabel
+                                                                                            id="sucursalReceptoraLabel">Oficina
+                                                                                            Receptora</InputLabel>
                                                                                         <Select
                                                                                             labelId="sucursalReceptoraLabel"
                                                                                             label="Oficina Receptora"
@@ -1943,7 +2004,8 @@ function Informes({ history }) {
                                                                                             id="sucursalReceptora"
                                                                                             onChange={handleSelectSucursalReceptora}
                                                                                         >
-                                                                                            <option value="0">Todas</option>
+                                                                                            <option value="0">Todas
+                                                                                            </option>
                                                                                             {dataSucursal.map(
                                                                                                 (sucursalReceptora) => (
                                                                                                     <option
@@ -1968,8 +2030,11 @@ function Informes({ history }) {
                                                                             <div className="col-sm-6 col-md-3 unit">
 
                                                                                 <label className="input select">
-                                                                                    <FormControl required fullWidth variant="outlined" margin="dense">
-                                                                                        <InputLabel id="EstatusInformeLabel">Estatus</InputLabel>
+                                                                                    <FormControl required fullWidth
+                                                                                                 variant="outlined"
+                                                                                                 margin="dense">
+                                                                                        <InputLabel
+                                                                                            id="EstatusInformeLabel">Estatus</InputLabel>
                                                                                         <Select
                                                                                             labelId="EstatusInformeLabel"
                                                                                             label="Estatus"
@@ -1979,7 +2044,9 @@ function Informes({ history }) {
                                                                                             value={state.EstatusInforme}
                                                                                             id="EstatusInforme"
                                                                                         >
-                                                                                            <option value="">Seleccionar</option>
+                                                                                            <option
+                                                                                                value="">Seleccionar
+                                                                                            </option>
                                                                                             {dataEstatusInformes.map(
                                                                                                 (EstatusInforme) => (
                                                                                                     <option
@@ -2042,7 +2109,8 @@ function Informes({ history }) {
                                                                                                     type: "search",
                                                                                                     disableUnderline: true,
                                                                                                     endAdornment: (
-                                                                                                        <InputAdornment position="end">
+                                                                                                        <InputAdornment
+                                                                                                            position="end">
                                                                                                             <IconButton
                                                                                                                 padding="0px"
                                                                                                                 style={{
@@ -2120,7 +2188,8 @@ function Informes({ history }) {
                                                                                                         type: "search",
                                                                                                         disableUnderline: true,
                                                                                                         endAdornment: (
-                                                                                                            <InputAdornment position="end">
+                                                                                                            <InputAdornment
+                                                                                                                position="end">
                                                                                                                 <IconButton
                                                                                                                     padding="0px"
                                                                                                                     style={{
@@ -2131,7 +2200,7 @@ function Informes({ history }) {
                                                                                                                         setState({
                                                                                                                             ...state,
                                                                                                                             identificadorModal:
-                                                                                                                                "IdRemolque1",
+                                                                                                                                "IdTipoUnidad",
                                                                                                                             tipoModal: 4,
                                                                                                                             openDialog: true,
                                                                                                                         });
@@ -2164,12 +2233,14 @@ function Informes({ history }) {
                                                                             <div className="col-sm-12 col-md-2 unit">
 
                                                                                 <div className="input">
-                                                                                    <TextField variant="outlined" margin="dense" label="Placa Int"
-                                                                                        required
-                                                                                        onChange={handleChange}
-                                                                                        className="form-control"
-                                                                                        type="text"
-                                                                                        id="PlacasDolly"
+                                                                                    <TextField variant="outlined"
+                                                                                               margin="dense"
+                                                                                               label="Placa Int"
+                                                                                               value={state.PlacasDolly}
+                                                                                               disabled
+                                                                                               className="form-control"
+                                                                                               type="text"
+                                                                                               id="PlacasDolly"
                                                                                     />
                                                                                 </div>
                                                                             </div>
@@ -2216,7 +2287,8 @@ function Informes({ history }) {
                                                                                                         type: "search",
                                                                                                         disableUnderline: true,
                                                                                                         endAdornment: (
-                                                                                                            <InputAdornment position="end">
+                                                                                                            <InputAdornment
+                                                                                                                position="end">
                                                                                                                 <IconButton
                                                                                                                     padding="0px"
                                                                                                                     style={{
@@ -2259,12 +2331,14 @@ function Informes({ history }) {
                                                                             <div className="col-sm-12 col-md-2 unit">
 
                                                                                 <div className="input">
-                                                                                    <TextField variant="outlined" margin="dense" label="Placa Int"
-                                                                                        required
-                                                                                        onChange={handleChange}
-                                                                                        className="form-control"
-                                                                                        type="text"
-                                                                                        id="PlacasRemolque1"
+                                                                                    <TextField variant="outlined"
+                                                                                               margin="dense"
+                                                                                               label="Placa Int"
+                                                                                               disabled
+                                                                                               value={state.PlacasRemolque1}
+                                                                                               className="form-control"
+                                                                                               type="text"
+                                                                                               id="PlacasRemolque1"
                                                                                     />
                                                                                 </div>
                                                                             </div>
@@ -2310,7 +2384,8 @@ function Informes({ history }) {
                                                                                                         type: "search",
                                                                                                         disableUnderline: true,
                                                                                                         endAdornment: (
-                                                                                                            <InputAdornment position="end">
+                                                                                                            <InputAdornment
+                                                                                                                position="end">
                                                                                                                 <IconButton
                                                                                                                     padding="0px"
                                                                                                                     style={{
@@ -2353,11 +2428,14 @@ function Informes({ history }) {
                                                                             <div className="col-sm-12 col-md-2 unit">
 
                                                                                 <div className="input">
-                                                                                    <TextField variant="outlined" margin="dense" label="Placa Int"
-                                                                                        onChange={handleChange}
-                                                                                        className="form-control"
-                                                                                        type="text"
-                                                                                        id="PlacasRemolque2"
+                                                                                    <TextField variant="outlined"
+                                                                                               margin="dense"
+                                                                                               label="Placa Int"
+                                                                                               value={state.PlacasRemolque2}
+                                                                                               disabled
+                                                                                               className="form-control"
+                                                                                               type="text"
+                                                                                               id="PlacasRemolque2"
                                                                                     />
                                                                                 </div>
                                                                             </div>
@@ -2404,7 +2482,8 @@ function Informes({ history }) {
                                                                                                         type: "search",
                                                                                                         disableUnderline: true,
                                                                                                         endAdornment: (
-                                                                                                            <InputAdornment position="end">
+                                                                                                            <InputAdornment
+                                                                                                                position="end">
                                                                                                                 <IconButton
                                                                                                                     padding="0px"
                                                                                                                     style={{
@@ -2455,15 +2534,7 @@ function Informes({ history }) {
                                                                                                 IdCiudadDestino: newValue,
                                                                                             })
                                                                                         }
-                                                                                        onSelect={() => {
-                                                                                            getAllGuiasFrom();
-                                                                                            getAllViajesOrigenDestino(
-                                                                                                state.IdCiudadOrigen
-                                                                                                    .m_nIdCiudad,
-                                                                                                state.IdCiudadDestino
-                                                                                                    .m_nIdCiudad
-                                                                                            );
-                                                                                        }}
+
                                                                                         value={state.IdCiudadDestino}
                                                                                         id="IdCiudadDestino"
                                                                                         disableClearable
@@ -2492,7 +2563,8 @@ function Informes({ history }) {
                                                                                                         type: "search",
                                                                                                         disableUnderline: true,
                                                                                                         endAdornment: (
-                                                                                                            <InputAdornment position="end">
+                                                                                                            <InputAdornment
+                                                                                                                position="end">
                                                                                                                 <IconButton
                                                                                                                     padding="0px"
                                                                                                                     style={{
@@ -2551,10 +2623,10 @@ function Informes({ history }) {
                                                                                         onChange={(event, newValue) =>
                                                                                             setState({
                                                                                                 ...state,
-                                                                                                idRuta: newValue,
+                                                                                                IdRuta: newValue,
                                                                                             })
                                                                                         }
-                                                                                        value={state.IdCiudadDestino}
+                                                                                        value={state.IdRuta}
                                                                                         id="idRuta"
                                                                                         disableClearable
                                                                                         forcePopupIcon={false}
@@ -2582,7 +2654,8 @@ function Informes({ history }) {
                                                                                                         type: "search",
                                                                                                         disableUnderline: true,
                                                                                                         endAdornment: (
-                                                                                                            <InputAdornment position="end">
+                                                                                                            <InputAdornment
+                                                                                                                position="end">
                                                                                                                 <IconButton
                                                                                                                     padding="0px"
                                                                                                                     style={{
@@ -2593,7 +2666,7 @@ function Informes({ history }) {
                                                                                                                         setState({
                                                                                                                             ...state,
                                                                                                                             identificadorModal:
-                                                                                                                                "IdCiudadDestino",
+                                                                                                                                "IdRuta",
                                                                                                                             tipoModal: 1,
                                                                                                                             openDialog: true,
                                                                                                                         });
@@ -2640,7 +2713,8 @@ function Informes({ history }) {
                                                     <div className="row">
                                                         <div className="col-md-12">
                                                             <div className="widget-wrap">
-                                                                <div className="widget-header block-header margin-bottom-0 clearfix">
+                                                                <div
+                                                                    className="widget-header block-header margin-bottom-0 clearfix">
                                                                     <div className="pull-left">
                                                                         <h3>Asignar a un Viaje</h3>
                                                                     </div>
@@ -2657,22 +2731,29 @@ function Informes({ history }) {
                                                                                     <div className="form-content">
                                                                                         {/*****************************************Viaje*************************************************/}
                                                                                         <div className="row">
-                                                                                            <div className="col-sm-12 col-md-6 unit">
+                                                                                            <div
+                                                                                                className="col-sm-12 col-md-6 unit">
 
-                                                                                                <label className="input select">
-                                                                                                    <FormControl fullWidth variant="outlined" margin="dense">
-                                                                                                        <InputLabel id="viajeLabel">Viaje</InputLabel>
+                                                                                                <label
+                                                                                                    className="input select">
+                                                                                                    <FormControl
+                                                                                                        fullWidth
+                                                                                                        variant="outlined"
+                                                                                                        margin="dense">
+                                                                                                        <InputLabel
+                                                                                                            id="viajeLabel">Viaje</InputLabel>
                                                                                                         <Select
                                                                                                             labelId="viajeLabel"
                                                                                                             label="Viaje"
                                                                                                             className="form-control"
                                                                                                             required
                                                                                                             id="viaje"
-                                                                                                        //onSelect={handleSelectViaje()}
+                                                                                                            //onSelect={handleSelectViaje()}
                                                                                                         >
-                                                                                                            <option value="0">
+                                                                                                            <option
+                                                                                                                value="0">
                                                                                                                 Seleccionar
-                                                    </option>
+                                                                                                            </option>
                                                                                                             {/*  {dataViajes.map((viaje) => (
                                                       <option
                                                         key={viaje.m_nIdViaje}
@@ -2687,10 +2768,14 @@ function Informes({ history }) {
                                                                                             </div>
 
                                                                                             {/*****************************************Ruta2*************************************************/}
-                                                                                            <div className="col-sm-12 col-md-6 unit">
+                                                                                            <div
+                                                                                                className="col-sm-12 col-md-6 unit">
 
                                                                                                 <div className="input">
-                                                                                                    <TextField variant="outlined" margin="dense" label="Ruta"
+                                                                                                    <TextField
+                                                                                                        variant="outlined"
+                                                                                                        margin="dense"
+                                                                                                        label="Ruta"
                                                                                                         className="form-control"
                                                                                                         type="text"
                                                                                                         value={state.ruta2}
@@ -2702,10 +2787,14 @@ function Informes({ history }) {
 
                                                                                         {/*****************************************Operador2*************************************************/}
                                                                                         <div className="row">
-                                                                                            <div className="col-sm-12 col-md-6 unit">
+                                                                                            <div
+                                                                                                className="col-sm-12 col-md-6 unit">
 
                                                                                                 <div className="input">
-                                                                                                    <TextField variant="outlined" margin="dense" label="Operador"
+                                                                                                    <TextField
+                                                                                                        variant="outlined"
+                                                                                                        margin="dense"
+                                                                                                        label="Operador"
                                                                                                         className="form-control"
                                                                                                         type="text"
                                                                                                         value={state.operador2}
@@ -2715,9 +2804,13 @@ function Informes({ history }) {
                                                                                             </div>
 
                                                                                             {/*****************************************Unidad2*************************************************/}
-                                                                                            <div className="col-sm-12 col-md-6 unit">
+                                                                                            <div
+                                                                                                className="col-sm-12 col-md-6 unit">
                                                                                                 <div className="input">
-                                                                                                    <TextField variant="outlined" margin="dense" label="Unidad"
+                                                                                                    <TextField
+                                                                                                        variant="outlined"
+                                                                                                        margin="dense"
+                                                                                                        label="Unidad"
                                                                                                         className="form-control"
                                                                                                         type="text"
                                                                                                         value={state.unidad2}
@@ -2729,7 +2822,8 @@ function Informes({ history }) {
 
                                                                                         {/*****************************************Remolque2*************************************************/}
                                                                                         <div className="row">
-                                                                                            <div className="col-sm-12 col-md-6 unit">
+                                                                                            <div
+                                                                                                className="col-sm-12 col-md-6 unit">
 
                                                                                                 <div className="input">
                                                                                                     <Autocomplete
@@ -2768,7 +2862,8 @@ function Informes({ history }) {
                                                                                                                         type: "search",
                                                                                                                         disableUnderline: true,
                                                                                                                         endAdornment: (
-                                                                                                                            <InputAdornment position="end">
+                                                                                                                            <InputAdornment
+                                                                                                                                position="end">
                                                                                                                                 <IconButton
                                                                                                                                     padding="0px"
                                                                                                                                     style={{
@@ -2834,11 +2929,14 @@ function Informes({ history }) {
                                                         <div className="col-md-12">
                                                             <form action="#" className="j-forms" noValidate>
                                                                 <div className="form-content">
-                                                                    <div style={{ maxHeight: "500px", overflow: "scroll" }}>
+                                                                    <div style={{
+                                                                        maxHeight: "500px",
+                                                                        overflow: "scroll"
+                                                                    }}>
                                                                         {dataGuias.map((value, index) => {
                                                                             return (
                                                                                 <div>
-                                                                                    <br />
+                                                                                    <br/>
                                                                                     <ButtonBase
                                                                                         style={{
                                                                                             width: "100%",
@@ -2872,11 +2970,17 @@ function Informes({ history }) {
                                                                                                     borderRadius: "10px",
                                                                                                 }}
                                                                                             >
-                                                                                                <Grid container spacing={2}>
-                                                                                                    <Grid item sm={12} md={4}>
-                                                                                                        <div className="input">
+                                                                                                <Grid container
+                                                                                                      spacing={2}>
+                                                                                                    <Grid item sm={12}
+                                                                                                          md={4}>
+                                                                                                        <div
+                                                                                                            className="input">
 
-                                                                                                            <TextField variant="outlined" margin="dense" label="Folio Guía"
+                                                                                                            <TextField
+                                                                                                                variant="outlined"
+                                                                                                                margin="dense"
+                                                                                                                label="Folio Guía"
                                                                                                                 onChange={handleChange}
                                                                                                                 value={value.m_nFolioGuia}
                                                                                                                 className="form-control"
@@ -2886,10 +2990,15 @@ function Informes({ history }) {
                                                                                                             />
                                                                                                         </div>
                                                                                                     </Grid>
-                                                                                                    <Grid item sm={12} md={4}>
-                                                                                                        <div className="input">
+                                                                                                    <Grid item sm={12}
+                                                                                                          md={4}>
+                                                                                                        <div
+                                                                                                            className="input">
 
-                                                                                                            <TextField variant="outlined" margin="dense" label="Estatus Guía"
+                                                                                                            <TextField
+                                                                                                                variant="outlined"
+                                                                                                                margin="dense"
+                                                                                                                label="Estatus Guía"
                                                                                                                 className="form-control"
                                                                                                                 type="text"
                                                                                                                 disabled="true"
@@ -2900,11 +3009,16 @@ function Informes({ history }) {
                                                                                                             />
                                                                                                         </div>
                                                                                                     </Grid>
-                                                                                                    <Grid item sm={12} md={4}>
-                                                                                                        <div className="input">
+                                                                                                    <Grid item sm={12}
+                                                                                                          md={4}>
+                                                                                                        <div
+                                                                                                            className="input">
 
-                                                                                                            <TextField variant="outlined" margin="dense" label="Total"
-                                                                                                                value={dataGuias[index].m_arClsGuiaConceptos.reduce((a,b) => +a + +b.m_cTotal,0)}
+                                                                                                            <TextField
+                                                                                                                variant="outlined"
+                                                                                                                margin="dense"
+                                                                                                                label="Total"
+                                                                                                                value={dataGuias[index].m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0)}
                                                                                                                 disabled="true"
                                                                                                                 className="form-control"
                                                                                                                 type="text"
@@ -2912,10 +3026,15 @@ function Informes({ history }) {
                                                                                                             />
                                                                                                         </div>
                                                                                                     </Grid>
-                                                                                                    <Grid item sm={12} md={6}>
-                                                                                                        <div className="input">
+                                                                                                    <Grid item sm={12}
+                                                                                                          md={6}>
+                                                                                                        <div
+                                                                                                            className="input">
 
-                                                                                                            <TextField variant="outlined" margin="dense" label="Destino"
+                                                                                                            <TextField
+                                                                                                                variant="outlined"
+                                                                                                                margin="dense"
+                                                                                                                label="Destino"
                                                                                                                 value={value.m_sCiudadDestino}
                                                                                                                 className="form-control"
                                                                                                                 type="text"
@@ -2924,10 +3043,15 @@ function Informes({ history }) {
                                                                                                             />
                                                                                                         </div>
                                                                                                     </Grid>
-                                                                                                    <Grid item sm={12} md={6}>
-                                                                                                        <div className="input">
+                                                                                                    <Grid item sm={12}
+                                                                                                          md={6}>
+                                                                                                        <div
+                                                                                                            className="input">
 
-                                                                                                            <TextField variant="outlined" margin="dense" label="Tipo de Servicio"
+                                                                                                            <TextField
+                                                                                                                variant="outlined"
+                                                                                                                margin="dense"
+                                                                                                                label="Tipo de Servicio"
                                                                                                                 disabled="true"
                                                                                                                 value={value.m_sTipoServicio}
                                                                                                                 className="form-control"
@@ -2936,10 +3060,15 @@ function Informes({ history }) {
                                                                                                             />
                                                                                                         </div>
                                                                                                     </Grid>
-                                                                                                    <Grid item sm={12} md={12}>
-                                                                                                        <div className="input">
+                                                                                                    <Grid item sm={12}
+                                                                                                          md={12}>
+                                                                                                        <div
+                                                                                                            className="input">
 
-                                                                                                            <TextField variant="outlined" margin="dense" label="Observaciones"
+                                                                                                            <TextField
+                                                                                                                variant="outlined"
+                                                                                                                margin="dense"
+                                                                                                                label="Observaciones"
                                                                                                                 disabled="true"
                                                                                                                 value={
                                                                                                                     value.m_sObservaciones
@@ -2956,12 +3085,12 @@ function Informes({ history }) {
                                                                                             </Grid>
                                                                                         </Grid>
                                                                                     </ButtonBase>
-                                                                                    <br />
+                                                                                    <br/>
                                                                                 </div>
                                                                             );
                                                                         })}
                                                                     </div>
-                                                                    <br />
+                                                                    <br/>
                                                                     <Grid
                                                                         container
                                                                         style={{
@@ -3005,7 +3134,7 @@ function Informes({ history }) {
                                                                                     }}
                                                                                 >
                                                                                     Total Por Cobrar Destinatario
-                                        </Grid>
+                                                                                </Grid>
                                                                                 <Grid
                                                                                     item
                                                                                     sm={6}
@@ -3015,7 +3144,7 @@ function Informes({ history }) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a,b) => +a + +b.m_cTotal,0) : 0),0)}
+                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
                                                                                 </Grid>
                                                                                 <Grid
                                                                                     item
@@ -3027,7 +3156,7 @@ function Informes({ history }) {
                                                                                     }}
                                                                                 >
                                                                                     Total Por Cobrar Remitente
-                                        </Grid>
+                                                                                </Grid>
                                                                                 <Grid
                                                                                     item
                                                                                     sm={6}
@@ -3037,7 +3166,7 @@ function Informes({ history }) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a,b) => +a + +b.m_cTotal,0) : 0),0)}
+                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
                                                                                 </Grid>
                                                                                 <Grid
                                                                                     item
@@ -3049,7 +3178,7 @@ function Informes({ history }) {
                                                                                     }}
                                                                                 >
                                                                                     Total Pagado en Mostrador
-                                        </Grid>
+                                                                                </Grid>
                                                                                 <Grid
                                                                                     item
                                                                                     sm={6}
@@ -3059,7 +3188,7 @@ function Informes({ history }) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a,b) => +a + +b.m_cTotal,0) : 0),0)}
+                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
                                                                                 </Grid>
 
                                                                                 <Grid
@@ -3072,7 +3201,7 @@ function Informes({ history }) {
                                                                                     }}
                                                                                 >
                                                                                     Total Unidad Completa
-                                        </Grid>
+                                                                                </Grid>
                                                                                 <Grid
                                                                                     item
                                                                                     sm={6}
@@ -3082,7 +3211,7 @@ function Informes({ history }) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a,b) => +a + +b.m_cTotal,0) : 0),0)}
+                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
                                                                                 </Grid>
                                                                                 <Grid
                                                                                     item
@@ -3093,9 +3222,9 @@ function Informes({ history }) {
                                                                                         textAlign: "left",
                                                                                     }}
                                                                                 >
-                                                                                    <b style={{ fontWeight: "bold" }}>
+                                                                                    <b style={{fontWeight: "bold"}}>
                                                                                         Total General
-                                          </b>
+                                                                                    </b>
                                                                                 </Grid>
                                                                                 <Grid
                                                                                     item
@@ -3106,7 +3235,7 @@ function Informes({ history }) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    ${dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a,b) => +a + +b.m_cTotal,0) : 0),0)}
+                                                                                    ${dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
                                                                                 </Grid>
                                                                             </Grid>
                                                                         </Grid>
@@ -3124,23 +3253,30 @@ function Informes({ history }) {
                                 <div className="form-footer" className="col-md-12">
                                     <button
                                         type="button"
-                                        onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            setState({...state, agregar: "Agregar"});
+                                            $('.nav-tabs li ').removeClass('active');
+                                            $('.nav-tabs li').eq(0).addClass('active');
+                                            $('.tab-content div ').removeClass('in show');
+                                            $('#Listado').addClass('in show');
+                                        }}
                                         className="btn btn-secondary secondary-btn"
                                     >
                                         Cancelar
-                  </button>
+                                    </button>
                                     <button
                                         type="submit"
                                         className="btn btn-primary primary-btn"
                                         disabled={state.agregar == "Consultar"}
                                     >
                                         Aceptar
-                  </button>
+                                    </button>
                                     {
                                         state.cubicar &&
-                                            <div>
-                                                {state.indexCubicar + 1} de {informes.length}
-                                            </div>
+                                        <div>
+                                            {state.indexCubicar + 1} de {informes.length}
+                                        </div>
                                     }
 
                                 </div>
@@ -3155,24 +3291,26 @@ function Informes({ history }) {
                                                 <div className="form-content">
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Folio Informes"
-                                                                className="form-control"
-                                                                type="text"
-                                                                value={state.FolioInforme}
-                                                                id="FolioInforme"
-                                                                readOnly
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       label="Folio Informes"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.FolioInforme}
+                                                                       id="FolioInforme"
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Sucursal"
-                                                                className="form-control"
-                                                                type="text"
-                                                                value={state.sucursalCancelacion}
-                                                                id="sucursalCancelacion"
-                                                                readOnly
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       label="Sucursal"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.sucursalCancelacion}
+                                                                       id="sucursalCancelacion"
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -3180,11 +3318,11 @@ function Informes({ history }) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense" label="Fecha"
-                                                                className="form-control"
-                                                                type="text"
-                                                                value={state.fechaCancelacion}
-                                                                id="fechaCancelacion"
-                                                                readOnly
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.fechaCancelacion}
+                                                                       id="fechaCancelacion"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -3192,11 +3330,11 @@ function Informes({ history }) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense" label="Usuario"
-                                                                className="form-control"
-                                                                type="text"
-                                                                value={state.usuarioCancelacion}
-                                                                id="usuarioCancelacion"
-                                                                readOnly
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.usuarioCancelacion}
+                                                                       id="usuarioCancelacion"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -3204,11 +3342,11 @@ function Informes({ history }) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense" label="Estatus"
-                                                                className="form-control"
-                                                                type="text"
-                                                                value={state.estatusCancelacion}
-                                                                id="estatusCancelacion"
-                                                                readOnly
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.estatusCancelacion}
+                                                                       id="estatusCancelacion"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -3216,27 +3354,34 @@ function Informes({ history }) {
                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense" label="Motivo"
-                                                                className="form-control"
-                                                                type="text"
-                                                                value={state.motivoCancelacion}
-                                                                id="motivoCancelacion"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.motivoCancelacion}
+                                                                       id="motivoCancelacion"
                                                             />
                                                         </div>
                                                     </div>
 
                                                     <div className="form-footer" className="col-md-12">
                                                         <button
-                                                            onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
+                                                            onClick={(event) => {
+                                                                event.stopPropagation();
+                                                                setState({...state, agregar: "Agregar"});
+                                                                $('.nav-tabs li ').removeClass('active');
+                                                                $('.nav-tabs li').eq(0).addClass('active');
+                                                                $('.tab-content div ').removeClass('in show');
+                                                                $('#Listado').addClass('in show');
+                                                            }}
                                                             className="btn btn-secondary secondary-btn"
                                                         >
                                                             Cancelar
-                            </button>
+                                                        </button>
                                                         <button
                                                             type="submit"
                                                             className="btn btn-primary primary-btn"
                                                         >
                                                             Aceptar
-                            </button>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -3577,15 +3722,15 @@ function Informes({ history }) {
                                                     <div className="row">
                                                         <div
                                                             align="center"
-                                                            style={{ padding: "10px", width: "100%" }}
+                                                            style={{padding: "10px", width: "100%"}}
                                                         >
                                                             <button
                                                                 type="submit"
                                                                 className="btn btn-primary primary-btn"
-                                                                style={{ float: "none" }}
+                                                                style={{float: "none"}}
                                                             >
                                                                 Cubicar
-                              </button>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -3598,11 +3743,11 @@ function Informes({ history }) {
                                                             minHeight: "400px",
                                                         }}
                                                     >
-                                                        <h4 style={{ color: "white", padding: "5px" }}>
+                                                        <h4 style={{color: "white", padding: "5px"}}>
                                                             Informes: {informes.length}
                                                         </h4>
                                                         {informes.map((i, index) => (
-                                                            <div style={{ padding: "10px" }}>
+                                                            <div style={{padding: "10px"}}>
                                                                 <table
                                                                     style={{
                                                                         backgroundColor: "white",
@@ -3612,23 +3757,23 @@ function Informes({ history }) {
                                                                     }}
                                                                 >
                                                                     <thead>
-                                                                        <tr style={{ backgroundColor: "#F9A03E" }}>
-                                                                            <th tyle={{ paddingLeft: "5px" }}>
-                                                                                F1-00000{index} - {i[0].destino}
-                                                                            </th>
-                                                                            <th></th>
-                                                                            <th
-                                                                                style={{
-                                                                                    textAlign: "right",
-                                                                                    paddingRight: "5px",
-                                                                                }}
-                                                                            >
-                                                                                {" "}
-                                        Guias - {i.length}
-                                                                            </th>
-                                                                        </tr>
+                                                                    <tr style={{backgroundColor: "#F9A03E"}}>
+                                                                        <th tyle={{paddingLeft: "5px"}}>
+                                                                            F1-00000{index} - {i[0].destino}
+                                                                        </th>
+                                                                        <th></th>
+                                                                        <th
+                                                                            style={{
+                                                                                textAlign: "right",
+                                                                                paddingRight: "5px",
+                                                                            }}
+                                                                        >
+                                                                            {" "}
+                                                                            Guias - {i.length}
+                                                                        </th>
+                                                                    </tr>
                                                                     </thead>
-                                                                    <tr style={{ backgroundColor: "#E6E6E6" }}>
+                                                                    <tr style={{backgroundColor: "#E6E6E6"}}>
                                                                         <th>Guía</th>
                                                                         <th>Destino</th>
                                                                         <th>Paquetes</th>
@@ -3636,12 +3781,12 @@ function Informes({ history }) {
                                                                     {i.map((g) => (
                                                                         <tr
                                                                             onClick={() =>
-                                                                                setState({ ...state, guiaSelected: g })
+                                                                                setState({...state, guiaSelected: g})
                                                                             }
                                                                         >
                                                                             <td>{g.folio}</td>
                                                                             <td>{g.destino}</td>
-                                                                            <td style={{ textAlign: "center" }}>
+                                                                            <td style={{textAlign: "center"}}>
                                                                                 {g.paquetes}
                                                                             </td>
                                                                         </tr>
@@ -3654,136 +3799,170 @@ function Informes({ history }) {
                                             </div>
                                             <div className="col-sm-12 col-md-4 col-lg-4 unit">
                                                 {state.guiaSelected && (
-                                                    <div style={{ backgroundColor: "#E6E6E6" }}>
-                                                        <h4 style={{ color: "#717171", padding: "5px" }}>
+                                                    <div style={{backgroundColor: "#E6E6E6"}}>
+                                                        <h4 style={{color: "#717171", padding: "5px"}}>
                                                             Detalles de Guía {state.guiaSelected.folio}
                                                         </h4>
                                                         {state.guiaSelected.arrayPaquetes.map(
                                                             (p, index) => (
                                                                 <div
-                                                                    style={{ color: "#707070", padding: "5px" }}
+                                                                    style={{color: "#707070", padding: "5px"}}
                                                                 >
                                                                     <h4>Paquete {index + 1}</h4>
                                                                     <div className="row">
-                                                                        <div className="col-sm-12 col-md-2 col-lg-2 unit" style={{ padding: "5px" }}>
+                                                                        <div
+                                                                            className="col-sm-12 col-md-2 col-lg-2 unit"
+                                                                            style={{padding: "5px"}}>
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense" label="Peso"
-                                                                                    style={{ backgroundColor: "#FFFFFF" }}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    disabled
-                                                                                    value={p.m_xPeso}
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense" label="Peso"
+                                                                                           style={{backgroundColor: "#FFFFFF"}}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           disabled
+                                                                                           value={p.m_xPeso}
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-sm-12 col-md-2 col-lg-2 unit" style={{ padding: "5px" }}>
+                                                                        <div
+                                                                            className="col-sm-12 col-md-2 col-lg-2 unit"
+                                                                            style={{padding: "5px"}}>
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense" label="Largo"
-                                                                                    style={{ backgroundColor: "#FFFFFF" }}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    disabled
-                                                                                    value={p.m_xLargo}
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense" label="Largo"
+                                                                                           style={{backgroundColor: "#FFFFFF"}}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           disabled
+                                                                                           value={p.m_xLargo}
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-sm-12 col-md-2 col-lg-2 unit" style={{ padding: "5px" }}>
+                                                                        <div
+                                                                            className="col-sm-12 col-md-2 col-lg-2 unit"
+                                                                            style={{padding: "5px"}}>
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense" label="Ancho"
-                                                                                    style={{ backgroundColor: "#FFFFFF" }}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    disabled
-                                                                                    value={p.m_xAncho}
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense" label="Ancho"
+                                                                                           style={{backgroundColor: "#FFFFFF"}}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           disabled
+                                                                                           value={p.m_xAncho}
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-sm-12 col-md-2 col-lg-2 unit" style={{ padding: "5px" }}>
+                                                                        <div
+                                                                            className="col-sm-12 col-md-2 col-lg-2 unit"
+                                                                            style={{padding: "5px"}}>
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense" label="Alto"
-                                                                                    style={{ backgroundColor: "#FFFFFF" }}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    disabled
-                                                                                    value={p.m_xAlto}
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense" label="Alto"
+                                                                                           style={{backgroundColor: "#FFFFFF"}}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           disabled
+                                                                                           value={p.m_xAlto}
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-sm-12 col-md-3 col-lg-3 unit" style={{ padding: "5px" }}>
+                                                                        <div
+                                                                            className="col-sm-12 col-md-3 col-lg-3 unit"
+                                                                            style={{padding: "5px"}}>
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense" label="Volumen"
-                                                                                    style={{ backgroundColor: "#FFFFFF" }}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    disabled
-                                                                                    value={
-                                                                                        p.m_xAlto * p.m_xAlto * p.m_xLargo
-                                                                                    }
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           label="Volumen"
+                                                                                           style={{backgroundColor: "#FFFFFF"}}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           disabled
+                                                                                           value={
+                                                                                               p.m_xAlto * p.m_xAlto * p.m_xLargo
+                                                                                           }
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-sm-12 col-md-6 col-lg-3 unit" style={{ padding: "5px" }}>
+                                                                        <div
+                                                                            className="col-sm-12 col-md-6 col-lg-3 unit"
+                                                                            style={{padding: "5px"}}>
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense" label="Tipo embalaje"
-                                                                                    style={{ backgroundColor: "#FFFFFF" }}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    disabled
-                                                                                    value={""}
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           label="Tipo embalaje"
+                                                                                           style={{backgroundColor: "#FFFFFF"}}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           disabled
+                                                                                           value={""}
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-sm-12 col-md-6 col-lg-3 unit" style={{ padding: "5px" }}>
+                                                                        <div
+                                                                            className="col-sm-12 col-md-6 col-lg-3 unit"
+                                                                            style={{padding: "5px"}}>
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense" label="Valor Declarado"
-                                                                                    style={{ backgroundColor: "#FFFFFF" }}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    disabled
-                                                                                    value={p.m_cValorDeclarado}
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           label="Valor Declarado"
+                                                                                           style={{backgroundColor: "#FFFFFF"}}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           disabled
+                                                                                           value={p.m_cValorDeclarado}
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-sm-12 col-md-12 col-lg-3 unit" style={{ padding: "5px" }}>
+                                                                        <div
+                                                                            className="col-sm-12 col-md-12 col-lg-3 unit"
+                                                                            style={{padding: "5px"}}>
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense" label="Descripción"
-                                                                                    style={{ backgroundColor: "#FFFFFF" }}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    disabled
-                                                                                    value={p.m_sDescripcion}
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           label="Descripción"
+                                                                                           style={{backgroundColor: "#FFFFFF"}}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           disabled
+                                                                                           value={p.m_sDescripcion}
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-sm-12 col-md-12 col-lg-3 unit" style={{ padding: "5px" }}>
+                                                                        <div
+                                                                            className="col-sm-12 col-md-12 col-lg-3 unit"
+                                                                            style={{padding: "5px"}}>
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense" label="Ctd"
-                                                                                    style={{ backgroundColor: "#FFFFFF" }}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    disabled
-                                                                                    value={p.ctd}
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense" label="Ctd"
+                                                                                           style={{backgroundColor: "#FFFFFF"}}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           disabled
+                                                                                           value={p.ctd}
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col-sm-12 col-md-12 unit" style={{ padding: "5px" }}>
+                                                                        <div className="col-sm-12 col-md-12 unit"
+                                                                             style={{padding: "5px"}}>
 
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense" label="Observaciones"
-                                                                                    style={{ backgroundColor: "#FFFFFF" }}
-                                                                                    className="form-control"
-                                                                                    type="text"
-                                                                                    disabled
-                                                                                    value={p.m_sObservaciones}
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           label="Observaciones"
+                                                                                           style={{backgroundColor: "#FFFFFF"}}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           disabled
+                                                                                           value={p.m_sObservaciones}
                                                                                 />
                                                                             </div>
                                                                         </div>
@@ -3797,24 +3976,39 @@ function Informes({ history }) {
                                             <div
                                                 className="form-footer"
                                                 className="col-md-12"
-                                                style={{ padding: "10px" }}
+                                                style={{padding: "10px"}}
                                                 align="center"
                                             >
                                                 <button
-                                                    onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar", cubicar: true }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');showAgregarFromCubicar(0); }}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        setState({...state, agregar: "Agregar", cubicar: true});
+                                                        $('.nav-tabs li ').removeClass('active');
+                                                        $('.nav-tabs li').eq(1).addClass('active');
+                                                        $('.tab-content div ').removeClass('in show');
+                                                        $('#Agregar').addClass('in show');
+                                                        showAgregarFromCubicar(0);
+                                                    }}
                                                     className="btn btn-primary primary-btn"
-                                                    style={{ margin: "10px" }}
+                                                    style={{margin: "10px"}}
                                                 >
                                                     Aceptar
-                        </button>
+                                                </button>
 
                                                 <button
-                                                    onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar", guias: [] }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        setState({...state, agregar: "Agregar", guias: []});
+                                                        $('.nav-tabs li ').removeClass('active');
+                                                        $('.nav-tabs li').eq(0).addClass('active');
+                                                        $('.tab-content div ').removeClass('in show');
+                                                        $('#Listado').addClass('in show');
+                                                    }}
                                                     className="btn btn-secondary primary-btn"
-                                                    style={{ margin: "10px" }}
+                                                    style={{margin: "10px"}}
                                                 >
                                                     Cancelar
-                        </button>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -3824,7 +4018,7 @@ function Informes({ history }) {
                     </div>
                 </div>
             </section>
-        </div >
+        </div>
     );
 }
 

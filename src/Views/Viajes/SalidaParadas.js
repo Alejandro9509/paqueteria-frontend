@@ -43,7 +43,7 @@ export default function SalidaParadas(props){
         unidad: props.data.m_sUnidad,
         placasUnidad: "",
         fechaSalida: props.data.m_dFechaSalida,
-        horaSalida: "",
+        horaSalida: props.data.m_dHoraSalida,
         idEstatus: 0,
         nameEstatus: "",
         motivoRetraso: "",

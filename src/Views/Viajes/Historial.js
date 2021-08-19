@@ -64,7 +64,7 @@ export default function Historial(){
         setChangeType(event.target.value);
     };
 
-    const columns = React.useMemo( () => [
+    const columns = [
         {
             headerName: "Usuario",
             field: "user",
@@ -90,7 +90,7 @@ export default function Historial(){
             field: "anterior",
             width: 150,
         },
-    ]);
+    ];
 
     function conDatos() {
         return data.length != 0;
