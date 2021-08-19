@@ -60,6 +60,7 @@ import { obtenerEstatusEmbarque } from "../Util/Contexts/EstatusContext";
 import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import { imprimirFormatosId, obtenerFormatosImpresion } from "../Util/Contexts/FormatosImpresionContext";
+import {obtenerCliente} from "../Util/Contexts/ClientesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -179,6 +180,7 @@ function Embarque(props) {
         moneda: '',
         tipoCambio: '',
         tipoCobro: '',
+        clientePaga: {},
 
         //Remitente
         nombreRemitente: '',
@@ -190,6 +192,7 @@ function Embarque(props) {
         telefonoRemitente: '',
         contactoRemitente: '',
         ciudadOrigen: '',
+        zonaRemitente: {},
 
         //Destinatario
         nombreDestinatario: '',
@@ -201,6 +204,7 @@ function Embarque(props) {
         telefonoDestinatario: '',
         contactoDestinatario: '',
         ciudadDestino: '',
+        zonaDestinatario: {},
 
         //Entrega
         entregaEnSucursal: false,
@@ -249,6 +253,7 @@ function Embarque(props) {
         height: window.innerHeight,
 
     });
+    const [dataClientes, setDataClientes] = useState([])
     const [stepActive, setStepActive] = React.useState(1);
     const [Modal, open, close, isOpen] = useModal("root", {
         preventScroll: true,
@@ -590,6 +595,7 @@ function Embarque(props) {
             m_nIdTIpoCobro: state.tipoCobro,
             m_dFecha: state.fechaHoraCreacion.split("T")[0],
             m_tHora: state.fechaHoraCreacion.split("T")[1],
+            m_nIdCliente: state.clientePaga.m_nIdCliente,
 
             m_sNOmbreRemitente: state.nombreRemitente.m_sNombre,
             m_sRFCRemitente: state.RFCRemitente,
@@ -600,6 +606,7 @@ function Embarque(props) {
             m_sTelefonoRemitente: state.telefonoRemitente,
             m_sContactoRemitente: state.contactoRemitente,
             m_nIdCiudadOrigen: state.ciudadOrigen.m_nIdCiudad,
+            m_nIdZonaRemitente: state.zonaRemitente.m_nIdZona,
 
             m_sNombreDestinatario: state.nombreDestinatario.m_sNombre,
             m_sRFCDestinatario: state.RFCDestinatario,
@@ -610,6 +617,7 @@ function Embarque(props) {
             m_sTelefonoDestinatario: state.telefonoDestinatario,
             m_sContactoDestinatario: state.contactoDestinatario,
             m_nIdCiudadDestino: state.ciudadDestino.m_nIdCiudad,
+            m_nIdZonaDestinatario: state.zonaDestinatario.m_nIdZona,
 
             m_nNoPaquetes: state.paquetes.length,
             m_nNoSobres: state.sobres.length,
@@ -631,6 +639,7 @@ function Embarque(props) {
             DatosAdicionales: '',
             m_tFechaDetalleEntrega: '',
             m_tHoraDetalleEntrega: '',
+            EntregarMismoDomicilio: true
 
         }
 
@@ -639,6 +648,7 @@ function Embarque(props) {
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
         }
         if (state.diferenteEntrega){
+            params.EntregarMismoDomicilio = false
             params.IdCiudadEntrega = state.ciudadEntrega
             params.CodigoPostalEntrega = state.codigoPostalEntrega.m_nIdCP
             params.IdZonaEntrega = state.zonaEntrega
@@ -940,7 +950,7 @@ function Embarque(props) {
                 }
             }
         },
-        [dataRemitenteDestinatario, dataCiudad, dataOperador, dataTipoUnidad,]
+        [dataRemitenteDestinatario, dataCiudad, dataOperador, dataTipoUnidad,dataClientes]
     );
 
     function handleShowCancelar() {
@@ -1002,6 +1012,7 @@ function Embarque(props) {
                 moneda: '',
                 tipoCambio: '',
                 tipoCobro: '',
+                clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
 
                 //Remitente
                 nombreRemitente: '',
@@ -1013,6 +1024,7 @@ function Embarque(props) {
                 telefonoRemitente: '',
                 contactoRemitente: '',
                 ciudadOrigen: '',
+                zonaRemitente: {},
 
                 //Destinatario
                 nombreDestinatario: '',
@@ -1024,6 +1036,7 @@ function Embarque(props) {
                 telefonoDestinatario: '',
                 contactoDestinatario: '',
                 ciudadDestino: '',
+                zonaDestinatario: {},
 
                 //Entrega
                 entregaEnSucursal: false,
@@ -1169,9 +1182,12 @@ function Embarque(props) {
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
+                clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
 
                 ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                 ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
+                zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
+                zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
 
                 //fecha entrega?
                 /*fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,*/
@@ -1197,8 +1213,7 @@ function Embarque(props) {
             }
         });
 
-        //si el cp de entrega es igual al de destinatario significa que no es entrega en diferente domicilio
-        if (respuesta.data.m_nIdCPDetalleEntrega != respuesta.data.m_sIdCodigoPostalDestinatario){
+        if (respuesta.data.m_bEntregaDiferenteDomicilio){
             obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then(cp => {
                 setState(state => {
                     return{
@@ -1251,6 +1266,7 @@ function Embarque(props) {
                 moneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 tipoCobro: respuesta.data.m_nIdTIpoCobro,
+                clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
 
                 //Remitente
                 /*nombreRemitente: '',
@@ -1262,6 +1278,7 @@ function Embarque(props) {
                 telefonoRemitente: '',
                 contactoRemitente: '',*/
                 ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+                zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
 
                 //Destinatario
                 /*nombreDestinatario: '',
@@ -1273,6 +1290,7 @@ function Embarque(props) {
                 telefonoDestinatario: '',
                 contactoDestinatario: '',*/
                 ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
+                zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
 
                 //Entrega
                 entregaEnSucursal: false,
@@ -1435,12 +1453,40 @@ function Embarque(props) {
         console.log(state.identificadorModal);
     }
 
+    const handleZonaRemitenteSelected = (newValue) => {
+        setState({
+            ...state,
+            zonaRemitente: newValue,
+        })
+    }
+
+    const handleZonaDestinatarioSelected = (newValue) => {
+        setState({
+            ...state,
+            zonaDestinatario: newValue
+        })
+    }
+
+    const handlePatrocinadorSelected = (newValue) => {
+        setState({
+            ...state,
+            clientePaga: newValue
+        })
+    }
+
     function getAllZonas() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
             setDataZona(respuesta.data);
         });
     }
+
+    const getAllClientes = () =>{
+        obtenerCliente().then((respuesta) => {
+            setDataClientes(respuesta.data)
+        })
+    }
+
 
     const handleChangeZonaEntrega = (event) => {
         event.preventDefault();
@@ -1465,6 +1511,7 @@ function Embarque(props) {
         getUltimoFolioEmbarque();
         getTipoCambio()
         getFormatosImpresion()
+        getAllClientes()
     }
 
     async function getAllEmbarque() {
@@ -2224,6 +2271,7 @@ function Embarque(props) {
     const handleChangePaquete = (event, index) => {
         var { paquetes } = state;
         paquetes[index][event.target.name] = event.target.value;
+        paquetes[index].m_xVolumen = paquetes[index].m_xLargo * paquetes[index].m_xAlto * paquetes[index].m_xAncho;
         setState({
             ...state,
             paquetes: paquetes,
@@ -2270,7 +2318,7 @@ function Embarque(props) {
                             type="text"
                             value={state.paquetes[index].m_xLargo}
                             disabled={state.agregar === "Consultar"}
-                            placeholder="mts"
+                            placeholder="cms"
                             name="m_xLargo"
                         />
                     </div>
@@ -2284,7 +2332,7 @@ function Embarque(props) {
                             type="text"
                             value={state.paquetes[index].m_xAncho}
                             disabled={state.agregar === "Consultar"}
-                            placeholder="mts"
+                            placeholder="cms"
                             name="m_xAncho"
                         />
                     </div>
@@ -2298,7 +2346,7 @@ function Embarque(props) {
                             type="text"
                             value={state.paquetes[index].m_xAlto}
                             disabled={state.agregar === "Consultar"}
-                            placeholder="mts"
+                            placeholder="cms"
                             name="m_xAlto"
                         />
                     </div>
@@ -2307,12 +2355,12 @@ function Embarque(props) {
                 <div className="col-sm-4 col-md-2-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense" label="Volumen"
-                            onChange={(event) => handleChangePaquete(event, index)}
+                            // onChange={(event) => handleChangePaquete(event, index)}
                             className="form-control"
                             type="text"
                             value={state.paquetes[index].m_xVolumen}
-                            disabled={state.agregar === "Consultar"}
-                            placeholder="mts3"
+                            disabled
+                            placeholder="cms3"
                             name="m_xVolumen"
                         />
                     </div>
@@ -3367,6 +3415,37 @@ function Embarque(props) {
                                         <div className="col-md-7">
                                             <div className="widget-wrap" id="remitenteDestinatario">
                                                 <div className="row">
+                                                    <div className="col-md-12">
+                                                        <div className="col-sm-12 col-md-12 unit">
+                                                            <div className="input">
+                                                                <Autocomplete
+                                                                    value={state.clientePaga}
+                                                                    freeSolo
+                                                                    onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
+                                                                    id="clientePaga"
+                                                                    disableClearable
+                                                                    forcePopupIcon={false}
+                                                                    options={dataClientes}
+                                                                    disabled={state.agregar === "Consultar"}
+                                                                    getOptionLabel={(option) => `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`}
+                                                                    variant="outlined"
+                                                                    name={"clientePaga"}
+                                                                    style={{
+                                                                        transform: "translate(14px, 10px) scale(1) !important"
+                                                                    }}
+                                                                    renderInput={(params) =>
+                                                                        <TextField
+                                                                            variant="outlined"
+                                                                            label="Responsable de pago"
+                                                                            margin="dense"
+                                                                            required
+                                                                            {...params}
+                                                                        />
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div className="col-md-6">
                                                         <div className="widget-header">
                                                             <h2>Remitente</h2>
@@ -3805,22 +3884,35 @@ function Embarque(props) {
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="col-sm-12 col-md-12  unit">
-                                                                        <label className="checkbox">
-                                                                            Entrega en Sucursal
-                                                                            <input
-                                                                                onChange={handleEntregaEnSucursalCheckbox}
-                                                                                className="form-control"
-                                                                                type="checkbox"
-                                                                                checked={state.entregaEnSucursal}
-                                                                                style={{ height: "20px" }}
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <div className="input">
+                                                                            <Autocomplete
+                                                                                value={state.zonaRemitente}
+                                                                                freeSolo
+                                                                                onChange={(event, newValue) => handleZonaRemitenteSelected(newValue)}
+                                                                                id="zonaRemitente"
+                                                                                disableClearable
+                                                                                forcePopupIcon={false}
+                                                                                options={dataZona.filter((z) => z.m_nIdSucursal == state.idSucursalAgregar)}
                                                                                 disabled={state.agregar === "Consultar"}
-                                                                                id="entregaEnSucursal"
+                                                                                getOptionLabel={(option) => option.m_sDescripcion}
+                                                                                variant="outlined"
+                                                                                name={"zonaRemitente"}
+                                                                                style={{
+                                                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                                                }}
+                                                                                renderInput={(params) =>
+                                                                                    <TextField
+                                                                                        variant="outlined"
+                                                                                        label="Zona"
+                                                                                        margin="dense"
+                                                                                        required
+                                                                                        {...params}
+                                                                                    />
+                                                                                }
                                                                             />
-                                                                            <i />
-                                                                        </label>
+                                                                        </div>
                                                                     </div>
-
 
                                                                 </div>
                                                             </div>
@@ -4266,6 +4358,52 @@ function Embarque(props) {
                                                                             )}
                                                                         />
                                                                     </div>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="input">
+                                                                        <Autocomplete
+                                                                            value={state.zonaDestinatario}
+                                                                            freeSolo
+                                                                            onChange={(event, newValue) => handleZonaDestinatarioSelected(newValue)}
+                                                                            id="zonaDestinatario"
+                                                                            disableClearable
+                                                                            forcePopupIcon={false}
+                                                                            options={dataZona}
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            getOptionLabel={(option) => option.m_sDescripcion}
+                                                                            variant="outlined"
+                                                                            name={"zonaDestinatario"}
+                                                                            style={{
+                                                                                transform: "translate(14px, 10px) scale(1) !important"
+                                                                            }}
+                                                                            renderInput={(params) =>
+                                                                                <TextField
+                                                                                    variant="outlined"
+                                                                                    label="Zona"
+                                                                                    margin="dense"
+                                                                                    required
+                                                                                    {...params}
+                                                                                />
+                                                                            }
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12  unit">
+                                                                    <label className="checkbox">
+                                                                        Entrega en Sucursal
+                                                                        <input
+                                                                            onChange={handleEntregaEnSucursalCheckbox}
+                                                                            className="form-control"
+                                                                            type="checkbox"
+                                                                            checked={state.entregaEnSucursal}
+                                                                            style={{ height: "20px" }}
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            id="entregaEnSucursal"
+                                                                        />
+                                                                        <i />
+                                                                    </label>
                                                                 </div>
 
                                                                 <div className="col-sm-12 col-md-12  unit">

@@ -1051,10 +1051,20 @@ function Guia(props) {
             console.log('tarifas by embarque')
             console.log(tarifa.data)
             let pesoTotal = 0
+            let pesoKg = 0
+            let pesoVolumetrico = 0
             paquetesTemp.forEach((p) => {
-                pesoTotal = pesoTotal + p.peso * p.cdt
+                pesoKg = pesoKg + p.peso * p.cdt
+                //xPesoVolumetrico += (clPaquete.m_xAlto * clPaquete.m_xLargo * clPaquete.m_xAncho)* 0.0005
+                pesoVolumetrico = (p.alto * p.ancho * p.largo) * 0.0005
             })
-            console.log(pesoTotal)
+            if (pesoKg > pesoVolumetrico){
+                pesoTotal = pesoKg
+            }else{
+                pesoTotal = pesoVolumetrico
+            }
+
+            console.log(pesoKg)
             obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal)
             if (tarifa.data.length !== 0) {
                 //se recorre el listado de conceptos de la tarifa del embarque
@@ -1226,6 +1236,7 @@ function Guia(props) {
         ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
     }
 
+    //Aqui se filtran los conceptos de la tarifa para que en el listado de conceptos que se pueden agregar solo salgan los que estan dentro del rango
     const obtenerConceptosByTarifa = (idTarifa, pesoTotal) => {
         console.log('pesoTotal: ', pesoTotal)
         const conceptosDentroRango = []
@@ -1237,6 +1248,9 @@ function Guia(props) {
                     conceptosDentroRango.push(element)
                 }else {
                     if (element.m_xnRangoMinimo <= pesoTotal && element.m_xnRangoMaximo >= pesoTotal) {
+                        if (element.m_nIdTipoCalculo == 2){
+                            element.m_cImporte = (pesoTotal/1000) * element.m_cImporte
+                        }
                         conceptosDentroRango.push(element)
                     }
                 }

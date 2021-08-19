@@ -422,8 +422,43 @@ class ZonasAgregar extends Component {
                                              style={{padding: "5px", display: "inline-flex"}}>
                                             <div className="form-footer " className="col-md-12"
                                                  style={{padding: "10px"}}>
+                                                <div className="col-md-2 col-sm-2"
+                                                     style={{float: "right", padding: "5px"}}>
+
+                                                    <div className="input">
+                                                        <TextField variant="outlined" margin="dense"
+                                                                   onChange={this.handleChange}
+                                                                   className="form-control"
+                                                                   type="number"
+                                                                   disabled={this.state.editar}
+                                                                   required
+                                                                   label="Costo Recolectar"
+                                                                   step="0.01"
+                                                                   value={this.state.costoRecolectar}
+                                                                   name="costoRecolectar"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-2 col-sm-2"
+                                                     style={{float: "right", padding: "5px"}}>
+
+                                                    <div className="input">
+                                                        <TextField variant="outlined" margin="dense"
+                                                                   onChange={this.handleChange}
+                                                                   className="form-control"
+                                                                   type="number"
+                                                                   label="Costo Entregar"
+                                                                   disabled={this.state.editar}
+                                                                   required
+                                                                   step="0.01"
+                                                                   value={this.state.costoEntregar}
+                                                                   name="costoEntregar"
+                                                        />
+                                                    </div>
+                                                </div>
                                                 <div className="col-md-12 col-sm-12">
                                                 </div>
+
 
                                                 {/*<button
                                                     type="button"

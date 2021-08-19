@@ -245,6 +245,7 @@ class Zonas extends Component {
       consult: false,
       agregar: "Agregar",
       idZona: 0,
+      selected: {},
     });
     $('.nav-tabs li ').removeClass('active');
     $('.nav-tabs li').eq(0).addClass('active');
@@ -259,6 +260,7 @@ class Zonas extends Component {
       consult: false,
       agregar: "Agregar",
       idZona: 0,
+      selected: {},
     });
     $('.nav-tabs li ').removeClass('active');
     $('.nav-tabs li').eq(1).addClass('active');

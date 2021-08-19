@@ -848,11 +848,6 @@ function Clientes(props) {
             modificarCliente(state.idCliente, params)
                 .then((respuesta) => {
                     alert(respuesta.data);
-                    /*$('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(0).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');*/
-                    // window.location.reload();
                     limpiarCamposAgregar()
                 })
                 .catch((err) => {
@@ -864,11 +859,6 @@ function Clientes(props) {
                 .then((respuesta) => {
                     alert(respuesta.data);
                     limpiarCamposAgregar()
-                    /*$('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(0).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');*/
-                    //window.location.reload();
                 })
                 .catch((err) => {
                     console.log(err);
