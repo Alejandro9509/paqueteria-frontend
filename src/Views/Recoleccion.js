@@ -905,12 +905,25 @@ function Recoleccion() {
     }
 
     const setRecoleccionDataParaConsultaModificacion = (respuesta) => {
-        const remitente = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente)
-        handleSelectRemitente(remitente)
+        const remitente = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente && o.m_sNombre == respuesta.data.m_sNombreRemitente)
 
-        const destinatario = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario)
-        handleSelectDestinatario(destinatario)
-
+        const destinatario = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
+        obtenerCodigoPostalId(remitente.m_nIdCP).then((cp) => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalRemitente: cp.data
+                }
+            })
+        })
+        obtenerCodigoPostalId(destinatario.m_nIdCP).then((cp) => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalDestinatario: cp.data
+                }
+            })
+        })
         obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleRecoleccion).then((cp) => {
             setState(state => {
                 return {
@@ -962,9 +975,26 @@ function Recoleccion() {
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
 
                 //Remitente
+                nombreRemitente: remitente,
+                RFCRemitente: respuesta.data.m_sRFCRemitente,
+                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+                ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
+                correoRemitente: respuesta.data.m_sCorreoRemitente,
+                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+                contactoRemitente: respuesta.data.m_sContactoRemitente,
+
                 origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                 zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
+
                 //Destinatario
+                nombreDestinatario: destinatario,
+                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+                ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
+                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+
                 destinoDestinatario: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
                 zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
 

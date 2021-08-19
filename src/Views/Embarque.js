@@ -1159,10 +1159,28 @@ function Embarque(props) {
             sobre["m_nTipo"] = 1
         })
 
-        const { m_sRFCRemitente, m_sRFCDestinatario } = respuesta.data
+        const remitente = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente && o.m_sNombre == respuesta.data.m_sNombreRemitente)
 
-        handleSelectRemitente(dataRemitenteDestinatario.find((o) => o.m_sRFC == m_sRFCRemitente))
-        handleSelectDestinatario(dataRemitenteDestinatario.find((o) => o.m_sRFC == m_sRFCDestinatario))
+        const destinatario = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
+        obtenerCodigoPostalId(remitente.m_nIdCP).then((cp) => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalRemitente: cp.data
+                }
+            })
+        })
+        obtenerCodigoPostalId(destinatario.m_nIdCP).then((cp) => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalDestinatario: cp.data
+                }
+            })
+        })
+
+        /*handleSelectRemitente(dataRemitenteDestinatario.find((o) => o.m_sRFC == m_sRFCRemitente))
+        handleSelectDestinatario(dataRemitenteDestinatario.find((o) => o.m_sRFC == m_sRFCDestinatario))*/
 
         setState(state => {
             return{
@@ -1184,7 +1202,22 @@ function Embarque(props) {
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
                 clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
 
+                nombreRemitente: remitente,
+                RFCRemitente: respuesta.data.m_sRFCRemitente,
+                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+                ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
+                correoRemitente: respuesta.data.m_sCorreoRemitente,
+                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+                contactoRemitente: respuesta.data.m_sContactoRemitente,
                 ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+
+                nombreDestinatario: destinatario,
+                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+                ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
+                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
                 zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
                 zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
@@ -1235,9 +1268,29 @@ function Embarque(props) {
     //Funcion para mostrar datos de embarque para consultar o modificar
     const setDataParaConsultarModificar = (respuesta) => {
 
-        handleSelectRemitente(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente))
-        handleSelectDestinatario(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario))
+        const remitente = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente && o.m_sNombre == respuesta.data.m_sNOmbreRemitente)
 
+        const destinatario = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
+
+        /*handleSelectRemitente(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente))
+        handleSelectDestinatario(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario))*/
+
+        obtenerCodigoPostalId(remitente.m_nIdCP).then((cp) => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalRemitente: cp.data
+                }
+            })
+        })
+        obtenerCodigoPostalId(destinatario.m_nIdCP).then((cp) => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalDestinatario: cp.data
+                }
+            })
+        })
         obtenerCodigoPostalId(respuesta.data.CodigoPostalEntrega).then((cp) => {
             setState(state => {
                 return {
@@ -1277,6 +1330,13 @@ function Embarque(props) {
                 correoRemitente: '',
                 telefonoRemitente: '',
                 contactoRemitente: '',*/
+                nombreRemitente: remitente,
+                RFCRemitente: respuesta.data.m_sRFCRemitente,
+                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+                ciudadRemitente: respuesta.data.m_nCiudadRemitente,
+                correoRemitente: respuesta.data.m_sCorreoRemitente,
+                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+                contactoRemitente: respuesta.data.m_sContactoRemitente,
                 ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                 zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
 
@@ -1289,6 +1349,13 @@ function Embarque(props) {
                 correoDestinatario: '',
                 telefonoDestinatario: '',
                 contactoDestinatario: '',*/
+                nombreDestinatario: destinatario,
+                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+                ciudadDestinatario: respuesta.data.m_nIdCIudadDestinatario,
+                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
                 zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
 
