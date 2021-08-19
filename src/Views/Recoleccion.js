@@ -69,6 +69,7 @@ import { obtenerTipoCambio } from "../Util/Contexts/TipoCambioContext";
 import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
 import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { obtenerFormatosImpresion, imprimirFormatosId } from "../Util/Contexts/FormatosImpresionContext";
+import {obtenerCliente} from "../Util/Contexts/ClientesContext";
 
 let timer;
 
@@ -127,6 +128,7 @@ function Recoleccion() {
     const [dataCodigosPostalesRecoleccion, setDataCodigosPostalesRecoleccion] = React.useState([]);
     const [dataCodigosPostalesEntrega, setDataCodigosPostalesEntrega] = React.useState([]);
 
+    const [dataClientes, setDataClientes] = useState([])
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario] = React.useState([]);
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
     const [dataOperador, setDataOperador] = React.useState([]);
@@ -171,6 +173,7 @@ function Recoleccion() {
         moneda: '',
         tipoCambio: '',
         tipoCobro: '',
+        clientePaga: {},
 
     //Remitente
         nombreRemitente: '',
@@ -450,6 +453,7 @@ function Recoleccion() {
         getTipoCambio()
         getFormatosImpresion()
         getUltimoFolioRecoleccion();
+        getAllClientes()
     }, []);
     //setea todos los datos del remitente seleccionado
     function handleSelectRemitente(newValue) {
@@ -515,6 +519,7 @@ function Recoleccion() {
             m_nMoneda: state.moneda,
             m_rTipoCambio: state.tipoCambio,
             m_nIdTipoDeCobro: state.tipoCobro,
+            m_nIdCliente: state.clientePaga.m_nIdCliente,
 
             //Remitente
             m_sNombreRemitente: state.nombreRemitente.m_sNombre,
@@ -973,6 +978,7 @@ function Recoleccion() {
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
+                clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
 
                 //Remitente
                 nombreRemitente: remitente,
@@ -1130,6 +1136,13 @@ function Recoleccion() {
         $('#Cancelar').addClass('in show');
     }
 
+    const handlePatrocinadorSelected = (newValue) => {
+        setState({
+            ...state,
+            clientePaga: newValue
+        })
+    }
+
     //Limpia todos los inputs
     const limpiarInputsAgregar = () => {
         setState(state => {
@@ -1145,6 +1158,7 @@ function Recoleccion() {
                 moneda: 1,
                 tipoCambio: '',
                 tipoCobro: '',
+                clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
 
                 //Remitente
                 nombreRemitente: {m_sNombre: "Nombre", m_sAlias: "Alias"},
@@ -1580,6 +1594,12 @@ function Recoleccion() {
             console.log('Recolecciones listado',respuesta.data);
             setData(respuesta.data);
         });
+    }
+
+    const getAllClientes = () =>{
+        obtenerCliente().then((respuesta) => {
+            setDataClientes(respuesta.data)
+        })
     }
 
     function getAllEmbalajes() {
@@ -3369,6 +3389,37 @@ function Recoleccion() {
                                         <div className="col-md-7" >
                                             <div className="widget-wrap" id="remitenteDestinatario">
                                                 <div className="row">
+                                                    <div className="col-md-12">
+                                                        <div className="col-sm-12 col-md-12 unit">
+                                                            <div className="input">
+                                                                <Autocomplete
+                                                                    value={state.clientePaga}
+                                                                    freeSolo
+                                                                    onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
+                                                                    id="clientePaga"
+                                                                    disableClearable
+                                                                    forcePopupIcon={false}
+                                                                    options={dataClientes}
+                                                                    disabled={state.agregar === "Consultar"}
+                                                                    getOptionLabel={(option) => `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`}
+                                                                    variant="outlined"
+                                                                    name={"clientePaga"}
+                                                                    style={{
+                                                                        transform: "translate(14px, 10px) scale(1) !important"
+                                                                    }}
+                                                                    renderInput={(params) =>
+                                                                        <TextField
+                                                                            variant="outlined"
+                                                                            label="Responsable de pago"
+                                                                            margin="dense"
+                                                                            required
+                                                                            {...params}
+                                                                        />
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div className="col-md-6">
                                                         <div className="widget-header">
                                                             <h2>Remitente</h2>
