@@ -124,7 +124,7 @@ class Zonas extends Component {
       "m_sDescripcion": data.descripcion,
       "m_nIdSucursal": data.sucursal,
       "m_cyCostoRecolectar": data.costoRecolectar,
-      "m_cyCostoEntregar": data.costoEntregar,
+      "m_cyCostoEntrega": data.costoEntregar,
 
       "m_nCreadoPor": localStorage.getItem("UsuarioId"),
       "m_nModificadoPor": localStorage.getItem("UsuarioId"),
