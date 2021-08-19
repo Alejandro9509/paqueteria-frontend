@@ -190,6 +190,7 @@ function Embarque(props) {
         telefonoRemitente: '',
         contactoRemitente: '',
         ciudadOrigen: '',
+        zonaRemitente: {},
 
         //Destinatario
         nombreDestinatario: '',
@@ -201,6 +202,7 @@ function Embarque(props) {
         telefonoDestinatario: '',
         contactoDestinatario: '',
         ciudadDestino: '',
+        zonaDestinatario: {},
 
         //Entrega
         entregaEnSucursal: false,
@@ -600,6 +602,7 @@ function Embarque(props) {
             m_sTelefonoRemitente: state.telefonoRemitente,
             m_sContactoRemitente: state.contactoRemitente,
             m_nIdCiudadOrigen: state.ciudadOrigen.m_nIdCiudad,
+            m_nIdZonaRemitente: state.zonaRemitente.m_nIdZona,
 
             m_sNombreDestinatario: state.nombreDestinatario.m_sNombre,
             m_sRFCDestinatario: state.RFCDestinatario,
@@ -610,6 +613,7 @@ function Embarque(props) {
             m_sTelefonoDestinatario: state.telefonoDestinatario,
             m_sContactoDestinatario: state.contactoDestinatario,
             m_nIdCiudadDestino: state.ciudadDestino.m_nIdCiudad,
+            m_nIdZonaDestinatario: state.zonaDestinatario.m_nIdZona,
 
             m_nNoPaquetes: state.paquetes.length,
             m_nNoSobres: state.sobres.length,
@@ -1013,6 +1017,7 @@ function Embarque(props) {
                 telefonoRemitente: '',
                 contactoRemitente: '',
                 ciudadOrigen: '',
+                zonaRemitente: {},
 
                 //Destinatario
                 nombreDestinatario: '',
@@ -1024,6 +1029,7 @@ function Embarque(props) {
                 telefonoDestinatario: '',
                 contactoDestinatario: '',
                 ciudadDestino: '',
+                zonaDestinatario: {},
 
                 //Entrega
                 entregaEnSucursal: false,
@@ -1172,6 +1178,8 @@ function Embarque(props) {
 
                 ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                 ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
+                zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
+                zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
 
                 //fecha entrega?
                 /*fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,*/
@@ -1262,6 +1270,7 @@ function Embarque(props) {
                 telefonoRemitente: '',
                 contactoRemitente: '',*/
                 ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+                zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
 
                 //Destinatario
                 /*nombreDestinatario: '',
@@ -1273,6 +1282,7 @@ function Embarque(props) {
                 telefonoDestinatario: '',
                 contactoDestinatario: '',*/
                 ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
+                zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
 
                 //Entrega
                 entregaEnSucursal: false,
@@ -1433,6 +1443,20 @@ function Embarque(props) {
         });
         console.log(id);
         console.log(state.identificadorModal);
+    }
+
+    const handleZonaRemitenteSelected = (newValue) => {
+        setState({
+            ...state,
+            zonaRemitente: newValue,
+        })
+    }
+
+    const handleZonaDestinatarioSelected = (newValue) => {
+        setState({
+            ...state,
+            zonaDestinatario: newValue
+        })
     }
 
     function getAllZonas() {
@@ -3806,22 +3830,35 @@ function Embarque(props) {
                                                                         </div>
                                                                     </div>
 
-                                                                    <div className="col-sm-12 col-md-12  unit">
-                                                                        <label className="checkbox">
-                                                                            Entrega en Sucursal
-                                                                            <input
-                                                                                onChange={handleEntregaEnSucursalCheckbox}
-                                                                                className="form-control"
-                                                                                type="checkbox"
-                                                                                checked={state.entregaEnSucursal}
-                                                                                style={{ height: "20px" }}
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <div className="input">
+                                                                            <Autocomplete
+                                                                                value={state.zonaRemitente}
+                                                                                freeSolo
+                                                                                onChange={(event, newValue) => handleZonaRemitenteSelected(newValue)}
+                                                                                id="zonaRemitente"
+                                                                                disableClearable
+                                                                                forcePopupIcon={false}
+                                                                                options={dataZona.filter((z) => z.m_nIdSucursal == state.idSucursalAgregar)}
                                                                                 disabled={state.agregar === "Consultar"}
-                                                                                id="entregaEnSucursal"
+                                                                                getOptionLabel={(option) => option.m_sDescripcion}
+                                                                                variant="outlined"
+                                                                                name={"zonaRemitente"}
+                                                                                style={{
+                                                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                                                }}
+                                                                                renderInput={(params) =>
+                                                                                    <TextField
+                                                                                        variant="outlined"
+                                                                                        label="Zona"
+                                                                                        margin="dense"
+                                                                                        required
+                                                                                        {...params}
+                                                                                    />
+                                                                                }
                                                                             />
-                                                                            <i />
-                                                                        </label>
+                                                                        </div>
                                                                     </div>
-
 
                                                                 </div>
                                                             </div>
@@ -4267,6 +4304,52 @@ function Embarque(props) {
                                                                             )}
                                                                         />
                                                                     </div>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="input">
+                                                                        <Autocomplete
+                                                                            value={state.zonaDestinatario}
+                                                                            freeSolo
+                                                                            onChange={(event, newValue) => handleZonaDestinatarioSelected(newValue)}
+                                                                            id="zonaDestinatario"
+                                                                            disableClearable
+                                                                            forcePopupIcon={false}
+                                                                            options={dataZona}
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            getOptionLabel={(option) => option.m_sDescripcion}
+                                                                            variant="outlined"
+                                                                            name={"zonaDestinatario"}
+                                                                            style={{
+                                                                                transform: "translate(14px, 10px) scale(1) !important"
+                                                                            }}
+                                                                            renderInput={(params) =>
+                                                                                <TextField
+                                                                                    variant="outlined"
+                                                                                    label="Zona"
+                                                                                    margin="dense"
+                                                                                    required
+                                                                                    {...params}
+                                                                                />
+                                                                            }
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12  unit">
+                                                                    <label className="checkbox">
+                                                                        Entrega en Sucursal
+                                                                        <input
+                                                                            onChange={handleEntregaEnSucursalCheckbox}
+                                                                            className="form-control"
+                                                                            type="checkbox"
+                                                                            checked={state.entregaEnSucursal}
+                                                                            style={{ height: "20px" }}
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            id="entregaEnSucursal"
+                                                                        />
+                                                                        <i />
+                                                                    </label>
                                                                 </div>
 
                                                                 <div className="col-sm-12 col-md-12  unit">
