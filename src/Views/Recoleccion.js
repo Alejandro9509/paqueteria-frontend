@@ -549,7 +549,7 @@ function Recoleccion() {
             m_sDomicilioDetalleRecoleccion: '',
             m_sRecogerEnDetalleRecoleccion: '',
             m_sDatosAdicionalesDetalleRecoleccion: '',
-            //state.diferenteRecoleccion
+            m_bRecoleccionDiferenteDomicilio: false,
 
             //Entrega
             m_nIdCPDetalleEntrega: state.codigoPostalDestinatario.m_nIdCP,
@@ -558,7 +558,7 @@ function Recoleccion() {
             m_sDomicilioDetalleEntrega: '',
             m_sEntregarEnDetalleEntrega: '',
             m_sDatosAdicionalesDetalleEntrega: '',
-            //state.diferenteEntrega
+            m_bEntregaDiferenteDomicilio: false,
 
             //Detalles de la operación
             m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
@@ -584,10 +584,11 @@ function Recoleccion() {
             params.m_sDomicilioDetalleRecoleccion = state.domicilioRecoleccion
             params.m_sRecogerEnDetalleRecoleccion = state.recogerEn
             params.m_sDatosAdicionalesDetalleRecoleccion = state.datosAdicionalesRecoleccion
-            //state.diferenteRecoleccion
+            params.m_bRecoleccionDiferenteDomicilio = state.diferenteRecoleccion
         }
 
         if (state.diferenteEntrega){
+            params.m_bEntregaDiferenteDomicilio = state.diferenteEntrega
             params.m_nIdCPDetalleEntrega = state.codigoPostalEntrega.m_nIdCP
             params.m_nIdCiudadDetalleEntrega = state.ciudadEntrega
             params.m_nIdZonaDetalleEntrega = state.zonaEntrega
@@ -689,7 +690,7 @@ function Recoleccion() {
         console.log(params)
         console.log(JSON.stringify(params))
         if (state.idRecoleccion != 0) {
-            /*modificarRecoleccion(state.idRecoleccion, params)
+            modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllData();
@@ -702,9 +703,9 @@ function Recoleccion() {
                 .catch((err) => {
                     console.log(err);
                     showSuccess("err");
-                });*/
+                });
         } else {
-            /*agregarRecoleccion(params)
+            agregarRecoleccion(params)
                 .then((respuesta) => {
                     console.log(respuesta.data);
                     showSuccess(respuesta.data);
@@ -718,7 +719,7 @@ function Recoleccion() {
                 .catch((err) => {
                     console.log(err);
                     showSuccess(err);
-                });*/
+                });
         }
 
 
@@ -976,7 +977,7 @@ function Recoleccion() {
                 sobres: respuesta.data.m_parrSobres, // agregar variable de tipo
 
                 //Entrega
-                diferenteEntrega: true,
+                diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
                 ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
                 zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
                 domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
@@ -984,7 +985,7 @@ function Recoleccion() {
                 datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
 
                 //Recoleccion
-                diferenteRecoleccion: true,
+                diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio,
                 fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
                 ciudadRecoleccion: respuesta.data.m_nIdCiudadDetalleRecoleccion,
                 zonaRecoleccion: respuesta.data.m_nIdZonaDetalleRecoleccion,
