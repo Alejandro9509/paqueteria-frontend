@@ -353,6 +353,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Viajes/SalidaParadas.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/Viajes/TablaUnidadViajes.js">
           <value>
             <set />
@@ -564,6 +569,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../Web/Cetys/sw-cetys-cercana-web/src/util/Contexts/TicketContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/TIBU/sw-tibu-frontend/.env">
           <value>
             <set />
           </value>
