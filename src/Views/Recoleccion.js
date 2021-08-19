@@ -1117,7 +1117,7 @@ function Recoleccion() {
                 tipoCobro: '',
 
                 //Remitente
-                nombreRemitente: '',
+                nombreRemitente: {m_sNombre: "Nombre", m_sAlias: "Alias"},
                 RFCRemitente: '',
                 domicilioRemitente: '',
                 ciudadRemitente: '',
@@ -1129,7 +1129,7 @@ function Recoleccion() {
                 zonaRemitente: {},
 
                 //Destinatario
-                nombreDestinatario: '',
+                nombreDestinatario: {m_sNombre: "Nombre", m_sAlias: "Alias"},
                 RFCDestinatario: '',
                 domicilioDestinatario: '',
                 ciudadDestinatario: '',
