@@ -182,6 +182,7 @@ function Recoleccion() {
         telefonoRemitente: '',
         contactoRemitente: '',
         origenRemitente: '',
+        zonaRemitente: {},
 
     //Destinatario
         nombreDestinatario: '',
@@ -193,6 +194,7 @@ function Recoleccion() {
         telefonoDestinatario: '',
         contactoDestinatario: '',
         destinoDestinatario: '',
+        zonaDestinatario: {},
 
     //Paquetes/Sobres
         countPaquetes: 1,
@@ -524,6 +526,7 @@ function Recoleccion() {
             m_sTelefonoRemitente: state.telefonoRemitente,
             m_sContactoRemitente: state.contactoRemitente,
             m_nIdCiudadOrigen: state.origenRemitente.m_nIdCiudad,
+            m_nIdZonaRemitente: state.zonaRemitente.m_nIdZona,
 
             //Destinatario
             m_sNombreDestinatario: state.nombreDestinatario.m_sNombre,
@@ -535,6 +538,7 @@ function Recoleccion() {
             m_sTelefonoDestinatario: state.telefonoDestinatario,
             m_sContactoDestinatario: state.contactoDestinatario,
             m_nIdCiudadDestino: state.destinoDestinatario.m_nIdCiudad,
+            m_nIdZonaDestinatario: state.zonaDestinatario.m_nIdZona,
 
             //Recoleccion
             m_dFechaDetalleRecoleccion: '',
@@ -592,7 +596,7 @@ function Recoleccion() {
             params.m_sDatosAdicionalesDetalleEntrega = state.datosAdicionalesEntrega
         }
 
-        const infoGeneral = {
+        /*const infoGeneral = {
             m_nIdRecoleccion: state.idRecoleccion,
             m_nIdSucursal: state.idSucursalAgregar,
             m_nIdEstatusRecoleccion: state.estatusRecoleccion,
@@ -680,12 +684,12 @@ function Recoleccion() {
             m_nModificadoPor: state.ModificadoPor
         }
         console.log('otros datos:')
-        console.log(otrosDatos)
+        console.log(otrosDatos)*/
 
         console.log(params)
         console.log(JSON.stringify(params))
         if (state.idRecoleccion != 0) {
-            modificarRecoleccion(state.idRecoleccion, params)
+            /*modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     getAllData();
@@ -698,9 +702,9 @@ function Recoleccion() {
                 .catch((err) => {
                     console.log(err);
                     showSuccess("err");
-                });
+                });*/
         } else {
-            agregarRecoleccion(params)
+            /*agregarRecoleccion(params)
                 .then((respuesta) => {
                     console.log(respuesta.data);
                     showSuccess(respuesta.data);
@@ -714,7 +718,7 @@ function Recoleccion() {
                 .catch((err) => {
                     console.log(err);
                     showSuccess(err);
-                });
+                });*/
         }
 
 
@@ -958,8 +962,10 @@ function Recoleccion() {
 
                 //Remitente
                 origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+                zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
                 //Destinatario
                 destinoDestinatario: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
+                zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
 
                 //Paquetes/Sobres
                 countPaquetes: respuesta.data.m_parrPaquetes.length,
@@ -1119,6 +1125,7 @@ function Recoleccion() {
                 telefonoRemitente: '',
                 contactoRemitente: '',
                 origenRemitente: '',
+                zonaRemitente: {},
 
                 //Destinatario
                 nombreDestinatario: '',
@@ -1130,6 +1137,7 @@ function Recoleccion() {
                 telefonoDestinatario: '',
                 contactoDestinatario: '',
                 destinoDestinatario: '',
+                zonaDestinatario: {},
 
                 //Paquetes/Sobres
                 countPaquetes: 1,
@@ -2512,6 +2520,20 @@ function Recoleccion() {
         }
     }
 
+    const handleZonaRemitenteSelected = (newValue) => {
+        setState({
+            ...state,
+            zonaRemitente: newValue
+        })
+    }
+
+    const handleZonaDestinatarioSelected = (newValue) => {
+        setState({
+            ...state,
+            zonaDestinatario: newValue
+        })
+    }
+
     return (
         <div >
             <Dialog open={state.openDialog} onClose={() => setState({ ...state, openDialog: false })} fullWidth maxWidth="md">
@@ -3681,6 +3703,35 @@ function Recoleccion() {
                                                                             />
                                                                         </div>
                                                                     </div>
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <div className="input">
+                                                                            <Autocomplete
+                                                                                value={state.zonaRemitente}
+                                                                                freeSolo
+                                                                                onChange={(event, newValue) => handleZonaRemitenteSelected(newValue)}
+                                                                                id="zonaRemitente"
+                                                                                disableClearable
+                                                                                forcePopupIcon={false}
+                                                                                options={dataZona.filter((z) => z.m_nIdSucursal == state.idSucursalAgregar)}
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                getOptionLabel={(option) => option.m_sDescripcion}
+                                                                                variant="outlined"
+                                                                                name={"zonaRemitente"}
+                                                                                style={{
+                                                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                                                }}
+                                                                                renderInput={(params) =>
+                                                                                    <TextField
+                                                                                        variant="outlined"
+                                                                                        label="Zona"
+                                                                                        margin="dense"
+                                                                                        required
+                                                                                        {...params}
+                                                                                    />
+                                                                                }
+                                                                            />
+                                                                        </div>
+                                                                    </div>
                                                                     {/* --------------------------------------- RecoleccionDD ------------------------------------------------- */}
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <label className="checkbox">
@@ -4059,6 +4110,36 @@ function Recoleccion() {
                                                                                     />
                                                                                 </div>
                                                                             )}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="input">
+                                                                        <Autocomplete
+                                                                            value={state.zonaDestinatario}
+                                                                            freeSolo
+                                                                            onChange={(event, newValue) => handleZonaDestinatarioSelected(newValue)}
+                                                                            id="zonaDestinatario"
+                                                                            disableClearable
+                                                                            forcePopupIcon={false}
+                                                                            options={dataZona}
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            getOptionLabel={(option) => option.m_sDescripcion}
+                                                                            variant="outlined"
+                                                                            name={"zonaDestinatario"}
+                                                                            style={{
+                                                                                transform: "translate(14px, 10px) scale(1) !important"
+                                                                            }}
+                                                                            renderInput={(params) =>
+                                                                                <TextField
+                                                                                    variant="outlined"
+                                                                                    label="Zona"
+                                                                                    margin="dense"
+                                                                                    required
+                                                                                    {...params}
+                                                                                />
+                                                                            }
                                                                         />
                                                                     </div>
                                                                 </div>
