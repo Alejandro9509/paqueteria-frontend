@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Correccion de bugs en Clientes">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Cambio en la forma de seatear datos en recoleccion y embarque">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -514,7 +515,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ajustes en embarque al mostrar informacion para modificar" />
     <MESSAGE value="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita" />
     <MESSAGE value="Ajustes al crear guia a partir de embarque" />
     <MESSAGE value="Se recuperan las opciones de impuestos de los servicios en sucursales" />
@@ -539,7 +539,8 @@
     <MESSAGE value="Se corrigio espacio al presionar consultar o editar en guias" />
     <MESSAGE value="Se corrigio conceptos" />
     <MESSAGE value="Se calculo de iva conceptos" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se calculo de iva conceptos" />
+    <MESSAGE value="*Cambio en la forma de seatear datos en recoleccion y embarque" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Cambio en la forma de seatear datos en recoleccion y embarque" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
