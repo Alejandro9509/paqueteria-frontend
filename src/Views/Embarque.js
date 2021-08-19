@@ -639,6 +639,7 @@ function Embarque(props) {
             DatosAdicionales: '',
             m_tFechaDetalleEntrega: '',
             m_tHoraDetalleEntrega: '',
+            EntregarMismoDomicilio: true
 
         }
 
@@ -647,6 +648,7 @@ function Embarque(props) {
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
         }
         if (state.diferenteEntrega){
+            params.EntregarMismoDomicilio = false
             params.IdCiudadEntrega = state.ciudadEntrega
             params.CodigoPostalEntrega = state.codigoPostalEntrega.m_nIdCP
             params.IdZonaEntrega = state.zonaEntrega
@@ -1211,8 +1213,7 @@ function Embarque(props) {
             }
         });
 
-        //si el cp de entrega es igual al de destinatario significa que no es entrega en diferente domicilio
-        if (respuesta.data.m_nIdCPDetalleEntrega != respuesta.data.m_sIdCodigoPostalDestinatario){
+        if (respuesta.data.m_bEntregaDiferenteDomicilio){
             obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then(cp => {
                 setState(state => {
                     return{
