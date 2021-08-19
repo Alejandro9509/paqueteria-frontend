@@ -60,6 +60,7 @@ import { obtenerEstatusEmbarque } from "../Util/Contexts/EstatusContext";
 import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import { imprimirFormatosId, obtenerFormatosImpresion } from "../Util/Contexts/FormatosImpresionContext";
+import {obtenerCliente} from "../Util/Contexts/ClientesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -179,6 +180,7 @@ function Embarque(props) {
         moneda: '',
         tipoCambio: '',
         tipoCobro: '',
+        clientePaga: {},
 
         //Remitente
         nombreRemitente: '',
@@ -251,6 +253,7 @@ function Embarque(props) {
         height: window.innerHeight,
 
     });
+    const [dataClientes, setDataClientes] = useState([])
     const [stepActive, setStepActive] = React.useState(1);
     const [Modal, open, close, isOpen] = useModal("root", {
         preventScroll: true,
@@ -592,6 +595,7 @@ function Embarque(props) {
             m_nIdTIpoCobro: state.tipoCobro,
             m_dFecha: state.fechaHoraCreacion.split("T")[0],
             m_tHora: state.fechaHoraCreacion.split("T")[1],
+            m_nIdCliente: state.clientePaga.m_nIdCliente,
 
             m_sNOmbreRemitente: state.nombreRemitente.m_sNombre,
             m_sRFCRemitente: state.RFCRemitente,
@@ -944,7 +948,7 @@ function Embarque(props) {
                 }
             }
         },
-        [dataRemitenteDestinatario, dataCiudad, dataOperador, dataTipoUnidad,]
+        [dataRemitenteDestinatario, dataCiudad, dataOperador, dataTipoUnidad,dataClientes]
     );
 
     function handleShowCancelar() {
@@ -1006,6 +1010,7 @@ function Embarque(props) {
                 moneda: '',
                 tipoCambio: '',
                 tipoCobro: '',
+                clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
 
                 //Remitente
                 nombreRemitente: '',
@@ -1175,6 +1180,7 @@ function Embarque(props) {
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
+                clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
 
                 ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                 ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
@@ -1259,6 +1265,7 @@ function Embarque(props) {
                 moneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 tipoCobro: respuesta.data.m_nIdTIpoCobro,
+                clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
 
                 //Remitente
                 /*nombreRemitente: '',
@@ -1459,12 +1466,26 @@ function Embarque(props) {
         })
     }
 
+    const handlePatrocinadorSelected = (newValue) => {
+        setState({
+            ...state,
+            clientePaga: newValue
+        })
+    }
+
     function getAllZonas() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
             setDataZona(respuesta.data);
         });
     }
+
+    const getAllClientes = () =>{
+        obtenerCliente().then((respuesta) => {
+            setDataClientes(respuesta.data)
+        })
+    }
+
 
     const handleChangeZonaEntrega = (event) => {
         event.preventDefault();
@@ -1489,6 +1510,7 @@ function Embarque(props) {
         getUltimoFolioEmbarque();
         getTipoCambio()
         getFormatosImpresion()
+        getAllClientes()
     }
 
     async function getAllEmbarque() {
@@ -3392,6 +3414,37 @@ function Embarque(props) {
                                         <div className="col-md-7">
                                             <div className="widget-wrap" id="remitenteDestinatario">
                                                 <div className="row">
+                                                    <div className="col-md-12">
+                                                        <div className="col-sm-12 col-md-12 unit">
+                                                            <div className="input">
+                                                                <Autocomplete
+                                                                    value={state.clientePaga}
+                                                                    freeSolo
+                                                                    onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
+                                                                    id="clientePaga"
+                                                                    disableClearable
+                                                                    forcePopupIcon={false}
+                                                                    options={dataClientes}
+                                                                    disabled={state.agregar === "Consultar"}
+                                                                    getOptionLabel={(option) => `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`}
+                                                                    variant="outlined"
+                                                                    name={"clientePaga"}
+                                                                    style={{
+                                                                        transform: "translate(14px, 10px) scale(1) !important"
+                                                                    }}
+                                                                    renderInput={(params) =>
+                                                                        <TextField
+                                                                            variant="outlined"
+                                                                            label="Responsable de pago"
+                                                                            margin="dense"
+                                                                            required
+                                                                            {...params}
+                                                                        />
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div className="col-md-6">
                                                         <div className="widget-header">
                                                             <h2>Remitente</h2>
