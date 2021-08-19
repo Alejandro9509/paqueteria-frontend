@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se corrigio conceptos">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se calculo de iva conceptos">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -430,7 +430,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629386868915</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="Se calculo de iva conceptos">
+      <created>1629387190042</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1629387190042</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -507,7 +514,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ajustes en embarque al agregar uno nuevo:&#10;*Campo moneda se modifica correctamente.&#10;*los sobres se agregan al listado de paquetes y se mandan a la base de datos." />
     <MESSAGE value="Ajustes en embarque al mostrar informacion para modificar" />
     <MESSAGE value="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita" />
     <MESSAGE value="Ajustes al crear guia a partir de embarque" />
@@ -532,15 +538,16 @@
     <MESSAGE value="Correccion al agregar embarque" />
     <MESSAGE value="Se corrigio espacio al presionar consultar o editar en guias" />
     <MESSAGE value="Se corrigio conceptos" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se corrigio conceptos" />
+    <MESSAGE value="Se calculo de iva conceptos" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se calculo de iva conceptos" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629386868715">
+    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629387189859">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629307017515" />
     <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629308522278" />
-    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629386868715" />
+    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629387189859" />
     <state x="144" y="76" width="1152" height="720" key="DiffContextDialog" timestamp="1629314045360">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -575,12 +582,12 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="426" y="164" key="RollbackChangesDialog/0.0.1440.900@0.0.1440.900" timestamp="1629301934246" />
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629386874835">
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629387882555">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629307024805" />
     <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629308535607" />
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629386874835" />
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629387882555" />
     <state x="506" y="371" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1629301998689">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
