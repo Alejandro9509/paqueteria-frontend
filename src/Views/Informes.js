@@ -570,7 +570,7 @@ function Informes({history}) {
             TotalUnidadCompleta: 0,
             TotalGeneral: 0,
             m_nCreadoPor: state.CreadoPor,
-            m_arrClsProInformeGuia: dataGuias,
+            m_arrClsProInformeGuia: dataGuias.filter(g => g.select),
         };
 
         if (state.IdInforme != 0) {

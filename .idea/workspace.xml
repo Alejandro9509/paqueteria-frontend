@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se corrigio el filio del embarque al editar">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se corrigio boton de agregar guias">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -451,7 +450,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629472642299</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="Se corrigio boton de agregar guias">
+      <created>1629472917226</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1629472917226</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -528,7 +534,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se recuperan las opciones de impuestos de los servicios en sucursales" />
     <MESSAGE value="Ajustes para registrar embarque cuando es entrega en domicilio" />
     <MESSAGE value="Se recupera dato Tipo de servicio al modificar/ consultar una guia" />
     <MESSAGE value="Se obtiene el codigo postal del remitente y destinatario" />
@@ -553,17 +558,26 @@
     <MESSAGE value="*Cambio en la forma de seatear datos en recoleccion y embarque" />
     <MESSAGE value="Se corrigio al momento de consultar y editar guia" />
     <MESSAGE value="Se corrigio el filio del embarque al editar" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se corrigio el filio del embarque al editar" />
+    <MESSAGE value="Se corrigio boton de agregar guias" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se corrigio boton de agregar guias" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629472642110">
+    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629472917046">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629472642110" />
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629472142586">
+    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629472917046" />
+    <state x="144" y="76" key="DiffContextDialog" timestamp="1629476207161">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629472142586" />
+    <state x="144" y="76" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1629476207161" />
+    <state x="427" y="176" key="RollbackChangesDialog" timestamp="1629476209899">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="427" y="176" key="RollbackChangesDialog/0.0.1440.900@0.0.1440.900" timestamp="1629476209899" />
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629472923564">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629472923564" />
     <state x="366" y="245" key="git4idea.merge.GitPullDialog" timestamp="1629470576411">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
