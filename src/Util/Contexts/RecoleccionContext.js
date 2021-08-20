@@ -25,7 +25,7 @@ function agregarRecoleccion(params) {
 }
 
 function cancelarRecoleccion(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Agregar`;
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Cancelar/${id}`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })

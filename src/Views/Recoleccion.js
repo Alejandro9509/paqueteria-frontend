@@ -781,9 +781,10 @@ function Recoleccion() {
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
             "fechaCancelacion": state.fechaCancelacion
         }
+        JSON.stringify(params)
         cancelarRecoleccion(state.idRecoleccion, params).then((respuesta) => {
             showSuccess(respuesta.data)
-            setState({
+            /*setState({
                 ...state,
                 idRecoleccion: 0,
                 folioRecoleccion:'',
@@ -791,8 +792,11 @@ function Recoleccion() {
                 mostrarFechaCancelacion: '',
                 estatusRecoleccion: '',
                 motivoCancelacion: '',
-            })
-        })
+            })*/
+        }).catch((err) => {
+            console.log(err);
+            showSuccess(err);
+        });
     }
 
     const changeHandler = (event) => {
@@ -1056,7 +1060,7 @@ function Recoleccion() {
                 datosAdicionalesRecoleccion: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
 
                 //Operador
-                operador: dataOperador.find((o) => o.m_nIdOperador == respuesta.data.m_nIdOperador),
+                operador: respuesta.data.m_nIdOperador > 0 ? dataOperador.find((o) => o.m_nIdOperador == respuesta.data.m_nIdOperador) : respuesta.data.m_nIdOperador ,
                 fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida.slice(0, 5),
                 fechaHoraLlegada: respuesta.data.m_dFechaLlegada + "T" + respuesta.data.m_tHoraLlegada.slice(0, 5),
 
