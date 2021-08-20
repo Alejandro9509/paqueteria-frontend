@@ -69,6 +69,7 @@ import { obtenerTipoCambio } from "../Util/Contexts/TipoCambioContext";
 import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
 import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { obtenerFormatosImpresion, imprimirFormatosId } from "../Util/Contexts/FormatosImpresionContext";
+import {obtenerCliente} from "../Util/Contexts/ClientesContext";
 
 let timer;
 
@@ -127,6 +128,7 @@ function Recoleccion() {
     const [dataCodigosPostalesRecoleccion, setDataCodigosPostalesRecoleccion] = React.useState([]);
     const [dataCodigosPostalesEntrega, setDataCodigosPostalesEntrega] = React.useState([]);
 
+    const [dataClientes, setDataClientes] = useState([])
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario] = React.useState([]);
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
     const [dataOperador, setDataOperador] = React.useState([]);
@@ -171,8 +173,11 @@ function Recoleccion() {
         moneda: '',
         tipoCambio: '',
         tipoCobro: '',
+        clientePaga: {},
 
     //Remitente
+        idRemitente: '',
+        aliasRemitente: '',
         nombreRemitente: '',
         RFCRemitente: '',
         domicilioRemitente: '',
@@ -185,6 +190,8 @@ function Recoleccion() {
         zonaRemitente: {},
 
     //Destinatario
+        idDestinatario: '',
+        aliasDestinatario: '',
         nombreDestinatario: '',
         RFCDestinatario: '',
         domicilioDestinatario: '',
@@ -450,6 +457,7 @@ function Recoleccion() {
         getTipoCambio()
         getFormatosImpresion()
         getUltimoFolioRecoleccion();
+        getAllClientes()
     }, []);
     //setea todos los datos del remitente seleccionado
     function handleSelectRemitente(newValue) {
@@ -457,6 +465,8 @@ function Recoleccion() {
             setState(state => {
                 return {
                 ...state,
+                    idRemitente: newValue.m_nIdRemitenteDestinatario,
+                    aliasRemitente: newValue.m_sAlias,
                     nombreRemitente: newValue,
                     RFCRemitente: newValue.m_sRFC,
                     domicilioRemitente: newValue.m_sDomicilio,
@@ -481,6 +491,8 @@ function Recoleccion() {
             setState(state => {
                 return {
                 ...state,
+                    idDestinatario: newValue.m_nIdRemitenteDestinatario,
+                    aliasDestinatario: newValue.m_sAlias,
                     nombreDestinatario: newValue,
                     RFCDestinatario: newValue.m_sRFC,
                     domicilioDestinatario: newValue.m_sDomicilio,
@@ -515,6 +527,7 @@ function Recoleccion() {
             m_nMoneda: state.moneda,
             m_rTipoCambio: state.tipoCambio,
             m_nIdTipoDeCobro: state.tipoCobro,
+            m_nIdCliente: state.clientePaga.m_nIdCliente,
 
             //Remitente
             m_sNombreRemitente: state.nombreRemitente.m_sNombre,
@@ -527,6 +540,8 @@ function Recoleccion() {
             m_sContactoRemitente: state.contactoRemitente,
             m_nIdCiudadOrigen: state.origenRemitente.m_nIdCiudad,
             m_nIdZonaRemitente: state.zonaRemitente.m_nIdZona,
+            m_nIdRemitente: state.idRemitente,
+            m_sAliasRemitente: state.aliasRemitente,
 
             //Destinatario
             m_sNombreDestinatario: state.nombreDestinatario.m_sNombre,
@@ -539,6 +554,8 @@ function Recoleccion() {
             m_sContactoDestinatario: state.contactoDestinatario,
             m_nIdCiudadDestino: state.destinoDestinatario.m_nIdCiudad,
             m_nIdZonaDestinatario: state.zonaDestinatario.m_nIdZona,
+            m_nIdDestinatario: state.idDestinatario,
+            m_sAliasDestinatario: state.aliasDestinatario,
 
             //Recoleccion
             m_dFechaDetalleRecoleccion: '',
@@ -905,12 +922,35 @@ function Recoleccion() {
     }
 
     const setRecoleccionDataParaConsultaModificacion = (respuesta) => {
-        const remitente = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente)
-        handleSelectRemitente(remitente)
+        let remitente = {}
+        let destinatario = {}
+        if (respuesta.data.m_sAliasRemitente){
+            remitente = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasRemitente && o.m_sNombre == respuesta.data.m_sNombreRemitente)
+        }else{
+            remitente = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNombreRemitente)
+        }
+        if (respuesta.data.m_sAliasDestinatario){
+            destinatario = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
+        }else{
+            destinatario = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNombreDestinatario)
+        }
 
-        const destinatario = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario)
-        handleSelectDestinatario(destinatario)
-
+        obtenerCodigoPostalId(remitente.m_nIdCP).then((cp) => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalRemitente: cp.data
+                }
+            })
+        })
+        obtenerCodigoPostalId(destinatario.m_nIdCP).then((cp) => {
+            setState(state => {
+                return {
+                    ...state,
+                    codigoPostalDestinatario: cp.data
+                }
+            })
+        })
         obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleRecoleccion).then((cp) => {
             setState(state => {
                 return {
@@ -960,11 +1000,33 @@ function Recoleccion() {
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
+                clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
 
                 //Remitente
+                nombreRemitente: remitente,
+                RFCRemitente: respuesta.data.m_sRFCRemitente,
+                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+                ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
+                correoRemitente: respuesta.data.m_sCorreoRemitente,
+                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+                contactoRemitente: respuesta.data.m_sContactoRemitente,
+                idRemitente: respuesta.data.m_nIdRemitente,
+                aliasRemitente: respuesta.data.m_sAliasRemitente,
+
                 origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                 zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
+
                 //Destinatario
+                nombreDestinatario: destinatario,
+                RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+                ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
+                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+                idDestinatario: respuesta.data.m_nIdDestinatario,
+                aliasDestinatario: respuesta.data.m_sAliasDestinatario,
+
                 destinoDestinatario: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
                 zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
 
@@ -1050,6 +1112,7 @@ function Recoleccion() {
 
     const handleShowListado = (event) => {
         event.stopPropagation();
+        limpiarInputsAgregar()
         setState(state =>{
             return {
                 ...state,
@@ -1100,6 +1163,13 @@ function Recoleccion() {
         $('#Cancelar').addClass('in show');
     }
 
+    const handlePatrocinadorSelected = (newValue) => {
+        setState({
+            ...state,
+            clientePaga: newValue
+        })
+    }
+
     //Limpia todos los inputs
     const limpiarInputsAgregar = () => {
         setState(state => {
@@ -1115,9 +1185,10 @@ function Recoleccion() {
                 moneda: 1,
                 tipoCambio: '',
                 tipoCobro: '',
+                clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
 
                 //Remitente
-                nombreRemitente: '',
+                nombreRemitente: {m_sNombre: "Nombre", m_sAlias: "Alias"},
                 RFCRemitente: '',
                 domicilioRemitente: '',
                 ciudadRemitente: '',
@@ -1127,9 +1198,11 @@ function Recoleccion() {
                 contactoRemitente: '',
                 origenRemitente: '',
                 zonaRemitente: {},
+                idRemitente: '',
+                aliasRemitente: '',
 
                 //Destinatario
-                nombreDestinatario: '',
+                nombreDestinatario: {m_sNombre: "Nombre", m_sAlias: "Alias"},
                 RFCDestinatario: '',
                 domicilioDestinatario: '',
                 ciudadDestinatario: '',
@@ -1139,6 +1212,8 @@ function Recoleccion() {
                 contactoDestinatario: '',
                 destinoDestinatario: '',
                 zonaDestinatario: {},
+                idDestinatario: '',
+                aliasDestinatario: '',
 
                 //Paquetes/Sobres
                 countPaquetes: 1,
@@ -1550,6 +1625,12 @@ function Recoleccion() {
             console.log('Recolecciones listado',respuesta.data);
             setData(respuesta.data);
         });
+    }
+
+    const getAllClientes = () =>{
+        obtenerCliente().then((respuesta) => {
+            setDataClientes(respuesta.data)
+        })
     }
 
     function getAllEmbalajes() {
@@ -3339,6 +3420,37 @@ function Recoleccion() {
                                         <div className="col-md-7" >
                                             <div className="widget-wrap" id="remitenteDestinatario">
                                                 <div className="row">
+                                                    <div className="col-md-12">
+                                                        <div className="col-sm-12 col-md-12 unit">
+                                                            <div className="input">
+                                                                <Autocomplete
+                                                                    value={state.clientePaga}
+                                                                    freeSolo
+                                                                    onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
+                                                                    id="clientePaga"
+                                                                    disableClearable
+                                                                    forcePopupIcon={false}
+                                                                    options={dataClientes}
+                                                                    disabled={state.agregar === "Consultar"}
+                                                                    getOptionLabel={(option) => `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`}
+                                                                    variant="outlined"
+                                                                    name={"clientePaga"}
+                                                                    style={{
+                                                                        transform: "translate(14px, 10px) scale(1) !important"
+                                                                    }}
+                                                                    renderInput={(params) =>
+                                                                        <TextField
+                                                                            variant="outlined"
+                                                                            label="Responsable de pago"
+                                                                            margin="dense"
+                                                                            required
+                                                                            {...params}
+                                                                        />
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div className="col-md-6">
                                                         <div className="widget-header">
                                                             <h2>Remitente</h2>
