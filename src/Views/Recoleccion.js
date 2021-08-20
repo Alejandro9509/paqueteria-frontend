@@ -564,10 +564,10 @@ function Recoleccion() {
             m_sAliasDestinatario: state.aliasDestinatario,
 
             //Cita de recoleccion
-            recoleccionConCita: false,
-            fechaCita: '',
-            horaCitaMinima: '',
-            horaCitaMaxima: '',
+            m_bRecoleccionConCita: false,
+            m_sFechaCita: '',
+            m_sHoraCitaMinima: '',
+            m_sHoraCitaMaxima: '',
 
             //Recoleccion
             m_dFechaDetalleRecoleccion: '',
