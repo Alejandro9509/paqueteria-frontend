@@ -195,6 +195,10 @@ function Embarque(props) {
         contactoRemitente: '',
         ciudadOrigen: '',
         zonaRemitente: {},
+        calleRemitente: '',
+        numeroIntRemitente: '',
+        numeroExtRemitente: '',
+        coloniaRemitente: '',
 
         //Destinatario
         idDestinatario: '',
@@ -209,6 +213,10 @@ function Embarque(props) {
         contactoDestinatario: '',
         ciudadDestino: '',
         zonaDestinatario: {},
+        calleDestinatario: '',
+        numeroIntDestinatario: '',
+        numeroExtDestinatario: '',
+        coloniaDestinatario: '',
 
         //Entrega
         entregaEnSucursal: false,
@@ -617,6 +625,10 @@ function Embarque(props) {
             m_nIdZonaRemitente: state.zonaRemitente.m_nIdZona,
             m_nIdRemitente: state.idRemitente,
             m_sAliasRemitente: state.aliasRemitente,
+            m_sCalleRemitente: state.calleRemitente,
+            m_sNumeroIntRemitente: state.numeroIntRemitente,
+            m_sNumeroExtRemitente: state.numeroExtRemitente,
+            m_sColoniaRemitente: state.coloniaRemitente,
 
             m_sNombreDestinatario: state.nombreDestinatario.m_sNombre,
             m_sRFCDestinatario: state.RFCDestinatario,
@@ -630,6 +642,10 @@ function Embarque(props) {
             m_nIdZonaDestinatario: state.zonaDestinatario.m_nIdZona,
             m_nIdDestinatario: state.idDestinatario,
             m_sAliasDestinatario: state.aliasDestinatario,
+            m_sCalleDestinatario: state.calleDestinatario,
+            m_sNumeroIntDestinatario: state.numeroIntDestinatario,
+            m_sNumeroExtDestinatario: state.numeroExtDestinatario,
+            m_sColoniaDestinatario: state.coloniaDestinatario,
 
             m_nNoPaquetes: state.paquetes.length,
             m_nNoSobres: state.sobres.length,
@@ -753,7 +769,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        if (state.idEmbarque != 0) {
+        /*if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -782,7 +798,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
     };
 
     function handleSelectCP(id, cp) {
@@ -1041,6 +1057,10 @@ function Embarque(props) {
                 zonaRemitente: {},
                 idRemitente: '',
                 aliasRemitente: '',
+                calleRemitente: '',
+                numeroIntRemitente: '',
+                numeroExtRemitente: '',
+                coloniaRemitente: '',
 
                 //Destinatario
                 nombreDestinatario: {m_sNombre: "Nombre", m_sAlias: "Alias"},
@@ -1055,7 +1075,10 @@ function Embarque(props) {
                 zonaDestinatario: {},
                 idDestinatario: '',
                 aliasDestinatario: '',
-
+                calleDestinatario: '',
+                numeroIntDestinatario: '',
+                numeroExtDestinatario: '',
+                coloniaDestinatario: '',
 
                 //Entrega
                 entregaEnSucursal: false,
@@ -1241,6 +1264,10 @@ function Embarque(props) {
                 ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                 idRemitente: respuesta.data.m_nIdRemitente,
                 aliasRemitente: respuesta.data.m_sAliasRemitente,
+                calleRemitente: respuesta.data.m_sCalleRemitente,
+                numeroIntRemitente: respuesta.data.m_sNumeroIntRemitente,
+                numeroExtRemitente: respuesta.data.m_sNumeroExtRemitente,
+                coloniaRemitente: respuesta.data.m_sColoniaRemitente,
 
                 nombreDestinatario: destinatario,
                 RFCDestinatario: respuesta.data.m_sRFCDestinatario,
@@ -1251,6 +1278,10 @@ function Embarque(props) {
                 contactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 idDestinatario: respuesta.data.m_nIdDestinatario,
                 aliasDestinatario: respuesta.data.m_sAliasDestinatario,
+                calleDestinatario: respuesta.data.m_sCalleDestinatario,
+                numeroIntDestinatario: respuesta.data.m_sNumeroIntDestinatario,
+                numeroExtDestinatario: respuesta.data.m_sNumeroExtDestinatario,
+                coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
 
                 ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
                 zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
@@ -1387,6 +1418,10 @@ function Embarque(props) {
                 zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
                 idRemitente: respuesta.data.m_nIdRemitente,
                 aliasRemitente: respuesta.data.m_sAliasRemitente,
+                calleRemitente: respuesta.data.m_sCalleRemitente,
+                numeroIntRemitente: respuesta.data.m_sNumeroIntRemitente,
+                numeroExtRemitente: respuesta.data.m_sNumeroExtRemitente,
+                coloniaRemitente: respuesta.data.m_sColoniaRemitente,
 
                 //Destinatario
                 /*nombreDestinatario: '',
@@ -1408,6 +1443,10 @@ function Embarque(props) {
                 zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
                 idDestinatario: respuesta.data.m_nIdDestinatario,
                 aliasDestinatario: respuesta.data.m_sAliasDestinatario,
+                calleDestinatario: respuesta.data.m_sCalleDestinatario,
+                numeroIntDestinatario: respuesta.data.m_sNumeroIntDestinatario,
+                numeroExtDestinatario: respuesta.data.m_sNumeroExtDestinatario,
+                coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
 
                 //Entrega
                 entregaEnSucursal: false,
@@ -3683,6 +3722,69 @@ function Embarque(props) {
                                                                         </div>
                                                                     </div>
 
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       required
+                                                                                       label="Calle"
+                                                                                       value={state.calleRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       id="calleRemitente"
+                                                                                       name="calleRemitente"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       required
+                                                                                       label="Número interior"
+                                                                                       value={state.numeroIntRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       id="numeroIntRemitente"
+                                                                                       name="numeroIntRemitente"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       label="Número exterior"
+                                                                                       value={state.numeroExtRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       id="numeroExtRemitente"
+                                                                                       name="numeroExtRemitente"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       required
+                                                                                       label="Colonia"
+                                                                                       value={state.coloniaRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       id="coloniaRemitente"
+                                                                                       name="coloniaRemitente"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+
                                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                                                         {/*<div className="input">
                                                                             <Autocomplete
@@ -4160,6 +4262,69 @@ function Embarque(props) {
                                                                             value={state.domicilioDestinatario}
                                                                             disabled={state.agregar === "Consultar"}
                                                                             name="domicilioDestinatario"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   required
+                                                                                   label="Calle"
+                                                                                   value={state.calleDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="calleDestinatario"
+                                                                                   name="calleDestinatario"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   required
+                                                                                   label="Número interior"
+                                                                                   value={state.numeroIntDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="numeroIntDestinatario"
+                                                                                   name="numeroIntDestinatario"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Número exterior"
+                                                                                   value={state.numeroExtDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="numeroExtDestinatario"
+                                                                                   name="numeroExtDestinatario"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   required
+                                                                                   label="Colonia"
+                                                                                   value={state.coloniaDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="coloniaDestinatario"
+                                                                                   name="coloniaDestinatario"
                                                                         />
                                                                     </div>
                                                                 </div>
