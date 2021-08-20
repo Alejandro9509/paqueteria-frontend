@@ -626,12 +626,12 @@ function Recoleccion() {
             params.m_sDatosAdicionalesDetalleEntrega = state.datosAdicionalesEntrega
         }
 
-        /*if (state.recoleccionConCita){
+        if (state.recoleccionConCita){
             params.m_bRecoleccionConCita = state.recoleccionConCita
-            params.variable1 = state.fechaCita
-            params.variable2 = state.horaCitaMinima
-            params.variable3 = state.horaCitaMaxima
-        }*/
+            params.m_sFechaCita = state.fechaCita
+            params.m_sHoraCitaMinima = state.horaCitaMinima
+            params.m_sHoraCitaMaxima = state.horaCitaMaxima
+        }
 
         /*const infoGeneral = {
             m_nIdRecoleccion: state.idRecoleccion,
@@ -725,7 +725,7 @@ function Recoleccion() {
 
         console.log(params)
         console.log(JSON.stringify(params))
-        /*if (state.idRecoleccion != 0) {
+        if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -756,7 +756,7 @@ function Recoleccion() {
                     console.log(err);
                     showSuccess(err);
                 });
-        }*/
+        }
 
 
     };
@@ -1062,10 +1062,10 @@ function Recoleccion() {
                 sobres: respuesta.data.m_parrSobres,
 
                 //Cita de recoleccion
-                /*recoleccionConCita: false,
-                fechaCita: '',
-                horaCitaMinima: '',
-                horaCitaMaxima: '',*/
+                recoleccionConCita: respuesta.data.m_bRecoleccionConCita,
+                fechaCita: respuesta.data.m_sFechaCita,
+                horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
+                horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
 
                 //Entrega
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
