@@ -621,9 +621,9 @@ function Guia(props) {
         });
         limpiarCamposAgregar()
         $('.nav-tabs li ').removeClass('active');
-        $('.nav-tabs li').eq(0).addClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
-        $('#Listado').addClass('in show');
+        $('#Agregar').addClass('in show');
         //getImpresion(38);
     }
 
@@ -1077,7 +1077,7 @@ function Guia(props) {
             paquetesTemp.forEach((p) => {
                 pesoKg = pesoKg + p.peso * p.cdt
                 //xPesoVolumetrico += (clPaquete.m_xAlto * clPaquete.m_xLargo * clPaquete.m_xAncho)* 0.0005
-                pesoVolumetrico = (p.alto * p.ancho * p.largo) * 0.0005
+                pesoVolumetrico = (p.alto * p.ancho * p.largo) * p.cdt * 0.0005
             })
             if (pesoKg > pesoVolumetrico){
                 pesoTotal = pesoKg
@@ -2021,7 +2021,7 @@ function Guia(props) {
                 <div className="container-fluid">
                     {/*tabs de pantalla*/}
                     <ul className="nav navStatica nav-tabs">
-                        <li >
+                        <li className="active">
                             <a  onClick={() => handleShowListado()}>
                                 <i className="fa fa-list" /> Listado
                             </a>
