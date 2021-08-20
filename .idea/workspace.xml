@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Cambio en la forma de seatear datos en recoleccion y embarque">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +103,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
+  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -470,6 +470,7 @@
                   </entry>
                 </map>
               </option>
+              <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
@@ -511,7 +512,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita" />
@@ -540,6 +540,16 @@
     <MESSAGE value="Se calculo de iva conceptos" />
     <MESSAGE value="*Cambio en la forma de seatear datos en recoleccion y embarque" />
     <option name="LAST_COMMIT_MESSAGE" value="*Cambio en la forma de seatear datos en recoleccion y embarque" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629436297621">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629436297621" />
+    <state x="366" y="245" key="git4idea.merge.GitPullDialog" timestamp="1629470576411">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900@0.0.1440.900" timestamp="1629470576411" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
