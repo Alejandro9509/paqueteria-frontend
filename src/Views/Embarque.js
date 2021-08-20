@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, {useEffect, useState, useMemo} from "react";
 import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
@@ -8,7 +8,7 @@ import ExportPDF from "../Components/Template/ExportPDF";
 import Carousel from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import {
@@ -20,46 +20,56 @@ import {
     usePagination,
 } from "react-table";
 import $ from "jquery";
-import { remove_array_element } from "../Util/Util";
+import {remove_array_element} from "../Util/Util";
 import IconButton from "@material-ui/core/IconButton";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import useModal from "react-hooks-use-modal";
-import { useHistory, Redirect } from "react-router-dom";
-import { DataGrid } from "@material-ui/data-grid";
+import {useHistory, Redirect} from "react-router-dom";
+import {DataGrid} from "@material-ui/data-grid";
 import SvgIcon from "@material-ui/core/SvgIcon";
-import { ReactComponent as Activo } from "../iconos/Menu/palomita.svg";
-import { ReactComponent as NoActivo } from "../iconos/Menu/cruz.svg";
+import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
+import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";
 import Noty from "noty";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper, Tooltip } from "@material-ui/core";
-import { ToggleButtonGroup } from "@material-ui/lab";
+import {Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper, Tooltip} from "@material-ui/core";
+import {ToggleButtonGroup} from "@material-ui/lab";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import { dataGridLocaleText } from "../Constants";
-import { confirmAlert } from 'react-confirm-alert'; // Import
+import {dataGridLocaleText} from "../Constants";
+import {confirmAlert} from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
+import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {
     obtenerCodigoPostal,
     obtenerCodigoPostalId,
     obtenerCodigosPostalesPorCiudad
 } from "../Util/Contexts/CodigoPostalContext";
-import { obtenerRemitentesDestinatarios } from "../Util/Contexts/RemitenteDestinatarioContext";
-import { obtenerEmbalajes } from "../Util/Contexts/EmbalajesContext";
-import { cancelarEmbarque, eliminarEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, obtenerEmbarqueCancelado, agregarEmbarques, modificarEmbarques, obtenerEmbarquesFiltro, obtenerEmbarques } from "../Util/Contexts/EmbarquesContext";
-import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
-import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
-import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
-import { obtenerUnidadesTipo } from "../Util/Contexts/UnidadesContext";
-import { obtenerTipoCambio } from "../Util/Contexts/TipoCambioContext";
-import { obtenerRecoleccionId } from "../Util/Contexts/RecoleccionContext";
-import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
-import { obtenerEstatusEmbarque } from "../Util/Contexts/EstatusContext";
-import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
-import { validarPermisos } from "../Util/Contexts/UsuarioContext";
-import { imprimirFormatosId, obtenerFormatosImpresion } from "../Util/Contexts/FormatosImpresionContext";
+import {obtenerRemitentesDestinatarios} from "../Util/Contexts/RemitenteDestinatarioContext";
+import {obtenerEmbalajes} from "../Util/Contexts/EmbalajesContext";
+import {
+    cancelarEmbarque,
+    eliminarEmbarques,
+    obtenerEmbarquesId,
+    obtenerUltimoFolioEmbarques,
+    obtenerEmbarqueCancelado,
+    agregarEmbarques,
+    modificarEmbarques,
+    obtenerEmbarquesFiltro,
+    obtenerEmbarques
+} from "../Util/Contexts/EmbarquesContext";
+import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
+import {obtenerOperadores} from "../Util/Contexts/OperadoresContext";
+import {obtenerTipoUnidades} from "../Util/Contexts/TipoUnidadContext";
+import {obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
+import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
+import {obtenerRecoleccionId} from "../Util/Contexts/RecoleccionContext";
+import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
+import {obtenerEstatusEmbarque} from "../Util/Contexts/EstatusContext";
+import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
+import {validarPermisos} from "../Util/Contexts/UsuarioContext";
+import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
 import {obtenerCliente} from "../Util/Contexts/ClientesContext";
 
 function showSuccess(mensaje) {
@@ -84,14 +94,18 @@ const options = {
             onClick: () => alert('Click No')
         }
     ],
-    childrenElement: () => <div />,
-    customUI: ({ onClose }) => <div>Custom UI</div>,
+    childrenElement: () => <div/>,
+    customUI: ({onClose}) => <div>Custom UI</div>,
     closeOnEscape: true,
     closeOnClickOutside: true,
-    willUnmount: () => { },
-    afterClose: () => { },
-    onClickOutside: () => { },
-    onKeypressEscape: () => { },
+    willUnmount: () => {
+    },
+    afterClose: () => {
+    },
+    onClickOutside: () => {
+    },
+    onKeypressEscape: () => {
+    },
     overlayClassName: "overlay-custom-class-name"
 };
 
@@ -340,9 +354,9 @@ function Embarque(props) {
                         }}
                     >
                         {row.row.m_bActivo ? (
-                            <SvgIcon component={Activo} />
+                            <SvgIcon component={Activo}/>
                         ) : (
-                            <SvgIcon component={NoActivo} />
+                            <SvgIcon component={NoActivo}/>
                         )}
                     </div>
                 );
@@ -400,7 +414,7 @@ function Embarque(props) {
                             >
                                 <i
                                     className="fa fa-pencil-square-o"
-                                    style={{ color: "#F9A03E" }}
+                                    style={{color: "#F9A03E"}}
                                 />
                             </a>
                         </Tooltip>
@@ -409,7 +423,7 @@ function Embarque(props) {
                                 className="btn btn-default btn-xs"
                                 onClick={() => handleShowConsultar(row.row.m_nIdEmbarque)}
                             >
-                                <i className="fa fa-eye" style={{ color: "#F9A03E" }} />
+                                <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                             </a>
                         </Tooltip>
                         <Tooltip title="Eliminar">
@@ -430,10 +444,9 @@ function Embarque(props) {
                                     ]
                                 })}
                             >
-                                <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
+                                <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>
                             </a>
                         </Tooltip>
-
 
 
                     </div>
@@ -495,9 +508,9 @@ function Embarque(props) {
                     >
                         {
                             (row.row.m_bEsRecolecta != 0 ? (
-                                <SvgIcon component={Activo} />
+                                <SvgIcon component={Activo}/>
                             ) : (
-                                <SvgIcon component={NoActivo} />
+                                <SvgIcon component={NoActivo}/>
                             ))
                         }
                     </div>
@@ -533,7 +546,7 @@ function Embarque(props) {
         let user = newValue
         obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
             setState(state => {
-                return{
+                return {
                     ...state,
                     idRemitente: newValue.m_nIdRemitenteDestinatario,
                     aliasRemitente: newValue.m_sAlias,
@@ -554,7 +567,7 @@ function Embarque(props) {
     function handleSelectDestinatario(newValue) {
         obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
             setState(state => {
-                return{
+                return {
                     ...state,
                     idDestinatario: newValue.m_nIdRemitenteDestinatario,
                     aliasDestinatario: newValue.m_sAlias,
@@ -574,7 +587,7 @@ function Embarque(props) {
 
     const handleAceptar = (e) => {
         e.preventDefault();
-        const { paquetes, sobres } = state;
+        const {paquetes, sobres} = state;
         const soloPaquetesLenth = paquetes.length
         const paquetesYSobres = []
 
@@ -655,12 +668,12 @@ function Embarque(props) {
 
         }
 
-        if (state.entregaEnSucursal){
+        if (state.entregaEnSucursal) {
             params.m_bEntregaEnSucursal = true
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
             params.EntregarMismoDomicilio = false
         }
-        if (state.diferenteEntrega){
+        if (state.diferenteEntrega) {
             params.EntregarMismoDomicilio = false
             params.m_bEntregaEnSucursal = false
             params.IdCiudadEntrega = state.ciudadEntrega
@@ -786,7 +799,7 @@ function Embarque(props) {
     };
 
     function handleSelectCP(id, cp) {
-        if (state.identificadorModal == "nombreRemitente"){
+        if (state.identificadorModal == "nombreRemitente") {
             setState({
                 ...state,
                 [state.identificadorModal]: id,
@@ -805,7 +818,7 @@ function Embarque(props) {
                 telefonoRemitente: id.m_sTelefono,
                 contactoRemitente: id.m_sContacto,
             });
-        }else{
+        } else {
             setState({
                 ...state,
                 [state.identificadorModal]: id,
@@ -866,6 +879,7 @@ function Embarque(props) {
                 showSuccess(err);
             });
     }
+
     //Funcion para cancelar un embarque. Se usa en tab cancelar.
     const handleCancelar = (e) => {
         e.preventDefault();
@@ -894,10 +908,10 @@ function Embarque(props) {
     }, []);
 
     //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el remitente
-    useEffect( value => {
-        if (state.ciudadRemitente != ""){
+    useEffect(value => {
+        if (state.ciudadRemitente != "") {
             obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
-                if (respuesta.data.length > 0){
+                if (respuesta.data.length > 0) {
                     setDataCodigosPostalesRemitente(respuesta.data);
                     /*if (props.location.idRecoleccion != undefined){
                         setState({
@@ -911,11 +925,11 @@ function Embarque(props) {
     }, [state.ciudadRemitente])
 
     //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el destinatario
-    useEffect( value => {
-        if (state.ciudadDestinatario != ""){
+    useEffect(value => {
+        if (state.ciudadDestinatario != "") {
             obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
                 console.log(respuesta.data)
-                if (respuesta.data.length > 0){
+                if (respuesta.data.length > 0) {
                     setDataCodigosPostalesDestinatario(respuesta.data);
                     /*if (props.location.idRecoleccion != undefined){
                         setState({
@@ -929,10 +943,10 @@ function Embarque(props) {
     }, [state.ciudadDestinatario])
 
     //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para entrega
-    useEffect( value => {
-        if (state.ciudadEntrega != ""){
+    useEffect(value => {
+        if (state.ciudadEntrega != "") {
             obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
-                if (respuesta.data.length > 0){
+                if (respuesta.data.length > 0) {
                     setDataCodigosPostalesEntrega(respuesta.data);
                     /*if(props.location.idRecoleccion != undefined){
                         if (state.idCodigoPostalEntregaTemp != state.idCodigoPostalDestinatarioTemp){
@@ -948,7 +962,7 @@ function Embarque(props) {
     }, [state.ciudadEntrega])
 
     useEffect(async (value) => {
-            if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataOperador.length > 0 && dataTipoUnidad.length > 0){
+            if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataOperador.length > 0 && dataTipoUnidad.length > 0) {
                 if (props.location.idRecoleccion != undefined) {
                     obtenerRecoleccionId(props.location.idRecoleccion)
                         .then((respuesta) => {
@@ -964,7 +978,7 @@ function Embarque(props) {
                 }
             }
         },
-        [dataRemitenteDestinatario, dataCiudad, dataOperador, dataTipoUnidad,dataClientes]
+        [dataRemitenteDestinatario, dataCiudad, dataOperador, dataTipoUnidad, dataClientes]
     );
 
     function handleShowCancelar() {
@@ -1010,11 +1024,11 @@ function Embarque(props) {
     }
 
     //Limpia todos los campos. Se usa al pasar del listado a consultar o modificar un registro
-    function limpiarCamposAgregar(){
+    function limpiarCamposAgregar() {
         setState(state => {
             return {
                 ...state,
-                 //==VARIABLES DE AGREGAR
+                //==VARIABLES DE AGREGAR
                 //Informacion general
                 idSucursalAgregar: '',
                 folioRecoleccion: '',
@@ -1070,26 +1084,26 @@ function Embarque(props) {
 
                 //Paquetes/sobres
                 paquetes: [
-                {
-                    m_xPeso: "",
-                    m_xLargo: "",
-                    m_xAncho: "",
-                    m_xAlto: "",
-                    m_xVolumen: "",
-                    m_nIdTIpoEmpaque: "",
-                    m_cyValorDeclarado: "",
-                    m_sDescripcion: "",
-                    m_nCantidad: "",
-                    m_nTipo: 2,
-                    m_sObservaciones: "",
-                },
-            ],
+                    {
+                        m_xPeso: "",
+                        m_xLargo: "",
+                        m_xAncho: "",
+                        m_xAlto: "",
+                        m_xVolumen: "",
+                        m_nIdTIpoEmpaque: "",
+                        m_cyValorDeclarado: "",
+                        m_sDescripcion: "",
+                        m_nCantidad: "",
+                        m_nTipo: 2,
+                        m_sObservaciones: "",
+                    },
+                ],
                 sobres: [
-                {
-                    m_nTipo: 1,
-                    m_sDescripcion: "",
-                },
-            ],
+                    {
+                        m_nTipo: 1,
+                        m_sDescripcion: "",
+                    },
+                ],
                 countSobres: 1,
                 countPaquetes: 1,
                 height: window.innerHeight,
@@ -1119,7 +1133,7 @@ function Embarque(props) {
     function handleShowAgregar() {
         let today = new Date();
         limpiarCamposAgregar()
-        setState(state =>{
+        setState(state => {
             return {
                 ...state,
                 agregar: "Agregar",
@@ -1129,7 +1143,10 @@ function Embarque(props) {
                 1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
             }
         });
-        $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
 
     }
 
@@ -1140,7 +1157,6 @@ function Embarque(props) {
         $('#Agregar').addClass('in show');
         limpiarCamposAgregar()
         obtenerEmbarquesId(id).then((respuesta) => {
-            console.log('Embarque: ', respuesta)
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -1150,8 +1166,8 @@ function Embarque(props) {
     }
 
     //Funcion para mostrar datos de recoleccion para crear embarque
-    function setDataRecoleccionOnState(respuesta){
-        const {m_parrPaquetes, m_parrSobres } = respuesta.data;
+    function setDataRecoleccionOnState(respuesta) {
+        const {m_parrPaquetes, m_parrSobres} = respuesta.data;
         /*let paquetesModificado = m_parrPaquetes
         for (let i = 0; i < respuesta.data.m_parrPaquetes.length; i++) {
             paquetesModificado[i]["m_nTipo"] = 2;
@@ -1174,19 +1190,19 @@ function Embarque(props) {
             paq["m_nIdTIpoEmpaque"] = paq.m_nIdTipoEmbalaje;
             paq["m_cValorDeclarado"] = paq.m_cyValorDeclarado;
         })
-        m_parrSobres.forEach( sobre => {
+        m_parrSobres.forEach(sobre => {
             sobre["m_nTipo"] = 1
         })
         let remitente = {}
         let destinatario = {}
-        if (respuesta.data.m_sAliasRemitente){
+        if (respuesta.data.m_sAliasRemitente) {
             remitente = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasRemitente && o.m_sNombre == respuesta.data.m_sNombreRemitente)
-        }else{
+        } else {
             remitente = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNombreRemitente)
         }
-        if (respuesta.data.m_sAliasDestinatario){
+        if (respuesta.data.m_sAliasDestinatario) {
             destinatario = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
-        }else{
+        } else {
             destinatario = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNombreDestinatario)
         }
         /*const remitente = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasRemitente && o.m_sNombre == respuesta.data.m_sNombreRemitente)
@@ -1212,7 +1228,7 @@ function Embarque(props) {
         handleSelectDestinatario(dataRemitenteDestinatario.find((o) => o.m_sRFC == m_sRFCDestinatario))*/
 
         setState(state => {
-            return{
+            return {
                 ...state,
                 fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
                 1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(
@@ -1224,7 +1240,7 @@ function Embarque(props) {
                 )}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-                folioEmbarque: dataFolioEmbarque.length !== 0 ? dataFolioEmbarque[0].m_sFolioEmbarque : null,
+                folioEmbarque: respuesta.data.m_nFolioEmbarque,
                 fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
@@ -1280,10 +1296,10 @@ function Embarque(props) {
             }
         });
 
-        if (respuesta.data.m_bEntregaDiferenteDomicilio){
+        if (respuesta.data.m_bEntregaDiferenteDomicilio) {
             obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then(cp => {
                 setState(state => {
-                    return{
+                    return {
                         ...state,
                         diferenteEntrega: true,
                         zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
@@ -1307,14 +1323,14 @@ function Embarque(props) {
 
         let remitente = {}
         let destinatario = {}
-        if (respuesta.data.m_sAliasRemitente){
+        if (respuesta.data.m_sAliasRemitente) {
             remitente = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasRemitente && o.m_sNombre == respuesta.data.m_sNOmbreRemitente)
-        }else{
+        } else {
             remitente = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNOmbreRemitente)
         }
-        if (respuesta.data.m_sAliasDestinatario){
+        if (respuesta.data.m_sAliasDestinatario) {
             destinatario = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
-        }else{
+        } else {
             destinatario = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNombreDestinatario)
         }
 
@@ -1351,13 +1367,13 @@ function Embarque(props) {
         })
 
         setState(state => {
-            return{
+            return {
                 ...state,
                 idEmbarque: respuesta.data.m_nIdEmbarque,
                 idRecoleccion: respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.IdSucursal,
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-                folioEmbarque: dataFolioEmbarque.length !== 0 ? dataFolioEmbarque[0].m_sFolioEmbarque : null,
+                folioEmbarque: respuesta.data.m_nFolioEmbarque,
                 folioGuia: respuesta.data.m_sFolioGuia,
                 folioInforme: respuesta.data.m_nFolioInforme,
                 fechaHoraRegistro: respuesta.data.m_dFechaRegistro + "T" + respuesta.data.m_tHoraRegistro.slice(0, 5),
@@ -1429,10 +1445,10 @@ function Embarque(props) {
         });
 
         //si el cp de entrega es igual al de destinatario significa que no es entrega en diferente domicilio
-        if (respuesta.data.m_nIdCPDetalleEntrega != respuesta.data.m_sIdCodigoPostalDestinatario){
+        if (respuesta.data.m_nIdCPDetalleEntrega != respuesta.data.m_sIdCodigoPostalDestinatario) {
             obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then(cp => {
                 setState(state => {
-                    return{
+                    return {
                         ...state,
                         diferenteEntrega: true,
                         zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
@@ -1593,12 +1609,12 @@ function Embarque(props) {
 
     function getAllZonas() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        axios.get(url, {headers}).then((respuesta) => {
             setDataZona(respuesta.data);
         });
     }
 
-    const getAllClientes = () =>{
+    const getAllClientes = () => {
         obtenerCliente().then((respuesta) => {
             setDataClientes(respuesta.data)
         })
@@ -1720,14 +1736,14 @@ function Embarque(props) {
         return data.length != 0;
     }
 
-    function DefaultColumnFilter({column: { filterValue, preFilteredRows, setFilter },}) {
+    function DefaultColumnFilter({column: {filterValue, preFilteredRows, setFilter},}) {
         const count = preFilteredRows.length;
         const [showResults, setShowResults] = React.useState(false);
         const onClick = () => setShowResults(!showResults);
         return (
-            <div style={{ display: "flex" }}>
+            <div style={{display: "flex"}}>
                 <a onClick={onClick}>
-                    <i className="fa fa-search" />
+                    <i className="fa fa-search"/>
                 </a>
                 <br></br>
                 <input
@@ -1743,7 +1759,7 @@ function Embarque(props) {
         );
     }
 
-    function TableRemitentesDestinatarios({ columns, data, select }) {
+    function TableRemitentesDestinatarios({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -1772,64 +1788,64 @@ function Embarque(props) {
         return (
             <div
                 className="col-md-12"
-                style={{ maxHeight: "300px", overflow: "auto" }}
+                style={{maxHeight: "300px", overflow: "auto"}}
             >
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr
-                                    style={{
-                                        backgroundColor:
-                                            row.original.m_nIdUnidad === select ? "#FCC88F" : "white",
-                                    }}
-                                    {...row.getRowProps()}
-                                    onClick={handleSelectCP.bind(this, row.original)}
-                                >
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr
+                                style={{
+                                    backgroundColor:
+                                        row.original.m_nIdUnidad === select ? "#FCC88F" : "white",
+                                }}
+                                {...row.getRowProps()}
+                                onClick={handleSelectCP.bind(this, row.original)}
+                            >
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>
         );
     }
 
-    function TableCodigoPostal({ columns, data, select }) {
+    function TableCodigoPostal({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -1858,65 +1874,65 @@ function Embarque(props) {
         return (
             <div
                 className="col-md-12"
-                style={{ maxHeight: "300px", overflow: "auto" }}
+                style={{maxHeight: "300px", overflow: "auto"}}
             >
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr
-                                    style={{
-                                        backgroundColor:
-                                            row.original.m_nIdCP === select ? "orange" : "white",
-                                    }}
-                                    {...row.getRowProps()}
-                                    onClick={handleSelectDatos.bind(this, row.original)}
-                                    onDoubleClick={close}
-                                >
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr
+                                style={{
+                                    backgroundColor:
+                                        row.original.m_nIdCP === select ? "orange" : "white",
+                                }}
+                                {...row.getRowProps()}
+                                onClick={handleSelectDatos.bind(this, row.original)}
+                                onDoubleClick={close}
+                            >
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>
         );
     }
 
-    function TableCiudades({ columns, data, select }) {
+    function TableCiudades({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -1945,64 +1961,64 @@ function Embarque(props) {
         return (
             <div
                 className="col-md-12"
-                style={{ maxHeight: "300px", overflow: "auto" }}
+                style={{maxHeight: "300px", overflow: "auto"}}
             >
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr
-                                    style={{
-                                        backgroundColor:
-                                            row.original.m_nIdCiudad === select ? "orange" : "white",
-                                    }}
-                                    {...row.getRowProps()}
-                                    onClick={handleSelectDatos.bind(this, row.original)}
-                                >
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr
+                                style={{
+                                    backgroundColor:
+                                        row.original.m_nIdCiudad === select ? "orange" : "white",
+                                }}
+                                {...row.getRowProps()}
+                                onClick={handleSelectDatos.bind(this, row.original)}
+                            >
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>
         );
     }
 
-    function TableOperadores({ columns, data, select }) {
+    function TableOperadores({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -2031,66 +2047,66 @@ function Embarque(props) {
         return (
             <div
                 className="col-md-12"
-                style={{ maxHeight: "300px", overflow: "auto" }}
+                style={{maxHeight: "300px", overflow: "auto"}}
             >
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr
-                                    style={{
-                                        backgroundColor:
-                                            row.original.m_nIdOperador === select
-                                                ? "orange"
-                                                : "white",
-                                    }}
-                                    {...row.getRowProps()}
-                                    onClick={handleSelectDatos.bind(this, row.original)}
-                                >
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr
+                                style={{
+                                    backgroundColor:
+                                        row.original.m_nIdOperador === select
+                                            ? "orange"
+                                            : "white",
+                                }}
+                                {...row.getRowProps()}
+                                onClick={handleSelectDatos.bind(this, row.original)}
+                            >
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>
         );
     }
 
-    function TableTipoUnidad({ columns, data, select }) {
+    function TableTipoUnidad({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -2120,62 +2136,62 @@ function Embarque(props) {
             <div className="col-md-12">
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr
-                                    style={{
-                                        backgroundColor:
-                                            row.original.m_nIdTipoUnidad === select
-                                                ? "orange"
-                                                : "white",
-                                    }}
-                                    {...row.getRowProps()}
-                                    onClick={handleSelectDatos.bind(this, row.original)}
-                                >
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr
+                                style={{
+                                    backgroundColor:
+                                        row.original.m_nIdTipoUnidad === select
+                                            ? "orange"
+                                            : "white",
+                                }}
+                                {...row.getRowProps()}
+                                onClick={handleSelectDatos.bind(this, row.original)}
+                            >
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>
         );
     }
 
-    function TableUnidad({ columns, data, select }) {
+    function TableUnidad({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -2204,57 +2220,57 @@ function Embarque(props) {
         return (
             <div
                 className="col-md-12"
-                style={{ maxHeight: "300px", overflow: "auto" }}
+                style={{maxHeight: "300px", overflow: "auto"}}
             >
                 <table className="table" {...getTableProps()}>
                     <thead>
-                        {headerGroups.map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column) => (
-                                    // Add the sorting props to control sorting. For this example
-                                    // we can add them into the header props
-                                    <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                        {column.render("Name")}
-                                        {/* Add a sort direction indicator */}
-                                        <span>
+                    {headerGroups.map((headerGroup) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column) => (
+                                // Add the sorting props to control sorting. For this example
+                                // we can add them into the header props
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                    {column.render("Name")}
+                                    {/* Add a sort direction indicator */}
+                                    <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up" />
+                                                    <i className="fa fa-caret-up"/>
                                                 ) : (
-                                                    <i className="fa fa-caret-down" />
+                                                    <i className="fa fa-caret-down"/>
                                                 )
                                             ) : (
                                                 ""
                                             )}
                                         </span>
-                                        <div>
-                                            {column.canFilter ? column.render("Filter") : null}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                                    <div>
+                                        {column.canFilter ? column.render("Filter") : null}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map((row, i) => {
-                            prepareRow(row);
-                            return (
-                                <tr
-                                    style={{
-                                        backgroundColor:
-                                            row.original.m_nIdUnidad === select ? "orange" : "white",
-                                    }}
-                                    {...row.getRowProps()}
-                                    onClick={handleSelectDatos.bind(this, row.original)}
-                                >
-                                    {row.cells.map((cell) => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
+                    {rows.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr
+                                style={{
+                                    backgroundColor:
+                                        row.original.m_nIdUnidad === select ? "orange" : "white",
+                                }}
+                                {...row.getRowProps()}
+                                onClick={handleSelectDatos.bind(this, row.original)}
+                            >
+                                {row.cells.map((cell) => {
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>
@@ -2263,7 +2279,7 @@ function Embarque(props) {
 
     const handleImprimir = () => {
         imprimirFormatosId(state.formatoSeleccionado).then((response) => {
-            var file = new Blob([response.data], { type: 'application/pdf' })
+            var file = new Blob([response.data], {type: 'application/pdf'})
             var fileURL = URL.createObjectURL(file)
             console.log(fileURL)
             window.open(fileURL);
@@ -2329,7 +2345,7 @@ function Embarque(props) {
     /*=PAQUETES Y SOBRES=*/
 
     function addPaquete() {
-        const { paquetes } = state;
+        const {paquetes} = state;
         paquetes.push({
             m_xPeso: "",
             m_xLargo: "",
@@ -2352,7 +2368,7 @@ function Embarque(props) {
     }
 
     function removePaquete(index) {
-        var { paquetes } = state;
+        var {paquetes} = state;
         if (paquetes.length !== 1) {
             paquetes.pop();
             setState({
@@ -2364,17 +2380,17 @@ function Embarque(props) {
     }
 
     function addSobre() {
-        const { sobres } = state;
+        const {sobres} = state;
         sobres.push({
             m_nTipo: 1,
             m_sDescripcion: "",
         });
         console.log(sobres);
-        setState({ ...state, sobres: sobres, countSobres: state.sobres.length });
+        setState({...state, sobres: sobres, countSobres: state.sobres.length});
     }
 
     function removeSobre(index) {
-        var { sobres } = state;
+        var {sobres} = state;
         if (sobres.length !== 1) {
             sobres.pop();
             setState({
@@ -2386,7 +2402,7 @@ function Embarque(props) {
     }
 
     const handleChangePaquete = (event, index) => {
-        var { paquetes } = state;
+        var {paquetes} = state;
         paquetes[index][event.target.name] = event.target.value;
         paquetes[index].m_xVolumen = paquetes[index].m_xLargo * paquetes[index].m_xAlto * paquetes[index].m_xAncho;
         setState({
@@ -2396,7 +2412,7 @@ function Embarque(props) {
     };
 
     const handleChangeSobre = (event, index) => {
-        var { sobres } = state;
+        var {sobres} = state;
         sobres[index][event.target.name] = event.target.value;
         setState({
             ...state,
@@ -2416,13 +2432,13 @@ function Embarque(props) {
                 <div className="col-sm-4 col-md-2-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense" label="Peso"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            value={state.paquetes[index].m_xPeso}
-                            disabled={state.agregar === "Consultar"}
-                            placeholder="kg"
-                            name="m_xPeso"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   value={state.paquetes[index].m_xPeso}
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="kg"
+                                   name="m_xPeso"
                         />
                     </div>
                 </div>
@@ -2430,13 +2446,13 @@ function Embarque(props) {
                 <div className="col-sm-4 col-md-2-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense" label="Largo"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            value={state.paquetes[index].m_xLargo}
-                            disabled={state.agregar === "Consultar"}
-                            placeholder="cms"
-                            name="m_xLargo"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   value={state.paquetes[index].m_xLargo}
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="cms"
+                                   name="m_xLargo"
                         />
                     </div>
                 </div>
@@ -2444,13 +2460,13 @@ function Embarque(props) {
                 <div className="col-sm-4 col-md-2-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense" label="Ancho"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            value={state.paquetes[index].m_xAncho}
-                            disabled={state.agregar === "Consultar"}
-                            placeholder="cms"
-                            name="m_xAncho"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   value={state.paquetes[index].m_xAncho}
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="cms"
+                                   name="m_xAncho"
                         />
                     </div>
                 </div>
@@ -2458,13 +2474,13 @@ function Embarque(props) {
                 <div className="col-sm-4 col-md-2-5 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense" label="Alto"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            value={state.paquetes[index].m_xAlto}
-                            disabled={state.agregar === "Consultar"}
-                            placeholder="cms"
-                            name="m_xAlto"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   value={state.paquetes[index].m_xAlto}
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="cms"
+                                   name="m_xAlto"
                         />
                     </div>
                 </div>
@@ -2473,12 +2489,12 @@ function Embarque(props) {
                     <div className="input">
                         <TextField variant="outlined" margin="dense" label="Volumen"
                             // onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            value={state.paquetes[index].m_xVolumen}
-                            disabled
-                            placeholder="cms3"
-                            name="m_xVolumen"
+                                   className="form-control"
+                                   type="text"
+                                   value={state.paquetes[index].m_xVolumen}
+                                   disabled
+                                   placeholder="cms3"
+                                   name="m_xVolumen"
                         />
                     </div>
                 </div>
@@ -2533,13 +2549,13 @@ function Embarque(props) {
                 <div className="col-sm-4 col-md-8 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense" label="Descripción"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            value={state.paquetes[index].m_sDescripcion}
-                            disabled={state.agregar === "Consultar"}
-                            placeholder="Descripción"
-                            name="m_sDescripcion"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   value={state.paquetes[index].m_sDescripcion}
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="Descripción"
+                                   name="m_sDescripcion"
                         />
                     </div>
                 </div>
@@ -2547,13 +2563,13 @@ function Embarque(props) {
                 <div className="col-sm-4 col-md-4 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense" label="Ctd"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            value={state.paquetes[index].m_nCantidad}
-                            disabled={state.agregar === "Consultar"}
-                            placeholder="Cantidad"
-                            name="m_nCantidad"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   value={state.paquetes[index].m_nCantidad}
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="Cantidad"
+                                   name="m_nCantidad"
                         />
                     </div>
                 </div>
@@ -2561,13 +2577,13 @@ function Embarque(props) {
                 <div className="col-sm-4 col-md-12 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense" label="Observaciones"
-                            onChange={(event) => handleChangePaquete(event, index)}
-                            className="form-control"
-                            type="text"
-                            value={state.paquetes[index].m_sObservaciones}
-                            disabled={state.agregar === "Consultar"}
-                            placeholder="Observaciones"
-                            name="m_sObservaciones"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   value={state.paquetes[index].m_sObservaciones}
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="Observaciones"
+                                   name="m_sObservaciones"
                         />
                     </div>
                 </div>
@@ -2585,13 +2601,13 @@ function Embarque(props) {
                     </h4>
                     <div className="input">
                         <TextField variant="outlined" margin="dense" label="Descripcion"
-                            onChange={(event) => handleChangeSobre(event, index)}
-                            className="form-control"
-                            type="text"
-                            value={state.sobres[index].m_sDescripcion}
-                            disabled={state.agregar === "Consultar"}
-                            placeholder="Descripción"
-                            name="m_sDescripcion"
+                                   onChange={(event) => handleChangeSobre(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   value={state.sobres[index].m_sDescripcion}
+                                   disabled={state.agregar === "Consultar"}
+                                   placeholder="Descripción"
+                                   name="m_sDescripcion"
                         />
                     </div>
                 </div>
@@ -2600,16 +2616,16 @@ function Embarque(props) {
     });
 
     return (
-        <div >
+        <div>
 
             <Dialog
                 open={state.openDialog}
-                onClose={() => setState({ ...state, openDialog: false })}
+                onClose={() => setState({...state, openDialog: false})}
                 fullWidth maxWidth="md"
             >
                 <DialogContent>
                     {state.tipoModal === 0 && (
-                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
                                     onClick={() => {
@@ -2636,15 +2652,15 @@ function Embarque(props) {
                                 <div>No se encontró ningún registro</div>
                             )}
 
-                            <DialogActions style={{ justifyContent: "left" }}>
+                            <DialogActions style={{justifyContent: "left"}}>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-secondary secondary-btn"
                                 >
                                     Cerrar
                                 </button>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-primary primary-btn"
                                 >
                                     Aceptar
@@ -2653,7 +2669,7 @@ function Embarque(props) {
                         </div>
                     )}
                     {state.tipoModal === 7 && (
-                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
                                     onClick={() => {
@@ -2680,15 +2696,15 @@ function Embarque(props) {
                                 <div>No se encontró ningún registro</div>
                             )}
 
-                            <DialogActions style={{ justifyContent: "left" }}>
+                            <DialogActions style={{justifyContent: "left"}}>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-secondary secondary-btn"
                                 >
                                     Cerrar
                                 </button>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-primary primary-btn"
                                 >
                                     Aceptar
@@ -2697,7 +2713,7 @@ function Embarque(props) {
                         </div>
                     )}
                     {state.tipoModal === 9 && (
-                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
                                     onClick={() => {
@@ -2724,15 +2740,15 @@ function Embarque(props) {
                                 <div>No se encontró ningún registro</div>
                             )}
 
-                            <DialogActions style={{ justifyContent: "left" }}>
+                            <DialogActions style={{justifyContent: "left"}}>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-secondary secondary-btn"
                                 >
                                     Cerrar
                                 </button>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-primary primary-btn"
                                 >
                                     Aceptar
@@ -2741,7 +2757,7 @@ function Embarque(props) {
                         </div>
                     )}
                     {state.tipoModal === 1 && (
-                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
                                     onClick={() => {
@@ -2767,15 +2783,15 @@ function Embarque(props) {
                             ) : (
                                 <div>No se encontró ningún registro</div>
                             )}
-                            <DialogActions style={{ justifyContent: "left" }}>
+                            <DialogActions style={{justifyContent: "left"}}>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-secondary secondary-btn"
                                 >
                                     Cerrar
                                 </button>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-primary primary-btn"
                                 >
                                     Aceptar
@@ -2784,7 +2800,7 @@ function Embarque(props) {
                         </div>
                     )}
                     {state.tipoModal === 2 && (
-                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
                                     onClick={() => {
@@ -2810,15 +2826,15 @@ function Embarque(props) {
                             ) : (
                                 <div>No se encontró ningún registro</div>
                             )}
-                            <DialogActions style={{ justifyContent: "left" }}>
+                            <DialogActions style={{justifyContent: "left"}}>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-secondary secondary-btn"
                                 >
                                     Cerrar
                                 </button>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-primary primary-btn"
                                 >
                                     Aceptar
@@ -2827,7 +2843,7 @@ function Embarque(props) {
                         </div>
                     )}
                     {state.tipoModal === 3 && (
-                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
                                     onClick={() => {
@@ -2852,15 +2868,15 @@ function Embarque(props) {
                             ) : (
                                 <div>No se encontró ningún registro</div>
                             )}
-                            <DialogActions style={{ justifyContent: "left" }}>
+                            <DialogActions style={{justifyContent: "left"}}>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-secondary secondary-btn"
                                 >
                                     Cerrar
                                 </button>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-primary primary-btn"
                                 >
                                     Aceptar
@@ -2869,7 +2885,7 @@ function Embarque(props) {
                         </div>
                     )}
                     {state.tipoModal === 4 && (
-                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
                                     onClick={() => {
@@ -2895,15 +2911,15 @@ function Embarque(props) {
                             ) : (
                                 <div>No se encontró ningún registro</div>
                             )}
-                            <DialogActions style={{ justifyContent: "left" }}>
+                            <DialogActions style={{justifyContent: "left"}}>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-secondary secondary-btn"
                                 >
                                     Cerrar
                                 </button>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-primary primary-btn"
                                 >
                                     Aceptar
@@ -2912,7 +2928,7 @@ function Embarque(props) {
                         </div>
                     )}
                     {state.tipoModal === 5 && (
-                        <div className="row" style={{ backgroundColor: "#FFFFFF" }}>
+                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
                                     onClick={() => {
@@ -2938,15 +2954,15 @@ function Embarque(props) {
                             ) : (
                                 <div>No se encontró ningún registro</div>
                             )}
-                            <DialogActions style={{ justifyContent: "left" }}>
+                            <DialogActions style={{justifyContent: "left"}}>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-secondary secondary-btn"
                                 >
                                     Cerrar
                                 </button>
                                 <button
-                                    onClick={() => setState({ ...state, openDialog: false })}
+                                    onClick={() => setState({...state, openDialog: false})}
                                     className="btn btn-primary primary-btn"
                                 >
                                     Aceptar
@@ -2955,52 +2971,55 @@ function Embarque(props) {
                         </div>
                     )}
                     {state.tipoModal === 6 &&
-                        <div className="row" style={{ backgroundColor: '#FFFFFF' }}>
-                            <DialogTitle style={{ padding: "0px" }}><h4>Selecciona el Formato</h4></DialogTitle>
-                            <div>
-                                <label className="input select" style={{ width: "100%" }}>
-                                    <FormControl fullWidth variant="outlined" margin="dense">
-                                        <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
-                                        <Select
-                                            labelId="sucursalListadoLabel"
-                                            label="Formato"
-                                            className="form-control"
-                                            required
-                                            value={state.formatoSeleccionado}
-                                            onChange={(event) => setState({ ...state, formatoSeleccionado: event.target.value })}
-                                            id="formatoSeleccionado"
-                                            name="formatoSeleccionado"
-                                        >
-                                            {dataFormatos.map((formato) => (
-                                                <option
-                                                    key={formato.m_nIdFormato}
-                                                    value={formato.m_nIdFormato}
-                                                >
-                                                    {formato.m_sFormato}
-                                                </option>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    <i></i>
-                                </label>
-                            </div>
-
-                            <DialogActions style={{ justifyContent: "left" }}>
-
-                                <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
-                                </button>
-                                <button onClick={() => setState({ ...state, openDialog: false })}
-                                    className="btn btn-secondary secondary-btn">Cerrar
-                                </button>
-
-                            </DialogActions>
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <DialogTitle style={{padding: "0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
+                        <div>
+                            <label className="input select" style={{width: "100%"}}>
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                    <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
+                                    <Select
+                                        labelId="sucursalListadoLabel"
+                                        label="Formato"
+                                        className="form-control"
+                                        required
+                                        value={state.formatoSeleccionado}
+                                        onChange={(event) => setState({
+                                            ...state,
+                                            formatoSeleccionado: event.target.value
+                                        })}
+                                        id="formatoSeleccionado"
+                                        name="formatoSeleccionado"
+                                    >
+                                        {dataFormatos.map((formato) => (
+                                            <option
+                                                key={formato.m_nIdFormato}
+                                                value={formato.m_nIdFormato}
+                                            >
+                                                {formato.m_sFormato}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <i></i>
+                            </label>
                         </div>
+
+                        <DialogActions style={{justifyContent: "left"}}>
+
+                            <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
+                            </button>
+                            <button onClick={() => setState({...state, openDialog: false})}
+                                    className="btn btn-secondary secondary-btn">Cerrar
+                            </button>
+
+                        </DialogActions>
+                    </div>
                     }
                 </DialogContent>
             </Dialog>
 
             <header className="topbar clearfix">
-                <Cabecera titulo="Embarque" >
+                <Cabecera titulo="Embarque">
                     <div className="page-header">
                         <ul className="list-page-breadcrumb">
                             <li className="active-page">Embarque</li>
@@ -3011,7 +3030,7 @@ function Embarque(props) {
 
             {/*Leftbar Start Here*/}
             <aside className="iconic-leftbar">
-                <BarraLateralIzquierda />
+                <BarraLateralIzquierda/>
             </aside>
             {/*Leftbar End Here*/}
 
@@ -3038,11 +3057,9 @@ function Embarque(props) {
 
                         <li className={props.location.idRecoleccion != undefined ? "active" : ""}>
                             <a onClick={() => handleShowAgregar()}>
-                                <i className="fa fa-plus-circle" /> {state.agregar}
+                                <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
-
-
 
 
                         <li>
@@ -3056,11 +3073,11 @@ function Embarque(props) {
                                     openDialog: true
                                 });
                             }}>
-                                <i className="fa fa-print" /> Imprimir
+                                <i className="fa fa-print"/> Imprimir
                             </a>
                         </li>
                         <li>
-                            <ExportCSV csvData={data} fileName="Embarque_Listado" />
+                            <ExportCSV csvData={data} fileName="Embarque_Listado"/>
                         </li>
                         <li>
                             <a
@@ -3068,13 +3085,13 @@ function Embarque(props) {
                                 onClick={handleShowCancelar}
                                 className={state.idEmbarque === 0 ? classes.disabled : ""}
                             >
-                                <i className="fa fa-times-circle" /> Cancelar
+                                <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>
-                        <li style={{ float: "right" }}>
+                        <li style={{float: "right"}}>
                             <a
                                 className={state.idEmbarque === 0 ? classes.disabled : ""}
-                                style={{ textAlign: "right" }}
+                                style={{textAlign: "right"}}
                                 onClick={() => setRedirect(true)}
                             >
                                 Generar Guía
@@ -3083,16 +3100,17 @@ function Embarque(props) {
                     </ul>
 
                     <div className="row tab-content">
-                        <div id="Listado" className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in show"}>
+                        <div id="Listado"
+                             className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in show"}>
 
                             <div className="widget-wrap">
                                 <div className="widget-content">
-                                    <div className="row" style={{ paddingLeft: "8px" }}>
+                                    <div className="row" style={{paddingLeft: "8px"}}>
                                         <form className="j-forms">
-                                            <div className="row" style={{ display: "flex" }}>
+                                            <div className="row" style={{display: "flex"}}>
                                                 <div
                                                     className="col-sm-6 col-md-3 "
-                                                    style={{ paddingLeft: "0px" }}
+                                                    style={{paddingLeft: "0px"}}
                                                 >
                                                     <div className="input">
                                                         <TextField
@@ -3114,7 +3132,7 @@ function Embarque(props) {
 
                                                 <div
                                                     className="col-sm-6 col-md-3 "
-                                                    style={{ paddingLeft: "0px" }}
+                                                    style={{paddingLeft: "0px"}}
                                                 >
                                                     <div className="input">
                                                         <TextField
@@ -3137,7 +3155,7 @@ function Embarque(props) {
 
                                                 <div
                                                     className="col-sm-6 col-md-3 "
-                                                    style={{ paddingLeft: "0px" }}
+                                                    style={{paddingLeft: "0px"}}
                                                 >
                                                     <label className="input select">
                                                         <FormControl fullWidth variant="outlined" margin="dense">
@@ -3171,7 +3189,7 @@ function Embarque(props) {
 
                                                 <div
                                                     className="col-sm-6 col-md-3 "
-                                                    style={{ paddingLeft: "0px" }}
+                                                    style={{paddingLeft: "0px"}}
                                                 >
                                                     <label className="input select">
                                                         <FormControl fullWidth variant="outlined" margin="dense">
@@ -3206,7 +3224,7 @@ function Embarque(props) {
                                     </div>
                                     <div
                                         className="row"
-                                        style={{ height: state.height - 250, width: "100%" }}
+                                        style={{height: state.height - 250, width: "100%"}}
                                     >
                                         {conDatos() ? (
                                             <DataGrid
@@ -3232,7 +3250,8 @@ function Embarque(props) {
                             </div>
                         </div>
 
-                        <div id="Agregar" className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
+                        <div id="Agregar"
+                             className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
 
                             <form className="j-forms row" onSubmit={handleAceptar}>
                                 <div className="form-content">
@@ -3251,8 +3270,9 @@ function Embarque(props) {
                                             <Stepper activeStep={stepActive - 1}>
                                                 {
                                                     ["Información General", "Remitentes/Destinatario", "Paquetes y Sobres", "Información Adicional del Pago"].map((s, index) => (
-                                                        <Step key={s} completed={false} onClick={() => openSection(index + 1)}>
-                                                            <StepLabel >{s}</StepLabel>
+                                                        <Step key={s} completed={false}
+                                                              onClick={() => openSection(index + 1)}>
+                                                            <StepLabel>{s}</StepLabel>
                                                         </Step>
                                                     ))
                                                 }
@@ -3272,7 +3292,7 @@ function Embarque(props) {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
-                                                                    margin="dense">
+                                                                             margin="dense">
                                                                     <InputLabel
                                                                         id="idSucursalAgregarLabel">Sucursal</InputLabel>
                                                                     <Select
@@ -3306,14 +3326,14 @@ function Embarque(props) {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                    label="Folio Recolección"
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    value={state.folioRecoleccion}
-                                                                    name="folioRecoleccion"
-                                                                    readOnly
-                                                                    disabled
+                                                                           label="Folio Recolección"
+                                                                           onChange={handleChange}
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           value={state.folioRecoleccion}
+                                                                           name="folioRecoleccion"
+                                                                           readOnly
+                                                                           disabled
                                                                 />
                                                             </div>
                                                         </div>
@@ -3321,14 +3341,17 @@ function Embarque(props) {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                    label="Folio Embarque"
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    value={state.folioEmbarque}
-                                                                    name="folioEmbarque"
-                                                                    readOnly
-                                                                    disabled
+                                                                           label="Folio Embarque"
+                                                                           onChange={handleChange}
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           value={state.folioEmbarque}
+                                                                           name="folioEmbarque"
+                                                                           InputLabelProps={{
+                                                                               shrink: true,
+                                                                           }}
+                                                                           readOnly
+                                                                           disabled
                                                                 />
                                                             </div>
                                                         </div>
@@ -3336,14 +3359,14 @@ function Embarque(props) {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                    label="Folio Guía"
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    value={state.folioGuia}
-                                                                    name="folioGuia"
-                                                                    readOnly
-                                                                    disabled
+                                                                           label="Folio Guía"
+                                                                           onChange={handleChange}
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           value={state.folioGuia}
+                                                                           name="folioGuia"
+                                                                           readOnly
+                                                                           disabled
                                                                 />
                                                             </div>
                                                         </div>
@@ -3351,14 +3374,14 @@ function Embarque(props) {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                    label="Folio Informe"
-                                                                    onChange={handleChange}
-                                                                    className="form-control"
-                                                                    type="text"
-                                                                    value={state.folioInforme}
-                                                                    name="folioInforme"
-                                                                    readOnly
-                                                                    disabled
+                                                                           label="Folio Informe"
+                                                                           onChange={handleChange}
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           value={state.folioInforme}
+                                                                           name="folioInforme"
+                                                                           readOnly
+                                                                           disabled
                                                                 />
                                                             </div>
                                                         </div>
@@ -3366,20 +3389,20 @@ function Embarque(props) {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                    label="Fecha / Hora de Registro"
-                                                                    onChange={handleChange}
-                                                                    required
-                                                                    value={state.fechaHoraRegistro}
-                                                                    className="form-control"
-                                                                    name="fechaHoraRegistro"
-                                                                    type="datetime-local"
-                                                                    InputLabelProps={{
-                                                                        shrink: true,
-                                                                    }}
-                                                                    disabled={
-                                                                        state.agregar === "Consultar" ||
-                                                                        state.agregar === "Modificar"
-                                                                    }
+                                                                           label="Fecha / Hora de Registro"
+                                                                           onChange={handleChange}
+                                                                           required
+                                                                           value={state.fechaHoraRegistro}
+                                                                           className="form-control"
+                                                                           name="fechaHoraRegistro"
+                                                                           type="datetime-local"
+                                                                           InputLabelProps={{
+                                                                               shrink: true,
+                                                                           }}
+                                                                           disabled={
+                                                                               state.agregar === "Consultar" ||
+                                                                               state.agregar === "Modificar"
+                                                                           }
                                                                 />
                                                             </div>
                                                         </div>
@@ -3388,7 +3411,7 @@ function Embarque(props) {
 
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
-                                                                    margin="dense">
+                                                                             margin="dense">
                                                                     <InputLabel id="idEstatusEmbarque">Estatus del
                                                                         Embarque</InputLabel>
                                                                     <Select
@@ -3404,7 +3427,7 @@ function Embarque(props) {
                                                                             name: "estatusEmbarque"
                                                                         }}
                                                                     >
-                                                                        {dataEstatusEmbarque.filter(e => e.m_nIdEstatusEmbarque < 17 ).map((estatus) => (
+                                                                        {dataEstatusEmbarque.filter(e => e.m_nIdEstatusEmbarque < 17).map((estatus) => (
                                                                             <option
                                                                                 key={estatus.m_nIdEstatusEmbarque}
                                                                                 value={estatus.m_nIdEstatusEmbarque}
@@ -3420,7 +3443,7 @@ function Embarque(props) {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
-                                                                    margin="dense">
+                                                                             margin="dense">
                                                                     <InputLabel id="idMonedaLabel">Moneda</InputLabel>
                                                                     <Select
                                                                         labelId={"idMonedaLabel"}
@@ -3452,7 +3475,7 @@ function Embarque(props) {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5  unit">
                                                             <div className="input">
                                                                 <FormControl fullWidth variant="outlined"
-                                                                    margin="dense">
+                                                                             margin="dense">
                                                                     <InputLabel id="tipoCambioLabel">Tipo de
                                                                         Cambio</InputLabel>
                                                                     <Select
@@ -3488,7 +3511,7 @@ function Embarque(props) {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
-                                                                    margin="dense">
+                                                                             margin="dense">
                                                                     <InputLabel id="idTipoCobroLabel">Tipo
                                                                         Cobro</InputLabel>
                                                                     <Select
@@ -3654,16 +3677,16 @@ function Embarque(props) {
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
-                                                                                label="RFC"
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="text"
-                                                                                pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
-                                                                                title="Favor de introducir un RFC válido."
-                                                                                required
-                                                                                value={state.RFCRemitente}
-                                                                                disabled={state.agregar === "Consultar"}
-                                                                                name="RFCRemitente"
+                                                                                       label="RFC"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                                                                                       title="Favor de introducir un RFC válido."
+                                                                                       required
+                                                                                       value={state.RFCRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       name="RFCRemitente"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -3671,14 +3694,14 @@ function Embarque(props) {
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
-                                                                                label="Domicilio"
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="text"
-                                                                                required
-                                                                                value={state.domicilioRemitente}
-                                                                                disabled={state.agregar === "Consultar"}
-                                                                                name="domicilioRemitente"
+                                                                                       label="Domicilio"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       required
+                                                                                       value={state.domicilioRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       name="domicilioRemitente"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -3784,7 +3807,7 @@ function Embarque(props) {
                                                                                     ))}
                                                                                 </Select>
                                                                             </FormControl>
-                                                                            <i className="fa fa-arrow-down" />
+                                                                            <i className="fa fa-arrow-down"/>
                                                                         </label>
                                                                     </div>
 
@@ -3871,33 +3894,33 @@ function Embarque(props) {
                                                                         </div>
                                                                     </div>
 
-                                                                    { }
+                                                                    {}
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
-                                                                                label="Correo Electrónico"
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="email"
-                                                                                required
-                                                                                value={state.correoRemitente}
-                                                                                disabled={state.agregar === "Consultar"}
-                                                                                name="correoRemitente"
+                                                                                       label="Correo Electrónico"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="email"
+                                                                                       required
+                                                                                       value={state.correoRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       name="correoRemitente"
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    { }
+                                                                    {}
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
-                                                                                label="Teléfono"
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="tel"
-                                                                                required
-                                                                                value={state.telefonoRemitente}
-                                                                                disabled={state.agregar === "Consultar"}
-                                                                                name="telefonoRemitente"
+                                                                                       label="Teléfono"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="tel"
+                                                                                       required
+                                                                                       value={state.telefonoRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       name="telefonoRemitente"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -3905,14 +3928,14 @@ function Embarque(props) {
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
-                                                                                label="Contacto"
-                                                                                onChange={handleChange}
-                                                                                className="form-control"
-                                                                                type="text"
-                                                                                required
-                                                                                value={state.contactoRemitente}
-                                                                                disabled={state.agregar === "Consultar"}
-                                                                                name="contactoRemitente"
+                                                                                       label="Contacto"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       required
+                                                                                       value={state.contactoRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       name="contactoRemitente"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -4135,16 +4158,16 @@ function Embarque(props) {
                                                                 <div className="col-sm-12 col-md-12 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
-                                                                            label="RFC"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
-                                                                            title="Favor de introducir un RFC válido."
-                                                                            required
-                                                                            value={state.RFCDestinatario}
-                                                                            disabled={state.agregar === "Consultar"}
-                                                                            name="RFCDestinatario"
+                                                                                   label="RFC"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                                                                                   title="Favor de introducir un RFC válido."
+                                                                                   required
+                                                                                   value={state.RFCDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   name="RFCDestinatario"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -4152,14 +4175,14 @@ function Embarque(props) {
                                                                 <div className="col-sm-12 col-md-12 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
-                                                                            label="Domicilio"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            required
-                                                                            value={state.domicilioDestinatario}
-                                                                            disabled={state.agregar === "Consultar"}
-                                                                            name="domicilioDestinatario"
+                                                                                   label="Domicilio"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   required
+                                                                                   value={state.domicilioDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   name="domicilioDestinatario"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -4269,7 +4292,7 @@ function Embarque(props) {
                                                                                 ))}
                                                                             </Select>
                                                                         </FormControl>
-                                                                        <i className="fa fa-arrow-down" />
+                                                                        <i className="fa fa-arrow-down"/>
                                                                     </label>
                                                                 </div>
 
@@ -4351,14 +4374,14 @@ function Embarque(props) {
                                                                 <div className="col-sm-12 col-md-12 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
-                                                                            label="Correo Electrónico"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="email"
-                                                                            required
-                                                                            value={state.correoDestinatario}
-                                                                            disabled={state.agregar === "Consultar"}
-                                                                            name="correoDestinatario"
+                                                                                   label="Correo Electrónico"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="email"
+                                                                                   required
+                                                                                   value={state.correoDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   name="correoDestinatario"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -4366,14 +4389,14 @@ function Embarque(props) {
                                                                 <div className="col-sm-12 col-md-12 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
-                                                                            label="Teléfono"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            required
-                                                                            value={state.telefonoDestinatario}
-                                                                            disabled={state.agregar === "Consultar"}
-                                                                            name="telefonoDestinatario"
+                                                                                   label="Teléfono"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   required
+                                                                                   value={state.telefonoDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   name="telefonoDestinatario"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -4381,14 +4404,14 @@ function Embarque(props) {
                                                                 <div className="col-sm-12 col-md-12 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
-                                                                            label="Contacto"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            required
-                                                                            value={state.contactoDestinatario}
-                                                                            disabled={state.agregar === "Consultar"}
-                                                                            name="contactoDestinatario"
+                                                                                   label="Contacto"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   required
+                                                                                   value={state.contactoDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   name="contactoDestinatario"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -4515,11 +4538,11 @@ function Embarque(props) {
                                                                             className="form-control"
                                                                             type="checkbox"
                                                                             checked={state.entregaEnSucursal}
-                                                                            style={{ height: "20px" }}
+                                                                            style={{height: "20px"}}
                                                                             disabled={state.agregar === "Consultar"}
                                                                             id="entregaEnSucursal"
                                                                         />
-                                                                        <i />
+                                                                        <i/>
                                                                     </label>
                                                                 </div>
 
@@ -4532,11 +4555,11 @@ function Embarque(props) {
                                                                             type="checkbox"
                                                                             checked={state.diferenteEntrega}
                                                                             value={state.diferenteEntrega}
-                                                                            style={{ height: "20px" }}
+                                                                            style={{height: "20px"}}
                                                                             disabled={state.agregar === "Consultar"}
                                                                             id="diferenteEntrega"
                                                                         />
-                                                                        <i />
+                                                                        <i/>
                                                                     </label>
                                                                 </div>
                                                             </div>
@@ -4547,15 +4570,16 @@ function Embarque(props) {
 
                                                     <div className="row">
                                                         <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                        <label className="input select">
+                                                            <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
-                                                                    margin="dense">
-                                                                    <InputLabel id="idSucursalEntrega">Sucursal de Entrega</InputLabel>
+                                                                             margin="dense">
+                                                                    <InputLabel id="idSucursalEntrega">Sucursal de
+                                                                        Entrega</InputLabel>
                                                                     <Select
                                                                         labelId={"idSucursalEntrega"}
                                                                         label="Sucursal de Entrega"
                                                                         className="form-control"
-                                                                        required = {state.entregaEnSucursal}
+                                                                        required={state.entregaEnSucursal}
                                                                         onChange={handleChangeSucursalEntrega}
                                                                         value={state.idSucursalEntrega}
                                                                         disabled={state.agregar === "Consultar"}
@@ -4581,7 +4605,7 @@ function Embarque(props) {
                                                     </div>
 
                                                     :
-                                                    <div />
+                                                    <div/>
 
                                                 }
 
@@ -4610,7 +4634,7 @@ function Embarque(props) {
                                                             <input
                                                                 type="number"
                                                                 value={state.paquetes.length}
-                                                                style={{ width: "40px", textAlign: "center" }}
+                                                                style={{width: "40px", textAlign: "center"}}
                                                             />
                                                             <a
                                                                 className="btn"
@@ -4644,7 +4668,7 @@ function Embarque(props) {
                                                     <input
                                                         type="number"
                                                         value={state.sobres.length}
-                                                        style={{ width: "40px", textAlign: "center" }}
+                                                        style={{width: "40px", textAlign: "center"}}
                                                     />
 
                                                     <a
@@ -4807,7 +4831,7 @@ function Embarque(props) {
                                                                                 ))}
                                                                             </Select>
                                                                         </FormControl>
-                                                                        <i className="fa fa-arrow-down" />
+                                                                        <i className="fa fa-arrow-down"/>
                                                                     </label>
                                                                 </div>
 
@@ -4894,52 +4918,52 @@ function Embarque(props) {
                                                                 </div>
 
                                                                 <div className="col-sm-6 col-md-4 unit">
-                                                                <label className="input select">
-                                                                                    <FormControl fullWidth
-                                                                                        variant="outlined"
-                                                                                        margin="dense">
-                                                                                        <InputLabel
-                                                                                            id="zonaEntregaLabel">Zona</InputLabel>
-                                                                                        <Select
-                                                                                            labelId="zonaEntregaLabel"
-                                                                                            label="Zona"
-                                                                                            className="form-control"
+                                                                    <label className="input select">
+                                                                        <FormControl fullWidth
+                                                                                     variant="outlined"
+                                                                                     margin="dense">
+                                                                            <InputLabel
+                                                                                id="zonaEntregaLabel">Zona</InputLabel>
+                                                                            <Select
+                                                                                labelId="zonaEntregaLabel"
+                                                                                label="Zona"
+                                                                                className="form-control"
 
-                                                                                            value={state.zonaEntrega}
-                                                                                            disabled={state.agregar === "Consultar"}
-                                                                                            onChange={handleChangeZonaEntrega}
-                                                                                            id="zonaEntrega"
-                                                                                        >
-                                                                                            <option value="">Selecciona
-                                                                                        </option>
+                                                                                value={state.zonaEntrega}
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                onChange={handleChangeZonaEntrega}
+                                                                                id="zonaEntrega"
+                                                                            >
+                                                                                <option value="">Selecciona
+                                                                                </option>
 
-                                                                                            {dataZona.map((zona) => (
-                                                                                                <option
-                                                                                                    key={zona.m_nIdZona}
-                                                                                                    value={zona.m_nIdZona}
-                                                                                                >
-                                                                                                    {zona.m_sDescripcion}
-                                                                                                </option>
-                                                                                            ))}
-                                                                                        </Select>
-                                                                                    </FormControl>
-                                                                                    <i className="fa fa-arrow-down" />
-                                                                                </label>
+                                                                                {dataZona.map((zona) => (
+                                                                                    <option
+                                                                                        key={zona.m_nIdZona}
+                                                                                        value={zona.m_nIdZona}
+                                                                                    >
+                                                                                        {zona.m_sDescripcion}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </Select>
+                                                                        </FormControl>
+                                                                        <i className="fa fa-arrow-down"/>
+                                                                    </label>
                                                                 </div>
 
                                                                 <div className="col-sm-4 col-md-4 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
-                                                                            label="Domicilio"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            required
-                                                                            value={state.domicilioEntrega}
-                                                                            disabled={
-                                                                                state.agregar === "Consultar"
-                                                                            }
-                                                                            name="domicilioEntrega"
+                                                                                   label="Domicilio"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   required
+                                                                                   value={state.domicilioEntrega}
+                                                                                   disabled={
+                                                                                       state.agregar === "Consultar"
+                                                                                   }
+                                                                                   name="domicilioEntrega"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -4947,16 +4971,16 @@ function Embarque(props) {
                                                                 <div className="col-sm-4 col-md-4  unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
-                                                                            label="Entrega En"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            required
-                                                                            value={state.entregaEn}
-                                                                            disabled={
-                                                                                state.agregar === "Consultar"
-                                                                            }
-                                                                            name="entregaEn"
+                                                                                   label="Entrega En"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   required
+                                                                                   value={state.entregaEn}
+                                                                                   disabled={
+                                                                                       state.agregar === "Consultar"
+                                                                                   }
+                                                                                   name="entregaEn"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -4964,16 +4988,16 @@ function Embarque(props) {
                                                                 <div className="col-sm-4 col-md-4 unit">
                                                                     <div className="input">
                                                                         <TextField variant="outlined" margin="dense"
-                                                                            label="Datos Adicionales para la Entrega"
-                                                                            onChange={handleChange}
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            required
-                                                                            value={state.datosAdicionalesEntrega}
-                                                                            disabled={
-                                                                                state.agregar === "Consultar"
-                                                                            }
-                                                                            name="datosAdicionalesEntrega"
+                                                                                   label="Datos Adicionales para la Entrega"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   required
+                                                                                   value={state.datosAdicionalesEntrega}
+                                                                                   disabled={
+                                                                                       state.agregar === "Consultar"
+                                                                                   }
+                                                                                   name="datosAdicionalesEntrega"
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -4983,14 +5007,21 @@ function Embarque(props) {
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div />
+                                            <div/>
                                         )}
                                     </div>
                                 </div>
                                 <div className="form-footer ol-md-12">
                                     <button
                                         type="button"
-                                        onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            setState({...state, agregar: "Agregar"});
+                                            $('.nav-tabs li ').removeClass('active');
+                                            $('.nav-tabs li').eq(0).addClass('active');
+                                            $('.tab-content div ').removeClass('in show');
+                                            $('#Listado').addClass('in show');
+                                        }}
                                         className="btn btn-secondary secondary-btn"
                                     >
                                         Cancelar
@@ -5016,13 +5047,13 @@ function Embarque(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                label="Folio Embarque"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                value={state.folioEmbarque}
-                                                                name="folioEmbarque"
-                                                                readOnly
+                                                                       label="Folio Embarque"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.folioEmbarque}
+                                                                       name="folioEmbarque"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>
@@ -5030,13 +5061,13 @@ function Embarque(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                label="Sucursal"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                value={state.sucursalCancelacion}
-                                                                name="sucursalCancelacion"
-                                                                readOnly disabled
+                                                                       label="Sucursal"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.sucursalCancelacion}
+                                                                       name="sucursalCancelacion"
+                                                                       readOnly disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5044,13 +5075,13 @@ function Embarque(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense" label="Fecha"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                value={state.fechaCancelacion}
-                                                                name="fechaCancelacion"
-                                                                readOnly
-                                                                disabled
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.fechaCancelacion}
+                                                                       name="fechaCancelacion"
+                                                                       readOnly
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5058,13 +5089,13 @@ function Embarque(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense" label="Usuario"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                value={state.usuario}
-                                                                name="usuario"
-                                                                readOnly
-                                                                disabled
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.usuario}
+                                                                       name="usuario"
+                                                                       readOnly
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5072,13 +5103,13 @@ function Embarque(props) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense" label="Estatus"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                value={state.estatusEmbarque}
-                                                                name="estatusEmbarque"
-                                                                readOnly
-                                                                disabled
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       value={state.estatusEmbarque}
+                                                                       name="estatusEmbarque"
+                                                                       readOnly
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -5099,7 +5130,14 @@ function Embarque(props) {
                                                     <div className="form-footer col-md-12">
                                                         <button
                                                             type="button"
-                                                            onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
+                                                            onClick={(event) => {
+                                                                event.stopPropagation();
+                                                                setState({...state, agregar: "Agregar"});
+                                                                $('.nav-tabs li ').removeClass('active');
+                                                                $('.nav-tabs li').eq(0).addClass('active');
+                                                                $('.tab-content div ').removeClass('in show');
+                                                                $('#Listado').addClass('in show');
+                                                            }}
                                                             className="btn btn-secondary secondary-btn"
                                                         >
                                                             Cancelar
@@ -5125,7 +5163,7 @@ function Embarque(props) {
 
             {/*Rightbar Start Here*/}
             <aside className="rightbar">
-                <BarraLateralDerecha />
+                <BarraLateralDerecha/>
             </aside>
         </div>
     );

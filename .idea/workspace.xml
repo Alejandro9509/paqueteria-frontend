@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Cambio en la forma de seatear datos en recoleccion y embarque">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se corrigio al momento de consultar y editar guia">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -437,7 +437,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629387190042</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="Se corrigio al momento de consultar y editar guia">
+      <created>1629472137588</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1629472137588</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -514,7 +521,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita" />
     <MESSAGE value="Ajustes al crear guia a partir de embarque" />
     <MESSAGE value="Se recuperan las opciones de impuestos de los servicios en sucursales" />
     <MESSAGE value="Ajustes para registrar embarque cuando es entrega en domicilio" />
@@ -539,13 +545,18 @@
     <MESSAGE value="Se corrigio conceptos" />
     <MESSAGE value="Se calculo de iva conceptos" />
     <MESSAGE value="*Cambio en la forma de seatear datos en recoleccion y embarque" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Cambio en la forma de seatear datos en recoleccion y embarque" />
+    <MESSAGE value="Se corrigio al momento de consultar y editar guia" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se corrigio al momento de consultar y editar guia" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629436297621">
+    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629472137402">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629436297621" />
+    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629472137402" />
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629472142586">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629472142586" />
     <state x="366" y="245" key="git4idea.merge.GitPullDialog" timestamp="1629470576411">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
