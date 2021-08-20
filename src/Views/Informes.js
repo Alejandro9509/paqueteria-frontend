@@ -570,7 +570,7 @@ function Informes({history}) {
             TotalUnidadCompleta: 0,
             TotalGeneral: 0,
             m_nCreadoPor: state.CreadoPor,
-            m_arrClsProInformeGuia: dataGuias,
+            m_arrClsProInformeGuia: dataGuias.filter(g => g.select),
         };
 
         if (state.IdInforme != 0) {
@@ -1342,6 +1342,7 @@ function Informes({history}) {
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         obtenerInformesId(id).then(({data}) => {
+            data.m_arrClsProGuia.forEach(g => g.select = true)
             setDataGuias(data.m_arrClsProGuia)
             setState({
                 ...state,
