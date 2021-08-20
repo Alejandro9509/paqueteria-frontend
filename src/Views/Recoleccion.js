@@ -706,7 +706,7 @@ function Recoleccion() {
 
         console.log(params)
         console.log(JSON.stringify(params))
-        /*if (state.idRecoleccion != 0) {
+        if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -737,7 +737,7 @@ function Recoleccion() {
                     console.log(err);
                     showSuccess(err);
                 });
-        }*/
+        }
 
 
     };
