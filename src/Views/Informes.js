@@ -1342,6 +1342,7 @@ function Informes({history}) {
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         obtenerInformesId(id).then(({data}) => {
+            data.m_arrClsProGuia.forEach(g => g.select = true)
             setDataGuias(data.m_arrClsProGuia)
             setState({
                 ...state,

@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se corrigio boton de agregar guias">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Error al agregar guia">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Informes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Informes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -457,7 +458,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629472917226</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="Error al agregar guia">
+      <created>1629481428234</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1629481428234</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -534,7 +542,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ajustes para registrar embarque cuando es entrega en domicilio" />
     <MESSAGE value="Se recupera dato Tipo de servicio al modificar/ consultar una guia" />
     <MESSAGE value="Se obtiene el codigo postal del remitente y destinatario" />
     <MESSAGE value="Se corigio el envio de parametros para el modificar de Zonas" />
@@ -559,28 +566,36 @@
     <MESSAGE value="Se corrigio al momento de consultar y editar guia" />
     <MESSAGE value="Se corrigio el filio del embarque al editar" />
     <MESSAGE value="Se corrigio boton de agregar guias" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se corrigio boton de agregar guias" />
+    <MESSAGE value="Error al agregar guia" />
+    <option name="LAST_COMMIT_MESSAGE" value="Error al agregar guia" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629472917046">
+    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629481427893">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481427893" />
     <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629472917046" />
     <state x="144" y="76" key="DiffContextDialog" timestamp="1629476207161">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="144" y="76" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1629476207161" />
+    <state x="432" y="170" key="MultipleFileMergeDialog" timestamp="1629481444821">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481444821" />
     <state x="427" y="176" key="RollbackChangesDialog" timestamp="1629476209899">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="427" y="176" key="RollbackChangesDialog/0.0.1440.900@0.0.1440.900" timestamp="1629476209899" />
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629472923564">
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629481463335">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481463335" />
     <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629472923564" />
-    <state x="366" y="245" key="git4idea.merge.GitPullDialog" timestamp="1629470576411">
+    <state x="366" y="245" key="git4idea.merge.GitPullDialog" timestamp="1629481440411">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481440411" />
     <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900@0.0.1440.900" timestamp="1629470576411" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
