@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {ButtonBase, Grid} from "@material-ui/core";
+import {ButtonBase, Grid, Divider} from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 
 class DetalleInforme extends Component {
@@ -111,6 +111,8 @@ class DetalleInforme extends Component {
                                         </Grid>
                                     </Grid>
                                 </Grid>
+
+                                <Divider style={{margin: "10px"}}/>
                             </div>
                         )
                     })

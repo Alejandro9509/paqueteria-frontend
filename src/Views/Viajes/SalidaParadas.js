@@ -464,6 +464,7 @@ export default function SalidaParadas(props){
                         InputLabelProps={{shrink: true,}}
                         margin={"dense"}
                         label={"Hora"}
+                        type={"time"}
                         variant={"outlined"}
                         value={data.horaSalida}
                         onChange={handleChangeHoraSalida}

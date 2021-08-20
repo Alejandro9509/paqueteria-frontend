@@ -379,6 +379,10 @@ function Guia(props) {
                 }
             });
             setDataGuiaParaConsultarModificar(respuesta)
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(1).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Agregar').addClass('in show');
         }).catch(function (err) {
             console.log(err.data)
         });
@@ -395,7 +399,10 @@ function Guia(props) {
                 }
             });
             setDataGuiaParaConsultarModificar(respuesta)
-
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(1).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Agregar').addClass('in show');
         }).catch(function (err) {
             console.log(err.data)
         });
@@ -613,12 +620,20 @@ function Guia(props) {
             }
         });
         limpiarCamposAgregar()
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
         //getImpresion(38);
     }
 
     const handleShowListado = () => {
         limpiarCamposAgregar()
         getAllData()
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
     }
 
     const handleChange = event => {
@@ -798,6 +813,12 @@ function Guia(props) {
         getUltimoFolioGuia()
         getTipoCambio()
         getFormatosImpresion()
+        if(props.location.idEmbarque !== undefined) {
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(1).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Agregar').addClass('in show');
+        }
     }, []);
 
     useEffect(value => {
@@ -1056,7 +1077,7 @@ function Guia(props) {
             paquetesTemp.forEach((p) => {
                 pesoKg = pesoKg + p.peso * p.cdt
                 //xPesoVolumetrico += (clPaquete.m_xAlto * clPaquete.m_xLargo * clPaquete.m_xAncho)* 0.0005
-                pesoVolumetrico = (p.alto * p.ancho * p.largo) * 0.0005
+                pesoVolumetrico = (p.alto * p.ancho * p.largo) * p.cdt * 0.0005
             })
             if (pesoKg > pesoVolumetrico){
                 pesoTotal = pesoKg
@@ -2000,13 +2021,13 @@ function Guia(props) {
                 <div className="container-fluid">
                     {/*tabs de pantalla*/}
                     <ul className="nav navStatica nav-tabs">
-                        <li className={props.location.idEmbarque != undefined ? "" : "active"}>
-                            <a data-toggle="tab" href="#Listado" onClick={() => handleShowListado()}>
+                        <li className="active">
+                            <a  onClick={() => handleShowListado()}>
                                 <i className="fa fa-list" /> Listado
                             </a>
                         </li>
-                        <li className={props.location.idEmbarque != undefined ? "active" : ""}>
-                            <a data-toggle="tab" href="#Agregar" onClick={() => handleShowAgregar()}>
+                        <li >
+                            <a onClick={() => handleShowAgregar()}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -2045,8 +2066,7 @@ function Guia(props) {
                     </ul>
 
                     <div className="row" className="tab-content">
-                        <div id="Listado"
-                             className={props.location.idEmbarque != undefined ? "tab-pane fade" : "tab-pane fade in active"}>
+                        <div id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <form className="j-forms">
@@ -2174,8 +2194,7 @@ function Guia(props) {
                                 </div>
                             </div>
                         </div>
-                        <div id="Agregar"
-                             className={props.location.idEmbarque != undefined ? "tab-pane fade in active" : "tab-pane fade"}>
+                        <div id="Agregar" className="tab-pane fade">
                             <form className="j-forms" onSubmit={handleAceptar}>
                                 <div className="form-content">
 

@@ -576,7 +576,7 @@ function Viajes() {
             m_nKmViaje: data.kms,
             m_nMillasViaje: data.millas,
             m_sMotivoRetraso: data.motivoRetraso,
-            IdRuta:paradaData.m_nIdRuta,
+            IdRuta: paradaData.m_nIdRuta,
 
 
             // m_nIdEstatusViaje: this.state.estatusListado,
@@ -591,17 +591,17 @@ function Viajes() {
         }
 
 
-            agregarViajeSalida(params)
-                .then((respuesta) => {
-                    showSuccess(respuesta.data);
-                    console.log(respuesta.data);
-
-                })
-                .catch((err) => {
-                    console.log(err);
-                    showSuccess(err);
-                });
-
+        agregarViajeSalida(params)
+            .then((respuesta) => {
+                showSuccess(respuesta.data);
+                console.log(respuesta.data);
+                getParadasListado(paradaData.m_nIdViaje)
+                getAllData()
+            })
+            .catch((err) => {
+                console.log(err);
+                showSuccess(err);
+            });
 
 
     }
@@ -611,30 +611,42 @@ function Viajes() {
         console.log(data);
 
         var params = {
-            m_dFecha: this.state.fechaHoraRegistro.split("T")[0],
-            m_tHora: this.state.fechaHoraRegistro.split("T")[1],
-            m_nIdEstatusViaje: this.state.estatusListado,
-            m_nIdSucursal: this.state.idSucursalAgregar,
-            m_sCandadoOficial: this.state.candadoOficial,
-            m_sFolioViaje: this.state.folioViaje,
-            m_sIdentificador: this.state.identificadorViaje,
-            m_sNumViajeCliente: this.state.viajeCliente,
-            CreadoPor: this.state.CreadoPor,
-            m_arrInformes: this.state.dataInformes
-
+            m_dFecha: state.fechaHoraRegistro.split("T")[0],
+            m_tHora: state.fechaHoraRegistro.split("T")[1],
+            m_nCV1Km: data.kmsRemolqueUno,
+            m_nCV2Km: data.kmsRemolqueDos,
+            m_nCV1Millas: data.millasRemolqueUno,
+            m_nCV2Millas: data.millasRemolqueDos,
+            m_bCV1Estatus: data.idEstatusRemolqueUno,
+            m_bCV2Estatus: data.idEstatusRemolqueDos,
+            m_nKmViaje: data.kms,
+            m_nIdEstatusLlegada: data.idEstatus,
+            m_nMillasViaje: data.millas,
+            IdRuta: paradaData.m_nIdRuta,
+            m_nIdViaje: paradaData.m_nIdViaje,
+            m_sMotivoRetraso: data.motivoRetraso,
+            m_nPesoCarga: data.pesoDescarga,
+            m_dFechaSalida: data.fechaSalida,
+            m_tHoraSalida: data.horaSalida,
+            m_nLiquidacion: data.liquidacion,
+            m_dFechaLlegada: data.fechaLlegada,
+            m_tHoraLlegada: data.horaLlegada,
+            m_nTipoCambio: data.tipoDeCambioOrigen
         }
 
 
-            agregarViajeLlegada(params)
-                .then((respuesta) => {
-                    showSuccess(respuesta.data);
-                    console.log(respuesta.data);
+        agregarViajeLlegada(params)
+            .then((respuesta) => {
+                showSuccess(respuesta.data);
+                console.log(respuesta.data);
+                getParadasListado(paradaData.m_nIdViaje)
+                getAllData()
 
-                })
-                .catch((err) => {
-                    console.log(err);
-                    showSuccess(err);
-                });
+            })
+            .catch((err) => {
+                console.log(err);
+                showSuccess(err);
+            });
 
     }
 
@@ -723,25 +735,27 @@ function Viajes() {
                     </DialogContent>
                 </Dialog>
             }
-
-            <Dialog open={eventOptions.showLlegadaParadasDialog}
-                    onClose={closeLlegadaDialog}
-                    fullWidth={true}
-                    maxWidth={'xl'}>
-                <DialogTitle><h2>Llegada de Paradas</h2></DialogTitle>
-                <DialogContent>
-                    <LlegadaParadas onSubmit={updateLlegada} data={paradaData}>
-                        <DialogActions>
-                            <Button
-                                variant={'contained'} color={'primary'}
-                                type="submit"
-                                onClick={closeLlegadaDialog}>Aceptar</Button>
-                            <Button variant={'outlined'} color={'primary'}
-                                    onClick={closeLlegadaDialog}>Cancelar</Button>
-                        </DialogActions>
-                    </LlegadaParadas>
-                </DialogContent>
-            </Dialog>
+            {
+                paradaData &&
+                <Dialog open={eventOptions.showLlegadaParadasDialog}
+                        onClose={closeLlegadaDialog}
+                        fullWidth={true}
+                        maxWidth={'xl'}>
+                    <DialogTitle><h2>Llegada de Paradas</h2></DialogTitle>
+                    <DialogContent>
+                        <LlegadaParadas onSubmit={updateLlegada} data={paradaData.m_clsInforme}>
+                            <DialogActions>
+                                <Button
+                                    variant={'contained'} color={'primary'}
+                                    type="submit"
+                                    onClick={closeLlegadaDialog}>Aceptar</Button>
+                                <Button variant={'outlined'} color={'primary'}
+                                        onClick={closeLlegadaDialog}>Cancelar</Button>
+                            </DialogActions>
+                        </LlegadaParadas>
+                    </DialogContent>
+                </Dialog>
+            }
             <Dialog open={eventOptions.showAsignarOperadorDialog}
                     onClose={closeAsignarOperadorDialog}
                     fullWidth={true}
@@ -980,7 +994,8 @@ function Viajes() {
                                     </div>
                                     <div className="widget-wrap">
                                         <div className="widget-content">
-                                            <div className="row" style={{height: "400px", width: '100%',overflow:"auto"}}>
+                                            <div className="row"
+                                                 style={{height: "400px", width: '100%', overflow: "auto"}}>
                                                 <List>
                                                     {
                                                         paradasListado.map((p, index) => {
