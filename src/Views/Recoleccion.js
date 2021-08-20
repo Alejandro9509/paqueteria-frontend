@@ -232,6 +232,12 @@ function Recoleccion() {
             },
         ],
 
+        //Cita de recoleccion
+        recoleccionConCita: false,
+        fechaCita: '',
+        horaCitaMinima: '',
+        horaCitaMaxima: '',
+
     //Entrega
         diferenteEntrega: false,
         ciudadEntrega: '',
@@ -557,6 +563,12 @@ function Recoleccion() {
             m_nIdDestinatario: state.idDestinatario,
             m_sAliasDestinatario: state.aliasDestinatario,
 
+            //Cita de recoleccion
+            recoleccionConCita: false,
+            fechaCita: '',
+            horaCitaMinima: '',
+            horaCitaMaxima: '',
+
             //Recoleccion
             m_dFechaDetalleRecoleccion: '',
             m_tHoraDetalleRecoleccion: '',
@@ -613,6 +625,13 @@ function Recoleccion() {
             params.m_sEntregarEnDetalleEntrega = state.entregaEn
             params.m_sDatosAdicionalesDetalleEntrega = state.datosAdicionalesEntrega
         }
+
+        /*if (state.recoleccionConCita){
+            params.m_bRecoleccionConCita = state.recoleccionConCita
+            params.variable1 = state.fechaCita
+            params.variable2 = state.horaCitaMinima
+            params.variable3 = state.horaCitaMaxima
+        }*/
 
         /*const infoGeneral = {
             m_nIdRecoleccion: state.idRecoleccion,
@@ -706,7 +725,7 @@ function Recoleccion() {
 
         console.log(params)
         console.log(JSON.stringify(params))
-        if (state.idRecoleccion != 0) {
+        /*if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -737,7 +756,7 @@ function Recoleccion() {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
 
 
     };
@@ -1039,8 +1058,14 @@ function Recoleccion() {
                 countSobres: respuesta.data.m_parrSobres.length,
                 mismoPaquete: false,
                 mismoSobre: false,
-                paquetes: respuesta.data.m_parrPaquetes, //agrega la variable de tipo
-                sobres: respuesta.data.m_parrSobres, // agregar variable de tipo
+                paquetes: respuesta.data.m_parrPaquetes,
+                sobres: respuesta.data.m_parrSobres,
+
+                //Cita de recoleccion
+                /*recoleccionConCita: false,
+                fechaCita: '',
+                horaCitaMinima: '',
+                horaCitaMaxima: '',*/
 
                 //Entrega
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
@@ -1244,6 +1269,12 @@ function Recoleccion() {
                 },
             ],
 
+                //Cita de recoleccion
+                recoleccionConCita: false,
+                fechaCita: '',
+                horaCitaMinima: '',
+                horaCitaMaxima: '',
+
                 //Entrega
                 diferenteEntrega: false,
                 ciudadEntrega: '',
@@ -1313,6 +1344,14 @@ function Recoleccion() {
         setState({
             ...state,
             diferenteRecoleccion: !state.diferenteRecoleccion,
+        });
+    };
+
+    const handleCitaCheckboxChange = (event) => {
+        // event.preventDefault();
+        setState({
+            ...state,
+            recoleccionConCita: !state.recoleccionConCita,
         });
     };
 
@@ -2620,6 +2659,27 @@ function Recoleccion() {
         })
     }
 
+    const handleFechaCita = (event) => {
+        setState({
+            ...state,
+            fechaCita: event.target.value,
+        })
+    }
+
+    const handleHoraCitaMinima = (event) => {
+        setState({
+            ...state,
+            horaCitaMinima: event.target.value,
+        })
+    }
+
+    const handleHoraCitaMaxima = (event) => {
+        setState({
+            ...state,
+            horaCitaMaxima: event.target.value,
+        })
+    }
+
     return (
         <div >
             <Dialog open={state.openDialog} onClose={() => setState({ ...state, openDialog: false })} fullWidth maxWidth="md">
@@ -3867,6 +3927,21 @@ function Recoleccion() {
                                                                             Recolección en Diferente Domicilio
                                                                         </label>
                                                                     </div>
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <label className="checkbox">
+                                                                            <input
+                                                                                onChange={handleCitaCheckboxChange}
+                                                                                className="form-control"
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                checked={state.recoleccionConCita}
+                                                                                type="checkbox"
+                                                                                style={{ height: "20px" }}
+                                                                                id="recoleccionConCita"
+                                                                            />
+                                                                            <i />
+                                                                            Programar cita de recolección
+                                                                        </label>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -4441,8 +4516,79 @@ function Recoleccion() {
                                     </div>
 
                                     <div className="col-md-12">
-                                        <div className="widget-wrap" id="detallesRecoleccion">
-                                            {state.diferenteRecoleccion ? (
+
+                                        {state.recoleccionConCita &&
+                                            <div className="widget-wrap" id="citaRecoleccion">
+                                                <div>
+                                                    <div className="widget-header">
+                                                        <h2>Programar cita de la Recolección</h2>
+                                                    </div>
+                                                    <div className="widget-container">
+                                                        <div className="widget-content">
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <div className="col-sm-6 col-md-4  unit">
+
+                                                                        <div className="input">
+                                                                            <TextField
+                                                                                variant="outlined"
+                                                                                id="fechaCita"
+                                                                                label="Fecha de la cita"
+                                                                                type="date"
+                                                                                onChange={handleFechaCita}
+                                                                                value={state.fechaCita}
+                                                                                className={"form-control"}
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                InputLabelProps={{shrink: true,}}
+                                                                                required={state.recoleccionConCita}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-6 col-md-4  unit">
+                                                                        <div className="input">
+                                                                            <TextField
+                                                                                variant="outlined"
+                                                                                id="horaMinima"
+                                                                                label="Hora mínima"
+                                                                                type="time"
+                                                                                value={state.horaCitaMinima}
+                                                                                onChange={handleHoraCitaMinima}
+                                                                                className={"form-control"}
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                InputLabelProps={{shrink: true,}}
+                                                                                inputProps={{step: 300,}}
+                                                                                required={state.recoleccionConCita}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="col-sm-6 col-md-4  unit">
+                                                                        <div className="input">
+                                                                            <TextField
+                                                                                variant="outlined"
+                                                                                id="horaMaxima"
+                                                                                label="Hora máxima"
+                                                                                type="time"
+                                                                                onChange={handleHoraCitaMaxima}
+                                                                                value={state.horaCitaMaxima}
+                                                                                className={"form-control"}
+                                                                                InputLabelProps={{shrink: true,}}
+                                                                                inputProps={{step: 300,}}
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                required={state.recoleccionConCita}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        {state.diferenteRecoleccion &&
+                                            <div className="widget-wrap" id="detallesRecoleccion">
                                                 <div>
                                                     <div className="widget-header">
                                                         <h2>Detalles de la Recolección</h2>
@@ -4674,11 +4820,10 @@ function Recoleccion() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            ) : (
-                                                <div></div>
-                                            )}
-
-                                            {state.diferenteEntrega ? (
+                                            </div>
+                                        }
+                                        {state.diferenteEntrega &&
+                                            <div className="widget-wrap" id="detallesRecoleccion">
                                                 <div>
                                                     <div className="widget-header">
                                                         <h2>Detalles de la Entrega</h2>
@@ -4890,11 +5035,15 @@ function Recoleccion() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            ) : (
-                                                <div></div>
-                                            )}
+                                            </div>
+                                        }
 
-                                            {/*{state.diferenteRecoleccion || state.diferenteEntrega ? (
+                                        {/*<div className="widget-wrap" id="detallesRecoleccion">
+
+
+
+
+                                            {state.diferenteRecoleccion || state.diferenteEntrega ? (
                                                 <div >
 
 
@@ -4902,8 +5051,8 @@ function Recoleccion() {
                                                 </div>
                                             ) : (
                                                 <div></div>
-                                            )}*/}
-                                        </div>
+                                            )}
+                                        </div>*/}
 
                                         <div className="widget-wrap" id="detallesOperacion">
                                             <div className="row">
