@@ -176,6 +176,8 @@ function Recoleccion() {
         clientePaga: {},
 
     //Remitente
+        idRemitente: '',
+        aliasRemitente: '',
         nombreRemitente: '',
         RFCRemitente: '',
         domicilioRemitente: '',
@@ -188,6 +190,8 @@ function Recoleccion() {
         zonaRemitente: {},
 
     //Destinatario
+        idDestinatario: '',
+        aliasDestinatario: '',
         nombreDestinatario: '',
         RFCDestinatario: '',
         domicilioDestinatario: '',
@@ -461,6 +465,8 @@ function Recoleccion() {
             setState(state => {
                 return {
                 ...state,
+                    idRemitente: newValue.m_nIdRemitenteDestinatario,
+                    aliasRemitente: newValue.m_sAlias,
                     nombreRemitente: newValue,
                     RFCRemitente: newValue.m_sRFC,
                     domicilioRemitente: newValue.m_sDomicilio,
@@ -485,6 +491,8 @@ function Recoleccion() {
             setState(state => {
                 return {
                 ...state,
+                    idDestinatario: newValue.m_nIdRemitenteDestinatario,
+                    aliasDestinatario: newValue.m_sAlias,
                     nombreDestinatario: newValue,
                     RFCDestinatario: newValue.m_sRFC,
                     domicilioDestinatario: newValue.m_sDomicilio,
@@ -532,6 +540,8 @@ function Recoleccion() {
             m_sContactoRemitente: state.contactoRemitente,
             m_nIdCiudadOrigen: state.origenRemitente.m_nIdCiudad,
             m_nIdZonaRemitente: state.zonaRemitente.m_nIdZona,
+            m_nIdRemitente: state.idRemitente,
+            m_sAliasRemitente: state.aliasRemitente,
 
             //Destinatario
             m_sNombreDestinatario: state.nombreDestinatario.m_sNombre,
@@ -544,6 +554,8 @@ function Recoleccion() {
             m_sContactoDestinatario: state.contactoDestinatario,
             m_nIdCiudadDestino: state.destinoDestinatario.m_nIdCiudad,
             m_nIdZonaDestinatario: state.zonaDestinatario.m_nIdZona,
+            m_nIdDestinatario: state.idDestinatario,
+            m_sAliasDestinatario: state.aliasDestinatario,
 
             //Recoleccion
             m_dFechaDetalleRecoleccion: '',
@@ -694,7 +706,7 @@ function Recoleccion() {
 
         console.log(params)
         console.log(JSON.stringify(params))
-        if (state.idRecoleccion != 0) {
+        /*if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -725,7 +737,7 @@ function Recoleccion() {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
 
 
     };
@@ -910,9 +922,19 @@ function Recoleccion() {
     }
 
     const setRecoleccionDataParaConsultaModificacion = (respuesta) => {
-        const remitente = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente && o.m_sNombre == respuesta.data.m_sNombreRemitente)
+        let remitente = {}
+        let destinatario = {}
+        if (respuesta.data.m_sAliasRemitente){
+            remitente = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasRemitente && o.m_sNombre == respuesta.data.m_sNombreRemitente)
+        }else{
+            remitente = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNombreRemitente)
+        }
+        if (respuesta.data.m_sAliasDestinatario){
+            destinatario = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
+        }else{
+            destinatario = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNombreDestinatario)
+        }
 
-        const destinatario = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
         obtenerCodigoPostalId(remitente.m_nIdCP).then((cp) => {
             setState(state => {
                 return {
@@ -988,6 +1010,8 @@ function Recoleccion() {
                 correoRemitente: respuesta.data.m_sCorreoRemitente,
                 telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                 contactoRemitente: respuesta.data.m_sContactoRemitente,
+                idRemitente: respuesta.data.m_nIdRemitente,
+                aliasRemitente: respuesta.data.m_sAliasRemitente,
 
                 origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                 zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
@@ -1000,6 +1024,8 @@ function Recoleccion() {
                 correoDestinatario: respuesta.data.m_sCorreoDestinatario,
                 telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                 contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+                idDestinatario: respuesta.data.m_nIdDestinatario,
+                aliasDestinatario: respuesta.data.m_sAliasDestinatario,
 
                 destinoDestinatario: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
                 zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
@@ -1086,6 +1112,7 @@ function Recoleccion() {
 
     const handleShowListado = (event) => {
         event.stopPropagation();
+        limpiarInputsAgregar()
         setState(state =>{
             return {
                 ...state,
@@ -1171,6 +1198,8 @@ function Recoleccion() {
                 contactoRemitente: '',
                 origenRemitente: '',
                 zonaRemitente: {},
+                idRemitente: '',
+                aliasRemitente: '',
 
                 //Destinatario
                 nombreDestinatario: {m_sNombre: "Nombre", m_sAlias: "Alias"},
@@ -1183,6 +1212,8 @@ function Recoleccion() {
                 contactoDestinatario: '',
                 destinoDestinatario: '',
                 zonaDestinatario: {},
+                idDestinatario: '',
+                aliasDestinatario: '',
 
                 //Paquetes/Sobres
                 countPaquetes: 1,
