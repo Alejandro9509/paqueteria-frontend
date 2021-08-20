@@ -183,6 +183,8 @@ function Embarque(props) {
         clientePaga: {},
 
         //Remitente
+        idRemitente: '',
+        aliasRemitente: '',
         nombreRemitente: '',
         RFCRemitente: '',
         domicilioRemitente: '',
@@ -195,6 +197,8 @@ function Embarque(props) {
         zonaRemitente: {},
 
         //Destinatario
+        idDestinatario: '',
+        aliasDestinatario: '',
         nombreDestinatario: '',
         RFCDestinatario: '',
         domicilioDestinatario: '',
@@ -531,6 +535,8 @@ function Embarque(props) {
             setState(state => {
                 return{
                     ...state,
+                    idRemitente: newValue.m_nIdRemitenteDestinatario,
+                    aliasRemitente: newValue.m_sAlias,
                     nombreRemitente: user,
                     RFCRemitente: user.m_sRFC,
                     domicilioRemitente: user.m_sDomicilio,
@@ -550,6 +556,8 @@ function Embarque(props) {
             setState(state => {
                 return{
                     ...state,
+                    idDestinatario: newValue.m_nIdRemitenteDestinatario,
+                    aliasDestinatario: newValue.m_sAlias,
                     nombreDestinatario: newValue,
                     RFCDestinatario: newValue.m_sRFC,
                     domicilioDestinatario: newValue.m_sDomicilio,
@@ -607,6 +615,8 @@ function Embarque(props) {
             m_sContactoRemitente: state.contactoRemitente,
             m_nIdCiudadOrigen: state.ciudadOrigen.m_nIdCiudad,
             m_nIdZonaRemitente: state.zonaRemitente.m_nIdZona,
+            m_nIdRemitente: state.idRemitente,
+            m_sAliasRemitente: state.aliasRemitente,
 
             m_sNombreDestinatario: state.nombreDestinatario.m_sNombre,
             m_sRFCDestinatario: state.RFCDestinatario,
@@ -618,6 +628,8 @@ function Embarque(props) {
             m_sContactoDestinatario: state.contactoDestinatario,
             m_nIdCiudadDestino: state.ciudadDestino.m_nIdCiudad,
             m_nIdZonaDestinatario: state.zonaDestinatario.m_nIdZona,
+            m_nIdDestinatario: state.idDestinatario,
+            m_sAliasDestinatario: state.aliasDestinatario,
 
             m_nNoPaquetes: state.paquetes.length,
             m_nNoSobres: state.sobres.length,
@@ -646,9 +658,11 @@ function Embarque(props) {
         if (state.entregaEnSucursal){
             params.m_bEntregaEnSucursal = true
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
+            params.EntregarMismoDomicilio = false
         }
         if (state.diferenteEntrega){
             params.EntregarMismoDomicilio = false
+            params.m_bEntregaEnSucursal = false
             params.IdCiudadEntrega = state.ciudadEntrega
             params.CodigoPostalEntrega = state.codigoPostalEntrega.m_nIdCP
             params.IdZonaEntrega = state.zonaEntrega
@@ -659,7 +673,7 @@ function Embarque(props) {
             params.m_tHoraDetalleEntrega = state.fechaEntrega.split("T")[1]*/
         }
 
-        const infoGeneral = {
+        /*const infoGeneral = {
             m_nIdEmbarque: params.m_nIdEmbarque,
             m_nIdRecoleccion: params.m_nIdRecoleccion,
             IdSucursal: params.IdSucursal,
@@ -710,10 +724,10 @@ function Embarque(props) {
             DomicilioEntrega: params.DomicilioEntrega,
             EntregarEn: params.EntregarEn,
             DatosAdicionales: params.DatosAdicionales,
-           /* m_tFechaDetalleEntrega: params.fechaEntrega.split("T")[0],
+           /!* m_tFechaDetalleEntrega: params.fechaEntrega.split("T")[0],
             m_tHoraDetalleEntrega: params.fechaEntrega.split("T")[1],
             m_dFechaEntrega: "",
-            m_tHoraEntrega: "",*/
+            m_tHoraEntrega: "",*!/
         }
         console.log('entrega: ')
         console.log(entregaData)
@@ -734,12 +748,12 @@ function Embarque(props) {
             m_nIdSucursalEntrega: params.m_nIdSucursalEntrega
         }
         console.log('otros datos:')
-        console.log(otros)
+        console.log(otros)*/
 
         console.log(params)
         console.log(JSON.stringify(params))
 
-        if (state.idEmbarque != 0) {
+        /*if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -768,7 +782,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
     };
 
     function handleSelectCP(id, cp) {
@@ -1025,6 +1039,8 @@ function Embarque(props) {
                 contactoRemitente: '',
                 ciudadOrigen: '',
                 zonaRemitente: {},
+                idRemitente: '',
+                aliasRemitente: '',
 
                 //Destinatario
                 nombreDestinatario: {m_sNombre: "Nombre", m_sAlias: "Alias"},
@@ -1037,6 +1053,9 @@ function Embarque(props) {
                 contactoDestinatario: '',
                 ciudadDestino: '',
                 zonaDestinatario: {},
+                idDestinatario: '',
+                aliasDestinatario: '',
+
 
                 //Entrega
                 entregaEnSucursal: false,
@@ -1159,9 +1178,8 @@ function Embarque(props) {
             sobre["m_nTipo"] = 1
         })
 
-        const remitente = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente && o.m_sNombre == respuesta.data.m_sNombreRemitente)
-
-        const destinatario = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
+        const remitente = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasRemitente && o.m_sNombre == respuesta.data.m_sNombreRemitente)
+        const destinatario = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
         obtenerCodigoPostalId(remitente.m_nIdCP).then((cp) => {
             setState(state => {
                 return {
@@ -1210,6 +1228,8 @@ function Embarque(props) {
                 telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                 contactoRemitente: respuesta.data.m_sContactoRemitente,
                 ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+                idRemitente: respuesta.data.m_nIdRemitente,
+                aliasRemitente: respuesta.data.m_sAliasRemitente,
 
                 nombreDestinatario: destinatario,
                 RFCDestinatario: respuesta.data.m_sRFCDestinatario,
@@ -1218,6 +1238,9 @@ function Embarque(props) {
                 correoDestinatario: respuesta.data.m_sCorreoDestinatario,
                 telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                 contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+                idDestinatario: respuesta.data.m_nIdDestinatario,
+                aliasDestinatario: respuesta.data.m_sAliasDestinatario,
+
                 ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
                 zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
                 zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
@@ -1268,9 +1291,8 @@ function Embarque(props) {
     //Funcion para mostrar datos de embarque para consultar o modificar
     const setDataParaConsultarModificar = (respuesta) => {
 
-        const remitente = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente && o.m_sNombre == respuesta.data.m_sNOmbreRemitente)
-
-        const destinatario = dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
+        const remitente = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasRemitente && o.m_sNombre == respuesta.data.m_sNOmbreRemitente)
+        const destinatario = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasRemitente && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
 
         /*handleSelectRemitente(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente))
         handleSelectDestinatario(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario))*/
@@ -1339,6 +1361,8 @@ function Embarque(props) {
                 contactoRemitente: respuesta.data.m_sContactoRemitente,
                 ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                 zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
+                idRemitente: respuesta.data.m_nIdRemitente,
+                aliasRemitente: respuesta.data.m_sAliasRemitente,
 
                 //Destinatario
                 /*nombreDestinatario: '',
@@ -1358,6 +1382,8 @@ function Embarque(props) {
                 contactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
                 zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
+                idDestinatario: respuesta.data.m_nIdDestinatario,
+                aliasDestinatario: respuesta.data.m_sAliasDestinatario,
 
                 //Entrega
                 entregaEnSucursal: false,
