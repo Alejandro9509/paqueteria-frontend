@@ -484,14 +484,15 @@ function Recoleccion() {
                     nombreRemitente: newValue,
                     RFCRemitente: newValue.m_sRFC,
                     domicilioRemitente: newValue.m_sDomicilio,
-
                     codigoPostalRemitente: respuesta.data,
-
                     ciudadRemitente: respuesta.data.m_nIdCiudad,
-
                     correoRemitente: newValue.m_sCorreoElectronico,
                     telefonoRemitente: newValue.m_sTelefono,
                     contactoRemitente: newValue.m_sContacto,
+                    calleRemitente: newValue.m_sCalle,
+                    numeroExtRemitente: newValue.m_sNoExterior,
+                    numeroIntRemitente: newValue.m_sNoInterior,
+                    coloniaRemitente: newValue.m_sColonia
                 }
             })
         })
@@ -510,14 +511,15 @@ function Recoleccion() {
                     nombreDestinatario: newValue,
                     RFCDestinatario: newValue.m_sRFC,
                     domicilioDestinatario: newValue.m_sDomicilio,
-
                     codigoPostalDestinatario: respuesta.data,
-
                     ciudadDestinatario: respuesta.data.m_nIdCiudad,
-
                     correoDestinatario: newValue.m_sCorreoElectronico,
                     telefonoDestinatario: newValue.m_sTelefono,
                     contactoDestinatario: newValue.m_sContacto,
+                    calleDestinatario: newValue.m_sCalle,
+                    numeroExtDestinatario: newValue.m_sNoExterior,
+                    numeroIntDestinatario: newValue.m_sNoInterior,
+                    coloniaDestinatario: newValue.m_sColonia
                 }
             })
         })
@@ -557,8 +559,8 @@ function Recoleccion() {
             m_nIdRemitente: state.idRemitente,
             m_sAliasRemitente: state.aliasRemitente,
             m_sCalleRemitente: state.calleRemitente,
-            m_sNumeroIntRemitente: state.numeroIntRemitente,
-            m_sNumeroExtRemitente: state.numeroExtRemitente,
+            m_sNoIntRemitente: state.numeroIntRemitente,
+            m_sNoExtRemitente: state.numeroExtRemitente,
             m_sColoniaRemitente: state.coloniaRemitente,
 
             //Destinatario
@@ -575,8 +577,8 @@ function Recoleccion() {
             m_nIdDestinatario: state.idDestinatario,
             m_sAliasDestinatario: state.aliasDestinatario,
             m_sCalleDestinatario: state.calleDestinatario,
-            m_sNumeroIntDestinatario: state.numeroIntDestinatario,
-            m_sNumeroExtDestinatario: state.numeroExtDestinatario,
+            m_sNoIntDestinatario: state.numeroIntDestinatario,
+            m_sNoExtDestinatario: state.numeroExtDestinatario,
             m_sColoniaDestinatario: state.coloniaDestinatario,
 
             //Cita de recoleccion
@@ -1052,8 +1054,8 @@ function Recoleccion() {
                 idRemitente: respuesta.data.m_nIdRemitente,
                 aliasRemitente: respuesta.data.m_sAliasRemitente,
                 calleRemitente: respuesta.data.m_sCalleRemitente,
-                numeroIntRemitente: respuesta.data.m_sNumeroIntRemitente,
-                numeroExtRemitente: respuesta.data.m_sNumeroExtRemitente,
+                numeroIntRemitente: respuesta.data.m_sNoIntRemitente,
+                numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
                 coloniaRemitente: respuesta.data.m_sColoniaRemitente,
 
                 origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
@@ -1070,8 +1072,8 @@ function Recoleccion() {
                 idDestinatario: respuesta.data.m_nIdDestinatario,
                 aliasDestinatario: respuesta.data.m_sAliasDestinatario,
                 calleDestinatario: respuesta.data.m_sCalleDestinatario,
-                numeroIntDestinatario: respuesta.data.m_sNumeroIntDestinatario,
-                numeroExtDestinatario: respuesta.data.m_sNumeroExtDestinatario,
+                numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario,
+                numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
                 coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
 
                 destinoDestinatario: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
