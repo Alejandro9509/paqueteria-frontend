@@ -181,6 +181,10 @@ function Recoleccion() {
         nombreRemitente: '',
         RFCRemitente: '',
         domicilioRemitente: '',
+        calleRemitente: '',
+        numeroIntRemitente: '',
+        numeroExtRemitente: '',
+        coloniaRemitente: '',
         ciudadRemitente: '',
         codigoPostalRemitente: '',
         correoRemitente: '',
@@ -195,6 +199,10 @@ function Recoleccion() {
         nombreDestinatario: '',
         RFCDestinatario: '',
         domicilioDestinatario: '',
+        calleDestinatario: '',
+        numeroIntDestinatario: '',
+        numeroExtDestinatario: '',
+        coloniaDestinatario: '',
         ciudadDestinatario: '',
         codigoPostalDestinatario: '',
         correoDestinatario: '',
@@ -476,14 +484,15 @@ function Recoleccion() {
                     nombreRemitente: newValue,
                     RFCRemitente: newValue.m_sRFC,
                     domicilioRemitente: newValue.m_sDomicilio,
-
                     codigoPostalRemitente: respuesta.data,
-
                     ciudadRemitente: respuesta.data.m_nIdCiudad,
-
                     correoRemitente: newValue.m_sCorreoElectronico,
                     telefonoRemitente: newValue.m_sTelefono,
                     contactoRemitente: newValue.m_sContacto,
+                    calleRemitente: newValue.m_sCalle,
+                    numeroExtRemitente: newValue.m_sNoExterior,
+                    numeroIntRemitente: newValue.m_sNoInterior,
+                    coloniaRemitente: newValue.m_sColonia
                 }
             })
         })
@@ -502,14 +511,15 @@ function Recoleccion() {
                     nombreDestinatario: newValue,
                     RFCDestinatario: newValue.m_sRFC,
                     domicilioDestinatario: newValue.m_sDomicilio,
-
                     codigoPostalDestinatario: respuesta.data,
-
                     ciudadDestinatario: respuesta.data.m_nIdCiudad,
-
                     correoDestinatario: newValue.m_sCorreoElectronico,
                     telefonoDestinatario: newValue.m_sTelefono,
                     contactoDestinatario: newValue.m_sContacto,
+                    calleDestinatario: newValue.m_sCalle,
+                    numeroExtDestinatario: newValue.m_sNoExterior,
+                    numeroIntDestinatario: newValue.m_sNoInterior,
+                    coloniaDestinatario: newValue.m_sColonia
                 }
             })
         })
@@ -548,6 +558,10 @@ function Recoleccion() {
             m_nIdZonaRemitente: state.zonaRemitente.m_nIdZona,
             m_nIdRemitente: state.idRemitente,
             m_sAliasRemitente: state.aliasRemitente,
+            m_sCalleRemitente: state.calleRemitente,
+            m_sNoIntRemitente: state.numeroIntRemitente,
+            m_sNoExtRemitente: state.numeroExtRemitente,
+            m_sColoniaRemitente: state.coloniaRemitente,
 
             //Destinatario
             m_sNombreDestinatario: state.nombreDestinatario.m_sNombre,
@@ -562,6 +576,10 @@ function Recoleccion() {
             m_nIdZonaDestinatario: state.zonaDestinatario.m_nIdZona,
             m_nIdDestinatario: state.idDestinatario,
             m_sAliasDestinatario: state.aliasDestinatario,
+            m_sCalleDestinatario: state.calleDestinatario,
+            m_sNoIntDestinatario: state.numeroIntDestinatario,
+            m_sNoExtDestinatario: state.numeroExtDestinatario,
+            m_sColoniaDestinatario: state.coloniaDestinatario,
 
             //Cita de recoleccion
             m_bRecoleccionConCita: false,
@@ -725,7 +743,7 @@ function Recoleccion() {
 
         console.log(params)
         console.log(JSON.stringify(params))
-        if (state.idRecoleccion != 0) {
+        /*if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -756,7 +774,7 @@ function Recoleccion() {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
 
 
     };
@@ -1035,6 +1053,10 @@ function Recoleccion() {
                 contactoRemitente: respuesta.data.m_sContactoRemitente,
                 idRemitente: respuesta.data.m_nIdRemitente,
                 aliasRemitente: respuesta.data.m_sAliasRemitente,
+                calleRemitente: respuesta.data.m_sCalleRemitente,
+                numeroIntRemitente: respuesta.data.m_sNoIntRemitente,
+                numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
+                coloniaRemitente: respuesta.data.m_sColoniaRemitente,
 
                 origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                 zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
@@ -1049,6 +1071,10 @@ function Recoleccion() {
                 contactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 idDestinatario: respuesta.data.m_nIdDestinatario,
                 aliasDestinatario: respuesta.data.m_sAliasDestinatario,
+                calleDestinatario: respuesta.data.m_sCalleDestinatario,
+                numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario,
+                numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
+                coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
 
                 destinoDestinatario: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
                 zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
@@ -1229,6 +1255,10 @@ function Recoleccion() {
                 zonaRemitente: {},
                 idRemitente: '',
                 aliasRemitente: '',
+                calleRemitente: '',
+                numeroIntRemitente: '',
+                numeroExtRemitente: '',
+                coloniaRemitente: '',
 
                 //Destinatario
                 nombreDestinatario: {m_sNombre: "Nombre", m_sAlias: "Alias"},
@@ -1243,6 +1273,10 @@ function Recoleccion() {
                 zonaDestinatario: {},
                 idDestinatario: '',
                 aliasDestinatario: '',
+                calleDestinatario: '',
+                numeroIntDestinatario: '',
+                numeroExtDestinatario: '',
+                coloniaDestinatario: '',
 
                 //Paquetes/Sobres
                 countPaquetes: 1,
@@ -3633,6 +3667,65 @@ function Recoleccion() {
                                                                             />
                                                                         </div>
                                                                     </div>
+
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       required
+                                                                                       label="Calle"
+                                                                                       value={state.calleRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       id="calleRemitente"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       required
+                                                                                       label="Número interior"
+                                                                                       value={state.numeroIntRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       id="numeroIntRemitente"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       label="Número exterior"
+                                                                                       value={state.numeroExtRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       id="numeroExtRemitente"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <div className="input">
+                                                                            <TextField variant="outlined" margin="dense"
+                                                                                       onChange={handleChange}
+                                                                                       className="form-control"
+                                                                                       type="text"
+                                                                                       required
+                                                                                       label="Colonia"
+                                                                                       value={state.coloniaRemitente}
+                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       id="coloniaRemitente"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
                                                                     {/* --------------------------------------- Ciudad ------------------------------------------------- */}
                                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
                                                                         <label className="input select">
@@ -4069,6 +4162,65 @@ function Recoleccion() {
                                                                             value={state.domicilioDestinatario}
                                                                             disabled={state.agregar === "Consultar"}
                                                                             id="domicilioDestinatario"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   required
+                                                                                   label="Calle"
+                                                                                   value={state.calleDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="calleDestinatario"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   required
+                                                                                   label="Número interior"
+                                                                                   value={state.numeroIntDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="numeroIntDestinatario"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Número exterior"
+                                                                                   value={state.numeroExtDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="numeroExtDestinatario"
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={handleChange}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   required
+                                                                                   label="Colonia"
+                                                                                   value={state.coloniaDestinatario}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="coloniaDestinatario"
                                                                         />
                                                                     </div>
                                                                 </div>
