@@ -41,6 +41,7 @@ import { obtenerTipoServicio } from "../Util/Contexts/TipoServiciosContext";
 import { obtenerImpuestosTipo } from "../Util/Contexts/ImpuestosContext";
 import { imprimirFormatosId, obtenerFormatosImpresion } from "../Util/Contexts/FormatosImpresionContext";
 import {obtenerCodigoPostalId} from "../Util/Contexts/CodigoPostalContext";
+import {obtenerRecoleccionFiltro} from "../Util/Contexts/RecoleccionContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -93,8 +94,8 @@ function Guia(props) {
     const [state, setState] = React.useState({
         //VARIABLES PARA LISTADO DE GUIAS
         sucursalListado: 0,
-        fechaFinal: today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate(),
-        fechaInicial: "",
+        fechaFinal: 0,
+        fechaInicial: 0,
         estatusListado: 0,
         idGuia: 0,
         //VARIABLES PARA CANCELAR GUIA
@@ -627,8 +628,21 @@ function Guia(props) {
         //getImpresion(38);
     }
 
-    const handleShowListado = () => {
+    const handleShowListado = (event) => {
+        event.stopPropagation();
         limpiarCamposAgregar()
+        setState(state =>{
+            return {
+                ...state,
+                fechaInicial: 0,
+                fechaFinal: 0,
+                sucursalListado: 0,
+                estatusListado: 0,
+                folioGuia: '',
+                height: window.height,
+                agregar: "Agregar",
+            }
+        });
         getAllData()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
@@ -650,9 +664,13 @@ function Guia(props) {
             ...state,
             fechaInicial: event.target.value,
         })
-        obtenerGuiasFiltro(
-            event.target.value, state.fechaFinal, state.sucursalListado, state.estatusListado).then(respuesta => {
-            setData(respuesta.data)
+        const {fechaFinal, sucursalListado, estatusListado,folioGuia} = state
+        obtenerGuiasFiltro(event.target.value, fechaFinal, sucursalListado, estatusListado).then(respuesta => {
+            if (respuesta.data == "Vacio"){
+                setData([])
+            }else {
+                setData(respuesta.data)
+            }
         })
     }
 
@@ -662,9 +680,13 @@ function Guia(props) {
             ...state,
             fechaFinal: event.target.value,
         })
-
-        obtenerGuiasFiltro(state.fechaInicial, event.target.value, state.sucursalListado, state.estatusListado).then(respuesta => {
-            setData(respuesta.data)
+        const {fechaInicial, sucursalListado, estatusListado,folioGuia} = state
+        obtenerGuiasFiltro(fechaInicial, event.target.value, sucursalListado, estatusListado,folioGuia).then(respuesta => {
+            if (respuesta.data == "Vacio"){
+                setData([])
+            }else {
+                setData(respuesta.data)
+            }
         })
     }
 
@@ -674,8 +696,13 @@ function Guia(props) {
             ...state,
             sucursalListado: event.target.value,
         })
-        obtenerGuiasFiltro(state.fechaInicial, state.fechaFinal, event.target.value, state.estatusListado).then(respuesta => {
-            setData(respuesta.data)
+        const {fechaInicial, fechaFinal, estatusListado,folioGuia} = state
+        obtenerGuiasFiltro(fechaInicial, fechaFinal, event.target.value, estatusListado,folioGuia).then(respuesta => {
+            if (respuesta.data == "Vacio"){
+                setData([])
+            }else {
+                setData(respuesta.data)
+            }
         })
     }
 
@@ -685,8 +712,33 @@ function Guia(props) {
             ...state,
             estatusListado: event.target.value,
         })
-        obtenerGuiasFiltro(state.fechaInicial, state.fechaFinal, state.sucursalListado, event.target.value).then(respuesta => {
-            setData(respuesta.data)
+        const {fechaInicial, fechaFinal, sucursalListado,folioGuia} = state
+        obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, event.target.value,folioGuia).then(respuesta => {
+            if (respuesta.data == "Vacio"){
+                setData([])
+            }else {
+                setData(respuesta.data)
+            }
+        })
+    }
+
+    //Maneja filtrado de listado guia
+    const handleFolioGuiaFiltro = async (event) => {
+        let value = event.target.value
+        if (event.target.value == ''){
+            value = 0
+        }
+        setState({
+            ...state,
+            folioGuia: event.target.value,
+        })
+        const {fechaInicial, fechaFinal, sucursalListado,estatusListado} = state
+        obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
+            if (respuesta.data == "Vacio"){
+                setData([])
+            }else {
+                setData(respuesta.data)
+            }
         })
     }
 
@@ -2022,7 +2074,7 @@ function Guia(props) {
                     {/*tabs de pantalla*/}
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a  onClick={() => handleShowListado()}>
+                            <a  onClick={(event) => handleShowListado(event)}>
                                 <i className="fa fa-list" /> Listado
                             </a>
                         </li>
@@ -2071,6 +2123,23 @@ function Guia(props) {
                                 <div className="widget-content">
                                     <form className="j-forms">
                                         <div className="row " style={{display: "flex"}}>
+
+                                            <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
+
+                                                <div className="input">
+                                                    <TextField variant="outlined" margin="dense"
+                                                               onChange={handleChange}
+                                                               onBlur={handleFolioGuiaFiltro}
+                                                               className="form-control"
+                                                               type="text"
+                                                               label="Folio Guia"
+                                                               placeholder={state.folioGuia}
+                                                               id="folioGuia"
+                                                               name="folioGuia"
+                                                    />
+                                                </div>
+                                            </div>
+
                                             <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
                                                 <div className="input">
                                                     <TextField

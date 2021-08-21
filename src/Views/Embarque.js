@@ -64,7 +64,7 @@ import {obtenerOperadores} from "../Util/Contexts/OperadoresContext";
 import {obtenerTipoUnidades} from "../Util/Contexts/TipoUnidadContext";
 import {obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
-import {obtenerRecoleccionId} from "../Util/Contexts/RecoleccionContext";
+import {obtenerRecoleccionFiltro, obtenerRecoleccionId} from "../Util/Contexts/RecoleccionContext";
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {obtenerEstatusEmbarque} from "../Util/Contexts/EstatusContext";
 import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
@@ -170,10 +170,10 @@ function Embarque(props) {
     const [state, setState] = React.useState({
         //==VARIABLES DE LISTADO==
         idEmbarque: 0,
-        fechaInicial: '',
-        fechaFinal: '',
-        sucursalListado: '',
-        estatusListado: '',
+        fechaInicial: 0,
+        fechaFinal: 0,
+        sucursalListado: 0,
+        estatusListado: 0,
         //==VARIABLES DE CANCELAR==
         // folioEmbarque: '', se usa en agregar tambien
         sucursalCancelacion: '',
@@ -187,7 +187,7 @@ function Embarque(props) {
         idSucursalAgregar: localStorage.getItem("Sucursal"),
         folioRecoleccion: '',
         folioEmbarque: '',
-        folioGuia: '', //(con acento),
+        folioGuia: '',
         folioInforme: '',
         fechaHoraRegistro: '',
         estatusEmbarque: '',
@@ -1512,6 +1512,28 @@ function Embarque(props) {
         }
     }
 
+    const handleShowListado = (event) => {
+        event.stopPropagation();
+        limpiarCamposAgregar()
+        setState(state =>{
+            return {
+                ...state,
+                idEmbarque: 0,
+                folioEmbarque: '',
+                fechaInicial: 0,
+                fechaFinal: 0,
+                sucursalListado: 0,
+                estatusListado: 0,
+                agregar: "Agregar",
+            }
+        });
+        getAllEmbarque();
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
+    }
+
     function getUltimoFolioEmbarque() {
         obtenerUltimoFolioEmbarques().then((respuesta) => {
             SetDataFolioEmbarque(respuesta.data);
@@ -1590,7 +1612,8 @@ function Embarque(props) {
             ...state,
             fechaInicial: event.target.value,
         });
-        obtenerEmbarquesFiltro(event.target.value, state.fechaInicial, state.sucursalListado, state.estatusListado).then((respuesta) => {
+        const {fechaFinal, sucursalListado, estatusListado, folioEmbarque} = state
+        obtenerEmbarquesFiltro(event.target.value, fechaFinal, sucursalListado, estatusListado, folioEmbarque).then((respuesta) => {
             setData(respuesta.data);
         });
     };
@@ -1600,7 +1623,8 @@ function Embarque(props) {
             ...state,
             fechaFinal: event.target.value,
         });
-        obtenerEmbarquesFiltro(state.fechaInicial, event.target.value, state.sucursalListado, state.estatusListado).then((respuesta) => {
+        const {fechaInicial, sucursalListado, estatusListado, folioEmbarque} = state
+        obtenerEmbarquesFiltro(fechaInicial, event.target.value, sucursalListado, estatusListado, folioEmbarque).then((respuesta) => {
             setData(respuesta.data);
         });
     };
@@ -1610,7 +1634,8 @@ function Embarque(props) {
             ...state,
             sucursalListado: event.target.value,
         });
-        obtenerEmbarquesFiltro(state.fechaInicial, state.fechaFinal, event.target.value, state.estatusListado).then((respuesta) => {
+        const {fechaInicial, fechaFinal, estatusListado, folioEmbarque} = state
+        obtenerEmbarquesFiltro(fechaInicial, fechaFinal, event.target.value, estatusListado, folioEmbarque).then((respuesta) => {
             setData(respuesta.data);
         });
     };
@@ -1620,10 +1645,31 @@ function Embarque(props) {
             ...state,
             estatusListado: event.target.value,
         });
-        obtenerEmbarquesFiltro(state.fechaInicial, state.fechaFinal, state.sucursalListado, event.target.value).then((respuesta) => {
+        const {fechaInicial, fechaFinal, sucursalListado, folioEmbarque} = state
+        obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, event.target.value, folioEmbarque).then((respuesta) => {
             setData(respuesta.data);
         });
     };
+
+    //Maneja filtrado de listado embarque
+    const handleFolioEmbarqueFiltro = async (event) => {
+        let value = event.target.value
+        if (event.target.value == ''){
+            value = 0
+        }
+        setState({
+            ...state,
+            folioEmbarque: event.target.value,
+        })
+        const {fechaInicial, fechaFinal, sucursalListado,estatusListado} = state
+        obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
+            if (respuesta.data == "Vacio"){
+                setData([])
+            }else {
+                setData(respuesta.data)
+            }
+        })
+    }
 
     function handleSelectDatos(id, cp) {
         setState({
@@ -3090,14 +3136,7 @@ function Embarque(props) {
                     <ul className="nav navStatica nav-tabs">
                         <li className={props.location.idRecoleccion != undefined ? "" : "active"}>
 
-                            <a onClick={(event) => {
-                                event.stopPropagation();
-                                setState({...state, agregar: "Agregar"});
-                                $('.nav-tabs li ').removeClass('active');
-                                $('.nav-tabs li').eq(0).addClass('active');
-                                $('.tab-content div ').removeClass('in show');
-                                $('#Listado').addClass('in show');
-                            }}>
+                            <a onClick={(event) => handleShowListado(event)}>
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
@@ -3156,6 +3195,22 @@ function Embarque(props) {
                                     <div className="row" style={{paddingLeft: "8px"}}>
                                         <form className="j-forms">
                                             <div className="row" style={{display: "flex"}}>
+
+                                                <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
+                                                    <div className="input">
+                                                        <TextField variant="outlined" margin="dense"
+                                                                   onChange={handleChange}
+                                                                   onBlur={handleFolioEmbarqueFiltro}
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="Folio Embarque"
+                                                                   value={state.folioEmbarque}
+                                                                   id="folioEmbarque"
+                                                                   name="folioEmbarque"
+                                                        />
+                                                    </div>
+                                                </div>
+
                                                 <div
                                                     className="col-sm-6 col-md-3 "
                                                     style={{paddingLeft: "0px"}}

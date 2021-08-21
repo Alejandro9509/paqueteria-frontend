@@ -43,7 +43,10 @@ function obtenerEmbarques(){
     return result
 }
 
-function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado) {
+function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioEmbarque) {
+    if (folioEmbarque == ''){
+        folioEmbarque = 0
+    }
     const url =
         `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
         fechaInicial +
@@ -52,7 +55,9 @@ function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estat
         "/" +
         sucursalListado +
         "/" +
-        estatusListado;
+        estatusListado +
+        "/" +
+        folioEmbarque;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

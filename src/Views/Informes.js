@@ -58,7 +58,7 @@ import {
     agregarInformes,
     cancelarInformes,
     eliminarInformes,
-    modificarInformes,
+    modificarInformes, obtenerInformeFiltro,
     obtenerInformes,
     obtenerInformesId
 } from "../Util/Contexts/InformesContext";
@@ -539,6 +539,7 @@ function Informes({history}) {
         sePuedeCancelar: false,
         Informes: [],
         indexCubicar: 0,
+        folioInformeListado: ''
     });
 
     const handleAceptar = (e) => {
@@ -1480,6 +1481,25 @@ function Informes({history}) {
         );
     }
 
+    //Maneja filtrado de listado informe
+    const handleFolioInformeFiltro = async (event) => {
+        let value = event.target.value
+        if (event.target.value == ''){
+            value = 0
+        }
+        setState({
+            ...state,
+            folioInformeListado: event.target.value,
+        })
+        obtenerInformeFiltro(value).then(respuesta => {
+            if (respuesta.data == "Vacio"){
+                setData([])
+            }else {
+                setData(respuesta.data)
+            }
+        })
+    }
+
 
     return (
         <div>
@@ -1791,10 +1811,26 @@ function Informes({history}) {
                         >
                             <div className="widget-wrap">
                                 <div className="widget-content">
-                                    <div
-                                        className="row"
-                                        style={{height: state.height - 250, width: "100%"}}
-                                    >
+
+                                    <div className="row " style={{display: "flex"}}>
+                                        <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
+
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           onChange={handleChange}
+                                                           onBlur={handleFolioInformeFiltro}
+                                                           className="form-control"
+                                                           type="text"
+                                                           label="Folio Informe"
+                                                           placeholder={state.folioInformeListado}
+                                                           id="folioInformeListado"
+                                                           name="folioInformeListado"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="row"style={{height: state.height - 250, width: "100%"}}>
                                         {data.length != 0 ? (
                                             <DataGrid
                                                 localeText={dataGridLocaleText}

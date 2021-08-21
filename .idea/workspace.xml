@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se dividió domicilio en calle numero interio, exterior y colornia en embarque">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se agregaron filtrados en embarque y se muestran por default registros de los ultimos 4 dias">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/GuiaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/GuiaContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/InformesContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/InformesContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Informes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Informes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -452,7 +454,21 @@
       <option name="project" value="LOCAL" />
       <updated>1629503345730</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="*Se agregaron filtrados en recoleccion y se muestran por default registros de los ultimos 4 dias">
+      <created>1629580283284</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1629580283285</updated>
+    </task>
+    <task id="LOCAL-00048" summary="*Se agregaron filtrados en embarque y se muestran por default registros de los ultimos 4 dias">
+      <created>1629584263702</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1629584263702</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -529,8 +545,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se recuperan las opciones de impuestos de los servicios en sucursales" />
-    <MESSAGE value="Ajustes para registrar embarque cuando es entrega en domicilio" />
     <MESSAGE value="Se recupera dato Tipo de servicio al modificar/ consultar una guia" />
     <MESSAGE value="Se obtiene el codigo postal del remitente y destinatario" />
     <MESSAGE value="Se corigio el envio de parametros para el modificar de Zonas" />
@@ -554,7 +568,9 @@
     <MESSAGE value="*Cambio en la forma de seatear datos en recoleccion y embarque" />
     <MESSAGE value="*Se dividió domicilio en calle numero interio, exterior y colornia en recoleccion" />
     <MESSAGE value="*Se dividió domicilio en calle numero interio, exterior y colornia en embarque" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Se dividió domicilio en calle numero interio, exterior y colornia en embarque" />
+    <MESSAGE value="*Se agregaron filtrados en recoleccion y se muestran por default registros de los ultimos 4 dias" />
+    <MESSAGE value="*Se agregaron filtrados en embarque y se muestran por default registros de los ultimos 4 dias" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se agregaron filtrados en embarque y se muestran por default registros de los ultimos 4 dias" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
