@@ -107,7 +107,10 @@ function imprimirGuia(id) {
     return result
 }
 
-function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado) {
+function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado,folioGuia) {
+    if (folioGuia == ''){
+        folioGuia = 0
+    }
     const url =
         `${process.env.REACT_APP_API_URL}/Guia/GetByFiltro/` +
         fechaInicial +
@@ -116,7 +119,9 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
         "/" +
         sucursalListado +
         "/" +
-        estatusListado;
+        estatusListado +
+        "/" +
+        folioGuia;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
