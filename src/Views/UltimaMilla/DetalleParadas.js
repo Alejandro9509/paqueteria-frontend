@@ -310,14 +310,14 @@ class DetalleParadas extends Component {
                                                                                                 style={{borderBottom: "none"}}
                                                                                                 align="left">
                                                                                                 <div style={{
-                                                                                                    backgroundColor: g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7 ? "#DBC50040" : g.m_nIdEstatusGuia === 8 ? "#06B10040" : "#F5153340",
+                                                                                                    backgroundColor: g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7 ? "#DBC50040" : g.m_nIdEstatusGuia === 7 ? "#06B10040" : "#F5153340",
                                                                                                     width: "100%",
                                                                                                     textAlign: "center"
                                                                                                 }}>
-                                                                                                    {g.m_nIdEstatusGuia === 8 &&
+                                                                                                    {g.m_nIdEstatusGuia === 7 &&
                                                                                                     "Exitosa"
                                                                                                     }
-                                                                                                    {g.m_nIdEstatusGuia === 7 &&
+                                                                                                    {g.m_nIdEstatusGuia === 8 &&
                                                                                                     "Fallida"
                                                                                                     }
                                                                                                     {g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7 &&

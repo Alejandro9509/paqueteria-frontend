@@ -201,13 +201,15 @@ async function searchLocationAddress(address) {
 }
 
 
-function searchLocationWeb(city, address) {
+function searchLocationWeb(city, address, subdistrict, number) {
     return new Promise((resolve, reject) => {
         xlocate.searchLocations({
             "$type": "SearchByAddressRequest",
             "address": {
                 "city": city,
                 "street": address,
+                "subdistrict": subdistrict,
+                "houseNumber": number
             }
         }, (location) => {
             if (location.results) {

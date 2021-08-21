@@ -116,7 +116,7 @@ class UltimaMilla extends Component {
     }
 
     getFechaUltimaMilla(date, idSucursal, zonas) {
-        clearInterval(this.interval);
+
         obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
             if (data.m_nIdUltimaMilla !== 0) {
                 if (actualizar) {
@@ -128,7 +128,7 @@ class UltimaMilla extends Component {
                     if (data.m_nIdUltimaMilla === this.state.ultimaMilla.m_nIdUltimaMilla) {
                         data.m_arrClsParadaUltimaMilla.forEach(t => t.color = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla).color)
                     } else {
-                        data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
+                        data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(200))
                     }
                 }
 
@@ -136,6 +136,7 @@ class UltimaMilla extends Component {
                 actualizar = false
             } else {
                 this.setState({modoEdicion: true, ultimaMilla: null})
+                clearInterval(this.interval);
             }
         })
     }
@@ -145,7 +146,7 @@ class UltimaMilla extends Component {
     }
 
     async changeMapLocation(location) {
-        searchLocationWeb(location.m_sMunicipio, location.m_sCalle).then((data) => {
+        searchLocationWeb(location.m_sMunicipio, location.m_sCalle, location.m_sColonia, location.m_sNoExterior).then((data) => {
             if (data) {
                 this.setState({lat: data.y, lng: data.x})
                 this.state.map.setView([data.y, data.x], 15)
@@ -159,8 +160,9 @@ class UltimaMilla extends Component {
     }
 
     guardarRuta() {
+
         agregarRuta(this.state.tour, this.state.filtros).then((data) => {
-            showSuccess("Se guardo la información con exito")
+            showSuccess("Se guardo la información con éxito")
             this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona))
         })
     }
@@ -182,7 +184,7 @@ class UltimaMilla extends Component {
                         unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
                     }
                 }
-                results.tours.map(t => t.color = randomColor(10))
+                results.tours.map(t => t.color = randomColor(200))
                 this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
 
             })
