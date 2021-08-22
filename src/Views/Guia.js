@@ -618,7 +618,6 @@ function Guia(props) {
             return {
             ...state,
                 agregar: "Agregar",
-                fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
                 idEstatusGuia: 4
             }
         });
@@ -1350,11 +1349,12 @@ function Guia(props) {
                 ...state,
                 //Informacion General
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
+                fecha: `${new Date().getFullYear()}-${`${new Date().getMonth() +
+                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
                 folioGuia: "",
                 idEmbarque: 0,
                 folioInforme: "",
                 tracking: "",
-                fecha: "",
                 idEstatusGuia: '',
                 idMoneda: 0,
                 tipoCambio: 0,
