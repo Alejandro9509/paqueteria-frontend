@@ -613,14 +613,16 @@ function Guia(props) {
 
     //Prepara campos para agregar guia
     function handleShowAgregar() {
+        limpiarCamposAgregar()
         setState(state => {
             return {
             ...state,
                 agregar: "Agregar",
                 fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+                idEstatusGuia: 4
             }
         });
-        limpiarCamposAgregar()
+        cargaEmbarqueMoneda(1)
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1442,9 +1444,11 @@ function Guia(props) {
 
     //Recibe el id de moneda seleccionado para traer los embarques registrados con ese tipo de moneda
     async function cargaEmbarqueMoneda(idMoneda) {
-        setState({
-            ...state,
-            idMoneda: idMoneda
+        setState(state =>{
+            return {
+                ...state,
+                idMoneda: idMoneda
+            }
         });
 
         if (state.idSucursalAgregar === "" || state.idSucursalAgregar === "0") return;
