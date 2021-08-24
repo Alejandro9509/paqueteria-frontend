@@ -69,7 +69,10 @@ function obtenerRecoleccionId(id) {
     return result
 }
 
-function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado) {
+function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioRecoleccion) {
+    if (folioRecoleccion == ''){
+        folioRecoleccion = 0
+    }
     const url =
         `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
         fechaInicial +
@@ -78,8 +81,11 @@ function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, est
         "/" +
         sucursalListado +
         "/" +
-        estatusListado;
+        estatusListado +
+        "/" +
+        folioRecoleccion;
     let result;
+    console.log('url filtro: ', url)
     trackPromise(
         result =  axios.get(url, { headers })
         );

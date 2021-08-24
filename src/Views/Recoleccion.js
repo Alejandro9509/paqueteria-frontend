@@ -137,8 +137,8 @@ function Recoleccion() {
     const [state, setState] = React.useState({
         // ===VARIABLES DE LISTADO===
         idRecoleccion: 0,
-        fechaInicial: '',
-        fechaFinal: '',
+        fechaInicial: 0,
+        fechaFinal: 0,
         sucursalListado: 0,
         estatusListado: 0,
 
@@ -1171,12 +1171,13 @@ function Recoleccion() {
         setState(state =>{
             return {
                 ...state,
-                fechaInicial: '',
+                fechaInicial: 0,
+                fechaFinal: 0,
                 sucursalListado: 0,
                 estatusListado: 0,
+                folioRecoleccion: '',
                 height: window.height,
                 agregar: "Agregar",
-                fechaFinal: (today.getMonth() + 1) + "-" + today.getDate() + "-" + today.getFullYear(),
             }
         });
         getAllSucursales()
@@ -1404,18 +1405,14 @@ function Recoleccion() {
             ...state,
             fechaInicial: event.target.value,
         })
-        const {fechaFinal, sucursalListado, estatusListado} = state
-        if (sucursalListado == 0 && estatusListado == 0){
-            getAllData()
-        }else {
-            obtenerRecoleccionFiltro(event.target.value, fechaFinal, sucursalListado, estatusListado).then(respuesta => {
-                if (respuesta.data == "Vacio"){
-                    setData([])
-                }else {
-                    setData(respuesta.data)
-                }
-            })
-        }
+        const {fechaFinal, sucursalListado, estatusListado, folioRecoleccion} = state
+        obtenerRecoleccionFiltro(event.target.value, fechaFinal, sucursalListado, estatusListado, folioRecoleccion).then(respuesta => {
+            if (respuesta.data == "Vacio"){
+                setData([])
+            }else {
+                setData(respuesta.data)
+            }
+        })
     }
 
     //Maneja filtrado de listado embarque
@@ -1424,18 +1421,14 @@ function Recoleccion() {
             ...state,
             fechaFinal: event.target.value,
         })
-        const {fechaInicial, sucursalListado, estatusListado} = state
-        if (sucursalListado == 0 && estatusListado == 0){
-            getAllData()
-        }else{
-            obtenerRecoleccionFiltro(fechaInicial, event.target.value, sucursalListado, estatusListado).then(respuesta => {
-                if (respuesta.data == "Vacio"){
-                    setData([])
-                }else {
-                    setData(respuesta.data)
-                }
-            })
-        }
+        const {fechaInicial, sucursalListado, estatusListado, folioRecoleccion} = state
+        obtenerRecoleccionFiltro(fechaInicial, event.target.value, sucursalListado, estatusListado, folioRecoleccion).then(respuesta => {
+            if (respuesta.data == "Vacio"){
+                setData([])
+            }else {
+                setData(respuesta.data)
+            }
+        })
     }
 
     //Maneja filtrado de listado embarque
@@ -1444,22 +1437,14 @@ function Recoleccion() {
             ...state,
             sucursalListado: event.target.value,
         })
-        const {fechaInicial, fechaFinal, estatusListado} = state
-        console.log('sucursal: ', event.target.value)
-        console.log('fechaInicial ', fechaInicial)
-        console.log('fechaFinal ', fechaFinal)
-        console.log('estatusListado ', estatusListado)
-        if (event.target.value == 0 && estatusListado == 0){
-            getAllData()
-        }else{
-            obtenerRecoleccionFiltro(fechaInicial, fechaFinal, event.target.value, estatusListado).then(respuesta => {
-                if (respuesta.data == "Vacio"){
-                    setData([])
-                }else {
-                    setData(respuesta.data)
-                }
-            })
-        }
+        const {fechaInicial, fechaFinal, estatusListado, folioRecoleccion} = state
+        obtenerRecoleccionFiltro(fechaInicial, fechaFinal, event.target.value, estatusListado, folioRecoleccion).then(respuesta => {
+            if (respuesta.data == "Vacio"){
+                setData([])
+            }else {
+                setData(respuesta.data)
+            }
+        })
     }
 
     //Maneja filtrado de listado embarque
@@ -1468,18 +1453,34 @@ function Recoleccion() {
             ...state,
             estatusListado: event.target.value,
         })
-        const {fechaInicial, fechaFinal, sucursalListado} = state
-        if (event.target.value == 0 && sucursalListado == 0){
-            getAllData()
-        }else {
-            obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, event.target.value).then(respuesta => {
-                if (respuesta.data == "Vacio"){
-                    setData([])
-                }else {
-                    setData(respuesta.data)
-                }
-            })
+        const {fechaInicial, fechaFinal, sucursalListado, folioRecoleccion} = state
+        obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, event.target.value, folioRecoleccion).then(respuesta => {
+            if (respuesta.data == "Vacio"){
+                setData([])
+            }else {
+                setData(respuesta.data)
+            }
+        })
+    }
+
+    //Maneja filtrado de listado embarque
+    const handleFolioRecoleccionFiltro = async (event) => {
+        let value = event.target.value
+        if (event.target.value == ''){
+            value = 0
         }
+        setState({
+            ...state,
+            folioRecoleccion: event.target.value,
+        })
+        const {fechaInicial, fechaFinal, sucursalListado,estatusListado} = state
+        obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
+            if (respuesta.data == "Vacio"){
+                setData([])
+            }else {
+                setData(respuesta.data)
+            }
+        })
     }
 
     const columns = React.useMemo(() => [
@@ -3102,6 +3103,21 @@ function Recoleccion() {
                             <div className="widget-wrap">
                                 <form className="j-forms">
                                     <div className="row" style={{ display: "flex" }}>
+
+                                        <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           onChange={handleChange}
+                                                           onBlur={handleFolioRecoleccionFiltro}
+                                                           className="form-control"
+                                                           type="text"
+                                                           label="Folio Recolección"
+                                                           value={state.folioRecoleccion}
+                                                           id="folioRecoleccion"
+                                                />
+                                            </div>
+                                        </div>
+
                                         <div className="col-sm-6 col-md-3 unit" style={{ paddingLeft: "0px" }}>
                                             <div className="input">
                                                 <TextField
@@ -3194,6 +3210,7 @@ function Recoleccion() {
                                                 </FormControl>
                                             </label>
                                         </div>
+
                                     </div>
                                 </form>
                                 <div className="row" style={{ height: state.height - 250, width: '100%' }}>
