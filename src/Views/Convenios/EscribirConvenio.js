@@ -655,6 +655,34 @@ class EscribirConvenio extends Component {
         })
     }
 
+    handleGuardarTarifa = (e) => {
+        e.preventDefault()
+        this.state.tarifasSeleccionadas.forEach((t) => {
+            if (t.m_nIdTarifa == this.state.tarifaDetalles.id){
+                t.m_arrArConceptos.length = 0
+                this.state.todosConceptos.forEach((c) => {
+                    t.m_arrArConceptos.push({
+                        m_nIdConceptosFacturacion: c.idConcepto,
+                        m_cImporte: c.importe,
+                        m_nIdImpuestoTraslada: c.traslada,
+                        m_nIdImpuestoRetiene: c.retiene,
+                        m_cImporteRetiene: c.importeRet,
+                        m_cImporteIva: c.importeIVA,
+                        m_nIdTipoCalculo: c.tipoCalculo,
+                        m_xnRangoMinimo: c.rangoMinimo,
+                        m_xnRangoMaximo: c.rangoMaximo,
+                        m_nIdAgregadoDesde: c.agregadoDesde,
+                        m_sConcepto: c.nombreConcepto,
+                    })
+                })
+            }
+        })
+        this.setState({
+            tarifasSeleccionadas: this.state.tarifasSeleccionadas
+        })
+        console.log(this.state.tarifasSeleccionadas)
+    }
+
     onSubmit = (e) => {
         e.preventDefault()
         console.log(this.state.tarifasSeleccionadas)
@@ -734,8 +762,7 @@ class EscribirConvenio extends Component {
                                                         >
                                                             <option
                                                                 key={"0"}
-                                                                value={"0"}
-                                                            >
+                                                                value={"0"}>
                                                                 Seleccionar
                                                             </option>
                                                             {this.state.dataClientes.map((cliente) => (
@@ -759,7 +786,7 @@ class EscribirConvenio extends Component {
                                                     </button>
 
                                                     <button type="submit" className="btn btn-primary primary-btn">
-                                                        Guardar
+                                                        Guardar convenio
                                                     </button>
                                                 </div>
                                             </div>
@@ -790,6 +817,9 @@ class EscribirConvenio extends Component {
                             <div className="col-md-9 col-sm-12" >
                                 <div className="widget-wrap" style={{ margin: "0px", padding: "0px" }}>
                                     <div className="widget-content">
+                                        <button className="btn btn-primary primary-btn" onClick={this.handleGuardarTarifa}>
+                                            Guardar tarifa
+                                        </button>
                                         <div>
                                             <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
                                                 <Tab label="Concetos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
