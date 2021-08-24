@@ -181,6 +181,7 @@ class EscribirConvenio extends Component {
         this.getAllClientes = this.getAllClientes.bind(this)
         this.handleShowDialog = this.handleShowDialog.bind(this)
         this.getAllTarifas = this.getAllTarifas.bind(this)
+        this.onSubmit = this.onSubmit.bind(this)
     }
 
     castConceptos(){
@@ -398,19 +399,6 @@ class EscribirConvenio extends Component {
         this.setState({
             [event.target.name]: event.target.value,
         });
-        if (event.target.name == "sucursal"){
-            if (event.target.name == 0 || this.state.destino == 0){
-                this.setState({disabled: true})
-            }else{
-                this.setState({disabled: false})
-            }
-        }else if (event.target.name == "destino"){
-            if (event.target.name == 0 || this.state.sucursal == 0){
-                this.setState({disabled: true})
-            }else{
-                this.setState({disabled: false})
-            }
-        }
 
     }
 
@@ -620,10 +608,10 @@ class EscribirConvenio extends Component {
 
     }
 
-    onSubmit(event) {
+    /*onSubmit(event) {
         event.preventDefault()
         this.props.onSubmit(this.state)
-    }
+    }*/
 
     handleShowDialog = (event) => {
         event.preventDefault()
@@ -667,8 +655,20 @@ class EscribirConvenio extends Component {
         })
     }
 
+    onSubmit = (e) => {
+        e.preventDefault()
+        console.log(this.state.tarifasSeleccionadas)
+        console.log('Mandar tarifas ', this.state.tarifasSeleccionadas)
+
+        let params = {
+            m_nIdCliente: this.state.cliente,
+            m_arrTarifas: this.state.tarifasSeleccionadas
+        }
+        console.log('agregar: ', params)
+    }
+
     render() {
-        const { disabled, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, todosConceptos, openDialog, columnsTarifas, dataTarifas, height,
+        const { disabled, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, openDialog, columnsTarifas, dataTarifas, height,
             tarifasSeleccionadas,columnsTarifasOverview, tarifaDetalles} = this.state
         let { consult, edit } = this.props
 
@@ -709,7 +709,7 @@ class EscribirConvenio extends Component {
                     </DialogActions>
                 </Dialog>
 
-                <form className="j-forms" >
+                <form className="j-forms" onSubmit={this.onSubmit}>
                     <div className="main-container" style={{ marginLeft: "0px", padding: "0px" }}>
                         <div className="row">
                             <div className="col-md-3 col-sm-12">
