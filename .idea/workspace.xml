@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se agregaron filtrados en informes">
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se inició la vista de agregar convenio">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Convenios/EscribirConvenio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Convenios/EscribirConvenio.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -464,7 +465,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629584263702</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="*Se inició la vista de agregar convenio">
+      <created>1629828330716</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1629828330716</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -529,7 +537,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se recupera dato Tipo de servicio al modificar/ consultar una guia" />
     <MESSAGE value="Se obtiene el codigo postal del remitente y destinatario" />
     <MESSAGE value="Se corigio el envio de parametros para el modificar de Zonas" />
     <MESSAGE value="Se corigio la consulta de forma que esta no permita la modificacion de datos en los siguientes catalogos: Tarifas, Remitente/destinatario y Rutas" />
@@ -554,7 +561,8 @@
     <MESSAGE value="*Se dividió domicilio en calle numero interio, exterior y colornia en embarque" />
     <MESSAGE value="*Se agregaron filtrados en recoleccion y se muestran por default registros de los ultimos 4 dias" />
     <MESSAGE value="*Se agregaron filtrados en embarque y se muestran por default registros de los ultimos 4 dias" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Se agregaron filtrados en embarque y se muestran por default registros de los ultimos 4 dias" />
+    <MESSAGE value="*Se inició la vista de agregar convenio" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se inició la vista de agregar convenio" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
