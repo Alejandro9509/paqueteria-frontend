@@ -12,9 +12,19 @@ import {
     TextField,
     Typography,
     Checkbox,
-    Dialog, DialogTitle, DialogContent, Button, DialogActions, Tooltip
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    Button,
+    DialogActions,
+    Tooltip,
+    Card,
+    CardContent,
+    CardActions,
+    CardHeader,
+    IconButton, Grid, CardActionArea, Menu, MenuItem
 } from '@material-ui/core';
-
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SvgIcon from "@material-ui/core/SvgIcon";
 import { getUniqueListBy } from '../../Util/Util';
 import { PowerInputSharp } from '@material-ui/icons';
@@ -128,7 +138,619 @@ class EscribirConvenio extends Component {
                 },
             ],
             idsTarifasSeleccionadas : [],
-            tarifasSeleccionadas : [],
+            tarifasSeleccionadas : [
+                {
+                    "m_nIdTarifa": 65,
+                    "m_nIdSucursal": 19,
+                    "m_sDestino": "Ciudad de México",
+                    "m_nIdDestino": 24301,
+                    "m_sSucursal": "Mérida",
+                    "m_bPorRango": true,
+                    "m_bPorPesoVolumen": false,
+                    "m_nFactorConversion": 1,
+                    "m_cPrecioM3": 1,
+                    "m_cPrecioKilo": 1,
+                    "m_cFleteMinimo": 1,
+                    "m_cMontoMinimo": 1,
+                    "m_nIdImpuestoRetiene": 0,
+                    "m_nIdImpuestoTraslada": 0,
+                    "m_nCreadoPor": 0,
+                    "m_bActivo": true,
+                    "m_nModificadoPor": 1014,
+                    "m_dtCreadoEl": "2021-08-17T09:18:30.000",
+                    "m_dtModificadoEl": "2021-08-19T22:17:48.000",
+                    "m_cCostoFinal": 0,
+                    "m_arrArCobros": [],
+                    "m_arrArServicios": [],
+                    "m_arrArConceptos": [
+                        {
+                            "m_nIdTarifaConceptos": 474,
+                            "m_nIdTarifa": 65,
+                            "m_sConcepto": "Entrega",
+                            "m_cImporte": 700,
+                            "m_nIdImpuestoTraslada": 3,
+                            "m_cImporteIva": 112,
+                            "m_nIdImpuestoRetiene": 11,
+                            "m_cImporteRetiene": 28,
+                            "m_dtCreadoEl": "2021-08-25T10:39:09.875",
+                            "m_nCreadoPor": 0,
+                            "m_dtModificadoEl": "2021-08-25T10:39:09.875",
+                            "m_nModificadoPor": 0,
+                            "m_bActivo": false,
+                            "m_nIdConceptosFacturacion": 52,
+                            "m_xnRangoMinimo": 1,
+                            "m_xnRangoMaximo": 5,
+                            "m_nIdTipoCalculo": 1,
+                            "m_nIdAgregadoDesde": 2,
+                            "mg_sUltimoError": "",
+                            "arClsDetalle": [
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 39,
+                                    "m_nIdConceptosFacturacion": 52,
+                                    "m_nIdImpuesto": 2,
+                                    "m_sImpuesto": "IVA 11%",
+                                    "m_xPorcentaje": 11,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 40,
+                                    "m_nIdConceptosFacturacion": 52,
+                                    "m_nIdImpuesto": 10,
+                                    "m_sImpuesto": "IVA 8%",
+                                    "m_xPorcentaje": 8,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 79,
+                                    "m_nIdConceptosFacturacion": 52,
+                                    "m_nIdImpuesto": 1,
+                                    "m_sImpuesto": "IVA 0%",
+                                    "m_xPorcentaje": 0,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 80,
+                                    "m_nIdConceptosFacturacion": 52,
+                                    "m_nIdImpuesto": 11,
+                                    "m_sImpuesto": "IVA 4%",
+                                    "m_xPorcentaje": 4,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 83,
+                                    "m_nIdConceptosFacturacion": 52,
+                                    "m_nIdImpuesto": 3,
+                                    "m_sImpuesto": "IVA 16%",
+                                    "m_xPorcentaje": 16,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                }
+                            ]
+                        },
+                        {
+                            "m_nIdTarifaConceptos": 485,
+                            "m_nIdTarifa": 65,
+                            "m_sConcepto": "Seguro transporte",
+                            "m_cImporte": 1,
+                            "m_nIdImpuestoTraslada": 3,
+                            "m_cImporteIva": 0.16,
+                            "m_nIdImpuestoRetiene": 12,
+                            "m_cImporteRetiene": 0,
+                            "m_dtCreadoEl": "2021-08-25T10:39:10.033",
+                            "m_nCreadoPor": 0,
+                            "m_dtModificadoEl": "2021-08-25T10:39:10.033",
+                            "m_nModificadoPor": 0,
+                            "m_bActivo": false,
+                            "m_nIdConceptosFacturacion": 57,
+                            "m_xnRangoMinimo": 0,
+                            "m_xnRangoMaximo": 0,
+                            "m_nIdTipoCalculo": 0,
+                            "m_nIdAgregadoDesde": 0,
+                            "mg_sUltimoError": "",
+                            "arClsDetalle": [
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 77,
+                                    "m_nIdConceptosFacturacion": 57,
+                                    "m_nIdImpuesto": 2,
+                                    "m_sImpuesto": "IVA 11%",
+                                    "m_xPorcentaje": 11,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 78,
+                                    "m_nIdConceptosFacturacion": 57,
+                                    "m_nIdImpuesto": 10,
+                                    "m_sImpuesto": "IVA 8%",
+                                    "m_xPorcentaje": 8,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 106,
+                                    "m_nIdConceptosFacturacion": 57,
+                                    "m_nIdImpuesto": 3,
+                                    "m_sImpuesto": "IVA 16%",
+                                    "m_xPorcentaje": 16,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": true,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 107,
+                                    "m_nIdConceptosFacturacion": 57,
+                                    "m_nIdImpuesto": 1,
+                                    "m_sImpuesto": "IVA 0%",
+                                    "m_xPorcentaje": 0,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 108,
+                                    "m_nIdConceptosFacturacion": 57,
+                                    "m_nIdImpuesto": 4,
+                                    "m_sImpuesto": "IVA %8",
+                                    "m_xPorcentaje": 8,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 109,
+                                    "m_nIdConceptosFacturacion": 57,
+                                    "m_nIdImpuesto": 11,
+                                    "m_sImpuesto": "IVA 4%",
+                                    "m_xPorcentaje": 4,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 110,
+                                    "m_nIdConceptosFacturacion": 57,
+                                    "m_nIdImpuesto": 12,
+                                    "m_sImpuesto": "IVA 0%",
+                                    "m_xPorcentaje": 0,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 111,
+                                    "m_nIdConceptosFacturacion": 57,
+                                    "m_nIdImpuesto": 3,
+                                    "m_sImpuesto": "IVA 16%",
+                                    "m_xPorcentaje": 16,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 112,
+                                    "m_nIdConceptosFacturacion": 57,
+                                    "m_nIdImpuesto": 1,
+                                    "m_sImpuesto": "IVA 0%",
+                                    "m_xPorcentaje": 0,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 113,
+                                    "m_nIdConceptosFacturacion": 57,
+                                    "m_nIdImpuesto": 4,
+                                    "m_sImpuesto": "IVA %8",
+                                    "m_xPorcentaje": 8,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 114,
+                                    "m_nIdConceptosFacturacion": 57,
+                                    "m_nIdImpuesto": 11,
+                                    "m_sImpuesto": "IVA 4%",
+                                    "m_xPorcentaje": 4,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 115,
+                                    "m_nIdConceptosFacturacion": 57,
+                                    "m_nIdImpuesto": 12,
+                                    "m_sImpuesto": "IVA 0%",
+                                    "m_xPorcentaje": 0,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                }
+                            ]
+                        },
+                        {
+                            "m_nIdTarifaConceptos": 486,
+                            "m_nIdTarifa": 65,
+                            "m_sConcepto": "Maniobra de carga",
+                            "m_cImporte": 105,
+                            "m_nIdImpuestoTraslada": 3,
+                            "m_cImporteIva": 16.8,
+                            "m_nIdImpuestoRetiene": 12,
+                            "m_cImporteRetiene": 0,
+                            "m_dtCreadoEl": "2021-08-25T10:39:10.054",
+                            "m_nCreadoPor": 0,
+                            "m_dtModificadoEl": "2021-08-25T10:39:10.054",
+                            "m_nModificadoPor": 0,
+                            "m_bActivo": false,
+                            "m_nIdConceptosFacturacion": 58,
+                            "m_xnRangoMinimo": 1,
+                            "m_xnRangoMaximo": 199,
+                            "m_nIdTipoCalculo": 1,
+                            "m_nIdAgregadoDesde": 1,
+                            "mg_sUltimoError": "",
+                            "arClsDetalle": [
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 90,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 1,
+                                    "m_sImpuesto": "IVA 0%",
+                                    "m_xPorcentaje": 0,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": true,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 91,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 3,
+                                    "m_sImpuesto": "IVA 16%",
+                                    "m_xPorcentaje": 16,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 92,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 12,
+                                    "m_sImpuesto": "IVA 0%",
+                                    "m_xPorcentaje": 0,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 93,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 11,
+                                    "m_sImpuesto": "IVA 4%",
+                                    "m_xPorcentaje": 4,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 94,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 1,
+                                    "m_sImpuesto": "IVA 0%",
+                                    "m_xPorcentaje": 0,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 95,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 3,
+                                    "m_sImpuesto": "IVA 16%",
+                                    "m_xPorcentaje": 16,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 96,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 12,
+                                    "m_sImpuesto": "IVA 0%",
+                                    "m_xPorcentaje": 0,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": true,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 97,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 11,
+                                    "m_sImpuesto": "IVA 4%",
+                                    "m_xPorcentaje": 4,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                }
+                            ]
+                        },
+                    ],
+                    "m_arrProductos": [
+                        {
+                            m_nIdProducto: 1,
+                            m_sDescripcion: 'Crema de cacahuate'
+                        },
+                        {
+                            m_nIdProducto: 2,
+                            m_sDescripcion: 'Platanos'
+                        }
+                    ],
+                    "m_nN_AGREGAR": 120,
+                    "m_nN_MODIFICAR": 121,
+                    "m_nN_ELIMINAR": 122
+                },
+                {
+                    "m_nIdTarifa": 66,
+                    "m_nIdSucursal": 19,
+                    "m_sDestino": "Ciudad de México",
+                    "m_nIdDestino": 24301,
+                    "m_sSucursal": "Mérida",
+                    "m_bPorRango": true,
+                    "m_bPorPesoVolumen": false,
+                    "m_nFactorConversion": 1,
+                    "m_cPrecioM3": 1,
+                    "m_cPrecioKilo": 1,
+                    "m_cFleteMinimo": 1,
+                    "m_cMontoMinimo": 1,
+                    "m_nIdImpuestoRetiene": 0,
+                    "m_nIdImpuestoTraslada": 0,
+                    "m_nCreadoPor": 0,
+                    "m_bActivo": true,
+                    "m_nModificadoPor": 1014,
+                    "m_dtCreadoEl": "2021-08-17T09:18:30.000",
+                    "m_dtModificadoEl": "2021-08-19T22:17:48.000",
+                    "m_cCostoFinal": 0,
+                    "m_arrArCobros": [],
+                    "m_arrArServicios": [],
+                    "m_arrArConceptos": [
+                        {
+                            "m_nIdTarifaConceptos": 474,
+                            "m_nIdTarifa": 65,
+                            "m_sConcepto": "Entrega",
+                            "m_cImporte": 700,
+                            "m_nIdImpuestoTraslada": 3,
+                            "m_cImporteIva": 112,
+                            "m_nIdImpuestoRetiene": 11,
+                            "m_cImporteRetiene": 28,
+                            "m_dtCreadoEl": "2021-08-25T10:39:09.875",
+                            "m_nCreadoPor": 0,
+                            "m_dtModificadoEl": "2021-08-25T10:39:09.875",
+                            "m_nModificadoPor": 0,
+                            "m_bActivo": false,
+                            "m_nIdConceptosFacturacion": 52,
+                            "m_xnRangoMinimo": 1,
+                            "m_xnRangoMaximo": 5,
+                            "m_nIdTipoCalculo": 1,
+                            "m_nIdAgregadoDesde": 2,
+                            "mg_sUltimoError": "",
+                            "arClsDetalle": [
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 39,
+                                    "m_nIdConceptosFacturacion": 52,
+                                    "m_nIdImpuesto": 2,
+                                    "m_sImpuesto": "IVA 11%",
+                                    "m_xPorcentaje": 11,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 40,
+                                    "m_nIdConceptosFacturacion": 52,
+                                    "m_nIdImpuesto": 10,
+                                    "m_sImpuesto": "IVA 8%",
+                                    "m_xPorcentaje": 8,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 79,
+                                    "m_nIdConceptosFacturacion": 52,
+                                    "m_nIdImpuesto": 1,
+                                    "m_sImpuesto": "IVA 0%",
+                                    "m_xPorcentaje": 0,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 80,
+                                    "m_nIdConceptosFacturacion": 52,
+                                    "m_nIdImpuesto": 11,
+                                    "m_sImpuesto": "IVA 4%",
+                                    "m_xPorcentaje": 4,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 83,
+                                    "m_nIdConceptosFacturacion": 52,
+                                    "m_nIdImpuesto": 3,
+                                    "m_sImpuesto": "IVA 16%",
+                                    "m_xPorcentaje": 16,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                }
+                            ]
+                        },
+                        {
+                            "m_nIdTarifaConceptos": 486,
+                            "m_nIdTarifa": 65,
+                            "m_sConcepto": "Maniobra de carga",
+                            "m_cImporte": 105,
+                            "m_nIdImpuestoTraslada": 3,
+                            "m_cImporteIva": 16.8,
+                            "m_nIdImpuestoRetiene": 12,
+                            "m_cImporteRetiene": 0,
+                            "m_dtCreadoEl": "2021-08-25T10:39:10.054",
+                            "m_nCreadoPor": 0,
+                            "m_dtModificadoEl": "2021-08-25T10:39:10.054",
+                            "m_nModificadoPor": 0,
+                            "m_bActivo": false,
+                            "m_nIdConceptosFacturacion": 58,
+                            "m_xnRangoMinimo": 1,
+                            "m_xnRangoMaximo": 199,
+                            "m_nIdTipoCalculo": 1,
+                            "m_nIdAgregadoDesde": 1,
+                            "mg_sUltimoError": "",
+                            "arClsDetalle": [
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 90,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 1,
+                                    "m_sImpuesto": "IVA 0%",
+                                    "m_xPorcentaje": 0,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": true,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 91,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 3,
+                                    "m_sImpuesto": "IVA 16%",
+                                    "m_xPorcentaje": 16,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 92,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 12,
+                                    "m_sImpuesto": "IVA 0%",
+                                    "m_xPorcentaje": 0,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 93,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 11,
+                                    "m_sImpuesto": "IVA 4%",
+                                    "m_xPorcentaje": 4,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 94,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 1,
+                                    "m_sImpuesto": "IVA 0%",
+                                    "m_xPorcentaje": 0,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 95,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 3,
+                                    "m_sImpuesto": "IVA 16%",
+                                    "m_xPorcentaje": 16,
+                                    "m_bTrasladado": true,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 96,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 12,
+                                    "m_sImpuesto": "IVA 0%",
+                                    "m_xPorcentaje": 0,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": true,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                },
+                                {
+                                    "m_nIdConceptosFacturacionDetalle": 97,
+                                    "m_nIdConceptosFacturacion": 58,
+                                    "m_nIdImpuesto": 11,
+                                    "m_sImpuesto": "IVA 4%",
+                                    "m_xPorcentaje": 4,
+                                    "m_bTrasladado": false,
+                                    "m_bPredeterminado": false,
+                                    "m_sUltimoError": "",
+                                    "m_sMsgUltimoError": ""
+                                }
+                            ]
+                        },
+                    ],
+                    "m_arrProductos": [
+                        {
+                            m_nIdProducto: 4,
+                            m_sDescripcion: 'Aceite Nutrioli'
+                        },
+                        {
+                            m_nIdProducto: 5,
+                            m_sDescripcion: 'Crema de avellanas'
+                        }
+                    ],
+                    "m_nN_AGREGAR": 120,
+                    "m_nN_MODIFICAR": 121,
+                    "m_nN_ELIMINAR": 122
+                }
+            ],
             height: window.innerHeight,
             columnsTarifasOverview: [
                 {
@@ -164,7 +786,16 @@ class EscribirConvenio extends Component {
                     },
                 },
             ],
-            tarifaDetalles: {m_arrArConceptos:[]}
+            tarifaDetalles: {m_arrArConceptos:[]},
+            columnsProductos: [
+                {
+                    headerName: "Descripcion",
+                    field: "m_sDescripcion",
+                    width: 200
+                }
+            ],
+            dataProductos: [],
+            anchorEl: null
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleTabChange = this.handleTabChange.bind(this)
@@ -182,6 +813,7 @@ class EscribirConvenio extends Component {
         this.handleShowDialog = this.handleShowDialog.bind(this)
         this.getAllTarifas = this.getAllTarifas.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
+        this.handleCloseCardMenu = this.handleCloseCardMenu.bind(this)
     }
 
     castConceptos(){
@@ -683,6 +1315,28 @@ class EscribirConvenio extends Component {
         console.log(this.state.tarifasSeleccionadas)
     }
 
+    handleCardClick = (e, t) => {
+        e.preventDefault()
+        console.log('card clicked')
+        this.setState({
+            dataProductos: t.m_arrProductos
+        })
+    }
+    handleCloseCardMenu = () => {
+        this.setState({
+            anchorEl: null
+        })
+    }
+
+    handleCardMenuClick = (e) => {
+        this.setState({
+            anchorEl: e.currentTarget
+        })
+    }
+    handleDuplicarClick = (e) => {
+        this.handleCloseCardMenu()
+    }
+
     onSubmit = (e) => {
         e.preventDefault()
         console.log(this.state.tarifasSeleccionadas)
@@ -697,7 +1351,7 @@ class EscribirConvenio extends Component {
 
     render() {
         const { disabled, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, openDialog, columnsTarifas, dataTarifas, height,
-            tarifasSeleccionadas,columnsTarifasOverview, tarifaDetalles} = this.state
+            tarifasSeleccionadas,columnsTarifasOverview, tarifaDetalles, columnsProductos, dataProductos, anchorEl} = this.state
         let { consult, edit } = this.props
 
         if (!consult && !edit){
@@ -777,7 +1431,6 @@ class EscribirConvenio extends Component {
                                                     </FormControl>
                                                 </label>
                                             </div>
-
                                             <div className="col-md-12 col-sm-12" style={{ padding: "5px", display: "inline-flex" }}>
                                                 <div className="form-footer " className="col-md-12" style={{ padding: "10px" }}>
                                                     <button className="btn btn-primary primary-btn"
@@ -794,7 +1447,48 @@ class EscribirConvenio extends Component {
 
                                     </div>
                                 </div>
-                                <div className="widget-wrap">
+                                {
+                                    tarifasSeleccionadas.map((t) => (
+                                        <Card style={{marginBottom: '10px'}}>
+                                            <CardHeader
+                                                style={{height: '10px', paddingBotton: '0px'}}
+                                                action={
+                                                    <IconButton aria-label="settings" onClick={(e) => this.handleCardMenuClick(e)}>
+                                                        <MoreVertIcon />
+                                                        <Menu
+                                                            id="simple-menu"
+                                                            anchorEl={anchorEl}
+                                                            keepMounted
+                                                            open={Boolean(anchorEl)}
+                                                            onClose={this.handleCloseCardMenu}
+                                                        >
+                                                            <MenuItem onClick={(e) => this.handleDuplicarClick(e)}>Duplicar</MenuItem>
+                                                        </Menu>
+                                                    </IconButton>
+                                                }
+                                            />
+                                            <CardActionArea onClick={(e) => this.handleCardClick(e, t)}>
+                                                <CardContent>
+                                                    <Grid container>
+                                                        <Grid item xs={12}>
+                                                            <Typography variant="body2" color="textSecondary" component="p">
+                                                                {t.m_sSucursal} - {t.m_sDestino}
+                                                            </Typography>
+                                                        </Grid>
+                                                        <Grid item xs={12}>
+                                                            <Typography gutterBottom variant="h5" component="h2">
+                                                                {t.m_arrProductos.map((p) => (
+                                                                    p.m_sDescripcion + ', '
+                                                                ))}
+                                                            </Typography>
+                                                        </Grid>
+                                                    </Grid>
+                                                </CardContent>
+                                            </CardActionArea>
+                                        </Card>
+                                    ))
+                                }
+                                {/*<div className="widget-wrap">
                                     <div className="widget-content">
                                         <div className="row">
                                             <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
@@ -812,7 +1506,7 @@ class EscribirConvenio extends Component {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>*/}
                             </div>
                             <div className="col-md-9 col-sm-12" >
                                 <div className="widget-wrap" style={{ margin: "0px", padding: "0px" }}>
@@ -826,6 +1520,7 @@ class EscribirConvenio extends Component {
                                                 <Tab label="Maniobras" {...this.a11yProps(1)} />
                                                 <Tab label="Entrega" {...this.a11yProps(2)} />
                                                 <Tab label="Recolección" {...this.a11yProps(3)}/>
+                                                <Tab label="Productos" {...this.a11yProps(4)}/>
                                             </Tabs>
 
                                             <TabPanel value={this.state.tab} index={0}>
@@ -857,7 +1552,17 @@ class EscribirConvenio extends Component {
 
                                                 </ConceptosAdicionalesRecoleccion>
                                             </TabPanel>
+                                            <TabPanel value={this.state.tab} index={4}>
+                                                <div style={{ display: 'flex', height: '500px' }}>
+                                                    <DataGrid
+                                                        columns={columnsProductos}
+                                                        rows={dataProductos}
+                                                        getRowId={(row) => row.m_nIdProducto}
+                                                        checkboxSelection
+                                                    />
+                                                </div>
 
+                                            </TabPanel>
                                         </div>
                                     </div>
                                 </div>

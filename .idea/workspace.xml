@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se inició la vista de agregar convenio">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se pueden modificar tarifas seleccionadas">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Convenios/EscribirConvenio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Convenios/EscribirConvenio.js" afterDir="false" />
     </list>
@@ -103,7 +103,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -128,13 +128,7 @@
       <workItem from="1625854871315" duration="946000" />
       <workItem from="1628006996868" duration="13293000" />
       <workItem from="1629125426621" duration="20705000" />
-    </task>
-    <task id="LOCAL-00001" summary="*Algunos pedazos de codigos se sustituyeron con componentes.&#10;*Listado de formatos se muestra correctamente&#10;*Mejor acomodo en pestaña domicilios">
-      <created>1624952066000</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1624952066000</updated>
+      <workItem from="1629911677357" duration="6556000" />
     </task>
     <task id="LOCAL-00002" summary="*Headers de tabla en pestaña formatos se ven correctamente.&#10;*Pestaña inputs de Procecsos especiales fueron reemplazados con componentes.">
       <created>1625000996594</created>
@@ -472,11 +466,18 @@
       <option name="project" value="LOCAL" />
       <updated>1629828330716</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="*Se pueden modificar tarifas seleccionadas">
+      <created>1629836656889</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1629836656892</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
@@ -537,7 +538,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se obtiene el codigo postal del remitente y destinatario" />
     <MESSAGE value="Se corigio el envio de parametros para el modificar de Zonas" />
     <MESSAGE value="Se corigio la consulta de forma que esta no permita la modificacion de datos en los siguientes catalogos: Tarifas, Remitente/destinatario y Rutas" />
     <MESSAGE value="Se elimino el codigo que no se estaba usando, se corrigieron los consultar y como se interactua con la informacion, se arreglo el problema de que consultar modificaba" />
@@ -562,7 +562,8 @@
     <MESSAGE value="*Se agregaron filtrados en recoleccion y se muestran por default registros de los ultimos 4 dias" />
     <MESSAGE value="*Se agregaron filtrados en embarque y se muestran por default registros de los ultimos 4 dias" />
     <MESSAGE value="*Se inició la vista de agregar convenio" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Se inició la vista de agregar convenio" />
+    <MESSAGE value="*Se pueden modificar tarifas seleccionadas" />
+    <option name="LAST_COMMIT_MESSAGE" value="*Se pueden modificar tarifas seleccionadas" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
