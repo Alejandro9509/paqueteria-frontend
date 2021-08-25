@@ -499,7 +499,7 @@ export default function SalidaParadas(props){
                 </Grid>
                 <Grid item xs={3}/>
 
-                <Grid item xs={2}>
+                {/*<Grid item xs={2}>
                     <TextField
                         id={"kms"}
                         margin={"dense"}
@@ -524,8 +524,7 @@ export default function SalidaParadas(props){
                         value={data.millas}
                         onChange={handleChangeMillas}
                     />
-                </Grid>
-                <Grid item xs={8}/>
+                </Grid>*/}
             </Grid>
             {props.children}
         </form>

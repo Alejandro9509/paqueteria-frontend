@@ -58,6 +58,7 @@ render(){
                   <Route exact path="/" component={Login} ></Route>
                   <Route path="/login" component={Login} ></Route>
                   <Redirect from="/**" to="/login"/>
+                  <Route exact path="/app/applications/:id/tracking" component={Tracking} />
                 </Switch>
               </div>
             </div>

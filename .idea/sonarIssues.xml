@@ -118,6 +118,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Convenios/EscribirConvenio.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/Departamento.js">
           <value>
             <set />
@@ -334,6 +339,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/Viajes/InformesPorAsignar.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Viajes/LlegadaParadas.js">
           <value>
             <set />
           </value>

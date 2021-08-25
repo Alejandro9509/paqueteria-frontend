@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se agregaron filtrados en informes">
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se realizaron ajustes a la ultima milla">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Constants/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +64,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/public" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -73,6 +76,9 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla" />
       <recent name="$PROJECT_DIR$/src/Components/Map" />
@@ -102,7 +108,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
+  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -127,27 +133,7 @@
       <workItem from="1625854871315" duration="946000" />
       <workItem from="1628006996868" duration="13293000" />
       <workItem from="1629125426621" duration="20705000" />
-    </task>
-    <task id="LOCAL-00001" summary="*Algunos pedazos de codigos se sustituyeron con componentes.&#10;*Listado de formatos se muestra correctamente&#10;*Mejor acomodo en pestaña domicilios">
-      <created>1624952066000</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1624952066000</updated>
-    </task>
-    <task id="LOCAL-00002" summary="*Headers de tabla en pestaña formatos se ven correctamente.&#10;*Pestaña inputs de Procecsos especiales fueron reemplazados con componentes.">
-      <created>1625000996594</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1625000996594</updated>
-    </task>
-    <task id="LOCAL-00003" summary="*Se agregó campo numRegistroIdentidadFiscal en seccion General, pestaña Inf. Adicional.&#10;*Se reemplazaron inputs por componentes.">
-      <created>1625005785111</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1625005785111</updated>
+      <workItem from="1629902787967" duration="7739000" />
     </task>
     <task id="LOCAL-00004" summary="*Se integró listado de atajos en toolbar">
       <created>1625608170315</created>
@@ -436,35 +422,63 @@
       <option name="project" value="LOCAL" />
       <updated>1629387190042</updated>
     </task>
-    <task id="LOCAL-00045" summary="*Se dividió domicilio en calle numero interio, exterior y colornia en recoleccion">
-      <created>1629503314150</created>
+    <task id="LOCAL-00045" summary="Se corrigio al momento de consultar y editar guia">
+      <created>1629472137588</created>
       <option name="number" value="00045" />
       <option name="presentableId" value="LOCAL-00045" />
       <option name="project" value="LOCAL" />
-      <updated>1629503314150</updated>
+      <updated>1629472137588</updated>
     </task>
-    <task id="LOCAL-00046" summary="*Se dividió domicilio en calle numero interio, exterior y colornia en embarque">
-      <created>1629503345730</created>
+    <task id="LOCAL-00046" summary="Se corrigio el filio del embarque al editar">
+      <created>1629472642299</created>
       <option name="number" value="00046" />
       <option name="presentableId" value="LOCAL-00046" />
       <option name="project" value="LOCAL" />
-      <updated>1629503345730</updated>
+      <updated>1629472642299</updated>
     </task>
-    <task id="LOCAL-00047" summary="*Se agregaron filtrados en recoleccion y se muestran por default registros de los ultimos 4 dias">
-      <created>1629580283284</created>
+    <task id="LOCAL-00047" summary="Se corrigio boton de agregar guias">
+      <created>1629472917226</created>
       <option name="number" value="00047" />
       <option name="presentableId" value="LOCAL-00047" />
       <option name="project" value="LOCAL" />
-      <updated>1629580283285</updated>
+      <updated>1629472917226</updated>
     </task>
-    <task id="LOCAL-00048" summary="*Se agregaron filtrados en embarque y se muestran por default registros de los ultimos 4 dias">
-      <created>1629584263702</created>
+    <task id="LOCAL-00048" summary="Error al agregar guia">
+      <created>1629481428234</created>
       <option name="number" value="00048" />
       <option name="presentableId" value="LOCAL-00048" />
       <option name="project" value="LOCAL" />
-      <updated>1629584263702</updated>
+      <updated>1629481428234</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="error al editar informe">
+      <created>1629482255289</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1629482255289</updated>
+    </task>
+    <task id="LOCAL-00050" summary="Corrección en última milla">
+      <created>1629565116123</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1629565116127</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Se agrego icono y se mejoro el scroll">
+      <created>1629837314582</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1629837314582</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Se realizaron ajustes a la ultima milla">
+      <created>1629929945152</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1629929945152</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -485,7 +499,20 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="develop" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
@@ -526,13 +553,8 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se recupera dato Tipo de servicio al modificar/ consultar una guia" />
-    <MESSAGE value="Se obtiene el codigo postal del remitente y destinatario" />
-    <MESSAGE value="Se corigio el envio de parametros para el modificar de Zonas" />
-    <MESSAGE value="Se corigio la consulta de forma que esta no permita la modificacion de datos en los siguientes catalogos: Tarifas, Remitente/destinatario y Rutas" />
     <MESSAGE value="Se elimino el codigo que no se estaba usando, se corrigieron los consultar y como se interactua con la informacion, se arreglo el problema de que consultar modificaba" />
     <MESSAGE value="* Se renombraron variables para mayor entendimiento en ciudades" />
     <MESSAGE value="* Se renombraron variables para mayor entendimiento en zonas" />
@@ -550,11 +572,75 @@
     <MESSAGE value="Se corrigio conceptos" />
     <MESSAGE value="Se calculo de iva conceptos" />
     <MESSAGE value="*Cambio en la forma de seatear datos en recoleccion y embarque" />
-    <MESSAGE value="*Se dividió domicilio en calle numero interio, exterior y colornia en recoleccion" />
-    <MESSAGE value="*Se dividió domicilio en calle numero interio, exterior y colornia en embarque" />
-    <MESSAGE value="*Se agregaron filtrados en recoleccion y se muestran por default registros de los ultimos 4 dias" />
-    <MESSAGE value="*Se agregaron filtrados en embarque y se muestran por default registros de los ultimos 4 dias" />
-    <option name="LAST_COMMIT_MESSAGE" value="*Se agregaron filtrados en embarque y se muestran por default registros de los ultimos 4 dias" />
+    <MESSAGE value="Se corrigio al momento de consultar y editar guia" />
+    <MESSAGE value="Se corrigio el filio del embarque al editar" />
+    <MESSAGE value="Se corrigio boton de agregar guias" />
+    <MESSAGE value="Error al agregar guia" />
+    <MESSAGE value="error al editar informe" />
+    <MESSAGE value="Corrección en última milla" />
+    <MESSAGE value="Se agrego icono y se mejoro el scroll" />
+    <MESSAGE value="Se realizaron ajustes a la ultima milla" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se realizaron ajustes a la ultima milla" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629929944301">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629837314284" />
+    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629929944301" />
+    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629472917046" />
+    <state x="144" y="76" key="DiffContextDialog" timestamp="1629476207161">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="144" y="76" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1629476207161" />
+    <state width="1419" height="133" key="GridCell.Tab.0.bottom" timestamp="1629842818570">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1419" height="133" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842502892" />
+    <state width="1419" height="133" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.0.800.600@0.0.1440.900" timestamp="1629842818570" />
+    <state width="1419" height="133" key="GridCell.Tab.0.center" timestamp="1629842818568">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1419" height="133" key="GridCell.Tab.0.center/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842502889" />
+    <state width="1419" height="133" key="GridCell.Tab.0.center/0.0.1440.900/1440.0.800.600@0.0.1440.900" timestamp="1629842818568" />
+    <state width="1419" height="133" key="GridCell.Tab.0.left" timestamp="1629842818567">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1419" height="133" key="GridCell.Tab.0.left/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842502888" />
+    <state width="1419" height="133" key="GridCell.Tab.0.left/0.0.1440.900/1440.0.800.600@0.0.1440.900" timestamp="1629842818567" />
+    <state width="1419" height="133" key="GridCell.Tab.0.right" timestamp="1629842818569">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1419" height="133" key="GridCell.Tab.0.right/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842502891" />
+    <state width="1419" height="133" key="GridCell.Tab.0.right/0.0.1440.900/1440.0.800.600@0.0.1440.900" timestamp="1629842818569" />
+    <state x="432" y="170" key="MultipleFileMergeDialog" timestamp="1629837327705">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629837327705" />
+    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481444821" />
+    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629565128625" />
+    <state x="427" y="176" key="RollbackChangesDialog" timestamp="1629842264321">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="427" y="176" key="RollbackChangesDialog/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842264321" />
+    <state x="427" y="176" key="RollbackChangesDialog/0.0.1440.900@0.0.1440.900" timestamp="1629476209899" />
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629482266699">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481463335" />
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629482266699" />
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629472923564" />
+    <state x="383" y="207" width="674" height="486" key="find.popup" timestamp="1629932698975">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="383" y="207" width="674" height="486" key="find.popup/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629932698975" />
+    <state x="366" y="245" key="git4idea.merge.GitPullDialog" timestamp="1629837319649">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629837319649" />
+    <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481440411" />
+    <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629565122944" />
+    <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900@0.0.1440.900" timestamp="1629470576411" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

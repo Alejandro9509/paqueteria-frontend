@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Marker from "react-leaflet-enhanced-marker";
-import {Polyline} from "react-leaflet";
+import {Polyline, Popup} from "react-leaflet";
 import {calcularRuta} from "../../Util/Contexts/UltimaMillaContext";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
 
@@ -46,12 +46,22 @@ class TourUltimaMilla extends Component {
             }
         ))
         if (result.length !== 1) {
-            calcularRuta(result, this.props.sucursal).then((result) => {
-                result.polyline.plain.polyline.map(c => {
-                    polygon.push([c.y, c.x])
+            if (this.props.data.m_xlat !== 0 && this.props.data.m_xlng !== 0 ) {
+                calcularRuta(result, {lat:this.props.data.m_xlat, lng:this.props.data.m_xlng}).then((result) => {
+                    result.polyline.plain.polyline.map(c => {
+                        polygon.push([c.y, c.x])
+                    })
+                    this.setState({polygon: polygon})
                 })
-                this.setState({polygon: polygon})
-            })
+            }else {
+                calcularRuta(result, this.props.sucursal).then((result) => {
+                    result.polyline.plain.polyline.map(c => {
+                        polygon.push([c.y, c.x])
+                    })
+                    this.setState({polygon: polygon})
+                })
+            }
+
         }
 
     }
@@ -65,9 +75,9 @@ class TourUltimaMilla extends Component {
                     this.props.data.m_arrClsProGuia.map((g, index) => {
                             return (
                                 <Marker key={index}
-                                        icon={<MarkerComponent color={g.color} index={g.m_nUltimaMillaOrden}/>}
+                                        icon={<MarkerComponent color={this.props.data.color} index={g.m_nUltimaMillaOrden}/>}
                                         position={[parseFloat(g.m_sLatitud), parseFloat(g.m_sLongitud)]}>
-
+                                    <Popup>{g.m_nFolioGuia}</Popup>
                                 </Marker>
                             )
                         }
@@ -75,14 +85,15 @@ class TourUltimaMilla extends Component {
                 }
 
                 {
-                    this.props.data.m_xlat !== "" && this.props.data.m_xlng !== "" &&
+                    this.props.data.m_xlat !== 0 && this.props.data.m_xlng !== 0 &&
                     <Marker key={"truckPoint"}
                             icon={<TruckMarkerComponent color={this.props.data.color}/>}
-                            position={[this.props.sucursal.lat, this.props.sucursal.lng]}>
+                            position={[this.props.data.m_xlat, this.props.data.m_xlng]}>
+                        <Popup>{this.props.data.m_snNombreOperador} - {this.props.data.m_sPlacasUnidad}</Popup>
                     </Marker>
                 }
                 {
-                    this.props.data.m_xlat === "" && this.props.data.m_xlng === "" &&
+                    this.props.data.m_xlat === 0 && this.props.data.m_xlng === 0 &&
                     <Marker key={"sucursalPoint"}
                             icon={<MarkerComponent color={this.props.data.color} index={"s"}/>}
                             position={[this.props.sucursal.lat, this.props.sucursal.lng]}>
@@ -107,6 +118,7 @@ export default TourUltimaMilla;
 class MarkerComponent extends Component {
     constructor(props) {
         super(props);
+        console.log(this.props.color)
     }
 
     render() {
@@ -115,15 +127,15 @@ class MarkerComponent extends Component {
             color: "white",
             display: "flex",
             justifyContent: "center",
-            width: "20px",
-            height: "20px",
+            width: "30px",
+            height: "30px",
             borderRadius: "20px",
             alignItems: "center",
             borderStyle: "solid",
             borderColor: "white",
             boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
         };
-        return <div align={"center"} style={markerStyle}>{this.props.index}</div>;
+        return <div  align={"center"} style={markerStyle}>{this.props.index}</div>;
     }
 }
 

@@ -307,19 +307,6 @@ export default function LlegadaParadas(props){
                         value={data.origen}/>
                 </Grid>
                 <Grid item xs={5}/>
-                <Grid item xs={2}>
-                    <TextField
-                        id={"tipoCambioOrigen"}
-                        margin={"dense"}
-                        label={"Tipo de cambio"}
-                        InputProps={{
-                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                        }}
-                        variant={"outlined"}
-                        value={data.tipoDeCambioOrigen}
-                        onChange={handleTipoDeCambio}
-                    />
-                </Grid>
 
                 <Grid item xs={5}>
                     <TextField
@@ -605,7 +592,7 @@ export default function LlegadaParadas(props){
                 </Grid>
                 <Grid item xs={3}/>
 
-                <Grid item xs={2}>
+                {/*<Grid item xs={2}>
                     <TextField
                         id={"pesoLiquidar"}
                         margin={"dense"}
@@ -625,8 +612,7 @@ export default function LlegadaParadas(props){
                         value={data.pesoDescarga}
                         onChange={handlePesoDescarga}
                     />
-                </Grid>
-                <Grid item xs={8}/>
+                </Grid>*/}
 
             </Grid>
             {props.children}

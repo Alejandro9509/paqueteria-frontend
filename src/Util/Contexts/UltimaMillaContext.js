@@ -78,7 +78,7 @@ async function obtenerGuiasUbicacion(paquetes) {
     var guias = []
     for (var i = 0; i < paquetes.length; i++) {
         var g = paquetes[i]
-        var location = await searchLocation(g.m_sCiudadDestino,g.m_sDomicilioDestinatario)
+        var location = await searchLocationGuia(g.m_sCiudadDestino,g.m_bEntregarMismoDomicilio ? g.m_sDomicilioDestinatario : g.m_sDomicilioEntrega, g.m_sCodigoPostalEntrega)
         guias.push({
             idGuia: g.m_nIdGuia,
             index: i,
@@ -200,14 +200,36 @@ async function searchLocationAddress(address) {
 
 }
 
+async function searchLocationGuia(city, address, postalCode) {
+    var location = await xlocate.searchLocations({
+        "$type": "SearchByAddressRequest",
+        "address": {
+            "city": city,
+            "street": address,
+            "postalCode": postalCode
+        }
+    });
+    if (location.results) {
+        if (location.results.length !== 0) {
+            return location.results[0].location.referenceCoordinate
+        } else {
+            return {x: 0.0, y: 0.0}
+        }
+    } else {
+        return {x: 0.0, y: 0.0}
+    }
+}
 
-function searchLocationWeb(city, address) {
+
+function searchLocationWeb(city, address, subdistrict, number) {
     return new Promise((resolve, reject) => {
         xlocate.searchLocations({
             "$type": "SearchByAddressRequest",
             "address": {
                 "city": city,
                 "street": address,
+                "subdistrict": subdistrict,
+                "houseNumber": number
             }
         }, (location) => {
             if (location.results) {
