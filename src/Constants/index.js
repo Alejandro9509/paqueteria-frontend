@@ -168,8 +168,10 @@ export const TICKET_ZABRA_TAMPLATE = (guia, paquete, index) => (
     ^PW1200
     ^LL1800
     ^LS0
-    ^FT24,120^AAN,32,14^FH\\^FD#Guia:^FS
-    ^FT160,120^A0N,47,47^FH\\^FD${guia.m_nFolioGuia}^FS
+    ^FT25,50^AAN,32,14^FH\\^FDFecha:^FS
+    ^FT160,50^AAN,32,14^FH\\^FD${guia.m_dFecha}^FS
+    ^FT25,120^AAN,32,14^FH\\^FD#Guia:^FS
+    ^FT160,135^A0N,55,55^FH\\^FD${guia.m_nFolioGuia}^FS
     ^FT25,202^AAN,28,16^FH\\^FDServicio:^FS
     ^FT200,208^A0N,45,45^FH\\^FDConsolidado^FS
     ^FO560,15
@@ -211,6 +213,9 @@ export const TICKET_ZABRA_TAMPLATE = (guia, paquete, index) => (
     ^FT25,1050^AAN,28,16^FH\\^FDAncho(cm):^FS
     ^FT250,1050^A0N,67,67^FH\\^FD${paquete.m_xAncho}^FS
     ^FO21,1080^GB1115,0,3^FS
+    ^FO650,1077
+    ^BQN,2,3
+    ^FDQA,http://190.9.53.4:8081/app/applications/${guia.m_nIdGuia}/tracking^FS
     ^PQ1,0,1,Y^XZ`)
 
 

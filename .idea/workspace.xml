@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se agrego icono y se mejoro el scroll">
-      <change beforePath="$PROJECT_DIR$/.idea/sonarIssues.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se realizaron ajustes a la ultima milla">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Constants/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Tour.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Tour.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/TourUltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/TourUltimaMilla.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,14 +133,7 @@
       <workItem from="1625854871315" duration="946000" />
       <workItem from="1628006996868" duration="13293000" />
       <workItem from="1629125426621" duration="20705000" />
-      <workItem from="1629902787967" duration="6734000" />
-    </task>
-    <task id="LOCAL-00003" summary="*Se agregó campo numRegistroIdentidadFiscal en seccion General, pestaña Inf. Adicional.&#10;*Se reemplazaron inputs por componentes.">
-      <created>1625005785111</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1625005785111</updated>
+      <workItem from="1629902787967" duration="7739000" />
     </task>
     <task id="LOCAL-00004" summary="*Se integró listado de atajos en toolbar">
       <created>1625608170315</created>
@@ -484,7 +471,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629837314582</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="Se realizaron ajustes a la ultima milla">
+      <created>1629929945152</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1629929945152</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -561,7 +555,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se corigio la consulta de forma que esta no permita la modificacion de datos en los siguientes catalogos: Tarifas, Remitente/destinatario y Rutas" />
     <MESSAGE value="Se elimino el codigo que no se estaba usando, se corrigieron los consultar y como se interactua con la informacion, se arreglo el problema de que consultar modificaba" />
     <MESSAGE value="* Se renombraron variables para mayor entendimiento en ciudades" />
     <MESSAGE value="* Se renombraron variables para mayor entendimiento en zonas" />
@@ -586,14 +579,15 @@
     <MESSAGE value="error al editar informe" />
     <MESSAGE value="Corrección en última milla" />
     <MESSAGE value="Se agrego icono y se mejoro el scroll" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se agrego icono y se mejoro el scroll" />
+    <MESSAGE value="Se realizaron ajustes a la ultima milla" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se realizaron ajustes a la ultima milla" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629837314284">
+    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629929944301">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629837314284" />
-    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629565115854" />
+    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629929944301" />
     <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629472917046" />
     <state x="144" y="76" key="DiffContextDialog" timestamp="1629476207161">
       <screen x="0" y="0" width="1440" height="900" />
@@ -636,10 +630,10 @@
     <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481463335" />
     <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629482266699" />
     <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629472923564" />
-    <state x="383" y="207" width="674" height="486" key="find.popup" timestamp="1629915581191">
+    <state x="383" y="207" width="674" height="486" key="find.popup" timestamp="1629932698975">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="383" y="207" width="674" height="486" key="find.popup/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629915581191" />
+    <state x="383" y="207" width="674" height="486" key="find.popup/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629932698975" />
     <state x="366" y="245" key="git4idea.merge.GitPullDialog" timestamp="1629837319649">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
