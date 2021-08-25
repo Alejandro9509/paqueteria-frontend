@@ -258,7 +258,7 @@ class PaquetesList extends Component {
                                         <TableCell align="left">Capacidad</TableCell>
                                         <TableCell align="left">{u.m_nIdTIpoCobro === 3  ?  "Por cobrar destinatario" : u.m_nIdTIpoCobro === 5 ? "Por cobrar remitente" :  u.m_bPagado ? "Pagada" : "Pendiente de pago"}</TableCell>
                                         <TableCell align="left">{u.m_sNombreDestinatario}</TableCell>
-                                        <TableCell align="left">{u.m_sDomicilioDestinatario}</TableCell>
+                                        <TableCell align="left">{u.m_bEntregarMismoDomicilio ? u.m_sDomicilioDestinatario : u.m_sDomicilioEntrega}</TableCell>
                                         <TableCell align="left">Sin definir</TableCell>
                                         <TableCell align="left">{u.m_sFechaHora}</TableCell>
                                         <TableCell align="left">{u.m_sEstatusGuia}</TableCell>

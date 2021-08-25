@@ -128,7 +128,7 @@ class UltimaMilla extends Component {
                     if (data.m_nIdUltimaMilla === this.state.ultimaMilla.m_nIdUltimaMilla) {
                         data.m_arrClsParadaUltimaMilla.forEach(t => t.color = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla).color)
                     } else {
-                        data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(200))
+                        data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
                     }
                 }
 
@@ -184,7 +184,7 @@ class UltimaMilla extends Component {
                         unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
                     }
                 }
-                results.tours.map(t => t.color = randomColor(200))
+                results.tours.map(t => t.color = randomColor(10))
                 this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
 
             })

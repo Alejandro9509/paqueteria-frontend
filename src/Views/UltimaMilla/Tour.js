@@ -63,7 +63,9 @@ class Tour extends Component {
                                 <Marker key={index}
                                         icon={<MarkerComponent color={this.props.tour.color} index={index + 1}/>}
                                         position={[paquete.lat, paquete.lng]}>
-
+                                    <Popup>
+                                        {paquete.folio}
+                                    </Popup>
                                 </Marker>
                             )
                         }

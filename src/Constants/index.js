@@ -161,7 +161,60 @@ export const dataGridLocaleText = {
     nextIconButtonText: 'Siguiente página',
 }
 
-export const TICKET_ZABRA_TAMPLATE = (guia, paquete) => (`^XA
+export const TICKET_ZABRA_TAMPLATE = (guia, paquete, index) => (
+    `^XA
+    ^CI28
+    ^MMT
+    ^PW1200
+    ^LL1800
+    ^LS0
+    ^FT24,120^AAN,32,14^FH\\^FD#Guia:^FS
+    ^FT160,120^A0N,47,47^FH\\^FD${guia.m_nFolioGuia}^FS
+    ^FT25,202^AAN,28,16^FH\\^FDServicio:^FS
+    ^FT200,208^A0N,45,45^FH\\^FDConsolidado^FS
+    ^FO560,15
+    ^BQN,2,10
+    ^FDQA,${guia.m_nIdGuia}^FS
+    ^FO40,260^GB1115,0,3^FS
+    ^FT25,310^AAN,28,16^FH\\^FDDestinatario^FS
+    ^FT480,310^AAN,28,16^FH\\^FDRemitente^FS
+    ^FT25,350^A0N,30,30^FH\\^FD${guia.m_bEntregarMismoDomicilio ? guia.m_sDomicilioDestinatario : guia.m_sDomicilioEntrega}^FS
+    ^FT25,390^A0N,30,30^FH\\^FD${guia.m_bEntregarMismoDomicilio ? guia.m_sColonia : guia.m_sColonia} ^FS
+    ^FT25,430^A0N,30,30^FH\\^FDC.P. ${guia.m_bEntregarMismoDomicilio ? guia.m_nIdCodigoPostalDestinatario : guia.m_nIdCodigoPostalDestinatario}^FS
+    ^FT25,470^A0N,30,30^FH\\^FD${guia.m_bEntregarMismoDomicilio ? guia.m_sCiudadDestinatario : guia.m_sCiudadDestino}, ${guia.m_bEntregarMismoDomicilio ? guia.m_sEstadoDestinatario : guia.m_sEstadoEntregaGuia}, ${guia.m_bEntregarMismoDomicilio ? guia.m_sPaisDestinatario : guia.m_sPaisEntregaGuia}^FS
+    ^FT480,350^A0N,30,30^FH\\^FD${guia.m_sDomicilioRemitente}^FS
+    ^FT480,390^A0N,30,30^FH\\^FD${guia.m_sColonia} ^FS
+    ^FT480,430^A0N,30,30^FH\\^FDC.P. ${guia.m_sCodigoPostalEntrega}^FS
+    ^FT480,470^A0N,30,30^FH\\^FD${guia.m_sCiudadOrigen}, ${guia.m_sEstadoRemitente}, ${guia.m_sPaisRemitente}^FS
+    ^FO40,500^GB1115,0,3^FS
+    ^FT25,540^AAN,28,16^FH\\^FD${guia.m_sNombreDestinatario}^FS
+    ^FT25,580^AAN,28,16^FH\\^FD${guia.m_sRFCDestinatario}^FS
+    ^FT25,620^AAN,28,16^FH\\^FD${guia.m_sDomicilioDestinatario}^FS
+    ^FT25,660^AAN,28,16^FH\\^FD${guia.m_sEstadoDestinatario}^FS
+    ^FT25,700^AAN,28,16^FH\\^FD${guia.m_sPaisRemitente}^FS
+    ^FO32,730^GB1115,0,3^FS
+    ^FT25,780^AAN,28,16^FH\\^FDOrigen^FS
+    ^FT25,820^A0N,30,30^FH\\^FD${guia.m_sCiudadOrigen}^FS
+    ^FT480,780^AAN,28,16^FH\\^FDDestino^FS
+    ^FT480,820^A0N,30,30^FH\\^FD${guia.m_sCiudadDestino}^FS
+    ^FO21,850^GB1115,0,3^FS
+    ^FT21,890^AAN,28,16^FH\\^FD#Paquetes:^FS
+   ^FT210,910^A0N,67,67^FH\\^FD${index + 1}^FS
+    ^FT250,910^A0N,40,40^FH\\^FDde^FS
+    ^FT310,910^A0N,67,67^FH\\^FD${paquete.ctd}^FS
+    ^FT440,910^AAN,28,16^FH\\^FDPeso:^FS
+    ^FT550,910^A0N,67,67^FH\\^FD${paquete.m_xPeso} kg^FS
+    ^FT25,980^AAN,28,16^FH\\^FDAltura(cm):^FS
+    ^FT250,980^A0N,67,67^FH\\^FD${paquete.m_xAlto}^FS
+    ^FT440,980^AAN,28,16^FH\\^FDLargo(cm):^FS
+    ^FT630,980^A0N,67,67^FH\\^FD${paquete.m_xLargo}^FS
+    ^FT25,1050^AAN,28,16^FH\\^FDAncho(cm):^FS
+    ^FT250,1050^A0N,67,67^FH\\^FD${paquete.m_xAncho}^FS
+    ^FO21,1080^GB1115,0,3^FS
+    ^PQ1,0,1,Y^XZ`)
+
+
+/*    (`^XA
 ^CI28
 ^MMT
 ^PW1200
@@ -172,14 +225,14 @@ export const TICKET_ZABRA_TAMPLATE = (guia, paquete) => (`^XA
 ^FT178,109^A0N,67,67^FH\\^FD${guia.m_nFolioGuia}^FS
 ^FT25,340^AAN,36,20^FH\\^FDDestinatario^FS
 ^FT674,340^AAN,36,20^FH\\^FDRemitente^FS
-^FT25,412^A0N,50,50^FH\\^FD${!guia.m_bEntregarMismoDomicilio ? guia.m_sDomicilioDestinatario : guia.m_sDomicilioEntrega}^FS
-^FT25,475^A0N,50,50^FH\\^FD${!guia.m_bEntregarMismoDomicilio ? guia.m_sColonia : guia.m_sColonia}^FS
-^FT25,538^A0N,50,50^FH\\^FDC.P. ${!guia.m_bEntregarMismoDomicilio ? guia.m_nIdCodigoPostalDestinatario : guia.m_nIdCodigoPostalDestinatario}^FS
-^FT25,601^A0N,50,50^FH\\^FD${!guia.m_bEntregarMismoDomicilio ? guia.m_sCiudadDestinatario : guia.m_sCiudadDestino}, ${!guia.m_bEntregarMismoDomicilio ? guia.m_sEstadoDestinatario : guia.m_sEstadoEntregaGuia}, ${!guia.m_bEntregarMismoDomicilio ? guia.m_sPaisDestinatario : guia.m_sPaisEntregaGuia}^FS
+^FT25,412^A0N,50,50^FH\\^FD${guia.m_bEntregarMismoDomicilio ? guia.m_sDomicilioDestinatario : guia.m_sDomicilioEntrega}^FS
+^FT25,475^A0N,50,50^FH\\^FD${guia.m_bEntregarMismoDomicilio ? guia.m_sColonia : guia.m_sColonia}^FS
+^FT25,538^A0N,50,50^FH\\^FDC.P. ${guia.m_bEntregarMismoDomicilio ? guia.m_nIdCodigoPostalDestinatario : guia.m_nIdCodigoPostalDestinatario}^FS
+^FT25,601^A0N,50,50^FH\\^FD${guia.m_bEntregarMismoDomicilio ? guia.m_sCiudadDestinatario : guia.m_sCiudadDestino}, ${guia.m_bEntregarMismoDomicilio ? guia.m_sEstadoDestinatario : guia.m_sEstadoEntregaGuia}, ${guia.m_bEntregarMismoDomicilio ? guia.m_sPaisDestinatario : guia.m_sPaisEntregaGuia}^FS
 ^FT674,412^A0N,50,50^FH\\^FD${guia.m_sDomicilioRemitente}^FS
 ^FT674,475^A0N,50,50^FH\\^FD${guia.m_sColonia}^FS
-^FT674,538^A0N,50,50^FH\\^FDC.P. ${guia.m_nIdCodigoPostalRemitente}^FS
-^FT674,601^A0N,50,50^FH\\^FD${guia.m_sCiudadRemitente}, ${guia.m_sEstadoRemitente}, ${guia.m_sPaisRemitente}^FS
+^FT674,538^A0N,50,50^FH\\^FDC.P. ${guia.m_sCodigoPostalEntrega}^FS
+^FT674,601^A0N,50,50^FH\\^FD${guia.m_sCiudadOrigen}, ${guia.m_sEstadoRemitente}, ${guia.m_sPaisRemitente}^FS
 ^FO40,638^GB1115,0,3^FS
 ^FO32,899^GB1115,0,3^FS
 ^FT900,295
@@ -208,4 +261,5 @@ export const TICKET_ZABRA_TAMPLATE = (guia, paquete) => (`^XA
 ^FT838,1276^A0N,67,67^FH\\^FD${paquete.m_xAncho}^FS
 ^FT320,1367^A0N,67,67^FH\\^FD${paquete.m_xLargo}^FS
 ^FO21,1396^GB1115,0,3^FS
-^PQ1,0,1,Y^XZ`)
+^PQ1,0,1,Y^XZ`)*/
+

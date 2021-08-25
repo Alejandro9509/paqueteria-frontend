@@ -4,10 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Corrección en última milla">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se agrego icono y se mejoro el scroll">
+      <change beforePath="$PROJECT_DIR$/.idea/sonarIssues.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/project-style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/project-style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/public/favicon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Constants/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Tour.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Tour.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/TourUltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/TourUltimaMilla.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,13 +139,7 @@
       <workItem from="1625854871315" duration="946000" />
       <workItem from="1628006996868" duration="13293000" />
       <workItem from="1629125426621" duration="20705000" />
-    </task>
-    <task id="LOCAL-00002" summary="*Headers de tabla en pestaña formatos se ven correctamente.&#10;*Pestaña inputs de Procecsos especiales fueron reemplazados con componentes.">
-      <created>1625000996594</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1625000996594</updated>
+      <workItem from="1629902787967" duration="6734000" />
     </task>
     <task id="LOCAL-00003" summary="*Se agregó campo numRegistroIdentidadFiscal en seccion General, pestaña Inf. Adicional.&#10;*Se reemplazaron inputs por componentes.">
       <created>1625005785111</created>
@@ -477,7 +477,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629565116127</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="Se agrego icono y se mejoro el scroll">
+      <created>1629837314582</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1629837314582</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -554,7 +561,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se corigio el envio de parametros para el modificar de Zonas" />
     <MESSAGE value="Se corigio la consulta de forma que esta no permita la modificacion de datos en los siguientes catalogos: Tarifas, Remitente/destinatario y Rutas" />
     <MESSAGE value="Se elimino el codigo que no se estaba usando, se corrigieron los consultar y como se interactua con la informacion, se arreglo el problema de que consultar modificaba" />
     <MESSAGE value="* Se renombraron variables para mayor entendimiento en ciudades" />
@@ -579,26 +585,50 @@
     <MESSAGE value="Error al agregar guia" />
     <MESSAGE value="error al editar informe" />
     <MESSAGE value="Corrección en última milla" />
-    <option name="LAST_COMMIT_MESSAGE" value="Corrección en última milla" />
+    <MESSAGE value="Se agrego icono y se mejoro el scroll" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se agrego icono y se mejoro el scroll" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629565115854">
+    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629837314284">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629837314284" />
     <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629565115854" />
     <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629472917046" />
     <state x="144" y="76" key="DiffContextDialog" timestamp="1629476207161">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="144" y="76" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1629476207161" />
-    <state x="432" y="170" key="MultipleFileMergeDialog" timestamp="1629565128625">
+    <state width="1419" height="133" key="GridCell.Tab.0.bottom" timestamp="1629842818570">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state width="1419" height="133" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842502892" />
+    <state width="1419" height="133" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.0.800.600@0.0.1440.900" timestamp="1629842818570" />
+    <state width="1419" height="133" key="GridCell.Tab.0.center" timestamp="1629842818568">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1419" height="133" key="GridCell.Tab.0.center/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842502889" />
+    <state width="1419" height="133" key="GridCell.Tab.0.center/0.0.1440.900/1440.0.800.600@0.0.1440.900" timestamp="1629842818568" />
+    <state width="1419" height="133" key="GridCell.Tab.0.left" timestamp="1629842818567">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1419" height="133" key="GridCell.Tab.0.left/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842502888" />
+    <state width="1419" height="133" key="GridCell.Tab.0.left/0.0.1440.900/1440.0.800.600@0.0.1440.900" timestamp="1629842818567" />
+    <state width="1419" height="133" key="GridCell.Tab.0.right" timestamp="1629842818569">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1419" height="133" key="GridCell.Tab.0.right/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842502891" />
+    <state width="1419" height="133" key="GridCell.Tab.0.right/0.0.1440.900/1440.0.800.600@0.0.1440.900" timestamp="1629842818569" />
+    <state x="432" y="170" key="MultipleFileMergeDialog" timestamp="1629837327705">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629837327705" />
     <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481444821" />
     <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629565128625" />
-    <state x="427" y="176" key="RollbackChangesDialog" timestamp="1629476209899">
+    <state x="427" y="176" key="RollbackChangesDialog" timestamp="1629842264321">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="427" y="176" key="RollbackChangesDialog/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842264321" />
     <state x="427" y="176" key="RollbackChangesDialog/0.0.1440.900@0.0.1440.900" timestamp="1629476209899" />
     <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629482266699">
       <screen x="0" y="0" width="1440" height="900" />
@@ -606,13 +636,14 @@
     <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481463335" />
     <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629482266699" />
     <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629472923564" />
-    <state x="383" y="207" width="674" height="486" key="find.popup" timestamp="1629558266362">
+    <state x="383" y="207" width="674" height="486" key="find.popup" timestamp="1629915581191">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="383" y="207" width="674" height="486" key="find.popup/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629558266362" />
-    <state x="366" y="245" key="git4idea.merge.GitPullDialog" timestamp="1629565122944">
+    <state x="383" y="207" width="674" height="486" key="find.popup/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629915581191" />
+    <state x="366" y="245" key="git4idea.merge.GitPullDialog" timestamp="1629837319649">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629837319649" />
     <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481440411" />
     <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629565122944" />
     <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900@0.0.1440.900" timestamp="1629470576411" />

@@ -254,10 +254,10 @@ function Guia(props) {
             agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 //window.location.reload();
-                let resp = respuesta.data;
-                let vGuia = resp.substring(resp.indexOf(":") + 2);
+                //let resp = respuesta.data;
+                //let vGuia = resp.substring(resp.indexOf(":") + 2);
                 handleShowListado()
-                getImpresion(vGuia);
+                //getImpresion(vGuia);
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
@@ -931,9 +931,9 @@ function Guia(props) {
                  })
              })
          })*/
-        guia.m_arrClsDetalle.forEach(p => {
+        guia.m_arrClsDetalle.forEach((p, index) => {
             console.log(TICKET_ZABRA_TAMPLATE(guia, p))
-            selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p), undefined, errorCallback);
+            selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, index), undefined, errorCallback);
         })
 
     }
