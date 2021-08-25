@@ -74,7 +74,7 @@ class CodigoPostal extends Component {
                                         <i />
                                     </label>
                                 </td>
-                                <td><strong>{i.m_sCP}</strong></td>
+                                <td><strong>{i.m_sCiudad} ({i.m_sCP})</strong></td>
                             </tr>
 
                         )

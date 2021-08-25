@@ -1124,6 +1124,7 @@ function Guia(props) {
         axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${idEmbarque}`, { headers }).then(tarifa => {
             console.log('tarifas by embarque')
             console.log(tarifa.data)
+            if (tarifa.data.length != 0) {
             let pesoTotal = 0
             let pesoKg = 0
             let pesoVolumetrico = 0
@@ -1171,7 +1172,7 @@ function Guia(props) {
                     ivaTraslada: ivaTraslada
                 }
             })
-
+        }
         })
     }
 
