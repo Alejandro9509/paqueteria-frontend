@@ -987,7 +987,9 @@ function Embarque(props) {
     }, [state.ciudadEntrega])
 
     useEffect(async (value) => {
-            if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataOperador.length > 0 && dataTipoUnidad.length > 0) {
+
+            if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataOperador.length > 0) {
+                console.log(props.location.idRecoleccion)
                 if (props.location.idRecoleccion != undefined) {
                     obtenerRecoleccionId(props.location.idRecoleccion)
                         .then((respuesta) => {
@@ -1003,7 +1005,7 @@ function Embarque(props) {
                 }
             }
         },
-        [dataRemitenteDestinatario, dataCiudad, dataOperador, dataTipoUnidad, dataClientes]
+        [dataRemitenteDestinatario, dataCiudad, dataOperador, dataClientes]
     );
 
     function handleShowCancelar() {
@@ -1734,7 +1736,7 @@ function Embarque(props) {
         getAllCiudades();
         // getAllCodigosPostales();
         getAllOperadores();
-        getAllTipoUnidad();
+        //getAllTipoUnidad();
         getAllRemitentesDestinatarios();
         getAllEmbalajes();
         getUltimoFolioEmbarque();
