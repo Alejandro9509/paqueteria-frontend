@@ -403,26 +403,26 @@ function Recoleccion() {
      }, [state.moneda])*/
 
     //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el remitente
-    useEffect(value => {
-        if (state.ciudadRemitente != "") {
+   /*  useEffect( value => {
+        if (state.ciudadRemitente != ""){
             obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
-                if (respuesta.data.length > 0) {
+                if (respuesta.data.length > 0){
                     setDataCodigosPostalesRemitente(respuesta.data);
                 }
             });
         }
-    }, [state.ciudadRemitente])
+    }, [state.ciudadRemitente]) */
 
     //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el destinatario
-    useEffect(value => {
-        if (state.ciudadDestinatario != "") {
+   /*  useEffect( value => {
+        if (state.ciudadDestinatario != ""){
             obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
-                if (respuesta.data.length > 0) {
+                if (respuesta.data.length > 0){
                     setDataCodigosPostalesDestinatario(respuesta.data);
                 }
             });
         }
-    }, [state.ciudadDestinatario])
+    }, [state.ciudadDestinatario]) */
 
     //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para recoleccion
     useEffect(value => {
@@ -494,7 +494,8 @@ function Recoleccion() {
                     nombreRemitente: newValue,
                     RFCRemitente: newValue.m_sRFC,
                     domicilioRemitente: newValue.m_sDomicilio,
-                    codigoPostalRemitente: respuesta.data,
+                    codigoPostalRemitente: respuesta.data.m_sCP,
+                    idCodigoPostalRemitente: respuesta.data.m_nIdCP,
                     ciudadRemitente: respuesta.data.m_nIdCiudad,
                     correoRemitente: newValue.m_sCorreoElectronico,
                     telefonoRemitente: newValue.m_sTelefono,
@@ -522,7 +523,8 @@ function Recoleccion() {
                     nombreDestinatario: newValue,
                     RFCDestinatario: newValue.m_sRFC,
                     domicilioDestinatario: newValue.m_sDomicilio,
-                    codigoPostalDestinatario: respuesta.data,
+                    codigoPostalDestinatario: respuesta.data.m_sCP,
+                    idCodigoPostalDestinatario: respuesta.data.m_nIdCP,
                     ciudadDestinatario: respuesta.data.m_nIdCiudad,
                     correoDestinatario: newValue.m_sCorreoElectronico,
                     telefonoDestinatario: newValue.m_sTelefono,
@@ -560,7 +562,7 @@ function Recoleccion() {
             m_sNombreRemitente: state.nombreRemitente.m_sNombre,
             m_sRFCRemitente: state.RFCRemitente,
             m_sDomicilioRemitente: state.domicilioRemitente,
-            m_sIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
+            m_sIdCodigoPostalRemitente: state.idCodigoPostalRemitente,
             m_nIdCiudadRemitente: state.ciudadRemitente,
             m_sCorreoRemitente: state.correoRemitente,
             m_sTelefonoRemitente: state.telefonoRemitente,
@@ -578,7 +580,7 @@ function Recoleccion() {
             m_sNombreDestinatario: state.nombreDestinatario.m_sNombre,
             m_sRFCDestinatario: state.RFCDestinatario,
             m_sDomicilioDestinatario: state.domicilioDestinatario,
-            m_sIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
+            m_sIdCodigoPostalDestinatario: state.idCodigoPostalDestinatario,
             m_nIdCiudadDestinatario: state.ciudadDestinatario,
             m_sCorreoDestinatario: state.correoDestinatario,
             m_sTelefonoDestinatario: state.telefonoDestinatario,
@@ -601,7 +603,7 @@ function Recoleccion() {
             //Recoleccion
             m_dFechaDetalleRecoleccion: '',
             m_tHoraDetalleRecoleccion: '',
-            m_nIdCPDetalleRecoleccion: state.codigoPostalRemitente.m_nIdCP,
+            m_nIdCPDetalleRecoleccion: state.idCodigoPostalRemitente,
             m_nIdCiudadDetalleRecoleccion: '',
             m_nIdZonaDetalleRecoleccion: '',
             m_sDomicilioDetalleRecoleccion: '',
@@ -610,7 +612,7 @@ function Recoleccion() {
             m_bRecoleccionDiferenteDomicilio: false,
 
             //Entrega
-            m_nIdCPDetalleEntrega: state.codigoPostalDestinatario.m_nIdCP,
+            m_nIdCPDetalleEntrega: state.idCodigoPostalDestinatario,
             m_nIdCiudadDetalleEntrega: '',
             m_nIdZonaDetalleEntrega: '',
             m_sDomicilioDetalleEntrega: '',
@@ -991,7 +993,8 @@ function Recoleccion() {
             setState(state => {
                 return {
                     ...state,
-                    codigoPostalRemitente: cp.data
+                    codigoPostalRemitente: respuesta.data.m_sCP,
+                    idCodigoPostalRemitente: respuesta.data.m_nIdCP
                 }
             })
         })
@@ -999,7 +1002,8 @@ function Recoleccion() {
             setState(state => {
                 return {
                     ...state,
-                    codigoPostalDestinatario: cp.data
+                    codigoPostalDestinatario: respuesta.data.m_sCP,
+                    idCodigoPostalDestinatario: respuesta.data.m_nIdCP
                 }
             })
         })
@@ -1783,8 +1787,7 @@ function Recoleccion() {
         event.preventDefault();
         setState({
             ...state,
-            ciudadRemitente: event.target.value,
-            codigoPostalRemitente: null
+            ciudadRemitente: event.target.value
         });
     }
     //setea la ciudad seleccionada para el destinatario
@@ -1792,8 +1795,7 @@ function Recoleccion() {
         event.preventDefault();
         setState({
             ...state,
-            ciudadDestinatario: event.target.value,
-            codigoPostalDestinatario: null
+            ciudadDestinatario: event.target.value
         });
     }
     //setea la ciudad seleccionada para recoleccion
@@ -3797,85 +3799,23 @@ function Recoleccion() {
                                                                     <div className="col-sm-12 col-md-12 unit">
 
                                                                         <div className="input">
-                                                                            <Autocomplete
-                                                                                value={state.codigoPostalRemitente}
-                                                                                freeSolo
-                                                                                onChange={(event, newValue) => {
-                                                                                    console.log(state.ciudadRemitente)
-                                                                                    console.log(
-                                                                                        dataCodigosPostalesRemitente.filter(cp => cp.m_nIdCiudad == state.ciudadRemitente))
-                                                                                    setState({
-                                                                                        ...state,
-                                                                                        codigoPostalRemitente: newValue
-                                                                                    })
-                                                                                }}
-                                                                                id="codigoPostalRemitente"
-                                                                                disableClearable
-                                                                                forcePopupIcon={false}
-                                                                                options={dataCodigosPostalesRemitente.filter((cp) => cp.m_nIdCiudad == state.ciudadRemitente)}
-                                                                                disabled={state.agregar === "Consultar"}
-                                                                                getOptionLabel={(option) =>
-                                                                                    option.m_sCP
-                                                                                }
-                                                                                variant="outlined"
-                                                                                style={{
-                                                                                    transform: "translate(14px, 10px) scale(1) !important"
-                                                                                }}
-                                                                                renderInput={(params) => (
-                                                                                    <div>
-                                                                                        <TextField
-                                                                                            variant="outlined"
-                                                                                            label="Código Postal"
-                                                                                            margin="dense"
-                                                                                            required
-                                                                                            {...params}
-                                                                                            InputProps={{
-                                                                                                ...params.InputProps,
-                                                                                                style: {
-                                                                                                    height: "33px",
-                                                                                                    fontSize: "14px"
-                                                                                                },
-                                                                                                type: "search",
-                                                                                                disableUnderline: true,
-                                                                                                disabled: state.agregar === "Consultar",
-                                                                                                endAdornment: (
-                                                                                                    <InputAdornment
-                                                                                                        position="end">
-                                                                                                        <IconButton
-                                                                                                            padding="0px"
-                                                                                                            style={{
-                                                                                                                paddingRight: "0px",
-                                                                                                            }}
-                                                                                                            disabled={state.agregar === "Consultar"}
-                                                                                                            onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "codigoPostalRemitente",
-                                                                                                                    tipoModal: 0,
-                                                                                                                    openDialog: true
-                                                                                                                });
-                                                                                                            }}
-                                                                                                        >
-                                                                                                            <PageviewIcon
-                                                                                                                style={{
-                                                                                                                    color: "#F9A03E",
-                                                                                                                    fontSize: 32,
-                                                                                                                    paddingInlineEnd: 0,
-                                                                                                                    paddingRight: 0,
-                                                                                                                    paddingBlockEnd: 0,
-                                                                                                                    paddingLeft: 0,
-                                                                                                                    paddingBlock: 0,
-                                                                                                                }}
-                                                                                                            />
-                                                                                                        </IconButton>
-                                                                                                    </InputAdornment>
-                                                                                                ),
-                                                                                            }}
-                                                                                        />
-                                                                                    </div>
-                                                                                )}
-                                                                            />
+                                                                        <TextField
+                                                                                        required
+                                                                                        variant="outlined"
+                                                                                        label="Código Postal"
+                                                                                        margin="dense"
+                                                                                        value={state.codigoPostalRemitente}
+                                                                                        InputProps={{
+                                                                                            style: {
+                                                                                                height: "33px",
+                                                                                                fontSize: "14px"
+                                                                                            },
+                                                                                            type: "search",
+                                                                                            disableUnderline: true,
+                                                                                            disabled: state.agregar === "Consultar",
+
+                                                                                        }}
+                                                                                    />
                                                                         </div>
                                                                     </div>
                                                                     {/* --------------------------------------- Correo ------------------------------------------------- */}
@@ -4296,34 +4236,14 @@ function Recoleccion() {
 
                                                                 <div className="col-sm-12 col-md-12 unit">
                                                                     <div className="input">
-                                                                        <Autocomplete
-                                                                            freeSolo
-                                                                            onChange={(event, newValue) =>
-                                                                                setState({
-                                                                                    ...state,
-                                                                                    codigoPostalDestinatario: newValue,
-                                                                                })
-                                                                            }
-                                                                            value={state.codigoPostalDestinatario}
-                                                                            disabled={state.agregar === "Consultar"}
-                                                                            id="codigoPostalDestinatario"
-                                                                            disableClearable
-                                                                            options={dataCodigosPostalesDestinatario.filter((cp) => cp.m_nIdCiudad == state.ciudadDestinatario)}
-                                                                            getOptionLabel={(option) => option.m_sCP}
-                                                                            variant="outlined"
-                                                                            style={{
-                                                                                transform: "translate(14px, 10px) scale(1) !important"
-                                                                            }}
-                                                                            renderInput={(params) => (
-                                                                                <div>
+
                                                                                     <TextField
                                                                                         required
                                                                                         variant="outlined"
                                                                                         label="Código Postal"
                                                                                         margin="dense"
-                                                                                        {...params}
+                                                                                        value={state.codigoPostalDestinatario}
                                                                                         InputProps={{
-                                                                                            ...params.InputProps,
                                                                                             style: {
                                                                                                 height: "33px",
                                                                                                 fontSize: "14px"
@@ -4331,39 +4251,10 @@ function Recoleccion() {
                                                                                             type: "search",
                                                                                             disableUnderline: true,
                                                                                             disabled: state.agregar === "Consultar",
-                                                                                            endAdornment: (
-                                                                                                <InputAdornment
-                                                                                                    position="end">
-                                                                                                    {" "}
-                                                                                                    <IconButton
-                                                                                                        style={{
-                                                                                                            paddingRight: "0px",
-                                                                                                        }}
-                                                                                                        disabled={state.agregar === "Consultar"}
-                                                                                                        onClick={() => {
-                                                                                                            setState({
-                                                                                                                ...state,
-                                                                                                                identificadorModal:
-                                                                                                                    "codigoPostalDestinatario",
-                                                                                                                tipoModal: 7,
-                                                                                                                openDialog: true
-                                                                                                            });
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        <PageviewIcon
-                                                                                                            style={{
-                                                                                                                color: "#F9A03E",
-                                                                                                                fontSize: 32,
-                                                                                                            }}
-                                                                                                        />
-                                                                                                    </IconButton>{" "}
-                                                                                                </InputAdornment>
-                                                                                            ),
+
                                                                                         }}
                                                                                     />
-                                                                                </div>
-                                                                            )}
-                                                                        />
+
                                                                     </div>
                                                                 </div>
 

@@ -216,7 +216,6 @@ class ZonasAgregar extends Component {
                 dataLocalidades: []
             });
         }
-        this.getAllLocalidades(array)
 
     }
 
@@ -360,7 +359,7 @@ class ZonasAgregar extends Component {
                                             </label>
                                         </div>
 
-                                        <div className="col-md-4 col-sm-12" style={{
+                                        <div className="col-md-6 col-sm-12" style={{
                                             height: this.state.height - 375,
                                             overflowY: "auto",
                                             padding: "5px"
@@ -377,7 +376,7 @@ class ZonasAgregar extends Component {
 
                                         </div>
 
-                                        <div className="col-md-4 col-sm-12" style={{
+                                        <div className="col-md-6 col-sm-12" style={{
                                             height: this.state.height - 375,
                                             overflowY: "auto",
                                             padding: "5px"
@@ -396,7 +395,7 @@ class ZonasAgregar extends Component {
                                             }
                                         </div>
 
-                                        <div className="col-md-4 col-sm-12" style={{
+                                       {/*  <div className="col-md-4 col-sm-12" style={{
                                             height: this.state.height - 375,
                                             overflowY: "auto",
                                             padding: "5px"
@@ -414,7 +413,7 @@ class ZonasAgregar extends Component {
                                             }
 
                                         </div>
-
+ */}
                                         <div style={{float: "right", marginRight: "0px"}}>
                                         </div>
 
