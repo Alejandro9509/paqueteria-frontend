@@ -4731,35 +4731,39 @@ function Embarque(props) {
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="col-sm-12 col-md-12 unit">
-                                                                    <div className="input">
-                                                                        <Autocomplete
-                                                                            value={state.zonaDestinatario}
-                                                                            freeSolo
-                                                                            onChange={(event, newValue) => handleZonaDestinatarioSelected(newValue)}
-                                                                            id="zonaDestinatario"
-                                                                            disableClearable
-                                                                            forcePopupIcon={false}
-                                                                            options={dataZona}
-                                                                            disabled={state.agregar === "Consultar"}
-                                                                            getOptionLabel={(option) => option.m_sDescripcion}
-                                                                            variant="outlined"
-                                                                            name={"zonaDestinatario"}
-                                                                            style={{
-                                                                                transform: "translate(14px, 10px) scale(1) !important"
-                                                                            }}
-                                                                            renderInput={(params) =>
-                                                                                <TextField
-                                                                                    variant="outlined"
-                                                                                    label="Zona"
-                                                                                    margin="dense"
-                                                                                    required
-                                                                                    {...params}
-                                                                                />
-                                                                            }
-                                                                        />
+                                                                {
+                                                                    (!state.diferenteEntrega && !state.entregaEnSucursal)  &&
+                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                        <div className="input">
+                                                                            <Autocomplete
+                                                                                value={state.zonaDestinatario}
+                                                                                freeSolo
+                                                                                onChange={(event, newValue) => handleZonaDestinatarioSelected(newValue)}
+                                                                                id="zonaDestinatario"
+                                                                                disableClearable
+                                                                                forcePopupIcon={false}
+                                                                                options={dataZona}
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                getOptionLabel={(option) => option.m_sDescripcion}
+                                                                                variant="outlined"
+                                                                                name={"zonaDestinatario"}
+                                                                                style={{
+                                                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                                                }}
+                                                                                renderInput={(params) =>
+                                                                                    <TextField
+                                                                                        variant="outlined"
+                                                                                        label="Zona"
+                                                                                        margin="dense"
+                                                                                        required
+                                                                                        {...params}
+                                                                                    />
+                                                                                }
+                                                                            />
+                                                                        </div>
                                                                     </div>
-                                                                </div>
+                                                                }
+
 
                                                                 <div className="col-sm-12 col-md-12  unit">
                                                                     <label className="checkbox">

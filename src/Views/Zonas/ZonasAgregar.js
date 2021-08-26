@@ -39,7 +39,7 @@ class ZonasAgregar extends Component {
             folio: props.edit ? props.select.m_nFolio : "0",
             descripcion: props.edit ? props.select.m_sDescripcion : "",
             costoRecolectar: props.edit ? props.select.m_cyCostoRecolectar : "",
-            costoEntregar: props.edit ? props.select.m_cyCostoEntregar : "",
+            costoEntregar: props.edit ? props.select.m_cyCostoEntrega : "",
             editar: props.consult,
             dataCodigoPostales: [],
             dataLocalidades: [],
