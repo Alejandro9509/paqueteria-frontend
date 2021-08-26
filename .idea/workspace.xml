@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se cambio la logica para mostrar sucursal en el listado de usuarios">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +107,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -510,7 +510,6 @@
                   </entry>
                 </map>
               </option>
-              <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
@@ -552,6 +551,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="*Los codigos postales ya se acumulan por ciudad" />
@@ -580,80 +580,6 @@
     <MESSAGE value="Corrección de error al generar embarque" />
     <MESSAGE value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
     <option name="LAST_COMMIT_MESSAGE" value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629994229729">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629837314284" />
-    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629929944301" />
-    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629994229729" />
-    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629949401021" />
-    <state x="144" y="76" key="DiffContextDialog" timestamp="1629476207161">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="144" y="76" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1629476207161" />
-    <state width="1419" height="133" key="GridCell.Tab.0.bottom" timestamp="1629948967616">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="1419" height="133" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842502892" />
-    <state width="1419" height="133" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.0.800.600@0.0.1440.900" timestamp="1629842818570" />
-    <state width="1419" height="133" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1629948967616" />
-    <state width="1419" height="133" key="GridCell.Tab.0.center" timestamp="1629948967615">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="1419" height="133" key="GridCell.Tab.0.center/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842502889" />
-    <state width="1419" height="133" key="GridCell.Tab.0.center/0.0.1440.900/1440.0.800.600@0.0.1440.900" timestamp="1629842818568" />
-    <state width="1419" height="133" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1629948967615" />
-    <state width="1419" height="133" key="GridCell.Tab.0.left" timestamp="1629948967614">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="1419" height="133" key="GridCell.Tab.0.left/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842502888" />
-    <state width="1419" height="133" key="GridCell.Tab.0.left/0.0.1440.900/1440.0.800.600@0.0.1440.900" timestamp="1629842818567" />
-    <state width="1419" height="133" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1629948967614" />
-    <state width="1419" height="133" key="GridCell.Tab.0.right" timestamp="1629948967615">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="1419" height="133" key="GridCell.Tab.0.right/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842502891" />
-    <state width="1419" height="133" key="GridCell.Tab.0.right/0.0.1440.900/1440.0.800.600@0.0.1440.900" timestamp="1629842818569" />
-    <state width="1419" height="133" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1629948967615" />
-    <state x="144" y="76" key="MergeDialog" timestamp="1629947733394">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="144" y="76" key="MergeDialog/0.0.1440.900@0.0.1440.900" timestamp="1629947733394" />
-    <state x="432" y="170" key="MultipleFileMergeDialog" timestamp="1629947733435">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629837327705" />
-    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481444821" />
-    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629565128625" />
-    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900@0.0.1440.900" timestamp="1629947733435" />
-    <state x="427" y="176" key="RollbackChangesDialog" timestamp="1629842264321">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="427" y="176" key="RollbackChangesDialog/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842264321" />
-    <state x="427" y="176" key="RollbackChangesDialog/0.0.1440.900@0.0.1440.900" timestamp="1629476209899" />
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629994236143">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481463335" />
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629994236143" />
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629949415218" />
-    <state x="383" y="207" width="674" height="486" key="find.popup" timestamp="1629994276578">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="383" y="207" width="674" height="486" key="find.popup/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629994276578" />
-    <state x="366" y="245" key="git4idea.merge.GitPullDialog" timestamp="1629947418395">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629837319649" />
-    <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481440411" />
-    <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629565122944" />
-    <state x="366" y="245" key="git4idea.merge.GitPullDialog/0.0.1440.900@0.0.1440.900" timestamp="1629947418395" />
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1629947166803">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1629947166803" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -397,33 +397,6 @@ function Recoleccion() {
         }
     }, [state.mismoSobre])
 
-    //Se ejecuta cada que el tipo de moneda cambia (para qué?)
-    /* useEffect(value => {
-         // console.log(dataTipoMoneda)
-     }, [state.moneda])*/
-
-    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el remitente
-   /*  useEffect( value => {
-        if (state.ciudadRemitente != ""){
-            obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
-                if (respuesta.data.length > 0){
-                    setDataCodigosPostalesRemitente(respuesta.data);
-                }
-            });
-        }
-    }, [state.ciudadRemitente]) */
-
-    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el destinatario
-   /*  useEffect( value => {
-        if (state.ciudadDestinatario != ""){
-            obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
-                if (respuesta.data.length > 0){
-                    setDataCodigosPostalesDestinatario(respuesta.data);
-                }
-            });
-        }
-    }, [state.ciudadDestinatario]) */
-
     //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para recoleccion
     useEffect(value => {
         if (state.ciudadRecoleccion != "") {
@@ -993,8 +966,8 @@ function Recoleccion() {
             setState(state => {
                 return {
                     ...state,
-                    codigoPostalRemitente: respuesta.data.m_sCP,
-                    idCodigoPostalRemitente: respuesta.data.m_nIdCP
+                    codigoPostalRemitente: cp.data.m_sCP,
+                    idCodigoPostalRemitente: cp.data.m_nIdCP
                 }
             })
         })
@@ -1002,8 +975,8 @@ function Recoleccion() {
             setState(state => {
                 return {
                     ...state,
-                    codigoPostalDestinatario: respuesta.data.m_sCP,
-                    idCodigoPostalDestinatario: respuesta.data.m_nIdCP
+                    codigoPostalDestinatario: cp.data.m_sCP,
+                    idCodigoPostalDestinatario: cp.data.m_nIdCP
                 }
             })
         })
@@ -3812,9 +3785,8 @@ function Recoleccion() {
                                                                                             },
                                                                                             type: "search",
                                                                                             disableUnderline: true,
-                                                                                            disabled: state.agregar === "Consultar",
-
                                                                                         }}
+                                                                                        disabled={state.agregar === "Consultar"}
                                                                                     />
                                                                         </div>
                                                                     </div>
@@ -4250,9 +4222,8 @@ function Recoleccion() {
                                                                                             },
                                                                                             type: "search",
                                                                                             disableUnderline: true,
-                                                                                            disabled: state.agregar === "Consultar",
-
                                                                                         }}
+                                                                                        disabled={state.agregar === "Consultar"}
                                                                                     />
 
                                                                     </div>
