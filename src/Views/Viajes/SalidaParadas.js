@@ -275,7 +275,7 @@ export default function SalidaParadas(props){
                         value={data.remolqueUno}
                     />
                 </Grid>
-                <Grid item xs={2}>
+                {/*<Grid item xs={2}>
                     <TextField
                         id={"kmsRemolqueUno"}
                         margin={"dense"}
@@ -287,8 +287,8 @@ export default function SalidaParadas(props){
                         value={data.kmsRemolqueUno}
                         onChange={handleChangeKmsRemolqueUno}
                     />
-                </Grid>
-                <Grid item xs={2}>
+                </Grid>*/}
+               {/* <Grid item xs={2}>
                     <TextField
                         id={"millasRemolqueUno"}
                         margin={"dense"}
@@ -300,7 +300,7 @@ export default function SalidaParadas(props){
                         value={data.millasRemolqueUno}
                         onChange={handleChangeMillasRemolqueUno}
                     />
-                </Grid>
+                </Grid>*/}
                 <Grid item xs={2}>
                     <TextField
                         id="estatusRemolqueUno"
@@ -328,7 +328,7 @@ export default function SalidaParadas(props){
                         value={data.remolqueDos}
                     />
                 </Grid>
-                <Grid item xs={2}>
+                {/*<Grid item xs={2}>
                     <TextField
                         id={"kmsRemolqueDos"}
                         margin={"dense"}
@@ -340,8 +340,8 @@ export default function SalidaParadas(props){
                         value={data.kmsRemolqueDos}
                         onChange={handleChangeKmsRemolqueDos}
                     />
-                </Grid>
-                <Grid item xs={2}>
+                </Grid>*/}
+                {/*<Grid item xs={2}>
                     <TextField
                         id={"millasRemolqueDos"}
                         margin={"dense"}
@@ -353,7 +353,7 @@ export default function SalidaParadas(props){
                         value={data.millasRemolqueDos}
                         onChange={handleChangeMillasRemolqueDos}
                     />
-                </Grid>
+                </Grid>*/}
                 <Grid item xs={2}>
                     <TextField
                         id="estatusRemolqueDos"
