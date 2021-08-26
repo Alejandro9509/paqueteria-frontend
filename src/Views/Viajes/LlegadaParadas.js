@@ -61,9 +61,9 @@ export default function LlegadaParadas(props){
         placasremolqueDos: props.data.m_sPlacasRemolque2,
         dolly: props.data.m_sDolly,
         fechaSalida: props.data.m_dFechaSalida,
-        horaSalida: "",
+        horaSalida: props.data.m_tHoraSalida,
         fechaLlegada: props.data.m_dFechaLlegada,
-        horaLlegada: "",
+        horaLlegada: props.data.m_tHoraLlegada,
         idEstatus: 0,
         motivoRetraso: "",
         pesoLiquidar: "",
@@ -320,7 +320,7 @@ export default function LlegadaParadas(props){
                 </Grid>
                 <Grid item xs={7}/>
 
-                <Grid item xs={2}>
+                {/*<Grid item xs={2}>
                     <TextField
                         id={"kilometros"}
                         margin={"dense"}
@@ -332,8 +332,8 @@ export default function LlegadaParadas(props){
                         value={data.kms}
                         onChange={handleChangeKms}
                     />
-                </Grid>
-                <Grid item xs={2}>
+                </Grid>*/}
+                {/*<Grid item xs={2}>
                     <TextField
                         id={"millas"}
                         margin={"dense"}
@@ -345,8 +345,8 @@ export default function LlegadaParadas(props){
                         value={data.millas}
                         onChange={handleChangeMillas}
                     />
-                </Grid>
-                <Grid item xs={8}/>
+                </Grid>*/}
+                {/*<Grid item xs={8}/>*/}
 
                 <Grid item xs={5}>
                     <TextField
@@ -412,7 +412,7 @@ export default function LlegadaParadas(props){
                         value={data.remolqueUno}
                     />
                 </Grid>
-                <Grid item xs={2}>
+                {/*<Grid item xs={2}>
                     <TextField
                         id={"kmsRemolqueUno"}
                         margin={"dense"}
@@ -424,8 +424,8 @@ export default function LlegadaParadas(props){
                         value={data.kmsRemolqueUno}
                         onChange={handleChangeKmsRemolqueUno}
                     />
-                </Grid>
-                <Grid item xs={2}>
+                </Grid>*/}
+                {/*<Grid item xs={2}>
                     <TextField
                         id={"millasRemolqueUno"}
                         margin={"dense"}
@@ -437,7 +437,7 @@ export default function LlegadaParadas(props){
                         value={data.millasRemolqueUno}
                         onChange={handleChangeMillasRemolqueUno}
                     />
-                </Grid>
+                </Grid>*/}
                 <Grid item xs={2}>
                     <TextField
                         id="placasRemolqueUno"
@@ -462,7 +462,7 @@ export default function LlegadaParadas(props){
                         value={data.remolqueDos}
                     />
                 </Grid>
-                <Grid item xs={2}>
+                {/*<Grid item xs={2}>
                     <TextField
                         id={"kmsRemolqueDos"}
                         margin={"dense"}
@@ -474,8 +474,8 @@ export default function LlegadaParadas(props){
                         value={data.kmsRemolqueDos}
                         onChange={handleChangeKmsRemolqueDos}
                     />
-                </Grid>
-                <Grid item xs={2}>
+                </Grid>*/}
+                {/*<Grid item xs={2}>
                     <TextField
                         id={"millasRemolqueDos"}
                         margin={"dense"}
@@ -487,7 +487,7 @@ export default function LlegadaParadas(props){
                         value={data.millasRemolqueDos}
                         onChange={handleChangeMillasRemolqueDos}
                     />
-                </Grid>
+                </Grid>*/}
                 <Grid item xs={2}>
                     <TextField
                         id="placasRemolqueDos"
