@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Corrección de error al generar embarque">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se cambio la logica para mostrar sucursal en el listado de usuarios">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Usuarios.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Usuarios.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,13 +133,6 @@
       <workItem from="1628006996868" duration="13293000" />
       <workItem from="1629125426621" duration="20705000" />
       <workItem from="1629902787967" duration="7739000" />
-    </task>
-    <task id="LOCAL-00006" summary="Se agregaron filtros para conceptos de tarifas">
-      <created>1627348022490</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1627348022490</updated>
     </task>
     <task id="LOCAL-00007" summary="Se agregaron los filtros necesarios">
       <created>1627356533411</created>
@@ -478,7 +470,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629949401340</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="Se cambio la logica para mostrar sucursal en el listado de usuarios">
+      <created>1629994230058</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1629994230059</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -555,7 +554,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="* Se renombraron variables para mayor entendimiento en zonas" />
     <MESSAGE value="*Los codigos postales ya se acumulan por ciudad" />
     <MESSAGE value="*Las localidades ya se acumulan" />
     <MESSAGE value="*Limpieza de código" />
@@ -580,14 +578,16 @@
     <MESSAGE value="Se realizaron ajustes a la ultima milla" />
     <MESSAGE value="Se removieron campos no requeridos en Recoleccion.js y Embarque.js" />
     <MESSAGE value="Corrección de error al generar embarque" />
-    <option name="LAST_COMMIT_MESSAGE" value="Corrección de error al generar embarque" />
+    <MESSAGE value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629949401021">
+    <state x="261" y="49" key="CommitChangelistDialog2" timestamp="1629994229729">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629837314284" />
     <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629929944301" />
+    <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629994229729" />
     <state x="261" y="49" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1629949401021" />
     <state x="144" y="76" key="DiffContextDialog" timestamp="1629476207161">
       <screen x="0" y="0" width="1440" height="900" />
@@ -633,16 +633,16 @@
     </state>
     <state x="427" y="176" key="RollbackChangesDialog/0.0.1440.900/1440.0.1280.1024@0.0.1440.900" timestamp="1629842264321" />
     <state x="427" y="176" key="RollbackChangesDialog/0.0.1440.900@0.0.1440.900" timestamp="1629476209899" />
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629949415218">
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1629994236143">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629481463335" />
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629482266699" />
+    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.25.1920.1055@0.0.1440.900" timestamp="1629994236143" />
     <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1629949415218" />
-    <state x="383" y="207" width="674" height="486" key="find.popup" timestamp="1629932698975">
+    <state x="383" y="207" width="674" height="486" key="find.popup" timestamp="1629994276578">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="383" y="207" width="674" height="486" key="find.popup/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629932698975" />
+    <state x="383" y="207" width="674" height="486" key="find.popup/0.0.1440.900/1440.0.1920.1080@0.0.1440.900" timestamp="1629994276578" />
     <state x="366" y="245" key="git4idea.merge.GitPullDialog" timestamp="1629947418395">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
