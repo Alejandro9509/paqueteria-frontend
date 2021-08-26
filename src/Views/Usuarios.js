@@ -441,9 +441,10 @@ function Usuarios() {
             field: "m_nIdSucursal",
             width: 150,
             renderCell: (row) => {
+                console.log(row)
                 return (
                     <div style={{ width: "100%" }}>
-                        { dataSucursal.length != 0 ? dataSucursal.find(o => o.m_nIdSucursal == row.row.m_nIdSucursal).m_sSucursal : ""}
+                        { dataSucursal.length !== 0 ? dataSucursal.find(o => o.m_nIdSucursal === row.row.m_nIdSucursal) ? dataSucursal.find(o => o.m_nIdSucursal === row.row.m_nIdSucursal).m_sSucursal : "" : ""}
                     </div>
                 )
             }
@@ -498,12 +499,14 @@ function Usuarios() {
 
     const getAllTiposUsuario = () => {
         obtenerTipoUsuarios().then(respuesta => {
+
             setDataListadoTipoUsuarios(respuesta.data)
         })
     }
 
     async function getAllData() {
         obtenerUsuarios().then(respuesta => {
+            console.log(respuesta.data)
             setData(respuesta.data)
         });
     };
