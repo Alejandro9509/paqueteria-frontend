@@ -79,6 +79,7 @@ import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
 import {obtenerFormatosImpresion, imprimirFormatosId} from "../Util/Contexts/FormatosImpresionContext";
 import {obtenerCliente} from "../Util/Contexts/ClientesContext";
+import {forEach} from "react-bootstrap/ElementChildren";
 
 let timer;
 
@@ -238,7 +239,6 @@ function Recoleccion() {
                 m_sObservaciones: "",
                 //checar cual de las dos es la que se usa
                 m_cyValorDeclarado: "",
-                m_cValorDeclarado: "",
                 m_nTipo: 2,
             },
         ],
@@ -511,8 +511,46 @@ function Recoleccion() {
         })
     }
 
+    const validarPaquetes = (paquete) => {
+        if (paquete.m_rPeso != ''
+            && paquete.m_rLargo != ''
+            && paquete.m_rAncho != ''
+            && paquete.m_rAlto != ''
+            && paquete.m_sDescripcion != ''
+            && paquete.m_cyValorDeclarado != ''
+            && paquete.m_nCantidad != ''
+        ){
+            return true
+        }else {
+            return false
+        }
+    }
+
+    const validarSobre = (sobre) => {
+        if (sobre.m_sDescripcion != ''){
+            return true
+        }else {
+            return false
+        }
+    }
+
     const handleAceptar = (e) => {
         e.preventDefault();
+        let sinPaquetes = false
+
+        for (let i = 0; i < state.paquetes.length; i++) {
+            if (!validarPaquetes(state.paquetes[i])){
+                sinPaquetes = true
+            }
+        }
+        if (sinPaquetes){
+            for (let i = 0; i < state.sobres.length; i++) {
+                if (!validarSobre(state.sobres[i])){
+                    showSuccess("Verifique haber llenado todos los datos de paquetes y/o sobres");
+                    return
+                }
+            }
+        }
 
         let params = {
             //Informacion general
@@ -569,28 +607,13 @@ function Recoleccion() {
 
             //Cita de recoleccion
             m_bRecoleccionConCita: false,
-            m_sFechaCita: '',
-            m_sHoraCitaMinima: '',
-            m_sHoraCitaMaxima: '',
 
             //Recoleccion
-            m_dFechaDetalleRecoleccion: '',
-            m_tHoraDetalleRecoleccion: '',
             m_nIdCPDetalleRecoleccion: state.idCodigoPostalRemitente,
-            m_nIdCiudadDetalleRecoleccion: '',
-            m_nIdZonaDetalleRecoleccion: '',
-            m_sDomicilioDetalleRecoleccion: '',
-            m_sRecogerEnDetalleRecoleccion: '',
-            m_sDatosAdicionalesDetalleRecoleccion: '',
             m_bRecoleccionDiferenteDomicilio: false,
 
             //Entrega
             m_nIdCPDetalleEntrega: state.idCodigoPostalDestinatario,
-            m_nIdCiudadDetalleEntrega: '',
-            m_nIdZonaDetalleEntrega: '',
-            m_sDomicilioDetalleEntrega: '',
-            m_sEntregarEnDetalleEntrega: '',
-            m_sDatosAdicionalesDetalleEntrega: '',
             m_bEntregaDiferenteDomicilio: false,
 
             //Detalles de la operación
@@ -637,99 +660,9 @@ function Recoleccion() {
             params.m_sHoraCitaMaxima = state.horaCitaMaxima
         }
 
-        /*const infoGeneral = {
-            m_nIdRecoleccion: state.idRecoleccion,
-            m_nIdSucursal: state.idSucursalAgregar,
-            m_nIdEstatusRecoleccion: state.estatusRecoleccion,
-            m_nIdEmbarque: state.folioEmbarque,
-            m_nIdGuia: state.folioGuia,
-            m_nIdInforme: state.folioInforme,
-            m_dFecha: state.fechaHoraCreacion.split("T")[0],
-            m_tHora: state.fechaHoraCreacion.split("T")[1],
-            m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
-            m_tHoraRegistro: state.fechaHoraRegistro.split("T")[1],
-            m_nMoneda: state.moneda,
-            m_rTipoCambio: state.tipoCambio,
-            m_nIdTipoDeCobro: state.tipoCobro,
-        }
-        console.log('info general:')
-        console.log(infoGeneral)
-
-        const remitente = {
-            m_sNombreRemitente: state.nombreRemitente.m_sNombre,
-            m_sRFCRemitente: state.RFCRemitente,
-            m_sDomicilioRemitente: state.domicilioRemitente,
-            m_sIdCodigoPostalRemitente: state.codigoPostalRemitente.m_nIdCP,
-            m_nIdCiudadRemitente: state.ciudadRemitente,
-            m_sCorreoRemitente: state.correoRemitente,
-            m_sTelefonoRemitente: state.telefonoRemitente,
-            m_sContactoRemitente: state.contactoRemitente,
-            m_nIdCiudadOrigen: state.origenRemitente.m_nIdCiudad,
-        }
-        console.log('remitente:')
-        console.log(remitente)
-
-        const destinatario = {
-            m_sNombreDestinatario: state.nombreDestinatario.m_sNombre,
-            m_sRFCDestinatario: state.RFCDestinatario,
-            m_sDomicilioDestinatario: state.domicilioDestinatario,
-            m_sIdCodigoPostalDestinatario: state.codigoPostalDestinatario.m_nIdCP,
-            m_nIdCiudadDestinatario: state.ciudadDestinatario,
-            m_sCorreoDestinatario: state.correoDestinatario,
-            m_sTelefonoDestinatario: state.telefonoDestinatario,
-            m_sContactoDestinatario: state.contactoDestinatario,
-            m_nIdCiudadDestino: state.destinoDestinatario.m_nIdCiudad,
-        }
-        console.log('destinatario:')
-        console.log(destinatario)
-
-        const recoleccion = {
-            diferenteRecoleccion : state.diferenteRecoleccion,
-            m_dFechaDetalleRecoleccion: params.m_dFechaDetalleRecoleccion,
-            m_tHoraDetalleRecoleccion: params.m_tHoraDetalleRecoleccion,
-            m_nIdCPDetalleRecoleccion: params.m_nIdCPDetalleRecoleccion,
-            m_nIdCiudadDetalleRecoleccion: params.m_nIdCiudadDetalleRecoleccion,
-            m_nIdZonaDetalleRecoleccion: params.m_nIdZonaDetalleRecoleccion,
-            m_sDomicilioDetalleRecoleccion: params.m_sDomicilioDetalleRecoleccion,
-            m_sRecogerEnDetalleRecoleccion: params.m_sRecogerEnDetalleRecoleccion,
-            m_sDatosAdicionalesDetalleRecoleccion: params.m_sDatosAdicionalesDetalleRecoleccion,
-        }
-        console.log('recoleccion:')
-        console.log(recoleccion)
-
-        const entrega = {
-            m_nIdCPDetalleEntrega: params.m_nIdCPDetalleEntrega,
-            m_nIdCiudadDetalleEntrega: params.m_nIdCiudadDetalleEntrega,
-            m_nIdZonaDetalleEntrega: params.m_nIdZonaDetalleEntrega,
-            m_sDomicilioDetalleEntrega: params.m_sDomicilioDetalleEntrega,
-            m_sEntregarEnDetalleEntrega: params.m_sEntregarEnDetalleEntrega,
-            m_sDatosAdicionalesDetalleEntrega: params.m_sDatosAdicionalesDetalleEntrega,
-            diferenteEntrega: state.diferenteEntrega
-        }
-        console.log('entrega:')
-        console.log(entrega)
-
-        const otrosDatos = {
-            m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
-            m_dFechaLlegada: state.fechaHoraLlegada.split("T")[0],
-            m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
-            m_tHoraLlegada: state.fechaHoraLlegada.split("T")[1],
-            m_parrPaquetes: state.paquetes,
-            m_nNoPaquetes: state.paquetes.length,
-            m_parrSobres: state.sobres,
-            m_nNoSobres: state.sobres.length,
-            m_nIdOperador: state.operador.m_nIdOperador,
-            m_nIdUnidad: state.unidad.m_nIdUnidad,
-            m_nIdRemolque: state.unidad.m_nIdUnidad,
-            m_nCreadoPor: state.CreadoPor,
-            m_nModificadoPor: state.ModificadoPor
-        }
-        console.log('otros datos:')
-        console.log(otrosDatos)*/
-
         console.log(params)
         console.log(JSON.stringify(params))
-        if (state.idRecoleccion != 0) {
+        /*if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -760,7 +693,7 @@ function Recoleccion() {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
 
 
     };
@@ -850,7 +783,7 @@ function Recoleccion() {
             m_xAlto: "",
             m_xVolumen: "",
             m_nIdTIpoEmpaque: "",
-            m_cValorDeclarado: "",
+            m_cyValorDeclarado: "",
             m_sDescripcion: "",
             ctd: "",
             m_nTipo: 2,
@@ -4653,7 +4586,7 @@ function Recoleccion() {
                                                     <div className="widget-content">
                                                         <div className="row">
                                                             <div className="col-md-12">
-                                                                <div className="col-sm-6 col-md-4  unit">
+                                                                {/*<div className="col-sm-6 col-md-4  unit">
 
                                                                     <div className="input">
                                                                         <TextField variant="outlined"
@@ -4671,7 +4604,7 @@ function Recoleccion() {
                                                                                    required={state.diferenteRecoleccion}
                                                                         />
                                                                     </div>
-                                                                </div>
+                                                                </div>*/}
 
                                                                 <div className="col-sm-6 col-md-4  unit">
                                                                     <label className="input select">
