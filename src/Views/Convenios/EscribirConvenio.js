@@ -509,7 +509,7 @@ class EscribirConvenio extends Component {
                             ]
                         },
                     ],
-                    "m_arrProductos": [
+                    "m_arrArProductos": [
                         {
                             m_nIdProducto: 1,
                             m_sDescripcion: 'Crema de cacahuate'
@@ -737,7 +737,7 @@ class EscribirConvenio extends Component {
                             ]
                         },
                     ],
-                    "m_arrProductos": [
+                    "m_arrArProductos": [
                         {
                             m_nIdProducto: 4,
                             m_sDescripcion: 'Aceite Nutrioli'
@@ -795,8 +795,7 @@ class EscribirConvenio extends Component {
                     width: 200
                 }
             ],
-            dataProductos: [],
-            anchorEl: null
+            dataProductos: []
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleTabChange = this.handleTabChange.bind(this)
@@ -1013,13 +1012,6 @@ class EscribirConvenio extends Component {
         });
     };
 
-    /*getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
-            this.setState({ dataSucursal: respuesta.data });
-        });
-    }*/
-
     getAllClientes() {
         const url = `${process.env.REACT_APP_API_URL}/Clientes/GetListado`;
         axios.get(url, { headers }).then((respuesta) => {
@@ -1175,12 +1167,6 @@ class EscribirConvenio extends Component {
         this.setState({ conceptosRecoleccion: newArrayConceptos, todosConceptos: newArrayTodosConceptos })
     }
 
-    /*getAllCiudades() {
-        obtenerCiudades().then((respuesta) => {
-            this.setState({ ciudades: respuesta.data });
-        });
-    }*/
-
     componentWillUnmount() {
 
     }
@@ -1241,11 +1227,6 @@ class EscribirConvenio extends Component {
 
     }
 
-    /*onSubmit(event) {
-        event.preventDefault()
-        this.props.onSubmit(this.state)
-    }*/
-
     handleShowDialog = (event) => {
         event.preventDefault()
         this.setState({
@@ -1279,15 +1260,6 @@ class EscribirConvenio extends Component {
         })
     }
 
-    //Funcion para reaccionar al seleccionar una tarifa del LISTADO INFERIOR
-    handleTarifaSeleccionada = (row) => {
-        this.setState({
-            tarifaDetalles: row.data
-        }, () => {
-            this.castConceptos()
-        })
-    }
-
     handleGuardarTarifa = (e) => {
         e.preventDefault()
         this.state.tarifasSeleccionadas.forEach((t) => {
@@ -1318,9 +1290,11 @@ class EscribirConvenio extends Component {
 
     handleCardClick = (e, t) => {
         e.preventDefault()
-        console.log('card clicked')
         this.setState({
-            dataProductos: t.m_arrProductos
+            tarifaDetalles: t,
+            dataProductos: t.m_arrArProductos
+        }, () => {
+            this.castConceptos()
         })
     }
     handleCloseCardMenu = () => {
@@ -1351,10 +1325,20 @@ class EscribirConvenio extends Component {
         console.log('agregar: ', params)
     }
 
+    handleDuplicarTarifa = (e) => {
+        e.preventDefault()
+        this.state.tarifasSeleccionadas.push(
+            this.state.tarifaDetalles
+        )
+        this.setState({
+            tarifasSeleccionadas: this.state.tarifasSeleccionadas
+        })
+    }
+
     render() {
         const { disabled, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, openDialog,
-            columnsTarifas, dataTarifas, height, tarifasSeleccionadas,columnsTarifasOverview, tarifaDetalles, dataProductos, columnsProductos, anchorEl,
-            cliente, fechaVigencia} = this.state
+            columnsTarifas, dataTarifas, height, tarifasSeleccionadas, tarifaDetalles, dataProductos, columnsProductos,
+            cliente, fechaVigencia, cardStyle} = this.state
         let { consult, edit } = this.props
 
         if (!consult && !edit){
@@ -1448,10 +1432,9 @@ class EscribirConvenio extends Component {
                                                     />
                                                 </label>
                                             </div>
-                                            <div className="col-md-12 col-sm-12" style={{ padding: "5px", display: "inline-flex" }}>
-                                                <div className="form-footer " className="col-md-12" style={{ padding: "10px" }}>
-                                                    <button className="btn btn-primary primary-btn"
-                                                    onClick={this.handleShowDialog}>
+                                            <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                                <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                                    <button className="btn btn-primary primary-btn" onClick={this.handleShowDialog}>
                                                         Seleccionar tarifas
                                                     </button>
 
@@ -1464,47 +1447,37 @@ class EscribirConvenio extends Component {
 
                                     </div>
                                 </div>
-                                {
-                                    tarifasSeleccionadas.map((t) => (
-                                        <Card style={{marginBottom: '10px'}}>
-                                            <CardHeader
-                                                style={{height: '10px', paddingBotton: '0px'}}
-                                                action={
-                                                    <IconButton aria-label="settings" onClick={(e) => this.handleCardMenuClick(e)}>
-                                                        <MoreVertIcon />
-                                                        <Menu
-                                                            id="simple-menu"
-                                                            anchorEl={anchorEl}
-                                                            keepMounted
-                                                            open={Boolean(anchorEl)}
-                                                            onClose={this.handleCloseCardMenu}
-                                                        >
-                                                            <MenuItem onClick={(e) => this.handleDuplicarClick(e)}>Duplicar</MenuItem>
-                                                        </Menu>
-                                                    </IconButton>
-                                                }
-                                            />
-                                            <CardActionArea onClick={(e) => this.handleCardClick(e, t)}>
-                                                <CardContent>
-                                                    <Grid container>
-                                                        <Grid item xs={12}>
-                                                            <Typography variant="body2" color="textSecondary" component="p">
-                                                                {t.m_sSucursal} - {t.m_sDestino}
-                                                            </Typography>
+                                <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                    <button className="btn btn-primary primary-btn" onClick={this.handleDuplicarTarifa}>
+                                        Duplicar Tarifa
+                                    </button>
+                                </div>
+                                <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                    {
+                                        tarifasSeleccionadas.map((t) => (
+                                            <Card style={{marginBottom: '10px'}}>
+                                                <CardActionArea onClick={(e) => this.handleCardClick(e, t)}>
+                                                    <CardContent>
+                                                        <Grid container>
+                                                            <Grid item xs={12}>
+                                                                <Typography variant="body2" color="textSecondary" component="p">
+                                                                    {t.m_sSucursal} - {t.m_sDestino}
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid item xs={12}>
+                                                                <Typography gutterBottom variant="h5" component="h2">
+                                                                    {t.m_arrArProductos.map((p) => (
+                                                                        p.m_sDescripcion + ', '
+                                                                    ))}
+                                                                </Typography>
+                                                            </Grid>
                                                         </Grid>
-                                                        <Grid item xs={12}>
-                                                            <Typography gutterBottom variant="h5" component="h2">
-                                                                {t.m_arrProductos.map((p) => (
-                                                                    p.m_sDescripcion + ', '
-                                                                ))}
-                                                            </Typography>
-                                                        </Grid>
-                                                    </Grid>
-                                                </CardContent>
-                                            </CardActionArea>
-                                        </Card>
-                                    ))
-                                }
+                                                    </CardContent>
+                                                </CardActionArea>
+                                            </Card>
+                                        ))
+                                    }
+                                </div>
                                 {/*<div className="widget-wrap">
                                     <div className="widget-content">
                                         <div className="row">
@@ -1526,11 +1499,14 @@ class EscribirConvenio extends Component {
                                 </div>*/}
                             </div>
                             <div className="col-md-9 col-sm-12" >
+                                <button className="btn btn-primary primary-btn" onClick={this.handleGuardarTarifa}>
+                                    Guardar tarifa
+                                </button>
+                            </div>
+                            <div className="col-md-9 col-sm-12" >
                                 <div className="widget-wrap" style={{ margin: "0px", padding: "0px" }}>
                                     <div className="widget-content">
-                                        <button className="btn btn-primary primary-btn" onClick={this.handleGuardarTarifa}>
-                                            Guardar tarifa
-                                        </button>
+
                                         <div>
                                             <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
                                                 <Tab label="Concetos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
