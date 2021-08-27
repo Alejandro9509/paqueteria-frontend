@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Se pueden modificar tarifas seleccionadas">
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
