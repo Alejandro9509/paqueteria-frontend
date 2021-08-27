@@ -527,14 +527,17 @@ class ConceptosAdicionales extends Component {
                                             <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)).m_sImpuesto : "No Aplica")}</td>
                                             <td style={{ textAlign: "left" }}>${parseFloat(c.importeRet).toFixed(2)}</td>
                                             <td style={{ textAlign: "left" }}>{c.tipoCalculo == 1 ? "Fijo" : c.tipoCalculo == 2 ? "Factor" : ""}</td>
-                                            <td>
-                                                <IconButton onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    this.removeConcepto(e, c)
-                                                }}>
-                                                    <CancelIcon style={{ fill: "red", fontSize: "x-large" }} />
-                                                </IconButton>
-                                            </td>
+                                            {
+                                                !this.props.consult &&
+                                                <td>
+                                                    <IconButton onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        this.removeConcepto(e, c)
+                                                    }}>
+                                                        <CancelIcon style={{ fill: "red", fontSize: "x-large" }} />
+                                                    </IconButton>
+                                                </td>
+                                            }
                                         </tr>
                                     ))
                                 }

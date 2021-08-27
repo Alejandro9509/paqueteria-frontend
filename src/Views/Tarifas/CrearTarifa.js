@@ -778,7 +778,7 @@ class CrearTarifa extends Component {
 
                                             <TabPanel value={this.state.tab} index={0}>
                                                 {/*el filtrado por agregadoDesde está demas*/}
-                                                <ConceptosAdicionales consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosAdicionales} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoAdicional} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada} mostrarRangos={true}>
+                                                <ConceptosAdicionales consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosAdicionales} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoAdicional} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada} mostrarRangos={false}>
 
                                                 </ConceptosAdicionales>
                                             </TabPanel>

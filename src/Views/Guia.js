@@ -3195,7 +3195,7 @@ function Guia(props) {
                                                                                           removeConcepto={removeConcepto}
                                                                                           ivaRetiene={state.ivaRetiene}
                                                                                           ivaTraslada={state.ivaTraslada}
-                                                                                          noMostrarRangos={false}
+                                                                                          mostrarRangos={false}
                                                                                           customConceptos={true}
                                                                                           listadoConceptosAlternativos={dataTodosConceptosByEmbarque}/>
                                                                 </div>
