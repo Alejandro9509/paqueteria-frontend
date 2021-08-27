@@ -78,7 +78,8 @@ class EscribirConvenio extends Component {
             precioKilo: props.edit ? props.select.m_cPrecioKilo : "",
             precioM3: props.edit ? props.select.m_cPrecioM3 : "",
             disabled: true,
-            cliente: props.edit ? props.select.m_nIdCliente : "0",
+            cliente: "",
+            fechaVigencia:"",
             dataClientes: [],
             openDialog: false,
             dataTarifas: [],
@@ -1344,14 +1345,16 @@ class EscribirConvenio extends Component {
 
         let params = {
             m_nIdCliente: this.state.cliente,
-            m_arrTarifas: this.state.tarifasSeleccionadas
+            m_sVigencia: this.state.fechaVigencia,
+            m_arrArTarifas: this.state.tarifasSeleccionadas
         }
         console.log('agregar: ', params)
     }
 
     render() {
-        const { disabled, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, openDialog, columnsTarifas, dataTarifas, height,
-            tarifasSeleccionadas,columnsTarifasOverview, tarifaDetalles, columnsProductos, dataProductos, anchorEl} = this.state
+        const { disabled, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, openDialog,
+            columnsTarifas, dataTarifas, height, tarifasSeleccionadas,columnsTarifasOverview, tarifaDetalles, dataProductos, columnsProductos, anchorEl,
+            cliente, fechaVigencia} = this.state
         let { consult, edit } = this.props
 
         if (!consult && !edit){
@@ -1410,25 +1413,39 @@ class EscribirConvenio extends Component {
                                                             className="form-control"
                                                             required
                                                             onChange={this.handleChange}
-                                                            value={this.state.cliente}
+                                                            value={cliente}
                                                             name="cliente"
                                                             id="cliente"
                                                         >
-                                                            <option
-                                                                key={"0"}
-                                                                value={"0"}>
-                                                                Seleccionar
-                                                            </option>
-                                                            {this.state.dataClientes.map((cliente) => (
+                                                            <option aria-label={"Seleccionar"} value={""}/>
+                                                            {this.state.dataClientes.map((c) => (
                                                                 <option
-                                                                    key={cliente.m_nIdCliente}
-                                                                    value={cliente.m_nIdCliente}
+                                                                    key={c.m_nIdCliente}
+                                                                    value={c.m_nIdCliente}
                                                                 >
-                                                                    {cliente.m_sNombreCorto}
+                                                                    {c.m_sNombreFiscal}
                                                                 </option>
                                                             ))}
                                                         </Select>
                                                     </FormControl>
+                                                </label>
+
+                                            </div>
+
+                                            <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                                <label className="input" style={{ width: "100%" }}>
+                                                    <TextField
+                                                        variant="outlined"
+                                                        id="fechaVigencia"
+                                                        name="fechaVigencia"
+                                                        label="Vigencia"
+                                                        type="date"
+                                                        onChange={this.handleChange}
+                                                        value={fechaVigencia}
+                                                        className={"form-control"}
+                                                        InputLabelProps={{shrink: true,}}
+                                                        required
+                                                    />
                                                 </label>
                                             </div>
                                             <div className="col-md-12 col-sm-12" style={{ padding: "5px", display: "inline-flex" }}>
