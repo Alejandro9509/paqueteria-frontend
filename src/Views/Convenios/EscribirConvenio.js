@@ -888,9 +888,6 @@ class EscribirConvenio extends Component {
             cliente, fechaVigencia, cardStyle} = this.state
         let { consult, edit} = this.props
 
-        if (!consult && !edit){
-            consult = disabled
-        }
         return (
             <div>
                 <Dialog
@@ -940,7 +937,7 @@ class EscribirConvenio extends Component {
                                                             native
                                                             labelId="clienteLabel"
                                                             label="Cliente"
-                                                            disabled={this.props.consult}
+                                                            disabled={consult}
                                                             className="form-control"
                                                             required
                                                             onChange={this.handleChange}
@@ -971,6 +968,7 @@ class EscribirConvenio extends Component {
                                                         name="fechaVigencia"
                                                         label="Vigencia"
                                                         type="date"
+                                                        disabled={consult}
                                                         onChange={this.handleChange}
                                                         value={fechaVigencia}
                                                         className={"form-control"}
@@ -981,11 +979,11 @@ class EscribirConvenio extends Component {
                                             </div>
                                             <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                                 <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                                    <button className="btn btn-primary primary-btn" onClick={this.handleShowDialog}>
+                                                    <button className="btn btn-primary primary-btn" onClick={this.handleShowDialog} disabled={consult}>
                                                         Seleccionar tarifas
                                                     </button>
 
-                                                    <button type="submit" className="btn btn-primary primary-btn">
+                                                    <button type="submit" className="btn btn-primary primary-btn" disabled={consult}>
                                                         Guardar convenio
                                                     </button>
                                                 </div>
@@ -997,7 +995,7 @@ class EscribirConvenio extends Component {
                                 <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                     {
                                         tarifasSeleccionadas.length > 0 &&
-                                        <button className="btn btn-primary primary-btn" onClick={this.handleDuplicarTarifa}>
+                                        <button className="btn btn-primary primary-btn" onClick={this.handleDuplicarTarifa} disabled={consult}>
                                             Duplicar Tarifa
                                         </button>
                                     }
@@ -1033,7 +1031,7 @@ class EscribirConvenio extends Component {
                             <div className="col-md-9 col-sm-12" >
                                 {
                                     todosConceptos.length > 0 &&
-                                    <button className="btn btn-primary primary-btn" onClick={this.handleGuardarTarifa}>
+                                    <button className="btn btn-primary primary-btn" onClick={this.handleGuardarTarifa} disabled={consult}>
                                         Guardar tarifa
                                     </button>
                                 }
@@ -1053,7 +1051,7 @@ class EscribirConvenio extends Component {
                                             </Tabs>
 
                                             <TabPanel value={this.state.tab} index={0}>
-                                                <ConceptosAdicionales consult={false} edit={true}
+                                                <ConceptosAdicionales consult={consult}
                                                                       select={tarifaDetalles}
                                                                       conceptosAdicionales={conceptosAdicionales}
                                                                       addConcepto={this.addConcepto}
@@ -1063,7 +1061,7 @@ class EscribirConvenio extends Component {
                                                                       mostrarRangos={false}/>
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={1}>
-                                                <ConceptosAdicionalesManiobra consult={false} edit={true}
+                                                <ConceptosAdicionalesManiobra consult={consult}
                                                                               select={tarifaDetalles}
                                                                               conceptosAdicionales={conceptosManiobra}
                                                                               addConcepto={this.addConcepto}
@@ -1074,7 +1072,7 @@ class EscribirConvenio extends Component {
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={2}>
                                                 {/*el filtrado por agregadoDesde está demas*/}
-                                                <ConceptosAdicionalesEntrega consult={false} edit={true}
+                                                <ConceptosAdicionalesEntrega consult={consult}
                                                                              select={tarifaDetalles}
                                                                              conceptosAdicionales={conceptosEntrega}
                                                                              addConcepto={this.addConcepto}
@@ -1085,8 +1083,7 @@ class EscribirConvenio extends Component {
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={3}>
                                                 {/*el filtrado por agregadoDesde está demas*/}
-                                                <ConceptosAdicionalesRecoleccion consult={false}
-                                                                                 edit={true}
+                                                <ConceptosAdicionalesRecoleccion consult={consult}
                                                                                  select={tarifaDetalles}
                                                                                  conceptosAdicionales={conceptosRecoleccion}
                                                                                  addConcepto={this.addConcepto}

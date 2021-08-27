@@ -98,6 +98,7 @@ function Convenios(){
     ])
     const [listaConvenios, setListaConvenios] = useState([])
     const [convenioSeleccionado, setConvenioSeleccionado] = useState(0)
+    const [consult, setConsult] = useState(false)
     const [state, setState] = useState({
         agregar: "Agregar",
         height: window. innerHeight,
@@ -242,6 +243,7 @@ function Convenios(){
         event.stopPropagation();
         // limpiarInputsAgregar()
         setConvenioSeleccionado(0)
+        setConsult(false)
         setState(state =>{
             return {
                 ...state,
@@ -269,6 +271,7 @@ function Convenios(){
 
     }
     const handleShowModificar = (convenio) => {
+        setConsult(false)
         setConvenioSeleccionado(convenio.m_nIdConVenio)
         setState(state =>{
             return {
@@ -283,6 +286,7 @@ function Convenios(){
     }
     const handleShowConsultar = (convenio) => {
         setConvenioSeleccionado(convenio.m_nIdConVenio)
+        setConsult(true)
         setState(state =>{
             return {
                 ...state,
@@ -379,7 +383,10 @@ function Convenios(){
                                     $('#Listado').addClass('in show');
                                 }}></CrearTarifa>
                             }*/}
-                            <EscribirConvenio select={convenioSeleccionado}/>
+                            <EscribirConvenio
+                                select={convenioSeleccionado}
+                                consult={consult}
+                            />
 
                         </div>
                     </div>
