@@ -37,6 +37,7 @@ import {dataGridLocaleText} from "../../Constants";
 import {DataGrid} from "@material-ui/data-grid";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
+import Noty from "noty";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -48,6 +49,15 @@ function a11yProps(index) {
         id: `simple-tab-${index}`,
         'aria-controls': `simple-tabpanel-${index}`,
     };
+}
+
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
 }
 class EscribirConvenio extends Component {
     constructor(props) {
@@ -203,6 +213,7 @@ class EscribirConvenio extends Component {
         this.onSubmit = this.onSubmit.bind(this)
         this.handleCloseCardMenu = this.handleCloseCardMenu.bind(this)
         this.getConvenioById = this.getConvenioById.bind(this)
+        this.limpiarCampos = this.limpiarCampos.bind(this)
     }
 
     castConceptos(){
@@ -566,156 +577,23 @@ class EscribirConvenio extends Component {
             if (select != 0){
                 this.getConvenioById(select)
             }else{
-                this.setState({
-                    cliente: '',
-                    fechaVigencia: '',
-                    tarifasSeleccionadas : [],
-                    todosConceptos: [],
-                    conceptosAdicionales: [],
-                    conceptosManiobra: [],
-                    conceptosEntrega: [],
-                    conceptosRecoleccion: [],
-                    impuestos: [],
-                    ivaTraslada: [],
-                    ivaRetiene: [],
-                    tarifaDetalles: {m_arrArConceptos:[]},
-                    idsTarifasSeleccionadas: []
-                })
+                this.limpiarCampos()
             }
         }
     }
 
     getConvenioById(idConvenio){
-        const respuesta = {
-            "m_nIdConvenio": 1,
-            "m_nIdCliente":1,
-            "m_sNombreFiscal": "Ricardo Arjona",
-            "m_sVigencia": "2022-04-05",
-            "m_bActivo": true,
-            "m_arrArTarifas": [
-                {
-                    "m_nIdTarifa": 69,
-                    "m_nIdSucursal": 1,
-                    "m_sDestino": "MEXICO",
-                    "m_nIdDestino": 5,
-                    "m_sSucursal": "MERIDA",
-                    "m_bPorRango": true,
-                    "m_bPorPesoVolumen": false,
-                    "m_nFactorConversion": 1,
-                    "m_cPrecioM3": 1,
-                    "m_cPrecioKilo": 1,
-                    "m_cFleteMinimo": 1,
-                    "m_cMontoMinimo": 1,
-                    "m_nIdImpuestoRetiene": 0,
-                    "m_nIdImpuestoTraslada": 0,
-                    "m_nCreadoPor": 0,
-                    "m_bActivo": true,
-                    "m_nModificadoPor": 1014,
-                    "m_dtCreadoEl": "2021-08-25T21:56:15.000",
-                    "m_dtModificadoEl": "2021-08-25T22:07:48.000",
-                    "m_cCostoFinal": 0,
-                    "m_arrArCobros": [],
-                    "m_arrArServicios": [],
-                    "m_arrArConceptos": [
-                        {
-                            "m_nIdTarifaConceptos": 515,
-                            "m_nIdTarifa": 69,
-                            "m_sConcepto": "MANIOBRAS DE RECOLECCION",
-                            "m_cImporte": 1,
-                            "m_nIdImpuestoTraslada": 3,
-                            "m_cImporteIva": 0.16,
-                            "m_nIdImpuestoRetiene": 4,
-                            "m_cImporteRetiene": 0,
-                            "m_dtCreadoEl": "2021-08-27T13:19:06.861",
-                            "m_nCreadoPor": 0,
-                            "m_dtModificadoEl": "2021-08-27T13:19:06.861",
-                            "m_nModificadoPor": 0,
-                            "m_bActivo": false,
-                            "m_nIdConceptosFacturacion": 14,
-                            "m_xnRangoMinimo": 0,
-                            "m_xnRangoMaximo": 0,
-                            "m_nIdTipoCalculo": 0,
-                            "m_nIdAgregadoDesde": 0,
-                            "mg_sUltimoError": "",
-                            "arClsDetalle": [
-                                {
-                                    "m_nIdConceptosFacturacionDetalle": 7,
-                                    "m_nIdConceptosFacturacion": 14,
-                                    "m_nIdImpuesto": 3,
-                                    "m_sImpuesto": "IVA 16%",
-                                    "m_xPorcentaje": 16,
-                                    "m_bTrasladado": true,
-                                    "m_bPredeterminado": true,
-                                    "m_sUltimoError": "",
-                                    "m_sMsgUltimoError": ""
-                                },
-                                {
-                                    "m_nIdConceptosFacturacionDetalle": 8,
-                                    "m_nIdConceptosFacturacion": 14,
-                                    "m_nIdImpuesto": 4,
-                                    "m_sImpuesto": "RETENCION IVA 0%",
-                                    "m_xPorcentaje": 0,
-                                    "m_bTrasladado": false,
-                                    "m_bPredeterminado": true,
-                                    "m_sUltimoError": "",
-                                    "m_sMsgUltimoError": ""
-                                }
-                            ]
-                        },
-                        {
-                            "m_nIdTarifaConceptos": 516,
-                            "m_nIdTarifa": 69,
-                            "m_sConcepto": "MANIOBRAS DE ENTREGA",
-                            "m_cImporte": 1,
-                            "m_nIdImpuestoTraslada": 3,
-                            "m_cImporteIva": 0.16,
-                            "m_nIdImpuestoRetiene": 4,
-                            "m_cImporteRetiene": 0,
-                            "m_dtCreadoEl": "2021-08-27T13:19:06.873",
-                            "m_nCreadoPor": 0,
-                            "m_dtModificadoEl": "2021-08-27T13:19:06.873",
-                            "m_nModificadoPor": 0,
-                            "m_bActivo": false,
-                            "m_nIdConceptosFacturacion": 15,
-                            "m_xnRangoMinimo": 0,
-                            "m_xnRangoMaximo": 0,
-                            "m_nIdTipoCalculo": 0,
-                            "m_nIdAgregadoDesde": 0,
-                            "mg_sUltimoError": "",
-                            "arClsDetalle": [
-                                {
-                                    "m_nIdConceptosFacturacionDetalle": 9,
-                                    "m_nIdConceptosFacturacion": 15,
-                                    "m_nIdImpuesto": 3,
-                                    "m_sImpuesto": "IVA 16%",
-                                    "m_xPorcentaje": 16,
-                                    "m_bTrasladado": true,
-                                    "m_bPredeterminado": true,
-                                    "m_sUltimoError": "",
-                                    "m_sMsgUltimoError": ""
-                                },
-                                {
-                                    "m_nIdConceptosFacturacionDetalle": 10,
-                                    "m_nIdConceptosFacturacion": 15,
-                                    "m_nIdImpuesto": 4,
-                                    "m_sImpuesto": "RETENCION IVA 0%",
-                                    "m_xPorcentaje": 0,
-                                    "m_bTrasladado": false,
-                                    "m_bPredeterminado": true,
-                                    "m_sUltimoError": "",
-                                    "m_sMsgUltimoError": ""
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
-        this.setState({
-            cliente: respuesta.m_nIdCliente,
-            fechaVigencia: respuesta.m_sVigencia,
-            tarifasSeleccionadas : respuesta.m_arrArTarifas,
-        })
+        const url = `${process.env.REACT_APP_API_URL}/Convenios/GetById/${idConvenio}`;
+        console.log(url)
+        axios.get(url, { headers }).then(respuesta => {
+            console.log(respuesta)
+            this.setState({
+                idConvenio: respuesta.data.m_nIdConvenio,
+                cliente: respuesta.data.m_nIdCliente,
+                fechaVigencia: respuesta.data.m_sVigencia,
+                tarifasSeleccionadas : respuesta.data.m_arrArTarifas,
+            })
+        });
     }
 
     handleTabChange(event, newValue) {
@@ -859,17 +737,53 @@ class EscribirConvenio extends Component {
         this.handleCloseCardMenu()
     }
 
+    limpiarCampos = () => {
+        this.setState({
+            idConvenio: 0,
+            cliente: '',
+            fechaVigencia: '',
+            tarifasSeleccionadas : [],
+            todosConceptos: [],
+            conceptosAdicionales: [],
+            conceptosManiobra: [],
+            conceptosEntrega: [],
+            conceptosRecoleccion: [],
+            impuestos: [],
+            ivaTraslada: [],
+            ivaRetiene: [],
+            tarifaDetalles: {m_arrArConceptos:[]},
+            idsTarifasSeleccionadas: []
+        })
+    }
+
     onSubmit = (e) => {
         e.preventDefault()
-        console.log(this.state.tarifasSeleccionadas)
-        console.log('Mandar tarifas ', this.state.tarifasSeleccionadas)
 
         let params = {
+            m_nIdConvenio: this.state.idConvenio,
             m_nIdCliente: this.state.cliente,
             m_sVigencia: this.state.fechaVigencia,
+            m_bActivo: true,
             m_arrArTarifas: this.state.tarifasSeleccionadas
         }
-        console.log('agregar: ', params)
+        console.log(params)
+        console.log(JSON.stringify(params))
+        const {idConvenio} = this.state
+        if (idConvenio == 0 || idConvenio == '' || idConvenio === undefined){
+            const url = `${process.env.REACT_APP_API_URL}/Convenios/Agregar`;
+            axios.post(url, Object.assign({}, params),{ headers }).then(respuesta => {
+                console.log(respuesta)
+                showSuccess(respuesta.data);
+                this.limpiarCampos()
+            });
+        }else{
+            const url = `${process.env.REACT_APP_API_URL}/Convenios/Modificar/${idConvenio}`;
+            axios.put(url, Object.assign({}, params),{ headers }).then(respuesta => {
+                console.log(respuesta)
+                showSuccess(respuesta.data);
+                this.limpiarCampos()
+            });
+        }
     }
 
     handleDuplicarTarifa = (e) => {
