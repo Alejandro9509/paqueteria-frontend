@@ -965,7 +965,7 @@ class EscribirConvenio extends Component {
                                                 <Tab label="Maniobras" {...this.a11yProps(1)} />
                                                 <Tab label="Entrega" {...this.a11yProps(2)} />
                                                 <Tab label="Recolección" {...this.a11yProps(3)}/>
-                                                <Tab label="Productos" {...this.a11yProps(4)}/>
+                                                {/*<Tab label="Productos" {...this.a11yProps(4)}/>*/}
                                             </Tabs>
 
                                             <TabPanel value={this.state.tab} index={0}>
