@@ -665,9 +665,13 @@ class EscribirConvenio extends Component {
         this.state.idsTarifasSeleccionadas.forEach((idTarifa) => {
             tarifas.push(this.state.dataTarifas.find((t) => t.m_nIdTarifa == idTarifa))
         })
+        tarifas.forEach((t) => {
+            this.state.tarifasSeleccionadas.push(t)
+        })
+
         this.setState({
             openDialog: !this.state.openDialog,
-            tarifasSeleccionadas: tarifas
+            tarifasSeleccionadas: this.state.tarifasSeleccionadas
         })
 
     };
