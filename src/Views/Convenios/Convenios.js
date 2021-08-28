@@ -116,133 +116,6 @@ function Convenios(){
     }, [])
 
     const getAllConvenios = () => {
-        setListaConvenios([
-            {
-                "m_nIdConvenio": 1,
-                "m_nIdCliente":1,
-                "m_sNombreFiscal": "Ricardo Arjona",
-                "m_sVigencia": "2022-04-05",
-                "m_bActivo": true,
-                "m_arrArTarifas": [
-                    {
-                        "m_nIdTarifa": 69,
-                        "m_nIdSucursal": 1,
-                        "m_sDestino": "MEXICO",
-                        "m_nIdDestino": 5,
-                        "m_sSucursal": "MERIDA",
-                        "m_bPorRango": true,
-                        "m_bPorPesoVolumen": false,
-                        "m_nFactorConversion": 1,
-                        "m_cPrecioM3": 1,
-                        "m_cPrecioKilo": 1,
-                        "m_cFleteMinimo": 1,
-                        "m_cMontoMinimo": 1,
-                        "m_nIdImpuestoRetiene": 0,
-                        "m_nIdImpuestoTraslada": 0,
-                        "m_nCreadoPor": 0,
-                        "m_bActivo": true,
-                        "m_nModificadoPor": 1014,
-                        "m_dtCreadoEl": "2021-08-25T21:56:15.000",
-                        "m_dtModificadoEl": "2021-08-25T22:07:48.000",
-                        "m_cCostoFinal": 0,
-                        "m_arrArCobros": [],
-                        "m_arrArServicios": [],
-                        "m_arrArConceptos": [
-                            {
-                                "m_nIdTarifaConceptos": 515,
-                                "m_nIdTarifa": 69,
-                                "m_sConcepto": "MANIOBRAS DE RECOLECCION",
-                                "m_cImporte": 1,
-                                "m_nIdImpuestoTraslada": 3,
-                                "m_cImporteIva": 0.16,
-                                "m_nIdImpuestoRetiene": 4,
-                                "m_cImporteRetiene": 0,
-                                "m_dtCreadoEl": "2021-08-27T13:19:06.861",
-                                "m_nCreadoPor": 0,
-                                "m_dtModificadoEl": "2021-08-27T13:19:06.861",
-                                "m_nModificadoPor": 0,
-                                "m_bActivo": false,
-                                "m_nIdConceptosFacturacion": 14,
-                                "m_xnRangoMinimo": 0,
-                                "m_xnRangoMaximo": 0,
-                                "m_nIdTipoCalculo": 0,
-                                "m_nIdAgregadoDesde": 0,
-                                "mg_sUltimoError": "",
-                                "arClsDetalle": [
-                                    {
-                                        "m_nIdConceptosFacturacionDetalle": 7,
-                                        "m_nIdConceptosFacturacion": 14,
-                                        "m_nIdImpuesto": 3,
-                                        "m_sImpuesto": "IVA 16%",
-                                        "m_xPorcentaje": 16,
-                                        "m_bTrasladado": true,
-                                        "m_bPredeterminado": true,
-                                        "m_sUltimoError": "",
-                                        "m_sMsgUltimoError": ""
-                                    },
-                                    {
-                                        "m_nIdConceptosFacturacionDetalle": 8,
-                                        "m_nIdConceptosFacturacion": 14,
-                                        "m_nIdImpuesto": 4,
-                                        "m_sImpuesto": "RETENCION IVA 0%",
-                                        "m_xPorcentaje": 0,
-                                        "m_bTrasladado": false,
-                                        "m_bPredeterminado": true,
-                                        "m_sUltimoError": "",
-                                        "m_sMsgUltimoError": ""
-                                    }
-                                ]
-                            },
-                            {
-                                "m_nIdTarifaConceptos": 516,
-                                "m_nIdTarifa": 69,
-                                "m_sConcepto": "MANIOBRAS DE ENTREGA",
-                                "m_cImporte": 1,
-                                "m_nIdImpuestoTraslada": 3,
-                                "m_cImporteIva": 0.16,
-                                "m_nIdImpuestoRetiene": 4,
-                                "m_cImporteRetiene": 0,
-                                "m_dtCreadoEl": "2021-08-27T13:19:06.873",
-                                "m_nCreadoPor": 0,
-                                "m_dtModificadoEl": "2021-08-27T13:19:06.873",
-                                "m_nModificadoPor": 0,
-                                "m_bActivo": false,
-                                "m_nIdConceptosFacturacion": 15,
-                                "m_xnRangoMinimo": 0,
-                                "m_xnRangoMaximo": 0,
-                                "m_nIdTipoCalculo": 0,
-                                "m_nIdAgregadoDesde": 0,
-                                "mg_sUltimoError": "",
-                                "arClsDetalle": [
-                                    {
-                                        "m_nIdConceptosFacturacionDetalle": 9,
-                                        "m_nIdConceptosFacturacion": 15,
-                                        "m_nIdImpuesto": 3,
-                                        "m_sImpuesto": "IVA 16%",
-                                        "m_xPorcentaje": 16,
-                                        "m_bTrasladado": true,
-                                        "m_bPredeterminado": true,
-                                        "m_sUltimoError": "",
-                                        "m_sMsgUltimoError": ""
-                                    },
-                                    {
-                                        "m_nIdConceptosFacturacionDetalle": 10,
-                                        "m_nIdConceptosFacturacion": 15,
-                                        "m_nIdImpuesto": 4,
-                                        "m_sImpuesto": "RETENCION IVA 0%",
-                                        "m_xPorcentaje": 0,
-                                        "m_bTrasladado": false,
-                                        "m_bPredeterminado": true,
-                                        "m_sUltimoError": "",
-                                        "m_sMsgUltimoError": ""
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ])
         const url = `${process.env.REACT_APP_API_URL}/Convenios/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
             setListaConvenios(respuesta.data)
@@ -251,6 +124,7 @@ function Convenios(){
 
     const handleShowListado = (event) => {
         event.stopPropagation();
+        getAllConvenios()
         // limpiarInputsAgregar()
         setConvenioSeleccionado(0)
         setConsult(false)
@@ -282,7 +156,7 @@ function Convenios(){
     }
     const handleShowModificar = (convenio) => {
         setConsult(false)
-        setConvenioSeleccionado(convenio.m_nIdConVenio)
+        setConvenioSeleccionado(convenio.m_nIdConvenio)
         setState(state =>{
             return {
                 ...state,
@@ -295,7 +169,7 @@ function Convenios(){
         $('#Agregar').addClass('in show');
     }
     const handleShowConsultar = (convenio) => {
-        setConvenioSeleccionado(convenio.m_nIdConVenio)
+        setConvenioSeleccionado(convenio.m_nIdConvenio)
         setConsult(true)
         setState(state =>{
             return {
