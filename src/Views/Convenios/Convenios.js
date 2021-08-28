@@ -12,12 +12,21 @@ import EscribirConvenio from "./EscribirConvenio";
 import {Tooltip} from "@material-ui/core";
 import {confirmAlert} from "react-confirm-alert";
 import axios from "axios";
+import Noty from "noty";
 
 window.jQuery = window.$ = $;
 
 const headers = {
     'Content-Type': 'application/json',
     //    'access-control-allow-origin': '*'
+}
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
 }
 function Convenios(){
     const columns = useMemo(() => [
@@ -38,15 +47,15 @@ function Convenios(){
                             <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
                         </Tooltip>
-                        {/*<Tooltip title="Eliminar">
+                        <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
                                    title: 'Confirmar Eliminar',
-                                   message: 'Está seguro de eliminar Embarque?',
+                                   message: 'Está seguro de eliminar Convenio?',
                                    buttons: [
                                        {
                                            label: 'Si',
-                                           onClick: () => handleEliminar(row.row.m_nIdRecoleccion)
+                                           onClick: () => handleEliminar(row.row)
                                        },
                                        {
                                            label: 'No',
@@ -54,7 +63,7 @@ function Convenios(){
                                    ]
                                })}><i className="zmdi zmdi-delete"
                                       style={{ color: "#F30B0B" }} /></a>
-                        </Tooltip>*/}
+                        </Tooltip>
 
                     </div>
                 )
@@ -183,7 +192,14 @@ function Convenios(){
         $('#Agregar').addClass('in show');
     }
 
-    const handleEliminar = () => {}
+    const handleEliminar = (convenio) => {
+        const url = `${process.env.REACT_APP_API_URL}/Convenios/Eliminar/${convenio.m_nIdConvenio}/0`;
+        axios.delete(url,{ headers }).then(respuesta => {
+            console.log(respuesta)
+            showSuccess(respuesta.data);
+            getAllConvenios()
+        });
+    }
 
 
     return(

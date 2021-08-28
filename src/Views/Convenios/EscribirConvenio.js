@@ -665,9 +665,13 @@ class EscribirConvenio extends Component {
         this.state.idsTarifasSeleccionadas.forEach((idTarifa) => {
             tarifas.push(this.state.dataTarifas.find((t) => t.m_nIdTarifa == idTarifa))
         })
+        tarifas.forEach((t) => {
+            this.state.tarifasSeleccionadas.push(t)
+        })
+
         this.setState({
             openDialog: !this.state.openDialog,
-            tarifasSeleccionadas: tarifas
+            tarifasSeleccionadas: this.state.tarifasSeleccionadas
         })
 
     };
@@ -961,7 +965,7 @@ class EscribirConvenio extends Component {
                                                 <Tab label="Maniobras" {...this.a11yProps(1)} />
                                                 <Tab label="Entrega" {...this.a11yProps(2)} />
                                                 <Tab label="Recolección" {...this.a11yProps(3)}/>
-                                                <Tab label="Productos" {...this.a11yProps(4)}/>
+                                                {/*<Tab label="Productos" {...this.a11yProps(4)}/>*/}
                                             </Tabs>
 
                                             <TabPanel value={this.state.tab} index={0}>
