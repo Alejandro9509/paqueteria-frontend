@@ -11,8 +11,14 @@ import CrearTarifa from "../Tarifas/CrearTarifa";
 import EscribirConvenio from "./EscribirConvenio";
 import {Tooltip} from "@material-ui/core";
 import {confirmAlert} from "react-confirm-alert";
+import axios from "axios";
 
 window.jQuery = window.$ = $;
+
+const headers = {
+    'Content-Type': 'application/json',
+    //    'access-control-allow-origin': '*'
+}
 function Convenios(){
     const columns = useMemo(() => [
         {
@@ -237,6 +243,10 @@ function Convenios(){
                 ]
             }
         ])
+        const url = `${process.env.REACT_APP_API_URL}/Convenios/GetListado`;
+        axios.get(url, { headers }).then(respuesta => {
+            setListaConvenios(respuesta.data)
+        });
     }
 
     const handleShowListado = (event) => {
