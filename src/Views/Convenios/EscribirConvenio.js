@@ -33,6 +33,7 @@ import ConceptosAdicionales from "../Tarifas/ConceptosAdicionales";
 import ConceptosAdicionalesManiobra from "../Tarifas/ConceptosAdicionalesManiobra";
 import ConceptosAdicionalesEntrega from "../Tarifas/ConceptosAdicionalesEntrega";
 import ConceptosAdicionalesRecoleccion from "../Tarifas/ConceptosAdicionalesRecoleccion";
+import ProductosTarifa from "../Tarifas/ProductosTarifa";
 import {dataGridLocaleText} from "../../Constants";
 import {DataGrid} from "@material-ui/data-grid";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
@@ -193,7 +194,12 @@ class EscribirConvenio extends Component {
                     width: 200
                 }
             ],
-            dataProductos: []
+            //Aqui se guardan todos los productos y no se modifican
+            dataProductos: [],
+            //Aqui se guardan todos los productos que no estan seleccionados
+            dataProductosTemp: [],
+            //Aqui pues el nombre de la variable ya es muy explicita
+            dataProductosSeleccionados: []
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleTabChange = this.handleTabChange.bind(this)
@@ -210,95 +216,13 @@ class EscribirConvenio extends Component {
         this.getAllClientes = this.getAllClientes.bind(this)
         this.handleShowDialog = this.handleShowDialog.bind(this)
         this.getAllTarifas = this.getAllTarifas.bind(this)
+        this.getAllProductos = this.getAllProductos.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
-        this.handleCloseCardMenu = this.handleCloseCardMenu.bind(this)
         this.getConvenioById = this.getConvenioById.bind(this)
         this.limpiarCampos = this.limpiarCampos.bind(this)
     }
 
     castConceptos(){
-        /*if (this.props.edit){
-            const { todosConceptos, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, tarifaDetalles } = this.state
-            tarifaDetalles.m_arrArConceptos.forEach( element =>{
-                var ivaTraslada = []
-                var ivaRetiene = []
-
-                todosConceptos.push({
-                    idConcepto : element.m_nIdConceptosFacturacion,
-                    importe: element.m_cImporte,
-                    retiene: element.m_nIdImpuestoRetiene,
-                    traslada: element.m_nIdImpuestoTraslada,
-                    importeRet: element.m_cImporteRetiene,
-                    importeIVA: element.m_cImporteIva,
-                    rangoMinimo: element.m_xnRangoMinimo,
-                    rangoMaximo: element.m_xnRangoMaximo,
-                    nombreConcepto: element.m_sConcepto,
-                    tipoCalculo: element.m_nIdTipoCalculo,
-                    agregadoDesde: element.m_nIdAgregadoDesde
-                })
-                if (element.m_nIdAgregadoDesde == 0){
-                    conceptosAdicionales.push({
-                        idConcepto : element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeRet: element.m_cImporteRetiene,
-                        importeIVA: element.m_cImporteIva,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo,
-                        agregadoDesde: element.m_nIdAgregadoDesde
-                    })
-                }else if (element.m_nIdAgregadoDesde == 1){
-                    conceptosManiobra.push({
-                        idConcepto : element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeRet: element.m_cImporteRetiene,
-                        importeIVA: element.m_cImporteIva,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo,
-                        agregadoDesde: element.m_nIdAgregadoDesde
-                    })
-                }else if (element.m_nIdAgregadoDesde == 2){
-                    conceptosEntrega.push({
-                        idConcepto : element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeRet: element.m_cImporteRetiene,
-                        importeIVA: element.m_cImporteIva,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo,
-                        agregadoDesde: element.m_nIdAgregadoDesde
-                    })
-                }else if (element.m_nIdAgregadoDesde == 3){
-                    conceptosRecoleccion.push({
-                        idConcepto : element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeRet: element.m_cImporteRetiene,
-                        importeIVA: element.m_cImporteIva,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo,
-                        agregadoDesde: element.m_nIdAgregadoDesde
-                    })
-                }
-
-                ivaTraslada = getUniqueListBy(todosConceptos, "traslada").map(i => i.traslada);
-                ivaRetiene = getUniqueListBy(todosConceptos, "retiene").map(i => i.retiene);
-                this.setState({ todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-            })
-        }*/
 
         let { todosConceptos, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, tarifaDetalles } = this.state
         todosConceptos.length = 0
@@ -403,6 +327,7 @@ class EscribirConvenio extends Component {
         this.castConceptos()
         this.getAllClientes()
         this.getAllTarifas()
+        this.getAllProductos()
     }
 
     getAllImpuestos() {
@@ -577,6 +502,7 @@ class EscribirConvenio extends Component {
             if (select != 0){
                 this.getConvenioById(select)
             }else{
+                console.log('limpiar')
                 this.limpiarCampos()
             }
         }
@@ -682,6 +608,14 @@ class EscribirConvenio extends Component {
             this.setState({ dataTarifas: respuesta.data, agregar: "Agregar" })
         });
     }
+
+    getAllProductos(){
+        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
+        axios.get(url, { headers }).then(respuesta => {
+            this.setState({ dataProductos: respuesta.data, dataProductosTemp: respuesta.data, agregar: "Agregar" })
+        });
+    }
+
     //Funcion para reaccionar al seleccionar una tarifa del LISTADO DE DIALOGO
     handleTarifasSeleccionadas = (e) => {
         this.setState({
@@ -692,7 +626,7 @@ class EscribirConvenio extends Component {
     handleGuardarTarifa = (e) => {
         e.preventDefault()
         this.state.tarifasSeleccionadas.forEach((t) => {
-            if (t.m_nIdTarifa == this.state.tarifaDetalles.id){
+            if (t.m_nIdTarifa == this.state.tarifaDetalles.m_nIdTarifa){
                 t.m_arrArConceptos.length = 0
                 this.state.todosConceptos.forEach((c) => {
                     t.m_arrArConceptos.push({
@@ -709,6 +643,10 @@ class EscribirConvenio extends Component {
                         m_sConcepto: c.nombreConcepto,
                     })
                 })
+                t.m_arrArProductos.length = 0
+                this.state.dataProductosSeleccionados.forEach((p) => {
+                    t.m_arrArProductos.push(p)
+                })
             }
         })
         this.setState({
@@ -719,26 +657,17 @@ class EscribirConvenio extends Component {
 
     handleCardClick = (e, t) => {
         e.preventDefault()
+        this.state.dataProductosTemp = this.state.dataProductos
+        t.m_arrArProductos.forEach((p) => {
+                this.state.dataProductosTemp = this.state.dataProductosTemp.filter((f) => f.m_nIdProducto != p.m_nIdProducto)
+            })
         this.setState({
             tarifaDetalles: t,
-            dataProductos: t.m_arrArProductos
+            dataProductosSeleccionados: t.m_arrArProductos,
+            dataProductosTemp: this.state.dataProductosTemp
         }, () => {
             this.castConceptos()
         })
-    }
-    handleCloseCardMenu = () => {
-        this.setState({
-            anchorEl: null
-        })
-    }
-
-    handleCardMenuClick = (e) => {
-        this.setState({
-            anchorEl: e.currentTarget
-        })
-    }
-    handleDuplicarClick = (e) => {
-        this.handleCloseCardMenu()
     }
 
     limpiarCampos = () => {
@@ -756,7 +685,9 @@ class EscribirConvenio extends Component {
             ivaTraslada: [],
             ivaRetiene: [],
             tarifaDetalles: {m_arrArConceptos:[]},
-            idsTarifasSeleccionadas: []
+            idsTarifasSeleccionadas: [],
+            dataProductosSeleccionados:[],
+            dataProductosTemp:this.state.dataProductos
         })
     }
 
@@ -800,9 +731,16 @@ class EscribirConvenio extends Component {
         })
     }
 
+    actualizarProductos = (todosProductos, productosSeleccionados) => {
+        this.setState({
+            dataProductosTemp: todosProductos,
+            dataProductosSeleccionados: productosSeleccionados
+        })
+    }
+
     render() {
         const { disabled, todosConceptos, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, openDialog,
-            columnsTarifas, dataTarifas, height, tarifasSeleccionadas, tarifaDetalles, dataProductos, columnsProductos,
+            columnsTarifas, dataTarifas, height, tarifasSeleccionadas, tarifaDetalles, dataProductosTemp,dataProductosSeleccionados, columnsProductos,
             cliente, fechaVigencia, cardStyle} = this.state
         let { consult, edit} = this.props
 
@@ -932,11 +870,11 @@ class EscribirConvenio extends Component {
                                                                 </Typography>
                                                             </Grid>
                                                             <Grid item xs={12}>
-                                                                {/*<Typography gutterBottom variant="h5" component="h2">
+                                                                <Typography gutterBottom variant="h5" component="h2">
                                                                     {t.m_arrArProductos.map((p) => (
                                                                         p.m_sDescripcion + ', '
                                                                     ))}
-                                                                </Typography>*/}
+                                                                </Typography>
                                                             </Grid>
                                                         </Grid>
                                                     </CardContent>
@@ -947,6 +885,10 @@ class EscribirConvenio extends Component {
                                 </div>
                             </div>
                             <div className="col-md-9 col-sm-12" >
+                                {
+                                    todosConceptos.length > 0 &&
+                                    `${tarifaDetalles.m_sSucursal} - ${tarifaDetalles.m_sDestino}`
+                                }
                                 {
                                     todosConceptos.length > 0 &&
                                     <button className="btn btn-primary primary-btn" onClick={this.handleGuardarTarifa} disabled={consult}>
@@ -965,7 +907,7 @@ class EscribirConvenio extends Component {
                                                 <Tab label="Maniobras" {...this.a11yProps(1)} />
                                                 <Tab label="Entrega" {...this.a11yProps(2)} />
                                                 <Tab label="Recolección" {...this.a11yProps(3)}/>
-                                                {/*<Tab label="Productos" {...this.a11yProps(4)}/>*/}
+                                                <Tab label="Productos" {...this.a11yProps(4)}/>
                                             </Tabs>
 
                                             <TabPanel value={this.state.tab} index={0}>
@@ -1010,17 +952,14 @@ class EscribirConvenio extends Component {
                                                                                  ivaTraslada={this.state.ivaTraslada}
                                                                                  />
                                             </TabPanel>
-                                            {/*<TabPanel value={this.state.tab} index={4}>
-                                                <div style={{ display: 'flex', height: '500px' }}>
-                                                    <DataGrid
-                                                        columns={columnsProductos}
-                                                        rows={dataProductos}
-                                                        getRowId={(row) => row.m_nIdProducto}
-                                                        checkboxSelection
-                                                    />
-                                                </div>
+                                            <TabPanel value={this.state.tab} index={4}>
+                                                <ProductosTarifa
+                                                    productos={dataProductosTemp}
+                                                    productosSeleccionados={dataProductosSeleccionados}
+                                                    actualizarProductos={this.actualizarProductos}
+                                                />
 
-                                            </TabPanel>*/}
+                                            </TabPanel>
                                         </div>
                                     </div>
                                 </div>

@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se cambio la logica para mostrar sucursal en el listado de usuarios">
-      <change beforePath="$PROJECT_DIR$/src/Views/Convenios/Convenios.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Convenios/Convenios.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Intento fallido de duplicar tarifas">
+      <change afterPath="$PROJECT_DIR$/src/Views/Tarifas/ProductosTarifa.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Convenios/EscribirConvenio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Convenios/EscribirConvenio.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +108,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -132,6 +134,8 @@
       <workItem from="1628006996868" duration="13293000" />
       <workItem from="1629125426621" duration="20705000" />
       <workItem from="1629902787967" duration="7739000" />
+      <workItem from="1630341665397" duration="1323000" />
+      <workItem from="1630389865958" duration="11054000" />
     </task>
     <task id="LOCAL-00007" summary="Se agregaron los filtros necesarios">
       <created>1627356533411</created>
@@ -480,7 +484,7 @@
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
