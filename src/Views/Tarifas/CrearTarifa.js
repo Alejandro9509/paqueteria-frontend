@@ -78,10 +78,9 @@ class CrearTarifa extends Component {
             const { select } = this.props
             console.log(select)
             select.m_arrArConceptos.forEach( element =>{
-                var ivaTraslada = []
-                var ivaRetiene = []
-
-                todosConceptos.push({
+                let ivaTraslada = []
+                let ivaRetiene = []
+                const concept = {
                     idConcepto : element.m_nIdConceptosFacturacion,
                     importe: element.m_cImporte,
                     retiene: element.m_nIdImpuestoRetiene,
@@ -93,63 +92,16 @@ class CrearTarifa extends Component {
                     nombreConcepto: element.m_sConcepto,
                     tipoCalculo: element.m_nIdTipoCalculo,
                     agregadoDesde: element.m_nIdAgregadoDesde
-                })
+                }
+                todosConceptos.push(concept)
                 if (element.m_nIdAgregadoDesde == 0){
-                    conceptosAdicionales.push({
-                        idConcepto : element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeRet: element.m_cImporteRetiene,
-                        importeIVA: element.m_cImporteIva,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo,
-                        agregadoDesde: element.m_nIdAgregadoDesde
-                    })
+                    conceptosAdicionales.push(concept)
                 }else if (element.m_nIdAgregadoDesde == 1){
-                    conceptosManiobra.push({
-                        idConcepto : element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeRet: element.m_cImporteRetiene,
-                        importeIVA: element.m_cImporteIva,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo,
-                        agregadoDesde: element.m_nIdAgregadoDesde
-                    })
+                    conceptosManiobra.push(concept)
                 }else if (element.m_nIdAgregadoDesde == 2){
-                    conceptosEntrega.push({
-                        idConcepto : element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeRet: element.m_cImporteRetiene,
-                        importeIVA: element.m_cImporteIva,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo,
-                        agregadoDesde: element.m_nIdAgregadoDesde
-                    })
+                    conceptosEntrega.push(concept)
                 }else if (element.m_nIdAgregadoDesde == 3){
-                    conceptosRecoleccion.push({
-                        idConcepto : element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeRet: element.m_cImporteRetiene,
-                        importeIVA: element.m_cImporteIva,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo,
-                        agregadoDesde: element.m_nIdAgregadoDesde
-                    })
+                    conceptosRecoleccion.push(concept)
                 }
 
                 ivaTraslada = getUniqueListBy(todosConceptos, "traslada").map(i => i.traslada);
@@ -230,7 +182,8 @@ class CrearTarifa extends Component {
             rangoMaximo: data.rangoMaximo,
             nombreConcepto: data.concepto.m_sConcepto,
             tipoCalculo: data.tipoCalculo,
-            agregadoDesde: data.agregadoDesde
+            agregadoDesde: data.agregadoDesde,
+            tipoMedida: data.tipoMedida
         })
         ivaTraslada = getUniqueListBy(todosConceptos, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(todosConceptos, "retiene").map(i => i.retiene);
@@ -247,7 +200,8 @@ class CrearTarifa extends Component {
                 rangoMaximo: data.rangoMaximo,
                 nombreConcepto: data.concepto.m_sConcepto,
                 tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde
+                agregadoDesde: data.agregadoDesde,
+                tipoMedida: data.tipoMedida
             })
             this.setState({ conceptosAdicionales: conceptosAdicionales, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }else if (data.agregadoDesde == 1){
@@ -263,7 +217,8 @@ class CrearTarifa extends Component {
                 rangoMaximo: data.rangoMaximo,
                 nombreConcepto: data.concepto.m_sConcepto,
                 tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde
+                agregadoDesde: data.agregadoDesde,
+                tipoMedida: data.tipoMedida
             })
             this.setState({ conceptosManiobra: conceptosManiobra, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }else if (data.agregadoDesde == 2){
@@ -279,7 +234,8 @@ class CrearTarifa extends Component {
                 rangoMaximo: data.rangoMaximo,
                 nombreConcepto: data.concepto.m_sConcepto,
                 tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde
+                agregadoDesde: data.agregadoDesde,
+                tipoMedida: data.tipoMedida
             })
             this.setState({ conceptosEntrega: conceptosEntrega, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }else if (data.agregadoDesde == 3){
@@ -295,7 +251,8 @@ class CrearTarifa extends Component {
                 rangoMaximo: data.rangoMaximo,
                 nombreConcepto: data.concepto.m_sConcepto,
                 tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde
+                agregadoDesde: data.agregadoDesde,
+                tipoMedida: data.tipoMedida
             })
             this.setState({ conceptosRecoleccion: conceptosRecoleccion, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }
