@@ -48,7 +48,9 @@ class ConceptosAdicionales extends Component {
                     accessor: "m_sConcepto",
                 }
             ],
-            agregadoDesde: 2
+            agregadoDesde: 2,
+            tiposCalculo:[],
+            tipoMedida: 0,
 
         }
         this.getAllConceptos = this.getAllConceptos.bind(this)
@@ -67,6 +69,7 @@ class ConceptosAdicionales extends Component {
     componentDidMount() {
         this.getAllConceptos()
         this.getAllImpuestos()
+        this.getAlTiposCalculo()
     }
 
     getAllImpuestos() {
@@ -104,6 +107,12 @@ class ConceptosAdicionales extends Component {
         });
     }
 
+    getAlTiposCalculo(){
+        const url = `${process.env.REACT_APP_API_URL}/TipoCalculo/GetListado`;
+        axios.get(url, { headers }).then(respuesta => {
+            this.setState({ tiposCalculo: respuesta.data })
+        });
+    }
 
     handleChange(event) {
         event.preventDefault()
@@ -171,6 +180,7 @@ class ConceptosAdicionales extends Component {
             rangoMinimo: 0,
             rangoMaximo: 0,
             tipoCalculo: 0,
+            tipoMedida: 0,
         })
     }
 
@@ -196,12 +206,11 @@ class ConceptosAdicionales extends Component {
             rangoMinimo: concepto.rangoMinimo,
             rangoMaximo: concepto.rangoMaximo,
             tipoCalculo: concepto.tipoCalculo,
+            tipoMedida: concepto.tipoMedida,
         })
     }
 
     render() {
-
-
 
         return (
             <div>
@@ -314,6 +323,27 @@ class ConceptosAdicionales extends Component {
                         </div>
 
                         <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
+                            <label className="input select" style={{ width: "100%" }}>
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                    <InputLabel id="tipoLabel">Medida</InputLabel>
+                                    <Select
+                                        labelId="tipoMedidaLabel"
+                                        label="Tipo Medida"
+                                        className="form-control"
+                                        onChange={this.handleChange}
+                                        name="tipoMedida"
+                                        value={this.state.tipoMedida}
+                                    >
+                                        <option key={0} value={0}>Selecciona</option>
+                                        <option key={1} value={1}>Kg</option>
+                                        <option key={2} value={2}>Toneladas</option>
+                                        <option key={3} value={3}>Piezas</option>
+
+                                    </Select>
+                                </FormControl>
+                            </label>
+                        </div>
+                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
 
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
@@ -359,7 +389,7 @@ class ConceptosAdicionales extends Component {
                             </div>
                         </div>
 
-                        <div className="col-md-1-5 col-sm-6" style={{ padding: "5px" }}>
+                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
                             <label className="input select" style={{ width: "100%" }}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
                                     <InputLabel id="trasladaLabel">Traslada</InputLabel>
@@ -407,7 +437,7 @@ class ConceptosAdicionales extends Component {
                                 />
                             </div>
                         </div>
-                        <div className="col-md-1-5 col-sm-6" style={{ padding: "5px" }}>
+                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
                             <label className="input select" style={{ width: "100%" }}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
                                     <InputLabel id="retieneLabel">Retiene</InputLabel>
@@ -456,7 +486,7 @@ class ConceptosAdicionales extends Component {
                                 />
                             </div>
                         </div>
-                        <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
+                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
                             <label className="input select" style={{ width: "100%" }}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
                                     <InputLabel id="tipoLabel">Tipo</InputLabel>
@@ -468,24 +498,15 @@ class ConceptosAdicionales extends Component {
                                         name="tipoCalculo"
                                         value={this.state.tipoCalculo}
                                     >
-                                        <option
-                                            key={0}
-                                            value={0}
-                                        >
-                                            Selecciona
-                                        </option>
-                                        <option
-                                            key={1}
-                                            value={1}
-                                        >
-                                            Fijo
-                                        </option>
-                                        <option
-                                            key={2}
-                                            value={2}
-                                        >
-                                            Factor
-                                        </option>
+                                        <option key={0} value={0}>Selecciona</option>
+                                        {this.state.tiposCalculo.map((t) =>
+                                            (<option
+                                                key={t.m_nIdTarifaTipoCalculo}
+                                                value={t.m_nIdTarifaTipoCalculo}
+                                            >
+                                                {t.m_sTarifaTipoCalculo}
+                                            </option>))
+                                        }
                                     </Select>
                                 </FormControl>
                             </label>
@@ -506,6 +527,7 @@ class ConceptosAdicionales extends Component {
                             <table style={{ width: "100%" }}>
                                 <tr>
                                     <th style={{ textAlign: "left" }}> Concepto</th>
+                                    <th style={{ textAlign: "left" }}> Medida</th>
                                     <th style={{ textAlign: "left" }}> Min</th>
                                     <th style={{ textAlign: "left" }}> Max</th>
                                     <th style={{ textAlign: "left" }}> Importe</th>
@@ -519,6 +541,7 @@ class ConceptosAdicionales extends Component {
                                     this.props.conceptosAdicionales.map((c, index) => (
                                         <tr onClick={(e) => this.handleRowClick(e, index, c)}>
                                             <td style={{ textAlign: "left" }}>{c.nombreConcepto}</td>
+                                            <td style={{ textAlign: "left" }}>{c.tipoMedida == 1 ? "Kg" : c.tipoMedida == 2 ? "Tons" : c.tipoMedida == 3 ? "Piezas" : ""}</td>
                                             <td style={{ textAlign: "left" }}>{c.rangoMinimo} kg</td>
                                             <td style={{ textAlign: "left" }}>{c.rangoMaximo} kg</td>
                                             <td style={{ textAlign: "left" }}>${parseFloat(c.importe).toFixed(2)}</td>
@@ -526,7 +549,7 @@ class ConceptosAdicionales extends Component {
                                             <td style={{ textAlign: "left" }}>${parseFloat(c.importeIVA).toFixed(2)}</td>
                                             <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)).m_sImpuesto : "No Aplica")}</td>
                                             <td style={{ textAlign: "left" }}>${parseFloat(c.importeRet).toFixed(2)}</td>
-                                            <td style={{ textAlign: "left" }}>{c.tipoCalculo == 1 ? "Fijo" : c.tipoCalculo == 2 ? "Factor" : ""}</td>
+                                            <td style={{ textAlign: "left" }}>{c.tipoCalculo == 1 ? "Fijo" : c.tipoCalculo == 2 ? "Factor" : c.tipoCalculo == 3 ? "Producto" : ""}</td>
                                             {
                                                 !this.props.consult &&
                                                 <td>

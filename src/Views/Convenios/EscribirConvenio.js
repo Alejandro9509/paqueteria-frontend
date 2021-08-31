@@ -233,7 +233,7 @@ class EscribirConvenio extends Component {
         tarifaDetalles.m_arrArConceptos.forEach( element =>{
             let ivaTraslada = []
             let ivaRetiene = []
-            todosConceptos.push({
+            const concept = {
                 idConcepto : element.m_nIdConceptosFacturacion,
                 importe: element.m_cImporte,
                 retiene: element.m_nIdImpuestoRetiene,
@@ -244,64 +244,18 @@ class EscribirConvenio extends Component {
                 rangoMaximo: element.m_xnRangoMaximo,
                 nombreConcepto: element.m_sConcepto,
                 tipoCalculo: element.m_nIdTipoCalculo,
-                agregadoDesde: element.m_nIdAgregadoDesde
-            })
+                agregadoDesde: element.m_nIdAgregadoDesde,
+                tipoMedida: element.m_nIdTipoMedida
+            }
+            todosConceptos.push(concept)
             if (element.m_nIdAgregadoDesde == 0){
-                conceptosAdicionales.push({
-                    idConcepto : element.m_nIdConceptosFacturacion,
-                    importe: element.m_cImporte,
-                    retiene: element.m_nIdImpuestoRetiene,
-                    traslada: element.m_nIdImpuestoTraslada,
-                    importeRet: element.m_cImporteRetiene,
-                    importeIVA: element.m_cImporteIva,
-                    rangoMinimo: element.m_xnRangoMinimo,
-                    rangoMaximo: element.m_xnRangoMaximo,
-                    nombreConcepto: element.m_sConcepto,
-                    tipoCalculo: element.m_nIdTipoCalculo,
-                    agregadoDesde: element.m_nIdAgregadoDesde
-                })
+                conceptosAdicionales.push(concept)
             }else if (element.m_nIdAgregadoDesde == 1){
-                conceptosManiobra.push({
-                    idConcepto : element.m_nIdConceptosFacturacion,
-                    importe: element.m_cImporte,
-                    retiene: element.m_nIdImpuestoRetiene,
-                    traslada: element.m_nIdImpuestoTraslada,
-                    importeRet: element.m_cImporteRetiene,
-                    importeIVA: element.m_cImporteIva,
-                    rangoMinimo: element.m_xnRangoMinimo,
-                    rangoMaximo: element.m_xnRangoMaximo,
-                    nombreConcepto: element.m_sConcepto,
-                    tipoCalculo: element.m_nIdTipoCalculo,
-                    agregadoDesde: element.m_nIdAgregadoDesde
-                })
+                conceptosManiobra.push(concept)
             }else if (element.m_nIdAgregadoDesde == 2){
-                conceptosEntrega.push({
-                    idConcepto : element.m_nIdConceptosFacturacion,
-                    importe: element.m_cImporte,
-                    retiene: element.m_nIdImpuestoRetiene,
-                    traslada: element.m_nIdImpuestoTraslada,
-                    importeRet: element.m_cImporteRetiene,
-                    importeIVA: element.m_cImporteIva,
-                    rangoMinimo: element.m_xnRangoMinimo,
-                    rangoMaximo: element.m_xnRangoMaximo,
-                    nombreConcepto: element.m_sConcepto,
-                    tipoCalculo: element.m_nIdTipoCalculo,
-                    agregadoDesde: element.m_nIdAgregadoDesde
-                })
+                conceptosEntrega.push(concept)
             }else if (element.m_nIdAgregadoDesde == 3){
-                conceptosRecoleccion.push({
-                    idConcepto : element.m_nIdConceptosFacturacion,
-                    importe: element.m_cImporte,
-                    retiene: element.m_nIdImpuestoRetiene,
-                    traslada: element.m_nIdImpuestoTraslada,
-                    importeRet: element.m_cImporteRetiene,
-                    importeIVA: element.m_cImporteIva,
-                    rangoMinimo: element.m_xnRangoMinimo,
-                    rangoMaximo: element.m_xnRangoMaximo,
-                    nombreConcepto: element.m_sConcepto,
-                    tipoCalculo: element.m_nIdTipoCalculo,
-                    agregadoDesde: element.m_nIdAgregadoDesde
-                })
+                conceptosRecoleccion.push(concept)
             }
 
             ivaTraslada = getUniqueListBy(todosConceptos, "traslada").map(i => i.traslada);
@@ -369,7 +323,8 @@ class EscribirConvenio extends Component {
             rangoMaximo: data.rangoMaximo,
             nombreConcepto: data.concepto.m_sConcepto,
             tipoCalculo: data.tipoCalculo,
-            agregadoDesde: data.agregadoDesde
+            agregadoDesde: data.agregadoDesde,
+            tipoMedida: data.tipoMedida
         })
         ivaTraslada = getUniqueListBy(todosConceptos, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(todosConceptos, "retiene").map(i => i.retiene);
@@ -386,7 +341,8 @@ class EscribirConvenio extends Component {
                 rangoMaximo: data.rangoMaximo,
                 nombreConcepto: data.concepto.m_sConcepto,
                 tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde
+                agregadoDesde: data.agregadoDesde,
+                tipoMedida: data.tipoMedida
             })
             this.setState({ conceptosAdicionales: conceptosAdicionales, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }else if (data.agregadoDesde == 1){
@@ -402,7 +358,8 @@ class EscribirConvenio extends Component {
                 rangoMaximo: data.rangoMaximo,
                 nombreConcepto: data.concepto.m_sConcepto,
                 tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde
+                agregadoDesde: data.agregadoDesde,
+                tipoMedida: data.tipoMedida
             })
             this.setState({ conceptosManiobra: conceptosManiobra, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }else if (data.agregadoDesde == 2){
@@ -418,7 +375,8 @@ class EscribirConvenio extends Component {
                 rangoMaximo: data.rangoMaximo,
                 nombreConcepto: data.concepto.m_sConcepto,
                 tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde
+                agregadoDesde: data.agregadoDesde,
+                tipoMedida: data.tipoMedida
             })
             this.setState({ conceptosEntrega: conceptosEntrega, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }else if (data.agregadoDesde == 3){
@@ -434,7 +392,8 @@ class EscribirConvenio extends Component {
                 rangoMaximo: data.rangoMaximo,
                 nombreConcepto: data.concepto.m_sConcepto,
                 tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde
+                agregadoDesde: data.agregadoDesde,
+                tipoMedida: data.tipoMedida
             })
             this.setState({ conceptosRecoleccion: conceptosRecoleccion, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }
@@ -641,6 +600,7 @@ class EscribirConvenio extends Component {
                         m_xnRangoMaximo: c.rangoMaximo,
                         m_nIdAgregadoDesde: c.agregadoDesde,
                         m_sConcepto: c.nombreConcepto,
+                        m_nIdTipoMedida: c.tipoMedida
                     })
                 })
                 t.m_arrArProductos.length = 0
