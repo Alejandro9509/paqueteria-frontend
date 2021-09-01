@@ -496,12 +496,9 @@ class ConceptosAdicionales extends Component {
                                     >
                                         <option key={0} value={0}>Selecciona</option>
                                         {this.state.tiposCalculo.map((t) =>
-                                            (<option
-                                                key={t.m_nIdTarifaTipoCalculo}
-                                                value={t.m_nIdTarifaTipoCalculo}
-                                            >
-                                                {t.m_sTarifaTipoCalculo}
-                                            </option>))
+                                            (t.m_nIdTarifaTipoCalculo == 3 ? this.state.tipoMedida == 3 &&
+                                                <option key={t.m_nIdTarifaTipoCalculo} value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>
+                                                : <option key={t.m_nIdTarifaTipoCalculo} value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>))
                                         }
                                     </Select>
                                 </FormControl>
