@@ -219,8 +219,10 @@ class Tarifas extends Component {
                 m_nIdTipoCalculo: c.tipoCalculo,
                 m_xnRangoMinimo: c.rangoMinimo,
                 m_xnRangoMaximo: c.rangoMaximo,
-                m_nIdAgregadoDesde: c.agregadoDesde
+                m_nIdAgregadoDesde: c.agregadoDesde,
+                m_nIdTipoMedida: c.tipoMedida
             })),
+            m_arrArProductos: data.dataProductosSeleccionados,
             m_nCreadoPOr: localStorage.getItem("UsuarioId"),
             m_nModificadoPor: localStorage.getItem("UsuarioId")
         }

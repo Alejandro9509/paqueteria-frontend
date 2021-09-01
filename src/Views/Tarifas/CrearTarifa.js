@@ -12,6 +12,7 @@ import SvgIcon from "@material-ui/core/SvgIcon";
 import { getUniqueListBy } from '../../Util/Util';
 import { PowerInputSharp } from '@material-ui/icons';
 import { obtenerCiudades } from '../../Util/Contexts/CiudadesContext';
+import ProductosTarifa from "./ProductosTarifa";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -55,6 +56,12 @@ class CrearTarifa extends Component {
             precioKilo: props.edit ? props.select.m_cPrecioKilo : "",
             precioM3: props.edit ? props.select.m_cPrecioM3 : "",
             disabled: true,
+            //Aqui se guardan todos los productos y no se modifican
+            dataProductos: [],
+            //Aqui se guardan todos los productos que no estan seleccionados
+            dataProductosTemp: [],
+            //Aqui pues el nombre de la variable ya es muy explicita
+            dataProductosSeleccionados: []
         }
         this.getAllSucursales = this.getAllSucursales.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -70,6 +77,7 @@ class CrearTarifa extends Component {
         this.onSubmit = this.onSubmit.bind(this)
         this.castConceptos = this.castConceptos.bind(this)
         this.filtrarConceptoAdicional = this.filtrarConceptoAdicional.bind(this)
+        this.getAllProductos = this.getAllProductos.bind(this)
     }
 
     castConceptos(){
@@ -78,10 +86,9 @@ class CrearTarifa extends Component {
             const { select } = this.props
             console.log(select)
             select.m_arrArConceptos.forEach( element =>{
-                var ivaTraslada = []
-                var ivaRetiene = []
-
-                todosConceptos.push({
+                let ivaTraslada = []
+                let ivaRetiene = []
+                const concept = {
                     idConcepto : element.m_nIdConceptosFacturacion,
                     importe: element.m_cImporte,
                     retiene: element.m_nIdImpuestoRetiene,
@@ -93,63 +100,16 @@ class CrearTarifa extends Component {
                     nombreConcepto: element.m_sConcepto,
                     tipoCalculo: element.m_nIdTipoCalculo,
                     agregadoDesde: element.m_nIdAgregadoDesde
-                })
+                }
+                todosConceptos.push(concept)
                 if (element.m_nIdAgregadoDesde == 0){
-                    conceptosAdicionales.push({
-                        idConcepto : element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeRet: element.m_cImporteRetiene,
-                        importeIVA: element.m_cImporteIva,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo,
-                        agregadoDesde: element.m_nIdAgregadoDesde
-                    })
+                    conceptosAdicionales.push(concept)
                 }else if (element.m_nIdAgregadoDesde == 1){
-                    conceptosManiobra.push({
-                        idConcepto : element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeRet: element.m_cImporteRetiene,
-                        importeIVA: element.m_cImporteIva,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo,
-                        agregadoDesde: element.m_nIdAgregadoDesde
-                    })
+                    conceptosManiobra.push(concept)
                 }else if (element.m_nIdAgregadoDesde == 2){
-                    conceptosEntrega.push({
-                        idConcepto : element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeRet: element.m_cImporteRetiene,
-                        importeIVA: element.m_cImporteIva,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo,
-                        agregadoDesde: element.m_nIdAgregadoDesde
-                    })
+                    conceptosEntrega.push(concept)
                 }else if (element.m_nIdAgregadoDesde == 3){
-                    conceptosRecoleccion.push({
-                        idConcepto : element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeRet: element.m_cImporteRetiene,
-                        importeIVA: element.m_cImporteIva,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo,
-                        agregadoDesde: element.m_nIdAgregadoDesde
-                    })
+                    conceptosRecoleccion.push(concept)
                 }
 
                 ivaTraslada = getUniqueListBy(todosConceptos, "traslada").map(i => i.traslada);
@@ -172,6 +132,7 @@ class CrearTarifa extends Component {
     }
 
     componentDidMount() {
+        this.getAllProductos()
         this.getAllSucursales()
         this.getAllCiudades()
         this.getAllImpuestos()
@@ -218,7 +179,7 @@ class CrearTarifa extends Component {
         const { conceptosRecoleccion, todosConceptos,conceptosAdicionales, conceptosManiobra, conceptosEntrega } = this.state
         let ivaTraslada = [];
         let ivaRetiene = [];
-        todosConceptos.push({
+        const concept = {
             idConcepto : data.concepto.m_nIdConceptosFacturacion,
             concepto: data.concepto,
             importe: data.importe,
@@ -230,73 +191,23 @@ class CrearTarifa extends Component {
             rangoMaximo: data.rangoMaximo,
             nombreConcepto: data.concepto.m_sConcepto,
             tipoCalculo: data.tipoCalculo,
-            agregadoDesde: data.agregadoDesde
-        })
+            agregadoDesde: data.agregadoDesde,
+            tipoMedida: data.tipoMedida
+        }
+        todosConceptos.push(concept)
         ivaTraslada = getUniqueListBy(todosConceptos, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(todosConceptos, "retiene").map(i => i.retiene);
         if (data.agregadoDesde == 0){
-            conceptosAdicionales.push({
-                idConcepto : data.concepto.m_nIdConceptosFacturacion,
-                concepto: data.concepto,
-                importe: data.importe,
-                retiene: data.retiene,
-                traslada: data.traslada,
-                importeRet: data.importeRet,
-                importeIVA: data.importeIVA,
-                rangoMinimo: data.rangoMinimo,
-                rangoMaximo: data.rangoMaximo,
-                nombreConcepto: data.concepto.m_sConcepto,
-                tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde
-            })
+            conceptosAdicionales.push(concept)
             this.setState({ conceptosAdicionales: conceptosAdicionales, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }else if (data.agregadoDesde == 1){
-            conceptosManiobra.push({
-                idConcepto : data.concepto.m_nIdConceptosFacturacion,
-                concepto: data.concepto,
-                importe: data.importe,
-                retiene: data.retiene,
-                traslada: data.traslada,
-                importeRet: data.importeRet,
-                importeIVA: data.importeIVA,
-                rangoMinimo: data.rangoMinimo,
-                rangoMaximo: data.rangoMaximo,
-                nombreConcepto: data.concepto.m_sConcepto,
-                tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde
-            })
+            conceptosManiobra.push(concept)
             this.setState({ conceptosManiobra: conceptosManiobra, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }else if (data.agregadoDesde == 2){
-            conceptosEntrega.push({
-                idConcepto : data.concepto.m_nIdConceptosFacturacion,
-                concepto: data.concepto,
-                importe: data.importe,
-                retiene: data.retiene,
-                traslada: data.traslada,
-                importeRet: data.importeRet,
-                importeIVA: data.importeIVA,
-                rangoMinimo: data.rangoMinimo,
-                rangoMaximo: data.rangoMaximo,
-                nombreConcepto: data.concepto.m_sConcepto,
-                tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde
-            })
+            conceptosEntrega.push(concept)
             this.setState({ conceptosEntrega: conceptosEntrega, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }else if (data.agregadoDesde == 3){
-            conceptosRecoleccion.push({
-                idConcepto : data.concepto.m_nIdConceptosFacturacion,
-                concepto: data.concepto,
-                importe: data.importe,
-                retiene: data.retiene,
-                traslada: data.traslada,
-                importeRet: data.importeRet,
-                importeIVA: data.importeIVA,
-                rangoMinimo: data.rangoMinimo,
-                rangoMaximo: data.rangoMaximo,
-                nombreConcepto: data.concepto.m_sConcepto,
-                tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde
-            })
+            conceptosRecoleccion.push(concept)
             this.setState({ conceptosRecoleccion: conceptosRecoleccion, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }
 
@@ -419,13 +330,40 @@ class CrearTarifa extends Component {
 
     }
 
+    getAllProductos(){
+        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
+        axios.get(url, { headers }).then(respuesta => {
+            this.setState({ dataProductos: respuesta.data, dataProductosTemp: respuesta.data, agregar: "Agregar" })
+            if (this.props.edit) {
+                const { select } = this.props
+                this.state.dataProductosTemp = respuesta.data
+                select.m_arrArProductos.forEach((p) => {
+                    this.state.dataProductosTemp = this.state.dataProductosTemp.filter((f) => f.m_nIdProducto != p.m_nIdProducto)
+                })
+                this.setState({
+                    dataProductosSeleccionados: select.m_arrArProductos,
+                    dataProductosTemp: this.state.dataProductosTemp
+                })
+            }
+
+        });
+    }
+
+    actualizarProductos = (todosProductos, productosSeleccionados) => {
+        this.setState({
+            dataProductosTemp: todosProductos,
+            dataProductosSeleccionados: productosSeleccionados
+        })
+    }
+
     onSubmit(event) {
         event.preventDefault()
         this.props.onSubmit(this.state)
     }
 
     render() {
-        const { disabled, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, todosConceptos } = this.state
+        const { disabled, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, todosConceptos,
+            dataProductosTemp,dataProductosSeleccionados} = this.state
         let { consult, edit } = this.props
 
         if (!consult && !edit){
@@ -771,14 +709,16 @@ class CrearTarifa extends Component {
                                                 <Tab label="Concetos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
                                                 <Tab label="Maniobras" {...this.a11yProps(1)} disabled={!this.state.porRangos} />
                                                 <Tab label="Entrega" {...this.a11yProps(2)} disabled={!this.state.porRangos} />
-                                                <Tab label="Recolección" {...this.a11yProps(3)} disabled={!this.state.porRangos} />
+                                                {/*<Tab label="Recolección" {...this.a11yProps(3)} disabled={!this.state.porRangos} />*/}
+                                                <Tab label="Productos" {...this.a11yProps(6)}/>
                                                 <Tab label="Condiciones de Precios por Tipo de Cobro" {...this.a11yProps(4)} />
                                                 <Tab label="Condiciones de Precio por Tipo de Servicio" {...this.a11yProps(5)} />
+
                                             </Tabs>
 
                                             <TabPanel value={this.state.tab} index={0}>
                                                 {/*el filtrado por agregadoDesde está demas*/}
-                                                <ConceptosAdicionales consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosAdicionales} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoAdicional} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada} mostrarRangos={true}>
+                                                <ConceptosAdicionales consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosAdicionales} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoAdicional} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada} mostrarRangos={false}>
 
                                                 </ConceptosAdicionales>
                                             </TabPanel>
@@ -794,11 +734,19 @@ class CrearTarifa extends Component {
 
                                                 </ConceptosAdicionalesEntrega>
                                             </TabPanel>
-                                            <TabPanel value={this.state.tab} index={3}>
-                                                {/*el filtrado por agregadoDesde está demas*/}
+                                            {/*<TabPanel value={this.state.tab} index={3}>
+                                                el filtrado por agregadoDesde está demas
                                                 <ConceptosAdicionalesRecoleccion consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosRecoleccion} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoRecoleccion} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
 
                                                 </ConceptosAdicionalesRecoleccion>
+                                            </TabPanel>*/}
+                                            <TabPanel value={this.state.tab} index={3}>
+                                                <ProductosTarifa
+                                                    productos={dataProductosTemp}
+                                                    productosSeleccionados={dataProductosSeleccionados}
+                                                    actualizarProductos={this.actualizarProductos}
+                                                />
+
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={4}>
                                                 <TipoCobro consult={consult} tiposCobroSeleccionado={this.state.tiposCobroSeleccionado} handleChange={this.handleChangeChecboxTiposCobro} all={this.state.tiposCobroAll}>
@@ -810,7 +758,6 @@ class CrearTarifa extends Component {
 
                                                 </TipoServicio>
                                             </TabPanel>
-
                                         </div>
                                         :
                                         <div>
