@@ -222,6 +222,7 @@ class Tarifas extends Component {
                 m_nIdAgregadoDesde: c.agregadoDesde,
                 m_nIdTipoMedida: c.tipoMedida
             })),
+            m_arrArProductos: data.dataProductosSeleccionados,
             m_nCreadoPOr: localStorage.getItem("UsuarioId"),
             m_nModificadoPor: localStorage.getItem("UsuarioId")
         }

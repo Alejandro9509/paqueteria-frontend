@@ -311,7 +311,7 @@ class EscribirConvenio extends Component {
         const { conceptosRecoleccion, todosConceptos,conceptosAdicionales, conceptosManiobra, conceptosEntrega } = this.state
         let ivaTraslada = [];
         let ivaRetiene = [];
-        todosConceptos.push({
+        const concept = {
             idConcepto : data.concepto.m_nIdConceptosFacturacion,
             concepto: data.concepto,
             importe: data.importe,
@@ -325,76 +325,21 @@ class EscribirConvenio extends Component {
             tipoCalculo: data.tipoCalculo,
             agregadoDesde: data.agregadoDesde,
             tipoMedida: data.tipoMedida
-        })
+        }
+        todosConceptos.push(concept)
         ivaTraslada = getUniqueListBy(todosConceptos, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(todosConceptos, "retiene").map(i => i.retiene);
         if (data.agregadoDesde == 0){
-            conceptosAdicionales.push({
-                idConcepto : data.concepto.m_nIdConceptosFacturacion,
-                concepto: data.concepto,
-                importe: data.importe,
-                retiene: data.retiene,
-                traslada: data.traslada,
-                importeRet: data.importeRet,
-                importeIVA: data.importeIVA,
-                rangoMinimo: data.rangoMinimo,
-                rangoMaximo: data.rangoMaximo,
-                nombreConcepto: data.concepto.m_sConcepto,
-                tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde,
-                tipoMedida: data.tipoMedida
-            })
+            conceptosAdicionales.push(concept)
             this.setState({ conceptosAdicionales: conceptosAdicionales, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }else if (data.agregadoDesde == 1){
-            conceptosManiobra.push({
-                idConcepto : data.concepto.m_nIdConceptosFacturacion,
-                concepto: data.concepto,
-                importe: data.importe,
-                retiene: data.retiene,
-                traslada: data.traslada,
-                importeRet: data.importeRet,
-                importeIVA: data.importeIVA,
-                rangoMinimo: data.rangoMinimo,
-                rangoMaximo: data.rangoMaximo,
-                nombreConcepto: data.concepto.m_sConcepto,
-                tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde,
-                tipoMedida: data.tipoMedida
-            })
+            conceptosManiobra.push(concept)
             this.setState({ conceptosManiobra: conceptosManiobra, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }else if (data.agregadoDesde == 2){
-            conceptosEntrega.push({
-                idConcepto : data.concepto.m_nIdConceptosFacturacion,
-                concepto: data.concepto,
-                importe: data.importe,
-                retiene: data.retiene,
-                traslada: data.traslada,
-                importeRet: data.importeRet,
-                importeIVA: data.importeIVA,
-                rangoMinimo: data.rangoMinimo,
-                rangoMaximo: data.rangoMaximo,
-                nombreConcepto: data.concepto.m_sConcepto,
-                tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde,
-                tipoMedida: data.tipoMedida
-            })
+            conceptosEntrega.push(concept)
             this.setState({ conceptosEntrega: conceptosEntrega, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }else if (data.agregadoDesde == 3){
-            conceptosRecoleccion.push({
-                idConcepto : data.concepto.m_nIdConceptosFacturacion,
-                concepto: data.concepto,
-                importe: data.importe,
-                retiene: data.retiene,
-                traslada: data.traslada,
-                importeRet: data.importeRet,
-                importeIVA: data.importeIVA,
-                rangoMinimo: data.rangoMinimo,
-                rangoMaximo: data.rangoMaximo,
-                nombreConcepto: data.concepto.m_sConcepto,
-                tipoCalculo: data.tipoCalculo,
-                agregadoDesde: data.agregadoDesde,
-                tipoMedida: data.tipoMedida
-            })
+            conceptosRecoleccion.push(concept)
             this.setState({ conceptosRecoleccion: conceptosRecoleccion, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         }
 
