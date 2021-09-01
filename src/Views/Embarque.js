@@ -113,7 +113,7 @@ window.jQuery = window.$ = $;
 
 const styles = {
     paqueteCarrusel: {
-        height: "300px !important",
+        height: "330px !important",
     },
     sobreCarrusel: {
         height: "100px !important",
@@ -257,6 +257,7 @@ function Embarque(props) {
                 m_nCantidad: "",
                 m_nTipo: 2,
                 m_sObservaciones: "",
+                m_nIdProducto:'',
             },
         ],
         sobres: [
@@ -546,6 +547,7 @@ function Embarque(props) {
             }
         },
     ]);
+    const [dataProductos, setDataProductos] = useState([])
 
     const history = useHistory();
 
@@ -1225,6 +1227,7 @@ function Embarque(props) {
             paq["m_xVolumen"] = paq.m_rVolumen;
             paq["m_nIdTIpoEmpaque"] = paq.m_nIdTipoEmbalaje;
             paq["m_cValorDeclarado"] = paq.m_cyValorDeclarado;
+            paq["producto"] = dataProductos.find((pd) => pd.m_nIdProducto == paq.m_nIdProducto)
         })
         m_parrSobres.forEach(sobre => {
             sobre["m_nTipo"] = 1
@@ -1408,6 +1411,7 @@ function Embarque(props) {
 
         respuesta.data.m_arrPaquetes.forEach(p => {
             p["m_nCantidad"] = p.ctd
+            p["producto"] = dataProductos.find((pd) => pd.m_nIdProducto == p.m_nIdProducto)
         })
 
         setState(state => {
@@ -1743,6 +1747,7 @@ function Embarque(props) {
         getTipoCambio()
         getFormatosImpresion()
         getAllClientes()
+        getAllProductos()
     }
 
     async function getAllEmbarque() {
@@ -2456,6 +2461,8 @@ function Embarque(props) {
             m_nCantidad: "",
             m_nTipo: 2,
             m_sObservaciones: "",
+            producto:'',
+            m_nIdProducto: "",
         });
         console.log(paquetes);
         setState({
@@ -2509,6 +2516,23 @@ function Embarque(props) {
         });
     };
 
+    const handleChangePaqueteProducto = (event, index, newValue) => {
+        let {paquetes} = state;
+        paquetes[index][event.target.name] = newValue;
+        paquetes[index].m_nIdProducto = newValue.m_nIdProducto
+        paquetes[index].m_rLargo = newValue.m_xLargo
+        paquetes[index].m_rAlto = newValue.m_xAlto
+        paquetes[index].m_rAncho = newValue.m_xAncho
+        paquetes[index].m_rPeso = newValue.m_xPeso
+        paquetes[index].m_nIdTipoEmbalaje = newValue.m_nIdEmbalaje
+        paquetes[index].m_sDescripcion = newValue.m_sDescripcion
+        paquetes[index].m_rVolumen = paquetes[index].m_rLargo * paquetes[index].m_rAlto * paquetes[index].m_rAncho;
+        setState({
+            ...state,
+            paquetes: paquetes,
+        });
+    };
+
     const handleChangeSobre = (event, index) => {
         var {sobres} = state;
         sobres[index][event.target.name] = event.target.value;
@@ -2518,6 +2542,13 @@ function Embarque(props) {
         });
     };
 
+    const getAllProductos = () => {
+        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
+        axios.get(url, { headers }).then(respuesta => {
+            setDataProductos(respuesta.data)
+        });
+    }
+
     const framesPaquete = state.paquetes.map((p, index) => {
         return (
             <div key={`paquete${index}`}>
@@ -2525,6 +2556,35 @@ function Embarque(props) {
                     <h4>
                         <strong>{`Paquete #${index + 1}`}</strong>
                     </h4>
+                </div>
+
+                <div className="col-sm-4 col-md-12 unit">
+                    <div className="input">
+                        <Autocomplete
+                            value={state.paquetes[index].producto}
+                            freeSolo
+                            onChange={(event, newValue) => handleChangePaqueteProducto(event, index, newValue)}
+                            disableClearable
+                            forcePopupIcon={false}
+                            options={dataProductos}
+                            disabled={state.agregar === "Consultar"}
+                            getOptionLabel={(option) => `${option.m_sDescripcion}`}
+                            variant="outlined"
+                            name={"producto"}
+                            style={{
+                                transform: "translate(14px, 10px) scale(1) !important"
+                            }}
+                            renderInput={(params) =>
+                                <TextField
+                                    variant="outlined"
+                                    label="Producto"
+                                    margin="dense"
+                                    required
+                                    {...params}
+                                />
+                            }
+                        />
+                    </div>
                 </div>
 
                 <div className="col-sm-4 col-md-2-5 unit">
