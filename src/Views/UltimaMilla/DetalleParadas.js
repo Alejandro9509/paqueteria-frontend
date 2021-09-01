@@ -11,9 +11,14 @@ import {
     List,
     ListItem,
     ListItemText, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-    TextField,
-    Typography
+    TextField, ButtonGroup,
+    Typography, Tooltip
 } from "@material-ui/core";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import DeleteIcon from '@material-ui/icons/Delete';
+import ReorderIcon from '@material-ui/icons/Reorder';
+import CachedIcon from '@material-ui/icons/Cached';
 import {ReactComponent as ParadasIcono} from "../../iconos/Mapa/paradas.svg";
 import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendario.svg";
 import MessageIcon from "@material-ui/icons/Message";
@@ -43,6 +48,7 @@ class DetalleParadas extends Component {
     }
 
     searchRepartidor(event) {
+        event.stopPropagation()
         event.preventDefault()
         if (this.state.searchText === "") {
             this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla})
@@ -55,6 +61,23 @@ class DetalleParadas extends Component {
     openDetail(index) {
         this.setState({indexOpen: index === this.state.indexOpen ? -1 : index})
 
+    }
+
+    deleteParada(idParada){
+            confirmAlert({
+                title: 'Confirmación',
+                message: '¿Está segura(o) que desea eliminar la parada?',
+                buttons: [
+                    {
+                        label: 'Yes',
+                        onClick: () => alert('Click Yes')
+                    },
+                    {
+                        label: 'No',
+                        onClick: () => alert('Click No')
+                    }
+                ]
+            });
     }
 
     render() {
@@ -90,7 +113,7 @@ class DetalleParadas extends Component {
                         style={{
                             color: "black",
                             borderRadius: "10px",
-                            width: "450px",
+                            width: "600px",
                             pointerEvents: "auto",
                             height: window.innerHeight - 100,
                             backgroundColor: "white",
@@ -129,12 +152,12 @@ class DetalleParadas extends Component {
                             <Grid item md={6} sm={12}>
                                 <div style={{height: "150px", padding: "10px 0 10px 0"}}>
                                     <PieChart
-                                        label={({ dataEntry }) => `${allGuias.length} \n Paradas`}
+                                        label={({dataEntry}) => `${allGuias.length} \n Paradas`}
                                         lineWidth={20}
                                         totalValue={allGuias.length}
                                         labelStyle={{
                                             fontSize: '10px',
-                                            textAlign:"center",
+                                            textAlign: "center",
                                             fill: 'black',
                                         }}
                                         labelPosition={0}
@@ -160,7 +183,8 @@ class DetalleParadas extends Component {
 
                             </Grid>
                             <Grid item md={6} sm={12}>
-                                <Grid container spacing={1} justify={"space-between"} style={{paddingTop: "10px", paddingRight: "10px", height:"100%"}}>
+                                <Grid container spacing={1} justify={"space-between"}
+                                      style={{paddingTop: "10px", paddingRight: "10px", height: "100%"}}>
                                     <Grid item sm={12}>
                                         <div style={{
                                             backgroundColor: "#F5E23E",
@@ -168,7 +192,8 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Pendientes </strong> {allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length} de {totalPaquetes} <strong>{parseInt((allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Pendientes </strong> {allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length} de {totalPaquetes}
+                                            <strong>{parseInt((allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -178,7 +203,8 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Exitosas </strong> {allGuias.filter(g => g.m_nIdEstatusGuia === 7).length} de {totalPaquetes} <strong> {parseInt((allGuias.filter(g => g.m_nIdEstatusGuia === 7).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Exitosas </strong> {allGuias.filter(g => g.m_nIdEstatusGuia === 7).length} de {totalPaquetes}
+                                            <strong> {parseInt((allGuias.filter(g => g.m_nIdEstatusGuia === 7).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -188,7 +214,8 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Fallidas </strong> {allGuias.filter(g => g.m_nIdEstatusGuia === 8).length} de {totalPaquetes} <strong>{parseInt((allGuias.filter(g => g.m_nIdEstatusGuia === 8).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Fallidas </strong> {allGuias.filter(g => g.m_nIdEstatusGuia === 8).length} de {totalPaquetes}
+                                            <strong>{parseInt((allGuias.filter(g => g.m_nIdEstatusGuia === 8).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                 </Grid>
@@ -217,7 +244,10 @@ class DetalleParadas extends Component {
                                         return (
                                             <div key={r.m_sNombreOperador}>
                                                 <ListItem button
-                                                          onClick={() => this.openDetail(index)}>
+                                                          onClick={(e) => {
+                                                              e.stopPropagation();
+                                                              this.openDetail(index)
+                                                          }}>
                                                     <ListItemText primary={
                                                         <Grid container spacing={1} alignItems={"baseline"}
                                                               justify={"space-between"}>
@@ -248,20 +278,22 @@ class DetalleParadas extends Component {
                                                 </ListItem>
                                                 <Collapse in={this.state.indexOpen === index} timeout="auto"
                                                           unmountOnExit>
-                                                    <div style={{
+                                                    <div align={"right"} style={{
                                                         borderRadius: "5px",
                                                         margin: "5px",
                                                     }}>
+                                                        <Button variant={"contained"} color={"primary"}>Agregar Parada</Button>
                                                         <List component="div" disablePadding style={{
-                                                            padding: "10px",
+                                                            padding: "5px",
                                                             height: "400px",
                                                             overflow: "auto"
                                                         }}>
 
                                                             <ListItem style={{
                                                                 borderRadius: "5px",
-                                                                padding: "10px",
+                                                                padding: "5px",
                                                             }}>
+
                                                                 <TableContainer style={{
                                                                     height: "100%",
                                                                     padding: "0px",
@@ -288,6 +320,12 @@ class DetalleParadas extends Component {
                                                                                         fontWeight: "bold"
                                                                                     }}
                                                                                     align="left">Entrega</TableCell>
+                                                                                <TableCell
+                                                                                    style={{
+                                                                                        borderBottom: "none",
+                                                                                        fontWeight: "bold"
+                                                                                    }}
+                                                                                    align="center">Acciones</TableCell>
                                                                             </TableRow>
                                                                         </TableHead>
 
@@ -297,14 +335,20 @@ class DetalleParadas extends Component {
                                                                                     return (
                                                                                         <TableRow key={index}>
                                                                                             <TableCell
-                                                                                                style={{borderBottom: "none", display: "inline-block"}}
+                                                                                                style={{
+                                                                                                    borderBottom: "none",
+                                                                                                    display: "inline-block"
+                                                                                                }}
                                                                                                 align="left">
-                                                                                                {index + 1} {g.m_nFolioGuia}
+                                                                                                {index + 1}-{g.m_sFolio}
                                                                                             </TableCell>
                                                                                             <TableCell
                                                                                                 style={{borderBottom: "none"}}
                                                                                                 align="left">
-                                                                                                Sin definir
+                                                                                                {
+                                                                                                    g.m_bEsRecoleccion &&
+                                                                                                    g.m_bRecoleccionConCita ? "" : "Sin Cita"
+                                                                                                }
                                                                                             </TableCell>
                                                                                             <TableCell
                                                                                                 style={{borderBottom: "none"}}
@@ -324,6 +368,40 @@ class DetalleParadas extends Component {
                                                                                                     "Pendiente"
                                                                                                     }
                                                                                                 </div>
+                                                                                            </TableCell>
+                                                                                            <TableCell
+                                                                                                style={{borderBottom: "none"}}
+                                                                                                align="left">
+                                                                                                <ButtonGroup
+                                                                                                    size="small"
+                                                                                                    disableElevation
+                                                                                                    variant="contained"
+                                                                                                    color="primary">
+                                                                                                    <IconButton
+                                                                                                        aria-label="reorder">
+                                                                                                        <Tooltip
+                                                                                                            title={"Cambiar de posición"}>
+                                                                                                            <ReorderIcon
+                                                                                                                fontSize="default"/>
+                                                                                                        </Tooltip>
+                                                                                                    </IconButton>
+                                                                                                    <IconButton
+                                                                                                        aria-label="reorder">
+                                                                                                        <Tooltip
+                                                                                                            title={"Remplazar"}>
+                                                                                                            <CachedIcon
+                                                                                                                fontSize="default"/>
+                                                                                                        </Tooltip>
+                                                                                                    </IconButton>
+                                                                                                    <IconButton
+                                                                                                        aria-label="delete">
+                                                                                                        <Tooltip
+                                                                                                            title={"Eliminar"}>
+                                                                                                            <DeleteIcon onClick={() => this.deleteParada(g.m_nId)}
+                                                                                                                fontSize="default"/>
+                                                                                                        </Tooltip>
+                                                                                                    </IconButton>
+                                                                                                </ButtonGroup>
                                                                                             </TableCell>
                                                                                         </TableRow>
                                                                                     )

@@ -501,7 +501,7 @@ function Informes({history}) {
         tipoModal: 0,
         IdInforme: 0,
         FolioInforme: 0,
-        fechaHora: "",
+        fechaHora: `${new Date().getFullYear()}-${`${new Date().getMonth() +  1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
         DerechoBorrar: 151,
         EstatusInforme: 0,
         IdViaje: {},
@@ -514,8 +514,8 @@ function Informes({history}) {
         PlacasRemolque2: "",
         PlacasDolly: "",
         IdTipoUnidad: {},
-        IdCiudadDestino: {},
-        IdCiudadOrigen: {},
+        IdCiudadDestino: null,
+        IdCiudadOrigen: null,
         IdRuta: 0,
         IdSucursal: localStorage.getItem("Sucursal"),
         CreadoPor: localStorage.getItem("UsuarioId"),
@@ -628,6 +628,7 @@ function Informes({history}) {
     }
 
     const handleSelectSucursalEmisora = event => {
+        event.preventDefault()
         setState({
             ...state,
             sucursalEmisora: event.target.value
@@ -635,6 +636,7 @@ function Informes({history}) {
 
     }
     const handleSelectSucursalReceptora = event => {
+        event.preventDefault()
         setState({
             ...state,
             sucursalReceptora: event.target.value
@@ -643,6 +645,7 @@ function Informes({history}) {
     }
 
     const handleSelectEstatus = event => {
+        event.preventDefault()
         setState({
             ...state,
             EstatusInforme: event.target.value
@@ -1113,8 +1116,8 @@ function Informes({history}) {
 
             IdEstatusInforme: 0,
             IdViaje: 0,
-            IdSucursalEmisora: 0,
-            IdSucursalReceptora: 0,
+            sucursalEmisora: 0,
+            sucursalReceptora: 0,
             IdOperador: {},
             IdUnidad: {},
             IdTipoUnidad: {},
@@ -1208,7 +1211,10 @@ function Informes({history}) {
     function getAllGuiasFrom(cubicar) {
         if (!cubicar) {
             obtenerGuiaPendientes(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad).then((respuesta) => {
-                setDataGuias(respuesta.data);
+                if (respuesta.data !== "Vacio") {
+                    setDataGuias(respuesta.data);
+                }
+
             })
         } else {
             obtenerGuiasFiltro(0, 0, 0, 4).then(async (respuesta) => {
@@ -1291,7 +1297,7 @@ function Informes({history}) {
     }
 
     useEffect(value => {
-        if (state.IdCiudadOrigen && state.IdCiudadDestino && state.IdRuta) {
+        if (state.IdCiudadOrigen && state.IdCiudadDestino && state.IdRuta != 0) {
             getAllGuiasFrom();
 
         }
@@ -1318,8 +1324,8 @@ function Informes({history}) {
             fechaHora: data.m_sFechayHora,
             IdCiudadDestino: {},
             IdCiudadOrigen: {},
-            IdSucursalEmisora: {},
-            IdSucursalReceptora: {},
+            sucursalEmisora: 0,
+            sucursalReceptora: 0,
             IdRemolque1: {},
             IdRemolque2: {},
             IdTipoUnidad: {},
@@ -1347,12 +1353,13 @@ function Informes({history}) {
             setDataGuias(data.m_arrClsProGuia)
             setState({
                 ...state,
+
                 fechaHora: data.m_sFechayHora,
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadOrigen),
                 IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
-                IdSucursalEmisora: dataSucursal.find(c => c.m_nIdSucursal === data.m_nIdSucursalEmisora),
-                IdSucursalReceptora: dataSucursal.find(c => c.m_nIdSucursal === data.m_nIdSucursalReceptora),
+                sucursalEmisora: data.m_nIdSucursalEmisora,
+                sucursalReceptora: data.m_nIdSucursalReceptora,
                 IdRemolque1: dataUnidadesRem.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
                 IdRemolque2: dataUnidadesRem.find(c => c.m_nIdUnidad === data.m_nIdRemolque2),
                 IdTipoUnidad: dataUnidadesDol.find(c => c.m_nIdUnidad === data.m_nIdDolly),
@@ -1362,6 +1369,7 @@ function Informes({history}) {
                 PlacasRemolque2: data.m_sPlacasRemolque2,
                 PlacasDolly: data.m_sPlacasDolly,
                 FolioInforme: data.m_sFolioInforme,
+                EstatusInforme: data.m_nIdEstatusInforme,
                 agregar: "Modificar"
             });
 
@@ -1382,8 +1390,8 @@ function Informes({history}) {
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
-                IdSucursalEmisora: dataSucursal.find(c => c.m_nIdSucursal === data.m_nIdSucursalEmisora),
-                IdSucursalReceptora: dataSucursal.find(c => c.m_nIdSucursal === data.m_nIdSucursalReceptora),
+                sucursalEmisora: data.m_nIdSucursalEmisora,
+                sucursalReceptora: data.m_nIdSucursalReceptora,
                 IdRemolque1: dataUnidadesRem.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
                 IdRemolque2: dataUnidadesRem.find(c => c.m_nIdUnidad === data.m_nIdRemolque2),
                 IdTipoUnidad: dataUnidadesDol.find(c => c.m_nIdUnidad === data.m_nIdDolly),
@@ -1393,6 +1401,7 @@ function Informes({history}) {
                 PlacasRemolque2: data.m_sPlacasRemolque2,
                 PlacasDolly: data.m_sPlacasDolly,
                 FolioInforme: data.m_sFolioInforme,
+                EstatusInforme: data.m_nIdEstatusInforme,
                 agregar: "Consultar"
             });
 
@@ -1821,6 +1830,7 @@ function Informes({history}) {
                                                            onBlur={handleFolioInformeFiltro}
                                                            className="form-control"
                                                            type="text"
+
                                                            label="Folio Informe"
                                                            placeholder={state.folioInformeListado}
                                                            id="folioInformeListado"
@@ -1891,7 +1901,7 @@ function Informes({history}) {
                                 </div>
 
                                 <div className="row">
-                                    <div className="col-md-8">
+                                    <div className="col-md-7">
                                         <div className="widget-wrap">
                                             <div className="widget-container margin-top-0">
                                                 <div className="widget-content">
@@ -1906,11 +1916,6 @@ function Informes({history}) {
                                                         <div className="widget-content">
                                                             <div className="row">
                                                                 <div className="col-md-12">
-                                                                    <form
-                                                                        action="#"
-                                                                        className="j-forms"
-                                                                        noValidate
-                                                                    >
                                                                         <div className="form-content">
                                                                             <div className="row">
                                                                                 {/*****************************************Sucursal**********************************************************/}
@@ -1948,20 +1953,24 @@ function Informes({history}) {
                                                                                 </div>
                                                                             </div>
                                                                             {/*****************************************Folio************************************************************/}
-                                                                            <div className="col-sm-12 col-md-3 unit">
+                                                                            <div className="col-sm-6 col-md-4 col-xs-12 unit">
                                                                                 <div className="input">
                                                                                     <TextField variant="outlined"
                                                                                                margin="dense"
                                                                                                label="Folio"
                                                                                                className="form-control"
                                                                                                type="text"
+                                                                                               InputLabelProps={{
+                                                                                                   shrink: true,
+                                                                                               }}
+                                                                                               value={state.FolioInforme}
                                                                                                id="Folio"
                                                                                                disabled
                                                                                     />
                                                                                 </div>
                                                                             </div>
                                                                             {/*****************************************Fecha*******************************************************/}
-                                                                            <div className="col-sm-12 col-md-6 unit">
+                                                                            <div className="col-sm-6 col-md-4 unit">
                                                                                 <div className="input">
                                                                                     <TextField variant="outlined"
                                                                                                margin="dense"
@@ -1984,7 +1993,7 @@ function Informes({history}) {
                                                                             {/*****************************************Hora*******************************************************/}
 
                                                                             {/*****************************************Oficina Emisora***************************************************/}
-                                                                            <div className="col-sm-6 col-md-3 unit">
+                                                                            <div className="col-sm-6 col-md-4 unit">
 
                                                                                 <label className="input select">
                                                                                     <FormControl fullWidth
@@ -1998,11 +2007,10 @@ function Informes({history}) {
                                                                                             label="Oficina Emisora"
                                                                                             className="form-control"
                                                                                             required
+                                                                                            value={state.sucursalEmisora}
                                                                                             id="sucursalEmisora"
                                                                                             onChange={handleSelectSucursalEmisora}
                                                                                         >
-                                                                                            <option value="0">Todas
-                                                                                            </option>
                                                                                             {dataSucursal.map(
                                                                                                 (sucursalEmisora) => (
                                                                                                     <option
@@ -2024,7 +2032,7 @@ function Informes({history}) {
                                                                                 </label>
                                                                             </div>
                                                                             {/*****************************************Oficina Receptora*************************************************/}
-                                                                            <div className="col-sm-6 col-md-3 unit">
+                                                                            <div className="col-sm-6 col-md-4 unit">
 
                                                                                 <label className="input select">
                                                                                     <FormControl fullWidth
@@ -2038,11 +2046,10 @@ function Informes({history}) {
                                                                                             label="Oficina Receptora"
                                                                                             className="form-control"
                                                                                             required
+                                                                                            value={state.sucursalReceptora}
                                                                                             id="sucursalReceptora"
                                                                                             onChange={handleSelectSucursalReceptora}
                                                                                         >
-                                                                                            <option value="0">Todas
-                                                                                            </option>
                                                                                             {dataSucursal.map(
                                                                                                 (sucursalReceptora) => (
                                                                                                     <option
@@ -2064,7 +2071,7 @@ function Informes({history}) {
                                                                                 </label>
                                                                             </div>
                                                                             {/*****************************************Estatus de Entrega*************************************************/}
-                                                                            <div className="col-sm-6 col-md-3 unit">
+                                                                            <div className="col-sm-6 col-md-4 unit">
 
                                                                                 <label className="input select">
                                                                                     <FormControl required fullWidth
@@ -2741,7 +2748,6 @@ function Informes({history}) {
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </form>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2953,7 +2959,7 @@ function Informes({history}) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="col-md-4">
+                                    <div className="col-md-5">
                                         <div className="widget-wrap">
                                             <div className="widget-header block-header margin-bottom-0 clearfix">
                                                 <div className="pull-left">
@@ -2967,6 +2973,7 @@ function Informes({history}) {
                                                             <form action="#" className="j-forms" noValidate>
                                                                 <div className="form-content">
                                                                     <div style={{
+                                                                        padding:"10px",
                                                                         maxHeight: "500px",
                                                                         overflow: "scroll"
                                                                     }}>
@@ -3161,7 +3168,7 @@ function Informes({history}) {
                                                                             }}
                                                                         >
                                                                             <Grid container>
-                                                                                <Grid
+                                                                                {/*<Grid
                                                                                     item
                                                                                     sm={6}
                                                                                     style={{
@@ -3182,8 +3189,8 @@ function Informes({history}) {
                                                                                     }}
                                                                                 >
                                                                                     ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 3).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
-                                                                                </Grid>
-                                                                                <Grid
+                                                                                </Grid>*/}
+                                                                                {/*<Grid
                                                                                     item
                                                                                     sm={6}
                                                                                     style={{
@@ -3204,31 +3211,31 @@ function Informes({history}) {
                                                                                     }}
                                                                                 >
                                                                                     ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 5).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
-                                                                                </Grid>
-                                                                                <Grid
-                                                                                    item
-                                                                                    sm={6}
-                                                                                    style={{
-                                                                                        justifyContent: "left",
-                                                                                        alignItems: "left",
-                                                                                        textAlign: "left",
-                                                                                    }}
-                                                                                >
-                                                                                    Total Pagado en Mostrador
-                                                                                </Grid>
-                                                                                <Grid
-                                                                                    item
-                                                                                    sm={6}
-                                                                                    style={{
-                                                                                        justifyContent: "right",
-                                                                                        alignItems: "right",
-                                                                                        textAlign: "right",
-                                                                                    }}
-                                                                                >
-                                                                                    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
-                                                                                </Grid>
+                                                                                </Grid>*/}
+                                                                                {/*<Grid*/}
+                                                                                {/*    item*/}
+                                                                                {/*    sm={6}*/}
+                                                                                {/*    style={{*/}
+                                                                                {/*        justifyContent: "left",*/}
+                                                                                {/*        alignItems: "left",*/}
+                                                                                {/*        textAlign: "left",*/}
+                                                                                {/*    }}*/}
+                                                                                {/*>*/}
+                                                                                {/*    Total Pagado en Mostrador*/}
+                                                                                {/*</Grid>*/}
+                                                                                {/*<Grid*/}
+                                                                                {/*    item*/}
+                                                                                {/*    sm={6}*/}
+                                                                                {/*    style={{*/}
+                                                                                {/*        justifyContent: "right",*/}
+                                                                                {/*        alignItems: "right",*/}
+                                                                                {/*        textAlign: "right",*/}
+                                                                                {/*    }}*/}
+                                                                                {/*>*/}
+                                                                                {/*    ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 2).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}*/}
+                                                                                {/*</Grid>*/}
 
-                                                                                <Grid
+                                                                            {/*    <Grid
                                                                                     item
                                                                                     sm={6}
                                                                                     style={{
@@ -3249,7 +3256,7 @@ function Informes({history}) {
                                                                                     }}
                                                                                 >
                                                                                     ${dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).length == 0 && 0}{dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).length != 0 && dataGuias.filter((g) => g.select && g.m_nIdTIpoCobro === 7).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
-                                                                                </Grid>
+                                                                                </Grid>*/}
                                                                                 <Grid
                                                                                     item
                                                                                     sm={6}
@@ -3260,7 +3267,7 @@ function Informes({history}) {
                                                                                     }}
                                                                                 >
                                                                                     <b style={{fontWeight: "bold"}}>
-                                                                                        Total General
+                                                                                        Total Flete
                                                                                     </b>
                                                                                 </Grid>
                                                                                 <Grid

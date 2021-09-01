@@ -7,9 +7,10 @@ function ActualizarDiponibilidadEquipo(props) {
 
     useEffect(value => {
         getEstatusEquipoListado();
+        setEquipo(props.equipo)
     }, [])
 
-    const [equipo, setEquipo] = React.useState(props.equipo);
+    const [equipo, setEquipo] = React.useState(null);
     const [estatusEquipoListado, setEstatusEquipoListado] = React.useState([]);
 
     const handleEstatus = (event) => {

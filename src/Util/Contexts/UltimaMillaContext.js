@@ -43,7 +43,7 @@ async function convertData(trucks, guias, dateFilter) {
     array = array.concat((guias.map((p, index) => (
         {
             "$type": "CustomerSite",
-            "id": "Customer" + p.idGuia,
+            "id": "Customer" + index,
             "routeLocation": {
                 "$type": "OffRoadRouteLocation",
                 "offRoadCoordinate": {
@@ -78,19 +78,12 @@ async function obtenerGuiasUbicacion(paquetes) {
     var guias = []
     for (var i = 0; i < paquetes.length; i++) {
         var g = paquetes[i]
-        var location = await searchLocationGuia(g.m_sCiudadDestino,g.m_bEntregarMismoDomicilio ? g.m_sDomicilioDestinatario : g.m_sDomicilioEntrega, g.m_sCodigoPostalEntrega)
+        var location = await searchLocationGuia(g.m_bEsRecoleccion ? g.m_sCiudadOrigen :  g.m_sCiudadDestino,g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioRemitente,g.m_bEsRecoleccion ? g.m_sCodigoPostalRemitente :  g.m_sCodigoPostalDestinatario)
         guias.push({
-            idGuia: g.m_nIdGuia,
-            index: i,
-            folio: g.m_nFolioGuia,
-            IdSucursal: g.IdSucursal,
-            m_nIdCiudadDestino: g.m_nIdCiudadDestino,
-            m_nCiudadRemitente: g.m_nCiudadRemitente,
-            paquetes: g.m_nNoPaquetes,
+            ...g,
             lat: location.y,
             lng: location.x,
-            embarqueId: g.m_nIdEmbarque,
-            arrayPaquetes: g.m_arrClsDetalle
+            index: i
         })
     }
     ;
@@ -108,8 +101,8 @@ async function obtenerRutas(truck, guias, data) {
                     guias.map((p, index) => (
                         {
                             "$type": "VisitOrder",
-                            "id": p.idGuia,
-                            "locationId": "Customer" + p.idGuia,
+                            "id": index,
+                            "locationId": "Customer" + index,
                         }
                     )),
                 "fleet": {
@@ -152,7 +145,8 @@ function apiPoint(x, y) {
 function calcularRuta(points, sucursal) {
     var array = []
     array.push(apiPoint(sucursal.lng, sucursal.lat))
-    array = array.concat(points.map(p => apiPoint(p.lng, p.lat)))
+    console.log(points)
+    array = array.concat(points.map(p => apiPoint(parseFloat(p.m_sLongitud), parseFloat(p.m_sLatitud))))
     array.push(apiPoint(sucursal.lng, sucursal.lat))
     var result;
     trackPromise(
@@ -232,14 +226,16 @@ function searchLocationWeb(city, address, subdistrict, number) {
                 "houseNumber": number
             }
         }, (location) => {
-            if (location.results) {
-                if (location.results.length !== 0) {
-                    resolve(location.results[0].location.referenceCoordinate)
+            if (location) {
+                if (location.results) {
+                    if (location.results.length !== 0) {
+                        resolve(location.results[0].location.referenceCoordinate)
+                    } else {
+                        resolve({x: 0.0, y: 0.0})
+                    }
                 } else {
                     resolve({x: 0.0, y: 0.0})
                 }
-            } else {
-                resolve({x: 0.0, y: 0.0})
             }
         });
     })
@@ -276,12 +272,12 @@ function agregarRuta(tour, data) {
     }
     tour.unidades.forEach((u) => {
         var tempTour = tour.tour.tours.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
-        var guias = tour.paquetes.filter((p, index) => tempTour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === p.idGuia) != null)
+        var guias = tour.paquetes.filter((p, index) => tempTour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === index) != null)
         guias = ordenarGuiasPorRuta(tempTour, guias)
         ultimaMillaObject.rutas.push({
             idOperador: u.m_nIdOperador,
             idUnidad: u.m_nIdUnidad,
-            guias: guias.map(g => ({idGuia: g.idGuia, lat: g.lat, lng: g.lng, orden: g.orden}))
+            guias: guias.map(g => ({idGuia: g.m_nId, lat: g.lat, lng: g.lng, orden: g.orden, esRecoleccion: g.m_bEsRecoleccion}))
         })
     })
     data.zonasSeleccionada.forEach((z) => {
@@ -320,8 +316,8 @@ function ordenarGuiasPorRuta(tour, guias) {
     var result = []
     tour.trips[0].stops.forEach((item, index) => {
         var found = false;
-        guias = guias.filter(function (guia) {
-            if (!found && guia.idGuia == parseInt(item.tasks[0].orderId)) {
+        guias = guias.filter(function (guia, index) {
+            if (!found && index == parseInt(item.tasks[0].orderId)) {
                 guia.orden = index + 1
                 result.push(guia);
                 found = true;

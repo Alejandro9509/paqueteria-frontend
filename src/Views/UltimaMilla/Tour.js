@@ -5,6 +5,7 @@ import MarkerImage from '../../iconos/Mapa/sucursalMarcador.png';
 import L from "leaflet";
 import {calcularRuta, randomColor} from "../../Util/Contexts/UltimaMillaContext";
 import Marker from 'react-leaflet-enhanced-marker'
+import {Grid, Typography} from "@material-ui/core"
 
 
 
@@ -26,13 +27,13 @@ class Tour extends Component {
     getRoute() {
 
         var polygon = []
-        var guias = this.props.paquetes.filter((p, index) => this.props.tour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === p.idGuia) != null)
+        var guias = this.props.paquetes.filter((p, index) => this.props.tour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === index) != null)
 
         var result = []
         this.props.tour.trips[0].stops.forEach((item, index) => {
             var found = false;
-            guias = guias.filter(function (guia) {
-                if (!found && guia.idGuia == parseInt(item.tasks[0].orderId)) {
+            guias = guias.filter(function (guia, index) {
+                if (!found && index === parseInt(item.tasks[0].orderId)) {
                     result.push(guia);
                     found = true;
                     return false;
@@ -57,14 +58,38 @@ class Tour extends Component {
             <div style={{backgroundColor: "transparent"}}>
                 {
                     this.props.tour.trips[0].stops.map((s, index) => {
-                            const paquete = this.props.paquetes.find(p => parseInt(s.tasks[0].orderId) === p.idGuia)
+                            const paquete = this.props.paquetes.find(p => parseInt(s.tasks[0].orderId) === index)
                             console.log(paquete)
                             return (
                                 <Marker key={index}
                                         icon={<MarkerComponent color={this.props.tour.color} index={index + 1}/>}
                                         position={[paquete.lat, paquete.lng]}>
                                     <Popup>
-                                        {paquete.folio}
+                                        <Grid container spacing={1}>
+                                            <Grid item md={12}>
+                                                <Typography variant={"h2"}>{paquete.m_sFolio} - {paquete.m_bEsRecoleccion ? paquete.m_sEstatusRecoleccion : paquete.m_sEstatusEmbarque}</Typography>
+                                            </Grid>
+
+                                            <Grid item md={12}>
+                                                <Typography variant={"body2"} style={{fontWeight:"bold"}}>Datos de la {paquete.m_bEsRecoleccion ? "Recolección" : "Entrega"}</Typography>
+                                            </Grid>
+                                            <Grid item md={12}>
+                                                <Typography variant={"body1"} >{paquete.m_bEsRecoleccion ? paquete.m_sNombreRemitente : paquete.m_sNombreDestinatario}</Typography>
+                                            </Grid>
+                                            <Grid item md={12}>
+                                                <Typography variant={"body1"} >{paquete.m_bEsRecoleccion ? paquete.m_sDomicilioRemitente : paquete.m_sDomicilioDestinatario}</Typography>
+                                            </Grid>
+                                            <Grid item md={12}>
+                                                <Typography variant={"body1"} >{paquete.m_bEsRecoleccion ? paquete.m_sContactoRemitente : paquete.m_sContactoDestinatario}</Typography>
+                                            </Grid>
+                                            <Grid item md={12}>
+                                                <Typography variant={"body1"} >{paquete.m_bEsRecoleccion ? paquete.m_sTelefonoRemitente : paquete.m_sTelefonoDestinatario}</Typography>
+                                            </Grid>
+                                            <Grid item md={12}>
+                                                <Typography variant={"body1"} >No. Paquetes: {paquete.m_bEsRecoleccion ? paquete.m_parrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0) : paquete.m_arrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0)}</Typography>
+                                            </Grid>
+                                        </Grid>
+
                                     </Popup>
                                 </Marker>
                             )

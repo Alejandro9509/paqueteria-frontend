@@ -4216,7 +4216,6 @@ function Embarque(props) {
                                                                                         variant="outlined"
                                                                                         label="Zona"
                                                                                         margin="dense"
-                                                                                        required
                                                                                         {...params}
                                                                                     />
                                                                                 }

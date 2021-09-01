@@ -4,7 +4,20 @@ import Marker from "react-leaflet-enhanced-marker";
 import {Polyline, Popup} from "react-leaflet";
 import {calcularRuta} from "../../Util/Contexts/UltimaMillaContext";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
+import L from "leaflet";
+import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
+import {Grid, Typography} from "@material-ui/core";
 
+const MarkerIcon = new L.Icon({
+    iconUrl: MarkerImage,
+    iconRetinaUrl: MarkerImage,
+    iconAnchor: null,
+    popupAnchor: null,
+    shadowUrl: null,
+    shadowSize: null,
+    shadowAnchor: null,
+    iconSize: new L.Point(20, 20),
+});
 class TourUltimaMilla extends Component {
     constructor(props) {
         super(props);
@@ -31,37 +44,23 @@ class TourUltimaMilla extends Component {
         var polygon = []
         var guias = this.props.data.m_arrClsProGuia.sort((a, b) => a.m_nUltimaMillaOrden - b.m_nUltimaMillaOrden)
 
-        var result = guias.map(g => (
-            {
-                idGuia: g.m_nIdGuia,
-                folio: g.m_nFolioGuia,
-                IdSucursal: g.IdSucursal,
-                m_nIdCiudadDestino: g.m_nIdCiudadDestino,
-                m_nCiudadRemitente: g.m_nCiudadRemitente,
-                paquetes: g.m_nNoPaquetes,
-                lat: parseFloat(g.m_sLatitud),
-                lng: parseFloat(g.m_sLongitud),
-                embarqueId: g.m_nIdEmbarque,
-                arrayPaquetes: g.m_arrClsDetalle
-            }
-        ))
-        if (result.length !== 1) {
+
+        if (guias.length !== 0) {
             if (this.props.data.m_xlat !== 0 && this.props.data.m_xlng !== 0 ) {
-                calcularRuta(result, {lat:this.props.data.m_xlat, lng:this.props.data.m_xlng}).then((result) => {
+                calcularRuta(guias, {lat:this.props.data.m_xlat, lng:this.props.data.m_xlng}).then((result) => {
                     result.polyline.plain.polyline.map(c => {
                         polygon.push([c.y, c.x])
                     })
                     this.setState({polygon: polygon})
                 })
             }else {
-                calcularRuta(result, this.props.sucursal).then((result) => {
+                calcularRuta(guias, this.props.sucursal).then((result) => {
                     result.polyline.plain.polyline.map(c => {
                         polygon.push([c.y, c.x])
                     })
                     this.setState({polygon: polygon})
                 })
             }
-
         }
 
     }
@@ -75,9 +74,35 @@ class TourUltimaMilla extends Component {
                     this.props.data.m_arrClsProGuia.map((g, index) => {
                             return (
                                 <Marker key={index}
-                                        icon={<MarkerComponent color={this.props.data.color} index={g.m_nUltimaMillaOrden}/>}
+                                        icon={<MarkerComponent color={this.props.data.color} index={g.m_nUltimaMillaOrden + 1}/>}
                                         position={[parseFloat(g.m_sLatitud), parseFloat(g.m_sLongitud)]}>
-                                    <Popup>{g.m_nFolioGuia}</Popup>
+                                    <Popup>
+                                        <Grid container spacing={1}>
+                                            <Grid item md={12}>
+                                                <Typography variant={"h2"}>{g.m_sFolio} - {g.m_bEsRecoleccion ? g.m_sEstatusRecoleccion : g.m_sEstatusEmbarque}</Typography>
+                                            </Grid>
+
+                                            <Grid item md={12}>
+                                                <Typography variant={"body2"} style={{fontWeight:"bold"}}>Datos de la {g.m_bEsRecoleccion ? "Recolección" : "Entrega"}</Typography>
+                                            </Grid>
+                                            <Grid item md={12}>
+                                                <Typography variant={"body1"} >{g.m_bEsRecoleccion ? g.m_sNombreRemitente : g.m_sNombreDestinatario}</Typography>
+                                            </Grid>
+                                            <Grid item md={12}>
+                                                <Typography variant={"body1"} >{g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioDestinatario}</Typography>
+                                            </Grid>
+                                            <Grid item md={12}>
+                                                <Typography variant={"body1"} >{g.m_bEsRecoleccion ? g.m_sContactoRemitente : g.m_sContactoDestinatario}</Typography>
+                                            </Grid>
+                                            <Grid item md={12}>
+                                                <Typography variant={"body1"} >{g.m_bEsRecoleccion ? g.m_sTelefonoRemitente : g.m_sTelefonoDestinatario}</Typography>
+                                            </Grid>
+                                            <Grid item md={12}>
+                                                <Typography variant={"body1"} >No. Paquetes: {g.m_bEsRecoleccion ? g.m_parrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0) : g.m_arrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0)}</Typography>
+                                            </Grid>
+                                        </Grid>
+
+                                    </Popup>
                                 </Marker>
                             )
                         }
@@ -94,13 +119,13 @@ class TourUltimaMilla extends Component {
                 }
                 {
                     this.props.data.m_xlat === 0 && this.props.data.m_xlng === 0 &&
-                    <Marker key={"sucursalPoint"}
-                            icon={<MarkerComponent color={this.props.data.color} index={"s"}/>}
+                    <Marker key={"truckPoint"}
+                            icon={<TruckMarkerComponent color={this.props.data.color}/>}
                             position={[this.props.sucursal.lat, this.props.sucursal.lng]}>
+                        <Popup>{this.props.data.m_snNombreOperador} - {this.props.data.m_sPlacasUnidad}</Popup>
                     </Marker>
+
                 }
-
-
                 {
                     this.state.polygon.length !== 0 &&
                     <Polyline pathOptions={blackOptions} positions={this.state.polygon}/>

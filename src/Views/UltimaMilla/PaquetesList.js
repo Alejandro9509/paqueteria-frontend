@@ -199,15 +199,15 @@ class PaquetesList extends Component {
                                 />
                             </TableCell>
                             <TableCell
-                                sortDirection={this.state.orderBy === "m_nFolioGuia" ? this.state.order : false}
+                                sortDirection={this.state.orderBy === "m_sFolio" ? this.state.order : false}
                                 align="left">
                                 <TableSortLabel
-                                    active={this.state.orderBy === "m_nFolioGuia"}
-                                    direction={this.state.orderBy === "m_nFolioGuia" ? this.state.order : 'asc'}
-                                    onClick={(event) => this.createSortHandler("m_nFolioGuia", event)}
+                                    active={this.state.orderBy === "m_sFolio"}
+                                    direction={this.state.orderBy === "m_sFolio" ? this.state.order : 'asc'}
+                                    onClick={(event) => this.createSortHandler("m_sFolio", event)}
                                 >
-                                    Guías
-                                    {this.state.orderBy === "m_nFolioGuia" ? (
+                                    Folio
+                                    {this.state.orderBy === "m_sFolio" ? (
                                         <span className={classes.visuallyHidden}>
                                             {this.state.order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                         </span>
@@ -217,26 +217,29 @@ class PaquetesList extends Component {
                             </TableCell>
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
-                                align="left">Volumen</TableCell>
-                            <TableCell
-                                sortDirection={this.state.orderBy === "m_nIdTIpoCobro" ? this.state.order : false}
-                                align="left">Estatus pago</TableCell>
-                            <TableCell
-                                sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
-                                align="left">Destinatario</TableCell>
+                                align="left">Tipo</TableCell>
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
-                                align="left">Destino</TableCell>
+                                align="left">Volumen</TableCell>
+                            <TableCell
+                                sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
+                                align="left">Tipo de cobro</TableCell>
+                            <TableCell
+                                sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
+                                align="left">Cliente</TableCell>
+                            <TableCell
+                                sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
+                                align="left">Domicilio</TableCell>
+
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sNombreOperador" ? this.state.order : false}
                                 align="left">Ventana de entrega</TableCell>
-                            <TableCell sortDirection={this.state.orderBy === "m_sFechaHora" ? this.state.order : false}
+                            <TableCell sortDirection={this.state.orderBy === "m_dFechaRegistro" ? this.state.order : false}
                                        align="left">Fecha</TableCell>
 
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sEstatusGuia" ? this.state.order : false}
                                 align="left">Estatus</TableCell>
-                            <TableCell align="left"></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -254,15 +257,15 @@ class PaquetesList extends Component {
                                                 inputProps={{'aria-labelledby': labelId}}
                                             />
                                         </TableCell>
-                                        <TableCell align="left">{u.m_nFolioGuia}</TableCell>
-                                        <TableCell align="left">Capacidad</TableCell>
-                                        <TableCell align="left">{u.m_nIdTIpoCobro === 3  ?  "Por cobrar destinatario" : u.m_nIdTIpoCobro === 5 ? "Por cobrar remitente" :  u.m_bPagado ? "Pagada" : "Pendiente de pago"}</TableCell>
-                                        <TableCell align="left">{u.m_sNombreDestinatario}</TableCell>
-                                        <TableCell align="left">{u.m_bEntregarMismoDomicilio ? u.m_sDomicilioDestinatario : u.m_sDomicilioEntrega}</TableCell>
-                                        <TableCell align="left">Sin definir</TableCell>
-                                        <TableCell align="left">{u.m_sFechaHora}</TableCell>
-                                        <TableCell align="left">{u.m_sEstatusGuia}</TableCell>
-                                        <TableCell align="left"></TableCell>
+                                        <TableCell align="left">{u.m_sFolio}</TableCell>
+                                        <TableCell align="left">{u.m_bEsRecoleccion ? "Recolección" : "Entrega"}</TableCell>
+                                        <TableCell align="left">{u.m_bEsRecoleccion ? u.m_parrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0) : u.m_arrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0)}</TableCell>
+                                        <TableCell align="left">{u.m_sTipoCobro}</TableCell>
+                                        <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sNombreRemitente : u.m_sNombreDestinatario}</TableCell>
+                                        <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sDomicilioRemitente: u.m_sDomicilioDestinatario}</TableCell>
+                                        <TableCell align="left">{u.m_bEsRecoleccion ? (u.m_bRecoleccionConCita ? "" : "Sin cita") : ""}</TableCell>
+                                        <TableCell align="left">{u.m_dFechaRegistro}</TableCell>
+                                        <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sEstatusRecoleccion : u.m_sEstatusEmbarque}</TableCell>
                                     </TableRow>
                                 )
                             })

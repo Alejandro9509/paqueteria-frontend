@@ -60,7 +60,7 @@ var selected_device;
 var devices = [];
 const styles = {
     paqueteCarrusel: {
-        height: "170px !important",
+        height: "190px !important",
         // position: "initial !important"
     },
     conceptoCarrusel: {
@@ -430,7 +430,7 @@ function Guia(props) {
             paq["ancho"] = paq.m_xAncho
             paq["alto"] = paq.m_xAlto
             paq["volumen"] = paq.m_xVolumen
-            paq["tipoEmbalaje"] = paq.m_nTipo
+            paq["tipoEmbalaje"] = paq.m_sEmbalaje
             paq["valorDeclarado"] = paq.m_cValorDeclarado
             paq["descripcionPaquete"] = paq.m_sDescripcion
             paq["observacionesPaquete"] = paq.m_sObservaciones
@@ -911,7 +911,7 @@ function Guia(props) {
             }, function(){alert("Error getting local devices")},"printer");
 
         }, function(error){
-            alert(error);
+            console.log(error);
         })
     },[])
 
@@ -932,7 +932,6 @@ function Guia(props) {
              })
          })*/
         guia.m_arrClsDetalle.forEach((p, index) => {
-            console.log(TICKET_ZABRA_TAMPLATE(guia, p))
             selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, index), undefined, errorCallback);
         })
 
@@ -1520,8 +1519,8 @@ function Guia(props) {
     //objeto de paquetes
     const framesPaquete = state.paquetes.map((p, index) => {
         return (
-            <div key={`paquete${index}`}>
-                <div className="col-sm-4 col-md-1-5 unit">
+            <div key={`paquete${index}`} style={{padding:"10px"}}>
+                <div className="col-xs-6 col-sm-4 col-md-4 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                                    onChange={(event) => handleChangePaquete(event, index)}
@@ -1536,7 +1535,7 @@ function Guia(props) {
                     </div>
                 </div>
 
-                <div className="col-sm-4 col-md-1-5 unit">
+                <div className="col-xs-6 col-sm-4 col-md-4 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                                    label="Largo"
@@ -1551,7 +1550,7 @@ function Guia(props) {
                     </div>
                 </div>
 
-                <div className="col-sm-4 col-md-1-5 unit">
+                <div className="col-xs-6 col-sm-4 col-md-4 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                                    onChange={(event) => handleChangePaquete(event, index)}
@@ -1566,7 +1565,7 @@ function Guia(props) {
                     </div>
                 </div>
 
-                <div className="col-sm-4 col-md-1-5 unit">
+                <div className="col-xs-6 col-sm-4 col-md-4 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                                    onChange={(event) => handleChangePaquete(event, index)}
@@ -1581,7 +1580,7 @@ function Guia(props) {
                     </div>
                 </div>
 
-                <div className="col-sm-4 col-md-1-5 unit">
+                <div className="col-xs-6 col-sm-4 col-md-4 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                                    onChange={(event) => handleChangePaquete(event, index)}
@@ -1596,7 +1595,7 @@ function Guia(props) {
                     </div>
                 </div>
 
-                <div className="col-sm-4 col-md-4-5 unit">
+                <div className="col-xs-6 col-sm-4 col-md-4 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                                    onChange={(event) => handleChangePaquete(event, index)}
@@ -1611,7 +1610,7 @@ function Guia(props) {
                     </div>
                 </div>
 
-                <div className="col-sm-4 col-md-3 unit">
+                <div className="col-xs-6 col-sm-4 col-md-4 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                                    onChange={(event) => handleChangePaquete(event, index)}
@@ -1626,7 +1625,7 @@ function Guia(props) {
                     </div>
                 </div>
 
-                <div className="col-sm-4 col-md-7-5 unit">
+                <div className="col-xs-6 col-sm-4 col-md-6 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                                    onChange={(event) => handleChangePaquete(event, index)}
@@ -1641,7 +1640,7 @@ function Guia(props) {
                     </div>
                 </div>
 
-                <div className="col-sm-4 col-md-1-5 unit">
+                <div className="col-xs-6 col-sm-4 col-md-2 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                                    onChange={(event) => handleChangePaquete(event, index)}
@@ -1656,7 +1655,7 @@ function Guia(props) {
                     </div>
                 </div>
 
-                <div className="col-sm-4 col-md-12 unit">
+                <div className="col-xs-6 col-sm-4 col-md-12 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
                                    onChange={(event) => handleChangePaquete(event, index)}
@@ -2978,10 +2977,7 @@ function Guia(props) {
 
 
                                     <div className="row" id="paquetesSobres">
-                                        <div className="row">
 
-                                        </div>
-                                        <div className="row">
                                             <div className="col-md-6">
                                                 <div className="widget-wrap">
                                                     <div className="widget-header">
@@ -3035,7 +3031,6 @@ function Guia(props) {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
                                     </div>
                                     <div className="widget-wrap" id="detalleFacturacion">
                                         <div className="widget-header">

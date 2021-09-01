@@ -52,7 +52,7 @@ class Configuracion extends Component {
                 <Grid item md={12}>
                     <Typography variant={"h4"}>Creación de rutas</Typography>
 
-                    <RadioGroup aria-label="tipoBusqueda" name="tipoBusqueda" value={this.props.values.tipoBusqueda}>
+                    <RadioGroup onChange={(e) => this.props.changeValue(e.target.name,e.target.value)} aria-label="tipoBusqueda" name="tipoBusqueda" value={this.props.values.tipoBusqueda}>
                         <Grid container>
                             <Grid item>
                                 <FormControlLabel value="1" control={<Radio/>} label="Solo entregas"/>

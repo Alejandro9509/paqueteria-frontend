@@ -36,8 +36,16 @@ function agregarViajeLlegada( params){
     return result
 }
 
+function obetenerViajeId( id){
+    const url = `${process.env.REACT_APP_API_URL}/Viajes/GetById/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
 
 
 
 
-export {agregarViaje,agregarViajeSalida,agregarViajeLlegada}
+export {agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId}

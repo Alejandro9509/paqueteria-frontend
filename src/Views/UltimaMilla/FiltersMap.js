@@ -7,7 +7,7 @@ import {
     IconButton,
     withStyles,
     InputBase,
-    ListItemText, InputAdornment, TextField
+    ListItemText, InputAdornment, TextField, DialogTitle, DialogContent, DialogActions, Button, Dialog
 } from "@material-ui/core";
 import {fade, makeStyles} from '@material-ui/core/styles';
 
@@ -33,6 +33,10 @@ import {ReactComponent as UltimaMillaIcono} from "../../iconos/Menu/IconoUltimaM
 import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendario.svg";
 import {Calendar, DatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import MomentUtils from "@date-io/moment";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
 
 
 const useStyles = theme => ({
@@ -104,26 +108,29 @@ class FiltersMap extends Component {
             tipoBusqueda: "3",
             sistemaUnidad: "1",
             optimizar: "2",
+            operadores: [],
+            openOperadorDialog: false,
+            operadorSeleccionado: 0
 
         }
         this.getAllSucursales = this.getAllSucursales.bind(this)
-        this.getAllUnidades = this.getAllUnidades.bind(this)
         this.getAllGuias = this.getAllGuias.bind(this)
         this.selectCiudad = this.selectCiudad.bind(this)
         this.getAllZonas = this.getAllZonas.bind(this)
         this.selectZona = this.selectZona.bind(this)
+        this.reasignarOperador = this.reasignarOperador.bind(this)
+        this.asignarOperadorUnidad = this.asignarOperadorUnidad.bind(this)
         this.selectUnidades = this.selectUnidades.bind(this)
         this.selectPaquetes = this.selectPaquetes.bind(this)
         this.searchSucursal = this.searchSucursal.bind(this)
         this.changeDate = this.changeDate.bind(this)
+        this.changeConfiguration = this.changeConfiguration.bind(this)
         this.changeDateConsult = this.changeDateConsult.bind(this)
     }
 
     componentDidMount() {
         this.getAllSucursales()
 
-        //this.getAllUnidades()
-        //this.getAllGuias()
 
     }
 
@@ -131,14 +138,16 @@ class FiltersMap extends Component {
         this.setState({
             [name]: value
         })
-        this.getAllGuias()
     }
 
-    getAllUnidades() {
-        obtenerUnidades().then(({data}) => {
-            this.setState({unidadesSeleccionadas: data})
+    changeConfiguration(name, value) {
+        this.setState({
+            [name]: value,
+            paquetesSeleccionadas: []
         })
     }
+
+
 
     changeDateConsult(value) {
         this.setState({fecha: value})
@@ -153,7 +162,7 @@ class FiltersMap extends Component {
         // })
         //"0", "0", this.props.data.sucursalSeleccionada.m_nIdSucursal, 4
         obtenerGuiaUltimaMilla(this.state.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.tipoBusqueda)).then(({data}) => {
-            this.setState({paquetes: data})
+            this.setState({paquetesSeleccionadas: data})
         })
     }
 
@@ -178,13 +187,16 @@ class FiltersMap extends Component {
     selectZona(zona) {
         this.setState({zonasSeleccionada: zona})
         if (zona.length !== 0) {
-            this.getAllUnidades()
             this.getAllGuias()
-            console.log(zona)
             this.props.getFechaUltimaMilla(this.state.fecha, this.state.sucursalSeleccionada.m_nIdSucursal, zona.map(z => z.m_nIdZona))
 
         }
 
+    }
+    reasignarOperador(unidad){
+        obtenerOperadores().then(({data}) => {
+            this.setState({operadores: data, unidadSeleccionada: unidad, openOperadorDialog: true,openUnidades: false})
+        })
     }
 
 
@@ -194,6 +206,11 @@ class FiltersMap extends Component {
 
     selectPaquetes(array) {
         this.setState({paquetesSeleccionadas: array})
+    }
+
+    asignarOperadorUnidad(event) {
+        event.preventDefault()
+        this.setState({openUnidades: true, openOperadorDialog: false})
     }
 
 
@@ -211,6 +228,49 @@ class FiltersMap extends Component {
         const {classes} = this.props;
         return (
             <div className="leaflet-top leaflet-left" style={{paddingLeft: "40px"}}>
+                <Dialog open={this.state.openOperadorDialog} on onClose={() => this.setState({openOperadorDialog: false})}>
+                    <DialogTitle>Asignar Operador</DialogTitle>
+
+                    <DialogContent>
+                        <form onSubmit={this.asignarOperadorUnidad}>
+                            <label className="input select" style={{width: "100%"}}>
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                    <InputLabel id="operadorListadoLabel">Operador</InputLabel>
+                                    <Select
+                                        labelId="operadorListadoLabel"
+                                        label="Formato"
+                                        className="form-control"
+                                        required
+                                        value={this.state.operadorSeleccionada}
+                                        onChange={(event) => this.setState({
+                                            operadorSeleccionada: event.target.value
+                                        })}
+                                        id="operador"
+                                        name="operador"
+                                    >
+                                        {this.state.operadores.map((operador) => (
+                                            <option
+                                                key={operador.m_nIdOperador}
+                                                value={operador.m_nIdOperador}
+                                            >
+                                                {operador.m_sNombreCompleto}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <i></i>
+                            </label>
+                            <DialogActions>
+                                <Button color={"primary"} type={"submit"}>
+                                    Aceptar
+                                </Button>
+                                <Button onClick={() => this.setState({openOperadorDialog: false, openUnidad: true})}>
+                                    Cancelar
+                                </Button>
+                            </DialogActions>
+                        </form>
+                    </DialogContent>
+                </Dialog>
                 <div className="leaflet-control leaflet-bar" style={{border: "none"}}>
                     <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: "center"}}>
                         <BootstrapTooltip
@@ -393,7 +453,7 @@ class FiltersMap extends Component {
                             disableHoverListener
                             disableTouchListener
                             title={
-                                <UnidadesList unidadesSeleccionadas={this.state.unidadesSeleccionadas}
+                                <UnidadesList reasignarOperador={this.reasignarOperador} unidadesSeleccionadas={this.state.unidadesSeleccionadas}
                                               selectUnidades={this.selectUnidades}>
 
                                 </UnidadesList>
@@ -429,6 +489,7 @@ class FiltersMap extends Component {
                             disableTouchListener
                             title={
                                 <Configuracion values={this.state}
+                                               changeValue={this.changeConfiguration}
                                                changeConfigurationFullScreen={this.props.changeConfiguration}
                                                fullScreenData={this.props.data}/>
                             }>
@@ -450,32 +511,38 @@ class FiltersMap extends Component {
                             />
                         </BootstrapTooltip>
 
-                        <Chip
-                            icon={<UltimaMillaIcono
-                                style={{fill: "white", paddingTop: "10px", paddingBottom: "10px"}}/>}
-                            label="Generar Rutas"
-                            style={{
-                                color: "white",
-                                backgroundColor: "#F9A03E",
-                                margin: "1px",
-                                boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-                            }}
-                            disabled={this.state.sucursalSeleccionada == null}
-                            onClick={() => this.props.generarRuta(this.state)}
-                        />
-                        <IconButton
-                            onClick={() => this.props.guardarRuta()}
-                            style={{
-                                backgroundColor: "white",
-                                margin: "1px",
-                                width: "70px",
-                                height: "32px",
-                                borderRadius: "16px",
-                                boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-                            }} aria-label="send">
-                            <SendIcon color={"primary"} fontSize="large"/>
-                        </IconButton>
-                        <TextField variant="standard" size={"small"} placeholder={"Buscar"}
+                        <Tooltip title={"Generar Rutas"}>
+                            <Chip
+                                icon={<UltimaMillaIcono
+                                    style={{fill: "white", paddingTop: "10px", paddingBottom: "10px"}}/>}
+                                label="Generar Rutas"
+                                style={{
+                                    color: "white",
+                                    backgroundColor: "#F9A03E",
+                                    margin: "1px",
+                                    boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+                                }}
+                                disabled={this.state.sucursalSeleccionada == null}
+                                onClick={() => this.props.generarRuta(this.state)}
+                            />
+                        </Tooltip>
+
+                        <Tooltip title={"Enviar ruta a operadores"}>
+                            <IconButton
+                                onClick={() => this.props.guardarRuta()}
+                                style={{
+                                    backgroundColor: "white",
+                                    margin: "1px",
+                                    width: "70px",
+                                    height: "32px",
+                                    borderRadius: "16px",
+                                    boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+                                }} aria-label="send">
+                                <SendIcon color={"primary"} fontSize="large"/>
+                            </IconButton>
+                        </Tooltip>
+
+                        <TextField variant="standard" size={"small"} placeholder={"Buscar dirección"}
                                    style={{
                                        width: "300px",
                                        paddingLeft: "10px",
@@ -513,6 +580,8 @@ const useStylesBootstrap = makeStyles((theme) => ({
         color: "#F9A03E",
     },
     tooltip: {
+        heigth: "400px",
+        width:"1000px",
         backgroundColor: "white",
     },
 }));

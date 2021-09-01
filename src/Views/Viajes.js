@@ -40,7 +40,7 @@ import ActualizarDiponibilidadEquipo from "./Viajes/ActualizarDiponibilidadEquip
 import SalidaParadas from "./Viajes/SalidaParadas";
 import LlegadaParadas from "./Viajes/LlegadaParadas";
 import AsignarOperador from "./Viajes/AsignarOperador";
-import {agregarViajeSalida, agregarViajeLlegada} from "../Util/Contexts/ViajesContext";
+import {agregarViajeSalida, agregarViajeLlegada, obetenerViajeId} from "../Util/Contexts/ViajesContext";
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import {obtenerInformesPorViaje} from "../Util/Contexts/InformesContext";
@@ -175,33 +175,38 @@ function Viajes() {
     }
 
     function handleShowModificar(id) {
-        // const url = `${process.env.REACT_APP_API_URL}/Viajes/GetById/` + id;
-        // axios.get(url, { headers }).then(respuesta => {
-        //   console.log(respuesta.data)
-        //   setState({
-        //     ...state,
-        //     agregar: "Modificar",
-        //     showPopUp: true,
-        //     idDepartamento: id,
-        //     codigoDepartamento: respuesta.data.m_nCodigo,
-        //     descripcionDepartamento: respuesta.data.m_sDescripcion
-        //   })
-        // });
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
+
+        obetenerViajeId(id).then(respuesta => {
+            setState({
+                ...state,
+                agregar: "Viaje",
+                fechaHoraRegistro: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora,
+                estatusListado: respuesta.data.m_nIdEstatusViaje,
+                idSucursalAgregar: respuesta.data.m_nIdSucursal,
+                candadoOficial: respuesta.data.m_sCandadoOficial,
+                folioViaje: respuesta.data.m_sFolioViaje,
+                identificadorViaje: respuesta.data.m_sIdentificador,
+                viajeCliente: respuesta.data.m_sNumViajeCliente,
+                dataInformesAsignados: respuesta.data.m_arrInformes
+            })
+        });
     }
 
     function handleShowConsultar(id) {
-        // const url = `${process.env.REACT_APP_API_URL}/Departamento/GetById/` + id;
-        // axios.get(url, { headers }).then(respuesta => {
-        //   console.log(respuesta.data)
-        //   setState({
-        //     ...state,
-        //     agregar: "Consultar",
-        //     showPopUp: true,
-        //     idDepartamento: id,
-        //     codigoDepartamento: respuesta.data.m_nCodigo,
-        //     descripcionDepartamento: respuesta.data.m_sDescripcion
-        //   })
-        // });
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
+        obetenerViajeId(id).then(respuesta => {
+            setState({
+                ...state,
+                agregar: "Viaje",
+            })
+        });
     }
 
     function handleShowAgregar() {
@@ -210,6 +215,10 @@ function Viajes() {
             agregar: "Viaje",
             showPopUp: false
         })
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
     }
 
     const handleChange = event => {
@@ -289,14 +298,14 @@ function Viajes() {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab"
-                               onClick={() => (handleShowModificar(row.row.m_nIdViaje))}
-                               className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
-                                                                     style={{color: "#F9A03E"}}/></a>
+                            <a
+                                onClick={() => (handleShowModificar(row.row.m_nIdViaje))}
+                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
+                                                                      style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs"
+                            <a className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row.m_nIdViaje))}><i className="fa fa-eye"
                                                                                             style={{color: "#F9A03E"}}/></a>
 
@@ -806,12 +815,19 @@ function Viajes() {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" href="#Listado">
+                            <a onClick={(event) => {
+                                event.stopPropagation();
+                                setState({...state, agregar: "Viaje"});
+                                $('.nav-tabs li ').removeClass('active');
+                                $('.nav-tabs li').eq(0).addClass('active');
+                                $('.tab-content div ').removeClass('in show');
+                                $('#Listado').addClass('in show');
+                            }}>
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                            <a onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -832,7 +848,7 @@ function Viajes() {
                     </ul>
 
                     <div className="row" className="tab-content">
-                        <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
+                        <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
 
@@ -1014,7 +1030,10 @@ function Viajes() {
                                                                                 Salida</Link>
                                                                         }
 
-                                                                        /
+                                                                        {p.m_dFechaLlegada.startsWith("0000") && p.m_dFechaSalida.startsWith("0000") &&
+                                                                        "/"
+                                                                        }
+
 
                                                                         {
                                                                             p.m_dFechaLlegada.startsWith("0000") &&

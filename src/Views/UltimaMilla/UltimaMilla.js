@@ -53,6 +53,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 const MarkerIcon = new L.Icon({
     iconUrl: MarkerImage,
     iconRetinaUrl: MarkerImage,
@@ -156,6 +157,7 @@ class UltimaMilla extends Component {
     }
 
     changeConfiguration(name, value) {
+        console.log(name)
         this.setState({[name]: value})
     }
 
@@ -179,14 +181,15 @@ class UltimaMilla extends Component {
             var guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
             var unidades = data.unidadesSeleccionadas
             obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
-                if (results.vehicleIdsNotPlanned) {
-                    if (results.vehicleIdsNotPlanned.length > 0) {
-                        unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
+                if (results) {
+                    if (results.vehicleIdsNotPlanned) {
+                        if (results.vehicleIdsNotPlanned.length > 0) {
+                            unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
+                        }
                     }
+                    results.tours.map(t => t.color = randomColor(10))
+                    this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
                 }
-                results.tours.map(t => t.color = randomColor(10))
-                this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
-
             })
         }
     }
@@ -218,6 +221,7 @@ class UltimaMilla extends Component {
     selectGuiaReasignar(idParadaFuente, idGuia) {
         this.setState({openDialog: true, paradaFuente: idParadaFuente, idGuia: idGuia})
     }
+
 
     reasignarParada(event) {
         event.preventDefault()
@@ -288,7 +292,7 @@ class UltimaMilla extends Component {
                 <section>
                     <div className="widget-content" id={"mapFullScreen"}>
                         <div className="row"
-                             style={{height: this.state.fullScreen ? "100%" : window.innerHeight - 50, width: '100%'}}>
+                             style={{height: this.state.fullScreen ? "100%" : window.innerHeight - 60, width: '100%'}}>
                             <MapContainer style={{width: "100%", height: "100%", zIndex: 1}}
                                           center={[this.state.lat, this.state.lng]} zoom={15} scrollWheelZoom={false}
                                           whenCreated={(map) => this.setState({map: map})}>
@@ -334,24 +338,27 @@ class UltimaMilla extends Component {
                                     !this.state.modoEdicion && (this.state.fullScreen === false || this.state.resumenFullscreen) &&
                                     <DetalleParadas tour={this.state.ultimaMilla}/>
                                 }
-                                <IconButton
-                                    onClick={() => this.state.fullScreen ? this.closeFullscreen() : this.openFullscreen()}
-                                    style={{
-                                        color: "white",
-                                        borderRadius: "10px",
-                                        width: "30px",
-                                        height: "30px",
-                                        backgroundColor: "white",
-                                        top: "110px",
-                                        right: "10px",
-                                        position: "fixed",
-                                        zIndex: 3000,
-                                        padding: "5px",
-                                        boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-                                    }}>
-                                    {this.state.fullScreen ? <FullscreenExitIcono style={{fill: "#F9A03E"}}/> :
-                                        <FullscreenIcono style={{fill: "#F9A03E"}}/>}
-                                </IconButton>
+                                {
+                                    (this.state.tour || this.state.ultimaMilla) &&
+                                    <IconButton
+                                        onClick={() => this.state.fullScreen ? this.closeFullscreen() : this.openFullscreen()}
+                                        style={{
+                                            color: "white",
+                                            borderRadius: "10px",
+                                            width: "30px",
+                                            height: "30px",
+                                            backgroundColor: "white",
+                                            top: "110px",
+                                            right: "10px",
+                                            position: "fixed",
+                                            zIndex: 3000,
+                                            padding: "5px",
+                                            boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+                                        }}>
+                                        {this.state.fullScreen ? <FullscreenExitIcono style={{fill: "#F9A03E"}}/> :
+                                            <FullscreenIcono style={{fill: "#F9A03E"}}/>}
+                                    </IconButton>
+                                }
 
 
                             </MapContainer>
