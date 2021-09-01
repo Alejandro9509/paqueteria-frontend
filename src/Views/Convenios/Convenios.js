@@ -113,6 +113,7 @@ function Convenios(){
     ])
     const [listaConvenios, setListaConvenios] = useState([])
     const [convenioSeleccionado, setConvenioSeleccionado] = useState(0)
+    const [pantallaActiva, setPantallaActiva ] = useState(1)
     const [consult, setConsult] = useState(false)
     const [state, setState] = useState({
         agregar: "Agregar",
@@ -135,6 +136,7 @@ function Convenios(){
         event.stopPropagation();
         getAllConvenios()
         // limpiarInputsAgregar()
+        setPantallaActiva(1)
         setConvenioSeleccionado(0)
         setConsult(false)
         setState(state =>{
@@ -152,6 +154,8 @@ function Convenios(){
     const handleShowAgregar = (event) => {
         event.stopPropagation()
         // limpiarInputsAgregar()
+        setConvenioSeleccionado(0)
+        setPantallaActiva(2)
         setState(state => {
             return {
                 ...state,
@@ -166,6 +170,7 @@ function Convenios(){
     const handleShowModificar = (convenio) => {
         setConsult(false)
         setConvenioSeleccionado(convenio.m_nIdConvenio)
+        setPantallaActiva(3)
         setState(state =>{
             return {
                 ...state,
@@ -179,6 +184,7 @@ function Convenios(){
     }
     const handleShowConsultar = (convenio) => {
         setConvenioSeleccionado(convenio.m_nIdConvenio)
+        setPantallaActiva(3)
         setConsult(true)
         setState(state =>{
             return {
@@ -286,6 +292,7 @@ function Convenios(){
                             <EscribirConvenio
                                 select={convenioSeleccionado}
                                 consult={consult}
+                                pantallaActiva={pantallaActiva}
                             />
 
                         </div>
