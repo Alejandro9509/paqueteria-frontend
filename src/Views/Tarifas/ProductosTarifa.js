@@ -118,7 +118,7 @@ export default function ProductosTarifa({productos = [], productosSeleccionados 
                     const labelId = `transfer-list-all-item-${value}-label`;
 
                     return (
-                        <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+                        <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)}>
                             <ListItemIcon>
                                 <Checkbox
                                     checked={checked.indexOf(value) !== -1}
