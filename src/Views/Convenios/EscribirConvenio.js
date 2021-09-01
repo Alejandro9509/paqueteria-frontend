@@ -401,15 +401,26 @@ class EscribirConvenio extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.select !== this.props.select) {
-            const {select} = this.props
+        if (prevProps.pantallaActiva !== this.props.pantallaActiva && this.props.pantallaActiva === 1){
+            this.limpiarCampos()
+        }
+
+        if (prevProps.pantallaActiva !== this.props.pantallaActiva && this.props.pantallaActiva === 3) {
+            // debugger
+            const {select, pantallaActiva} = this.props
             if (select != 0){
                 this.getConvenioById(select)
-            }else{
-                console.log('limpiar')
-                this.limpiarCampos()
             }
         }
+        if (prevProps.pantallaActiva == this.props.pantallaActiva && this.props.pantallaActiva === 2){
+            if (prevState.cliente != this.state.cliente){
+                if (this.state.cliente != 0) {
+                    this.getConvenioByIdCliente(this.state.cliente)
+                }
+            }
+
+        }
+
     }
 
     getConvenioById(idConvenio){
@@ -424,6 +435,45 @@ class EscribirConvenio extends Component {
                 tarifasSeleccionadas : respuesta.data.m_arrArTarifas,
             })
         });
+    }
+
+    getConvenioByIdCliente(idCliente){
+        const url = `${process.env.REACT_APP_API_URL}/Convenios/GetByIdCliente/${idCliente}`;
+        console.log(url)
+        axios.get(url, { headers }).then(respuesta => {
+            console.log(respuesta)
+            if (respuesta.data.length > 0){
+                this.setState({
+                    idConvenio: respuesta.data[0].m_nIdConvenio,
+                    cliente: respuesta.data[0].m_nIdCliente,
+                    fechaVigencia: respuesta.data[0].m_sVigencia,
+                    tarifasSeleccionadas : respuesta.data[0].m_arrArTarifas,
+                })
+                showSuccess("Se detectó que el cliente seleccionado ya tiene convenio");
+            }else{
+                this.limpiarCamposMenosCliente()
+            }
+
+        });
+    }
+    limpiarCamposMenosCliente = () => {
+        this.setState({
+            idConvenio: 0,
+            fechaVigencia: '',
+            tarifasSeleccionadas : [],
+            todosConceptos: [],
+            conceptosAdicionales: [],
+            conceptosManiobra: [],
+            conceptosEntrega: [],
+            conceptosRecoleccion: [],
+            impuestos: [],
+            ivaTraslada: [],
+            ivaRetiene: [],
+            tarifaDetalles: {m_arrArConceptos:[]},
+            idsTarifasSeleccionadas: [],
+            dataProductosSeleccionados:[],
+            dataProductosTemp:this.state.dataProductos
+        })
     }
 
     handleTabChange(event, newValue) {
