@@ -811,7 +811,7 @@ class EscribirConvenio extends Component {
                                                 <Tab label="Concetos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
                                                 <Tab label="Maniobras" {...this.a11yProps(1)} />
                                                 <Tab label="Entrega" {...this.a11yProps(2)} />
-                                                <Tab label="Recolección" {...this.a11yProps(3)}/>
+                                                {/*<Tab label="Recolección" {...this.a11yProps(3)}/>*/}
                                                 <Tab label="Productos" {...this.a11yProps(4)}/>
                                             </Tabs>
 
@@ -846,8 +846,8 @@ class EscribirConvenio extends Component {
                                                                              ivaTraslada={this.state.ivaTraslada}
                                                                              />
                                             </TabPanel>
-                                            <TabPanel value={this.state.tab} index={3}>
-                                                {/*el filtrado por agregadoDesde está demas*/}
+                                            {/*<TabPanel value={this.state.tab} index={3}>
+                                                el filtrado por agregadoDesde está demas
                                                 <ConceptosAdicionalesRecoleccion consult={consult}
                                                                                  select={tarifaDetalles}
                                                                                  conceptosAdicionales={conceptosRecoleccion}
@@ -856,8 +856,8 @@ class EscribirConvenio extends Component {
                                                                                  ivaRetiene={this.state.ivaRetiene}
                                                                                  ivaTraslada={this.state.ivaTraslada}
                                                                                  />
-                                            </TabPanel>
-                                            <TabPanel value={this.state.tab} index={4}>
+                                            </TabPanel>*/}
+                                            <TabPanel value={this.state.tab} index={3}>
                                                 <ProductosTarifa
                                                     productos={dataProductosTemp}
                                                     productosSeleccionados={dataProductosSeleccionados}

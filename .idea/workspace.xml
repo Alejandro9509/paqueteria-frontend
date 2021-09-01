@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Intento fallido de duplicar tarifas">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Convenios/EscribirConvenio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Convenios/EscribirConvenio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/Tarifas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/Tarifas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesEntrega.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesEntrega.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesManiobra.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesManiobra.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesRecoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesRecoleccion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

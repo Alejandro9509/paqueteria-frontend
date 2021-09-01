@@ -539,8 +539,8 @@ class ConceptosAdicionales extends Component {
                                         <tr onClick={(e) => this.handleRowClick(e, index, c)}>
                                             <td style={{ textAlign: "left" }}>{c.nombreConcepto}</td>
                                             <td style={{ textAlign: "left" }}>{c.tipoMedida == 1 ? "Kg" : c.tipoMedida == 2 ? "Tons" : c.tipoMedida == 3 ? "Piezas" : ""}</td>
-                                            <td style={{ textAlign: "left" }}>{c.rangoMinimo} kg</td>
-                                            <td style={{ textAlign: "left" }}>{c.rangoMaximo} kg</td>
+                                            <td style={{ textAlign: "left" }}>{c.rangoMinimo} {c.tipoMedida == 1 ? "kg" : c.tipoMedida == 2 ? "Tons" : c.tipoMedida == 3 ? "pzs": ""}</td>
+                                            <td style={{ textAlign: "left" }}>{c.rangoMaximo} {c.tipoMedida == 1 ? "kg" : c.tipoMedida == 2 ? "Tons" : c.tipoMedida == 3 ? "pzs": ""}</td>
                                             <td style={{ textAlign: "left" }}>${parseFloat(c.importe).toFixed(2)}</td>
                                             <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)).m_sImpuesto : "No Aplica")}</td>
                                             <td style={{ textAlign: "left" }}>${parseFloat(c.importeIVA).toFixed(2)}</td>

@@ -709,10 +709,11 @@ class CrearTarifa extends Component {
                                                 <Tab label="Concetos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
                                                 <Tab label="Maniobras" {...this.a11yProps(1)} disabled={!this.state.porRangos} />
                                                 <Tab label="Entrega" {...this.a11yProps(2)} disabled={!this.state.porRangos} />
-                                                <Tab label="Recolección" {...this.a11yProps(3)} disabled={!this.state.porRangos} />
+                                                {/*<Tab label="Recolección" {...this.a11yProps(3)} disabled={!this.state.porRangos} />*/}
+                                                <Tab label="Productos" {...this.a11yProps(6)}/>
                                                 <Tab label="Condiciones de Precios por Tipo de Cobro" {...this.a11yProps(4)} />
                                                 <Tab label="Condiciones de Precio por Tipo de Servicio" {...this.a11yProps(5)} />
-                                                <Tab label="Productos" {...this.a11yProps(6)}/>
+
                                             </Tabs>
 
                                             <TabPanel value={this.state.tab} index={0}>
@@ -733,11 +734,19 @@ class CrearTarifa extends Component {
 
                                                 </ConceptosAdicionalesEntrega>
                                             </TabPanel>
-                                            <TabPanel value={this.state.tab} index={3}>
-                                                {/*el filtrado por agregadoDesde está demas*/}
+                                            {/*<TabPanel value={this.state.tab} index={3}>
+                                                el filtrado por agregadoDesde está demas
                                                 <ConceptosAdicionalesRecoleccion consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosRecoleccion} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoRecoleccion} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
 
                                                 </ConceptosAdicionalesRecoleccion>
+                                            </TabPanel>*/}
+                                            <TabPanel value={this.state.tab} index={3}>
+                                                <ProductosTarifa
+                                                    productos={dataProductosTemp}
+                                                    productosSeleccionados={dataProductosSeleccionados}
+                                                    actualizarProductos={this.actualizarProductos}
+                                                />
+
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={4}>
                                                 <TipoCobro consult={consult} tiposCobroSeleccionado={this.state.tiposCobroSeleccionado} handleChange={this.handleChangeChecboxTiposCobro} all={this.state.tiposCobroAll}>
@@ -749,15 +758,6 @@ class CrearTarifa extends Component {
 
                                                 </TipoServicio>
                                             </TabPanel>
-                                            <TabPanel value={this.state.tab} index={6}>
-                                                <ProductosTarifa
-                                                    productos={dataProductosTemp}
-                                                    productosSeleccionados={dataProductosSeleccionados}
-                                                    actualizarProductos={this.actualizarProductos}
-                                                />
-
-                                            </TabPanel>
-
                                         </div>
                                         :
                                         <div>
