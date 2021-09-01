@@ -99,7 +99,8 @@ class CrearTarifa extends Component {
                     rangoMaximo: element.m_xnRangoMaximo,
                     nombreConcepto: element.m_sConcepto,
                     tipoCalculo: element.m_nIdTipoCalculo,
-                    agregadoDesde: element.m_nIdAgregadoDesde
+                    agregadoDesde: element.m_nIdAgregadoDesde,
+                    tipoMedida: element.m_nIdTipoMedida
                 }
                 todosConceptos.push(concept)
                 if (element.m_nIdAgregadoDesde == 0){
