@@ -101,7 +101,7 @@ const useStyles = makeStyles({
         },
     },
     paqueteCarrusel: {
-        height: "230px !important",
+        height: "330px !important",
     },
     sobreCarrusel: {
         height: "70px !important",
@@ -240,6 +240,7 @@ function Recoleccion() {
                 //checar cual de las dos es la que se usa
                 m_cyValorDeclarado: "",
                 m_nTipo: 2,
+                m_nIdProducto:'',
             },
         ],
         sobres: [
@@ -362,6 +363,7 @@ function Recoleccion() {
     const [Modal, open, close, isOpen] = useModal("root", {
         preventScroll: true,
     });
+    const [dataProductos, setDataProductos] = useState([])
 
     const history = useHistory()
 
@@ -454,6 +456,7 @@ function Recoleccion() {
         getFormatosImpresion()
         getUltimoFolioRecoleccion();
         getAllClientes()
+        getAllProductos()
     }, []);
 
     //setea todos los datos del remitente seleccionado
@@ -695,7 +698,6 @@ function Recoleccion() {
                 });
         }
 
-
     };
 
     function getTipoCambio() {
@@ -788,6 +790,8 @@ function Recoleccion() {
             ctd: "",
             m_nTipo: 2,
             m_sObservaciones: "",
+            producto:'',
+            m_nIdProducto: "",
         });
         console.log(paquetes);
         setState({...state, paquetes: paquetes, countPaquetes: state.countPaquetes + 1});
@@ -946,6 +950,9 @@ function Recoleccion() {
                     }
                 })
             })
+        })
+        respuesta.data.m_parrPaquetes.forEach((p) => {
+            p["producto"] = dataProductos.find((pd) => pd.m_nIdProducto == p.m_nIdProducto)
         })
 
         setState(state => {
@@ -1278,6 +1285,22 @@ function Recoleccion() {
     const handleChangePaquete = (event, index) => {
         var {paquetes} = state;
         paquetes[index][event.target.name] = event.target.value;
+        paquetes[index].m_rVolumen = paquetes[index].m_rLargo * paquetes[index].m_rAlto * paquetes[index].m_rAncho;
+        setState({
+            ...state,
+            paquetes: paquetes,
+        });
+    };
+    const handleChangePaqueteProducto = (event, index, newValue) => {
+        let {paquetes} = state;
+        paquetes[index][event.target.name] = newValue;
+        paquetes[index].m_nIdProducto = newValue.m_nIdProducto
+        paquetes[index].m_rLargo = newValue.m_xLargo
+        paquetes[index].m_rAlto = newValue.m_xAlto
+        paquetes[index].m_rAncho = newValue.m_xAncho
+        paquetes[index].m_rPeso = newValue.m_xPeso
+        paquetes[index].m_nIdTipoEmbalaje = newValue.m_nIdEmbalaje
+        paquetes[index].m_sDescripcion = newValue.m_sDescripcion
         paquetes[index].m_rVolumen = paquetes[index].m_rLargo * paquetes[index].m_rAlto * paquetes[index].m_rAncho;
         setState({
             ...state,
@@ -1671,6 +1694,13 @@ function Recoleccion() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
         axios.get(url, {headers}).then((respuesta) => {
             setDataZona(respuesta.data);
+        });
+    }
+
+    const getAllProductos = () => {
+        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
+        axios.get(url, { headers }).then(respuesta => {
+            setDataProductos(respuesta.data)
         });
     }
 
@@ -2383,6 +2413,34 @@ function Recoleccion() {
             <div key={`paquete${index}`}>
                 <h4><strong>{`Paquete #${index + 1}`}</strong></h4>
 
+                <div className="col-sm-4 col-md-12 unit">
+                    <div className="input">
+                        <Autocomplete
+                            value={state.paquetes[index].producto}
+                            freeSolo
+                            onChange={(event, newValue) => handleChangePaqueteProducto(event, index, newValue)}
+                            disableClearable
+                            forcePopupIcon={false}
+                            options={dataProductos}
+                            disabled={state.agregar === "Consultar"}
+                            getOptionLabel={(option) => `${option.m_sDescripcion}`}
+                            variant="outlined"
+                            name={"producto"}
+                            style={{
+                                transform: "translate(14px, 10px) scale(1) !important"
+                            }}
+                            renderInput={(params) =>
+                                <TextField
+                                    variant="outlined"
+                                    label="Producto"
+                                    margin="dense"
+                                    required
+                                    {...params}
+                                />
+                            }
+                        />
+                    </div>
+                </div>
 
                 <div className="col-sm-4 col-md-2-5 unit">
                     <div className="input">
@@ -4458,6 +4516,7 @@ function Recoleccion() {
                                                                             </div>
                                                                             : <span/>}
                                                                         <Carousel
+                                                                            swipeable={false}
                                                                             className={classes.paqueteCarrusel}
                                                                             widgets={[IndicatorDots, Buttons]}
                                                                             frames={framesPaquete}
@@ -4490,6 +4549,7 @@ function Recoleccion() {
                                                                             </div>
                                                                             : <span/>}
                                                                         <Carousel
+                                                                            swipeable={false}
                                                                             className={classes.sobreCarrusel}
                                                                             widgets={[IndicatorDots, Buttons]}
                                                                             frames={framesSobre}

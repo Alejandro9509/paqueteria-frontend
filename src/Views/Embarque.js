@@ -113,7 +113,7 @@ window.jQuery = window.$ = $;
 
 const styles = {
     paqueteCarrusel: {
-        height: "300px !important",
+        height: "330px !important",
     },
     sobreCarrusel: {
         height: "100px !important",
@@ -257,6 +257,7 @@ function Embarque(props) {
                 m_nCantidad: "",
                 m_nTipo: 2,
                 m_sObservaciones: "",
+                m_nIdProducto:'',
             },
         ],
         sobres: [
@@ -546,6 +547,7 @@ function Embarque(props) {
             }
         },
     ]);
+    const [dataProductos, setDataProductos] = useState([])
 
     const history = useHistory();
 
@@ -710,83 +712,6 @@ function Embarque(props) {
             /*params.m_tFechaDetalleEntrega = state.fechaEntrega.split("T")[0]
             params.m_tHoraDetalleEntrega = state.fechaEntrega.split("T")[1]*/
         }
-
-        /*const infoGeneral = {
-            m_nIdEmbarque: params.m_nIdEmbarque,
-            m_nIdRecoleccion: params.m_nIdRecoleccion,
-            IdSucursal: params.IdSucursal,
-            m_nFolioEmbarque: params.m_nFolioEmbarque,
-            m_nFolioGuia: params.m_nFolioGuia,
-            m_nFolioInforme: params.m_nFolioInforme,
-            m_dFechaRegistro: params.m_dFechaRegistro,
-            m_tHoraRegistro: params.m_tHoraRegistro,
-            m_nIdEstatusEmbarque: params.m_nIdEstatusEmbarque,
-            m_nIdMoneda: params.m_nIdMoneda,
-            m_cTIpoCambio: params.m_cTIpoCambio,
-            m_nIdTIpoCobro: params.m_nIdTIpoCobro,
-            m_dFecha: params.m_dFecha,
-            m_tHora: params.m_tHora,
-        }
-        console.log('informacion general:')
-        console.log(infoGeneral)
-        const remitenteData = {
-            m_sNOmbreRemitente: params.m_sNOmbreRemitente,
-            m_sRFCRemitente: params.m_sRFCRemitente,
-            m_sDomicilioRemitente: params.m_sDomicilioRemitente,
-            m_nIdCodigoPostalRemitente: params.m_nIdCodigoPostalRemitente,
-            m_nCiudadRemitente: params.m_nCiudadRemitente,
-            m_sCorreoRemitente: params.m_sCorreoRemitente,
-            m_sTelefonoRemitente: params.m_sTelefonoRemitente,
-            m_sContactoRemitente: params.m_sContactoRemitente,
-            m_nIdCiudadOrigen: params.m_nIdCiudadOrigen,
-        }
-        console.log('remitente:')
-        console.log(remitenteData)
-        const destinatarioData = {
-            m_sNombreDestinatario: params.m_sNombreDestinatario,
-            m_sRFCDestinatario: params.m_sRFCDestinatario,
-            m_sDomicilioDestinatario: params.m_sDomicilioDestinatario,
-            m_nIdCodigoPostalDestinatario: params.m_nIdCodigoPostalDestinatario,
-            m_nIdCIudadDestinatario: params.m_nIdCIudadDestinatario,
-            m_sCorreoDestinatario: params.m_sCorreoDestinatario,
-            m_sTelefonoDestinatario: params.m_sTelefonoDestinatario,
-            m_sContactoDestinatario: params.m_sContactoDestinatario,
-            m_nIdCiudadDestino: params.m_nIdCiudadDestino,
-        }
-        console.log('destinatario:')
-        console.log(destinatarioData)
-        const entregaData = {
-            IdCiudadEntrega: params.IdCiudadEntrega,
-            CodigoPostalEntrega: params.CodigoPostalEntrega,
-            IdZonaEntrega: params.IdZonaEntrega,
-            DomicilioEntrega: params.DomicilioEntrega,
-            EntregarEn: params.EntregarEn,
-            DatosAdicionales: params.DatosAdicionales,
-           /!* m_tFechaDetalleEntrega: params.fechaEntrega.split("T")[0],
-            m_tHoraDetalleEntrega: params.fechaEntrega.split("T")[1],
-            m_dFechaEntrega: "",
-            m_tHoraEntrega: "",*!/
-        }
-        console.log('entrega: ')
-        console.log(entregaData)
-
-        const otros = {
-            m_nNoPaquetes: params.m_nNoPaquetes,
-            m_nNoSobres: params.m_nNoSobres,
-            m_arrClsDetalle: params.m_arrClsDetalle,
-            //m_nIdOperador: params.idOperador.m_nIdOperador,
-            // m_nIdUnidad: params.idUnidad.m_nIdUnidad,
-            // m_dFechaSalida: params.fechaHoraSalida.split("T")[0],
-            // m_tHoraSalida: params.fechaHoraSalida.split("T")[1],
-            // FechaLlegada: params.fechaHoraLlegada.split("T")[0],
-            // HoraLlegada: params.fechaHoraLlegada.split("T")[1],
-            CreadoPor: params.CreadoPor,
-            ModificadoPor: params.ModificadoPor,
-            m_bEntregaEnSucursal: params.m_bEntregaEnSucursal,
-            m_nIdSucursalEntrega: params.m_nIdSucursalEntrega
-        }
-        console.log('otros datos:')
-        console.log(otros)*/
 
         console.log(params)
         console.log(JSON.stringify(params))
@@ -1225,6 +1150,7 @@ function Embarque(props) {
             paq["m_xVolumen"] = paq.m_rVolumen;
             paq["m_nIdTIpoEmpaque"] = paq.m_nIdTipoEmbalaje;
             paq["m_cValorDeclarado"] = paq.m_cyValorDeclarado;
+            paq["producto"] = dataProductos.find((pd) => pd.m_nIdProducto == paq.m_nIdProducto)
         })
         m_parrSobres.forEach(sobre => {
             sobre["m_nTipo"] = 1
@@ -1362,9 +1288,6 @@ function Embarque(props) {
     //Funcion para mostrar datos de embarque para consultar o modificar
     const setDataParaConsultarModificar = (respuesta) => {
 
-        /*const remitente = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasRemitente && o.m_sNombre == respuesta.data.m_sNOmbreRemitente)
-        const destinatario = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasRemitente && o.m_sNombre == respuesta.data.m_sNombreDestinatario)*/
-
         let remitente = {}
         let destinatario = {}
         if (respuesta.data.m_sAliasRemitente) {
@@ -1377,9 +1300,6 @@ function Embarque(props) {
         } else {
             destinatario = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNombreDestinatario)
         }
-
-        /*handleSelectRemitente(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCRemitente))
-        handleSelectDestinatario(dataRemitenteDestinatario.find((o) => o.m_sRFC == respuesta.data.m_sRFCDestinatario))*/
 
         obtenerCodigoPostalId(remitente.m_nIdCP).then((cp) => {
             setState(state => {
@@ -1408,6 +1328,8 @@ function Embarque(props) {
 
         respuesta.data.m_arrPaquetes.forEach(p => {
             p["m_nCantidad"] = p.ctd
+            p.producto = dataProductos.find((pd) => pd.m_nIdProducto == p.m_nIdProducto)
+            debugger
         })
 
         setState(state => {
@@ -1743,6 +1665,7 @@ function Embarque(props) {
         getTipoCambio()
         getFormatosImpresion()
         getAllClientes()
+        getAllProductos()
     }
 
     async function getAllEmbarque() {
@@ -2456,6 +2379,8 @@ function Embarque(props) {
             m_nCantidad: "",
             m_nTipo: 2,
             m_sObservaciones: "",
+            producto:'',
+            m_nIdProducto: "",
         });
         console.log(paquetes);
         setState({
@@ -2509,6 +2434,23 @@ function Embarque(props) {
         });
     };
 
+    const handleChangePaqueteProducto = (event, index, newValue) => {
+        let {paquetes} = state;
+        paquetes[index].producto = newValue;
+        paquetes[index].m_nIdProducto = newValue.m_nIdProducto
+        paquetes[index].m_xLargo = newValue.m_xLargo
+        paquetes[index].m_xAlto = newValue.m_xAlto
+        paquetes[index].m_xAncho = newValue.m_xAncho
+        paquetes[index].m_xPeso = newValue.m_xPeso
+        paquetes[index].m_nIdTIpoEmpaque = newValue.m_nIdEmbalaje
+        paquetes[index].m_sDescripcion = newValue.m_sDescripcion
+        paquetes[index].m_xVolumen = paquetes[index].m_xLargo * paquetes[index].m_xAlto * paquetes[index].m_xAncho;
+        setState({
+            ...state,
+            paquetes: paquetes,
+        });
+    };
+
     const handleChangeSobre = (event, index) => {
         var {sobres} = state;
         sobres[index][event.target.name] = event.target.value;
@@ -2518,6 +2460,13 @@ function Embarque(props) {
         });
     };
 
+    const getAllProductos = () => {
+        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
+        axios.get(url, { headers }).then(respuesta => {
+            setDataProductos(respuesta.data)
+        });
+    }
+
     const framesPaquete = state.paquetes.map((p, index) => {
         return (
             <div key={`paquete${index}`}>
@@ -2525,6 +2474,35 @@ function Embarque(props) {
                     <h4>
                         <strong>{`Paquete #${index + 1}`}</strong>
                     </h4>
+                </div>
+
+                <div className="col-sm-4 col-md-12 unit">
+                    <div className="input">
+                        <Autocomplete
+                            value={state.paquetes[index].producto}
+                            freeSolo
+                            onChange={(event, newValue) => handleChangePaqueteProducto(event, index, newValue)}
+                            disableClearable
+                            forcePopupIcon={false}
+                            options={dataProductos}
+                            disabled={state.agregar === "Consultar"}
+                            getOptionLabel={(option) => `${option.m_sDescripcion}`}
+                            variant="outlined"
+                            name={"producto"}
+                            style={{
+                                transform: "translate(14px, 10px) scale(1) !important"
+                            }}
+                            renderInput={(params) =>
+                                <TextField
+                                    variant="outlined"
+                                    label="Producto"
+                                    margin="dense"
+                                    required
+                                    {...params}
+                                />
+                            }
+                        />
+                    </div>
                 </div>
 
                 <div className="col-sm-4 col-md-2-5 unit">
