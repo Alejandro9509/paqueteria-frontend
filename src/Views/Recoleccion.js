@@ -698,7 +698,6 @@ function Recoleccion() {
                 });
         }
 
-
     };
 
     function getTipoCambio() {
