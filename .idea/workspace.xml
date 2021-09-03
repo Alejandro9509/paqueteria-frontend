@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Intento fallido de duplicar tarifas">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +108,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -135,6 +136,7 @@
       <workItem from="1629902787967" duration="7739000" />
       <workItem from="1630341665397" duration="1323000" />
       <workItem from="1630389865958" duration="16705000" />
+      <workItem from="1630703848244" duration="1275000" />
     </task>
     <task id="LOCAL-00007" summary="Se agregaron los filtros necesarios">
       <created>1627356533411</created>
@@ -582,12 +584,6 @@
     <MESSAGE value="Corrección de error al generar embarque" />
     <MESSAGE value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
     <option name="LAST_COMMIT_MESSAGE" value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="432" y="170" key="MultipleFileMergeDialog" timestamp="1630693776760">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900@0.0.1440.900" timestamp="1630693776760" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

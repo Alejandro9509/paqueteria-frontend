@@ -1055,6 +1055,7 @@ function Embarque(props) {
                         m_nCantidad: "",
                         m_nTipo: 2,
                         m_sObservaciones: "",
+                        m_nIdProducto:'',
                     },
                 ],
                 sobres: [
