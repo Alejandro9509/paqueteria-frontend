@@ -6,18 +6,9 @@ import {calcularRuta} from "../../Util/Contexts/UltimaMillaContext";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
-import {Grid, Typography} from "@material-ui/core";
+import {Grid, Typography, Dialog, DialogTitle, DialogActions, DialogContent} from "@material-ui/core";
 
-const MarkerIcon = new L.Icon({
-    iconUrl: MarkerImage,
-    iconRetinaUrl: MarkerImage,
-    iconAnchor: null,
-    popupAnchor: null,
-    shadowUrl: null,
-    shadowSize: null,
-    shadowAnchor: null,
-    iconSize: new L.Point(20, 20),
-});
+
 class TourUltimaMilla extends Component {
     constructor(props) {
         super(props);
@@ -44,7 +35,10 @@ class TourUltimaMilla extends Component {
         var polygon = []
         var guias = this.props.data.m_arrClsProGuia.sort((a, b) => a.m_nUltimaMillaOrden - b.m_nUltimaMillaOrden)
 
-
+        guias.forEach(g => {
+            g.lat = g.m_sLatitud
+            g.lng = g.m_sLongitud
+        })
         if (guias.length !== 0) {
             if (this.props.data.m_xlat !== 0 && this.props.data.m_xlng !== 0 ) {
                 calcularRuta(guias, {lat:this.props.data.m_xlat, lng:this.props.data.m_xlng}).then((result) => {
@@ -70,6 +64,7 @@ class TourUltimaMilla extends Component {
         const blackOptions = {color: this.props.data.color}
         return (
             <div style={{backgroundColor: "transparent"}}>
+
                 {
                     this.props.data.m_arrClsProGuia.map((g, index) => {
                             return (

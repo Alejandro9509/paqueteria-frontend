@@ -34,7 +34,7 @@ import {ContactsOutlined} from "@material-ui/icons";
 import {obtenerInformesDisponiblesViajes} from "../../Util/Contexts/InformesContext";
 import InformesPorAsignar from "./InformesPorAsignar";
 import Noty from "noty";
-import {obtenerEstatusUnidadeId} from "../../Util/Contexts/UnidadesContext";
+import {obtenerEstatusUnidadeId, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -163,7 +163,6 @@ class AgregarViaje extends Component {
             }
         }
 
-
         agregarViaje(params)
             .then((respuesta) => {
                 //showSuccess(respuesta.data);
@@ -239,8 +238,7 @@ class AgregarViaje extends Component {
     }
 
     getAllUnidades() {
-        const url = `${process.env.REACT_APP_API_URL}/Unidades/GetListado`;
-        axios.get(url, {headers}).then((respuesta) => {
+        obtenerUnidades().then((respuesta) => {
             this.setState({dataUnidades: respuesta.data})
         });
     }
@@ -921,9 +919,9 @@ class AgregarViaje extends Component {
                                                     id="IdRemolque1"
                                                     disableClearable
                                                     forcePopupIcon={false}
-                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_sTipoUnidad !== 'Dolly')}
+                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30 )}
                                                     getOptionLabel={(option) =>
-                                                        option.m_sDescripcion
+                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
                                                     }
                                                     style={{
                                                         transform: "translate(14px, 10px) scale(1) !important"
@@ -1028,9 +1026,9 @@ class AgregarViaje extends Component {
                                                     id="IdRemolque2"
                                                     disableClearable
                                                     forcePopupIcon={false}
-                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_sTipoUnidad !== 'Dolly')}
+                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
                                                     getOptionLabel={(option) =>
-                                                        option.m_sDescripcion
+                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
                                                     }
                                                     style={{
                                                         transform: "translate(14px, 10px) scale(1) !important"
@@ -1138,9 +1136,9 @@ class AgregarViaje extends Component {
                                                     id="IdDolly"
                                                     disableClearable
                                                     forcePopupIcon={false}
-                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_sTipoUnidad === 'Dolly')}
+                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 28)}
                                                     getOptionLabel={(option) =>
-                                                        option.m_sDescripcion
+                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
                                                     }
                                                     style={{
                                                         transform: "translate(14px, 10px) scale(1) !important"

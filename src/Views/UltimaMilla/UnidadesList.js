@@ -190,7 +190,7 @@ class UnidadesList extends Component {
                                                 />
                                             </TableCell>
                                             <TableCell align="left">{u.m_sDescripcion}</TableCell>
-                                            <TableCell align="left">Capacidad</TableCell>
+                                            <TableCell align="left">{u.m_nCapacidad}</TableCell>
                                             <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
                                             <TableCell align="left">{u.m_nIdOperador === 0 ? (
                                                 <Link onClick={() => this.props.reasignarOperador(u)}>Asignar</Link>) : u.m_sNombreOperador}</TableCell>

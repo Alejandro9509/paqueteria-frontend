@@ -78,13 +78,22 @@ async function obtenerGuiasUbicacion(paquetes) {
     var guias = []
     for (var i = 0; i < paquetes.length; i++) {
         var g = paquetes[i]
-        var location = await searchLocationGuia(g.m_bEsRecoleccion ? g.m_sCiudadOrigen :  g.m_sCiudadDestino,g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioRemitente,g.m_bEsRecoleccion ? g.m_sCodigoPostalRemitente :  g.m_sCodigoPostalDestinatario)
-        guias.push({
-            ...g,
-            lat: location.y,
-            lng: location.x,
-            index: i
-        })
+        if (!g.lat) {
+            var location = await searchLocationGuia(g.m_bEsRecoleccion ? g.m_sCiudadOrigen : g.m_sCiudadDestino, g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioRemitente, g.m_bEsRecoleccion ? g.m_sCodigoPostalRemitente : g.m_sCodigoPostalDestinatario)
+            guias.push({
+                ...g,
+                lat: location.y,
+                lng: location.x,
+                index: i
+            })
+        }else {
+            guias.push({
+                ...g,
+                lat: g.m_sLatitud,
+                lng: g.m_sLongitud,
+                index: i
+            })
+        }
     }
     ;
     return guias
@@ -146,7 +155,7 @@ function calcularRuta(points, sucursal) {
     var array = []
     array.push(apiPoint(sucursal.lng, sucursal.lat))
     console.log(points)
-    array = array.concat(points.map(p => apiPoint(parseFloat(p.m_sLongitud), parseFloat(p.m_sLatitud))))
+    array = array.concat(points.map(p => apiPoint(parseFloat(p.lng), parseFloat(p.lat))))
     array.push(apiPoint(sucursal.lng, sucursal.lat))
     var result;
     trackPromise(
@@ -300,6 +309,17 @@ function obtenerUltimaMillaFecha(date, idSucursal, zonas) {
     return result
 }
 
+async function remplazarPaqueteUltimaMilla(idParada, paqueteViejo, paqueteNuevo) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/RemplazarParada/${idParada}/${paqueteViejo.m_nId}`;
+    let result;
+    var guia = await obtenerGuiasUbicacion([paqueteNuevo])
+    trackPromise(
+
+        result = axios.put(url, Object.assign({}, {EsRecoleccion: paqueteViejo.m_bEsRecoleccion,IdNuevaGuia: paqueteNuevo.m_nId, NuevoEsRecoleccion: paqueteNuevo.m_bEsRecoleccion, Lat: guia[0].lat, Lng: guia[0].lng}), {headers})
+    );
+    return result
+}
+
 export {
     obtenerRutas,
     obtenerGuiasUbicacion,
@@ -308,7 +328,9 @@ export {
     searchLocationWeb,
     agregarRuta,
     searchLocationAddress,
-    obtenerUltimaMillaFecha
+    obtenerUltimaMillaFecha,
+    remplazarPaqueteUltimaMilla
+
 }
 
 

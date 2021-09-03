@@ -73,6 +73,15 @@ function obtenerEstatusUnidadeId(id) {
     return result
 }
 
+function cambiarOperadorUnidad(idOperador, idUnidad) {
+    const url = `${process.env.REACT_APP_API_URL}/Unidad/AsignarOperador/${idUnidad}/${idOperador}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, {}, { headers })
+    );
+    return result
+}
+
 function obtenerUnidadesTipo(id) {
     const url = `${process.env.REACT_APP_API_URL}/Unidades/ByTipoUnidad/${id}`;
     let result;
@@ -82,4 +91,4 @@ function obtenerUnidadesTipo(id) {
     return result
 }
 
-export { modificarUnidades, agregarUnidades, eliminarUnidades, obtenerUnidadesId, obtenerUnidades, validaCodigoUnidad, obtenerUnidadesTipo, obtenerEstatusUnidadeId }
+export { cambiarOperadorUnidad, modificarUnidades, agregarUnidades, eliminarUnidades, obtenerUnidadesId, obtenerUnidades, validaCodigoUnidad, obtenerUnidadesTipo, obtenerEstatusUnidadeId }
