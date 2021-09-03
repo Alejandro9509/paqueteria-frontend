@@ -70,6 +70,10 @@ class Tarifas extends Component {
                     field: "m_sSucursal",
                     width: 300,
                 }, {
+                    headerName: "Origen",
+                    field: "m_sOrigen",
+                    width: 300,
+                },{
                     headerName: "Destino",
                     field: "m_sDestino",
                     width: 300,
@@ -198,6 +202,7 @@ class Tarifas extends Component {
     handleAceptar(data) {
         var params = {
             m_nIdSucursal: data.sucursal,
+            m_nIdOrigen: data.origen,
             m_nIdDestino: data.destino,
             m_cFleteMinimo: data.precioFlete,
             m_bActivo: data.activo ? 1 : 0,

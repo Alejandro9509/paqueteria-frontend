@@ -51,6 +51,8 @@ class CrearTarifa extends Component {
             ivaRetiene: [],
             sucursal: props.edit ? props.select.m_nIdSucursal : "0",
             destino: props.edit ? props.select.m_nIdDestino : "0",
+            origen: props.edit ? props.select.m_nIdOrigen : "0",
+
             precioFlete: props.edit ? props.select.m_cFleteMinimo : "",
             precioMinimo: props.edit ? props.select.m_cMontoMinimo : "",
             precioKilo: props.edit ? props.select.m_cPrecioKilo : "",
@@ -160,13 +162,19 @@ class CrearTarifa extends Component {
             [event.target.name]: event.target.value,
         });
         if (event.target.name == "sucursal"){
-            if (event.target.name == 0 || this.state.destino == 0){
+            if (event.target.name == 0 || this.state.destino == 0 || this.origen == 0){
                 this.setState({disabled: true})
             }else{
                 this.setState({disabled: false})
             }
         }else if (event.target.name == "destino"){
-            if (event.target.name == 0 || this.state.sucursal == 0){
+            if (event.target.name == 0 || this.state.sucursal == 0 || this.state.origen == 0){
+                this.setState({disabled: true})
+            }else{
+                this.setState({disabled: false})
+            }
+        }else if (event.target.name == "origen"){
+            if (event.target.name == 0 || this.state.sucursal == 0 || this.state.destino == 0){
                 this.setState({disabled: true})
             }else{
                 this.setState({disabled: false})
@@ -412,6 +420,41 @@ class CrearTarifa extends Component {
                                                                 value={sucursal.m_nIdSucursal}
                                                             >
                                                                 {sucursal.m_sSucursal}
+                                                            </option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </label>
+                                        </div>
+                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                            <label className="input select" style={{ width: "100%" }}>
+                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                    <InputLabel id="origenLabel">Origen</InputLabel>
+                                                    <Select
+                                                        native
+                                                        className="form-control"
+                                                        label="Origen"
+                                                        disabled={this.props.consult}
+                                                        labelId="origenLabel"
+                                                        className="form-control"
+                                                        required
+
+                                                        value={this.state.origen}
+                                                        onChange={this.handleChange}
+                                                        name="origen"
+                                                    >
+                                                        <option
+                                                            key={"0"}
+                                                            value={"0"}
+                                                        >
+                                                            Seleccionar
+                                                        </option>
+                                                        {this.state.ciudades.map((ciudad) => (
+                                                            <option
+                                                                key={ciudad.m_nIdCiudad}
+                                                                value={ciudad.m_nIdCiudad}
+                                                            >
+                                                                {ciudad.m_sCiudad}
                                                             </option>
                                                         ))}
                                                     </Select>
@@ -763,7 +806,7 @@ class CrearTarifa extends Component {
                                         :
                                         <div>
                                             <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
-                                                <Tab label="Concetos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
+                                                <Tab label="Conceptos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
                                                 <Tab label="Condiciones de Precios por Tipo de Cobro" {...this.a11yProps(1)} />
                                                 <Tab label="Condiciones de Precio por Tipo de Servicio" {...this.a11yProps(2)} />
                                             </Tabs>
