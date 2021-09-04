@@ -604,9 +604,49 @@ function Embarque(props) {
 
     }
 
+    const validarPaquetes = (paquete) => {
+        if (paquete.m_xPeso != ''
+            && paquete.m_xLargo != ''
+            && paquete.m_xAncho != ''
+            && paquete.m_xAlto != ''
+            && paquete.m_sDescripcion != ''
+            && paquete.m_cValorDeclarado != ''
+            && paquete.m_nCantidad != ''
+        ){
+            return true
+        }else {
+            return false
+        }
+    }
+
+    const validarSobre = (sobre) => {
+        if (sobre.m_sDescripcion != ''){
+            return true
+        }else {
+            return false
+        }
+    }
+
     const handleAceptar = (e) => {
         e.preventDefault();
         const {paquetes, sobres} = state;
+        let sinPaquetes = false
+
+        for (let i = 0; i < paquetes.length; i++) {
+            if (!validarPaquetes(paquetes[i])){
+                sinPaquetes = true
+            }
+        }
+        if (sinPaquetes){
+            for (let i = 0; i < sobres.length; i++) {
+                if (!validarSobre(sobres[i])){
+                    showSuccess("Verifique haber llenado todos los datos de paquetes y/o sobres");
+                    return
+                }
+            }
+        }
+
+
         const soloPaquetesLenth = paquetes.length
         const paquetesYSobres = []
 
@@ -680,28 +720,19 @@ function Embarque(props) {
             // HoraLlegada: state.fechaHoraLlegada.split("T")[1],
             CreadoPor: state.CreadoPor,
             ModificadoPor: state.ModificadoPor,
-            m_bEntregaEnSucursal: false,
-            m_nIdSucursalEntrega: 0,
+            m_bEntregaEnSucursal: state.entregaEnSucursal,
 
             IdCiudadEntrega: state.ciudadDestinatario,
             CodigoPostalEntrega: state.codigoPostalDestinatario.m_nIdCP,
-            IdZonaEntrega: 0,
             DomicilioEntrega: state.domicilioDestinatario,
-            EntregarEn: '',
-            DatosAdicionales: '',
-            m_tFechaDetalleEntrega: '',
-            m_tHoraDetalleEntrega: '',
-            EntregarMismoDomicilio: true
-
+            EntregarMismoDomicilio: !state.diferenteEntrega
         }
 
         if (state.entregaEnSucursal) {
-            params.m_bEntregaEnSucursal = true
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
             params.EntregarMismoDomicilio = false
         }
         if (state.diferenteEntrega) {
-            params.EntregarMismoDomicilio = false
             params.m_bEntregaEnSucursal = false
             params.IdCiudadEntrega = state.ciudadEntrega
             params.CodigoPostalEntrega = state.codigoPostalEntrega.m_nIdCP
@@ -709,8 +740,6 @@ function Embarque(props) {
             params.DomicilioEntrega = state.domicilioEntrega
             params.EntregarEn = state.entregaEn
             params.DatosAdicionales = state.datosAdicionalesEntrega
-            /*params.m_tFechaDetalleEntrega = state.fechaEntrega.split("T")[0]
-            params.m_tHoraDetalleEntrega = state.fechaEntrega.split("T")[1]*/
         }
 
         console.log(params)
@@ -1050,12 +1079,13 @@ function Embarque(props) {
                         m_xAlto: "",
                         m_xVolumen: "",
                         m_nIdTIpoEmpaque: "",
-                        m_cyValorDeclarado: "",
+                        m_cValorDeclarado: "",
                         m_sDescripcion: "",
                         m_nCantidad: "",
                         m_nTipo: 2,
                         m_sObservaciones: "",
                         m_nIdProducto:'',
+                        producto: ''
                     },
                 ],
                 sobres: [
@@ -1330,7 +1360,7 @@ function Embarque(props) {
         respuesta.data.m_arrPaquetes.forEach(p => {
             p["m_nCantidad"] = p.ctd
             p.producto = dataProductos.find((pd) => pd.m_nIdProducto == p.m_nIdProducto)
-            debugger
+            // debugger
         })
 
         setState(state => {
