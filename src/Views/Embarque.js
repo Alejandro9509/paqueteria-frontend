@@ -243,6 +243,12 @@ function Embarque(props) {
         entregaEn: '',
         datosAdicionalesEntrega: '',
 
+        //Cita de recoleccion
+        entregaConCita: false,
+        fechaCita: '',
+        horaCitaMinima: '',
+        horaCitaMaxima: '',
+
         //Paquetes/sobres
         paquetes: [
             {
@@ -604,9 +610,49 @@ function Embarque(props) {
 
     }
 
+    const validarPaquetes = (paquete) => {
+        if (paquete.m_xPeso != ''
+            && paquete.m_xLargo != ''
+            && paquete.m_xAncho != ''
+            && paquete.m_xAlto != ''
+            && paquete.m_sDescripcion != ''
+            && paquete.m_cValorDeclarado != ''
+            && paquete.m_nCantidad != ''
+        ){
+            return true
+        }else {
+            return false
+        }
+    }
+
+    const validarSobre = (sobre) => {
+        if (sobre.m_sDescripcion != ''){
+            return true
+        }else {
+            return false
+        }
+    }
+
     const handleAceptar = (e) => {
         e.preventDefault();
         const {paquetes, sobres} = state;
+        let sinPaquetes = false
+
+        for (let i = 0; i < paquetes.length; i++) {
+            if (!validarPaquetes(paquetes[i])){
+                sinPaquetes = true
+            }
+        }
+        if (sinPaquetes){
+            for (let i = 0; i < sobres.length; i++) {
+                if (!validarSobre(sobres[i])){
+                    showSuccess("Verifique haber llenado todos los datos de paquetes y/o sobres");
+                    return
+                }
+            }
+        }
+
+
         const soloPaquetesLenth = paquetes.length
         const paquetesYSobres = []
 
@@ -680,28 +726,21 @@ function Embarque(props) {
             // HoraLlegada: state.fechaHoraLlegada.split("T")[1],
             CreadoPor: state.CreadoPor,
             ModificadoPor: state.ModificadoPor,
-            m_bEntregaEnSucursal: false,
-            m_nIdSucursalEntrega: 0,
+            m_bEntregaEnSucursal: state.entregaEnSucursal,
 
             IdCiudadEntrega: state.ciudadDestinatario,
             CodigoPostalEntrega: state.codigoPostalDestinatario.m_nIdCP,
-            IdZonaEntrega: 0,
             DomicilioEntrega: state.domicilioDestinatario,
-            EntregarEn: '',
-            DatosAdicionales: '',
-            m_tFechaDetalleEntrega: '',
-            m_tHoraDetalleEntrega: '',
-            EntregarMismoDomicilio: true
-
+            EntregarMismoDomicilio: !state.diferenteEntrega,
+            //Cita de recoleccion
+            m_bEntregaConCita: state.entregaConCita,
         }
 
         if (state.entregaEnSucursal) {
-            params.m_bEntregaEnSucursal = true
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
             params.EntregarMismoDomicilio = false
         }
         if (state.diferenteEntrega) {
-            params.EntregarMismoDomicilio = false
             params.m_bEntregaEnSucursal = false
             params.IdCiudadEntrega = state.ciudadEntrega
             params.CodigoPostalEntrega = state.codigoPostalEntrega.m_nIdCP
@@ -709,8 +748,11 @@ function Embarque(props) {
             params.DomicilioEntrega = state.domicilioEntrega
             params.EntregarEn = state.entregaEn
             params.DatosAdicionales = state.datosAdicionalesEntrega
-            /*params.m_tFechaDetalleEntrega = state.fechaEntrega.split("T")[0]
-            params.m_tHoraDetalleEntrega = state.fechaEntrega.split("T")[1]*/
+        }
+        if (state.entregaConCita) {
+            params.m_sFechaCita = state.fechaCita
+            params.m_sHoraCitaMinima = state.horaCitaMinima
+            params.m_sHoraCitaMaxima = state.horaCitaMaxima
         }
 
         console.log(params)
@@ -1041,6 +1083,12 @@ function Embarque(props) {
                 entregaEn: '',
                 datosAdicionalesEntrega: '',
 
+                //Cita de recoleccion
+                entregaConCita: false,
+                fechaCita: '',
+                horaCitaMinima: '',
+                horaCitaMaxima: '',
+
                 //Paquetes/sobres
                 paquetes: [
                     {
@@ -1050,12 +1098,13 @@ function Embarque(props) {
                         m_xAlto: "",
                         m_xVolumen: "",
                         m_nIdTIpoEmpaque: "",
-                        m_cyValorDeclarado: "",
+                        m_cValorDeclarado: "",
                         m_sDescripcion: "",
                         m_nCantidad: "",
                         m_nTipo: 2,
                         m_sObservaciones: "",
                         m_nIdProducto:'',
+                        producto: ''
                     },
                 ],
                 sobres: [
@@ -1330,7 +1379,7 @@ function Embarque(props) {
         respuesta.data.m_arrPaquetes.forEach(p => {
             p["m_nCantidad"] = p.ctd
             p.producto = dataProductos.find((pd) => pd.m_nIdProducto == p.m_nIdProducto)
-            debugger
+            // debugger
         })
 
         setState(state => {
@@ -1489,7 +1538,7 @@ function Embarque(props) {
         setState({
             ...state,
             diferenteEntrega: !state.diferenteEntrega,
-            entregaEnSucursal: false
+            entregaEnSucursal: !state.diferenteEntrega && false
         });
     };
 
@@ -1497,18 +1546,18 @@ function Embarque(props) {
         setState({
             ...state,
             entregaEnSucursal: !state.entregaEnSucursal,
-            diferenteEntrega: false
+            diferenteEntrega: !state.entregaEnSucursal && false,
+            entregaConCita: !state.entregaEnSucursal && false
         });
     };
 
-    //antigua implementacion para cambiar ciudad, si es muy vieja borrar (3 junio 2021)
-    /*const handleSelectCiudadChange = (event) => {
-        console.log("diferenteEntrega : " + state.diferenteEntrega);
+    const handleEntregaConCitaCheckbox = (event) => {
         setState({
             ...state,
-            ciudadRemitente: event.target.value,
+            entregaEnSucursal: !state.entregaConCita && false,
+            entregaConCita: !state.entregaConCita
         });
-    };*/
+    };
 
     const handleChangeCiudadRemitente = (event) => {
         event.preventDefault();
@@ -2691,6 +2740,27 @@ function Embarque(props) {
             </div>
         );
     });
+
+    const handleFechaCita = (event) => {
+        setState({
+            ...state,
+            fechaCita: event.target.value,
+        })
+    }
+
+    const handleHoraCitaMinima = (event) => {
+        setState({
+            ...state,
+            horaCitaMinima: event.target.value,
+        })
+    }
+
+    const handleHoraCitaMaxima = (event) => {
+        setState({
+            ...state,
+            horaCitaMaxima: event.target.value,
+        })
+    }
 
     return (
         <div>
@@ -4777,6 +4847,23 @@ function Embarque(props) {
                                                                         <i/>
                                                                     </label>
                                                                 </div>
+
+                                                                <div className="col-sm-12 col-md-12  unit">
+                                                                    <label className="checkbox">
+                                                                        Entrega con cita
+                                                                        <input
+                                                                            onChange={handleEntregaConCitaCheckbox}
+                                                                            className="form-control"
+                                                                            type="checkbox"
+                                                                            checked={state.entregaConCita}
+                                                                            value={state.entregaConCita}
+                                                                            style={{height: "20px"}}
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            id="entregaConCita"
+                                                                        />
+                                                                        <i/>
+                                                                    </label>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -5225,6 +5312,79 @@ function Embarque(props) {
                                             <div/>
                                         )}
                                     </div>
+
+                                    <div className="row">
+                                        {state.entregaConCita &&
+                                        <div className="widget-wrap" id="citaEntrega">
+                                            <div>
+                                                <div className="widget-header">
+                                                    <h2>Programar cita de la Entrega</h2>
+                                                </div>
+                                                <div className="widget-container">
+                                                    <div className="widget-content">
+                                                        <div className="row">
+                                                            <div className="col-md-12">
+                                                                <div className="col-sm-6 col-md-4  unit">
+
+                                                                    <div className="input">
+                                                                        <TextField
+                                                                            variant="outlined"
+                                                                            id="fechaCita"
+                                                                            label="Fecha de la cita"
+                                                                            type="date"
+                                                                            onChange={handleFechaCita}
+                                                                            value={state.fechaCita}
+                                                                            className={"form-control"}
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            InputLabelProps={{shrink: true,}}
+                                                                            required={state.entregaConCita}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-4  unit">
+                                                                    <div className="input">
+                                                                        <TextField
+                                                                            variant="outlined"
+                                                                            id="horaMinima"
+                                                                            label="Hora mínima"
+                                                                            type="time"
+                                                                            value={state.horaCitaMinima}
+                                                                            onChange={handleHoraCitaMinima}
+                                                                            className={"form-control"}
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            InputLabelProps={{shrink: true,}}
+                                                                            inputProps={{step: 300,}}
+                                                                            required={state.entregaConCita}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-4  unit">
+                                                                    <div className="input">
+                                                                        <TextField
+                                                                            variant="outlined"
+                                                                            id="horaMaxima"
+                                                                            label="Hora máxima"
+                                                                            type="time"
+                                                                            onChange={handleHoraCitaMaxima}
+                                                                            value={state.horaCitaMaxima}
+                                                                            className={"form-control"}
+                                                                            InputLabelProps={{shrink: true,}}
+                                                                            inputProps={{step: 300,}}
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            required={state.entregaConCita}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        }
+                                    </div>
+
                                 </div>
                                 <div className="form-footer ol-md-12">
                                     <button
