@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="63f43a96-c7eb-454d-9f39-8cd5dd63b7eb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/sonarIssues.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Informes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Informes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Rutas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Rutas.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/DetalleParadas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/DetalleParadas.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Paradas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Paradas.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Viajes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Intento fallido de duplicar tarifas">
+      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,12 +74,12 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/public" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla" />
       <recent name="$PROJECT_DIR$/src/Components/Map" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
     </key>
   </component>
   <component name="RunManager">
@@ -113,7 +106,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -141,6 +134,7 @@
       <workItem from="1629902787967" duration="7739000" />
       <workItem from="1630341665397" duration="1323000" />
       <workItem from="1630389865958" duration="16705000" />
+      <workItem from="1630703848244" duration="9624000" />
     </task>
     <task id="LOCAL-00007" summary="Se agregaron los filtros necesarios">
       <created>1627356533411</created>
@@ -518,7 +512,6 @@
                   </entry>
                 </map>
               </option>
-              <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
@@ -560,8 +553,10 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="*Los codigos postales ya se acumulan por ciudad" />
     <MESSAGE value="*Las localidades ya se acumulan" />
     <MESSAGE value="*Limpieza de código" />
     <MESSAGE value="*Se arregló validacion para que mande a modificar o agregar respectivamente" />
@@ -586,50 +581,7 @@
     <MESSAGE value="Se removieron campos no requeridos en Recoleccion.js y Embarque.js" />
     <MESSAGE value="Corrección de error al generar embarque" />
     <MESSAGE value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
-    <MESSAGE value="Merge branch 'develop' of http://190.9.53.4:8082/paqueteria/proyecto-paqueteria into develop&#10;&#10; Conflicts:&#10;&#9;.idea/workspace.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'develop' of http://190.9.53.4:8082/paqueteria/proyecto-paqueteria into develop&#10;&#10; Conflicts:&#10;&#9;.idea/workspace.xml" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="190" y="13" key="CommitChangelistDialog2" timestamp="1630693832335">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="190" y="13" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1630693832335" />
-    <state width="1419" height="80" key="GridCell.Tab.0.bottom" timestamp="1630719410988">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="1419" height="80" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1630719410988" />
-    <state width="1419" height="80" key="GridCell.Tab.0.center" timestamp="1630719410986">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="1419" height="80" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1630719410986" />
-    <state width="1419" height="80" key="GridCell.Tab.0.left" timestamp="1630719410985">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="1419" height="80" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1630719410985" />
-    <state width="1419" height="80" key="GridCell.Tab.0.right" timestamp="1630719410987">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="1419" height="80" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1630719410987" />
-    <state x="432" y="170" key="MultipleFileMergeDialog" timestamp="1630693776760">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="432" y="170" key="MultipleFileMergeDialog/0.0.1440.900@0.0.1440.900" timestamp="1630693776760" />
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2" timestamp="1630693842996">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="320" y="187" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1630693842996" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js</url>
-          <line>556</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <option name="LAST_COMMIT_MESSAGE" value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -1111,23 +1111,23 @@ function Guia(props) {
             }
         })
 
-        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, paquetes)
+        obtenerTarifasPorEmbarque(respuesta.data, paquetes)
     }
 
     const [dataTodosConceptosByEmbarque, setDataTodosConceptosByEmbarque] = useState([])
 
-    const obtenerTarifasPorEmbarque = (idEmbarque,paquetesTemp) => {
+    const obtenerTarifasPorEmbarque = (embarque,paquetesTemp) => {
         const conceptosTemp = []
         let ivaTraslada = []
         let ivaRetiene = []
-        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${idEmbarque}`, { headers }).then(tarifa => {
+        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque.m_nIdEmbarque}`, { headers }).then(tarifa => {
             console.log('tarifas by embarque')
             console.log(tarifa.data)
             if (tarifa.data.length != 0) {
             let pesoTotal = 0
             let pesoKg = 0
             let pesoVolumetrico = 0
-            paquetesTemp.forEach((p) => {
+                paquetesTemp.forEach((p) => {
                 pesoKg = pesoKg + p.peso * p.cdt
                 //xPesoVolumetrico += (clPaquete.m_xAlto * clPaquete.m_xLargo * clPaquete.m_xAncho)* 0.0005
                 pesoVolumetrico = (p.alto * p.ancho * p.largo) * p.cdt * 0.0005
@@ -1139,7 +1139,7 @@ function Guia(props) {
             }
 
             console.log(pesoKg)
-            obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal)
+            obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal,paquetesTemp)
             if (tarifa.data.length !== 0) {
                 //se recorre el listado de conceptos de la tarifa del embarque
                 tarifa.data[0].m_arrArConceptos.forEach(element => {
@@ -1311,32 +1311,37 @@ function Guia(props) {
     }
 
     //Aqui se filtran los conceptos de la tarifa para que en el listado de conceptos que se pueden agregar solo salgan los que estan dentro del rango
-    const obtenerConceptosByTarifa = (idTarifa, pesoTotal) => {
+    const obtenerConceptosByTarifa = (idTarifa, pesoTotal, paquetesEmbarque) => {
         console.log('pesoTotal: ', pesoTotal)
         const conceptosDentroRango = []
         axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetById/${idTarifa}`, { headers }).then(tarifa => {
             console.log("Tarifas/GetById ", tarifa)
 
-            tarifa.data.m_arrArConceptos.forEach( element => {
-                if (element.m_nIdAgregadoDesde == 0){
-                    conceptosDentroRango.push(element)
-                }else {
-                    if (element.m_xnRangoMinimo <= pesoTotal && element.m_xnRangoMaximo >= pesoTotal) {
-                        if (element.m_nIdTipoCalculo == 2){
-                            if ((pesoTotal/1000) * element.m_cImporte < 51.5) {
-                                element.m_cImporte = 51.5
-                            }else {
-                                element.m_cImporte = (pesoTotal/1000) * element.m_cImporte
-                            }
-
-                            element.m_cImporteRetiene = (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoRetiene).m_xPorcentaje / 100) * element.m_cImporte
-                            element.m_cImporteIva = (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoTraslada).m_xPorcentaje / 100) * element.m_cImporte
-
-                        }
+            paquetesEmbarque.forEach((p) => {
+                tarifa.data.m_arrArConceptos.forEach( element => {
+                    if (element.m_nIdAgregadoDesde == 0){
                         conceptosDentroRango.push(element)
+                    }else {
+                        if (element.m_nIdTipoCalculo == 3){
+                            if (element.m_xnRangoMinimo <= p.ctd && element.m_xnRangoMaximo >= p.ctd){
+                                conceptosDentroRango.push(element)
+                            }
+                        }else{
+                            if (element.m_xnRangoMinimo <= pesoTotal && element.m_xnRangoMaximo >= pesoTotal) {
+                                if (element.m_nIdTipoCalculo == 2){
+                                    if ((pesoTotal/1000) * element.m_cImporte < 51.5) {
+                                        element.m_cImporte = 51.5
+                                    }else {
+                                        element.m_cImporte = (pesoTotal/1000) * element.m_cImporte
+                                    }
+                                    element.m_cImporteRetiene = (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoRetiene).m_xPorcentaje / 100) * element.m_cImporte
+                                    element.m_cImporteIva = (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoTraslada).m_xPorcentaje / 100) * element.m_cImporte
+                                }
+                                conceptosDentroRango.push(element)
+                            }
+                        }
                     }
-                }
-
+                })
             })
             setDataTodosConceptosByEmbarque(conceptosDentroRango)
 
