@@ -1459,6 +1459,12 @@ function Embarque(props) {
                 entregaEn: respuesta.data.EntregarEn,
                 datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
 
+                //Cita de recoleccion
+                entregaConCita: respuesta.data.m_bEntregaConCita,
+                fechaCita: respuesta.data.m_sFechaCita,
+                horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
+                horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
+
                 //Paquetes/sobres
                 paquetes: respuesta.data.m_arrPaquetes,
                 sobres: respuesta.data.m_arrSobres,
