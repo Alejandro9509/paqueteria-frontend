@@ -37,7 +37,7 @@ class Paradas extends Component {
 
                             <div className="pointBarFlag"
                                  style={{
-                                     left: `${parseInt((this.props.tour.m_arrClsProGuia.filter(g => g.m_nIdEstatusGuia === 7).length/this.props.tour.m_arrClsProGuia.length) * 100)}%`
+                                     left: `${parseInt((this.props.tour.m_arrClsProGuia.filter(g => g.m_nEstatusUlimaMilla === 3).length/this.props.tour.m_arrClsProGuia.length) * 100)}%`
 
                                  }}>
                                 <UnidadesIcon

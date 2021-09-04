@@ -184,6 +184,7 @@ function Viajes() {
             setState({
                 ...state,
                 agregar: "Viaje",
+                edit: true,
                 fechaHoraRegistro: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora,
                 estatusListado: respuesta.data.m_nIdEstatusViaje,
                 idSucursalAgregar: respuesta.data.m_nIdSucursal,
@@ -213,7 +214,8 @@ function Viajes() {
         setState({
             ...state,
             agregar: "Viaje",
-            showPopUp: false
+            showPopUp: false,
+            edit: false
         })
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
@@ -1122,7 +1124,7 @@ function Viajes() {
 
                         <div className="widget-wrap" id="Agregar" className="tab-pane fade">
 
-                            <AgregarViaje reload={getAllData}/>
+                            <AgregarViaje reload={getAllData} edit={state.edit}/>
 
                         </div>
 

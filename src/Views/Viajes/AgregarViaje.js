@@ -62,13 +62,14 @@ class AgregarViaje extends Component {
         const today = new Date();
 
         this.state = {
-            origen: {},
-            destino: {},
-            IdRemolque1: {},
-            IdRemolque2: {},
-            IdDolly: {},
+            origen: "",
+            destino: "",
+            IdRemolque1: null,
+            IdRemolque2: null,
+            IdDolly: null,
             idRuta: {},
-
+            idCiudadOrigen: {},
+            idCiudadDestino: {},
             dataCiudad: [],
             dataRutas: [],
             dataCodigoPostal: [],
@@ -85,10 +86,10 @@ class AgregarViaje extends Component {
             folioViaje: "",
             viajeCliente: "",
             fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + "T" + today.getHours() + ":" + today.getMinutes(),
-            fechaHoraRegistro: "",
+            fechaHoraRegistro: new Date(),
             candadoOficial: "",
             identificadorViaje: "",
-            estatusListado: '',
+            estatusListado: '8',
             CreadoPor: localStorage.getItem("UsuarioId"),
             ModificadoPor: localStorage.getItem("UsuarioId"),
             placasDolly: "",
@@ -131,7 +132,7 @@ class AgregarViaje extends Component {
 
     handleAceptar = (e) => {
         e.preventDefault();
-        if (Object.keys(this.state.asignacionEquipo).length === 0 ) {
+        if (Object.keys(this.state.asignacionEquipo).length === 0) {
             showSuccess("Debe asignar una unidad y un operador al viaje")
             return
         }
@@ -168,7 +169,8 @@ class AgregarViaje extends Component {
                 //showSuccess(respuesta.data);
                 //console.log(respuesta.data);
                 //getAllEmbarque();
-                this.props.reload()
+                showSuccess(respuesta.data)
+                this.props.getAllData()
                 $('.nav-tabs li ').removeClass('active');
                 $('.nav-tabs li').eq(0).addClass('active');
                 $('.tab-content div ').removeClass('in show');
@@ -284,7 +286,11 @@ class AgregarViaje extends Component {
     handleRemolqueUnoFiltro(event, newValue) {
         event.preventDefault();
         obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
-            this.setState({IdRemolque1: newValue, placasRemolque1: newValue.m_sPlacas,  estatusRemolque1: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus})
+            this.setState({
+                IdRemolque1: newValue,
+                placasRemolque1: newValue.m_sPlacas,
+                estatusRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
+            })
         })
         if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && newValue.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
@@ -296,7 +302,11 @@ class AgregarViaje extends Component {
     handleRemolqueDosFiltro(event, newValue) {
         event.preventDefault();
         obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
-            this.setState({IdRemolque2: newValue, placasRemolque2: newValue.m_sPlacas,  estatusRemolque2: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus})
+            this.setState({
+                IdRemolque2: newValue,
+                placasRemolque2: newValue.m_sPlacas,
+                estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
+            })
         })
 
         if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
@@ -682,6 +692,504 @@ class AgregarViaje extends Component {
                                     </div>
 
                                 </div>
+
+                                <div className={"row"}>
+                                    {/* Origen */}
+                                    <div className="col-sm-12 col-md-6 unit">
+                                        <div className="input">
+                                            <Autocomplete
+                                                freeSolo
+                                                onChange={(e, newValue) => this.setState({idCiudadOrigen: newValue})}
+                                                value={this.state.idCiudadOrigen}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="idCiudadOrigen"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={this.state.dataCiudad}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sCiudad
+                                                }
+                                                style={{
+                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                }}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Origen"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            {...params}
+                                                            InputProps={{
+                                                                ...params.InputProps,
+                                                                style: {height: "33px", fontSize: "14px"},
+                                                                type: "search",
+                                                                //disabled: state.agregar == "Consultar",
+                                                                disableUnderline: true,
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <IconButton
+                                                                            padding="0px"
+                                                                            style={{
+                                                                                paddingRight: "0px",
+                                                                            }}
+                                                                            //disabled={state.agregar == "Consultar"}
+                                                                            onClick={() => {
+                                                                                this.setState({
+                                                                                    identificadorModal:
+                                                                                        "idCiudadOrigen",
+                                                                                    tipoModal: 1,
+                                                                                    openDialog: true
+                                                                                })
+                                                                            }}
+                                                                        >
+                                                                            <PageviewIcon
+                                                                                style={{
+                                                                                    color: "#F9A03E",
+                                                                                    fontSize: 32,
+                                                                                    paddingInlineEnd: 0,
+                                                                                    paddingRight: 0,
+                                                                                    paddingBlockEnd: 0,
+                                                                                    paddingLeft: 0,
+                                                                                    paddingBlock: 0,
+                                                                                }}
+                                                                            />
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+                                    {/* Destino */}
+                                    <div className="col-sm-12 col-md-6 unit">
+                                        <div className="input">
+                                            <Autocomplete
+                                                freeSolo
+                                                onChange={(e, newValue) => this.setState({idCiudadOrigen: newValue})}
+                                                value={this.state.idCiudadDestino}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="idCiudadDestino"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={this.state.dataCiudad}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sCiudad
+                                                }
+                                                style={{
+                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                }}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Destino"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            {...params}
+                                                            InputProps={{
+                                                                ...params.InputProps,
+                                                                style: {height: "33px", fontSize: "14px"},
+                                                                type: "search",
+                                                                //disabled: state.agregar == "Consultar",
+                                                                disableUnderline: true,
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <IconButton
+                                                                            padding="0px"
+                                                                            style={{
+                                                                                paddingRight: "0px",
+                                                                            }}
+                                                                            //disabled={state.agregar == "Consultar"}
+                                                                            onClick={() => {
+                                                                                this.setState({
+                                                                                    identificadorModal:
+                                                                                        "idCiudadDestino",
+                                                                                    tipoModal: 1,
+                                                                                    openDialog: true
+                                                                                })
+                                                                            }}
+                                                                        >
+                                                                            <PageviewIcon
+                                                                                style={{
+                                                                                    color: "#F9A03E",
+                                                                                    fontSize: 32,
+                                                                                    paddingInlineEnd: 0,
+                                                                                    paddingRight: 0,
+                                                                                    paddingBlockEnd: 0,
+                                                                                    paddingLeft: 0,
+                                                                                    paddingBlock: 0,
+                                                                                }}
+                                                                            />
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="widget-header">
+                                    <h2> Convoy</h2>
+                                </div>
+
+                                <div className="row" style={{display: "flex"}}>
+
+                                    {/* Remolque 1 */}
+
+                                    <div className="col-sm-12 col-md-6 unit">
+                                        <div className="col-sm-12 col-md-6 unit">
+
+                                            <div className="input">
+
+                                                <Autocomplete
+                                                    freeSolo
+                                                    onChange={this.handleRemolqueUnoFiltro}
+                                                    value={this.state.IdRemolque1}
+                                                    //disabled={state.agregar == "Consultar"}
+                                                    id="IdRemolque1"
+                                                    disableClearable
+                                                    forcePopupIcon={false}
+                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
+                                                    getOptionLabel={(option) =>
+                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
+                                                    }
+                                                    style={{
+                                                        transform: "translate(14px, 10px) scale(1) !important"
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <div>
+                                                            <TextField
+                                                                label="Remolque 1"
+                                                                margin="dense"
+                                                                variant="outlined"
+                                                                {...params}
+                                                                InputProps={{
+                                                                    ...params.InputProps,
+                                                                    style: {height: "33px", fontSize: "14px"},
+                                                                    type: "search",
+                                                                    //disabled: state.agregar == "Consultar",
+                                                                    disableUnderline: true,
+                                                                    endAdornment: (
+                                                                        <InputAdornment position="end">
+                                                                            <IconButton
+                                                                                padding="0px"
+                                                                                style={{
+                                                                                    paddingRight: "0px",
+                                                                                }}
+                                                                                //disabled={state.agregar == "Consultar"}
+                                                                                onClick={() => {
+                                                                                    this.setState({
+                                                                                        identificadorModal:
+                                                                                            "IdRemolque1",
+                                                                                        tipoModal: 4,
+                                                                                        openDialog: true
+                                                                                    })
+                                                                                }}
+                                                                            >
+                                                                                <PageviewIcon
+                                                                                    style={{
+                                                                                        color: "#F9A03E",
+                                                                                        fontSize: 32,
+                                                                                        paddingInlineEnd: 0,
+                                                                                        paddingRight: 0,
+                                                                                        paddingBlockEnd: 0,
+                                                                                        paddingLeft: 0,
+                                                                                        paddingBlock: 0,
+                                                                                    }}
+                                                                                />
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    ),
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                />
+
+                                            </div>
+
+                                        </div>
+
+                                        {/* Placa Int */}
+                                        <div className="col-sm-12 col-md-3 unit">
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           className="form-control"
+                                                           type="text"
+                                                           disabled
+                                                           label="Placas Int"
+                                                           value={this.state.placasRemolque1}
+                                                           name="placasRemolque1"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Estatus */}
+                                        <div className="col-sm-12 col-md-3 unit">
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           className="form-control"
+                                                           type="text"
+                                                           label="Estatus"
+                                                           disabled
+                                                           value={this.state.estatusRemolque1}
+                                                           name="estatusRemolque1"
+                                                />
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    {/* Remolque 2 */}
+
+                                    <div className="col-sm-12 col-md-6 unit">
+
+                                        <div className="col-sm-12 col-md-6 unit">
+
+                                            <div className="input">
+                                                <Autocomplete
+                                                    freeSolo
+                                                    onChange={this.handleRemolqueDosFiltro}
+                                                    value={this.state.IdRemolque2}
+                                                    //disabled={state.agregar == "Consultar"}
+                                                    id="IdRemolque2"
+                                                    disableClearable
+                                                    forcePopupIcon={false}
+                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
+                                                    getOptionLabel={(option) =>
+                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
+                                                    }
+                                                    style={{
+                                                        transform: "translate(14px, 10px) scale(1) !important"
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <div>
+                                                            <TextField
+                                                                label="Remolque 2"
+                                                                margin="dense"
+                                                                variant="outlined"
+                                                                {...params}
+                                                                InputProps={{
+                                                                    ...params.InputProps,
+                                                                    style: {height: "33px", fontSize: "14px"},
+                                                                    type: "search",
+                                                                    //disabled: state.agregar == "Consultar",
+                                                                    disableUnderline: true,
+                                                                    endAdornment: (
+                                                                        <InputAdornment position="end">
+                                                                            <IconButton
+                                                                                padding="0px"
+                                                                                style={{
+                                                                                    paddingRight: "0px",
+                                                                                }}
+                                                                                //disabled={state.agregar == "Consultar"}
+                                                                                onClick={() => {
+                                                                                    this.setState({
+                                                                                        identificadorModal:
+                                                                                            "IdRemolque2",
+                                                                                        tipoModal: 4,
+                                                                                        openDialog: true
+                                                                                    })
+                                                                                }}
+                                                                            >
+                                                                                <PageviewIcon
+                                                                                    style={{
+                                                                                        color: "#F9A03E",
+                                                                                        fontSize: 32,
+                                                                                        paddingInlineEnd: 0,
+                                                                                        paddingRight: 0,
+                                                                                        paddingBlockEnd: 0,
+                                                                                        paddingLeft: 0,
+                                                                                        paddingBlock: 0,
+                                                                                    }}
+                                                                                />
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    ),
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                />
+
+                                            </div>
+
+                                        </div>
+
+                                        {/* Placa Int */}
+                                        <div className="col-sm-12 col-md-3 unit">
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           disabled
+                                                           className="form-control"
+                                                           type="text"
+                                                           label="Placas Int"
+                                                           value={this.state.placasRemolque2}
+                                                           name="placasRemolque2"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Estatus */}
+                                        <div className="col-sm-12 col-md-3 unit">
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           disabled
+                                                           className="form-control"
+                                                           type="text"
+                                                           label="Estatus"
+                                                           value={this.state.estatusRemolque2}
+                                                           name="estatusRemolque2"
+                                                />
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div className="row" style={{display: "flex"}}>
+                                    {/* Dolly  */}
+
+                                    <div className="col-sm-12 col-md-6 unit">
+
+                                        <div className="col-sm-12 col-md-6 unit">
+
+                                            <div className="input">
+                                                <Autocomplete
+                                                    freeSolo
+                                                    onChange={this.handleDollyFiltro}
+                                                    value={this.state.IdDolly}
+                                                    //disabled={state.agregar == "Consultar"}
+                                                    id="IdDolly"
+                                                    disableClearable
+                                                    forcePopupIcon={false}
+                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 28)}
+                                                    getOptionLabel={(option) =>
+                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                                                    }
+                                                    style={{
+                                                        transform: "translate(14px, 10px) scale(1) !important"
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <div>
+                                                            <TextField
+                                                                label="Dolly"
+                                                                margin="dense"
+                                                                variant="outlined"
+                                                                {...params}
+                                                                InputProps={{
+                                                                    ...params.InputProps,
+                                                                    style: {height: "33px", fontSize: "14px"},
+                                                                    type: "search",
+                                                                    //disabled: state.agregar == "Consultar",
+                                                                    disableUnderline: true,
+                                                                    endAdornment: (
+                                                                        <InputAdornment position="end">
+                                                                            <IconButton
+                                                                                padding="0px"
+                                                                                style={{
+                                                                                    paddingRight: "0px",
+                                                                                }}
+                                                                                //disabled={state.agregar == "Consultar"}
+                                                                                onClick={() => {
+                                                                                    this.setState({
+                                                                                        identificadorModal:
+                                                                                            "IdDolly",
+                                                                                        tipoModal: 4,
+                                                                                        openDialog: true
+                                                                                    })
+                                                                                }}
+                                                                            >
+                                                                                <PageviewIcon
+                                                                                    style={{
+                                                                                        color: "#F9A03E",
+                                                                                        fontSize: 32,
+                                                                                        paddingInlineEnd: 0,
+                                                                                        paddingRight: 0,
+                                                                                        paddingBlockEnd: 0,
+                                                                                        paddingLeft: 0,
+                                                                                        paddingBlock: 0,
+                                                                                    }}
+                                                                                />
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    ),
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                />
+
+                                            </div>
+
+                                        </div>
+
+                                        {/* Placa Int */}
+                                        <div className="col-sm-12 col-md-3 unit">
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           className="form-control"
+                                                           type="text"
+                                                           disabled
+                                                           label="Placas Int"
+                                                           value={this.state.placasDolly}
+                                                           name="placasDolly"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {this.state.dataInformesAsignados.length != 0 ? (
+                                            <Button
+                                                variant={"contained"}
+                                                color={"primary"}
+                                                onClick={() => this.setState({showAsignarOperadorDialog: true})}>Asignar
+                                                operador unidad</Button>
+
+                                        ) : (<div/>)}
+                                    </div>
+                                </div>
+                                <div className="form-footer col-md-12">
+                                    <button
+                                        type="button"
+                                        onClick={(event) => {
+                                            event.stopPropagation();
+                                            this.setState({...this.state, agregar: "Agregar"});
+                                            $('.nav-tabs li ').removeClass('active');
+                                            $('.nav-tabs li').eq(0).addClass('active');
+                                            $('.tab-content div ').removeClass('in show');
+                                            $('#Listado').addClass('in show');
+                                        }
+                                        }
+                                        className="btn btn-secondary secondary-btn"
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary primary-btn"
+                                        disabled={this.agregar === "Consultar"}
+                                    >
+                                        Aceptar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="widget-wrap">
+                            <div className="widget-header">
+                                <h2 color={'#717171'}>Informes para asignación</h2>
                                 <div className="row" style={{display: "flex"}}>
                                     {/* Ruta */}
                                     <div className="col-sm-12 col-md-12 unit">
@@ -897,366 +1405,6 @@ class AgregarViaje extends Component {
                                     </div>
 
                                 </div>
-
-                                <div className="widget-header">
-                                    <h2> Convoy</h2>
-                                </div>
-
-                                <div className="row" style={{display: "flex"}}>
-
-                                    {/* Remolque 1 */}
-
-                                    <div className="col-sm-12 col-md-6 unit">
-                                        <div className="col-sm-12 col-md-6 unit">
-
-                                            <div className="input">
-
-                                                <Autocomplete
-                                                    freeSolo
-                                                    onChange={this.handleRemolqueUnoFiltro}
-                                                    value={this.state.IdRemolque1}
-                                                    //disabled={state.agregar == "Consultar"}
-                                                    id="IdRemolque1"
-                                                    disableClearable
-                                                    forcePopupIcon={false}
-                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30 )}
-                                                    getOptionLabel={(option) =>
-                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
-                                                    }
-                                                    style={{
-                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                    }}
-                                                    renderInput={(params) => (
-                                                        <div>
-                                                            <TextField
-                                                                label="Remolque 1"
-                                                                margin="dense"
-                                                                variant="outlined"
-                                                                {...params}
-                                                                InputProps={{
-                                                                    ...params.InputProps,
-                                                                    style: {height: "33px", fontSize: "14px"},
-                                                                    type: "search",
-                                                                    value: this.state.IdRemolque1,
-                                                                    //disabled: state.agregar == "Consultar",
-                                                                    disableUnderline: true,
-                                                                    endAdornment: (
-                                                                        <InputAdornment position="end">
-                                                                            <IconButton
-                                                                                padding="0px"
-                                                                                style={{
-                                                                                    paddingRight: "0px",
-                                                                                }}
-                                                                                //disabled={state.agregar == "Consultar"}
-                                                                                onClick={() => {
-                                                                                    this.setState({
-                                                                                        identificadorModal:
-                                                                                            "IdRemolque1",
-                                                                                        tipoModal: 4,
-                                                                                        openDialog: true
-                                                                                    })
-                                                                                }}
-                                                                            >
-                                                                                <PageviewIcon
-                                                                                    style={{
-                                                                                        color: "#F9A03E",
-                                                                                        fontSize: 32,
-                                                                                        paddingInlineEnd: 0,
-                                                                                        paddingRight: 0,
-                                                                                        paddingBlockEnd: 0,
-                                                                                        paddingLeft: 0,
-                                                                                        paddingBlock: 0,
-                                                                                    }}
-                                                                                />
-                                                                            </IconButton>
-                                                                        </InputAdornment>
-                                                                    ),
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                />
-
-                                            </div>
-
-                                        </div>
-
-                                        {/* Placa Int */}
-                                        <div className="col-sm-12 col-md-3 unit">
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           className="form-control"
-                                                           type="text"
-                                                           disabled
-                                                           label="Placas Int"
-                                                           value={this.state.placasRemolque1}
-                                                           name="placasRemolque1"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        {/* Estatus */}
-                                        <div className="col-sm-12 col-md-3 unit">
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Estatus"
-                                                           disabled
-                                                           value={this.state.estatusRemolque1}
-                                                           name="estatusRemolque1"
-                                                />
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    {/* Remolque 2 */}
-
-                                    <div className="col-sm-12 col-md-6 unit">
-
-                                        <div className="col-sm-12 col-md-6 unit">
-
-                                            <div className="input">
-                                                <Autocomplete
-                                                    freeSolo
-                                                    onChange={this.handleRemolqueDosFiltro}
-                                                    value={this.state.IdRemolque2}
-                                                    //disabled={state.agregar == "Consultar"}
-                                                    id="IdRemolque2"
-                                                    disableClearable
-                                                    forcePopupIcon={false}
-                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
-                                                    getOptionLabel={(option) =>
-                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
-                                                    }
-                                                    style={{
-                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                    }}
-                                                    renderInput={(params) => (
-                                                        <div>
-                                                            <TextField
-                                                                label="Remolque 2"
-                                                                margin="dense"
-                                                                variant="outlined"
-                                                                {...params}
-                                                                InputProps={{
-                                                                    ...params.InputProps,
-                                                                    style: {height: "33px", fontSize: "14px"},
-                                                                    type: "search",
-                                                                    value: this.state.IdRemolque2,
-                                                                    //disabled: state.agregar == "Consultar",
-                                                                    disableUnderline: true,
-                                                                    endAdornment: (
-                                                                        <InputAdornment position="end">
-                                                                            <IconButton
-                                                                                padding="0px"
-                                                                                style={{
-                                                                                    paddingRight: "0px",
-                                                                                }}
-                                                                                //disabled={state.agregar == "Consultar"}
-                                                                                onClick={() => {
-                                                                                    this.setState({
-                                                                                        identificadorModal:
-                                                                                            "IdRemolque2",
-                                                                                        tipoModal: 4,
-                                                                                        openDialog: true
-                                                                                    })
-                                                                                }}
-                                                                            >
-                                                                                <PageviewIcon
-                                                                                    style={{
-                                                                                        color: "#F9A03E",
-                                                                                        fontSize: 32,
-                                                                                        paddingInlineEnd: 0,
-                                                                                        paddingRight: 0,
-                                                                                        paddingBlockEnd: 0,
-                                                                                        paddingLeft: 0,
-                                                                                        paddingBlock: 0,
-                                                                                    }}
-                                                                                />
-                                                                            </IconButton>
-                                                                        </InputAdornment>
-                                                                    ),
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                />
-
-                                            </div>
-
-                                        </div>
-
-                                        {/* Placa Int */}
-                                        <div className="col-sm-12 col-md-3 unit">
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           disabled
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Placas Int"
-                                                           value={this.state.placasRemolque2}
-                                                           name="placasRemolque2"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        {/* Estatus */}
-                                        <div className="col-sm-12 col-md-3 unit">
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           disabled
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Estatus"
-                                                           value={this.state.estatusRemolque2}
-                                                           name="estatusRemolque2"
-                                                />
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <div className="row" style={{display: "flex"}}>
-                                    {/* Dolly  */}
-
-                                    <div className="col-sm-12 col-md-6 unit">
-
-                                        <div className="col-sm-12 col-md-6 unit">
-
-                                            <div className="input">
-                                                <Autocomplete
-                                                    freeSolo
-                                                    onChange={this.handleDollyFiltro}
-                                                    value={this.state.IdDolly}
-                                                    //disabled={state.agregar == "Consultar"}
-                                                    id="IdDolly"
-                                                    disableClearable
-                                                    forcePopupIcon={false}
-                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 28)}
-                                                    getOptionLabel={(option) =>
-                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
-                                                    }
-                                                    style={{
-                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                    }}
-                                                    renderInput={(params) => (
-                                                        <div>
-                                                            <TextField
-                                                                label="Dolly"
-                                                                margin="dense"
-                                                                variant="outlined"
-                                                                {...params}
-                                                                InputProps={{
-                                                                    ...params.InputProps,
-                                                                    style: {height: "33px", fontSize: "14px"},
-                                                                    type: "search",
-                                                                    value: this.state.IdDolly,
-                                                                    //disabled: state.agregar == "Consultar",
-                                                                    disableUnderline: true,
-                                                                    endAdornment: (
-                                                                        <InputAdornment position="end">
-                                                                            <IconButton
-                                                                                padding="0px"
-                                                                                style={{
-                                                                                    paddingRight: "0px",
-                                                                                }}
-                                                                                //disabled={state.agregar == "Consultar"}
-                                                                                onClick={() => {
-                                                                                    this.setState({
-                                                                                        identificadorModal:
-                                                                                            "IdDolly",
-                                                                                        tipoModal: 4,
-                                                                                        openDialog: true
-                                                                                    })
-                                                                                }}
-                                                                            >
-                                                                                <PageviewIcon
-                                                                                    style={{
-                                                                                        color: "#F9A03E",
-                                                                                        fontSize: 32,
-                                                                                        paddingInlineEnd: 0,
-                                                                                        paddingRight: 0,
-                                                                                        paddingBlockEnd: 0,
-                                                                                        paddingLeft: 0,
-                                                                                        paddingBlock: 0,
-                                                                                    }}
-                                                                                />
-                                                                            </IconButton>
-                                                                        </InputAdornment>
-                                                                    ),
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                />
-
-                                            </div>
-
-                                        </div>
-
-                                        {/* Placa Int */}
-                                        <div className="col-sm-12 col-md-3 unit">
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           onChange={this.handleChange}
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Placas Int"
-                                                           value={this.state.placasDolly}
-                                                           name="placasDolly"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        {this.state.dataInformesAsignados.length != 0 ? (
-                                            <Button
-                                                variant={"contained"}
-                                                color={"primary"}
-                                                onClick={() => this.setState({showAsignarOperadorDialog: true})}>Asignar
-                                                operador unidad</Button>
-
-                                        ) : (<div/>)}
-                                    </div>
-                                </div>
-                                <div className="form-footer col-md-12">
-                                    <button
-                                        type="button"
-                                        onClick={(event) => {
-                                            event.stopPropagation();
-                                            this.setState({...this.state, agregar: "Agregar"});
-                                            $('.nav-tabs li ').removeClass('active');
-                                            $('.nav-tabs li').eq(0).addClass('active');
-                                            $('.tab-content div ').removeClass('in show');
-                                            $('#Listado').addClass('in show');
-                                        }
-                                        }
-                                        className="btn btn-secondary secondary-btn"
-                                    >
-                                        Cancelar
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="btn btn-primary primary-btn"
-                                        disabled={this.agregar === "Consultar"}
-                                    >
-                                        Aceptar
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div className="row">
-                    <div className="col-md-12">
-                        <div className="widget-wrap">
-                            <div className="widget-header">
-                                <h2 color={'#717171'}>Informes para asignación</h2>
                             </div>
 
                             <div className="row" style={{height: "200px", width: '100%'}}>

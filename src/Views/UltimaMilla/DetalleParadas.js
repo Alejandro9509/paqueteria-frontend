@@ -207,17 +207,17 @@ class DetalleParadas extends Component {
                                         data={[
                                             {
                                                 title: '',
-                                                value: allGuias.filter(g => g.m_nIdEstatusGuia === 8).length,
+                                                value: allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length,
                                                 color: '#F51533'
                                             },
                                             {
                                                 title: '',
-                                                value: allGuias.filter(g => g.m_nIdEstatusGuia === 7).length,
+                                                value: allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length,
                                                 color: '#06B100'
                                             },
                                             {
                                                 title: '',
-                                                value: allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length,
+                                                value: allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length,
                                                 color: '#F5E23E'
                                             },
                                         ]}
@@ -235,8 +235,8 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Pendientes </strong> {allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length} de {totalPaquetes}
-                                            <strong> {parseInt((allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Pendientes </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length} de {totalPaquetes}
+                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -246,8 +246,8 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Exitosas </strong> {allGuias.filter(g => g.m_nIdEstatusGuia === 7).length} de {totalPaquetes}
-                                            <strong> {parseInt((allGuias.filter(g => g.m_nIdEstatusGuia === 7).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Exitosas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length} de {totalPaquetes}
+                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -257,8 +257,8 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Fallidas </strong> {allGuias.filter(g => g.m_nIdEstatusGuia === 8).length} de {totalPaquetes}
-                                            <strong>{parseInt((allGuias.filter(g => g.m_nIdEstatusGuia === 8).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Fallidas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length} de {totalPaquetes}
+                                            <strong>{parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                 </Grid>
@@ -405,19 +405,11 @@ class DetalleParadas extends Component {
                                                                                                 style={{borderBottom: "none"}}
                                                                                                 align="left">
                                                                                                 <div style={{
-                                                                                                    backgroundColor: g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7 ? "#DBC50040" : g.m_nIdEstatusGuia === 7 ? "#06B10040" : "#F5153340",
+                                                                                                    backgroundColor: g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 ? "#DBC50040" : g.m_nEstatusUlimaMilla === 3 ? "#06B10040" : "#F5153340",
                                                                                                     width: "100%",
                                                                                                     textAlign: "center"
                                                                                                 }}>
-                                                                                                    {g.m_nIdEstatusGuia === 7 &&
-                                                                                                    "Exitosa"
-                                                                                                    }
-                                                                                                    {g.m_nIdEstatusGuia === 8 &&
-                                                                                                    "Fallida"
-                                                                                                    }
-                                                                                                    {g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7 &&
-                                                                                                    "Pendiente"
-                                                                                                    }
+                                                                                                    {g.m_sEstatusUltimaMilla}
                                                                                                 </div>
                                                                                             </TableCell>
                                                                                             <TableCell

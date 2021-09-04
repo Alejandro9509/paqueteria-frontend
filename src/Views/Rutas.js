@@ -74,6 +74,7 @@ function Rutas(props) {
     const [data, setData] = React.useState([]);
     const [tiposViaje, setTiposViaje] = React.useState([])
     const [destinos, setDestinos] = React.useState([])
+    const [ciudades, setCiudades] = React.useState([])
     const [calificaciones, setCalificaciones] = React.useState([])
     const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
     const [state, setState] = React.useState({
