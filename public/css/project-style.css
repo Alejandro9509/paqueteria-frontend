@@ -349,3 +349,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 .leaflet-popup-content p {
   margin: 0px !important;
 }
+
+.MuiDataGrid-root .MuiDataGrid-row.Mui-selected{
+  background-color:  #f98522 !important;
+}

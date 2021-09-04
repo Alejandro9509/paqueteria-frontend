@@ -11,25 +11,35 @@ import {
     List,
     ListItem,
     ListItemText, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-    TextField, ButtonGroup,
-    Typography, Tooltip
+    TextField, ButtonGroup, Popover, Fade, Dialog, DialogContent, DialogTitle, DialogActions,
+    Typography, Tooltip, Popper, Paper, FormControl, InputLabel, Select
 } from "@material-ui/core";
-import { confirmAlert } from 'react-confirm-alert'; // Import
+import {confirmAlert} from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReorderIcon from '@material-ui/icons/Reorder';
 import CachedIcon from '@material-ui/icons/Cached';
 import {ReactComponent as ParadasIcono} from "../../iconos/Mapa/paradas.svg";
-import {ReactComponent as CalendarioIcono} from "../../iconos/Mapa/iconoCalendario.svg";
-import MessageIcon from "@material-ui/icons/Message";
 import CloseIcon from "@material-ui/icons/Close";
 import SearchIcon from "@material-ui/icons/Search";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
-import EmailIcon from "@material-ui/icons/Email";
-import {obtenerMensajes} from "../../Util/Contexts/MensajesConetext";
 import {PieChart} from 'react-minimal-pie-chart';
-import {obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 
+import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
+import AgregarPaqueteUltimaMilla from "./AgregarPaqueteUltimaMilla";
+import PaquetesList from "./PaquetesList";
+import {obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
+import {remplazarPaqueteUltimaMilla} from "../../Util/Contexts/UltimaMillaContext";
+import Noty from "noty";
+
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
+}
 
 class DetalleParadas extends Component {
     constructor(props) {
@@ -39,13 +49,21 @@ class DetalleParadas extends Component {
             repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla,
             newMessageText: "",
             paradas: [],
+            paquetes: [],
+            anchorEl: null,
+            placement: null,
+            open: false,
+            tour: null,
+            openRemplazar: false,
+            openAgregar: false,
+
         }
         this.searchRepartidor = this.searchRepartidor.bind(this)
         this.openDetail = this.openDetail.bind(this)
+        this.openRemplazarPaquete = this.openRemplazarPaquete.bind(this)
+        this.onSubmitRemplazarPaquete = this.onSubmitRemplazarPaquete.bind(this)
     }
 
-    componentDidMount() {
-    }
 
     searchRepartidor(event) {
         event.stopPropagation()
@@ -63,21 +81,34 @@ class DetalleParadas extends Component {
 
     }
 
-    deleteParada(idParada){
-            confirmAlert({
-                title: 'Confirmación',
-                message: '¿Está segura(o) que desea eliminar la parada?',
-                buttons: [
-                    {
-                        label: 'Yes',
-                        onClick: () => alert('Click Yes')
-                    },
-                    {
-                        label: 'No',
-                        onClick: () => alert('Click No')
-                    }
-                ]
-            });
+    openRemplazarPaquete(tour, paquete) {
+        obtenerGuiaUltimaMilla(this.props.filtros.zonasSeleccionada, parseInt(this.props.filtros.tipoBusqueda)).then(({data}) => {
+            this.setState({paquetes: data, openRemplazar: true, tour: tour, paqueteSeleccionado: paquete})
+        })
+    }
+
+    deleteParada(idParada) {
+        confirmAlert({
+            title: 'Confirmación',
+            message: '¿Está segura(o) que desea eliminar la parada?',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => alert('Click Yes')
+                },
+                {
+                    label: 'No'
+                }
+            ]
+        });
+    }
+
+    onSubmitRemplazarPaquete(paqueteNuevo) {
+        remplazarPaqueteUltimaMilla(this.state.tour.m_nIdParadaUltimaMilla, this.state.paqueteSeleccionado, paqueteNuevo[0]).then(({data}) => {
+            showSuccess("Parada Actualizada")
+            this.setState({openRemplazar: false})
+            this.props.refresh()
+        })
     }
 
     render() {
@@ -86,6 +117,18 @@ class DetalleParadas extends Component {
         const allGuias = [].concat(...this.props.tour.m_arrClsParadaUltimaMilla.map(a => a.m_arrClsProGuia))
         return (
             <div>
+                {
+                    this.state.openAgregar &&
+                    <AgregarPaqueteUltimaMilla zonasIds={this.props.filtros.zonasSeleccionada}
+                                               tipoServicio={parseInt(this.props.filtros.tipoBusqueda)}
+                                               close={() => this.setState({openAgregar: false})}
+                                               open={this.state.openAgregar} paquetes={this.state.paquetes}/>
+                }
+
+                <RemplazarPaqueteUltimaMilla open={this.state.openRemplazar} multiples={false}
+                                             onSubmit={this.onSubmitRemplazarPaquete}
+                                             close={() => this.setState({openRemplazar: false})}
+                                             data={this.state.paquetes}/>
                 {
                     !this.state.openDetail &&
                     <IconButton
@@ -193,7 +236,7 @@ class DetalleParadas extends Component {
                                             textAlign: "center"
                                         }}>
                                             <strong>Pendientes </strong> {allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length} de {totalPaquetes}
-                                            <strong>{parseInt((allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length / totalPaquetes) * 100)}%</strong>
+                                            <strong> {parseInt((allGuias.filter(g => g.m_nIdEstatusGuia !== 8 && g.m_nIdEstatusGuia !== 7).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -282,7 +325,15 @@ class DetalleParadas extends Component {
                                                         borderRadius: "5px",
                                                         margin: "5px",
                                                     }}>
-                                                        <Button variant={"contained"} color={"primary"}>Agregar Parada</Button>
+
+                                                        <Button variant={"contained"} color={"primary"}
+                                                                onClick={() => this.setState({
+                                                                    paquetes: tour.m_arrClsProGuia,
+                                                                    tour: tour,
+                                                                    openAgregar: true
+                                                                })}>Ordenar
+                                                            Paradas</Button>
+
                                                         <List component="div" disablePadding style={{
                                                             padding: "5px",
                                                             height: "400px",
@@ -377,19 +428,14 @@ class DetalleParadas extends Component {
                                                                                                     disableElevation
                                                                                                     variant="contained"
                                                                                                     color="primary">
-                                                                                                    <IconButton
-                                                                                                        aria-label="reorder">
-                                                                                                        <Tooltip
-                                                                                                            title={"Cambiar de posición"}>
-                                                                                                            <ReorderIcon
-                                                                                                                fontSize="default"/>
-                                                                                                        </Tooltip>
-                                                                                                    </IconButton>
+
+
                                                                                                     <IconButton
                                                                                                         aria-label="reorder">
                                                                                                         <Tooltip
                                                                                                             title={"Remplazar"}>
                                                                                                             <CachedIcon
+                                                                                                                onClick={() => this.openRemplazarPaquete(tour, g)}
                                                                                                                 fontSize="default"/>
                                                                                                         </Tooltip>
                                                                                                     </IconButton>
@@ -397,7 +443,8 @@ class DetalleParadas extends Component {
                                                                                                         aria-label="delete">
                                                                                                         <Tooltip
                                                                                                             title={"Eliminar"}>
-                                                                                                            <DeleteIcon onClick={() => this.deleteParada(g.m_nId)}
+                                                                                                            <DeleteIcon
+                                                                                                                onClick={() => this.deleteParada(g.m_nId)}
                                                                                                                 fontSize="default"/>
                                                                                                         </Tooltip>
                                                                                                     </IconButton>

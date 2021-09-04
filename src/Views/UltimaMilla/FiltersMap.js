@@ -20,7 +20,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import {obtenerZonasSucursal} from "../../Util/Contexts/ZonasContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import moment from "moment";
-import {obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
+import {cambiarOperadorUnidad, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 import UnidadesList from "./UnidadesList";
 import PaquetesList from "./PaquetesList";
 import {obtenerGuia, obtenerGuiasFiltro, obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
@@ -101,8 +101,8 @@ class FiltersMap extends Component {
             paquetesSeleccionadas: [],
             startDate: moment(new Date()).format('yyyy-MM-DD'),
             finishDate: moment(new Date()).format('yyyy-MM-DD'),
-            startTime: "00:00",
-            finishTime: moment(new Date()).format('hh:mm'),
+            startTime: "08:00",
+            finishTime: "18:00",
             searchText: "",
             locationSearch: "",
             tipoBusqueda: "3",
@@ -152,7 +152,7 @@ class FiltersMap extends Component {
     changeDateConsult(value) {
         this.setState({fecha: value})
 
-        this.props.getFechaUltimaMilla(value, this.state.sucursalSeleccionada.m_nIdSucursal, this.state.zonasSeleccionada.map(z => z.m_nIdZona))
+        this.props.getFechaUltimaMilla(value, this.state.sucursalSeleccionada.m_nIdSucursal, this.state.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.tipoBusqueda))
     }
 
     getAllGuias() {
@@ -195,7 +195,7 @@ class FiltersMap extends Component {
     }
     reasignarOperador(unidad){
         obtenerOperadores().then(({data}) => {
-            this.setState({operadores: data, unidadSeleccionada: unidad, openOperadorDialog: true,openUnidades: false})
+            this.setState({operadores: data, unidadSeleccionada: unidad.m_nIdUnidad, openOperadorDialog: true,openUnidades: false})
         })
     }
 
@@ -210,7 +210,10 @@ class FiltersMap extends Component {
 
     asignarOperadorUnidad(event) {
         event.preventDefault()
-        this.setState({openUnidades: true, openOperadorDialog: false})
+        cambiarOperadorUnidad( this.state.unidadSeleccionada, this.state.operadorSeleccionada).then(({data}) => {
+            this.setState({openUnidades: true, openOperadorDialog: false})
+        })
+
     }
 
 

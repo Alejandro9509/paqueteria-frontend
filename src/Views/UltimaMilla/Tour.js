@@ -32,8 +32,9 @@ class Tour extends Component {
         var result = []
         this.props.tour.trips[0].stops.forEach((item, index) => {
             var found = false;
-            guias = guias.filter(function (guia, index) {
-                if (!found && index === parseInt(item.tasks[0].orderId)) {
+
+            guias = guias.filter(function (guia, i) {
+                if (!found && guia.index === parseInt(item.tasks[0].orderId)) {
                     result.push(guia);
                     found = true;
                     return false;
@@ -58,8 +59,8 @@ class Tour extends Component {
             <div style={{backgroundColor: "transparent"}}>
                 {
                     this.props.tour.trips[0].stops.map((s, index) => {
-                            const paquete = this.props.paquetes.find(p => parseInt(s.tasks[0].orderId) === index)
-                            console.log(paquete)
+                            const paquete = this.props.paquetes.find((p, i) => (parseInt(s.tasks[0].orderId)) === i )
+
                             return (
                                 <Marker key={index}
                                         icon={<MarkerComponent color={this.props.tour.color} index={index + 1}/>}
