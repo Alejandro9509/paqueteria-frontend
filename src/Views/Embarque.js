@@ -2406,6 +2406,7 @@ function Embarque(props) {
             data.find((o) => o.m_nIdEmbarque == state.idEmbarque).m_sFolioGuia != ""
         ) {
             showSuccess("Embarque ya tiene Guía");
+            setRedirect(false)
         } else {
             return (
                 <Redirect
