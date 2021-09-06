@@ -46,6 +46,8 @@ class Tarifas extends Component {
                     headerName: "Acciones",
                     sortable: false, filterable: false,
                     field: "",
+                    flex: 1,
+                    minWidth: 300,
                     renderCell: (row) => {
                         return (
                             <div>
@@ -68,42 +70,50 @@ class Tarifas extends Component {
                 {
                     headerName: "Sucursal Origen",
                     field: "m_sSucursal",
-                    width: 300,
+                    flex: 1,
+                    minWidth: 300,
                 }, {
                     headerName: "Origen",
                     field: "m_sOrigen",
-                    width: 300,
+                    flex: 1,
+                    minWidth: 300,
                 },{
                     headerName: "Destino",
                     field: "m_sDestino",
-                    width: 300,
+                    flex: 1,
+                    minWidth: 300,
                 }, {
                     headerName: "Precio m³",
                     field: "m_cPrecioM3",
+                    flex: 1,
                     valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                    width: 200,
+                    minWidth: 200,
                 }, {
                     headerName: "Precio Kilo",
                     field: "m_cPrecioKilo",
+                    flex: 1,
                     valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                    width: 125,
+                    minWidth: 125,
                 },
                 {
                     headerName: "Flete mínimo",
                     field: "m_cFleteMinimo",
+                    flex: 1,
                     valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                    width: 125,
+                    minWidth: 125,
                 },
                 {
                     headerName: "Monto mínimo",
                     field: "m_cMontoMinimo",
+                    flex: 1,
                     valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                    width: 125,
+                    minWidth: 125,
                 },
                 {
                     headerName: "Activo",
                     field: "m_bActivo",
-                    width: 200,
+                    minWidth: 200,
+                    flex: 1,
                     renderCell: (row) => {
                         return (
                             <div
