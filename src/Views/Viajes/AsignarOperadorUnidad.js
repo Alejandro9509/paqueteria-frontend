@@ -136,12 +136,29 @@ export default function AsignarOperadorUnidad(props) {
     useEffect((value) => {
         getAllOperadores()
         getAllUnidadesTipo(4);
-        setData({
-            ...data,
-            origen: props.rutaSeleccionada.m_sOrigen,
-            destino: props.rutaSeleccionada.m_sDestino,
 
-        })
+        if (props.unidadAsignada) {
+            setData({
+                ...data,
+                origen: props.rutaSeleccionada.m_sOrigen,
+                destino: props.rutaSeleccionada.m_sDestino,
+                kms: props.rutaSeleccionada.m_rKM,
+                horas: props.rutaSeleccionada.m_rHoras,
+                horasEnRuta: props.rutaSeleccionada.m_rHoras,
+            ...props.unidadAsignada
+
+            })
+        }else {
+            setData({
+                ...data,
+                origen: props.rutaSeleccionada.m_sOrigen,
+                destino: props.rutaSeleccionada.m_sDestino,
+                kms: props.rutaSeleccionada.m_rKM,
+                horas: props.rutaSeleccionada.m_rHoras,
+                horasEnRuta: props.rutaSeleccionada.m_rHoras,
+
+            })
+        }
     }, []);
 
     function getAllUnidadesTipo(id) {

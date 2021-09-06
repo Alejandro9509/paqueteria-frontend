@@ -27,7 +27,7 @@ import {
     agregarViaje,
     modificarEmbarques,
     obtenerEmbarquesFiltro,
-    obtenerEmbarques
+    obtenerEmbarques, modificarViaje
 } from "../../Util/Contexts/ViajesContext";
 import $ from "jquery";
 import {ContactsOutlined} from "@material-ui/icons";
@@ -130,6 +130,41 @@ class AgregarViaje extends Component {
         this.getAllUnidades();
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.id !== this.props.id ){
+            this.setState({
+                fechaHoraRegistro: this.props.select.m_dFecha + "T"+ this.props.select.m_tHora,
+                estatusListado:this.props.select.m_nIdEstatusViaje,
+                idSucursalAgregar:this.props.select.m_nIdSucursal,
+                candadoOficial:this.props.select.m_sCandadoOficial,
+                folioViaje:this.props.select.m_sFolioViaje,
+                identificadorViaje: this.props.select.m_sIdentificador,
+                viajeCliente:this.props.select.m_sNumViajeCliente,
+                CreadoPor: this.props.select.CreadoPor,
+
+               dataInformesAsignados:this.props.select.m_arrInformes,
+                idCiudadOrigen: this.state.dataCiudad.find(c => c.m_nIdCiudad === this.props.select.m_nIdOrigen),
+                idCiudadDestino: this.state.dataCiudad.find(c => c.m_nIdCiudad === this.props.select.m_nDestino),
+                asignacionUnidad: {
+                    idUnidad: this.state.dataUnidades.find(u => u.m_nIdUnidad === this.props.select.m_nIdUnidad),
+                    idOperador: this.state.asignacionEquipo.operador.m_nIdOperador,
+                    CRV1: this.state.asignacionEquipo.cargadoVacioRemolqueUno,
+                    CRV2: this.state.asignacionEquipo.cargadoVacioRemolqueDos,
+                    referencia: this.state.asignacionEquipo.referencia,
+                    kilometro: this.state.asignacionEquipo.kms,
+                    fechaCarga: this.state.asignacionEquipo.fechaCarga,
+                    horas: this.state.asignacionEquipo.horas,
+                    fechaEntrega: this.state.asignacionEquipo.fechaEntregaGeneral,
+                    horaCarga: this.state.asignacionEquipo.horaCarga,
+                    fechaInforme: this.state.asignacionEquipo.fechaInforme,
+                    horaInforme: this.state.asignacionEquipo.horaInforme,
+                    estatus: this.state.asignacionEquipo.estatusInforme,
+                    horaEntrega: this.state.asignacionEquipo.horaEntregaGeneral,
+                }
+            })
+        }
+    }
+
     handleAceptar = (e) => {
         e.preventDefault();
         if (Object.keys(this.state.asignacionEquipo).length === 0) {
@@ -147,6 +182,11 @@ class AgregarViaje extends Component {
             m_sNumViajeCliente: this.state.viajeCliente,
             CreadoPor: this.state.CreadoPor,
             m_arrInformes: this.state.dataInformesAsignados,
+            m_nIdOrigen: this.state.idCiudadOrigen.m_nIdCiudad,
+            m_nDestino: this.state.idCiudadDestino.m_nIdCiudad,
+            IdRemolque1: this.state.IdRemolque1.m_nIdUnidad,
+            IdRemolque2: this.state.IdRemolque1.m_nIdUnidad,
+            IdDolly: this.state.IdDolly.m_nIdUnidad,
             asignacionUnidad: {
                 idUnidad: this.state.asignacionEquipo.unidad.m_nIdUnidad,
                 idOperador: this.state.asignacionEquipo.operador.m_nIdOperador,
@@ -164,22 +204,36 @@ class AgregarViaje extends Component {
             }
         }
 
-        agregarViaje(params)
-            .then((respuesta) => {
-                //showSuccess(respuesta.data);
-                //console.log(respuesta.data);
-                //getAllEmbarque();
-                showSuccess(respuesta.data)
-                this.props.getAllData()
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(0).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Listado').addClass('in show');
-            })
-            .catch((err) => {
-                // console.log(err);
-                showSuccess(err);
-            });
+        if (this.props.editar) {
+            modificarViaje(this.props.id, params)
+                .then((respuesta) => {
+                    showSuccess(respuesta.data)
+                    this.props.getAllData()
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
+                })
+                .catch((err) => {
+                    // console.log(err);
+                    showSuccess(err);
+                });
+        } else {
+            agregarViaje(params)
+                .then((respuesta) => {
+                    showSuccess(respuesta.data)
+                    this.props.getAllData()
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(0).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Listado').addClass('in show');
+                })
+                .catch((err) => {
+                    // console.log(err);
+                    showSuccess(err);
+                });
+        }
+
 
     };
 
@@ -525,30 +579,36 @@ class AgregarViaje extends Component {
                     onClose={() => this.setState({openHistoryDialog: false})}>
                     <Historial/>
                 </Dialog>
-                <Dialog open={this.state.showAsignarOperadorDialog}
-                        fullWidth={true}
-                        maxWidth={"md"}
-                        onClose={() => this.setState({showAsignarOperadorDialog: false})}>
-                    <DialogContent>
-                        <AsignarOperadorUnidad idInforme={this.state.unidadAsignada}
-                                               rutaSeleccionada={this.state.idRuta} onSubmit={(data) => this.setState({
-                            showAsignarOperadorDialog: false,
-                            asignacionEquipo: data
-                        })}>
-                            <DialogActions>
-                                <Button
-                                    variant={"contained"}
-                                    color={"primary"}
-                                    type={"submit"}
-                                >Aceptar</Button>
-                                <Button
-                                    variant={"outlined"}
-                                    color={"primary"}
-                                    onClick={() => this.setState({showAsignarOperadorDialog: false})}>Cancelar</Button>
-                            </DialogActions>
-                        </AsignarOperadorUnidad>
-                    </DialogContent>
-                </Dialog>
+                {
+                    this.state.showAsignarOperadorDialog &&
+                    <Dialog open={this.state.showAsignarOperadorDialog}
+                            fullWidth={true}
+                            maxWidth={"md"}
+                            onClose={() => this.setState({showAsignarOperadorDialog: false})}>
+                        <DialogContent>
+                            <AsignarOperadorUnidad unidadAsignada={this.state.asignacionEquipo}
+                                                   rutaSeleccionada={this.state.idRuta}
+
+                                                   onSubmit={(data) => this.setState({
+                                                       showAsignarOperadorDialog: false,
+                                                       asignacionEquipo: data
+                                                   })}>
+                                <DialogActions>
+                                    <Button
+                                        variant={"contained"}
+                                        color={"primary"}
+                                        type={"submit"}
+                                    >Aceptar</Button>
+                                    <Button
+                                        variant={"outlined"}
+                                        color={"primary"}
+                                        onClick={() => this.setState({showAsignarOperadorDialog: false})}>Cancelar</Button>
+                                </DialogActions>
+                            </AsignarOperadorUnidad>
+                        </DialogContent>
+                    </Dialog>
+                }
+
                 <div className="widget-wrap">
                     <div className="widget-content">
 
@@ -1057,103 +1117,135 @@ class AgregarViaje extends Component {
                                 <div className="row" style={{display: "flex"}}>
                                     {/* Dolly  */}
 
-                                    <div className="col-sm-12 col-md-6 unit">
 
-                                        <div className="col-sm-12 col-md-6 unit">
+                                    <div className="col-sm-12 col-md-4 unit">
 
-                                            <div className="input">
-                                                <Autocomplete
-                                                    freeSolo
-                                                    onChange={this.handleDollyFiltro}
-                                                    value={this.state.IdDolly}
-                                                    //disabled={state.agregar == "Consultar"}
-                                                    id="IdDolly"
-                                                    disableClearable
-                                                    forcePopupIcon={false}
-                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 28)}
-                                                    getOptionLabel={(option) =>
-                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
-                                                    }
-                                                    style={{
-                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                    }}
-                                                    renderInput={(params) => (
-                                                        <div>
-                                                            <TextField
-                                                                label="Dolly"
-                                                                margin="dense"
-                                                                variant="outlined"
-                                                                {...params}
-                                                                InputProps={{
-                                                                    ...params.InputProps,
-                                                                    style: {height: "33px", fontSize: "14px"},
-                                                                    type: "search",
-                                                                    //disabled: state.agregar == "Consultar",
-                                                                    disableUnderline: true,
-                                                                    endAdornment: (
-                                                                        <InputAdornment position="end">
-                                                                            <IconButton
-                                                                                padding="0px"
+                                        <div className="input">
+                                            <Autocomplete
+                                                freeSolo
+                                                onChange={this.handleDollyFiltro}
+                                                value={this.state.IdDolly}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="IdDolly"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 28)}
+                                                getOptionLabel={(option) =>
+                                                    option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                                                }
+                                                style={{
+                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                }}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Dolly"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            {...params}
+                                                            InputProps={{
+                                                                ...params.InputProps,
+                                                                style: {height: "33px", fontSize: "14px"},
+                                                                type: "search",
+                                                                //disabled: state.agregar == "Consultar",
+                                                                disableUnderline: true,
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">
+                                                                        <IconButton
+                                                                            padding="0px"
+                                                                            style={{
+                                                                                paddingRight: "0px",
+                                                                            }}
+                                                                            //disabled={state.agregar == "Consultar"}
+                                                                            onClick={() => {
+                                                                                this.setState({
+                                                                                    identificadorModal:
+                                                                                        "IdDolly",
+                                                                                    tipoModal: 4,
+                                                                                    openDialog: true
+                                                                                })
+                                                                            }}
+                                                                        >
+                                                                            <PageviewIcon
                                                                                 style={{
-                                                                                    paddingRight: "0px",
+                                                                                    color: "#F9A03E",
+                                                                                    fontSize: 32,
+                                                                                    paddingInlineEnd: 0,
+                                                                                    paddingRight: 0,
+                                                                                    paddingBlockEnd: 0,
+                                                                                    paddingLeft: 0,
+                                                                                    paddingBlock: 0,
                                                                                 }}
-                                                                                //disabled={state.agregar == "Consultar"}
-                                                                                onClick={() => {
-                                                                                    this.setState({
-                                                                                        identificadorModal:
-                                                                                            "IdDolly",
-                                                                                        tipoModal: 4,
-                                                                                        openDialog: true
-                                                                                    })
-                                                                                }}
-                                                                            >
-                                                                                <PageviewIcon
-                                                                                    style={{
-                                                                                        color: "#F9A03E",
-                                                                                        fontSize: 32,
-                                                                                        paddingInlineEnd: 0,
-                                                                                        paddingRight: 0,
-                                                                                        paddingBlockEnd: 0,
-                                                                                        paddingLeft: 0,
-                                                                                        paddingBlock: 0,
-                                                                                    }}
-                                                                                />
-                                                                            </IconButton>
-                                                                        </InputAdornment>
-                                                                    ),
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                />
-
-                                            </div>
+                                                                            />
+                                                                        </IconButton>
+                                                                    </InputAdornment>
+                                                                ),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
 
                                         </div>
 
-                                        {/* Placa Int */}
-                                        <div className="col-sm-12 col-md-3 unit">
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           className="form-control"
-                                                           type="text"
-                                                           disabled
-                                                           label="Placas Int"
-                                                           value={this.state.placasDolly}
-                                                           name="placasDolly"
-                                                />
-                                            </div>
-                                        </div>
+                                    </div>
 
-                                        {this.state.dataInformesAsignados.length != 0 ? (
+                                    {/* Placa Int */}
+                                    <div className="col-sm-12 col-md-4 unit">
+                                        <div className="input">
+                                            <TextField variant="outlined" margin="dense"
+                                                       className="form-control"
+                                                       type="text"
+                                                       disabled
+                                                       label="Placas Int"
+                                                       value={this.state.placasDolly}
+                                                       name="placasDolly"
+                                            />
+                                        </div>
+                                    </div>
+                                    {this.state.dataInformesAsignados.length != 0 ? (
+                                        <div className="col-sm-6 col-md-4 unit">
                                             <Button
                                                 variant={"contained"}
                                                 color={"primary"}
                                                 onClick={() => this.setState({showAsignarOperadorDialog: true})}>Asignar
                                                 operador unidad</Button>
+                                        </div>
 
-                                        ) : (<div/>)}
-                                    </div>
+                                    ) : (<div/>)}
+                                </div>
+                                <div className={"row"}>
+
+                                    {
+                                        Object.keys(this.state.asignacionEquipo).length !== 0 &&
+                                        <div className="row" style={{display: "flex"}}>
+                                            <div className="col-sm-6 col-md-4 unit">
+                                                <div className="input">
+                                                    <TextField variant="outlined" margin="dense"
+                                                               className="form-control"
+                                                               type="text"
+                                                               disabled
+                                                               label="Operador"
+                                                               value={this.state.asignacionEquipo.operador.m_sNombreCompleto}
+                                                               name="placasDolly"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-6 col-md-4 unit">
+                                                <div className="input">
+                                                    <TextField variant="outlined" margin="dense"
+                                                               className="form-control"
+                                                               type="text"
+                                                               disabled
+                                                               label="Unidad"
+                                                               value={this.state.asignacionEquipo.unidad.m_sDescripcion}
+                                                               name="placasDolly"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
                                 </div>
                                 <div className="form-footer col-md-12">
                                     <button

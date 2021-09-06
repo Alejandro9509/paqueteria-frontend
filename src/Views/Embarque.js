@@ -210,7 +210,7 @@ function Embarque(props) {
         ciudadOrigen: '',
         zonaRemitente: {},
         calleRemitente: '',
-        numeroIntRemitente: '',
+        numeroIntRemitente: '0',
         numeroExtRemitente: '',
         coloniaRemitente: '',
 
@@ -228,7 +228,7 @@ function Embarque(props) {
         ciudadDestino: '',
         zonaDestinatario: {},
         calleDestinatario: '',
-        numeroIntDestinatario: '',
+        numeroIntDestinatario: '0',
         numeroExtDestinatario: '',
         coloniaDestinatario: '',
 
@@ -576,7 +576,7 @@ function Embarque(props) {
                     contactoRemitente: user.m_sContacto,
                     calleRemitente: newValue.m_sCalle,
                     numeroExtRemitente: newValue.m_sNoExterior,
-                    numeroIntRemitente: newValue.m_sNoInterior,
+                    numeroIntRemitente: newValue.m_sNoInterior || 0,
                     coloniaRemitente: newValue.m_sColonia
 
                 }
@@ -602,7 +602,7 @@ function Embarque(props) {
                     contactoDestinatario: newValue.m_sContacto,
                     calleDestinatario: newValue.m_sCalle,
                     numeroExtDestinatario: newValue.m_sNoExterior,
-                    numeroIntDestinatario: newValue.m_sNoInterior,
+                    numeroIntDestinatario: newValue.m_sNoInterior || 0,
                     coloniaDestinatario: newValue.m_sColonia
                 }
             });
@@ -1050,7 +1050,7 @@ function Embarque(props) {
                 idRemitente: '',
                 aliasRemitente: '',
                 calleRemitente: '',
-                numeroIntRemitente: '',
+                numeroIntRemitente: '0',
                 numeroExtRemitente: '',
                 coloniaRemitente: '',
 
@@ -1068,7 +1068,7 @@ function Embarque(props) {
                 idDestinatario: '',
                 aliasDestinatario: '',
                 calleDestinatario: '',
-                numeroIntDestinatario: '',
+                numeroIntDestinatario: '0',
                 numeroExtDestinatario: '',
                 coloniaDestinatario: '',
 
@@ -1270,7 +1270,7 @@ function Embarque(props) {
                 idRemitente: respuesta.data.m_nIdRemitente,
                 aliasRemitente: respuesta.data.m_sAliasRemitente,
                 calleRemitente: respuesta.data.m_sCalleRemitente,
-                numeroIntRemitente: respuesta.data.m_sNoIntRemitente,
+                numeroIntRemitente: respuesta.data.m_sNoIntRemitente || 0,
                 numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
                 coloniaRemitente: respuesta.data.m_sColoniaRemitente,
 
@@ -1284,7 +1284,7 @@ function Embarque(props) {
                 idDestinatario: respuesta.data.m_nIdDestinatario,
                 aliasDestinatario: respuesta.data.m_sAliasDestinatario,
                 calleDestinatario: respuesta.data.m_sCalleDestinatario,
-                numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario,
+                numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0 ,
                 numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
                 coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
 
@@ -1420,7 +1420,7 @@ function Embarque(props) {
                 idRemitente: respuesta.data.m_nIdRemitente,
                 aliasRemitente: respuesta.data.m_sAliasRemitente,
                 calleRemitente: respuesta.data.m_sCalleRemitente,
-                numeroIntRemitente: respuesta.data.m_sNoIntRemitente,
+                numeroIntRemitente: respuesta.data.m_sNoIntRemitente || 0,
                 numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
                 coloniaRemitente: respuesta.data.m_sColoniaRemitente,
 
@@ -1445,7 +1445,7 @@ function Embarque(props) {
                 idDestinatario: respuesta.data.m_nIdDestinatario,
                 aliasDestinatario: respuesta.data.m_sAliasDestinatario,
                 calleDestinatario: respuesta.data.m_sCalleDestinatario,
-                numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario,
+                numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0,
                 numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
                 coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
 
@@ -3890,7 +3890,6 @@ function Embarque(props) {
                                                                                        onChange={handleChange}
                                                                                        className="form-control"
                                                                                        type="text"
-                                                                                       required
                                                                                        label="Número interior"
                                                                                        value={state.numeroIntRemitente}
                                                                                        disabled={state.agregar === "Consultar"}
@@ -4433,7 +4432,6 @@ function Embarque(props) {
                                                                                    onChange={handleChange}
                                                                                    className="form-control"
                                                                                    type="text"
-                                                                                   required
                                                                                    label="Número interior"
                                                                                    value={state.numeroIntDestinatario}
                                                                                    disabled={state.agregar === "Consultar"}

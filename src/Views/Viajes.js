@@ -40,7 +40,7 @@ import ActualizarDiponibilidadEquipo from "./Viajes/ActualizarDiponibilidadEquip
 import SalidaParadas from "./Viajes/SalidaParadas";
 import LlegadaParadas from "./Viajes/LlegadaParadas";
 import AsignarOperador from "./Viajes/AsignarOperador";
-import {agregarViajeSalida, agregarViajeLlegada, obetenerViajeId} from "../Util/Contexts/ViajesContext";
+import {agregarViajeSalida, agregarViajeLlegada, obetenerViajeId, obtenerViajes} from "../Util/Contexts/ViajesContext";
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import {obtenerInformesPorViaje} from "../Util/Contexts/InformesContext";
@@ -91,9 +91,7 @@ function Viajes() {
         sucursalListado: 0,
         estatusListado: 0,
         estatusDocumentoListado: 0,
-        idEquipo: 0,
-        fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
-        1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
+        idEquipo: 0
 
 
     })
@@ -185,14 +183,8 @@ function Viajes() {
                 ...state,
                 agregar: "Viaje",
                 edit: true,
-                fechaHoraRegistro: respuesta.data.m_dFecha + "T" + respuesta.data.m_tHora,
-                estatusListado: respuesta.data.m_nIdEstatusViaje,
-                idSucursalAgregar: respuesta.data.m_nIdSucursal,
-                candadoOficial: respuesta.data.m_sCandadoOficial,
-                folioViaje: respuesta.data.m_sFolioViaje,
-                identificadorViaje: respuesta.data.m_sIdentificador,
-                viajeCliente: respuesta.data.m_sNumViajeCliente,
-                dataInformesAsignados: respuesta.data.m_arrInformes
+                idViaje: id,
+                selectViaje: respuesta.data
             })
         });
     }
@@ -375,8 +367,7 @@ function Viajes() {
     }, []);
 
     function getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Viajes/GetListado`;
-        axios.get(url, {headers}).then(respuesta => {
+        obtenerViajes().then(respuesta => {
             setData(respuesta.data)
         });
     };
@@ -1124,7 +1115,7 @@ function Viajes() {
 
                         <div className="widget-wrap" id="Agregar" className="tab-pane fade">
 
-                            <AgregarViaje reload={getAllData} edit={state.edit}/>
+                            <AgregarViaje reload={getAllData} edit={state.edit} select={state.selectViaje} id={state.idViaje}/>
 
                         </div>
 

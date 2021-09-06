@@ -15,6 +15,15 @@ function agregarViaje( params){
     return result
 }
 
+function modificarViaje( id,params){
+    const url = `${process.env.REACT_APP_API_URL}/Viajes/Modificar/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+    );
+    return result
+}
+
 function agregarViajeSalida( params){
     const url = `${process.env.REACT_APP_API_URL}/Viajes/AgregarSalida`;
     let result;
@@ -36,6 +45,16 @@ function agregarViajeLlegada( params){
     return result
 }
 
+function obtenerViajes(){
+    const url = `${process.env.REACT_APP_API_URL}/Viajes/GetListado`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
+
+
 function obetenerViajeId( id){
     const url = `${process.env.REACT_APP_API_URL}/Viajes/GetById/${id}`;
     let result;
@@ -48,4 +67,4 @@ function obetenerViajeId( id){
 
 
 
-export {agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId}
+export {agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje, obtenerViajes}

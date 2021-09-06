@@ -52,7 +52,7 @@ import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusInforme} from "../Util/Contexts/EstatusContext";
 import {obtenerGuia, obtenerGuiaPendientes, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
 import {obtenerOperadores} from "../Util/Contexts/OperadoresContext";
-import {obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
+import {obtenerUnidades, obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
 import {obtenerRutas} from "../Util/Contexts/RutasContext";
 import {
     agregarInformes,
@@ -103,13 +103,11 @@ function Informes({history}) {
     const [dataRutas, setDataRutas] = React.useState([]);
     const [guias, setGuias] = React.useState([]);
     const [informes, setInformes] = React.useState([]);
-    const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
     const [dataSucursal, setDataSucursal] = React.useState([]);
     const [dataEstatusInformes, setEstatusInformes] = React.useState([]);
     const [dataOperadores, setDataOperadores] = React.useState([]);
     const [dataOrigenes, setDataOrigenes] = React.useState([]);
-    const [dataUnidadesRem, setDataUnidadesRem] = React.useState([]);
-    const [dataUnidadesDol, setDataUnidadesDol] = React.useState([]);
+    const [dataUnidades, setDataUnidades] = React.useState([]);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
     const [dataViajes, setDataViajes] = React.useState([]);
@@ -302,24 +300,6 @@ function Informes({history}) {
         },
     ]);
 
-    const columnsTipoUnidades = React.useMemo(() => [
-        {
-            Name: "Tipo de unidad",
-            accessor: "m_nIdTipoUnidad",
-        },
-        {
-            Name: "Identificador",
-            accessor: "m_nIdentificador",
-        },
-        {
-            Name: "Nomenclatura",
-            accessor: "m_sNomenclaturaSCT",
-        },
-        {
-            Name: "Estatus",
-            accessor: "m_bActivo",
-        },
-    ]);
 
     const columnsUnidades = React.useMemo(() => [
         {
@@ -376,13 +356,13 @@ function Informes({history}) {
         FolioInforme: 0,
         fechaHora: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
         DerechoBorrar: 151,
-        EstatusInforme: 0,
+        EstatusInforme: 5,
         IdViaje: {},
         sucursalEmisora: 0,
         sucursalReceptora: 0,
-        IdOperador: {},
-        IdRemolque1: {},
-        IdRemolque2: {},
+        IdOperador: null,
+        IdRemolque1: null,
+        IdRemolque2: null,
         PlacasRemolque1: "",
         PlacasRemolque2: "",
         PlacasDolly: "",
@@ -751,131 +731,6 @@ function Informes({history}) {
         );
     }
 
-    function TableTipoUnidad({columns, data, select}) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-            state,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div className="col-md-12">
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            <th>Acciones</th>
-                            {headerGroup.headers.map((column) => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
-                                    <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up"/>
-                                                ) : (
-                                                    <i className="fa fa-caret-down"/>
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                    <div>
-                                        {column.canFilter ? column.render("Filter") : null}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                style={{
-                                    backgroundColor:
-                                        row.original.m_nIdTipoUnidad === select
-                                            ? "#FCC88F"
-                                            : "white",
-                                }}
-                                {...row.getRowProps()}
-                                onClick={handleSelectCP.bind(this, row.original, false)}
-                                onDoubleClick={handleSelectCP.bind(this, row.original, true)}
-                            >
-                                <td>
-                                    <div>
-                                        <a
-                                            href="#Agregar"
-                                            role="tab"
-                                            data-toggle="tab"
-                                            onClick={() =>
-                                                handleShowModificar(row.original.m_nIdRecoleccion)
-                                            }
-                                            className="btn btn-default"
-                                        >
-                                            <i
-                                                className="fa fa-pencil-square-o"
-                                                style={{color: "#F9A03E"}}
-                                            />
-                                        </a>
-                                        <a
-                                            href="#"
-                                            className="btn btn-default btn-sm m-user-delete"
-                                            onClick={() =>
-                                                handleEliminar(row.original.m_nIdRecoleccion)
-                                            }
-                                        >
-                                            <i
-                                                className="zmdi zmdi-delete"
-                                                style={{color: "#F30B0B"}}
-                                            />
-                                        </a>
-                                        <a
-                                            href="#"
-                                            className="btn btn-default btn-sm m-user-delete"
-                                            onClick={() =>
-                                                handleEliminar(row.original.m_nIdRecoleccion)
-                                            }
-                                        >
-                                            <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
-                                        </a>
-                                    </div>
-                                </td>
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
 
     function TableUnidad({columns, data, select}) {
         const defaultColumn = React.useMemo(
@@ -971,56 +826,6 @@ function Informes({history}) {
     function cubicarAccion(e) {
         e.preventDefault();
         getAllGuiasFrom(true);
-    }
-
-    function addInformeGuia() {
-        const {Informes} = state;
-        Informes.push({
-            ruta2: "",
-            operador2: "",
-            unidad2: "",
-            remolque2: "",
-            viaje: {},
-            tipoModal: 0,
-            IdInforme: 0,
-            FolioInforme: 0,
-            fechaHoraLlegada: "",
-            DerechoBorrar: 151,
-
-            IdEstatusInforme: 0,
-            IdViaje: 0,
-            sucursalEmisora: 0,
-            sucursalReceptora: 0,
-            IdOperador: {},
-            IdUnidad: {},
-            IdTipoUnidad: {},
-            IdRemolque: 0,
-            IdCiudadDestino: 0,
-            IdCiudadOrigen: 0,
-            IdRuta: 0,
-            usuarioCancelacion: "",
-            estatusCancelacion: "",
-            IdSucursal: localStorage.getItem("Sucursal"),
-            agregar: "Agregar",
-            height: window.innerHeight,
-            CreadoPor: localStorage.getItem("UsuarioId"),
-            ModificadoPor: localStorage.getItem("UsuarioId"),
-            Guias: [
-                {
-                    m_nFolioGuia: "",
-                    m_sEstatusGuia: "",
-                    m_cValorDeclarado: "",
-                    m_sCiudadDestinatario: "",
-                    tipoServicio: "",
-                    observaciones: "",
-                },
-            ],
-            FechaCancelacion: "",
-            motivoCancelacion: "",
-            sucursalCancelacion: {},
-            sePuedeCancelar: false,
-        });
-        setState({...state, Informes: Informes});
     }
 
 
@@ -1132,17 +937,12 @@ function Informes({history}) {
         });
       }
      */
-    function getAllUnidadesTipo(id) {
-        obtenerUnidadesTipo(id).then((respuesta) => {
-            setDataUnidadesRem(respuesta.data);
+    function getAllUnidades() {
+        obtenerUnidades().then((respuesta) => {
+            setDataUnidades(respuesta.data);
         });
     }
 
-    function getAllUnidadesTipoDolly(id) {
-        obtenerUnidadesTipo(id).then((respuesta) => {
-            setDataUnidadesDol(respuesta.data);
-        });
-    }
 
     function getAllOperadores() {
         obtenerOperadores().then((respuesta) => {
@@ -1194,16 +994,16 @@ function Informes({history}) {
             GrupoUnidad: "",
             Color: "",
             IdOperador: 0,
-            fechaHora: data.m_sFechayHora,
+            fechaHora: state.fechaHora,
             IdCiudadDestino: {},
             IdCiudadOrigen: {},
             sucursalEmisora: 0,
             sucursalReceptora: 0,
-            IdRemolque1: {},
-            IdRemolque2: {},
+            IdRemolque1: null,
+            IdRemolque2: null,
             IdTipoUnidad: {},
             IdRuta: {},
-            IdEstatusInforme: "",
+            IdEstatusInforme: "5",
             PlacasRemolque1: "",
             PlacasRemolque2: "",
             PlacasDolly: "",
@@ -1233,9 +1033,9 @@ function Informes({history}) {
                 IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
                 sucursalEmisora: data.m_nIdSucursalEmisora,
                 sucursalReceptora: data.m_nIdSucursalReceptora,
-                IdRemolque1: dataUnidadesRem.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
-                IdRemolque2: dataUnidadesRem.find(c => c.m_nIdUnidad === data.m_nIdRemolque2),
-                IdTipoUnidad: dataUnidadesDol.find(c => c.m_nIdUnidad === data.m_nIdDolly),
+                IdRemolque1: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
+                IdRemolque2: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque2),
+                IdTipoUnidad: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdDolly),
                 IdRuta: dataRutas.find(c => c.m_nIdRuta === data.m_nIdRuta),
                 IdEstatusInforme: dataEstatusInformes.find(c => c.m_nIdEstatusInforme === data.m_nIdEstatusInforme),
                 PlacasRemolque1: data.m_sPlacasRemolque1,
@@ -1265,9 +1065,9 @@ function Informes({history}) {
                 IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
                 sucursalEmisora: data.m_nIdSucursalEmisora,
                 sucursalReceptora: data.m_nIdSucursalReceptora,
-                IdRemolque1: dataUnidadesRem.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
-                IdRemolque2: dataUnidadesRem.find(c => c.m_nIdUnidad === data.m_nIdRemolque2),
-                IdTipoUnidad: dataUnidadesDol.find(c => c.m_nIdUnidad === data.m_nIdDolly),
+                IdRemolque1: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
+                IdRemolque2: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque2),
+                IdTipoUnidad: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdDolly),
                 IdRuta: dataRutas.find(c => c.m_nIdRuta === data.m_nIdRuta),
                 IdEstatusInforme: dataEstatusInformes.find(c => c.m_nIdEstatusInforme === data.m_nIdEstatusInforme),
                 PlacasRemolque1: data.m_sPlacasRemolque1,
@@ -1322,8 +1122,7 @@ function Informes({history}) {
         getAllOperadores();
         getFormatosImpresion();
         getAllCiudades();
-        getAllUnidadesTipo(8);
-        getAllUnidadesTipoDolly(9);
+        getAllUnidades();
         //getAllTipoUnidad();
         getAllDataRutas();
     }, []);
@@ -1476,47 +1275,7 @@ function Informes({history}) {
                             </DialogActions>
                         </div>
                     )}
-                    {state.tipoModal == 3 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        history.push("/TipoUnidad");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
-                            {dataTipoUnidad.length != 0 ? (
-                                <TableTipoUnidad
-                                    select={
-                                        state[state.identificadorModal] &&
-                                        state[state.identificadorModal].m_nIdTipoUnidad
-                                    }
-                                    columns={columnsTipoUnidades}
-                                    data={dataTipoUnidad}
-                                    identificadorModal={state.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}
+
                     {state.tipoModal == 4 && (
                         <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
@@ -1530,14 +1289,14 @@ function Informes({history}) {
                                 </button>
                             </div>
 
-                            {dataUnidadesRem.length != 0 ? (
+                            {dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30).length != 0 ? (
                                 <TableUnidad
                                     select={
                                         state[state.identificadorModal] &&
                                         state[state.identificadorModal].m_nIdUnidad
                                     }
                                     columns={columnsUnidades}
-                                    data={dataUnidadesRem}
+                                    data={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
                                     identificadorModal={state.identificadorModal}
                                 />
                             ) : (
@@ -1987,10 +1746,10 @@ function Informes({history}) {
 
                                                                     {/*****************************************Operador*************************************************/}
 
-                                                                    <div className="row">
+                                                                    {/*<div className="row">
                                                                         <div className="col-sm-12 col-md-12 unit">
 
-                                                                            {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+                                                                              <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/>
                                                                             <Autocomplete
                                                                                 freeSolo
                                                                                 value={state.IdOperador}
@@ -2064,9 +1823,9 @@ function Informes({history}) {
                                                                                 )}
                                                                             />
                                                                         </div>
-                                                                    </div>
+                                                                    </div>*/}
                                                                     {/*****************************************tipo Unidad*************************************************/}
-                                                                    <div className="row">
+                                                                    {/*<div className="row">
                                                                         <div className="col-sm-12 col-md-6 unit">
 
                                                                             <div className="input">
@@ -2082,9 +1841,9 @@ function Informes({history}) {
                                                                                     id="IdTipoUnidad"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
-                                                                                    options={dataUnidadesDol}
+                                                                                    options={dataUnidades && dataUnidades.filter((g) => g.m_nIdTipoUnidad === 28)}
                                                                                     getOptionLabel={(option) =>
-                                                                                        option.m_sDescripcion
+                                                                                         option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                                                     }
                                                                                     variant="outlined"
                                                                                     style={{
@@ -2147,7 +1906,7 @@ function Informes({history}) {
                                                                             </div>
                                                                         </div>
 
-                                                                        {/*****************************************Placa Int*************************************************/}
+                                                                        ****************************************Placa Int************************************************
                                                                         <div className="col-sm-12 col-md-6 unit">
 
                                                                             <div className="input">
@@ -2162,7 +1921,7 @@ function Informes({history}) {
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </div>*/}
 
                                                                     {/*****************************************Remolque*************************************************/}
                                                                     <div className="row">
@@ -2182,9 +1941,9 @@ function Informes({history}) {
                                                                                     id="IdRemolque1"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
-                                                                                    options={dataUnidadesRem}
+                                                                                    options={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
                                                                                     getOptionLabel={(option) =>
-                                                                                        option.m_sDescripcion
+                                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                                                     }
                                                                                     variant="outlined"
                                                                                     style={{
@@ -2280,9 +2039,9 @@ function Informes({history}) {
                                                                                     id="IdRemolque2"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
-                                                                                    options={dataUnidadesRem}
+                                                                                    options={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
                                                                                     getOptionLabel={(option) =>
-                                                                                        option.m_sDescripcion
+                                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                                                     }
                                                                                     variant="outlined"
                                                                                     style={{
@@ -2392,6 +2151,7 @@ function Informes({history}) {
                                                                                                 variant="outlined"
                                                                                                 label="Origen"
                                                                                                 margin="dense"
+                                                                                                required
                                                                                                 className="form-control"
                                                                                                 {...params}
                                                                                                 InputProps={{
@@ -2473,6 +2233,7 @@ function Informes({history}) {
                                                                                                 variant="outlined"
                                                                                                 label="Destino"
                                                                                                 margin="dense"
+                                                                                                required
                                                                                                 className="form-control"
                                                                                                 {...params}
                                                                                                 InputProps={{
@@ -2534,9 +2295,9 @@ function Informes({history}) {
                                                                         </div>
                                                                     </div>
                                                                     {/*****************************************Ruta*************************************************/}
-                                                                    <div className="row">
+                                                                    {/*<div className="row">
                                                                         <div className="col-sm-12 col-md-12 unit">
-                                                                            {/*  <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/> */}
+                                                                              <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/>
                                                                             <div className="input">
                                                                                 <Autocomplete
                                                                                     freeSolo
@@ -2623,7 +2384,7 @@ function Informes({history}) {
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    </div>*/}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2757,9 +2518,9 @@ function Informes({history}) {
                                                                                                         id="IdRemolque2Viaje"
                                                                                                         disableClearable
                                                                                                         forcePopupIcon={false}
-                                                                                                        options={dataUnidadesRem}
+                                                                                                        options={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
                                                                                                         getOptionLabel={(option) =>
-                                                                                                            option.m_sDescripcion
+                                                                                                            option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                                                                         }
                                                                                                         variant="outlined"
                                                                                                         style={{
@@ -2846,7 +2607,8 @@ function Informes({history}) {
                                                 <div className="widget-content">
                                                     <div className="row">
                                                         <div className="col-md-12">
-                                                            <form action="#" className="j-forms" noValidate>
+                                                            {dataGuias.length !== 0 &&
+                                                            <form className="j-forms" noValidate>
                                                                 <div className="form-content">
                                                                     <div style={{
                                                                         padding: "10px",
@@ -3162,6 +2924,8 @@ function Informes({history}) {
                                                                     </Grid>
                                                                 </div>
                                                             </form>
+                                                            }
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -3497,9 +3261,9 @@ function Informes({history}) {
                                                                     id="IdUnidad"
                                                                     disableClearable
                                                                     forcePopupIcon={false}
-                                                                    options={dataUnidadesRem}
+                                                                    options={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
                                                                     getOptionLabel={(option) =>
-                                                                        option.m_sDescripcion
+                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                                     }
                                                                     variant="outlined"
                                                                     style={{
@@ -3576,9 +3340,9 @@ function Informes({history}) {
                                                                     id="remolqueSecundario"
                                                                     disableClearable
                                                                     forcePopupIcon={false}
-                                                                    options={dataUnidadesRem}
+                                                                    options={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
                                                                     getOptionLabel={(option) =>
-                                                                        option.m_sDescripcion
+                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                                     }
                                                                     variant="outlined"
                                                                     style={{

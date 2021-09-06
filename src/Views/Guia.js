@@ -160,7 +160,7 @@ function Guia(props) {
         ],
         //Detalle de faturación
         idTipoCobro: 0,
-        idTipoServicio: '',
+        idTipoServicio: '2',
         ValorDeclarado: "",
         //Conceptos de facturacion
         conceptosAdicionales: [],
@@ -1407,7 +1407,7 @@ function Guia(props) {
                 ],
                 //Detalle de faturación
                 idTipoCobro: 0,
-                idTipoServicio: '',
+                idTipoServicio: '2',
                 ValorDeclarado: "",
                 //Conceptos de facturacion
                 conceptosAdicionales: [],
