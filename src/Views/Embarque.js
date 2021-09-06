@@ -417,7 +417,7 @@ function Embarque(props) {
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
-            sortable: false, filterable: false,
+            sortable: false, filterable: false, width: 120,
             field: "",
             renderCell: (row) => {
                 return (
@@ -462,7 +462,14 @@ function Embarque(props) {
                                 <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>
                             </a>
                         </Tooltip>
-
+                        <Tooltip title="Duplicar">
+                            <a
+                                className="btn btn-default btn-xs"
+                                onClick={() => handleShowDuplicarConsultar(row.row.m_nIdEmbarque)}
+                            >
+                                <i className="fa fa-copy" style={{color: "#F9A03E"}}/>
+                            </a>
+                        </Tooltip>
 
                     </div>
                 );
@@ -672,6 +679,7 @@ function Embarque(props) {
             IdSucursal: state.idSucursalAgregar,
             m_nFolioEmbarque: state.folioEmbarque,
             m_nFolioGuia: state.folioGuia,
+            m_nIdEmbarqueRelacionado: state.idEmbarqueRelacionado,
             m_nFolioInforme: state.folioInforme,
             m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
             m_tHoraRegistro: state.fechaHoraRegistro.split("T")[1],
@@ -1135,10 +1143,27 @@ function Embarque(props) {
                 ...state,
                 agregar: "Consultar",
             });
-            setDataParaConsultarModificar(respuesta)
+            setDataParaConsultarModificar(respuesta, false)
 
         });
     }
+    function handleShowDuplicarConsultar(id) {
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
+        limpiarCamposAgregar()
+        obtenerEmbarquesId(id).then((respuesta) => {
+            console.log('Embarque: ', respuesta)
+            setState({
+                ...state,
+                agregar: "Agregar",
+            });
+            setDataParaConsultarModificar(respuesta, true)
+
+        });
+    }
+
 
     function handleShowAgregar() {
         let today = new Date();
@@ -1173,7 +1198,7 @@ function Embarque(props) {
                 ...state,
                 agregar: "Modificar",
             });
-            setDataParaConsultarModificar(respuesta)
+            setDataParaConsultarModificar(respuesta, false)
         });
     }
 
@@ -1311,7 +1336,7 @@ function Embarque(props) {
     }
 
     //Funcion para mostrar datos de embarque para consultar o modificar
-    const setDataParaConsultarModificar = (respuesta) => {
+    const setDataParaConsultarModificar = (respuesta, duplicar) => {
 
         let remitente = {}
         let destinatario = {}
@@ -1360,20 +1385,21 @@ function Embarque(props) {
         setState(state => {
             return {
                 ...state,
-                idEmbarque: respuesta.data.m_nIdEmbarque,
-                idRecoleccion: respuesta.data.m_nIdRecoleccion,
+                idEmbarque: duplicar ? 0 : respuesta.data.m_nIdEmbarque,
+                idEmbarqueRelacionado: duplicar ? respuesta.data.m_nIdEmbarque : 0,
+                idRecoleccion: duplicar ? 0 : respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.IdSucursal,
-                folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-                folioEmbarque: respuesta.data.m_nFolioEmbarque,
-                folioGuia: respuesta.data.m_sFolioGuia,
-                folioInforme: respuesta.data.m_nFolioInforme,
+                folioRecoleccion: duplicar ? "" : respuesta.data.m_sFolioRecoleccion,
+                folioEmbarque: respuesta.data.m_nFolioEmbarque ,
+                folioGuia: duplicar ? "" : respuesta.data.m_sFolioGuia,
+                folioInforme: duplicar ? "" : respuesta.data.m_nFolioInforme,
                 fechaHoraRegistro: respuesta.data.m_dFechaRegistro + "T" + respuesta.data.m_tHoraRegistro.slice(0, 5),
-                estatusEmbarque: respuesta.data.m_nIdEstatusEmbarque,
+                estatusEmbarque: duplicar ? 16 : respuesta.data.m_nIdEstatusEmbarque,
                 moneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 tipoCobro: respuesta.data.m_nIdTIpoCobro,
                 clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
-
+                duplicar: duplicar,
                 //Remitente
                 /*nombreRemitente: '',
                 RFCRemitente: '',
@@ -3471,7 +3497,7 @@ function Embarque(props) {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                           label="Folio Embarque"
+                                                                           label={state.duplicar ? "Folio Relacionado" : "Folio Embarque"}
                                                                            onChange={handleChange}
                                                                            className="form-control"
                                                                            type="text"

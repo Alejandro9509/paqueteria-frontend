@@ -243,13 +243,6 @@ function Guia(props) {
             })),
 
         }
-
-        console.log(params)
-        console.log(JSON.stringify(params));
-
-        // debugger;
-        console.log('id guia')
-        console.log(state.idGuia)
         if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
             agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
