@@ -1543,8 +1543,12 @@ function Guia(props) {
                                    type="text"
                                    value={state.paquetes[index].producto}
                                    placeholder="Producto"
+                                   label={"Producto"}
                                    name="producto"
                                    disabled={true}
+                                   InputLabelProps={{
+                                       shrink: true,
+                                   }}
                         />
                     </div>
                 </div>

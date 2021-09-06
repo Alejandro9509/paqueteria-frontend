@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Intento fallido de duplicar tarifas">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/Tarifas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/Tarifas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +106,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -514,7 +513,6 @@
                   </entry>
                 </map>
               </option>
-              <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
@@ -556,6 +554,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="*Las localidades ya se acumulan" />
@@ -584,17 +583,6 @@
     <MESSAGE value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
     <MESSAGE value="Se cambio la dsitribución de los campos en informes y viajes" />
     <option name="LAST_COMMIT_MESSAGE" value="Se cambio la dsitribución de los campos en informes y viajes" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2" timestamp="1630955905888">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630955905888" />
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog" timestamp="1630967750966">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630967750966" />
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630965804921" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
