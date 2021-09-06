@@ -425,6 +425,10 @@ function Guia(props) {
         })
 
         paquetes.forEach((paq) => {
+            const url = `${process.env.REACT_APP_API_URL}/Productos/GetById/${paq.m_nIdProducto}`;
+            axios.get(url, { headers }).then(respuesta => {
+                paq["producto"] = respuesta.data.m_sDescripcion
+            })
             paq["peso"] = paq.m_xPeso
             paq["largo"] = paq.m_xLargo
             paq["ancho"] = paq.m_xAncho
@@ -1032,6 +1036,11 @@ function Guia(props) {
         const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
 
         paquetes.forEach((paq) => {
+            const url = `${process.env.REACT_APP_API_URL}/Productos/GetById/${paq.m_nIdProducto}`;
+            axios.get(url, { headers }).then(({m_sDescripcion}) => {
+                paq["producto"] = m_sDescripcion
+            })
+
             paq["peso"] = paq.m_xPeso
             paq["largo"] = paq.m_xLargo
             paq["ancho"] = paq.m_xAncho
@@ -1532,7 +1541,6 @@ function Guia(props) {
                                    onChange={(event) => handleChangePaquete(event, index)}
                                    className="form-control"
                                    type="text"
-                                   label="Producto"
                                    value={state.paquetes[index].producto}
                                    placeholder="Producto"
                                    name="producto"
