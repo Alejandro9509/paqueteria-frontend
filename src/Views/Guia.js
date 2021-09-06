@@ -425,6 +425,10 @@ function Guia(props) {
         })
 
         paquetes.forEach((paq) => {
+            const url = `${process.env.REACT_APP_API_URL}/Productos/GetById/${paq.m_nIdProducto}`;
+            axios.get(url, { headers }).then(respuesta => {
+                paq["producto"] = respuesta.data.m_sDescripcion
+            })
             paq["peso"] = paq.m_xPeso
             paq["largo"] = paq.m_xLargo
             paq["ancho"] = paq.m_xAncho
@@ -1032,6 +1036,11 @@ function Guia(props) {
         const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
 
         paquetes.forEach((paq) => {
+            const url = `${process.env.REACT_APP_API_URL}/Productos/GetById/${paq.m_nIdProducto}`;
+            axios.get(url, { headers }).then(({m_sDescripcion}) => {
+                paq["producto"] = m_sDescripcion
+            })
+
             paq["peso"] = paq.m_xPeso
             paq["largo"] = paq.m_xLargo
             paq["ancho"] = paq.m_xAncho
@@ -1525,6 +1534,21 @@ function Guia(props) {
     const framesPaquete = state.paquetes.map((p, index) => {
         return (
             <div key={`paquete${index}`} style={{padding:"10px"}}>
+
+                <div className="col-xs-6 col-sm-4 col-md-12 unit">
+                    <div className="input">
+                        <TextField variant="outlined" margin="dense"
+                                   onChange={(event) => handleChangePaquete(event, index)}
+                                   className="form-control"
+                                   type="text"
+                                   value={state.paquetes[index].producto}
+                                   placeholder="Producto"
+                                   name="producto"
+                                   disabled={true}
+                        />
+                    </div>
+                </div>
+
                 <div className="col-xs-6 col-sm-4 col-md-4 unit">
                     <div className="input">
                         <TextField variant="outlined" margin="dense"
@@ -3197,7 +3221,8 @@ function Guia(props) {
                                                                                           ivaTraslada={state.ivaTraslada}
                                                                                           mostrarRangos={false}
                                                                                           customConceptos={true}
-                                                                                          listadoConceptosAlternativos={dataTodosConceptosByEmbarque}/>
+                                                                                          listadoConceptosAlternativos={dataTodosConceptosByEmbarque}
+                                                                                          consult={state.agregar == "Consultar"}/>
                                                                 </div>
 
                                                             }
