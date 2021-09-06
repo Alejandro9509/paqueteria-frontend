@@ -733,7 +733,7 @@ function Embarque(props) {
             DomicilioEntrega: state.domicilioDestinatario,
             EntregarMismoDomicilio: !state.diferenteEntrega,
             //Cita de recoleccion
-            m_bEntregaConCita: state.entregaConCita,
+            m_bEmbarqueConCita: state.entregaConCita,
         }
 
         if (state.entregaEnSucursal) {
@@ -750,6 +750,7 @@ function Embarque(props) {
             params.DatosAdicionales = state.datosAdicionalesEntrega
         }
         if (state.entregaConCita) {
+
             params.m_sFechaCita = state.fechaCita
             params.m_sHoraCitaMinima = state.horaCitaMinima
             params.m_sHoraCitaMaxima = state.horaCitaMaxima
@@ -1460,7 +1461,7 @@ function Embarque(props) {
                 datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
 
                 //Cita de recoleccion
-                entregaConCita: respuesta.data.m_bEntregaConCita,
+                entregaConCita: respuesta.data.m_bEmbarqueConCita,
                 fechaCita: respuesta.data.m_sFechaCita,
                 horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
                 horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
