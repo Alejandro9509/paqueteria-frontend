@@ -6,14 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Intento fallido de duplicar tarifas">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/ViajesContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/ViajesContext.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Informes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Informes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Viajes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Viajes/AsignarOperadorUnidad.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes/AsignarOperadorUnidad.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,12 +75,12 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/public" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla" />
       <recent name="$PROJECT_DIR$/src/Components/Map" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
     </key>
   </component>
   <component name="RunManager">
@@ -114,7 +107,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -143,7 +136,7 @@
       <workItem from="1630341665397" duration="1323000" />
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
-      <workItem from="1630770396507" duration="8652000" />
+      <workItem from="1630947747664" duration="1625000" />
     </task>
     <task id="LOCAL-00007" summary="Se agregaron los filtros necesarios">
       <created>1627356533411</created>
@@ -492,7 +485,7 @@
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
@@ -515,13 +508,12 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/feature/viajes" />
+                        <option value="develop" />
                       </list>
                     </value>
                   </entry>
                 </map>
               </option>
-              <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
@@ -534,22 +526,17 @@
             <list>
               <RecentGroup>
                 <option name="FILTER_VALUES">
-                  <option value="origin/feature/viajes" />
-                </option>
-              </RecentGroup>
-              <RecentGroup>
-                <option name="FILTER_VALUES">
-                  <option value="develop" />
-                </option>
-              </RecentGroup>
-              <RecentGroup>
-                <option name="FILTER_VALUES">
                   <option value="feature/milla" />
                 </option>
               </RecentGroup>
               <RecentGroup>
                 <option name="FILTER_VALUES">
                   <option value="origin/develop" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="develop" />
                 </option>
               </RecentGroup>
             </list>
@@ -568,6 +555,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="*Los codigos postales ya se acumulan por ciudad" />
@@ -596,41 +584,6 @@
     <MESSAGE value="Corrección de error al generar embarque" />
     <MESSAGE value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
     <option name="LAST_COMMIT_MESSAGE" value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="100" y="100" width="1240" height="700" key="DiffContextDialog" timestamp="1630771236990">
-      <screen x="50" y="25" width="1390" height="875" />
-    </state>
-    <state x="100" y="100" width="1240" height="700" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1630771219871" />
-    <state x="100" y="100" width="1240" height="700" key="DiffContextDialog/50.25.1390.875@50.25.1390.875" timestamp="1630771236990" />
-    <state width="1419" height="80" key="GridCell.Tab.0.bottom" timestamp="1630771253597">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="1419" height="80" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1630771253597" />
-    <state width="1419" height="80" key="GridCell.Tab.0.bottom/50.25.1390.875@50.25.1390.875" timestamp="1630770365625" />
-    <state width="1419" height="80" key="GridCell.Tab.0.center" timestamp="1630771253596">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="1419" height="80" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1630771253596" />
-    <state width="1419" height="80" key="GridCell.Tab.0.center/50.25.1390.875@50.25.1390.875" timestamp="1630770365624" />
-    <state width="1419" height="80" key="GridCell.Tab.0.left" timestamp="1630771253595">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="1419" height="80" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1630771253595" />
-    <state width="1419" height="80" key="GridCell.Tab.0.left/50.25.1390.875@50.25.1390.875" timestamp="1630770365624" />
-    <state width="1419" height="80" key="GridCell.Tab.0.right" timestamp="1630771253596">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state width="1419" height="80" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1630771253596" />
-    <state width="1419" height="80" key="GridCell.Tab.0.right/50.25.1390.875@50.25.1390.875" timestamp="1630770365625" />
-    <state x="2386" y="-63" width="667" height="486" key="find.popup" timestamp="1630947963065">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2386" y="-63" width="667" height="486" key="find.popup/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630947963065" />
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1630777968838">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1630777968838" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

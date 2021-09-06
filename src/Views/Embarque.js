@@ -733,7 +733,7 @@ function Embarque(props) {
             DomicilioEntrega: state.domicilioDestinatario,
             EntregarMismoDomicilio: !state.diferenteEntrega,
             //Cita de recoleccion
-            m_bEntregaConCita: state.entregaConCita,
+            m_bEmbarqueConCita: state.entregaConCita,
         }
 
         if (state.entregaEnSucursal) {
@@ -750,6 +750,7 @@ function Embarque(props) {
             params.DatosAdicionales = state.datosAdicionalesEntrega
         }
         if (state.entregaConCita) {
+
             params.m_sFechaCita = state.fechaCita
             params.m_sHoraCitaMinima = state.horaCitaMinima
             params.m_sHoraCitaMaxima = state.horaCitaMaxima
@@ -1179,18 +1180,6 @@ function Embarque(props) {
     //Funcion para mostrar datos de recoleccion para crear embarque
     function setDataRecoleccionOnState(respuesta) {
         const {m_parrPaquetes, m_parrSobres} = respuesta.data;
-        /*let paquetesModificado = m_parrPaquetes
-        for (let i = 0; i < respuesta.data.m_parrPaquetes.length; i++) {
-            paquetesModificado[i]["m_nTipo"] = 2;
-            paquetesModificado[i]["m_xPeso"] = paquetesModificado[i].m_rPeso;
-            paquetesModificado[i]["m_xLargo"] = paquetesModificado[i].m_rLargo;
-            paquetesModificado[i]["m_xAncho"] = paquetesModificado[i].m_rAncho;
-            paquetesModificado[i]["m_xAlto"] = paquetesModificado[i].m_rAlto;
-            paquetesModificado[i]["m_xVolumen"] = paquetesModificado[i].m_rVolumen;
-            paquetesModificado[i]["m_nIdTIpoEmpaque"] = paquetesModificado[i].m_nIdTipoEmbalaje;
-            paquetesModificado[i]["m_cValorDeclarado"] = paquetesModificado[i].m_cyValorDeclarado;
-        }*/
-
         m_parrPaquetes.forEach(paq => {
             paq["m_nTipo"] = 2;
             paq["m_xPeso"] = paq.m_rPeso;
@@ -1217,8 +1206,7 @@ function Embarque(props) {
         } else {
             destinatario = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNombreDestinatario)
         }
-        /*const remitente = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasRemitente && o.m_sNombre == respuesta.data.m_sNombreRemitente)
-        const destinatario = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)*/
+
         obtenerCodigoPostalId(remitente.m_nIdCP).then((cp) => {
             setState(state => {
                 return {
@@ -1235,9 +1223,6 @@ function Embarque(props) {
                 }
             })
         })
-
-        /*handleSelectRemitente(dataRemitenteDestinatario.find((o) => o.m_sRFC == m_sRFCRemitente))
-        handleSelectDestinatario(dataRemitenteDestinatario.find((o) => o.m_sRFC == m_sRFCDestinatario))*/
 
         setState(state => {
             return {
@@ -1292,16 +1277,6 @@ function Embarque(props) {
                 zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
                 zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
 
-                //fecha entrega?
-                /*fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,*/
-
-                //detalles de la operacion
-                // fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida,
-                // fechaHoraLlegada: respuesta.data.FechaLlegada + "T" + respuesta.data.HoraLlegada,
-                // idOperador: dataOperador.find((o) => o.m_nIdOperador === respuesta.data.m_nIdOperador),
-                // idUnidad: respuesta.data.m_nIdUnidad,
-
-                //paquetes
                 paquetes: m_parrPaquetes,
                 sobres: m_parrSobres,
 
@@ -1425,14 +1400,6 @@ function Embarque(props) {
                 coloniaRemitente: respuesta.data.m_sColoniaRemitente,
 
                 //Destinatario
-                /*nombreDestinatario: '',
-                RFCDestinatario: '',
-                domicilioDestinatario: '',
-                ciudadDestinatario: '',
-                codigoPostalDestinatario: '',
-                correoDestinatario: '',
-                telefonoDestinatario: '',
-                contactoDestinatario: '',*/
                 nombreDestinatario: destinatario,
                 RFCDestinatario: respuesta.data.m_sRFCDestinatario,
                 domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
@@ -1460,7 +1427,7 @@ function Embarque(props) {
                 datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,
 
                 //Cita de recoleccion
-                entregaConCita: respuesta.data.m_bEntregaConCita,
+                entregaConCita: respuesta.data.m_bEmbarqueConCita,
                 fechaCita: respuesta.data.m_sFechaCita,
                 horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
                 horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
@@ -2406,6 +2373,7 @@ function Embarque(props) {
             data.find((o) => o.m_nIdEmbarque == state.idEmbarque).m_sFolioGuia != ""
         ) {
             showSuccess("Embarque ya tiene Guía");
+            setRedirect(false)
         } else {
             return (
                 <Redirect
