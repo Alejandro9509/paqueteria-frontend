@@ -563,8 +563,8 @@ function Viajes() {
 
         //e.preventDefault();
         var params = {
-            m_dFecha: state.fechaHoraRegistro.split("T")[0],
-            m_tHora: state.fechaHoraRegistro.split("T")[1],
+            //m_dFecha: state.fechaHoraRegistro.split("T")[0],
+            //m_tHora: state.fechaHoraRegistro.split("T")[1],
             m_nIdViaje: paradaData.m_nIdViaje,
             m_nCV1Km: data.kmsRemolqueUno,
             m_nCV2Km: data.kmsRemolqueDos,
@@ -613,8 +613,8 @@ function Viajes() {
         console.log(data);
 
         var params = {
-            m_dFecha: state.fechaHoraRegistro.split("T")[0],
-            m_tHora: state.fechaHoraRegistro.split("T")[1],
+            //m_dFecha: state.fechaHoraRegistro.split("T")[0],
+            //m_tHora: state.fechaHoraRegistro.split("T")[1],
             m_nCV1Km: data.kmsRemolqueUno,
             m_nCV2Km: data.kmsRemolqueDos,
             m_nCV1Millas: data.millasRemolqueUno,

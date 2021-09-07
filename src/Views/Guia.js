@@ -1081,7 +1081,8 @@ function Guia(props) {
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
                 folioInforme: respuesta.data.m_nFolioInforme,
-
+                folioRelacionado: respuesta.m_sFolioEmbarqueRelacionado,
+                idEmbarqueRelacionado: respuesta.m_nIdEmbarqueRelacionado,
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,

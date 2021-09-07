@@ -147,19 +147,19 @@ class AgregarViaje extends Component {
                 idCiudadDestino: this.state.dataCiudad.find(c => c.m_nIdCiudad === this.props.select.m_nDestino),
                 asignacionUnidad: {
                     idUnidad: this.state.dataUnidades.find(u => u.m_nIdUnidad === this.props.select.m_nIdUnidad),
-                    idOperador: this.state.asignacionEquipo.operador.m_nIdOperador,
-                    CRV1: this.state.asignacionEquipo.cargadoVacioRemolqueUno,
-                    CRV2: this.state.asignacionEquipo.cargadoVacioRemolqueDos,
-                    referencia: this.state.asignacionEquipo.referencia,
-                    kilometro: this.state.asignacionEquipo.kms,
-                    fechaCarga: this.state.asignacionEquipo.fechaCarga,
-                    horas: this.state.asignacionEquipo.horas,
-                    fechaEntrega: this.state.asignacionEquipo.fechaEntregaGeneral,
-                    horaCarga: this.state.asignacionEquipo.horaCarga,
-                    fechaInforme: this.state.asignacionEquipo.fechaInforme,
-                    horaInforme: this.state.asignacionEquipo.horaInforme,
-                    estatus: this.state.asignacionEquipo.estatusInforme,
-                    horaEntrega: this.state.asignacionEquipo.horaEntregaGeneral,
+                    // idOperador: this.state.asignacionEquipo.operador.m_nIdOperador,
+                    // CRV1: this.state.asignacionEquipo.cargadoVacioRemolqueUno,
+                    // CRV2: this.state.asignacionEquipo.cargadoVacioRemolqueDos,
+                    // referencia: this.state.asignacionEquipo.referencia,
+                    // kilometro: this.state.asignacionEquipo.kms,
+                    // fechaCarga: this.state.asignacionEquipo.fechaCarga,
+                    // horas: this.state.asignacionEquipo.horas,
+                    // fechaEntrega: this.state.asignacionEquipo.fechaEntregaGeneral,
+                    // horaCarga: this.state.asignacionEquipo.horaCarga,
+                    // fechaInforme: this.state.asignacionEquipo.fechaInforme,
+                    // horaInforme: this.state.asignacionEquipo.horaInforme,
+                    // estatus: this.state.asignacionEquipo.estatusInforme,
+                    // horaEntrega: this.state.asignacionEquipo.horaEntregaGeneral,
                 }
             })
         }
@@ -185,7 +185,7 @@ class AgregarViaje extends Component {
             m_nIdOrigen: this.state.idCiudadOrigen.m_nIdCiudad,
             m_nDestino: this.state.idCiudadDestino.m_nIdCiudad,
             IdRemolque1: this.state.IdRemolque1.m_nIdUnidad,
-            IdRemolque2: this.state.IdRemolque1.m_nIdUnidad,
+            IdRemolque2: this.state.IdRemolque2.m_nIdUnidad,
             IdDolly: this.state.IdDolly.m_nIdUnidad,
             asignacionUnidad: {
                 idUnidad: this.state.asignacionEquipo.unidad.m_nIdUnidad,
@@ -208,11 +208,12 @@ class AgregarViaje extends Component {
             modificarViaje(this.props.id, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data)
-                    this.props.getAllData()
+
                     $('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
                     $('#Listado').addClass('in show');
+                    this.props.getAllData()
                 })
                 .catch((err) => {
                     // console.log(err);
@@ -587,7 +588,7 @@ class AgregarViaje extends Component {
                             onClose={() => this.setState({showAsignarOperadorDialog: false})}>
                         <DialogContent>
                             <AsignarOperadorUnidad unidadAsignada={this.state.asignacionEquipo}
-                                                   rutaSeleccionada={this.state.idRuta}
+                                                   rutaSeleccionada={this.state}
 
                                                    onSubmit={(data) => this.setState({
                                                        showAsignarOperadorDialog: false,
@@ -776,6 +777,7 @@ class AgregarViaje extends Component {
                                                     <div>
                                                         <TextField
                                                             label="Origen"
+                                                            required
                                                             margin="dense"
                                                             variant="outlined"
                                                             {...params}
@@ -828,7 +830,7 @@ class AgregarViaje extends Component {
                                         <div className="input">
                                             <Autocomplete
                                                 freeSolo
-                                                onChange={(e, newValue) => this.setState({idCiudadOrigen: newValue})}
+                                                onChange={(e, newValue) => this.setState({idCiudadDestino: newValue})}
                                                 value={this.state.idCiudadDestino}
                                                 //disabled={state.agregar == "Consultar"}
                                                 id="idCiudadDestino"
@@ -846,6 +848,7 @@ class AgregarViaje extends Component {
                                                         <TextField
                                                             label="Destino"
                                                             margin="dense"
+                                                            required
                                                             variant="outlined"
                                                             {...params}
                                                             InputProps={{
@@ -927,6 +930,7 @@ class AgregarViaje extends Component {
                                                             <TextField
                                                                 label="Remolque 1"
                                                                 margin="dense"
+                                                                required
                                                                 variant="outlined"
                                                                 {...params}
                                                                 InputProps={{
@@ -998,6 +1002,9 @@ class AgregarViaje extends Component {
                                                            type="text"
                                                            label="Estatus"
                                                            disabled
+                                                           InputLabelProps={{
+                                                               shrink: true,
+                                                           }}
                                                            value={this.state.estatusRemolque1}
                                                            name="estatusRemolque1"
                                                 />
@@ -1104,6 +1111,9 @@ class AgregarViaje extends Component {
                                                            className="form-control"
                                                            type="text"
                                                            label="Estatus"
+                                                           InputLabelProps={{
+                                                               shrink: true,
+                                                           }}
                                                            value={this.state.estatusRemolque2}
                                                            name="estatusRemolque2"
                                                 />
@@ -1282,9 +1292,10 @@ class AgregarViaje extends Component {
                         <div className="widget-wrap">
                             <div className="widget-header">
                                 <h2 color={'#717171'}>Informes para asignación</h2>
+                                <br/>
                                 <div className="row" style={{display: "flex"}}>
                                     {/* Ruta */}
-                                    <div className="col-sm-12 col-md-12 unit">
+                                    {/*<div className="col-sm-12 col-md-12 unit">
                                         <div className="input">
                                             <Autocomplete
                                                 freeSolo
@@ -1353,7 +1364,7 @@ class AgregarViaje extends Component {
                                                 )}
                                             />
                                         </div>
-                                    </div>
+                                    </div>*/}
                                     {/* Origen */}
                                     <div className="col-sm-12 col-md-12 unit">
                                         <div className="input">
