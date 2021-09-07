@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Clonar Embarque">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se hicieron ajustes en viajes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Viajes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Viajes/AsignarOperadorUnidad.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes/AsignarOperadorUnidad.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,13 +137,6 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
-    </task>
-    <task id="LOCAL-00009" summary="Se hicieron ajustes para mandar el id de destino en lugar el nombre a los servicios">
-      <created>1627420097343</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1627420097343</updated>
     </task>
     <task id="LOCAL-00010" summary="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos">
       <created>1627426088771</created>
@@ -484,7 +474,14 @@
       <option name="project" value="LOCAL" />
       <updated>1630972046603</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="Se hicieron ajustes en viajes">
+      <created>1631036046324</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1631036046325</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -561,7 +558,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="*Se arregló validacion para que mande a modificar o agregar respectivamente" />
     <MESSAGE value="*Se arregló problema par que se vea el listado de unidades por id de tipo" />
     <MESSAGE value="*Se arregló problema que impedia seleccionar unidad" />
     <MESSAGE value="*Se corrigieron datos al agregar embarque" />
@@ -586,13 +582,14 @@
     <MESSAGE value="Se cambio la dsitribución de los campos en informes y viajes" />
     <MESSAGE value="Se ajustaron las columnas de tarifas" />
     <MESSAGE value="Clonar Embarque" />
-    <option name="LAST_COMMIT_MESSAGE" value="Clonar Embarque" />
+    <MESSAGE value="Se hicieron ajustes en viajes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se hicieron ajustes en viajes" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2270" y="-221" key="CommitChangelistDialog2" timestamp="1631031720924">
+    <state x="2270" y="-221" key="CommitChangelistDialog2" timestamp="1631036045958">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state x="2270" y="-221" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631031720924" />
+    <state x="2270" y="-221" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631036045958" />
     <state width="2539" height="150" key="GridCell.Tab.0.bottom" timestamp="1630968919010">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
@@ -609,19 +606,19 @@
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
     <state width="2539" height="150" key="GridCell.Tab.0.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630968919009" />
-    <state x="2433" y="-100" key="MultipleFileMergeDialog" timestamp="1630972055682">
+    <state x="2433" y="-100" key="MultipleFileMergeDialog" timestamp="1631036067745">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state x="2433" y="-100" key="MultipleFileMergeDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630972055682" />
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2" timestamp="1630972070880">
+    <state x="2433" y="-100" key="MultipleFileMergeDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631036067745" />
+    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2" timestamp="1631036080793">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630972070880" />
+    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631036080793" />
     <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630955905888" />
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog" timestamp="1630974801641">
+    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog" timestamp="1631036061130">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630974801641" />
+    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631036061129" />
     <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630965804921" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

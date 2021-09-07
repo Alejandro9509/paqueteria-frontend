@@ -185,8 +185,8 @@ class AgregarViaje extends Component {
             m_nIdOrigen: this.state.idCiudadOrigen.m_nIdCiudad,
             m_nDestino: this.state.idCiudadDestino.m_nIdCiudad,
             IdRemolque1: this.state.IdRemolque1.m_nIdUnidad,
-            IdRemolque2: this.state.IdRemolque2.m_nIdUnidad,
-            IdDolly: this.state.IdDolly.m_nIdUnidad,
+            IdRemolque2:  this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0,
+            IdDolly: this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0,
             asignacionUnidad: {
                 idUnidad: this.state.asignacionEquipo.unidad.m_nIdUnidad,
                 idOperador: this.state.asignacionEquipo.operador.m_nIdOperador,
