@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se hicieron ajustes">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se hicieron ajustes en viajes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionales.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesEntrega.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesEntrega.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesManiobra.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesManiobra.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesRecoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesRecoleccion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +35,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feature/convenios" />
+        <entry key="$PROJECT_DIR$" value="develop" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -107,7 +111,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -137,6 +141,27 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
+    </task>
+    <task id="LOCAL-00010" summary="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos">
+      <created>1627426088771</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1627426088771</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona">
+      <created>1627444117527</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1627444117527</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Ajustes">
+      <created>1627445082721</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1627445082721</updated>
     </task>
     <task id="LOCAL-00013" summary="Se autocompleta la informacion de remitente y destinatario al seleccionar">
       <created>1627496295098</created>
@@ -460,28 +485,7 @@
       <option name="project" value="LOCAL" />
       <updated>1631036046325</updated>
     </task>
-    <task id="LOCAL-00059" summary="Error al crear viaje">
-      <created>1631036817581</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1631036817581</updated>
-    </task>
-    <task id="LOCAL-00060" summary="Se corrigieron errores al generar viajes y informes">
-      <created>1631043154901</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1631043154902</updated>
-    </task>
-    <task id="LOCAL-00061" summary="Se hicieron ajustes">
-      <created>1631043549780</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1631043549780</updated>
-    </task>
-    <option name="localTasksCounter" value="62" />
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -514,7 +518,6 @@
                   </entry>
                 </map>
               </option>
-              <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
@@ -556,8 +559,12 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="*Se arregló problema par que se vea el listado de unidades por id de tipo" />
+    <MESSAGE value="*Se arregló problema que impedia seleccionar unidad" />
+    <MESSAGE value="*Se corrigieron datos al agregar embarque" />
     <MESSAGE value="Ajuste en viajes" />
     <MESSAGE value="Se realizo el ajuste de multiplicar el peso por la cantidad de paquetes" />
     <MESSAGE value="Correccion al agregar embarque" />
@@ -580,46 +587,7 @@
     <MESSAGE value="Se ajustaron las columnas de tarifas" />
     <MESSAGE value="Clonar Embarque" />
     <MESSAGE value="Se hicieron ajustes en viajes" />
-    <MESSAGE value="Error al crear viaje" />
-    <MESSAGE value="Se corrigieron errores al generar viajes y informes" />
-    <MESSAGE value="Se hicieron ajustes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se hicieron ajustes" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="2270" y="-221" key="CommitChangelistDialog2" timestamp="1631043549514">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2270" y="-221" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631043549514" />
-    <state width="2539" height="150" key="GridCell.Tab.0.bottom" timestamp="1630968919010">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="150" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630968919010" />
-    <state width="2539" height="150" key="GridCell.Tab.0.center" timestamp="1630968919008">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="150" key="GridCell.Tab.0.center/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630968919008" />
-    <state width="2539" height="150" key="GridCell.Tab.0.left" timestamp="1630968919008">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="150" key="GridCell.Tab.0.left/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630968919008" />
-    <state width="2539" height="150" key="GridCell.Tab.0.right" timestamp="1630968919009">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="150" key="GridCell.Tab.0.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630968919009" />
-    <state x="2433" y="-100" key="MultipleFileMergeDialog" timestamp="1631036067745">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2433" y="-100" key="MultipleFileMergeDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631036067745" />
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2" timestamp="1631043172412">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631043172412" />
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630955905888" />
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog" timestamp="1631043159616">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631043159616" />
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630965804921" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se hicieron ajustes en viajes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
