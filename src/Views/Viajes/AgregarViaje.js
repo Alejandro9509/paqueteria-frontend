@@ -213,7 +213,7 @@ class AgregarViaje extends Component {
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
                     $('#Listado').addClass('in show');
-                    this.props.getAllData()
+                    this.props.reload()
                 })
                 .catch((err) => {
                     // console.log(err);
@@ -223,11 +223,11 @@ class AgregarViaje extends Component {
             agregarViaje(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data)
-                    this.props.getAllData()
                     $('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
                     $('#Listado').addClass('in show');
+                    this.props.reload()
                 })
                 .catch((err) => {
                     console.log(err);
