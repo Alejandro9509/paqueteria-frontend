@@ -2665,9 +2665,7 @@ function Embarque(props) {
                                    disabled={state.agregar === "Consultar"}
                                    placeholder="$"
                                    name="m_cValorDeclarado"
-                                   InputProps={{
-                                       shrink: true,
-                                   }}
+                                   InputLabelProps={{shrink: true,}}
                         />
                     </div>
                 </div>
