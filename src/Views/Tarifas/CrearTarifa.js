@@ -52,6 +52,7 @@ class CrearTarifa extends Component {
             sucursal: props.edit ? props.select.m_nIdSucursal : "0",
             destino: props.edit ? props.select.m_nIdDestino : "0",
             origen: props.edit ? props.select.m_nIdOrigen : "0",
+            codigoTarifa: props.edit ? props.select.m_sCodigo: "",
 
             precioFlete: props.edit ? props.select.m_cFleteMinimo : "",
             precioMinimo: props.edit ? props.select.m_cMontoMinimo : "",
@@ -391,6 +392,21 @@ class CrearTarifa extends Component {
                                         </div>
                                     </div>
                                     <div className="row">
+                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           onChange={this.handleChange}
+                                                           className="form-control"
+                                                           label={"Código"}
+                                                           required
+                                                           disabled={this.props.consult}
+
+                                                           value={this.state.codigoTarifa}
+                                                           name="codigoTarifa"
+                                                />
+                                            </div>
+                                        </div>
                                         <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <label className="input select" style={{ width: "100%" }}>
                                                 <FormControl fullWidth variant="outlined" margin="dense">
