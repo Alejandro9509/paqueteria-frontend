@@ -408,7 +408,7 @@ function Informes({history}) {
             m_nIdEstatusInforme: state.EstatusInforme,
             m_nIdOperador: state.IdOperador.m_nIdOperador,
             m_nIdRemolque1: state.IdRemolque1.m_nIdUnidad,
-            m_nIdRemolque2: state.IdRemolque2.m_nIdUnidad,
+            m_nIdRemolque2: state.IdRemolque2 ? state.IdRemolque2.m_nIdUnidad : 0,
             m_sPlacasRemolque1: state.PlacasRemolque1,
             m_sPlacasRemolque2: state.PlacasRemolque2,
             m_nIdRuta: state.IdRuta.m_nIdRuta,

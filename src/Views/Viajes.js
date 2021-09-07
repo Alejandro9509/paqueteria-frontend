@@ -522,7 +522,7 @@ function Viajes() {
 
     function getParadasListado(row) {
         obtenerDetalleParadasIdViaje(row).then(respuesta => {
-            var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdRuta")
+            var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdOrigen")
             arrayInformes.forEach(a => {
                 a["informes"] = respuesta.data.filter(r => r.m_nIdRuta === a.m_nIdRuta)
             })
@@ -1014,7 +1014,7 @@ function Viajes() {
                                                                     <ListItem
                                                                     >
 
-                                                                        <ListItemText primary={`Ruta: ${p.m_sRuta}`}/>
+                                                                        <ListItemText primary={`Ruta: ${p.m_sOrigen}  - ${p.m_sDestino}`}/>
                                                                         {
                                                                             p.m_dFechaSalida.startsWith("0000") &&
 

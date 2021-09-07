@@ -60,7 +60,7 @@ export default function LlegadaParadas(props){
         millasRemolqueDos: "",
         placasremolqueDos: props.data.m_sPlacasRemolque2,
         dolly: props.data.m_sDolly,
-        fechaSalida: props.data.m_dFechaSalida,
+        fechaSalida: "02:30",
         horaSalida: props.data.m_tHoraSalida,
         fechaLlegada: props.data.m_dFechaLlegada,
         horaLlegada: props.data.m_tHoraLlegada,

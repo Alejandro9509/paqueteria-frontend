@@ -85,8 +85,8 @@ class AgregarViaje extends Component {
             idSucursalAgregar: localStorage.getItem("Sucursal"),
             folioViaje: "",
             viajeCliente: "",
-            fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + "T" + today.getHours() + ":" + today.getMinutes(),
-            fechaHoraRegistro: new Date(),
+            fechaHoraCreacion: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+            fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
             candadoOficial: "",
             identificadorViaje: "",
             estatusListado: '8',
@@ -230,7 +230,7 @@ class AgregarViaje extends Component {
                     $('#Listado').addClass('in show');
                 })
                 .catch((err) => {
-                    // console.log(err);
+                    console.log(err);
                     showSuccess(err);
                 });
         }
