@@ -787,7 +787,7 @@ export default function AsignarOperadorUnidad(props) {
                                 forcePopupIcon={false}
                                 options={dataUnidadesRem}
                                 getOptionLabel={(option) =>
-                                    option.m_sDescripcion
+                                    option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                 }
                                 style={{
                                     transform: "translate(14px, 10px) scale(1) !important"
@@ -875,7 +875,6 @@ export default function AsignarOperadorUnidad(props) {
                                 margin={"dense"}
                                 variant={"outlined"}
                                 label={"Kilómetros"}
-                                required
                                 onChange={(e) => setData({...data, kms: e.target.value})}
                                 value={data.kms}/>
                         </Grid>
@@ -885,7 +884,6 @@ export default function AsignarOperadorUnidad(props) {
                                 variant={"outlined"}
                                 label={"Horas"}
                                 onChange={(e) => setData({...data, horas: e.target.value})}
-                                required
                                 value={data.horas}/>
                         </Grid>
                         <Grid item xs={4}/>

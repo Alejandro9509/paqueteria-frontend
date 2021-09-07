@@ -1248,7 +1248,7 @@ class AgregarViaje extends Component {
                                                                type="text"
                                                                disabled
                                                                label="Unidad"
-                                                               value={this.state.asignacionEquipo.unidad.m_sDescripcion}
+                                                               value={`${this.state.asignacionEquipo.unidad.m_sCodigo} - ${this.state.asignacionEquipo.unidad.m_sDescripcion}`}
                                                                name="placasDolly"
                                                     />
                                                 </div>

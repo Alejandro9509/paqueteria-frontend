@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Error al crear viaje">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se corrigieron errores al generar viajes y informes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Viajes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Viajes/AsignarOperadorUnidad.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes/AsignarOperadorUnidad.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,13 +138,6 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
-    </task>
-    <task id="LOCAL-00011" summary="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona">
-      <created>1627444117527</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1627444117527</updated>
     </task>
     <task id="LOCAL-00012" summary="Ajustes">
       <created>1627445082721</created>
@@ -482,7 +475,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631036817581</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="Se corrigieron errores al generar viajes y informes">
+      <created>1631043154901</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1631043154902</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -559,7 +559,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="*Se arregló problema que impedia seleccionar unidad" />
     <MESSAGE value="*Se corrigieron datos al agregar embarque" />
     <MESSAGE value="Ajuste en viajes" />
     <MESSAGE value="Se realizo el ajuste de multiplicar el peso por la cantidad de paquetes" />
@@ -584,13 +583,14 @@
     <MESSAGE value="Clonar Embarque" />
     <MESSAGE value="Se hicieron ajustes en viajes" />
     <MESSAGE value="Error al crear viaje" />
-    <option name="LAST_COMMIT_MESSAGE" value="Error al crear viaje" />
+    <MESSAGE value="Se corrigieron errores al generar viajes y informes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se corrigieron errores al generar viajes y informes" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2270" y="-221" key="CommitChangelistDialog2" timestamp="1631036817387">
+    <state x="2270" y="-221" key="CommitChangelistDialog2" timestamp="1631043154403">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state x="2270" y="-221" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631036817387" />
+    <state x="2270" y="-221" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631043154403" />
     <state width="2539" height="150" key="GridCell.Tab.0.bottom" timestamp="1630968919010">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
@@ -611,15 +611,15 @@
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
     <state x="2433" y="-100" key="MultipleFileMergeDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631036067745" />
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2" timestamp="1631036824921">
+    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2" timestamp="1631043172412">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631036824921" />
+    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631043172412" />
     <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630955905888" />
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog" timestamp="1631036061130">
+    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog" timestamp="1631043159616">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631036061129" />
+    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631043159616" />
     <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630965804921" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
