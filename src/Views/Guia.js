@@ -1126,7 +1126,7 @@ function Guia(props) {
         axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque.m_nIdEmbarque}`, { headers }).then(tarifa => {
             console.log('tarifas by embarque')
             console.log(tarifa.data)
-            debugger
+            // debugger
             if (tarifa.data.length != 0) {
             let pesoTotal = 0
             let pesoKg = 0
