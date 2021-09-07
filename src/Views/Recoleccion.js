@@ -4371,7 +4371,6 @@ function Recoleccion() {
                                                                                         variant="outlined"
                                                                                         label="Zona"
                                                                                         margin="dense"
-                                                                                        required
                                                                                         {...params}
                                                                                     />
                                                                                 }
