@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se ajustaron las columnas de tarifas">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*Intento fallido de duplicar tarifas">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/Tarifas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/Tarifas.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +108,7 @@
       </list>
     </option>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -138,6 +138,13 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
+    </task>
+    <task id="LOCAL-00007" summary="Se agregaron los filtros necesarios">
+      <created>1627356533411</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1627356533411</updated>
     </task>
     <task id="LOCAL-00008" summary="Se agregaron validacionees para obligar a seleccionar sucursal y destino antes de otros datos">
       <created>1627419598939</created>
@@ -475,14 +482,7 @@
       <option name="project" value="LOCAL" />
       <updated>1629994230059</updated>
     </task>
-    <task id="LOCAL-00056" summary="Se ajustaron las columnas de tarifas">
-      <created>1630968070381</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1630968070381</updated>
-    </task>
-    <option name="localTasksCounter" value="57" />
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -515,7 +515,6 @@
                   </entry>
                 </map>
               </option>
-              <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
@@ -557,8 +556,10 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="*Las localidades ya se acumulan" />
     <MESSAGE value="*Limpieza de código" />
     <MESSAGE value="*Se arregló validacion para que mande a modificar o agregar respectivamente" />
     <MESSAGE value="*Se arregló problema par que se vea el listado de unidades por id de tipo" />
@@ -583,40 +584,7 @@
     <MESSAGE value="Corrección de error al generar embarque" />
     <MESSAGE value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
     <MESSAGE value="Se cambio la dsitribución de los campos en informes y viajes" />
-    <MESSAGE value="Se ajustaron las columnas de tarifas" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se ajustaron las columnas de tarifas" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="2270" y="-221" key="CommitChangelistDialog2" timestamp="1630968070087">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2270" y="-221" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630968070087" />
-    <state width="2539" height="150" key="GridCell.Tab.0.bottom" timestamp="1630968919010">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="150" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630968919010" />
-    <state width="2539" height="150" key="GridCell.Tab.0.center" timestamp="1630968919008">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="150" key="GridCell.Tab.0.center/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630968919008" />
-    <state width="2539" height="150" key="GridCell.Tab.0.left" timestamp="1630968919008">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="150" key="GridCell.Tab.0.left/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630968919008" />
-    <state width="2539" height="150" key="GridCell.Tab.0.right" timestamp="1630968919009">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="150" key="GridCell.Tab.0.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630968919009" />
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2" timestamp="1630968074919">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630968074919" />
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630955905888" />
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog" timestamp="1630967750966">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630967750966" />
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.25.1440.875/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1630965804921" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se cambio la dsitribución de los campos en informes y viajes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -46,8 +46,7 @@ class Tarifas extends Component {
                     headerName: "Acciones",
                     sortable: false, filterable: false,
                     field: "",
-                    flex: 1,
-                    minWidth: 300,
+                    minWidth: 250,
                     renderCell: (row) => {
                         return (
                             <div>
@@ -68,8 +67,8 @@ class Tarifas extends Component {
                     }
                 },
                 {
-                    headerName: "Sucursal Origen",
-                    field: "m_sSucursal",
+                    headerName: "Código",
+                    field: "m_sCodigo",
                     flex: 1,
                     minWidth: 300,
                 }, {
@@ -239,7 +238,8 @@ class Tarifas extends Component {
             })),
             m_arrArProductos: data.dataProductosSeleccionados,
             m_nCreadoPOr: localStorage.getItem("UsuarioId"),
-            m_nModificadoPor: localStorage.getItem("UsuarioId")
+            m_nModificadoPor: localStorage.getItem("UsuarioId"),
+            m_sCodigo: data.codigoTarifa
         }
         console.log(JSON.stringify(params))
         if (this.state.edit) {
