@@ -1129,7 +1129,6 @@ function Guia(props) {
 
             }
         })
-
         obtenerTarifasPorEmbarque(respuesta.data, paquetes)
     }
 
@@ -1140,8 +1139,7 @@ function Guia(props) {
         let ivaTraslada = []
         let ivaRetiene = []
         axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque.m_nIdEmbarque}`, { headers }).then(tarifa => {
-            console.log('tarifas by embarque')
-            console.log(tarifa.data)
+            console.log('tarifas by embarque ',tarifa.data)
             // debugger
             if (tarifa.data.length != 0) {
             let pesoTotal = 0
@@ -1158,29 +1156,23 @@ function Guia(props) {
                 pesoTotal = pesoVolumetrico
             }
 
-            console.log(pesoKg)
-            obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal,paquetesTemp)
-            if (tarifa.data.length !== 0) {
-                //se recorre el listado de conceptos de la tarifa del embarque
-                tarifa.data[0].m_arrArConceptos.forEach(element => {
-                    conceptosTemp.push({
-                        concepto: element,
-                        idConcepto: element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeIVA: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoTraslada).m_xPorcentaje / 100) * element.m_cImporte,
-                        importeRet: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoRetiene).m_xPorcentaje / 100) * element.m_cImporte,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo
-                    })
-
+            tarifa.data[0].m_arrArConceptos.forEach(element => {
+                conceptosTemp.push({
+                    concepto: element,
+                    idConcepto: element.m_nIdConceptosFacturacion,
+                    importe: element.m_cImporte,
+                    retiene: element.m_nIdImpuestoRetiene,
+                    traslada: element.m_nIdImpuestoTraslada,
+                    importeIVA: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoTraslada).m_xPorcentaje / 100) * element.m_cImporte,
+                    importeRet: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoRetiene).m_xPorcentaje / 100) * element.m_cImporte,
+                    rangoMinimo: element.m_xnRangoMinimo,
+                    rangoMaximo: element.m_xnRangoMaximo,
+                    nombreConcepto: element.m_sConcepto,
+                    tipoCalculo: element.m_nIdTipoCalculo
                 })
-                ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
-                ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
-            }
+            })
+            ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
+            ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
 
             setState(state => {
                 return {
@@ -1191,7 +1183,10 @@ function Guia(props) {
                     ivaTraslada: ivaTraslada
                 }
             })
-        }
+            obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal,paquetesTemp)
+        }else{
+                showSuccess("No se encontró tarifa con las caracteristicas especificadas")
+            }
         })
     }
 
