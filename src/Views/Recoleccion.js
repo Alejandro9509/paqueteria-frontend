@@ -1409,22 +1409,24 @@ function Recoleccion() {
 
     //Maneja filtrado de listado embarque
     const handleFolioRecoleccionFiltro = async (event) => {
-        let value = event.target.value
-        if (event.target.value == '') {
-            value = 0
-        }
-        setState({
-            ...state,
-            folioRecoleccion: event.target.value,
-        })
-        const {fechaInicial, fechaFinal, sucursalListado, estatusListado} = state
-        obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
-            if (respuesta.data == "Vacio") {
-                setData([])
-            } else {
-                setData(respuesta.data)
+        if(event.keyCode == 13) {
+            let value = event.target.value
+            if (event.target.value == '') {
+                value = 0
             }
-        })
+            setState({
+                ...state,
+                folioRecoleccion: event.target.value,
+            })
+            const {fechaInicial, fechaFinal, sucursalListado, estatusListado} = state
+            obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
     }
 
     const columns = React.useMemo(() => [
@@ -3090,7 +3092,7 @@ function Recoleccion() {
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
                                                            onChange={handleChange}
-                                                           onBlur={handleFolioRecoleccionFiltro}
+                                                           onKeyDown={handleFolioRecoleccionFiltro}
                                                            className="form-control"
                                                            type="text"
                                                            label="Folio Recolección"

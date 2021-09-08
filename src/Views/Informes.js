@@ -1164,21 +1164,23 @@ function Informes({history}) {
 
     //Maneja filtrado de listado informe
     const handleFolioInformeFiltro = async (event) => {
-        let value = event.target.value
-        if (event.target.value == '') {
-            value = 0
-        }
-        setState({
-            ...state,
-            folioInformeListado: event.target.value,
-        })
-        obtenerInformeFiltro(value).then(respuesta => {
-            if (respuesta.data == "Vacio") {
-                setData([])
-            } else {
-                setData(respuesta.data)
+        if(event.keyCode == 13) {
+            let value = event.target.value
+            if (event.target.value == '') {
+                value = 0
             }
-        })
+            setState({
+                ...state,
+                folioInformeListado: event.target.value,
+            })
+            obtenerInformeFiltro(value).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
     }
 
 
@@ -1459,7 +1461,7 @@ function Informes({history}) {
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
                                                            onChange={handleChange}
-                                                           onBlur={handleFolioInformeFiltro}
+                                                           onKeyDown={handleFolioInformeFiltro}
                                                            className="form-control"
                                                            type="text"
 

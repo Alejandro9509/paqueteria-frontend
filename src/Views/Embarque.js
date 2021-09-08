@@ -1628,22 +1628,24 @@ function Embarque(props) {
 
     //Maneja filtrado de listado embarque
     const handleFolioEmbarqueFiltro = async (event) => {
-        let value = event.target.value
-        if (event.target.value == ''){
-            value = 0
-        }
-        setState({
-            ...state,
-            folioEmbarque: event.target.value,
-        })
-        const {fechaInicial, fechaFinal, sucursalListado,estatusListado} = state
-        obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
-            if (respuesta.data == "Vacio"){
-                setData([])
-            }else {
-                setData(respuesta.data)
+        if(event.keyCode == 13){
+            let value = event.target.value
+            if (event.target.value == ''){
+                value = 0
             }
-        })
+            setState({
+                ...state,
+                folioEmbarque: event.target.value,
+            })
+            const {fechaInicial, fechaFinal, sucursalListado,estatusListado} = state
+            obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
+                if (respuesta.data == "Vacio"){
+                    setData([])
+                }else {
+                    setData(respuesta.data)
+                }
+            })
+        }
     }
 
     function handleSelectDatos(id, cp) {
@@ -3251,7 +3253,8 @@ function Embarque(props) {
                                                     <div className="input">
                                                         <TextField variant="outlined" margin="dense"
                                                                    onChange={handleChange}
-                                                                   onBlur={handleFolioEmbarqueFiltro}
+                                                                   // onBlur={handleFolioEmbarqueFiltro}
+                                                                   onKeyDown={handleFolioEmbarqueFiltro}
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Folio Embarque"
