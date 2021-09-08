@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se hicieron ajustes en viajes">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Precargar estatus de la guia en pendiente al traer datos de embarque">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
@@ -137,13 +137,6 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
-    </task>
-    <task id="LOCAL-00010" summary="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos">
-      <created>1627426088771</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1627426088771</updated>
     </task>
     <task id="LOCAL-00011" summary="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona">
       <created>1627444117527</created>
@@ -481,7 +474,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631036046325</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="Precargar estatus de la guia en pendiente al traer datos de embarque">
+      <created>1631122595463</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1631122595463</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -558,7 +558,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="*Se arregló problema par que se vea el listado de unidades por id de tipo" />
     <MESSAGE value="*Se arregló problema que impedia seleccionar unidad" />
     <MESSAGE value="*Se corrigieron datos al agregar embarque" />
     <MESSAGE value="Ajuste en viajes" />
@@ -583,7 +582,8 @@
     <MESSAGE value="Se ajustaron las columnas de tarifas" />
     <MESSAGE value="Clonar Embarque" />
     <MESSAGE value="Se hicieron ajustes en viajes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se hicieron ajustes en viajes" />
+    <MESSAGE value="Precargar estatus de la guia en pendiente al traer datos de embarque" />
+    <option name="LAST_COMMIT_MESSAGE" value="Precargar estatus de la guia en pendiente al traer datos de embarque" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

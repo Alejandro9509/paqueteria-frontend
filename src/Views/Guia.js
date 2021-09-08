@@ -388,7 +388,6 @@ function Guia(props) {
     function handleShowConsultar(id) {
         obtenerGuiaId(id).then(respuesta => {
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-            // handleEmbarque(respuesta.data.m_nIdEmbarque)
             setState(state => {
                 return {
                     ...state,
@@ -768,8 +767,6 @@ function Guia(props) {
         });
     };
 
-
-
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -945,6 +942,7 @@ function Guia(props) {
         })
 
     }
+
     var errorCallback = function(errorMessage){
         alert("Error: " + errorMessage);
     }
@@ -993,6 +991,7 @@ function Guia(props) {
             && c.importeIVA == item.importeIVA
         return !valid
     }
+
     function removeConcepto(item) {
         const {conceptosAdicionales} = state
         const newArrayConceptos = conceptosAdicionales.filter(c => filtrarConceptoAdicional(c, item))
@@ -1125,7 +1124,8 @@ function Guia(props) {
                 folioGuia: respuesta.data.m_nFolioGuia,
                 idGuia: respuesta.data.m_nIdGuia,
                 creadoEl: respuesta.data.m_dCreadoEl,
-                idEstatusGuia: 4
+                idEstatusGuia: 4,
+                idTipoServicio: 2
 
             }
         })
