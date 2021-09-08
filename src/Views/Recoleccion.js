@@ -101,7 +101,7 @@ const useStyles = makeStyles({
         },
     },
     paqueteCarrusel: {
-        height: "330px !important",
+        height: "280px !important",
     },
     sobreCarrusel: {
         height: "70px !important",
@@ -364,6 +364,7 @@ function Recoleccion() {
         preventScroll: true,
     });
     const [dataProductos, setDataProductos] = useState([])
+    const [totalPaquetes, setTotalPaquetes] = useState(0)
 
     const history = useHistory()
 
@@ -1290,6 +1291,11 @@ function Recoleccion() {
             ...state,
             paquetes: paquetes,
         });
+        let totalCantidad = 0
+        paquetes.forEach((p) => {
+            totalCantidad += parseInt(p.m_nCantidad)
+        })
+        setTotalPaquetes(totalCantidad)
     };
     const handleChangePaqueteProducto = (event, index, newValue) => {
         let {paquetes} = state;
@@ -4494,7 +4500,7 @@ function Recoleccion() {
                                                                                 display: "flex",
                                                                                 alignItems: "flex-end"
                                                                             }}>
-                                                                                <div className="input">
+                                                                                {/*<div className="input">
                                                                                     <input
                                                                                         onChange={(event) => {
                                                                                             setState({
@@ -4511,7 +4517,7 @@ function Recoleccion() {
                                                                                 </div>
                                                                                 <label className="label"
                                                                                        style={{paddingLeft: "10px"}}>Mismo
-                                                                                    Paquete</label>
+                                                                                    Paquete</label>*/}
 
                                                                             </div>
                                                                             : <span/>}
@@ -4521,7 +4527,7 @@ function Recoleccion() {
                                                                             widgets={[IndicatorDots, Buttons]}
                                                                             frames={framesPaquete}
                                                                         />
-
+                                                                        <h2>Número total de elementos: {totalPaquetes}</h2>
 
                                                                         {state.agregar !== "Consultar" ?
                                                                             <div style={{
@@ -4529,7 +4535,7 @@ function Recoleccion() {
                                                                                 alignItems: "flex-end"
                                                                             }}>
 
-                                                                                <div className="input">
+                                                                                {/*<div className="input">
                                                                                     <input
                                                                                         onChange={(event) => {
                                                                                             setState({
@@ -4545,7 +4551,7 @@ function Recoleccion() {
                                                                                 </div>
                                                                                 <label className="label"
                                                                                        style={{paddingLeft: "10px"}}>Mismo
-                                                                                    Sobre</label>
+                                                                                    Sobre</label>*/}
                                                                             </div>
                                                                             : <span/>}
                                                                         <Carousel
