@@ -101,6 +101,7 @@ function Guia(props) {
         //VARIABLES PARA CANCELAR GUIA
         //variable de folioGuia es la misma que en agregar
         usuarioCancela: "",
+        FolioGuiaRelacionada: "",
         fechaCancelado: "",
         usuarioCancelacion: 0,
         estatusGuia: "",
@@ -1085,6 +1086,7 @@ function Guia(props) {
                 idEmbarqueRelacionado: respuesta.m_nIdEmbarqueRelacionado,
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
+                FolioGuiaRelacionada: respuesta.data.m_sFolioGuiaRelacionada,
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
                 ciudadRemitente: respuesta.data.m_sCiudadRemitente,
                 correoRemitente: respuesta.data.m_sCorreoRemitente,
@@ -2429,6 +2431,23 @@ function Guia(props) {
 
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           InputLabelProps={{
+                                                                               shrink: true,
+                                                                           }}
+                                                                           label="Folio Relacionado"
+                                                                           placeholder={state.FolioGuiaRelacionada}
+                                                                           id="FolioGuiaRelacionada"
+                                                                           name="FolioGuiaRelacionada"
+                                                                           disabled
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-sm-4 col-md-2-5 unit">
+
+                                                            <div className="input">
+                                                                <TextField variant="outlined" margin="dense"
                                                                            onChange={handleChange}
                                                                            className="form-control"
                                                                            type="text"
@@ -2441,6 +2460,9 @@ function Guia(props) {
                                                                 />
                                                             </div>
                                                         </div>
+
+
+
                                                         <div className="col-sm-4 col-md-2-5 unit">
 
                                                             <div className="input">
