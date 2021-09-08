@@ -521,7 +521,7 @@ function Guia(props) {
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
 
                 conceptosAdicionales: conceptosAdicionales,
-
+                FolioGuiaRelacionada: respuesta.data.m_sFolioGuiaRelacionada,
 
             }
         })
