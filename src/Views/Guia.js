@@ -246,7 +246,7 @@ function Guia(props) {
         }
         console.log(params)
         if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
-            /*agregarGuia(params).then(respuesta => {
+            agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 //window.location.reload();
                 //let resp = respuesta.data;
@@ -256,17 +256,17 @@ function Guia(props) {
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
-            });*/
+            });
         } else {
-            /*modificarGuia(state.idGuia, params).then(respuesta => {
+            modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
-            });*/
-            /*showSuccess('Guia modificada')
-            limpiarCamposAgregar()*/
+            });
+            showSuccess('Guia modificada')
+            limpiarCamposAgregar()
         }
     }
 
