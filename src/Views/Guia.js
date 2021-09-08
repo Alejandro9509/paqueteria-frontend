@@ -853,13 +853,7 @@ function Guia(props) {
         getAllDataEstatusGuia()
         getUltimoFolioGuia()
         getTipoCambio()
-        getFormatosImpresion()
-        if(props.location.idEmbarque !== undefined) {
-            $('.nav-tabs li ').removeClass('active');
-            $('.nav-tabs li').eq(1).addClass('active');
-            $('.tab-content div ').removeClass('in show');
-            $('#Agregar').addClass('in show');
-        }
+        // getFormatosImpresion()
     }, []);
 
     useEffect(value => {
@@ -872,6 +866,10 @@ function Guia(props) {
                 obtenerEmbarqueMoneda(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, state.idGuia).then(respuesta => {
                     setDataEmbarque(respuesta.data)
                 })
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(1).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Agregar').addClass('in show');
             });
         }
     }, []);
