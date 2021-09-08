@@ -476,19 +476,9 @@ function Embarque(props) {
             },
         },
         {
-            headerName: "Folio",
-            field: "m_nFolioEmbarque",
-            width: 125,
-        },
-        {
             headerName: "Fecha/Hora Elaboración",
             field: "m_sFechaHora",
             width: 200,
-        },
-        {
-            headerName: "Sucursal",
-            field: "m_sSucursal",
-            width: 150,
         },
         {
             headerName: "Estatus de la Orden",
@@ -505,6 +495,24 @@ function Embarque(props) {
             field: "m_sCiudadDestino",
             width: 150,
         },
+        {
+            headerName: "Folio",
+            field: "m_nFolioEmbarque",
+            width: 125,
+        },
+        {
+            headerName: "Folio Relacionado",
+            field: "m_sFolioEmbarqueRelacionado",
+            width: 150,
+        },
+        {
+            headerName: "Sucursal",
+            field: "m_sSucursal",
+            width: 150,
+        },
+
+
+
         {
             headerName: "Folio Guía",
             field: "m_sFolioGuia",
@@ -1381,6 +1389,8 @@ function Embarque(props) {
             p.producto = dataProductos.find((pd) => pd.m_nIdProducto == p.m_nIdProducto)
             // debugger
         })
+
+        console.log(respuesta.data.m_arrPaquetes)
 
         setState(state => {
             return {

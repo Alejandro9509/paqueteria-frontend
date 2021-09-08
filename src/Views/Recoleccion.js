@@ -1470,15 +1470,16 @@ function Recoleccion() {
             }
         },
         {
-            headerName: "Folio",
-            field: "m_sFolioRecoleccion",
-            width: 125,
-        },
-        {
             headerName: "Fecha/Hora Elaboración",
             field: "m_sFechaHora",
             width: 200,
         },
+        {
+            headerName: "Folio",
+            field: "m_sFolioRecoleccion",
+            width: 125,
+        },
+
         {
             headerName: "Fecha/Hora Recolección",
             field: "m_sFechaHoraDetalleRec",

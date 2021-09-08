@@ -173,7 +173,7 @@ export const TICKET_ZABRA_TAMPLATE = (guia, paquete, index) => (
     ^FT25,120^AAN,32,14^FH\\^FD#Guia:^FS
     ^FT160,135^A0N,55,55^FH\\^FD${guia.m_nFolioGuia}^FS
     ^FT25,202^AAN,28,16^FH\\^FDServicio:^FS
-    ^FT200,208^A0N,45,45^FH\\^FDConsolidado^FS
+    ^FT200,208^A0N,45,45^FH\\^FD${guia.m_sTipoServicio}^FS
     ^FO560,15
     ^BQN,2,10
     ^FDQA,${guia.m_nIdGuia}^FS

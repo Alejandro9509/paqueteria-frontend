@@ -239,13 +239,14 @@ function Guia(props) {
                 m_nIdImpuestoTraslada: c.traslada,
                 m_nIdImpuestoRetiene: c.retiene,
                 m_cImporteRetiene: c.importeRet,
-                m_cImporteIva: c.importeIva,
+                m_cImporteIva: c.importeIVA,
                 m_bActivo: true,
             })),
 
         }
+        console.log(params)
         if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
-            agregarGuia(params).then(respuesta => {
+            /*agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 //window.location.reload();
                 //let resp = respuesta.data;
@@ -255,15 +256,15 @@ function Guia(props) {
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
-            });
+            });*/
         } else {
-            modificarGuia(state.idGuia, params).then(respuesta => {
+            /*modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
-            });
+            });*/
             /*showSuccess('Guia modificada')
             limpiarCamposAgregar()*/
         }
@@ -808,10 +809,6 @@ function Guia(props) {
             field: "m_sFechaHora",
             width: 200,
         }, {
-            headerName: "Sucursal",
-            field: "m_sSucursal",
-            width: 125,
-        }, {
             headerName: "Estatus Guia",
             field: "m_sEstatusGuia",
             width: 125,
@@ -828,6 +825,14 @@ function Guia(props) {
             field: "m_nFolioGuia",
             width: 125,
         }, {
+            headerName: "Folio Relacionado",
+            field: "m_sFolioGuiaRelacionada",
+            width: 125,
+        }, {
+            headerName: "Sucursal",
+            field: "m_sSucursal",
+            width: 125,
+        },    {
             headerName: "Folio Informe",
             field: "m_sFolioInforme",
             width: 125,
@@ -3156,9 +3161,7 @@ function Guia(props) {
                                                                                     name="idTipoServicio"
                                                                                     read="true"
                                                                                     value={state.idTipoServicio}
-                                                                                    InputLabelProps={{
-                                                                                        shrink: true,
-                                                                                    }}
+
                                                                                 >
                                                                                     <option value=""></option>
                                                                                     {dataTipoServicio.map(

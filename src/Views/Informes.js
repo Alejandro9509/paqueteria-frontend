@@ -209,13 +209,9 @@ function Informes({history}) {
             width: 250,
         },
         {
-            headerName: "Tipo de Unidad",
-            field: "m_sTipoUnidadIdentificador",
-            width: 125,
-        },
-        {
             headerName: "Remolque",
             field: "m_sRemolque1",
+            //valueFormatter: (params) => `Hola`,
             width: 125,
         },
         {
@@ -227,11 +223,6 @@ function Informes({history}) {
             headerName: "Destino",
             field: "m_sCiudadDestino",
             width: 125,
-        },
-        {
-            headerName: "Ruta",
-            field: "m_sRuta",
-            width: 150,
         },
         {
             headerName: "Cancelado",
