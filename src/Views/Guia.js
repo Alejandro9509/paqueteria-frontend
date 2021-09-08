@@ -1125,6 +1125,7 @@ function Guia(props) {
                 folioGuia: respuesta.data.m_nFolioGuia,
                 idGuia: respuesta.data.m_nIdGuia,
                 creadoEl: respuesta.data.m_dCreadoEl,
+                idEstatusGuia: 4
 
             }
         })
@@ -1434,6 +1435,7 @@ function Guia(props) {
                 ivaRetiene: [],
             }
         })
+        setTotalPaquetes(0)
     }
 
     async function getAllDataMoneda() {
