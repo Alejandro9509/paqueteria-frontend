@@ -724,22 +724,24 @@ function Guia(props) {
 
     //Maneja filtrado de listado guia
     const handleFolioGuiaFiltro = async (event) => {
-        let value = event.target.value
-        if (event.target.value == ''){
-            value = 0
-        }
-        setState({
-            ...state,
-            folioGuia: event.target.value,
-        })
-        const {fechaInicial, fechaFinal, sucursalListado,estatusListado} = state
-        obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
-            if (respuesta.data == "Vacio"){
-                setData([])
-            }else {
-                setData(respuesta.data)
+        if(event.keyCode == 13) {
+            let value = event.target.value
+            if (event.target.value == '') {
+                value = 0
             }
-        })
+            setState({
+                ...state,
+                folioGuia: event.target.value,
+            })
+            const {fechaInicial, fechaFinal, sucursalListado, estatusListado} = state
+            obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
     }
 
     const handleChangePaquete = (event, index) => {
@@ -2168,7 +2170,7 @@ function Guia(props) {
                                                 <div className="input">
                                                     <TextField variant="outlined" margin="dense"
                                                                onChange={handleChange}
-                                                               onBlur={handleFolioGuiaFiltro}
+                                                               onKeyDown={handleFolioGuiaFiltro}
                                                                className="form-control"
                                                                type="text"
                                                                label="Folio Guia"
