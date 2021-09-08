@@ -2088,7 +2088,7 @@ function Guia(props) {
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
-                        <li>
+                        <li className="hide">
                             <a onClick={(event) => {
                                 event.stopPropagation();
                                 setState({
