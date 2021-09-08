@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="En guia se encima dato de tipo de servicio al traer datos de embarque">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Al no encontrar ninguna tarifa que cuadre con el embarque mostrar mensaje al usuario">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
@@ -137,13 +137,6 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
-    </task>
-    <task id="LOCAL-00012" summary="Ajustes">
-      <created>1627445082721</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1627445082721</updated>
     </task>
     <task id="LOCAL-00013" summary="Se autocompleta la informacion de remitente y destinatario al seleccionar">
       <created>1627496295098</created>
@@ -481,7 +474,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631124395576</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="Al no encontrar ninguna tarifa que cuadre con el embarque mostrar mensaje al usuario">
+      <created>1631126388894</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1631126388894</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -558,7 +558,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="*Se corrigieron datos al agregar embarque" />
     <MESSAGE value="Ajuste en viajes" />
     <MESSAGE value="Se realizo el ajuste de multiplicar el peso por la cantidad de paquetes" />
     <MESSAGE value="Correccion al agregar embarque" />
@@ -583,7 +582,8 @@
     <MESSAGE value="Se hicieron ajustes en viajes" />
     <MESSAGE value="Precargar estatus de la guia en pendiente al traer datos de embarque" />
     <MESSAGE value="En guia se encima dato de tipo de servicio al traer datos de embarque" />
-    <option name="LAST_COMMIT_MESSAGE" value="En guia se encima dato de tipo de servicio al traer datos de embarque" />
+    <MESSAGE value="Al no encontrar ninguna tarifa que cuadre con el embarque mostrar mensaje al usuario" />
+    <option name="LAST_COMMIT_MESSAGE" value="Al no encontrar ninguna tarifa que cuadre con el embarque mostrar mensaje al usuario" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

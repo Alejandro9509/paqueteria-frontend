@@ -1033,18 +1033,13 @@ function Guia(props) {
     }
 
     const setDataFromEmbarque = (respuesta) => {
-        console.log('Embarque datos:')
-        console.log(respuesta.data)
+        console.log('Embarque datos: ', respuesta.data)
         let valorDeclaradoTotal = 0
 
         const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
         let totalCantidad = 0
         paquetes.forEach((paq) => {
-            const url = `${process.env.REACT_APP_API_URL}/Productos/GetById/${paq.m_nIdProducto}`;
-            axios.get(url, { headers }).then(({m_sDescripcion}) => {
-                paq["producto"] = m_sDescripcion
-            })
-
+                paq["producto"] = paq.m_sProducto ? paq.m_sProducto : ""
                 paq["peso"] = paq.m_xPeso
                 paq["largo"] = paq.m_xLargo
                 paq["ancho"] = paq.m_xAncho
@@ -1067,24 +1062,6 @@ function Guia(props) {
             sob["id"] = sob.m_nIdEmbarqueDetalle
         })
 
-        obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(respuesta => {
-            setState(state => {
-                return {
-                    ...state,
-                    codigoPostalRemitente: respuesta.data.m_sCP,
-                }
-            })
-        })
-
-        obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalDestinatario).then(respuesta => {
-            setState(state => {
-                return {
-                    ...state,
-                    codigoPostalDestinatario: respuesta.data.m_sCP
-                }
-            })
-        })
-
         setState(state => {
             return {
                 ...state,
@@ -1105,6 +1082,7 @@ function Guia(props) {
                 telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                 contactoRemitente: respuesta.data.m_sContactoRemitente,
                 origenRemitente: respuesta.data.m_sCiudadOrigen,
+                codigoPostalRemitente: respuesta.data.m_sCodigoPostalRemitente,
 
                 sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
                 sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
@@ -1114,6 +1092,7 @@ function Guia(props) {
                 sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                 sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 CiudadDestino: respuesta.data.m_sCiudadDestino,
+                codigoPostalDestinatario: respuesta.data.m_sCodigoPostalDestinatario,
 
                 paquetes: paquetes,
                 sobres: sobres,
