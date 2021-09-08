@@ -507,7 +507,7 @@ function Guia(props) {
                 sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
                 sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
                 sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
+                ciudadDestinatario: respuesta.data.m_sCiudadDestinatario,
                 sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
                 sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                 sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
