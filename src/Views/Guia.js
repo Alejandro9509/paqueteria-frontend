@@ -605,7 +605,6 @@ function Guia(props) {
                 idEstatusGuia: 4
             }
         });
-        cargaEmbarqueMoneda(1)
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -853,6 +852,7 @@ function Guia(props) {
         getAllDataEstatusGuia()
         getUltimoFolioGuia()
         getTipoCambio()
+        cargaEmbarqueMoneda(1)
         // getFormatosImpresion()
     }, []);
 
@@ -1335,14 +1335,14 @@ function Guia(props) {
                 folioInforme: "",
                 tracking: "",
                 idEstatusGuia: '',
-                idMoneda: 0,
+                idMoneda: 1,
                 tipoCambio: 0,
                 //Remitente
                 nombreRemitente: "",
                 RFCRemitente: "",
                 domicilioRemitente: "",
                 codigoPostalRemitente: "",
-                ciudadRemitente: 0,
+                ciudadRemitente: "",
                 correoRemitente: "",
                 telefonoRemitente: "",
                 contactoRemitente: "",
@@ -1370,7 +1370,8 @@ function Guia(props) {
                         descripcionPaquete: "",
                         ctd: "",
                         observacionesPaquete: "",
-                        id: ""
+                        id: "",
+                        producto: ""
                     },
                 ],
                 sobres: [

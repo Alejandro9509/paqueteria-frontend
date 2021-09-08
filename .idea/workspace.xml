@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Ocultar pestaña imprimir en guias">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Optimizar consulta al traer datos de guia">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -136,13 +137,6 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
-    </task>
-    <task id="LOCAL-00018" summary="Ajustes en embarque al agregar uno nuevo:&#10;*Campo moneda se modifica correctamente.&#10;*los sobres se agregan al listado de paquetes y se mandan a la base de datos.">
-      <created>1627533967600</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1627533967600</updated>
     </task>
     <task id="LOCAL-00019" summary="Ajustes en embarque al mostrar informacion para modificar">
       <created>1627540058341</created>
@@ -480,7 +474,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631133272817</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="Optimizar consulta al traer datos de guia">
+      <created>1631133560223</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1631133560223</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -580,9 +581,9 @@
     <MESSAGE value="Optimizar consulta al traer datos de embarque para generar guia" />
     <MESSAGE value="Folio relacionado no se muestra al consultar guia" />
     <MESSAGE value="Ciudad de destinatario no se muestra al consultar guia" />
-    <MESSAGE value="Optimizar consulta al traer datos de guia" />
     <MESSAGE value="Ocultar pestaña imprimir en guias" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ocultar pestaña imprimir en guias" />
+    <MESSAGE value="Optimizar consulta al traer datos de guia" />
+    <option name="LAST_COMMIT_MESSAGE" value="Optimizar consulta al traer datos de guia" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
