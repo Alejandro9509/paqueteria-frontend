@@ -803,6 +803,11 @@ function Recoleccion() {
         if (paquetes.length !== 1) {
             paquetes.pop()
             setState({...state, paquetes: paquetes, countPaquetes: state.countPaquetes - 1});
+            let totalCantidad = 0
+            paquetes.forEach((p) => {
+                totalCantidad += parseInt(p.m_nCantidad)
+            })
+            setTotalPaquetes(totalCantidad)
         }
 
     }

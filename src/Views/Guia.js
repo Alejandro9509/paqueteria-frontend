@@ -217,6 +217,7 @@ function Guia(props) {
     const [dataConceptosDefecto, setDataConceptosDefecto] = useState([])
 
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
+    const [totalPaquetes, setTotalPaquetes] = useState(0)
 
     const handleAceptar = (e) => {
         e.preventDefault()
@@ -418,7 +419,7 @@ function Guia(props) {
                 paquetes.push(item)
             }
         })
-
+        let totalCantidad = 0
         paquetes.forEach((paq) => {
             const url = `${process.env.REACT_APP_API_URL}/Productos/GetById/${paq.m_nIdProducto}`;
             axios.get(url, { headers }).then(respuesta => {
@@ -434,7 +435,10 @@ function Guia(props) {
             paq["descripcionPaquete"] = paq.m_sDescripcion
             paq["observacionesPaquete"] = paq.m_sObservaciones
             paq["id"] = paq.m_nIdEmbarqueDetalle
+
+            totalCantidad += parseInt(paq.ctd)
         })
+            setTotalPaquetes(totalCantidad)
 
         sobres.forEach((sob) => {
             sob["descripcionSobre"] = sob.m_sDescripcion
@@ -1035,27 +1039,29 @@ function Guia(props) {
         let valorDeclaradoTotal = 0
 
         const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
-
+        let totalCantidad = 0
         paquetes.forEach((paq) => {
             const url = `${process.env.REACT_APP_API_URL}/Productos/GetById/${paq.m_nIdProducto}`;
             axios.get(url, { headers }).then(({m_sDescripcion}) => {
                 paq["producto"] = m_sDescripcion
             })
 
-            paq["peso"] = paq.m_xPeso
-            paq["largo"] = paq.m_xLargo
-            paq["ancho"] = paq.m_xAncho
-            paq["alto"] = paq.m_xAlto
-            paq["cdt"] = paq.ctd
-            paq["volumen"] = paq.m_xVolumen
-            paq["tipoEmbalaje"] = paq.m_nTipo
-            paq["valorDeclarado"] = paq.m_cValorDeclarado
-            paq["descripcionPaquete"] = paq.m_sDescripcion
-            paq["observacionesPaquete"] = paq.m_sObservaciones
-            paq["id"] = paq.m_nIdEmbarqueDetalle
-            valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
+                paq["peso"] = paq.m_xPeso
+                paq["largo"] = paq.m_xLargo
+                paq["ancho"] = paq.m_xAncho
+                paq["alto"] = paq.m_xAlto
+                paq["cdt"] = paq.ctd
+                paq["volumen"] = paq.m_xVolumen
+                paq["tipoEmbalaje"] = paq.m_nTipo
+                paq["valorDeclarado"] = paq.m_cValorDeclarado
+                paq["descripcionPaquete"] = paq.m_sDescripcion
+                paq["observacionesPaquete"] = paq.m_sObservaciones
+                paq["id"] = paq.m_nIdEmbarqueDetalle
+                valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
+                totalCantidad += parseInt(paq.ctd)
 
             })
+            setTotalPaquetes(totalCantidad)
 
         sobres.forEach((sob) => {
             sob["descripcionSobre"] = sob.m_sDescripcion
@@ -3053,6 +3059,7 @@ function Guia(props) {
                                                                                 widgets={[IndicatorDots, Buttons]}
                                                                                 frames={framesPaquete}
                                                                             />
+                                                                            <h2>Número total de elementos: {totalPaquetes}</h2>
                                                                         </div>
                                                                     </form>
                                                                 </div>
