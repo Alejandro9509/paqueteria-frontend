@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Folio relacionado no se muestra al consultar guia" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Ciudad de destinatario no se muestra al consultar guia">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -134,13 +137,6 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
-    </task>
-    <task id="LOCAL-00015" summary="Se arreglo relleno de datos al modificar sucursal">
-      <created>1627515450904</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1627515450904</updated>
     </task>
     <task id="LOCAL-00016" summary="Ajustes al agregar usuarios">
       <created>1627521214583</created>
@@ -478,7 +474,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631131887263</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="Ciudad de destinatario no se muestra al consultar guia">
+      <created>1631131987998</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1631131987998</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -555,7 +558,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Correccion al agregar embarque" />
     <MESSAGE value="Se corrigio espacio al presionar consultar o editar en guias" />
     <MESSAGE value="Se corrigio conceptos" />
     <MESSAGE value="Se calculo de iva conceptos" />
@@ -580,7 +582,8 @@
     <MESSAGE value="Al no encontrar ninguna tarifa que cuadre con el embarque mostrar mensaje al usuario" />
     <MESSAGE value="Optimizar consulta al traer datos de embarque para generar guia" />
     <MESSAGE value="Folio relacionado no se muestra al consultar guia" />
-    <option name="LAST_COMMIT_MESSAGE" value="Folio relacionado no se muestra al consultar guia" />
+    <MESSAGE value="Ciudad de destinatario no se muestra al consultar guia" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ciudad de destinatario no se muestra al consultar guia" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
