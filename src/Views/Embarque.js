@@ -626,6 +626,13 @@ function Embarque(props) {
 
     }
 
+    const handleClickRemitenteDestinatario = (event) => {
+        event.preventDefault()
+        if (dataRemitenteDestinatario.length === 0){
+            getAllRemitentesDestinatarios()
+        }
+    }
+
     const validarPaquetes = (paquete) => {
         if (paquete.m_xPeso != ''
             && paquete.m_xLargo != ''
@@ -912,50 +919,42 @@ function Embarque(props) {
     };
 
     useEffect((value) => {
-        getAllData();
-        getAllZonas();
-
-    }, []);
-
-    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para entrega
-    useEffect(value => {
-        if (state.ciudadEntrega != "") {
-            obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
-                if (respuesta.data.length > 0) {
-                    setDataCodigosPostalesEntrega(respuesta.data);
-                    /*if(props.location.idRecoleccion != undefined){
-                        if (state.idCodigoPostalEntregaTemp != state.idCodigoPostalDestinatarioTemp){
-                            setState({
-                                ...state,
-                                codigoPostalEntrega: respuesta.data.find((o) => o.m_nIdCP == state.idCodigoPostalEntregaTemp)
-                            })
-                        }
-                    }*/
-                }
-            });
+        if (props.location.idRecoleccion != undefined){
+            if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataClientes.length > 0){
+                obtenerRecoleccionId(props.location.idRecoleccion)
+                    .then((respuesta) => {
+                        console.log('Recoleccion: ', respuesta.data);
+                        setDataRecoleccionOnState(respuesta)
+                    })
+            }
         }
-    }, [state.ciudadEntrega])
+
+
+    }, [dataRemitenteDestinatario, dataCiudad, dataClientes]);
+
+    useEffect((value) => {
+        if (dataTipoCobro.length > 0 && dataTipoMoneda.length > 0 && dataTipoCambio.length > 0){
+            if (props.location.idRecoleccion === undefined){
+                limpiarCamposAgregar()
+            }
+        }
+    }, [dataTipoCobro, dataTipoMoneda, dataTipoCambio]);
 
     useEffect(async (value) => {
 
-            if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataOperador.length > 0) {
-                console.log(props.location.idRecoleccion)
-                if (props.location.idRecoleccion != undefined) {
-                    obtenerRecoleccionId(props.location.idRecoleccion)
-                        .then((respuesta) => {
-                            console.log('Recoleccion: ', respuesta.data);
-                            setDataRecoleccionOnState(respuesta)
-                        })
-                }
+            if (props.location.idRecoleccion === undefined) {
+                getDataParaListado()
+            }else{
+                getDataParaEditar()
+            }
 
-                if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
-                    showSuccess("Es necesario iniciar sesion para acceder a este proceso");
-                    window.location.replace("login");
-                    return;
-                }
+            if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
+                showSuccess("Es necesario iniciar sesion para acceder a este proceso");
+                window.location.replace("login");
+                return;
             }
         },
-        [dataRemitenteDestinatario, dataCiudad, dataOperador, dataClientes]
+        []
     );
 
     function handleShowCancelar() {
@@ -1007,17 +1006,19 @@ function Embarque(props) {
                 ...state,
                 //==VARIABLES DE AGREGAR
                 //Informacion general
-                idSucursalAgregar: '',
                 folioRecoleccion: '',
                 folioEmbarque: '',
                 folioGuia: '',
                 folioInforme: '',
-                fechaHoraRegistro: '',
-                estatusEmbarque: '',
-                moneda: '',
                 tipoCambio: '',
                 tipoCobro: '',
                 clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
+                idEmbarque: 0,
+                idSucursalAgregar: localStorage.getItem("Sucursal"),
+                fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
+                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+                moneda: 1,
+                estatusEmbarque: 16,
 
                 //Remitente
                 nombreRemitente: {m_sNombre: "Nombre", m_sAlias: "Alias"},
@@ -1103,7 +1104,7 @@ function Embarque(props) {
         })
     }
 
-    /*=TABS NAVEGACION=*/
+    //===TABS NAVEGACION===
 
     function handleShowConsultar(id) {
         $('.nav-tabs li ').removeClass('active');
@@ -1141,17 +1142,12 @@ function Embarque(props) {
 
     function handleShowAgregar() {
         let today = new Date();
-        limpiarCamposAgregar()
+        // limpiarCamposAgregar()
+        getDataParaEditar()
         setState(state => {
             return {
                 ...state,
                 agregar: "Agregar",
-                idEmbarque: 0,
-                idSucursalAgregar: localStorage.getItem("Sucursal"),
-                fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
-                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
-                moneda: 1,
-                estatusEmbarque: 16
             }
         });
         $('.nav-tabs li ').removeClass('active');
@@ -1469,12 +1465,6 @@ function Embarque(props) {
         setState(state =>{
             return {
                 ...state,
-                idEmbarque: 0,
-                folioEmbarque: '',
-                fechaInicial: 0,
-                fechaFinal: 0,
-                sucursalListado: 0,
-                estatusListado: 0,
                 agregar: "Agregar",
             }
         });
@@ -1586,6 +1576,13 @@ function Embarque(props) {
             ...state,
             ciudadRemitente: event.target.value,
         });
+    }
+
+    const handleClickCiudad = (event) => {
+        event.preventDefault()
+        if (dataCiudad.length === 0 ){
+            getAllCiudades()
+        }
     }
 
     const handleChangeCiudadDestinatario = (event) => {
@@ -1700,6 +1697,13 @@ function Embarque(props) {
         })
     }
 
+    const handleClickResponsablePago = (event) => {
+        event.preventDefault();
+        if (dataClientes.length === 0){
+            getAllClientes()
+        }
+    }
+
     function getAllZonas() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
         axios.get(url, {headers}).then((respuesta) => {
@@ -1713,7 +1717,6 @@ function Embarque(props) {
         })
     }
 
-
     const handleChangeZonaEntrega = (event) => {
         event.preventDefault();
         setState({
@@ -1723,22 +1726,39 @@ function Embarque(props) {
     }
 
     async function getAllData() {
-        getAllEmbarque();
-        getAllSucursales();
-        getAllEstatusEmbarque();
+
         getAllTipoCobro();
         getAllTipoMoneda();
         getAllCiudades();
-        // getAllCodigosPostales();
         getAllOperadores();
-        //getAllTipoUnidad();
         getAllRemitentesDestinatarios();
         getAllEmbalajes();
-        getUltimoFolioEmbarque();
         getTipoCambio()
-        getFormatosImpresion()
         getAllClientes()
         getAllProductos()
+        getAllZonas();
+        // getAllCodigosPostales();
+        //getAllTipoUnidad();
+        // getUltimoFolioEmbarque();
+        // getFormatosImpresion()
+    }
+
+    const getDataParaListado = () => {
+        getAllEmbarque();
+        getAllSucursales();
+        getAllEstatusEmbarque();
+    }
+
+    const getDataParaEditar = () => {
+        getAllTipoCobro();
+        getAllTipoMoneda();
+        // getAllCiudades();
+        // getAllRemitentesDestinatarios();
+        // getAllEmbalajes();
+        getTipoCambio()
+        // getAllClientes()
+        // getAllProductos()
+        // getAllZonas();
     }
 
     async function getAllEmbarque() {
@@ -1753,7 +1773,7 @@ function Embarque(props) {
         });
     };
 
-    async function getAllRemitentesDestinatarios() {
+    const getAllRemitentesDestinatarios = () => {
         obtenerRemitentesDestinatarios().then((respuesta) => {
             setDataRemitenteDestinatario(respuesta.data);
         });
@@ -3768,6 +3788,9 @@ function Embarque(props) {
                                                                             label="Responsable de pago"
                                                                             margin="dense"
                                                                             required
+                                                                            placeholder={"No. Cliente: Nombre fiscal"}
+                                                                            InputLabelProps={{shrink: true}}
+                                                                            onClick={handleClickResponsablePago}
                                                                             {...params}
                                                                         />
                                                                     }
@@ -3790,15 +3813,12 @@ function Embarque(props) {
                                                                                 }}
                                                                                 value={state.nombreRemitente}
                                                                                 freeSolo
-
                                                                                 id="nombreRemitente"
                                                                                 disableClearable
                                                                                 forcePopupIcon={false}
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 options={dataRemitenteDestinatario}
-                                                                                getOptionLabel={(option) =>
-                                                                                    option.m_sAlias + " (" + option.m_sNombre + ")"
-                                                                                }
+                                                                                getOptionLabel={(option) => option.m_sAlias + " (" + option.m_sNombre + ")"}
                                                                                 variant="outlined"
                                                                                 style={{
                                                                                     transform: "translate(14px, 10px) scale(1) !important"
@@ -3807,10 +3827,13 @@ function Embarque(props) {
                                                                                     <div>
                                                                                         <TextField
                                                                                             required
-                                                                                            label={"Nombre"}
+                                                                                            label={"Alias (Nombre)"}
                                                                                             {...params}
                                                                                             margin="dense"
                                                                                             variant="outlined"
+                                                                                            onClick={handleClickRemitenteDestinatario}
+                                                                                            placeholder={"Alias (Nombre)"}
+                                                                                            InputLabelProps={{shrink: true}}
                                                                                             InputProps={{
                                                                                                 ...params.InputProps,
                                                                                                 style: {
@@ -3971,6 +3994,7 @@ function Embarque(props) {
                                                                                     value={state.ciudadRemitente}
                                                                                     disabled={state.agregar === "Consultar"}
                                                                                     onChange={handleChangeCiudadRemitente}
+                                                                                    onClick={handleClickCiudad}
                                                                                     //onSelect={ getAllCodigosPostales(state.ciudadRemitente)}
 
                                                                                     id="ciudadRemitente"
@@ -4250,15 +4274,12 @@ function Embarque(props) {
                                                                             }}
                                                                             value={state.nombreDestinatario}
                                                                             freeSolo
-
-                                                                            id="nombreRemitente"
+                                                                            id="nombreDestinatario"
                                                                             disableClearable
                                                                             disabled={state.agregar === "Consultar"}
                                                                             forcePopupIcon={false}
                                                                             options={dataRemitenteDestinatario}
-                                                                            getOptionLabel={(option) =>
-                                                                                option.m_sAlias + " (" + option.m_sNombre + ")"
-                                                                            }
+                                                                            getOptionLabel={(option) => option.m_sAlias + " (" + option.m_sNombre + ")"}
                                                                             variant="outlined"
                                                                             style={{
                                                                                 transform: "translate(14px, 10px) scale(1) !important"
@@ -4267,10 +4288,13 @@ function Embarque(props) {
                                                                                 <div>
                                                                                     <TextField
                                                                                         required
-                                                                                        label={"Nombre"}
+                                                                                        label={"Alias (Nombre)"}
+                                                                                        {...params}
                                                                                         margin="dense"
                                                                                         variant="outlined"
-                                                                                        {...params}
+                                                                                        onClick={handleClickRemitenteDestinatario}
+                                                                                        placeholder={"Alias (Nombre)"}
+                                                                                        InputLabelProps={{shrink: true}}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
                                                                                             style: {
@@ -4519,6 +4543,7 @@ function Embarque(props) {
                                                                                 value={state.ciudadDestinatario}
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 onChange={handleChangeCiudadDestinatario}
+                                                                                onClick={handleClickCiudad}
                                                                                 //onSelect={ getAllCodigosPostales(state.ciudadDestinatario)}
                                                                                 id="ciudadDestinatario"
                                                                             >
