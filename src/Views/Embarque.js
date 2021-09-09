@@ -1683,6 +1683,14 @@ function Embarque(props) {
         })
     }
 
+    const handleClickZona = (event) => {
+        event.preventDefault()
+        if (dataZona.length === 0){
+            getAllZonas()
+        }
+
+    }
+
     const handleZonaDestinatarioSelected = (newValue) => {
         setState({
             ...state,
@@ -4173,6 +4181,7 @@ function Embarque(props) {
                                                                                             margin="dense"
                                                                                             variant="outlined"
                                                                                             label={"Origen"}
+                                                                                            onClick={handleClickCiudad}
                                                                                             {...params}
                                                                                             InputProps={{
                                                                                                 ...params.InputProps,
@@ -4249,6 +4258,7 @@ function Embarque(props) {
                                                                                         variant="outlined"
                                                                                         label="Zona"
                                                                                         margin="dense"
+                                                                                        onClick={handleClickZona}
                                                                                         {...params}
                                                                                     />
                                                                                 }
@@ -4711,6 +4721,7 @@ function Embarque(props) {
                                                                                         margin="dense"
                                                                                         variant="outlined"
                                                                                         label={"Destino"}
+                                                                                        onClick={handleClickCiudad}
                                                                                         required
                                                                                         {...params}
                                                                                         InputProps={{
@@ -4790,6 +4801,7 @@ function Embarque(props) {
                                                                                         variant="outlined"
                                                                                         label="Zona"
                                                                                         margin="dense"
+                                                                                        onClick={handleClickZona}
                                                                                         required
                                                                                         {...params}
                                                                                     />
@@ -5129,6 +5141,7 @@ function Embarque(props) {
                                                                             <Select
                                                                                 labelId="zonaEntregaLabel"
                                                                                 label="Zona"
+                                                                                onClick={handleClickZona}
                                                                                 className="form-control"
 
                                                                                 value={state.zonaEntrega}

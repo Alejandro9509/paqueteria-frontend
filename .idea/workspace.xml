@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Los codigos postales se buscan al hacer click en el campo">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
     </list>
@@ -137,14 +137,7 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
-      <workItem from="1631159140096" duration="10944000" />
-    </task>
-    <task id="LOCAL-00020" summary="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita">
-      <created>1627583587933</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1627583587934</updated>
+      <workItem from="1631159140096" duration="12292000" />
     </task>
     <task id="LOCAL-00021" summary="Ajustes al crear guia a partir de embarque">
       <created>1627606448194</created>
@@ -482,7 +475,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631161727939</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario">
+      <created>1631208567080</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1631208567080</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -503,19 +503,7 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="develop" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
+            <State />
           </value>
         </entry>
       </map>
@@ -559,7 +547,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="*Cambio en la forma de seatear datos en recoleccion y embarque" />
     <MESSAGE value="Se corrigio al momento de consultar y editar guia" />
     <MESSAGE value="Se corrigio el filio del embarque al editar" />
     <MESSAGE value="Se corrigio boton de agregar guias" />
@@ -584,7 +571,8 @@
     <MESSAGE value="Ocultar pestaña imprimir en guias" />
     <MESSAGE value="Optimizar consulta al traer datos de guia" />
     <MESSAGE value="Los codigos postales se buscan al hacer click en el campo" />
-    <option name="LAST_COMMIT_MESSAGE" value="Los codigos postales se buscan al hacer click en el campo" />
+    <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario" />
+    <option name="LAST_COMMIT_MESSAGE" value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
