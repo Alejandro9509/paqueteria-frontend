@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se bajo la taza de refrescamiento">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Espacio en el detalle de paradas">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/DetalleParadas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/DetalleParadas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,13 +137,6 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
-    </task>
-    <task id="LOCAL-00013" summary="Se autocompleta la informacion de remitente y destinatario al seleccionar">
-      <created>1627496295098</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1627496295098</updated>
     </task>
     <task id="LOCAL-00014" summary="Se agregó validacion para hacer la fecha de vencimiento obligatoria">
       <created>1627499252192</created>
@@ -481,7 +474,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631164209498</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="Espacio en el detalle de paradas">
+      <created>1631164905882</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1631164905882</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -558,7 +558,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ajuste en viajes" />
     <MESSAGE value="Se realizo el ajuste de multiplicar el peso por la cantidad de paquetes" />
     <MESSAGE value="Correccion al agregar embarque" />
     <MESSAGE value="Se corrigio espacio al presionar consultar o editar en guias" />
@@ -583,14 +582,15 @@
     <MESSAGE value="Homologar tablas de listados,&#10;Al consultar guia no muestra las cantidades correctar en conceptos" />
     <MESSAGE value="Se agrego para remplazar paquetes y agregar" />
     <MESSAGE value="Se bajo la taza de refrescamiento" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se bajo la taza de refrescamiento" />
+    <MESSAGE value="Espacio en el detalle de paradas" />
+    <option name="LAST_COMMIT_MESSAGE" value="Espacio en el detalle de paradas" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="467" y="81" key="CommitChangelistDialog2" timestamp="1631164209272">
+    <state x="467" y="81" key="CommitChangelistDialog2" timestamp="1631164905648">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="2270" y="-221" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631085203822" />
-    <state x="467" y="81" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1631164209272" />
+    <state x="467" y="81" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1631164905648" />
     <state x="2144" y="-194" key="DiffContextDialog" timestamp="1631085241937">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
@@ -616,11 +616,11 @@
     </state>
     <state x="2433" y="-100" key="MultipleFileMergeDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631085215767" />
     <state x="559" y="275" key="MultipleFileMergeDialog/0.0.1440.900@0.0.1440.900" timestamp="1631164062975" />
-    <state x="495" y="286" key="Vcs.Push.Dialog.v2" timestamp="1631164251381">
+    <state x="495" y="286" key="Vcs.Push.Dialog.v2" timestamp="1631164912509">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631085243413" />
-    <state x="495" y="286" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1631164251381" />
+    <state x="495" y="286" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1631164912509" />
     <state x="2375" y="-201" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1631119750488">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>

@@ -458,6 +458,14 @@ function Guia(props) {
                 tipoCalculo: element.m_nIdTipoCalculo
             })
         })
+        var ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
+        var ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
+        setState({
+            ...state,
+            conceptosAdicionales: conceptosAdicionales,
+            ivaRetiene: ivaRetiene,
+            ivaTraslada: ivaTraslada
+        })
 
         setState(state => {
             return {
