@@ -869,12 +869,6 @@ function Embarque(props) {
     function getTipoCambio() {
         obtenerTipoCambio().then(respuesta => {
             setDataTipoCambio(respuesta.data)
-            setState(state => {
-                return {
-                    ...state,
-                    tipoCambio: respuesta.data[0].m_cTipoCambio
-                }
-            })
         });
     }
 
@@ -940,11 +934,11 @@ function Embarque(props) {
     }, [dataRemitenteDestinatario, dataCiudad, dataClientes]);
 
     useEffect((value) => {
-        if (dataTipoCobro.length > 0 && dataTipoMoneda.length > 0 && dataTipoCambio.length > 0){
+        /*if (dataTipoCobro.length > 0 && dataTipoMoneda.length > 0 && dataTipoCambio.length > 0){
             if (props.location.idRecoleccion === undefined){
                 limpiarCamposAgregar()
             }
-        }
+        }*/
     }, [dataTipoCobro, dataTipoMoneda, dataTipoCambio]);
 
     //Se checa si se entró a embarque por una recoleccion
@@ -1316,6 +1310,7 @@ function Embarque(props) {
         getAllTipoCobro()
         getTipoCambio()
         getAllZonas()
+        getAllEmbalajes()
         getAllCiudades()
 
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {

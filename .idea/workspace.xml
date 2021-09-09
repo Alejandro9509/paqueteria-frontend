@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos">
-      <change afterPath="$PROJECT_DIR$/src/Util/Contexts/ProductosContext.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Problemas al traer muchos datos juntos para consultar">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/ZonasContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/ZonasContext.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
