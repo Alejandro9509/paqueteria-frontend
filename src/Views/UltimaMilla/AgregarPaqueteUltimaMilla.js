@@ -32,10 +32,13 @@ class AgregarPaqueteUltimaMilla extends Component {
             itemsSinModificar: props.paquetes,
             paquetes: [],
             openRemplazar: false,
+            paradaSeleccionada: props.tour
         }
         this.onSortEnd = this.onSortEnd.bind(this)
         this.openSeleccionarPaquetes = this.openSeleccionarPaquetes.bind(this)
         this.onSubmitPaquetesSeleccionados = this.onSubmitPaquetesSeleccionados.bind(this)
+        this.quitarPaquete = this.quitarPaquete.bind(this)
+        this.onSubmitData = this.onSubmitData.bind(this)
         //this.getAllPaquetes = this.getAllPaquetes.bind(this)
     }
 
@@ -45,15 +48,19 @@ class AgregarPaqueteUltimaMilla extends Component {
     }
 
 
-    onSubmit(e) {
+    onSubmitData(e) {
         e.preventDefault()
-       // this.props.onSubmit(this.state.idsPaquetesSeleccionadas)
+        this.props.onSubmit(this.state.items)
     }
 
     onSubmitPaquetesSeleccionados(seleccionados){
-        const arrayPaquetes = this.state.items
-        arrayPaquetes.concat(seleccionados)
-        this.setState({items: arrayPaquetes})
+        var array = []
+        const {items} = this.state
+        array = array.concat(items)
+        array = array.concat(seleccionados)
+        console.log(array)
+
+        this.setState({items: array, openRemplazar: false})
     }
 
 
@@ -70,6 +77,12 @@ class AgregarPaqueteUltimaMilla extends Component {
             items: arrayMoveImmutable(items, oldIndex, newIndex),
         }));
     };
+
+    quitarPaquete(index){
+        const items = this.state.items
+        items.splice(index,1)
+        this.setState({items: items})
+    }
 
     render() {
         const {items} = this.state;
@@ -89,7 +102,7 @@ class AgregarPaqueteUltimaMilla extends Component {
                     onClose={this.props.close}
                     aria-labelledby="max-width-dialog-title"
                 >
-                    <DialogTitle><Typography variant={"h4"}>Paquetes</Typography></DialogTitle>
+                    <DialogTitle><Typography variant={"h4"}>Paquetes - {this.state.paradaSeleccionada.m_snNombreOperador} </Typography></DialogTitle>
                     <DialogContent>
                         <div align={"right"} style={{width: "100%"}}>
                             <Button variant={"contained"} color={"primary"} onClick={() => this.openSeleccionarPaquetes()}>Agregar Paquetes</Button>
@@ -97,10 +110,11 @@ class AgregarPaqueteUltimaMilla extends Component {
                         </div>
                         <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
 
-                            {items.map((value, index) => (
-                                <SortableItem key={`item-${value.m_sFolio}`} index={index} primary={value.m_sFolio}
+                            {items.map((value, index) => {
+                                return (
+                                <SortableItem quitarPaquete={this.quitarPaquete} key={`item-${value.m_sFolio}`} index={index} position={index} primary={value.m_sFolio}
                                               secundary={value.m_bEsRecoleccion ? value.m_sDomicilioRemitente : value.m_sDomicilioDestinatario}/>
-                            ))}
+                                )})}
                         </SortableContainer>
                     </DialogContent>
                     <DialogActions>
@@ -124,15 +138,16 @@ export default AgregarPaqueteUltimaMilla;
 
 const DragHandle = sortableHandle(() => <DragHandleIcon/>);
 
-const SortableItem = sortableElement(({primary, secundary}) => (
+const SortableItem = sortableElement(({primary, secundary, quitarPaquete, position}) => {
+    return (
     <ListItem style={{zIndex: 3000000000}}>
         <ListItemIcon>
             <DragHandle/>
         </ListItemIcon>
         <ListItemText primary={`${primary}`} secondary={secundary}/>
-        <DeleteIcon/>
+        <DeleteIcon onClick={() => quitarPaquete(position)}/>
     </ListItem>
-));
+)});
 
 const SortableContainer = sortableContainer(({children}) => {
     return <List>{children}</List>;

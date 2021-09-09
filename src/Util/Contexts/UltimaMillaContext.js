@@ -86,7 +86,7 @@ async function obtenerGuiasUbicacion(paquetes) {
                 lng: location.x,
                 index: i
             })
-        }else {
+        } else {
             guias.push({
                 ...g,
                 lat: g.m_sLatitud,
@@ -286,7 +286,13 @@ function agregarRuta(tour, data) {
         ultimaMillaObject.rutas.push({
             idOperador: u.m_nIdOperador,
             idUnidad: u.m_nIdUnidad,
-            guias: guias.map(g => ({idGuia: g.m_nId, lat: g.lat, lng: g.lng, orden: g.orden, esRecoleccion: g.m_bEsRecoleccion}))
+            guias: guias.map(g => ({
+                idGuia: g.m_nId,
+                lat: g.lat,
+                lng: g.lng,
+                orden: g.orden,
+                esRecoleccion: g.m_bEsRecoleccion
+            }))
         })
     })
     data.zonasSeleccionada.forEach((z) => {
@@ -296,6 +302,26 @@ function agregarRuta(tour, data) {
     trackPromise(
         result = axios.post(url, Object.assign({}, ultimaMillaObject), {headers})
     );
+    return result
+}
+
+async function ordenarParada(idParada, guias) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/OrdenarParada/${idParada}`;
+    let result;
+
+    guias = await obtenerGuiasUbicacion(guias)
+    var paquetes = guias.map((g, index) => ({
+        idGuia: g.m_nId,
+        lat: g.lat.toString(),
+        lng: g.lng.toString(),
+        orden: index,
+        esRecoleccion: g.m_bEsRecoleccion
+    }))
+    trackPromise(
+
+    result = axios.put(url, Object.assign({}, {guias: paquetes}), {headers})
+)
+    ;
     return result
 }
 
@@ -314,11 +340,30 @@ async function remplazarPaqueteUltimaMilla(idParada, paqueteViejo, paqueteNuevo)
     let result;
     var guia = await obtenerGuiasUbicacion([paqueteNuevo])
     trackPromise(
-
-        result = axios.put(url, Object.assign({}, {EsRecoleccion: paqueteViejo.m_bEsRecoleccion,IdNuevaGuia: paqueteNuevo.m_nId, NuevoEsRecoleccion: paqueteNuevo.m_bEsRecoleccion, Lat: guia[0].lat, Lng: guia[0].lng}), {headers})
+        result = axios.put(url, Object.assign({}, {
+            EsRecoleccion: paqueteViejo.m_bEsRecoleccion,
+            IdNuevaGuia: paqueteNuevo.m_nId,
+            NuevoEsRecoleccion: paqueteNuevo.m_bEsRecoleccion,
+            Lat: guia[0].lat,
+            Lng: guia[0].lng
+        }), {headers})
     );
     return result
 }
+
+function eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/RemplazarParada`;
+    let result;
+    trackPromise(
+        result = axios.put(url, Object.assign({}, {
+            EsRecoleccion:idParada,
+            IdGuia: idGuia,
+            IdParada: esRecoleccion,
+        }), {headers})
+    );
+    return result
+}
+
 
 export {
     obtenerRutas,
@@ -329,8 +374,9 @@ export {
     agregarRuta,
     searchLocationAddress,
     obtenerUltimaMillaFecha,
-    remplazarPaqueteUltimaMilla
-
+    remplazarPaqueteUltimaMilla,
+    ordenarParada,
+    eliminarPaqueteUltimaMilla
 }
 
 

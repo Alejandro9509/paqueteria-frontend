@@ -4,12 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se hicieron ajustes en viajes">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Homologar tablas de listados,&#10;Al consultar guia no muestra las cantidades correctar en conceptos">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Constants/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Informes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Informes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/AgregarPaqueteUltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/AgregarPaqueteUltimaMilla.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/DetalleParadas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/DetalleParadas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/TourUltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/TourUltimaMilla.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,13 +140,6 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
-    </task>
-    <task id="LOCAL-00010" summary="Se habilitaron campos de minimo y maximo para pastaña de conceptos de entrega por rangos">
-      <created>1627426088771</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1627426088771</updated>
     </task>
     <task id="LOCAL-00011" summary="Se arregló problema de duplicidad de registros y la funcion modificar ya funciona">
       <created>1627444117527</created>
@@ -484,7 +477,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631036046325</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="Homologar tablas de listados,&#10;Al consultar guia no muestra las cantidades correctar en conceptos">
+      <created>1631085204109</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1631085204109</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -561,7 +561,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="*Se arregló problema par que se vea el listado de unidades por id de tipo" />
     <MESSAGE value="*Se arregló problema que impedia seleccionar unidad" />
     <MESSAGE value="*Se corrigieron datos al agregar embarque" />
     <MESSAGE value="Ajuste en viajes" />
@@ -586,13 +585,54 @@
     <MESSAGE value="Se ajustaron las columnas de tarifas" />
     <MESSAGE value="Clonar Embarque" />
     <MESSAGE value="Se hicieron ajustes en viajes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se hicieron ajustes en viajes" />
+    <MESSAGE value="Homologar tablas de listados,&#10;Al consultar guia no muestra las cantidades correctar en conceptos" />
+    <option name="LAST_COMMIT_MESSAGE" value="Homologar tablas de listados,&#10;Al consultar guia no muestra las cantidades correctar en conceptos" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2386" y="-63" width="667" height="486" key="find.popup" timestamp="1631084499260">
+    <state x="2270" y="-221" key="CommitChangelistDialog2" timestamp="1631085203822">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
-    <state x="2386" y="-63" width="667" height="486" key="find.popup/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631084499260" />
+    <state x="2270" y="-221" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631085203822" />
+    <state x="2144" y="-194" key="DiffContextDialog" timestamp="1631085241937">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state x="2144" y="-194" key="DiffContextDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631085241937" />
+    <state width="2539" height="150" key="GridCell.Tab.0.bottom" timestamp="1631118482977">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state width="2539" height="150" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631118482977" />
+    <state width="2539" height="150" key="GridCell.Tab.0.center" timestamp="1631118482975">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state width="2539" height="150" key="GridCell.Tab.0.center/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631118482975" />
+    <state width="2539" height="150" key="GridCell.Tab.0.left" timestamp="1631118482971">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state width="2539" height="150" key="GridCell.Tab.0.left/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631118482971" />
+    <state width="2539" height="150" key="GridCell.Tab.0.right" timestamp="1631118482976">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state width="2539" height="150" key="GridCell.Tab.0.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631118482976" />
+    <state x="2433" y="-100" key="MultipleFileMergeDialog" timestamp="1631085215767">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state x="2433" y="-100" key="MultipleFileMergeDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631085215767" />
+    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2" timestamp="1631085243413">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631085243413" />
+    <state x="2375" y="-201" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1631119750488">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state x="2375" y="-201" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631119750488" />
+    <state x="2386" y="-63" width="667" height="486" key="find.popup" timestamp="1631119961097">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state x="2386" y="-63" width="667" height="486" key="find.popup/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631119961097" />
+    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog" timestamp="1631085211270">
+      <screen x="1440" y="-540" width="2560" height="1440" />
+    </state>
+    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631085211270" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

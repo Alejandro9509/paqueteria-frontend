@@ -29,7 +29,11 @@ import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
 import AgregarPaqueteUltimaMilla from "./AgregarPaqueteUltimaMilla";
 import PaquetesList from "./PaquetesList";
 import {obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
-import {remplazarPaqueteUltimaMilla} from "../../Util/Contexts/UltimaMillaContext";
+import {
+    eliminarPaqueteUltimaMilla,
+    ordenarParada,
+    remplazarPaqueteUltimaMilla
+} from "../../Util/Contexts/UltimaMillaContext";
 import Noty from "noty";
 
 function showSuccess(mensaje) {
@@ -62,6 +66,9 @@ class DetalleParadas extends Component {
         this.openDetail = this.openDetail.bind(this)
         this.openRemplazarPaquete = this.openRemplazarPaquete.bind(this)
         this.onSubmitRemplazarPaquete = this.onSubmitRemplazarPaquete.bind(this)
+        this.onSubmitOrdenarPaquetes = this.onSubmitOrdenarPaquetes.bind(this)
+        this.onSubmitBorrarPaquete = this.onSubmitBorrarPaquete.bind(this)
+        this.confirmDeleteParada = this.confirmDeleteParada.bind(this)
     }
 
 
@@ -87,20 +94,34 @@ class DetalleParadas extends Component {
         })
     }
 
-    deleteParada(idParada) {
+    confirmDeleteParada(idParada, idGuia, esRecoleccion) {
         confirmAlert({
             title: 'Confirmación',
             message: '¿Está segura(o) que desea eliminar la parada?',
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => alert('Click Yes')
+                    onClick: () => this.onSubmitBorrarPaquete(idParada, idGuia, esRecoleccion)
                 },
                 {
                     label: 'No'
                 }
             ]
         });
+    }
+    onSubmitBorrarPaquete(idParada, idGuia, esRecoleccion){
+        eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion).then(({data}) => {
+            showSuccess(data.data)
+            this.props.refresh()
+        })
+    }
+
+    onSubmitOrdenarPaquetes(paquetes) {
+        ordenarParada(this.state.tour.m_nIdParadaUltimaMilla, paquetes).then(({data}) => {
+            showSuccess("Parada Actualizada")
+            this.setState({openAgregar: false})
+            this.props.refresh()
+        })
     }
 
     onSubmitRemplazarPaquete(paqueteNuevo) {
@@ -120,6 +141,8 @@ class DetalleParadas extends Component {
                 {
                     this.state.openAgregar &&
                     <AgregarPaqueteUltimaMilla zonasIds={this.props.filtros.zonasSeleccionada}
+                                               tour={this.state.tour}
+                                               onSubmit={this.onSubmitOrdenarPaquetes}
                                                tipoServicio={parseInt(this.props.filtros.tipoBusqueda)}
                                                close={() => this.setState({openAgregar: false})}
                                                open={this.state.openAgregar} paquetes={this.state.paquetes}/>
@@ -436,7 +459,7 @@ class DetalleParadas extends Component {
                                                                                                         <Tooltip
                                                                                                             title={"Eliminar"}>
                                                                                                             <DeleteIcon
-                                                                                                                onClick={() => this.deleteParada(g.m_nId)}
+                                                                                                                onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
                                                                                                                 fontSize="default"/>
                                                                                                         </Tooltip>
                                                                                                     </IconButton>

@@ -40,19 +40,23 @@ class TourUltimaMilla extends Component {
             g.lng = g.m_sLongitud
         })
         if (guias.length !== 0) {
-            if (this.props.data.m_xlat !== 0 && this.props.data.m_xlng !== 0 ) {
-                calcularRuta(guias, {lat:this.props.data.m_xlat, lng:this.props.data.m_xlng}).then((result) => {
-                    result.polyline.plain.polyline.map(c => {
-                        polygon.push([c.y, c.x])
-                    })
-                    this.setState({polygon: polygon})
+            if (this.props.data.m_xlat !== 0 && this.props.data.m_xlng !== 0) {
+                calcularRuta(guias, {lat: this.props.data.m_xlat, lng: this.props.data.m_xlng}).then((result) => {
+                    if (result) {
+                        result.polyline.plain.polyline.map(c => {
+                            polygon.push([c.y, c.x])
+                        })
+                        this.setState({polygon: polygon})
+                    }
                 })
-            }else {
+            } else {
                 calcularRuta(guias, this.props.sucursal).then((result) => {
-                    result.polyline.plain.polyline.map(c => {
-                        polygon.push([c.y, c.x])
-                    })
-                    this.setState({polygon: polygon})
+                    if (result) {
+                        result.polyline.plain.polyline.map(c => {
+                            polygon.push([c.y, c.x])
+                        })
+                        this.setState({polygon: polygon})
+                    }
                 })
             }
         }
@@ -69,31 +73,39 @@ class TourUltimaMilla extends Component {
                     this.props.data.m_arrClsProGuia.map((g, index) => {
                             return (
                                 <Marker key={index}
-                                        icon={<MarkerComponent color={this.props.data.color} index={g.m_nUltimaMillaOrden + 1}/>}
+                                        icon={<MarkerComponent color={this.props.data.color}
+                                                               index={g.m_nUltimaMillaOrden + 1}/>}
                                         position={[parseFloat(g.m_sLatitud), parseFloat(g.m_sLongitud)]}>
                                     <Popup>
                                         <Grid container spacing={1}>
                                             <Grid item md={12}>
-                                                <Typography variant={"h2"}>{g.m_sFolio} - {g.m_bEsRecoleccion ? g.m_sEstatusRecoleccion : g.m_sEstatusEmbarque}</Typography>
+                                                <Typography
+                                                    variant={"h2"}>{g.m_sFolio} - {g.m_bEsRecoleccion ? g.m_sEstatusRecoleccion : g.m_sEstatusEmbarque}</Typography>
                                             </Grid>
 
                                             <Grid item md={12}>
-                                                <Typography variant={"body2"} style={{fontWeight:"bold"}}>Datos de la {g.m_bEsRecoleccion ? "Recolección" : "Entrega"}</Typography>
+                                                <Typography variant={"body2"} style={{fontWeight: "bold"}}>Datos de
+                                                    la {g.m_bEsRecoleccion ? "Recolección" : "Entrega"}</Typography>
                                             </Grid>
                                             <Grid item md={12}>
-                                                <Typography variant={"body1"} >{g.m_bEsRecoleccion ? g.m_sNombreRemitente : g.m_sNombreDestinatario}</Typography>
+                                                <Typography
+                                                    variant={"body1"}>{g.m_bEsRecoleccion ? g.m_sNombreRemitente : g.m_sNombreDestinatario}</Typography>
                                             </Grid>
                                             <Grid item md={12}>
-                                                <Typography variant={"body1"} >{g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioDestinatario}</Typography>
+                                                <Typography
+                                                    variant={"body1"}>{g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioDestinatario}</Typography>
                                             </Grid>
                                             <Grid item md={12}>
-                                                <Typography variant={"body1"} >{g.m_bEsRecoleccion ? g.m_sContactoRemitente : g.m_sContactoDestinatario}</Typography>
+                                                <Typography
+                                                    variant={"body1"}>{g.m_bEsRecoleccion ? g.m_sContactoRemitente : g.m_sContactoDestinatario}</Typography>
                                             </Grid>
                                             <Grid item md={12}>
-                                                <Typography variant={"body1"} >{g.m_bEsRecoleccion ? g.m_sTelefonoRemitente : g.m_sTelefonoDestinatario}</Typography>
+                                                <Typography
+                                                    variant={"body1"}>{g.m_bEsRecoleccion ? g.m_sTelefonoRemitente : g.m_sTelefonoDestinatario}</Typography>
                                             </Grid>
                                             <Grid item md={12}>
-                                                <Typography variant={"body1"} >No. Paquetes: {g.m_bEsRecoleccion ? g.m_parrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0) : g.m_arrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0)}</Typography>
+                                                <Typography variant={"body1"}>No.
+                                                    Paquetes: {g.m_bEsRecoleccion ? g.m_parrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0) : g.m_arrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0)}</Typography>
                                             </Grid>
                                         </Grid>
 
@@ -155,7 +167,7 @@ class MarkerComponent extends Component {
             borderColor: "white",
             boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
         };
-        return <div  align={"center"} style={markerStyle}>{this.props.index}</div>;
+        return <div align={"center"} style={markerStyle}>{this.props.index}</div>;
     }
 }
 
