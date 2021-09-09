@@ -113,7 +113,7 @@ window.jQuery = window.$ = $;
 
 const styles = {
     paqueteCarrusel: {
-        height: "330px !important",
+        height: "280px !important",
     },
     sobreCarrusel: {
         height: "100px !important",
@@ -569,6 +569,7 @@ function Embarque(props) {
         },
     ]);
     const [dataProductos, setDataProductos] = useState([])
+    const [totalPaquetes, setTotalPaquetes] = useState(0)
 
     const history = useHistory();
 
@@ -2461,6 +2462,11 @@ function Embarque(props) {
                 paquetes: paquetes,
                 countPaquetes: state.paquetes.length,
             });
+            let totalCantidad = 0
+            paquetes.forEach((p) => {
+                totalCantidad += parseInt(p.m_nCantidad)
+            })
+            setTotalPaquetes(totalCantidad)
         }
     }
 
@@ -2494,6 +2500,11 @@ function Embarque(props) {
             ...state,
             paquetes: paquetes,
         });
+        let totalCantidad = 0
+        paquetes.forEach((p) => {
+            totalCantidad += parseInt(p.m_nCantidad)
+        })
+        setTotalPaquetes(totalCantidad)
     };
 
     const handleChangePaqueteProducto = (event, index, newValue) => {
@@ -5008,6 +5019,7 @@ function Embarque(props) {
                                                                         widgets={[IndicatorDots, Buttons]}
                                                                         frames={framesPaquete}
                                                                     ></Carousel>
+                                                                    <h2>Número total de elementos: {totalPaquetes}</h2>
 
                                                                     <Carousel
                                                                         className={classes.sobreCarrusel}

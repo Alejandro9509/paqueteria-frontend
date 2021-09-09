@@ -217,6 +217,7 @@ function Guia(props) {
     const [dataConceptosDefecto, setDataConceptosDefecto] = useState([])
 
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
+    const [totalPaquetes, setTotalPaquetes] = useState(0)
 
     const handleAceptar = (e) => {
         e.preventDefault()
@@ -246,7 +247,7 @@ function Guia(props) {
         }
         console.log(params)
         if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
-            /*agregarGuia(params).then(respuesta => {
+            agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 //window.location.reload();
                 //let resp = respuesta.data;
@@ -256,17 +257,17 @@ function Guia(props) {
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
-            });*/
+            });
         } else {
-            /*modificarGuia(state.idGuia, params).then(respuesta => {
+            modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
-            });*/
-            /*showSuccess('Guia modificada')
-            limpiarCamposAgregar()*/
+            });
+            showSuccess('Guia modificada')
+            limpiarCamposAgregar()
         }
     }
 
@@ -387,7 +388,6 @@ function Guia(props) {
     function handleShowConsultar(id) {
         obtenerGuiaId(id).then(respuesta => {
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-            // handleEmbarque(respuesta.data.m_nIdEmbarque)
             setState(state => {
                 return {
                     ...state,
@@ -418,12 +418,9 @@ function Guia(props) {
                 paquetes.push(item)
             }
         })
-
+        let totalCantidad = 0
         paquetes.forEach((paq) => {
-            const url = `${process.env.REACT_APP_API_URL}/Productos/GetById/${paq.m_nIdProducto}`;
-            axios.get(url, { headers }).then(respuesta => {
-                paq["producto"] = respuesta.data.m_sDescripcion
-            })
+            paq["producto"] = paq.m_sProducto ? paq.m_sProducto : ""
             paq["peso"] = paq.m_xPeso
             paq["largo"] = paq.m_xLargo
             paq["ancho"] = paq.m_xAncho
@@ -434,30 +431,16 @@ function Guia(props) {
             paq["descripcionPaquete"] = paq.m_sDescripcion
             paq["observacionesPaquete"] = paq.m_sObservaciones
             paq["id"] = paq.m_nIdEmbarqueDetalle
+
+            totalCantidad += parseInt(paq.ctd)
         })
+            setTotalPaquetes(totalCantidad)
 
         sobres.forEach((sob) => {
             sob["descripcionSobre"] = sob.m_sDescripcion
             sob["id"] = sob.m_nIdEmbarqueDetalle
         })
 
-        obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(respuesta => {
-            setState(state => {
-                return {
-                    ...state,
-                    codigoPostalRemitente: respuesta.data.m_sCP,
-                }
-            })
-        })
-
-        obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalDestinatario).then(respuesta => {
-            setState(state => {
-                return {
-                    ...state,
-                    codigoPostalDestinatario: respuesta.data.m_sCP
-                }
-            })
-        })
         const conceptosAdicionales = []
 
         m_arClsGuiaConceptos.forEach((element) => {
@@ -500,15 +483,17 @@ function Guia(props) {
                 telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                 contactoRemitente: respuesta.data.m_sContactoRemitente,
                 origenRemitente: respuesta.data.m_sCiudadOrigen,
+                codigoPostalRemitente: respuesta.data.m_sCodigoPostalRemitente,
 
                 sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
                 sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
                 sDomicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                ciudadDestinatario: respuesta.data.m_sCIudadDestinatario,
+                ciudadDestinatario: respuesta.data.m_sCiudadDestinatario,
                 sCorreoDestinatario: respuesta.data.m_sCorreoDestinatario,
                 sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                 sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 CiudadDestino: respuesta.data.m_sCiudadDestino,
+                codigoPostalDestinatario: respuesta.data.m_sCodigoPostalDestinatario,
 
                 paquetes: paquetes,
                 sobres: sobres,
@@ -518,7 +503,7 @@ function Guia(props) {
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
 
                 conceptosAdicionales: conceptosAdicionales,
-
+                FolioGuiaRelacionada: respuesta.data.m_sFolioGuiaRelacionada,
 
             }
         })
@@ -620,7 +605,6 @@ function Guia(props) {
                 idEstatusGuia: 4
             }
         });
-        cargaEmbarqueMoneda(1)
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -764,8 +748,6 @@ function Guia(props) {
         });
     };
 
-
-
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -870,13 +852,8 @@ function Guia(props) {
         getAllDataEstatusGuia()
         getUltimoFolioGuia()
         getTipoCambio()
-        getFormatosImpresion()
-        if(props.location.idEmbarque !== undefined) {
-            $('.nav-tabs li ').removeClass('active');
-            $('.nav-tabs li').eq(1).addClass('active');
-            $('.tab-content div ').removeClass('in show');
-            $('#Agregar').addClass('in show');
-        }
+        cargaEmbarqueMoneda(1)
+        // getFormatosImpresion()
     }, []);
 
     useEffect(value => {
@@ -889,6 +866,10 @@ function Guia(props) {
                 obtenerEmbarqueMoneda(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, state.idGuia).then(respuesta => {
                     setDataEmbarque(respuesta.data)
                 })
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(1).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Agregar').addClass('in show');
             });
         }
     }, []);
@@ -941,6 +922,7 @@ function Guia(props) {
         })
 
     }
+
     var errorCallback = function(errorMessage){
         alert("Error: " + errorMessage);
     }
@@ -989,6 +971,7 @@ function Guia(props) {
             && c.importeIVA == item.importeIVA
         return !valid
     }
+
     function removeConcepto(item) {
         const {conceptosAdicionales} = state
         const newArrayConceptos = conceptosAdicionales.filter(c => filtrarConceptoAdicional(c, item))
@@ -1030,54 +1013,33 @@ function Guia(props) {
     }
 
     const setDataFromEmbarque = (respuesta) => {
-        console.log('Embarque datos:')
-        console.log(respuesta.data)
+        console.log('Embarque datos: ', respuesta.data)
         let valorDeclaradoTotal = 0
 
         const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
-
+        let totalCantidad = 0
         paquetes.forEach((paq) => {
-            const url = `${process.env.REACT_APP_API_URL}/Productos/GetById/${paq.m_nIdProducto}`;
-            axios.get(url, { headers }).then(({m_sDescripcion}) => {
-                paq["producto"] = m_sDescripcion
-            })
-
-            paq["peso"] = paq.m_xPeso
-            paq["largo"] = paq.m_xLargo
-            paq["ancho"] = paq.m_xAncho
-            paq["alto"] = paq.m_xAlto
-            paq["cdt"] = paq.ctd
-            paq["volumen"] = paq.m_xVolumen
-            paq["tipoEmbalaje"] = paq.m_nTipo
-            paq["valorDeclarado"] = paq.m_cValorDeclarado
-            paq["descripcionPaquete"] = paq.m_sDescripcion
-            paq["observacionesPaquete"] = paq.m_sObservaciones
-            paq["id"] = paq.m_nIdEmbarqueDetalle
-            valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
+                paq["producto"] = paq.m_sProducto ? paq.m_sProducto : ""
+                paq["peso"] = paq.m_xPeso
+                paq["largo"] = paq.m_xLargo
+                paq["ancho"] = paq.m_xAncho
+                paq["alto"] = paq.m_xAlto
+                paq["cdt"] = paq.ctd
+                paq["volumen"] = paq.m_xVolumen
+                paq["tipoEmbalaje"] = paq.m_nTipo
+                paq["valorDeclarado"] = paq.m_cValorDeclarado
+                paq["descripcionPaquete"] = paq.m_sDescripcion
+                paq["observacionesPaquete"] = paq.m_sObservaciones
+                paq["id"] = paq.m_nIdEmbarqueDetalle
+                valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
+                totalCantidad += parseInt(paq.ctd)
 
             })
+            setTotalPaquetes(totalCantidad)
 
         sobres.forEach((sob) => {
             sob["descripcionSobre"] = sob.m_sDescripcion
             sob["id"] = sob.m_nIdEmbarqueDetalle
-        })
-
-        obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(respuesta => {
-            setState(state => {
-                return {
-                    ...state,
-                    codigoPostalRemitente: respuesta.data.m_sCP,
-                }
-            })
-        })
-
-        obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalDestinatario).then(respuesta => {
-            setState(state => {
-                return {
-                    ...state,
-                    codigoPostalDestinatario: respuesta.data.m_sCP
-                }
-            })
         })
 
         setState(state => {
@@ -1100,6 +1062,7 @@ function Guia(props) {
                 telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                 contactoRemitente: respuesta.data.m_sContactoRemitente,
                 origenRemitente: respuesta.data.m_sCiudadOrigen,
+                codigoPostalRemitente: respuesta.data.m_sCodigoPostalRemitente,
 
                 sNombreDestinatario: respuesta.data.m_sNombreDestinatario,
                 sRFCDestinatario: respuesta.data.m_sRFCDestinatario,
@@ -1109,6 +1072,7 @@ function Guia(props) {
                 sTelefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                 sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 CiudadDestino: respuesta.data.m_sCiudadDestino,
+                codigoPostalDestinatario: respuesta.data.m_sCodigoPostalDestinatario,
 
                 paquetes: paquetes,
                 sobres: sobres,
@@ -1119,10 +1083,11 @@ function Guia(props) {
                 folioGuia: respuesta.data.m_nFolioGuia,
                 idGuia: respuesta.data.m_nIdGuia,
                 creadoEl: respuesta.data.m_dCreadoEl,
+                idEstatusGuia: 4,
+                idTipoServicio: 2
 
             }
         })
-
         obtenerTarifasPorEmbarque(respuesta.data, paquetes)
     }
 
@@ -1133,8 +1098,7 @@ function Guia(props) {
         let ivaTraslada = []
         let ivaRetiene = []
         axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque.m_nIdEmbarque}`, { headers }).then(tarifa => {
-            console.log('tarifas by embarque')
-            console.log(tarifa.data)
+            console.log('tarifas by embarque ',tarifa.data)
             // debugger
             if (tarifa.data.length != 0) {
             let pesoTotal = 0
@@ -1151,29 +1115,23 @@ function Guia(props) {
                 pesoTotal = pesoVolumetrico
             }
 
-            console.log(pesoKg)
-            obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal,paquetesTemp)
-            if (tarifa.data.length !== 0) {
-                //se recorre el listado de conceptos de la tarifa del embarque
-                tarifa.data[0].m_arrArConceptos.forEach(element => {
-                    conceptosTemp.push({
-                        concepto: element,
-                        idConcepto: element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeIVA: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoTraslada).m_xPorcentaje / 100) * element.m_cImporte,
-                        importeRet: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoRetiene).m_xPorcentaje / 100) * element.m_cImporte,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo
-                    })
-
+            tarifa.data[0].m_arrArConceptos.forEach(element => {
+                conceptosTemp.push({
+                    concepto: element,
+                    idConcepto: element.m_nIdConceptosFacturacion,
+                    importe: element.m_cImporte,
+                    retiene: element.m_nIdImpuestoRetiene,
+                    traslada: element.m_nIdImpuestoTraslada,
+                    importeIVA: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoTraslada).m_xPorcentaje / 100) * element.m_cImporte,
+                    importeRet: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoRetiene).m_xPorcentaje / 100) * element.m_cImporte,
+                    rangoMinimo: element.m_xnRangoMinimo,
+                    rangoMaximo: element.m_xnRangoMaximo,
+                    nombreConcepto: element.m_sConcepto,
+                    tipoCalculo: element.m_nIdTipoCalculo
                 })
-                ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
-                ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
-            }
+            })
+            ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
+            ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
 
             setState(state => {
                 return {
@@ -1184,7 +1142,10 @@ function Guia(props) {
                     ivaTraslada: ivaTraslada
                 }
             })
-        }
+            obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal,paquetesTemp)
+        }else{
+                showSuccess("No se encontró tarifa con las caracteristicas especificadas")
+            }
         })
     }
 
@@ -1374,14 +1335,14 @@ function Guia(props) {
                 folioInforme: "",
                 tracking: "",
                 idEstatusGuia: '',
-                idMoneda: 0,
+                idMoneda: 1,
                 tipoCambio: 0,
                 //Remitente
                 nombreRemitente: "",
                 RFCRemitente: "",
                 domicilioRemitente: "",
                 codigoPostalRemitente: "",
-                ciudadRemitente: 0,
+                ciudadRemitente: "",
                 correoRemitente: "",
                 telefonoRemitente: "",
                 contactoRemitente: "",
@@ -1409,7 +1370,8 @@ function Guia(props) {
                         descripcionPaquete: "",
                         ctd: "",
                         observacionesPaquete: "",
-                        id: ""
+                        id: "",
+                        producto: ""
                     },
                 ],
                 sobres: [
@@ -1428,6 +1390,7 @@ function Guia(props) {
                 ivaRetiene: [],
             }
         })
+        setTotalPaquetes(0)
     }
 
     async function getAllDataMoneda() {
@@ -2124,7 +2087,7 @@ function Guia(props) {
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
-                        <li>
+                        <li className="hide">
                             <a onClick={(event) => {
                                 event.stopPropagation();
                                 setState({
@@ -3053,6 +3016,7 @@ function Guia(props) {
                                                                                 widgets={[IndicatorDots, Buttons]}
                                                                                 frames={framesPaquete}
                                                                             />
+                                                                            <h2>Número total de elementos: {totalPaquetes}</h2>
                                                                         </div>
                                                                     </form>
                                                                 </div>
