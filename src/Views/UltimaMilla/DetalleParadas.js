@@ -258,8 +258,7 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Pendientes </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length} de {totalPaquetes}
-                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Pendientes </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length} de {totalPaquetes} <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -269,8 +268,7 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Exitosas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length} de {totalPaquetes}
-                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Exitosas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length} de {totalPaquetes} <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -280,8 +278,7 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Fallidas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length} de {totalPaquetes}
-                                            <strong>{parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Fallidas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length} de {totalPaquetes} <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                 </Grid>
