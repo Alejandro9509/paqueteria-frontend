@@ -589,10 +589,11 @@
     <option name="LAST_COMMIT_MESSAGE" value="Homologar tablas de listados,&#10;Al consultar guia no muestra las cantidades correctar en conceptos" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2270" y="-221" key="CommitChangelistDialog2" timestamp="1631085203822">
-      <screen x="1440" y="-540" width="2560" height="1440" />
+    <state x="467" y="81" key="CommitChangelistDialog2" timestamp="1631164053982">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="2270" y="-221" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631085203822" />
+    <state x="467" y="81" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1631164053982" />
     <state x="2144" y="-194" key="DiffContextDialog" timestamp="1631085241937">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
@@ -613,10 +614,11 @@
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
     <state width="2539" height="150" key="GridCell.Tab.0.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631118482976" />
-    <state x="2433" y="-100" key="MultipleFileMergeDialog" timestamp="1631085215767">
-      <screen x="1440" y="-540" width="2560" height="1440" />
+    <state x="559" y="275" key="MultipleFileMergeDialog" timestamp="1631164062975">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="2433" y="-100" key="MultipleFileMergeDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631085215767" />
+    <state x="559" y="275" key="MultipleFileMergeDialog/0.0.1440.900@0.0.1440.900" timestamp="1631164062975" />
     <state x="2320" y="-83" key="Vcs.Push.Dialog.v2" timestamp="1631085243413">
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
@@ -629,10 +631,11 @@
       <screen x="1440" y="-540" width="2560" height="1440" />
     </state>
     <state x="2386" y="-63" width="667" height="486" key="find.popup/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631119961097" />
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog" timestamp="1631085211270">
-      <screen x="1440" y="-540" width="2560" height="1440" />
+    <state x="522" y="322" key="git4idea.merge.GitPullDialog" timestamp="1631164059238">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631085211270" />
+    <state x="522" y="322" key="git4idea.merge.GitPullDialog/0.0.1440.900@0.0.1440.900" timestamp="1631164059238" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
