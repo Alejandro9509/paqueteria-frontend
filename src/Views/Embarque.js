@@ -917,41 +917,6 @@ function Embarque(props) {
 
     }, []);
 
-    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el remitente
-    useEffect(value => {
-        if (state.ciudadRemitente != "") {
-            obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
-                if (respuesta.data.length > 0) {
-                    setDataCodigosPostalesRemitente(respuesta.data);
-                    /*if (props.location.idRecoleccion != undefined){
-                        setState({
-                            ...state,
-                            codigoPostalRemitente: respuesta.data.find((o) => o.m_nIdCP == state.idCodigoPostalRemitenteTemp),
-                        })
-                    }*/
-                }
-            });
-        }
-    }, [state.ciudadRemitente])
-
-    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para el destinatario
-    useEffect(value => {
-        if (state.ciudadDestinatario != "") {
-            obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
-                console.log(respuesta.data)
-                if (respuesta.data.length > 0) {
-                    setDataCodigosPostalesDestinatario(respuesta.data);
-                    /*if (props.location.idRecoleccion != undefined){
-                        setState({
-                            ...state,
-                            codigoPostalDestinatario: respuesta.data.find((o) => o.m_nIdCP == state.idCodigoPostalDestinatarioTemp),
-                        })
-                    }*/
-                }
-            });
-        }
-    }, [state.ciudadDestinatario])
-
     //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para entrega
     useEffect(value => {
         if (state.ciudadEntrega != "") {
@@ -1156,6 +1121,7 @@ function Embarque(props) {
 
         });
     }
+
     function handleShowDuplicarConsultar(id) {
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
@@ -1172,7 +1138,6 @@ function Embarque(props) {
 
         });
     }
-
 
     function handleShowAgregar() {
         let today = new Date();
@@ -1568,6 +1533,52 @@ function Embarque(props) {
             entregaConCita: !state.entregaConCita
         });
     };
+
+    const handleCodigoPostalRemitenteClick = (event) => {
+        event.preventDefault();
+        if (dataCodigosPostalesRemitente.length > 0){
+            if (dataCodigosPostalesRemitente[0].m_nIdCiudad != state.ciudadRemitente){
+                obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
+                    setDataCodigosPostalesRemitente(respuesta.data);
+                });
+            }
+        }else{
+            obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
+                setDataCodigosPostalesRemitente(respuesta.data);
+            });
+        }
+
+    }
+
+    const handleCodigoPostalDestinatarioClick = (event) => {
+        event.preventDefault();
+        if (dataCodigosPostalesDestinatario.length > 0){
+            if (dataCodigosPostalesDestinatario[0].m_nIdCiudad != state.ciudadDestinatario){
+                obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
+                    setDataCodigosPostalesDestinatario(respuesta.data);
+                });
+            }
+        }else{
+            obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
+                setDataCodigosPostalesDestinatario(respuesta.data);
+            });
+        }
+    }
+
+    const handleCodigoPostalEntregaClick = (event) => {
+        event.preventDefault();
+        if (dataCodigosPostalesEntrega.length > 0){
+            if (dataCodigosPostalesEntrega[0].m_nIdCiudad != state.ciudadEntrega){
+                obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
+                    setDataCodigosPostalesEntrega(respuesta.data);
+                });
+            }
+        }else{
+            obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
+                setDataCodigosPostalesEntrega(respuesta.data);
+            });
+        }
+    }
 
     const handleChangeCiudadRemitente = (event) => {
         event.preventDefault();
@@ -3947,79 +3958,6 @@ function Embarque(props) {
                                                                     </div>
 
                                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                                        {/*<div className="input">
-                                                                            <Autocomplete
-                                                                                freeSolo
-                                                                                onChange={handleSelectCiudadChange}
-                                                                                value={state.ciudadRemitente}
-                                                                                id="ciudadRemitente"
-                                                                                disableClearable
-                                                                                disabled={state.agregar === "Consultar"}
-                                                                                forcePopupIcon={false}
-                                                                                options={dataCiudad}
-                                                                                getOptionLabel={(option) =>
-                                                                                    option.m_sCiudad
-                                                                                }
-                                                                                variant="outlined"
-                                                                                style={{
-                                                                                    transform: "translate(14px, 10px) scale(1) !important"
-                                                                                }}
-                                                                                renderInput={(params) => (
-                                                                                    <div>
-                                                                                        <TextField
-                                                                                            required
-                                                                                            margin="dense"
-                                                                                            variant="outlined"
-                                                                                            label={"Ciudad"}
-                                                                                            {...params}
-                                                                                            InputProps={{
-                                                                                                ...params.InputProps,
-                                                                                                style: { height: 24 },
-                                                                                                type: "search",
-                                                                                                disabled:
-                                                                                                    state.agregar === "Consultar",
-                                                                                                endAdornment: (
-                                                                                                    <InputAdornment
-                                                                                                        position="end">
-                                                                                                        <IconButton
-                                                                                                            padding="0px"
-                                                                                                            style={{
-                                                                                                                paddingRight: "0px",
-                                                                                                            }}
-                                                                                                            disabled={
-                                                                                                                state.agregar ===
-                                                                                                                "Consultar"
-                                                                                                            }
-                                                                                                            onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "ciudadRemitente",
-                                                                                                                    tipoModal: 1,
-                                                                                                                    openDialog: true,
-                                                                                                                });
-                                                                                                            }}
-                                                                                                        >
-                                                                                                            <PageviewIcon
-                                                                                                                style={{
-                                                                                                                    color: "#F9A03E",
-                                                                                                                    fontSize: 32,
-                                                                                                                    paddingInlineEnd: 0,
-                                                                                                                    paddingRight: 0,
-                                                                                                                    paddingBlockEnd: 0,
-                                                                                                                    paddingLeft: 0,
-                                                                                                                    paddingBlock: 0,
-                                                                                                                }}
-                                                                                                            />
-                                                                                                        </IconButton>
-                                                                                                    </InputAdornment>
-                                                                                                ),
-                                                                                            }}
-                                                                                        />
-                                                                                    </div>
-                                                                                )}
-                                                                            />
-                                                                        </div>*/}
                                                                         <label className="input select">
                                                                             <FormControl fullWidth variant="outlined"
                                                                                          margin="dense">
@@ -4080,6 +4018,7 @@ function Embarque(props) {
                                                                                             required
                                                                                             margin="dense"
                                                                                             variant="outlined"
+                                                                                            onClick={handleCodigoPostalRemitenteClick}
                                                                                             label={"Código Postal"}
                                                                                             {...params}
                                                                                             InputProps={{
@@ -4622,6 +4561,7 @@ function Embarque(props) {
                                                                                     <TextField
                                                                                         required
                                                                                         margin="dense"
+                                                                                        onClick={handleCodigoPostalDestinatarioClick}
                                                                                         variant="outlined"
                                                                                         label={"Código Postal"}
                                                                                         {...params}
@@ -5046,88 +4986,6 @@ function Embarque(props) {
                                                         <div className="row">
                                                             <div className="col-md-12">
                                                                 <div className="col-sm-6 col-md-4  unit">
-                                                                    {/*<div className="input">
-                                                                        <Autocomplete
-                                                                            freeSolo
-                                                                            onChange={(event, newValue) =>
-                                                                                setState({
-                                                                                    ...state,
-                                                                                    ciudadEntrega: newValue,
-                                                                                    codigoPostalEntrega: null
-                                                                                })
-                                                                            }
-                                                                            value={state.ciudadEntrega}
-                                                                            disabled={
-                                                                                state.agregar === "Consultar"
-                                                                            }
-                                                                            id="ciudadEntrega"
-                                                                            disableClearable
-                                                                            forcePopupIcon={false}
-                                                                            options={dataCiudad}
-                                                                            getOptionLabel={(option) =>
-                                                                                option.m_sCiudad
-                                                                            }
-                                                                            variant="outlined"
-                                                                            style={{
-                                                                                transform: "translate(14px, 10px) scale(1) !important"
-                                                                            }}
-                                                                            renderInput={(params) => (
-                                                                                <div>
-                                                                                    <TextField
-                                                                                        required
-                                                                                        label={"Ciudad"}
-                                                                                        margin="dense"
-                                                                                        variant="outlined"
-                                                                                        {...params}
-                                                                                        InputProps={{
-                                                                                            ...params.InputProps,
-                                                                                            style: { height: 24 },
-                                                                                            type: "search",
-                                                                                            disabled:
-                                                                                                state.agregar ===
-                                                                                                "Consultar",
-                                                                                            endAdornment: (
-                                                                                                <InputAdornment
-                                                                                                    position="end">
-                                                                                                    <IconButton
-                                                                                                        padding="0px"
-                                                                                                        style={{
-                                                                                                            paddingRight: "0px",
-                                                                                                        }}
-                                                                                                        disabled={
-                                                                                                            state.agregar ===
-                                                                                                            "Consultar"
-                                                                                                        }
-                                                                                                        onClick={() => {
-                                                                                                            setState({
-                                                                                                                ...state,
-                                                                                                                identificadorModal:
-                                                                                                                    "ciudadEntrega",
-                                                                                                                tipoModal: 1,
-                                                                                                                openDialog: true,
-                                                                                                            });
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        <PageviewIcon
-                                                                                                            style={{
-                                                                                                                color: "#F9A03E",
-                                                                                                                fontSize: 32,
-                                                                                                                paddingInlineEnd: 0,
-                                                                                                                paddingRight: 0,
-                                                                                                                paddingBlockEnd: 0,
-                                                                                                                paddingLeft: 0,
-                                                                                                                paddingBlock: 0,
-                                                                                                            }}
-                                                                                                        />
-                                                                                                    </IconButton>
-                                                                                                </InputAdornment>
-                                                                                            ),
-                                                                                        }}
-                                                                                    />
-                                                                                </div>
-                                                                            )}
-                                                                        />
-                                                                    </div>*/}
                                                                     <label className="input select">
                                                                         <FormControl fullWidth
                                                                                      variant="outlined"
@@ -5163,7 +5021,6 @@ function Embarque(props) {
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
-                                                                            // onSelect={handleSelectCodigoPostal()}
                                                                             onChange={(event, newValue) =>
                                                                                 setState({
                                                                                     ...state,
@@ -5171,16 +5028,12 @@ function Embarque(props) {
                                                                                 })
                                                                             }
                                                                             value={state.codigoPostalEntrega}
-                                                                            disabled={
-                                                                                state.agregar === "Consultar"
-                                                                            }
+                                                                            disabled={state.agregar === "Consultar"}
                                                                             id="codigoPostalEntrega"
                                                                             disableClearable
                                                                             forcePopupIcon={false}
                                                                             options={dataCodigosPostalesEntrega.filter(cp => cp.m_nIdCiudad == state.ciudadEntrega)}
-                                                                            getOptionLabel={(option) =>
-                                                                                option.m_sCP
-                                                                            }
+                                                                            getOptionLabel={(option) => option.m_sCP}
                                                                             variant="outlined"
                                                                             style={{
                                                                                 transform: "translate(14px, 10px) scale(1) !important"
@@ -5191,6 +5044,7 @@ function Embarque(props) {
                                                                                         required
                                                                                         label={"Código Postal"}
                                                                                         margin="dense"
+                                                                                        onClick={handleCodigoPostalEntregaClick}
                                                                                         variant="outlined"
                                                                                         {...params}
                                                                                         InputProps={{
