@@ -40,13 +40,16 @@ import Select from "@material-ui/core/Select";
 import {dataGridLocaleText} from "../Constants";
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
+import {obtenerCiudades, obtenerCiudadId} from "../Util/Contexts/CiudadesContext";
 import {
     obtenerCodigoPostal,
     obtenerCodigoPostalId,
     obtenerCodigosPostalesPorCiudad
 } from "../Util/Contexts/CodigoPostalContext";
-import {obtenerRemitentesDestinatarios} from "../Util/Contexts/RemitenteDestinatarioContext";
+import {
+    obtenerRemitentesDestinatarios,
+    obtenerRemitentesDestinatariosId
+} from "../Util/Contexts/RemitenteDestinatarioContext";
 import {obtenerEmbalajes} from "../Util/Contexts/EmbalajesContext";
 import {
     cancelarEmbarque,
@@ -70,7 +73,9 @@ import {obtenerEstatusEmbarque} from "../Util/Contexts/EstatusContext";
 import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
 import {validarPermisos} from "../Util/Contexts/UsuarioContext";
 import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
-import {obtenerCliente} from "../Util/Contexts/ClientesContext";
+import {obtenerCliente, obtenerClienteId} from "../Util/Contexts/ClientesContext";
+import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
+import {obtenerZonasById} from "../Util/Contexts/ZonasContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -864,9 +869,11 @@ function Embarque(props) {
     function getTipoCambio() {
         obtenerTipoCambio().then(respuesta => {
             setDataTipoCambio(respuesta.data)
-            setState({
-                ...state,
-                tipoCambio: respuesta.data[0].m_cTipoCambio
+            setState(state => {
+                return {
+                    ...state,
+                    tipoCambio: respuesta.data[0].m_cTipoCambio
+                }
             })
         });
     }
@@ -940,22 +947,19 @@ function Embarque(props) {
         }
     }, [dataTipoCobro, dataTipoMoneda, dataTipoCambio]);
 
+    //Se checa si se entró a embarque por una recoleccion
     useEffect(async (value) => {
-
-            if (props.location.idRecoleccion === undefined) {
-                getDataParaListado()
-            }else{
-                getDataParaEditar()
-            }
-
-            if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
-                showSuccess("Es necesario iniciar sesion para acceder a este proceso");
-                window.location.replace("login");
-                return;
-            }
-        },
-        []
-    );
+        if (props.location.idRecoleccion === undefined) {
+            getDataParaListado()
+        }else{
+            getDataParaEditar()
+        }
+        if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
+            showSuccess("Es necesario iniciar sesion para acceder a este proceso");
+            window.location.replace("login");
+            return;
+        }
+        }, []);
 
     function handleShowCancelar() {
         var today = new Date();
@@ -1308,34 +1312,46 @@ function Embarque(props) {
     //Funcion para mostrar datos de embarque para consultar o modificar
     const setDataParaConsultarModificar = (respuesta, duplicar) => {
 
-        let remitente = {}
-        let destinatario = {}
-        if (respuesta.data.m_sAliasRemitente) {
-            remitente = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasRemitente && o.m_sNombre == respuesta.data.m_sNOmbreRemitente)
-        } else {
-            remitente = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNOmbreRemitente)
-        }
-        if (respuesta.data.m_sAliasDestinatario) {
-            destinatario = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
-        } else {
-            destinatario = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNombreDestinatario)
-        }
+        getAllTipoMoneda()
+        getAllTipoCobro()
+        getTipoCambio()
+        getAllZonas()
+        getAllCiudades()
 
-        obtenerCodigoPostalId(remitente.m_nIdCP).then((cp) => {
+        obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
             setState(state => {
                 return {
                     ...state,
-                    codigoPostalRemitente: cp.data
+                    nombreRemitente: data
                 }
+            })
+            obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        codigoPostalDestinatario: cp.data
+                    }
+                })
+        })
+        obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    nombreDestinatario: data
+                }
+            })
+            obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        codigoPostalRemitente: cp.data
+                    }
+                })
             })
         })
-        obtenerCodigoPostalId(destinatario.m_nIdCP).then((cp) => {
-            setState(state => {
-                return {
-                    ...state,
-                    codigoPostalDestinatario: cp.data
-                }
-            })
+
+
+
         })
         obtenerCodigoPostalId(respuesta.data.CodigoPostalEntrega).then((cp) => {
             setState(state => {
@@ -1346,13 +1362,60 @@ function Embarque(props) {
             })
         })
 
+        let totalPaquetes = 0
         respuesta.data.m_arrPaquetes.forEach(p => {
-            p["m_nCantidad"] = p.ctd
-            p.producto = dataProductos.find((pd) => pd.m_nIdProducto == p.m_nIdProducto)
-            // debugger
+            obtenerProductoById(p.m_nIdProducto).then(({data}) => {
+                p["m_nCantidad"] = p.ctd
+                p.producto = data
+                totalPaquetes += parseInt(p.ctd)
+            })
+        })
+        setTotalPaquetes(totalPaquetes)
+
+        obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    clientePaga: data
+                }
+            })
         })
 
-        console.log(respuesta.data.m_arrPaquetes)
+        obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    ciudadOrigen: data
+                }
+            })
+        })
+
+        obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    ciudadDestino: data
+                }
+            })
+        })
+
+        obtenerZonasById(respuesta.data.m_nIdZonaRemitente).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    zonaRemitente: data
+                }
+            })
+        })
+
+        obtenerZonasById(respuesta.data.m_nIdZonaDestinatario).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    zonaDestinatario: data
+                }
+            })
+        })
 
         setState(state => {
             return {
@@ -1370,26 +1433,18 @@ function Embarque(props) {
                 moneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 tipoCobro: respuesta.data.m_nIdTIpoCobro,
-                clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
+                // clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
                 duplicar: duplicar,
                 //Remitente
-                /*nombreRemitente: '',
-                RFCRemitente: '',
-                domicilioRemitente: '',
-                ciudadRemitente: '',
-                codigoPostalRemitente: '',
-                correoRemitente: '',
-                telefonoRemitente: '',
-                contactoRemitente: '',*/
-                nombreRemitente: remitente,
+                // nombreRemitente: remitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
                 ciudadRemitente: respuesta.data.m_nCiudadRemitente,
                 correoRemitente: respuesta.data.m_sCorreoRemitente,
                 telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                 contactoRemitente: respuesta.data.m_sContactoRemitente,
-                ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
-                zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
+                // ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+                // zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
                 idRemitente: respuesta.data.m_nIdRemitente,
                 aliasRemitente: respuesta.data.m_sAliasRemitente,
                 calleRemitente: respuesta.data.m_sCalleRemitente,
@@ -1398,15 +1453,15 @@ function Embarque(props) {
                 coloniaRemitente: respuesta.data.m_sColoniaRemitente,
 
                 //Destinatario
-                nombreDestinatario: destinatario,
+                // nombreDestinatario: destinatario,
                 RFCDestinatario: respuesta.data.m_sRFCDestinatario,
                 domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
                 ciudadDestinatario: respuesta.data.m_nIdCIudadDestinatario,
                 correoDestinatario: respuesta.data.m_sCorreoDestinatario,
                 telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                 contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
-                zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
+                // ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
+                // zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
                 idDestinatario: respuesta.data.m_nIdDestinatario,
                 aliasDestinatario: respuesta.data.m_sAliasDestinatario,
                 calleDestinatario: respuesta.data.m_sCalleDestinatario,

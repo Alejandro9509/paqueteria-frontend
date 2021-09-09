@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Zonas, origen, destino">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos">
+      <change afterPath="$PROJECT_DIR$/src/Util/Contexts/ProductosContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/ZonasContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/ZonasContext.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -62,7 +65,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/public" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Util/Contexts" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -74,12 +77,13 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Certuit\WebstormProjects\gm-paqueteria\src\Util\Contexts" />
+      <recent name="$PROJECT_DIR$/public" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla" />
       <recent name="$PROJECT_DIR$/src/Components/Map" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/public" />
     </key>
   </component>
   <component name="RunManager">
@@ -136,14 +140,7 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
-      <workItem from="1631159140096" duration="12704000" />
-    </task>
-    <task id="LOCAL-00022" summary="Se recuperan las opciones de impuestos de los servicios en sucursales">
-      <created>1627628575701</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1627628575701</updated>
+      <workItem from="1631159140096" duration="18684000" />
     </task>
     <task id="LOCAL-00023" summary="Se recuperan las opciones de impuestos de los servicios en sucursales">
       <created>1627629213333</created>
@@ -481,7 +478,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631209994643</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos">
+      <created>1631210673200</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1631210673200</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -546,7 +550,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se corrigio el filio del embarque al editar" />
     <MESSAGE value="Se corrigio boton de agregar guias" />
     <MESSAGE value="Error al agregar guia" />
     <MESSAGE value="error al editar informe" />
@@ -571,7 +574,8 @@
     <MESSAGE value="Los codigos postales se buscan al hacer click en el campo" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Zonas, origen, destino" />
-    <option name="LAST_COMMIT_MESSAGE" value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Zonas, origen, destino" />
+    <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos" />
+    <option name="LAST_COMMIT_MESSAGE" value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
