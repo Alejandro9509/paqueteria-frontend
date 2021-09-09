@@ -2563,6 +2563,15 @@ function Embarque(props) {
         });
     };
 
+    const handleClickProducto = () => {
+        if (dataProductos.length === 0 ){
+            getAllProductos()
+        }
+        if (dataEmbalaje.length === 0 ) {
+            getAllEmbalajes()
+        }
+    }
+
     const handleChangeSobre = (event, index) => {
         var {sobres} = state;
         sobres[index][event.target.name] = event.target.value;
@@ -2609,6 +2618,7 @@ function Embarque(props) {
                                     variant="outlined"
                                     label="Producto"
                                     margin="dense"
+                                    onClick={handleClickProducto}
                                     required
                                     {...params}
                                 />
