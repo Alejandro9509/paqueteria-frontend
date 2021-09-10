@@ -210,9 +210,9 @@ function Informes({history}) {
         },
         {
             headerName: "Remolque",
-            field: "m_sRemolque1",
+            field: "remolqueCompleto",
             //valueFormatter: (params) => `Hola`,
-            width: 125,
+            width: 180,
         },
         {
             headerName: "Origen",
@@ -952,7 +952,7 @@ function Informes({history}) {
     }
 
     useEffect(value => {
-        if (state.IdCiudadOrigen && state.IdCiudadDestino && state.IdRuta != 0 && state.IdRuta === undefined && state.IdRuta === "") {
+        if (state.IdCiudadOrigen && state.IdCiudadDestino && state.IdRuta != 0 && state.IdRuta != undefined && state.IdRuta != "") {
             getAllGuiasFrom();
 
         }
@@ -1112,6 +1112,7 @@ function Informes({history}) {
 
     function getAllData() {
         obtenerInformes().then((respuesta) => {
+            respuesta.data.forEach((i) => i.remolqueCompleto = i.m_nIdentificador + " - " +  i.m_sRemolque1)
             setData(respuesta.data);
         });
     }
