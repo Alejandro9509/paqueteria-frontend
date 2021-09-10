@@ -173,7 +173,7 @@ class Cronograma extends Component {
                                                                             borderRadius: "10px"
                                                                         }}>{
 
-                                                                            filterEstatus.length === 0 ? "Terminado" :  filterEstatus[0].m_sEstatusUltimaMilla
+                                                                            filterEstatus.length === 0 ? "Completado" :  filterEstatus[0].m_sEstatusUltimaMilla
 
                                                                         }
                                                                         </div>

@@ -18,12 +18,15 @@ class TourUltimaMilla extends Component {
         this.getRoute = this.getRoute.bind(this)
     }
 
-    componentWillMount() {
-        this.getRoute()
+    componentDidUpdate(prevProps, prevState, snapshot) {
+
+       if (this.props.data.m_arrClsProGuia.length !== prevProps.data.m_arrClsProGuia.length){
+           this.getRoute()
+       }
     }
 
     componentDidMount() {
-
+        this.getRoute()
     }
 
     componentWillUnmount() {

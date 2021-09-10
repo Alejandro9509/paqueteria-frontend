@@ -101,6 +101,7 @@ class UltimaMilla extends Component {
         this.selectGuiaReasignar = this.selectGuiaReasignar.bind(this)
         this.reasignarParada = this.reasignarParada.bind(this)
         this.refreshUltimaMilla = this.refreshUltimaMilla.bind(this)
+        this.refreshFilterUltimaMilla = this.refreshFilterUltimaMilla.bind(this)
     }
 
 
@@ -118,11 +119,10 @@ class UltimaMilla extends Component {
     }
 
     getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda) {
-
+        this.setState({modoEdicion: true, ultimaMilla:null})
         obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
             if (data.m_nIdUltimaMilla !== 0) {
                 if (actualizar) {
-
                     this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 10000);
                 }
                 if (!this.state.ultimaMilla) {
@@ -138,6 +138,7 @@ class UltimaMilla extends Component {
                 this.setState({modoEdicion: false, ultimaMilla: data, idSucursal: idSucursal, fechaUltimaMilla: date, zonasIds: zonas, tipoBusqueda: tipoBusqueda })
                 actualizar = false
             } else {
+                actualizar = false
                 this.setState({modoEdicion: true, ultimaMilla: null})
                 clearInterval(this.interval);
             }
@@ -157,12 +158,18 @@ class UltimaMilla extends Component {
         })
 
     }
+    refreshFilterUltimaMilla(date, idSucursal, zonas, tipoBusqueda){
+        actualizar=true
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
+        this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda)
+    }
     refreshUltimaMilla(){
         this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda)
     }
 
     changeConfiguration(name, value) {
-        console.log(name)
         this.setState({[name]: value})
     }
 
@@ -170,6 +177,8 @@ class UltimaMilla extends Component {
 
         agregarRuta(this.state.tour, this.state.filtros).then((data) => {
             showSuccess("Se guardo la información con éxito")
+            actualizar = true
+            this.setState({tour:null})
             this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona),  parseInt(this.state.filtros.tipoBusqueda))
         })
     }
@@ -307,7 +316,7 @@ class UltimaMilla extends Component {
                                 />
                                 {
                                     !this.state.fullScreen &&
-                                    <FiltersMap getFechaUltimaMilla={this.getFechaUltimaMilla}
+                                    <FiltersMap refreshFilterUltimaMilla={this.refreshFilterUltimaMilla}
                                                 changeConfiguration={this.changeConfiguration}
                                                 searchLocation={this.searchLocation} generarRuta={this.generarRuta}
                                                 guardarRuta={this.guardarRuta}
@@ -343,27 +352,27 @@ class UltimaMilla extends Component {
                                     !this.state.modoEdicion && (this.state.fullScreen === false || this.state.resumenFullscreen) &&
                                     <DetalleParadas refresh={this.refreshUltimaMilla} filtros={{zonasSeleccionada: this.state.zonasIds, tipoBusqueda: this.state.tipoBusqueda}} tour={this.state.ultimaMilla}/>
                                 }
-                                {
-                                    (this.state.tour || this.state.ultimaMilla) &&
-                                    <IconButton
-                                        onClick={() => this.state.fullScreen ? this.closeFullscreen() : this.openFullscreen()}
-                                        style={{
-                                            color: "white",
-                                            borderRadius: "10px",
-                                            width: "30px",
-                                            height: "30px",
-                                            backgroundColor: "white",
-                                            top: "110px",
-                                            right: "10px",
-                                            position: "fixed",
-                                            zIndex: 3000,
-                                            padding: "5px",
-                                            boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-                                        }}>
-                                        {this.state.fullScreen ? <FullscreenExitIcono style={{fill: "#F9A03E"}}/> :
-                                            <FullscreenIcono style={{fill: "#F9A03E"}}/>}
-                                    </IconButton>
-                                }
+                                {/*{*/}
+                                {/*    (this.state.tour || this.state.ultimaMilla) &&*/}
+                                {/*    <IconButton*/}
+                                {/*        onClick={() => this.state.fullScreen ? this.closeFullscreen() : this.openFullscreen()}*/}
+                                {/*        style={{*/}
+                                {/*            color: "white",*/}
+                                {/*            borderRadius: "10px",*/}
+                                {/*            width: "30px",*/}
+                                {/*            height: "30px",*/}
+                                {/*            backgroundColor: "white",*/}
+                                {/*            top: "110px",*/}
+                                {/*            right: "10px",*/}
+                                {/*            position: "fixed",*/}
+                                {/*            zIndex: 3000,*/}
+                                {/*            padding: "5px",*/}
+                                {/*            boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"*/}
+                                {/*        }}>*/}
+                                {/*        {this.state.fullScreen ? <FullscreenExitIcono style={{fill: "#F9A03E"}}/> :*/}
+                                {/*            <FullscreenIcono style={{fill: "#F9A03E"}}/>}*/}
+                                {/*    </IconButton>*/}
+                                {/*}*/}
 
 
                             </MapContainer>

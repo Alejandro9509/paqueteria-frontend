@@ -225,29 +225,33 @@ async function searchLocationGuia(city, address, postalCode) {
 
 
 function searchLocationWeb(city, address, subdistrict, number) {
-    return new Promise((resolve, reject) => {
-        xlocate.searchLocations({
-            "$type": "SearchByAddressRequest",
-            "address": {
-                "city": city,
-                "street": address,
-                "subdistrict": subdistrict,
-                "houseNumber": number
-            }
-        }, (location) => {
-            if (location) {
-                if (location.results) {
-                    if (location.results.length !== 0) {
-                        resolve(location.results[0].location.referenceCoordinate)
+    var result;
+    trackPromise(
+        result = new Promise((resolve, reject) => {
+            xlocate.searchLocations({
+                "$type": "SearchByAddressRequest",
+                "address": {
+                    "city": city,
+                    "street": address,
+                    "subdistrict": subdistrict,
+                    "houseNumber": number
+                }
+            }, (location) => {
+                if (location) {
+                    if (location.results) {
+                        if (location.results.length !== 0) {
+                            resolve(location.results[0].location.referenceCoordinate)
+                        } else {
+                            resolve({x: 0.0, y: 0.0})
+                        }
                     } else {
                         resolve({x: 0.0, y: 0.0})
                     }
-                } else {
-                    resolve({x: 0.0, y: 0.0})
                 }
-            }
-        });
-    })
+            });
+        })
+    )
+    return result
 }
 
 async function searchLocation(city, address) {
@@ -314,13 +318,12 @@ async function ordenarParada(idParada, guias) {
         idGuia: g.m_nId,
         lat: g.lat.toString(),
         lng: g.lng.toString(),
-        orden: index,
+        orden: index + 1,
         esRecoleccion: g.m_bEsRecoleccion
     }))
     trackPromise(
-
-    result = axios.put(url, Object.assign({}, {guias: paquetes}), {headers})
-)
+        result = axios.put(url, Object.assign({}, {guias: paquetes}), {headers})
+    )
     ;
     return result
 }
@@ -356,7 +359,7 @@ function eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion) {
     let result;
     trackPromise(
         result = axios.put(url, Object.assign({}, {
-            EsRecoleccion:idParada,
+            EsRecoleccion: idParada,
             IdGuia: idGuia,
             IdParada: esRecoleccion,
         }), {headers})
