@@ -221,9 +221,7 @@ class PaquetesList extends Component {
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
                                 align="left">Volumen</TableCell>
-                            <TableCell
-                                sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
-                                align="left">Zona</TableCell>
+
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
                                 align="left">Tipo de cobro</TableCell>

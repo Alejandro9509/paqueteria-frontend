@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/AgregarPaqueteUltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/AgregarPaqueteUltimaMilla.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Paradas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Paradas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/UnidadesList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UnidadesList.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,14 +140,7 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
-      <workItem from="1631224936256" duration="2476000" />
-    </task>
-    <task id="LOCAL-00016" summary="Ajustes al agregar usuarios">
-      <created>1627521214583</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1627521214583</updated>
+      <workItem from="1631224936256" duration="3020000" />
     </task>
     <task id="LOCAL-00017" summary="Ajustes en crear embarque">
       <created>1627523445560</created>
@@ -485,7 +478,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631225376286</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="Se hicieron ajustes en las paradas">
+      <created>1631237975413</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1631237975414</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -562,7 +562,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se corrigio espacio al presionar consultar o editar en guias" />
     <MESSAGE value="Se corrigio conceptos" />
     <MESSAGE value="Se calculo de iva conceptos" />
     <MESSAGE value="*Cambio en la forma de seatear datos en recoleccion y embarque" />
@@ -587,7 +586,8 @@
     <MESSAGE value="Espacio en el detalle de paradas" />
     <MESSAGE value="Error al cargar los conceptos" />
     <MESSAGE value="Se hicieron ajustes en el listado de paquetes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se hicieron ajustes en el listado de paquetes" />
+    <MESSAGE value="Se hicieron ajustes en las paradas" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se hicieron ajustes en las paradas" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
