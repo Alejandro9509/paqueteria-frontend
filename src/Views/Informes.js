@@ -311,9 +311,7 @@ function Informes({history}) {
         },
     ]);
 
-    function DefaultColumnFilter({
-                                     column: {filterValue, preFilteredRows, setFilter},
-                                 }) {
+    function DefaultColumnFilter({column: {filterValue, preFilteredRows, setFilter},}) {
         const count = preFilteredRows.length;
 
         return (
@@ -327,7 +325,6 @@ function Informes({history}) {
             />
         );
     }
-
 
     const [state, setState] = React.useState({
         showPopUp: false,
@@ -496,7 +493,6 @@ function Informes({history}) {
         });
 
     }
-
 
     function TableCiudades({columns, data, select}) {
         const defaultColumn = React.useMemo(
@@ -722,7 +718,6 @@ function Informes({history}) {
         );
     }
 
-
     function TableUnidad({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
@@ -819,14 +814,12 @@ function Informes({history}) {
         getAllGuiasFrom(true);
     }
 
-
     const selectGuia = (index) => {
         const newGuia = [...dataGuias];
 
         newGuia[index]["select"] = newGuia[index].select ? false : true;
         setDataGuias(newGuia);
     };
-
 
     function handleShowCancelar(event) {
         event.stopPropagation()
@@ -906,7 +899,6 @@ function Informes({history}) {
 
     }
 
-
     const handleImprimir = () => {
         imprimirFormatosId(state.formatoSeleccionado).then((response) => {
             window.open(new Blob([response.data]));
@@ -934,7 +926,6 @@ function Informes({history}) {
         });
     }
 
-
     function getAllOperadores() {
         obtenerOperadores().then((respuesta) => {
             setDataOperadores(respuesta.data);
@@ -961,7 +952,7 @@ function Informes({history}) {
     }
 
     useEffect(value => {
-        if (state.IdCiudadOrigen && state.IdCiudadDestino && state.IdRuta != 0) {
+        if (state.IdCiudadOrigen && state.IdCiudadDestino && state.IdRuta != 0 && state.IdRuta === undefined && state.IdRuta === "") {
             getAllGuiasFrom();
 
         }
@@ -1047,6 +1038,7 @@ function Informes({history}) {
         $('#Agregar').addClass('in show');
         obtenerInformesId(id).then(({data}) => {
             console.log(data.m_arrClsProGuia)
+            data.m_arrClsProGuia.forEach(g => g.select = true)
             setDataGuias(data.m_arrClsProGuia)
             setState({
                 ...state,
@@ -1397,7 +1389,7 @@ function Informes({history}) {
                             </a>
                         </li>
 
-                        <li>
+                        <li className="hide">
                             <a onClick={(event) => {
                                 event.stopPropagation();
                                 setState({
@@ -2617,6 +2609,7 @@ function Informes({history}) {
                                                                                             width: "100%",
                                                                                             borderRadius: "10px",
                                                                                         }}
+                                                                                        disabled={state.agregar === "Consultar"}
                                                                                         onClick={() => selectGuia(index)}
                                                                                     >
                                                                                         <Grid container spacing={2}>

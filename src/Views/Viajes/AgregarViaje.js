@@ -403,8 +403,8 @@ class AgregarViaje extends Component {
                 flex: 1,
             },
             {
-                headerName: "Ruta",
-                field: "m_sRuta",
+                headerName: "Fecha informe",
+                field: "m_dFecha",
                 flex: 1,
             },
             {
@@ -420,6 +420,16 @@ class AgregarViaje extends Component {
             {
                 headerName: "Operador",
                 field: "m_sNombreCompleto",
+                flex: 1,
+            },
+            {
+                headerName: "Remolque 1",
+                field: "m_sRemolque1",
+                flex: 1,
+            },
+            {
+                headerName: "Remolque 2",
+                field: "m_sRemolque2",
                 flex: 1,
             },
             {
@@ -451,8 +461,8 @@ class AgregarViaje extends Component {
                 flex: 1,
             },
             {
-                headerName: "Ruta",
-                field: "m_sRuta",
+                headerName: "Fecha informe",
+                field: "m_dFecha",
                 flex: 1,
             },
             {
@@ -468,6 +478,16 @@ class AgregarViaje extends Component {
             {
                 headerName: "Operador",
                 field: "m_sNombreCompleto",
+                flex: 1,
+            },
+            {
+                headerName: "Remolque 1",
+                field: "m_sRemolque1",
+                flex: 1,
+            },
+            {
+                headerName: "Remolque 2",
+                field: "m_sRemolque2",
                 flex: 1,
             },
             {
@@ -1511,25 +1531,21 @@ class AgregarViaje extends Component {
                             </div>
 
                             <div className="row" style={{height: "200px", width: '100%'}}>
-                                {this.state.dataInformesPorAsignar.length != 0 ? (
-                                    <DataGrid
-                                        localeText={dataGridLocaleText}
-                                        rows={this.state.dataInformesPorAsignar}
-                                        columns={columnspRorAsignar}
-                                        density="compact"
-                                        pageSize={Math.floor((this.state.height - 310) / 30)}
-                                        getRowId={(row) => row.m_nIdInforme}
-                                        onRowSelected={(row) => {
-                                            this.setState({
-                                                idInforme: row.data.m_nIdInforme
+                                <DataGrid
+                                    localeText={dataGridLocaleText}
+                                    rows={this.state.dataInformesPorAsignar}
+                                    columns={columnspRorAsignar}
+                                    density="compact"
+                                    pageSize={Math.floor((this.state.height - 310) / 30)}
+                                    getRowId={(row) => row.m_nIdInforme}
+                                    onRowSelected={(row) => {
+                                        this.setState({
+                                            idInforme: row.data.m_nIdInforme
 
-                                            })
+                                        })
 
-                                        }}
-                                    />
-                                ) : (
-                                    <div>No se encontró ningún registro</div>
-                                )}
+                                    }}
+                                />
 
                             </div>
 
@@ -1545,13 +1561,9 @@ class AgregarViaje extends Component {
                             </div>
 
                             <div className="row" style={{height: "200px", width: '100%'}}>
-                                {this.state.dataInformesAsignados.length != 0 ? (
-                                    <InformesPorAsignar {...this.props} columns={columnspAsignadas}
-                                                        dataInformesAsignados={this.state.dataInformesAsignados}
-                                    />
-                                ) : (
-                                    <div>No se encontró ningún registro</div>
-                                )}
+                                <InformesPorAsignar {...this.props} columns={columnspAsignadas}
+                                                    dataInformesAsignados={this.state.dataInformesAsignados}
+                                />
 
                             </div>
 
