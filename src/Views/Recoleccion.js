@@ -1311,7 +1311,7 @@ function Recoleccion() {
         paquetes[index].m_rAncho = newValue.m_xAncho
         paquetes[index].m_rPeso = newValue.m_xPeso
         paquetes[index].m_nIdTipoEmbalaje = newValue.m_nIdEmbalaje
-        paquetes[index].m_sDescripcion = newValue.m_sDescripcion
+        paquetes[index].m_sDescripcion = newValue.m_nIdProducto == 1 ? "" : newValue.m_sDescripcion
         paquetes[index].m_rVolumen = paquetes[index].m_rLargo * paquetes[index].m_rAlto * paquetes[index].m_rAncho;
         setState({
             ...state,

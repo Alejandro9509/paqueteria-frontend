@@ -2516,7 +2516,7 @@ function Embarque(props) {
         paquetes[index].m_xAncho = newValue.m_xAncho
         paquetes[index].m_xPeso = newValue.m_xPeso
         paquetes[index].m_nIdTIpoEmpaque = newValue.m_nIdEmbalaje
-        paquetes[index].m_sDescripcion = newValue.m_sDescripcion
+        paquetes[index].m_sDescripcion = newValue.m_nIdProducto == 1 ? "" : newValue.m_sDescripcion
         paquetes[index].m_xVolumen = paquetes[index].m_xLargo * paquetes[index].m_xAlto * paquetes[index].m_xAncho;
         setState({
             ...state,
