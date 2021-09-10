@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se oculto pestaña imprimir">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Resulto bug anterior">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Informes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Informes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +31,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="bugfix/embarque" />
+        <entry key="$PROJECT_DIR$" value="develop" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -63,7 +63,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/public" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Util/Contexts" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -76,6 +76,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Certuit\WebstormProjects\gm-paqueteria\src\Util\Contexts" />
       <recent name="$PROJECT_DIR$/public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -137,49 +138,7 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
-      <workItem from="1631239752288" duration="1822000" />
-    </task>
-    <task id="LOCAL-00017" summary="Ajustes en crear embarque">
-      <created>1627523445560</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1627523445560</updated>
-    </task>
-    <task id="LOCAL-00018" summary="Ajustes en embarque al agregar uno nuevo:&#10;*Campo moneda se modifica correctamente.&#10;*los sobres se agregan al listado de paquetes y se mandan a la base de datos.">
-      <created>1627533967600</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1627533967600</updated>
-    </task>
-    <task id="LOCAL-00019" summary="Ajustes en embarque al mostrar informacion para modificar">
-      <created>1627540058341</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1627540058341</updated>
-    </task>
-    <task id="LOCAL-00020" summary="Se resolvio el problema al mostrar los sobres y paquetes cuando se modifica o edita">
-      <created>1627583587933</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1627583587934</updated>
-    </task>
-    <task id="LOCAL-00021" summary="Ajustes al crear guia a partir de embarque">
-      <created>1627606448194</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1627606448194</updated>
-    </task>
-    <task id="LOCAL-00022" summary="Se recuperan las opciones de impuestos de los servicios en sucursales">
-      <created>1627628575701</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1627628575701</updated>
+      <workItem from="1631159140096" duration="18684000" />
     </task>
     <task id="LOCAL-00023" summary="Se recuperan las opciones de impuestos de los servicios en sucursales">
       <created>1627629213333</created>
@@ -433,56 +392,98 @@
       <option name="project" value="LOCAL" />
       <updated>1631036046325</updated>
     </task>
-    <task id="LOCAL-00059" summary="Homologar tablas de listados,&#10;Al consultar guia no muestra las cantidades correctar en conceptos">
-      <created>1631085204109</created>
+    <task id="LOCAL-00059" summary="Precargar estatus de la guia en pendiente al traer datos de embarque">
+      <created>1631122595463</created>
       <option name="number" value="00059" />
       <option name="presentableId" value="LOCAL-00059" />
       <option name="project" value="LOCAL" />
-      <updated>1631085204109</updated>
+      <updated>1631122595463</updated>
     </task>
-    <task id="LOCAL-00060" summary="Se agrego para remplazar paquetes y agregar">
-      <created>1631164054463</created>
+    <task id="LOCAL-00060" summary="En guia se encima dato de tipo de servicio al traer datos de embarque">
+      <created>1631124395576</created>
       <option name="number" value="00060" />
       <option name="presentableId" value="LOCAL-00060" />
       <option name="project" value="LOCAL" />
-      <updated>1631164054463</updated>
+      <updated>1631124395576</updated>
     </task>
-    <task id="LOCAL-00061" summary="Se bajo la taza de refrescamiento">
-      <created>1631164209497</created>
+    <task id="LOCAL-00061" summary="Al no encontrar ninguna tarifa que cuadre con el embarque mostrar mensaje al usuario">
+      <created>1631126388894</created>
       <option name="number" value="00061" />
       <option name="presentableId" value="LOCAL-00061" />
       <option name="project" value="LOCAL" />
-      <updated>1631164209498</updated>
+      <updated>1631126388894</updated>
     </task>
-    <task id="LOCAL-00062" summary="Espacio en el detalle de paradas">
-      <created>1631164905882</created>
+    <task id="LOCAL-00062" summary="Optimizar consulta al traer datos de embarque para generar guia">
+      <created>1631131542230</created>
       <option name="number" value="00062" />
       <option name="presentableId" value="LOCAL-00062" />
       <option name="project" value="LOCAL" />
-      <updated>1631164905882</updated>
+      <updated>1631131542231</updated>
     </task>
-    <task id="LOCAL-00063" summary="Quitar la columna de RUTA y Agregar columan Fecha Informe, Remolque1, Remolque2">
-      <created>1631231102293</created>
+    <task id="LOCAL-00063" summary="Folio relacionado no se muestra al consultar guia">
+      <created>1631131887263</created>
       <option name="number" value="00063" />
       <option name="presentableId" value="LOCAL-00063" />
       <option name="project" value="LOCAL" />
-      <updated>1631231102293</updated>
+      <updated>1631131887263</updated>
     </task>
-    <task id="LOCAL-00064" summary="Al seleccionar como producto SIN ASIGNAR el campo descripcion debe quedar vacío">
-      <created>1631240245147</created>
+    <task id="LOCAL-00064" summary="Ciudad de destinatario no se muestra al consultar guia">
+      <created>1631131987998</created>
       <option name="number" value="00064" />
       <option name="presentableId" value="LOCAL-00064" />
       <option name="project" value="LOCAL" />
-      <updated>1631240245147</updated>
+      <updated>1631131987998</updated>
     </task>
-    <task id="LOCAL-00065" summary="Se oculto pestaña imprimir">
-      <created>1631240619205</created>
+    <task id="LOCAL-00065" summary="Optimizar consulta al traer datos de guia">
+      <created>1631133150815</created>
       <option name="number" value="00065" />
       <option name="presentableId" value="LOCAL-00065" />
       <option name="project" value="LOCAL" />
-      <updated>1631240619205</updated>
+      <updated>1631133150816</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="Ocultar pestaña imprimir en guias">
+      <created>1631133272817</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1631133272817</updated>
+    </task>
+    <task id="LOCAL-00067" summary="Optimizar consulta al traer datos de guia">
+      <created>1631133560223</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1631133560223</updated>
+    </task>
+    <task id="LOCAL-00068" summary="Los codigos postales se buscan al hacer click en el campo">
+      <created>1631161727938</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1631161727939</updated>
+    </task>
+    <task id="LOCAL-00069" summary="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario">
+      <created>1631208567080</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1631208567080</updated>
+    </task>
+    <task id="LOCAL-00070" summary="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Zonas, origen, destino">
+      <created>1631209994643</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1631209994643</updated>
+    </task>
+    <task id="LOCAL-00071" summary="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos">
+      <created>1631210673200</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1631210673200</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -547,11 +548,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se corrigio conceptos" />
-    <MESSAGE value="Se calculo de iva conceptos" />
-    <MESSAGE value="*Cambio en la forma de seatear datos en recoleccion y embarque" />
-    <MESSAGE value="Se corrigio al momento de consultar y editar guia" />
-    <MESSAGE value="Se corrigio el filio del embarque al editar" />
     <MESSAGE value="Se corrigio boton de agregar guias" />
     <MESSAGE value="Error al agregar guia" />
     <MESSAGE value="error al editar informe" />
@@ -565,14 +561,19 @@
     <MESSAGE value="Se ajustaron las columnas de tarifas" />
     <MESSAGE value="Clonar Embarque" />
     <MESSAGE value="Se hicieron ajustes en viajes" />
-    <MESSAGE value="Homologar tablas de listados,&#10;Al consultar guia no muestra las cantidades correctar en conceptos" />
-    <MESSAGE value="Se agrego para remplazar paquetes y agregar" />
-    <MESSAGE value="Se bajo la taza de refrescamiento" />
-    <MESSAGE value="Espacio en el detalle de paradas" />
-    <MESSAGE value="Quitar la columna de RUTA y Agregar columan Fecha Informe, Remolque1, Remolque2" />
-    <MESSAGE value="Al seleccionar como producto SIN ASIGNAR el campo descripcion debe quedar vacío" />
-    <MESSAGE value="Se oculto pestaña imprimir" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se oculto pestaña imprimir" />
+    <MESSAGE value="Precargar estatus de la guia en pendiente al traer datos de embarque" />
+    <MESSAGE value="En guia se encima dato de tipo de servicio al traer datos de embarque" />
+    <MESSAGE value="Al no encontrar ninguna tarifa que cuadre con el embarque mostrar mensaje al usuario" />
+    <MESSAGE value="Optimizar consulta al traer datos de embarque para generar guia" />
+    <MESSAGE value="Folio relacionado no se muestra al consultar guia" />
+    <MESSAGE value="Ciudad de destinatario no se muestra al consultar guia" />
+    <MESSAGE value="Ocultar pestaña imprimir en guias" />
+    <MESSAGE value="Optimizar consulta al traer datos de guia" />
+    <MESSAGE value="Los codigos postales se buscan al hacer click en el campo" />
+    <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario" />
+    <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Zonas, origen, destino" />
+    <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos" />
+    <option name="LAST_COMMIT_MESSAGE" value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

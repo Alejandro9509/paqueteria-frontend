@@ -15,4 +15,13 @@ function obtenerZonasSucursal(id) {
     return result
 }
 
-export {obtenerZonasSucursal}
+function obtenerZonasById(id) {
+    const url = `${process.env.REACT_APP_API_URL}/Zonas/GetById/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export {obtenerZonasSucursal,obtenerZonasById}
