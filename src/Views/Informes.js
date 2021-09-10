@@ -952,7 +952,7 @@ function Informes({history}) {
     }
 
     useEffect(value => {
-        if (state.IdCiudadOrigen && state.IdCiudadDestino && state.IdRuta != 0 && state.IdRuta === undefined && state.IdRuta === "") {
+        if (state.IdCiudadOrigen && state.IdCiudadDestino && state.IdRuta != 0 && state.IdRuta != undefined && state.IdRuta != "") {
             getAllGuiasFrom();
 
         }
