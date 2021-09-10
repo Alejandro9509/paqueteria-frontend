@@ -3045,7 +3045,7 @@ function Recoleccion() {
                             </a>
                         </li>
 
-                        <li>
+                        <li className="hide">
                             <a onClick={(event) => {
                                 event.stopPropagation();
                                 setState({

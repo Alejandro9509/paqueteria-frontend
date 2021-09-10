@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Quitar la columna de RUTA y Agregar columan Fecha Informe, Remolque1, Remolque2">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Al seleccionar como producto SIN ASIGNAR el campo descripcion debe quedar vacío">
       <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
     </list>
@@ -138,14 +137,7 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
-      <workItem from="1631239752288" duration="429000" />
-    </task>
-    <task id="LOCAL-00015" summary="Se arreglo relleno de datos al modificar sucursal">
-      <created>1627515450904</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1627515450904</updated>
+      <workItem from="1631239752288" duration="728000" />
     </task>
     <task id="LOCAL-00016" summary="Ajustes al agregar usuarios">
       <created>1627521214583</created>
@@ -483,7 +475,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631231102293</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="Al seleccionar como producto SIN ASIGNAR el campo descripcion debe quedar vacío">
+      <created>1631240245147</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1631240245147</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -548,7 +547,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Correccion al agregar embarque" />
     <MESSAGE value="Se corrigio espacio al presionar consultar o editar en guias" />
     <MESSAGE value="Se corrigio conceptos" />
     <MESSAGE value="Se calculo de iva conceptos" />
@@ -573,7 +571,8 @@
     <MESSAGE value="Se bajo la taza de refrescamiento" />
     <MESSAGE value="Espacio en el detalle de paradas" />
     <MESSAGE value="Quitar la columna de RUTA y Agregar columan Fecha Informe, Remolque1, Remolque2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Quitar la columna de RUTA y Agregar columan Fecha Informe, Remolque1, Remolque2" />
+    <MESSAGE value="Al seleccionar como producto SIN ASIGNAR el campo descripcion debe quedar vacío" />
+    <option name="LAST_COMMIT_MESSAGE" value="Al seleccionar como producto SIN ASIGNAR el campo descripcion debe quedar vacío" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
