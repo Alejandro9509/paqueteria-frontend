@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,13 +139,6 @@
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
       <workItem from="1631159140096" duration="18684000" />
-    </task>
-    <task id="LOCAL-00025" summary="Se recupera dato Tipo de servicio al modificar/ consultar una guia">
-      <created>1627639262638</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1627639262638</updated>
     </task>
     <task id="LOCAL-00026" summary="Se obtiene el codigo postal del remitente y destinatario">
       <created>1627650495815</created>
@@ -482,7 +476,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631293132144</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="Error al guardar UltimaMillaContext.js">
+      <created>1631297876740</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1631297876740</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -547,7 +548,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="error al editar informe" />
     <MESSAGE value="Corrección en última milla" />
     <MESSAGE value="Se agrego icono y se mejoro el scroll" />
     <MESSAGE value="Se realizaron ajustes a la ultima milla" />
@@ -572,7 +572,8 @@
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos" />
     <MESSAGE value="Error al consultar el paquete" />
     <MESSAGE value="Errores al cargar ultima milla" />
-    <option name="LAST_COMMIT_MESSAGE" value="Errores al cargar ultima milla" />
+    <MESSAGE value="Error al guardar UltimaMillaContext.js" />
+    <option name="LAST_COMMIT_MESSAGE" value="Error al guardar UltimaMillaContext.js" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

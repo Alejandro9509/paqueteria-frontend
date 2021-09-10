@@ -119,11 +119,11 @@ class UltimaMilla extends Component {
     }
 
     getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda) {
-        this.setState({modoEdicion: true, ultimaMilla:null})
+        this.setState({mostrarRuta: false})
         obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
             if (data.m_nIdUltimaMilla !== 0) {
                 if (actualizar) {
-                    this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 10000);
+                    this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 100000);
                 }
                 if (!this.state.ultimaMilla) {
                     data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
@@ -135,7 +135,7 @@ class UltimaMilla extends Component {
                     }
                 }
 
-                this.setState({modoEdicion: false, ultimaMilla: data, idSucursal: idSucursal, fechaUltimaMilla: date, zonasIds: zonas, tipoBusqueda: tipoBusqueda })
+                this.setState({mostrarRuta: true,modoEdicion: false, ultimaMilla: data, idSucursal: idSucursal, fechaUltimaMilla: date, zonasIds: zonas, tipoBusqueda: tipoBusqueda })
                 actualizar = false
             } else {
                 actualizar = false
@@ -334,7 +334,7 @@ class UltimaMilla extends Component {
                                             position={[this.state.lat, this.state.lng]}></Marker>
                                 }
                                 {
-                                    this.state.ultimaMilla && this.state.ultimaMilla.m_arrClsParadaUltimaMilla.map(t =>
+                                    this.state.ultimaMilla && this.state.mostrarRuta && this.state.ultimaMilla.m_arrClsParadaUltimaMilla.map(t =>
                                         <TourUltimaMilla data={t} sucursal={this.state}/>
                                     )
                                 }
