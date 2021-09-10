@@ -946,7 +946,12 @@ function Embarque(props) {
         if (props.location.idRecoleccion === undefined) {
             getDataParaListado()
         }else{
-            getDataParaEditar()
+            // getDataParaEditar()
+            obtenerRecoleccionId(props.location.idRecoleccion)
+                .then((respuesta) => {
+                    console.log('Recoleccion: ', respuesta.data);
+                    setDataRecoleccionOnState(respuesta)
+                })
         }
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
             showSuccess("Es necesario iniciar sesion para acceder a este proceso");
@@ -1172,22 +1177,35 @@ function Embarque(props) {
 
     //Funcion para mostrar datos de recoleccion para crear embarque
     function setDataRecoleccionOnState(respuesta) {
+
+        getAllTipoMoneda()
+        getAllTipoCobro()
+        getTipoCambio()
+        getAllZonas()
+        getAllEmbalajes()
+        getAllCiudades()
+        getAllSucursales()
+
         const {m_parrPaquetes, m_parrSobres} = respuesta.data;
+        let totalPaquetes = 0
         m_parrPaquetes.forEach(paq => {
-            paq["m_nTipo"] = 2;
-            paq["m_xPeso"] = paq.m_rPeso;
-            paq["m_xLargo"] = paq.m_rLargo;
-            paq["m_xAncho"] = paq.m_rAncho;
-            paq["m_xAlto"] = paq.m_rAlto;
-            paq["m_xVolumen"] = paq.m_rVolumen;
-            paq["m_nIdTIpoEmpaque"] = paq.m_nIdTipoEmbalaje;
-            paq["m_cValorDeclarado"] = paq.m_cyValorDeclarado;
-            paq["producto"] = dataProductos.find((pd) => pd.m_nIdProducto == paq.m_nIdProducto)
+            obtenerProductoById(paq.m_nIdProducto).then(({data}) => {
+                paq["m_nTipo"] = 2;
+                paq["m_xPeso"] = paq.m_rPeso;
+                paq["m_xLargo"] = paq.m_rLargo;
+                paq["m_xAncho"] = paq.m_rAncho;
+                paq["m_xAlto"] = paq.m_rAlto;
+                paq["m_xVolumen"] = paq.m_rVolumen;
+                paq["m_nIdTIpoEmpaque"] = paq.m_nIdTipoEmbalaje;
+                paq["m_cValorDeclarado"] = paq.m_cyValorDeclarado;
+                paq["producto"] = data
+                totalPaquetes += parseInt(paq.ctd)
+            })
         })
         m_parrSobres.forEach(sobre => {
             sobre["m_nTipo"] = 1
         })
-        let remitente = {}
+        /*let remitente = {}
         let destinatario = {}
         if (respuesta.data.m_sAliasRemitente) {
             remitente = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasRemitente && o.m_sNombre == respuesta.data.m_sNombreRemitente)
@@ -1198,9 +1216,42 @@ function Embarque(props) {
             destinatario = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
         } else {
             destinatario = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNombreDestinatario)
-        }
+        }*/
 
-        obtenerCodigoPostalId(remitente.m_nIdCP).then((cp) => {
+        obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    nombreRemitente: data
+                }
+            })
+            obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        codigoPostalDestinatario: cp.data
+                    }
+                })
+            })
+        })
+        obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    nombreDestinatario: data
+                }
+            })
+            obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        codigoPostalRemitente: cp.data
+                    }
+                })
+            })
+        })
+
+        /*obtenerCodigoPostalId(remitente.m_nIdCP).then((cp) => {
             setState(state => {
                 return {
                     ...state,
@@ -1213,6 +1264,42 @@ function Embarque(props) {
                 return {
                     ...state,
                     codigoPostalDestinatario: cp.data
+                }
+            })
+        })*/
+
+        obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    ciudadOrigen: data
+                }
+            })
+        })
+
+        obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    ciudadDestino: data
+                }
+            })
+        })
+
+        obtenerZonasById(respuesta.data.m_nIdZonaRemitente).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    zonaRemitente: data
+                }
+            })
+        })
+
+        obtenerZonasById(respuesta.data.m_nIdZonaDestinatario).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    zonaDestinatario: data
                 }
             })
         })
@@ -1237,14 +1324,14 @@ function Embarque(props) {
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
                 clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
 
-                nombreRemitente: remitente,
+                // nombreRemitente: remitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
                 ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
                 correoRemitente: respuesta.data.m_sCorreoRemitente,
                 telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                 contactoRemitente: respuesta.data.m_sContactoRemitente,
-                ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+                // ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                 idRemitente: respuesta.data.m_nIdRemitente,
                 aliasRemitente: respuesta.data.m_sAliasRemitente,
                 calleRemitente: respuesta.data.m_sCalleRemitente,
@@ -1252,7 +1339,7 @@ function Embarque(props) {
                 numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
                 coloniaRemitente: respuesta.data.m_sColoniaRemitente,
 
-                nombreDestinatario: destinatario,
+                // nombreDestinatario: destinatario,
                 RFCDestinatario: respuesta.data.m_sRFCDestinatario,
                 domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
                 ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
@@ -1266,9 +1353,9 @@ function Embarque(props) {
                 numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
                 coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
 
-                ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
-                zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
-                zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
+                // ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
+                // zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
+                // zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
 
                 paquetes: m_parrPaquetes,
                 sobres: m_parrSobres,
@@ -1328,6 +1415,7 @@ function Embarque(props) {
                     }
                 })
         })
+        })
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
             setState(state => {
                 return {
@@ -1344,10 +1432,6 @@ function Embarque(props) {
                 })
             })
         })
-
-
-
-        })
         obtenerCodigoPostalId(respuesta.data.CodigoPostalEntrega).then((cp) => {
             setState(state => {
                 return {
@@ -1360,6 +1444,7 @@ function Embarque(props) {
         let totalPaquetes = 0
         respuesta.data.m_arrPaquetes.forEach(p => {
             obtenerProductoById(p.m_nIdProducto).then(({data}) => {
+                console.log('producto consultar ',data)
                 p["m_nCantidad"] = p.ctd
                 p.producto = data
                 totalPaquetes += parseInt(p.ctd)
@@ -2598,6 +2683,7 @@ function Embarque(props) {
 
     const handleChangePaqueteProducto = (event, index, newValue) => {
         let {paquetes} = state;
+        console.log('seleccion ',newValue)
         paquetes[index].producto = newValue;
         paquetes[index].m_nIdProducto = newValue.m_nIdProducto
         paquetes[index].m_xLargo = newValue.m_xLargo
