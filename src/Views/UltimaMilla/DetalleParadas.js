@@ -109,7 +109,8 @@ class DetalleParadas extends Component {
             ]
         });
     }
-    onSubmitBorrarPaquete(idParada, idGuia, esRecoleccion){
+
+    onSubmitBorrarPaquete(idParada, idGuia, esRecoleccion) {
         eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion).then(({data}) => {
             showSuccess(data.data)
             this.props.refresh()
@@ -258,7 +259,8 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Pendientes </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length} de {totalPaquetes} <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Pendientes </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length} de {totalPaquetes}
+                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -268,7 +270,8 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Exitosas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length} de {totalPaquetes} <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Exitosas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length} de {totalPaquetes}
+                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -278,7 +281,8 @@ class DetalleParadas extends Component {
                                             width: "100%",
                                             textAlign: "center"
                                         }}>
-                                            <strong>Fallidas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length} de {totalPaquetes} <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length / totalPaquetes) * 100)}%</strong>
+                                            <strong>Fallidas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length} de {totalPaquetes}
+                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                 </Grid>
@@ -435,32 +439,36 @@ class DetalleParadas extends Component {
                                                                                             <TableCell
                                                                                                 style={{borderBottom: "none"}}
                                                                                                 align="left">
-                                                                                                <ButtonGroup
-                                                                                                    size="small"
-                                                                                                    disableElevation
-                                                                                                    variant="contained"
-                                                                                                    color="primary">
+                                                                                                {
+                                                                                                    g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 &&
+                                                                                                    <ButtonGroup
+                                                                                                        size="small"
+                                                                                                        disableElevation
+                                                                                                        variant="contained"
+                                                                                                        color="primary">
 
 
-                                                                                                    <IconButton
-                                                                                                        aria-label="reorder">
-                                                                                                        <Tooltip
-                                                                                                            title={"Remplazar"}>
-                                                                                                            <CachedIcon
-                                                                                                                onClick={() => this.openRemplazarPaquete(tour, g)}
-                                                                                                                fontSize="default"/>
-                                                                                                        </Tooltip>
-                                                                                                    </IconButton>
-                                                                                                    <IconButton
-                                                                                                        aria-label="delete">
-                                                                                                        <Tooltip
-                                                                                                            title={"Eliminar"}>
-                                                                                                            <DeleteIcon
-                                                                                                                onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
-                                                                                                                fontSize="default"/>
-                                                                                                        </Tooltip>
-                                                                                                    </IconButton>
-                                                                                                </ButtonGroup>
+                                                                                                        <IconButton
+                                                                                                            aria-label="reorder">
+                                                                                                            <Tooltip
+                                                                                                                title={"Remplazar"}>
+                                                                                                                <CachedIcon
+                                                                                                                    onClick={() => this.openRemplazarPaquete(tour, g)}
+                                                                                                                    fontSize="default"/>
+                                                                                                            </Tooltip>
+                                                                                                        </IconButton>
+                                                                                                        <IconButton
+                                                                                                            aria-label="delete">
+                                                                                                            <Tooltip
+                                                                                                                title={"Eliminar"}>
+                                                                                                                <DeleteIcon
+                                                                                                                    onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
+                                                                                                                    fontSize="default"/>
+                                                                                                            </Tooltip>
+                                                                                                        </IconButton>
+                                                                                                    </ButtonGroup>
+                                                                                                }
+
                                                                                             </TableCell>
                                                                                         </TableRow>
                                                                                     )

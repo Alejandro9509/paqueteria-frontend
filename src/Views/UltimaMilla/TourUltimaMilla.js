@@ -74,7 +74,7 @@ class TourUltimaMilla extends Component {
                             return (
                                 <Marker key={index}
                                         icon={<MarkerComponent color={this.props.data.color}
-                                                               index={g.m_nUltimaMillaOrden + 1}/>}
+                                                               index={g.m_nUltimaMillaOrden}/>}
                                         position={[parseFloat(g.m_sLatitud), parseFloat(g.m_sLongitud)]}>
                                     <Popup>
                                         <Grid container spacing={1}>
