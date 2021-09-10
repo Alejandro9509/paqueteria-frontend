@@ -285,7 +285,7 @@ function agregarRuta(tour, data) {
     }
     tour.unidades.forEach((u) => {
         var tempTour = tour.tour.tours.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
-        var guias = tour.paquetes.filter((p, index) => tempTour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === index) != null)
+        var guias = tour.paquetes.filter((p, index) => tempTour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === p.index) != null)
         guias = ordenarGuiasPorRuta(tempTour, guias)
         ultimaMillaObject.rutas.push({
             idOperador: u.m_nIdOperador,
@@ -388,7 +388,7 @@ function ordenarGuiasPorRuta(tour, guias) {
     tour.trips[0].stops.forEach((item, index) => {
         var found = false;
         guias = guias.filter(function (guia, index) {
-            if (!found && index == parseInt(item.tasks[0].orderId)) {
+            if (!found && guia.index == parseInt(item.tasks[0].orderId)) {
                 guia.orden = index + 1
                 result.push(guia);
                 found = true;
