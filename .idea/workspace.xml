@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Ajustes en embarque">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/TourUltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/TourUltimaMilla.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Convenios/EscribirConvenio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Convenios/EscribirConvenio.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,13 +139,6 @@
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
       <workItem from="1631159140096" duration="18684000" />
-    </task>
-    <task id="LOCAL-00024" summary="Ajustes para registrar embarque cuando es entrega en domicilio">
-      <created>1627636188110</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1627636188110</updated>
     </task>
     <task id="LOCAL-00025" summary="Se recupera dato Tipo de servicio al modificar/ consultar una guia">
       <created>1627639262638</created>
@@ -480,14 +469,21 @@
       <option name="project" value="LOCAL" />
       <updated>1631210673200</updated>
     </task>
-    <task id="LOCAL-00072" summary="Error al consultar el paquete">
-      <created>1631254419000</created>
+    <task id="LOCAL-00072" summary="Ajustes en embarque">
+      <created>1631252533998</created>
       <option name="number" value="00072" />
       <option name="presentableId" value="LOCAL-00072" />
       <option name="project" value="LOCAL" />
-      <updated>1631254419000</updated>
+      <updated>1631252533998</updated>
     </task>
-    <option name="localTasksCounter" value="73" />
+    <task id="LOCAL-00073" summary="Ajustes en embarque">
+      <created>1631292296188</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1631292296189</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -576,8 +572,8 @@
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Zonas, origen, destino" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos" />
-    <MESSAGE value="Error al consultar el paquete" />
-    <option name="LAST_COMMIT_MESSAGE" value="Error al consultar el paquete" />
+    <MESSAGE value="Ajustes en embarque" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajustes en embarque" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
