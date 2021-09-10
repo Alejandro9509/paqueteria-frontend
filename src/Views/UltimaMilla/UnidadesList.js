@@ -189,7 +189,7 @@ class UnidadesList extends Component {
                                                     inputProps={{'aria-labelledby': labelId}}
                                                 />
                                             </TableCell>
-                                            <TableCell align="left">{u.m_sDescripcion}</TableCell>
+                                            <TableCell align="left"> {u.m_sCodigo} - {u.m_sDescripcion}</TableCell>
                                             <TableCell align="left">{u.m_nCapacidad}</TableCell>
                                             <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
                                             <TableCell align="left">{u.m_nIdOperador === 0 ? (
