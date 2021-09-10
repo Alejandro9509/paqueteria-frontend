@@ -1185,6 +1185,7 @@ function Embarque(props) {
         getAllEmbalajes()
         getAllCiudades()
         getAllSucursales()
+        getAllEstatusEmbarque()
 
         const {m_parrPaquetes, m_parrSobres} = respuesta.data;
         let totalPaquetes = 0
@@ -1217,6 +1218,15 @@ function Embarque(props) {
         } else {
             destinatario = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNombreDestinatario)
         }*/
+
+        obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
+            setState(state => {
+                return {
+                    ...state,
+                    clientePaga: data
+                }
+            })
+        })
 
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
             setState(state => {
