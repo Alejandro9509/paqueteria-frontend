@@ -598,14 +598,18 @@ class EscribirConvenio extends Component {
                         m_nIdTipoMedida: c.tipoMedida
                     })
                 })
+
+                const listadoProductosTemp = []
+                this.state.dataProductosSeleccionados.forEach((p) => {listadoProductosTemp.push(p)})
                 t.m_arrArProductos.length = 0
-                this.state.dataProductosSeleccionados.forEach((p) => {
-                    t.m_arrArProductos.push(p)
-                })
+                listadoProductosTemp.forEach((p) => {t.m_arrArProductos.push(p)})
             }
         })
-        this.setState({
-            tarifasSeleccionadas: this.state.tarifasSeleccionadas
+        this.setState(state => {
+            return {
+                ...state,
+                tarifasSeleccionadas: this.state.tarifasSeleccionadas
+            }
         })
         console.log(this.state.tarifasSeleccionadas)
     }
