@@ -27,7 +27,18 @@ import {dataGridLocaleText, TICKET_ZABRA_TAMPLATE} from "../Constants";
 import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
 import { obtenerEstatusGuia } from "../Util/Contexts/EstatusContext";
 import { obtenerEmbarquesId, obtenerEmbarqueMoneda } from "../Util/Contexts/EmbarquesContext";
-import { ultimoFolioGuia, eliminarGuia, obtenerGuiaId, cancelarGuia, obtenerGuiasFiltro, obtenerGuia, modificarGuia, agregarGuia, imprimirGuia } from "../Util/Contexts/GuiaContext";
+import {
+    ultimoFolioGuia,
+    eliminarGuia,
+    obtenerGuiaId,
+    cancelarGuia,
+    obtenerGuiasFiltro,
+    obtenerGuia,
+    modificarGuia,
+    agregarGuia,
+    imprimirGuia,
+    obtenerGuiaReporte
+} from "../Util/Contexts/GuiaContext";
 import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
 import { obtenerTipoCambio } from "../Util/Contexts/TipoCambioContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
@@ -778,7 +789,14 @@ function Guia(props) {
                                                                                            style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="iMPRIMIR">
+                        <Tooltip title="Reporte">
+                            <a  className="btn btn-default btn-xs"
+                                onClick={() => generarReporte(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i className="zmdi zmdi-file"
+                                                                        style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+
+                        <Tooltip title="Imprimir">
                             <a  className="btn btn-default btn-xs"
                                onClick={() => printTicket(row.row)}><i className="zmdi zmdi-print"
                                                                 style={{color: "#F9A03E"}}/></a>
@@ -863,6 +881,15 @@ function Guia(props) {
         cargaEmbarqueMoneda(1)
         // getFormatosImpresion()
     }, []);
+
+    function generarReporte(id, folio){
+        obtenerGuiaReporte(id).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Guía " + folio;
+        })
+    }
 
     useEffect(value => {
         if (props.location.idEmbarque != undefined) {

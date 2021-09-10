@@ -290,11 +290,11 @@ function agregarRuta(tour, data) {
         ultimaMillaObject.rutas.push({
             idOperador: u.m_nIdOperador,
             idUnidad: u.m_nIdUnidad,
-            guias: guias.map(g => ({
+            guias: guias.map((g, index) => ({
                 idGuia: g.m_nId,
                 lat: g.lat,
                 lng: g.lng,
-                orden: g.orden,
+                orden: index + 1,
                 esRecoleccion: g.m_bEsRecoleccion
             }))
         })
