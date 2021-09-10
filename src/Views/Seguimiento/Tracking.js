@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 export default function Tracking(...props){
-    console.log(entrega);
+    // console.log(entrega);
     const classes = useStyles();
     const [openGuia, setOpenGuia] = React.useState(true);
     const [openRastreo, setOpenRastreo] = React.useState(true);
@@ -111,17 +111,17 @@ export default function Tracking(...props){
 
     function handleShowConsultar(id) {
         const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta)
+        axios.get(url, { headers }).then(({data}) => {
+            console.log('data guia ',data)
 
             setGuiaData({
                 ...guiaData,
-                destinatario: respuesta.data.m_sDomicilioDestinatario,
-                folio: respuesta.data.m_nFolioGuia,
-                fechaEnvio: respuesta.data.m_dFechaSalida,
-                tipoServicio: respuesta.data.m_nIdTipoServicio,
-                paquetes: respuesta.data.m_arrClsDetalle,
-                estatusGuia: respuesta.data.m_nIdEstatusGuia
+                destinatario: data.m_sDomicilioDestinatario,
+                folio: data.m_nFolioGuia,
+                fechaEnvio: data.m_dFecha,
+                tipoServicio: data.m_sTipoServicio,
+                paquetes: data.m_arrClsDetalle,
+                estatusGuia: data.m_nIdEstatusGuia
             })
         }).catch(function (err) {
             console.log(err.data)
@@ -138,63 +138,54 @@ export default function Tracking(...props){
     };
     return(
         <div>
-            <header 
-                className={classes.heading}>
-                <img 
-                    className={classes.image} 
-                    src={logo}/>
+            <header className={classes.heading}>
+                <img className={classes.image} src={logo}/>
             </header>
             <div className="widget-wrap" style={{margin:10}}>
                 <div className="widget-container">
                     <div className="widget-content">
                         <div className="row">
-                            <InformacionEntrega 
-                                entrega = {guiaData}/>
-                            <List
-                    component="nav"
-                    className={classes.root}>
-                    <ListItem 
-                        button 
-                        onClick={handleGuiaClick} 
-                        className={classes.listItem}>
-                        <ListItemText 
-                            primary="Descripción Guía"/>
-                        {openGuia ? <ExpandLess className={classes.collapseArrow} /> : <ExpandMore className={classes.collapseArrow} />}
-                    </ListItem>
-                    <Collapse 
-                        in={openGuia} 
-                        timeout="auto" 
-                        unmountOnExit>
-                        <List 
-                            component="div" 
-                            disablePadding>{
-                            guiaData.paquetes.map(
-                                p => (
-                                <ListItem 
-                                    className={classes.nested}>
-                                    <InformacionPaquete 
-                                        package = {p}/>
+                            <InformacionEntrega entrega={guiaData}/>
+                            <List component="nav">
+                                <ListItem
+                                    button
+                                    onClick={handleGuiaClick}
+                                    className={classes.listItem}>
+                                    <ListItemText
+                                        primary="Descripción Guía"/>
+                                    {openGuia ? <ExpandLess className={classes.collapseArrow} /> : <ExpandMore className={classes.collapseArrow} />}
                                 </ListItem>
-                                )
-                            )
-                        }
-                        </List>
-                    </Collapse>
-                    <ListItem 
-                        button 
-                        onClick={handleRastreoClick} 
-                        className={classes.listItem}>
+                                <Collapse
+                                    in={openGuia}
+                                    timeout="auto"
+                                    unmountOnExit>
+                                    <List component="div">
+                                        {
+                                            guiaData.paquetes.map(
+                                            p => (
+                                                <ListItem key={p.m_nIdEmbarqueDetalle}>
+                                                    <InformacionPaquete package = {p}/>
+                                                </ListItem>
+                                                )
+                                            )
+                                        }
+                                    </List>
+                                </Collapse>
+                                <ListItem
+                                    button
+                                    onClick={handleRastreoClick}
+                                    className={classes.listItem}>
                         <ListItemText 
                             primary="Rastreo Envio" />
                         {openRastreo ? <ExpandLess className={classes.collapseArrow} /> : <ExpandMore className={classes.collapseArrow} />}
                     </ListItem>
-                    <Collapse 
-                        in={openRastreo} 
-                        timeout="auto" 
-                        unmountOnExit>
-                        <DetallesSeguimiento estatusGuia = {guiaData.estatusGuia}/>
-                    </Collapse>
-                    </List>
+                                <Collapse
+                                    in={openRastreo}
+                                    timeout="auto"
+                                    unmountOnExit>
+                                    <DetallesSeguimiento estatusGuia = {guiaData.estatusGuia}/>
+                                </Collapse>
+                            </List>
                         </div>
                     </div>
                 </div>

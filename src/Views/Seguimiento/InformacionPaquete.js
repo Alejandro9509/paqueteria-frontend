@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import theme from '../../Assets/themes/default'
+import {Grid, Paper} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     attribute: {
@@ -16,72 +17,77 @@ const useStyles = makeStyles((theme) => ({
         fontStyle: 'italic'
     },
     divider: {
-        maginTop: 8,
+        maginTop: 20,
         height: 3,
         backgroundColor: theme.palette.primary.main
-    }
+    },
+    label:{
+        color: theme.palette.primary.main
+    },
 }));
 
 export default function InformacionPaquete(props){
     console.log(props.package);
     const classes = useStyles();
-    const packId = props.package.m_nIdEmbarque;
+    const producto = props.package.m_sProducto;
     const weight = props.package.m_xPeso;
     const large = props.package.m_xLargo;
     const width = props.package.m_xAncho;
     const height = props.package.m_xAlto;
-    const type = props.package.m_nTipo;
+    const type = props.package.m_sEmbalaje;
     const value = props.package.m_cValorDeclarado;
     const description = props.package.m_sDescripcion;
     const observation = props.package.m_sObservaciones;
     const quantity = props.package.ctd;
 
     return(
-        <div>
-            <h4 className={classes.id}>Paquete {packId}</h4>
-            <div>
-                <div className={classes.attribute}>
-                    <h5 className={classes.title}>Peso</h5>
+        <Paper>
+            <Grid container style={{margin:'30px'}}>
+                <Grid item xs={12} >
+                    <span className={classes.label}>Producto:</span><br/><br/>
+                    <span>{producto}</span>
+                </Grid>
+                <Grid item xs={12} style={{height: '20px'}}/>
+                <Grid item xs={2}>
+                    <span className={classes.label}>Peso</span><br/><br/>
                     <span>{weight} kg</span>
-                </div>
-                <div className={classes.attribute}>
-                    <h5 className={classes.title}>Largo</h5>
-                    <span>{large} mts</span>
-                </div >
-                <div className={classes.attribute}>
-                    <h5 className={classes.title}>Ancho</h5>
-                    <span>{width} mts</span>
-                </div>
-                <div className={classes.attribute}>
-                    <h5 className={classes.title}>Alto</h5>
-                    <span>{height} mts</span>
-                </div>
-                <div className={classes.attribute}>
-                    <h5 className={classes.title}>Tipo de Embalaje</h5>
+                </Grid>
+                <Grid item xs={2}>
+                    <span className={classes.label}>Largo</span><br/><br/>
+                    <span>{large} cms</span>
+                </Grid>
+                <Grid item xs={2}>
+                    <span className={classes.label}>Ancho</span><br/><br/>
+                    <span>{width} cms</span>
+                </Grid>
+                <Grid item xs={2}>
+                    <span className={classes.label}>Alto</span><br/><br/>
+                    <span>{height} cms</span>
+                </Grid>
+                <Grid item xs={2}>
+                    <span className={classes.label}>Tipo de Embalaje</span><br/><br/>
                     <span>{type}</span>
-                </div>
-            </div>
-            <div>
-                <div className={classes.attribute}>
-                    <h5 className={classes.title}>Valor</h5>
-                    <span>{value}</span>
-                </div>
-                <div className={classes.attribute}>
-                    <h5 className={classes.title}>Descripción</h5>
+                </Grid>
+
+                <Grid item xs={12} style={{height: '20px'}}/>
+                <Grid item xs={3}>
+                    <span className={classes.label}>Valor</span><br/><br/>
+                    <span>{value ? value : "No declarado"}</span>
+                </Grid>
+                <Grid item xs={3}>
+                    <span className={classes.label}>Descripción</span><br/><br/>
                     <span>{description}</span>
-                </div>
-            </div>
-            <div>
-                <div className={classes.attribute}>
-                    <h5 className={classes.title}>Observación</h5>
-                    <span>{observation}</span>
-                </div>
-                <div className={classes.attribute}>
-                    <h5 className={classes.title}>Ctd.</h5>
+                </Grid>
+                <Grid item xs={3}>
+                    <span className={classes.label}>Observación</span><br/><br/>
+                    <span>{observation ? observation : "No especificado" }</span>
+                </Grid>
+                <Grid item xs={3}>
+                    <span className={classes.label}>Ctd</span><br/><br/>
                     <span>{quantity}</span>
-                </div>
-            </div>
-            <div className={classes.divider}></div>
-        </div>
+                </Grid>
+            </Grid>
+            <Grid item xs={12} className={classes.divider}/>
+        </Paper>
     )
 }
