@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Error al cargar los conceptos">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/DetalleParadas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/DetalleParadas.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/TourUltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/TourUltimaMilla.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/AgregarPaqueteUltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/AgregarPaqueteUltimaMilla.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Cronograma.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/Paradas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/Paradas.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,14 +140,7 @@
       <workItem from="1630389865958" duration="16705000" />
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
-      <workItem from="1631224936256" duration="322000" />
-    </task>
-    <task id="LOCAL-00015" summary="Se arreglo relleno de datos al modificar sucursal">
-      <created>1627515450904</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1627515450904</updated>
+      <workItem from="1631224936256" duration="2476000" />
     </task>
     <task id="LOCAL-00016" summary="Ajustes al agregar usuarios">
       <created>1627521214583</created>
@@ -485,7 +478,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631212655586</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="Se hicieron ajustes en el listado de paquetes">
+      <created>1631225376286</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1631225376286</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -562,7 +562,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Correccion al agregar embarque" />
     <MESSAGE value="Se corrigio espacio al presionar consultar o editar en guias" />
     <MESSAGE value="Se corrigio conceptos" />
     <MESSAGE value="Se calculo de iva conceptos" />
@@ -587,57 +586,8 @@
     <MESSAGE value="Se bajo la taza de refrescamiento" />
     <MESSAGE value="Espacio en el detalle de paradas" />
     <MESSAGE value="Error al cargar los conceptos" />
-    <option name="LAST_COMMIT_MESSAGE" value="Error al cargar los conceptos" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="2270" y="-221" key="CommitChangelistDialog2" timestamp="1631212655175">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2270" y="-221" key="CommitChangelistDialog2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631212655175" />
-    <state x="467" y="81" key="CommitChangelistDialog2/0.0.1440.900@0.0.1440.900" timestamp="1631164905648" />
-    <state x="2144" y="-194" key="DiffContextDialog" timestamp="1631085241937">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2144" y="-194" key="DiffContextDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631085241937" />
-    <state width="2539" height="150" key="GridCell.Tab.0.bottom" timestamp="1631224846457">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="150" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631224846457" />
-    <state width="2539" height="150" key="GridCell.Tab.0.center" timestamp="1631224846456">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="150" key="GridCell.Tab.0.center/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631224846456" />
-    <state width="2539" height="150" key="GridCell.Tab.0.left" timestamp="1631224846455">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="150" key="GridCell.Tab.0.left/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631224846455" />
-    <state width="2539" height="150" key="GridCell.Tab.0.right" timestamp="1631224846457">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state width="2539" height="150" key="GridCell.Tab.0.right/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631224846457" />
-    <state x="559" y="275" key="MultipleFileMergeDialog" timestamp="1631164062975">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="2433" y="-100" key="MultipleFileMergeDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631085215767" />
-    <state x="559" y="275" key="MultipleFileMergeDialog/0.0.1440.900@0.0.1440.900" timestamp="1631164062975" />
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2" timestamp="1631212667490">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2320" y="-83" key="Vcs.Push.Dialog.v2/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631212667490" />
-    <state x="495" y="286" key="Vcs.Push.Dialog.v2/0.0.1440.900@0.0.1440.900" timestamp="1631164912509" />
-    <state x="2375" y="-201" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1631119750488">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2375" y="-201" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631119750488" />
-    <state x="2386" y="-63" width="667" height="486" key="find.popup" timestamp="1631119961097">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2386" y="-63" width="667" height="486" key="find.popup/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631119961097" />
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog" timestamp="1631212660938">
-      <screen x="1440" y="-540" width="2560" height="1440" />
-    </state>
-    <state x="2368" y="-25" key="git4idea.merge.GitPullDialog/0.0.1440.900/1440.-540.2560.1440@1440.-540.2560.1440" timestamp="1631212660938" />
-    <state x="522" y="322" key="git4idea.merge.GitPullDialog/0.0.1440.900@0.0.1440.900" timestamp="1631164059238" />
+    <MESSAGE value="Se hicieron ajustes en el listado de paquetes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se hicieron ajustes en el listado de paquetes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
