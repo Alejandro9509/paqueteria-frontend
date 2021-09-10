@@ -123,7 +123,7 @@ class UltimaMilla extends Component {
         obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
             if (data.m_nIdUltimaMilla !== 0) {
                 if (actualizar) {
-                    this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 100000);
+                    this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 30000);
                 }
                 if (!this.state.ultimaMilla) {
                     data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
