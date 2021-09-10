@@ -188,7 +188,7 @@ class FiltersMap extends Component {
         this.setState({zonasSeleccionada: zona})
         if (zona.length !== 0) {
             this.getAllGuias()
-            this.props.getFechaUltimaMilla(this.state.fecha, this.state.sucursalSeleccionada.m_nIdSucursal, zona.map(z => z.m_nIdZona))
+            this.props.getFechaUltimaMilla(this.state.fecha, this.state.sucursalSeleccionada.m_nIdSucursal, zona.map(z => z.m_nIdZona), parseInt(this.state.tipoBusqueda))
 
         }
 
