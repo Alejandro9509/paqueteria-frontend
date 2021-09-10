@@ -1145,7 +1145,7 @@ function Embarque(props) {
 
     function handleShowAgregar() {
         let today = new Date();
-        // limpiarCamposAgregar()
+        limpiarCamposAgregar()
         getDataParaEditar()
         setState(state => {
             return {

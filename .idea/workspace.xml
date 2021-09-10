@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Resulto bug anterior">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Ajustes en embarque">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,13 +139,6 @@
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
       <workItem from="1631159140096" duration="18684000" />
-    </task>
-    <task id="LOCAL-00023" summary="Se recuperan las opciones de impuestos de los servicios en sucursales">
-      <created>1627629213333</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1627629213333</updated>
     </task>
     <task id="LOCAL-00024" summary="Ajustes para registrar embarque cuando es entrega en domicilio">
       <created>1627636188110</created>
@@ -484,7 +476,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631210673200</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="Ajustes en embarque">
+      <created>1631252533998</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1631252533998</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -549,7 +548,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se corrigio boton de agregar guias" />
     <MESSAGE value="Error al agregar guia" />
     <MESSAGE value="error al editar informe" />
     <MESSAGE value="Corrección en última milla" />
@@ -574,7 +572,8 @@
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Zonas, origen, destino" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos" />
-    <option name="LAST_COMMIT_MESSAGE" value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos" />
+    <MESSAGE value="Ajustes en embarque" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajustes en embarque" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
