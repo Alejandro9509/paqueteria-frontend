@@ -4,7 +4,7 @@ import Cabecera from "../Components/Template/Cabecera";
 
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import {Tab, Tabs, Box, InputAdornment} from '@material-ui/core';
+import {Tab, Tabs, Box, InputAdornment, Button, Grid} from '@material-ui/core';
 import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
 import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
@@ -37,7 +37,7 @@ import {
     modificarGuia,
     agregarGuia,
     imprimirGuia,
-    obtenerGuiaReporte
+    obtenerGuiaReporte, entregaOcurreGuia
 } from "../Util/Contexts/GuiaContext";
 import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
 import { obtenerTipoCambio } from "../Util/Contexts/TipoCambioContext";
@@ -208,6 +208,7 @@ function Guia(props) {
         modificadoPor: localStorage.getItem("UsuarioId"),
         creadoEl: "",
         modificadoEl: "",
+        openDialog: false
 
     })
 
@@ -229,6 +230,8 @@ function Guia(props) {
 
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
     const [totalPaquetes, setTotalPaquetes] = useState(0)
+    const [showDialogOcurre, setShowDialogOcurre] = useState(false)
+    const [dataOcurre, setDataOcurre] = useState()
 
     const handleAceptar = (e) => {
         e.preventDefault()
@@ -280,6 +283,29 @@ function Guia(props) {
             showSuccess('Guia modificada')
             limpiarCamposAgregar()
         }
+    }
+
+    const handleEntregaOcurre = (e) => {
+        e.preventDefault()
+        let params = {
+            nIdGuia: dataOcurre.idGuia,
+            m_nIdUsuarioEntregaOcurre: localStorage.getItem("Usuario"),
+            m_sFechaOcurre: dataOcurre.fechaOcurre,
+            m_sHoraOcurre: dataOcurre.horaOcurre,
+            m_sComentariosOcurre: dataOcurre.comentariosOcurre,
+            m_sMontoRecibidoOcurre: dataOcurre.importeOcurre
+
+        }
+        console.log(params)
+        entregaOcurreGuia(dataOcurre.idGuia, params).then(respuesta => {
+            showSuccess(respuesta.data)
+            getAllData()
+            setDataOcurre({})
+            setState({...state, openDialog: false})
+        }).catch(err => {
+            console.log(err)
+            showSuccess(err)
+        });
     }
 
     function getUltimoFolioGuia() {
@@ -795,7 +821,11 @@ function Guia(props) {
                                                                         style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
+                        <Tooltip title="Ocurre">
+                            <a  className="btn btn-default btn-xs"
+                                onClick={(event) => mostrarDialogoOcurre(event, row.row)}><i className="zmdi zmdi-sign-in" style={{color: "#F9A03E"}}/></a>
 
+                        </Tooltip>
                         <Tooltip title="Imprimir">
                             <a  className="btn btn-default btn-xs"
                                onClick={() => printTicket(row.row)}><i className="zmdi zmdi-print"
@@ -2033,13 +2063,61 @@ function Guia(props) {
         setState({...state, tab: newValue});
     }
 
+    const mostrarDialogoOcurre = (event, guia) => {
+        event.stopPropagation();
+        if (guia.m_nIdEstatusGuia == 7){
+            if (!guia.m_nClienteBloqueado){
+                let importeTotal = 0
+                guia.m_arClsGuiaConceptos.forEach((c) => importeTotal += parseFloat(c.m_cTotal))
+                setDataOcurre({
+                    idGuia : guia.m_nIdGuia,
+                    tipoCobroOcurre: guia.m_nIdTIpoCobro,
+                    importeTotal: importeTotal
+                })
+                setState({
+                    ...state,
+                    openDialog: true
+                })
+                setShowDialogOcurre(true)
+            }else{
+                showSuccess("El cliente responsable de pago está bloqueado. No se puede realizar entrega.")
+            }
+        }else{
+            showSuccess("La guia debe tener estado completado para poder entregar.")
+        }
+
+    }
+
+    const handleFechaOcurre = (event) => {
+        setDataOcurre({
+            ...dataOcurre,
+            fechaOcurre: event.target.value,
+        })
+    }
+
+    const handleHoraOcurre = (event) => {
+        setDataOcurre({
+            ...dataOcurre,
+            horaOcurre: event.target.value,
+        })
+    }
+
+    const handleChangeDataOcurre = (event) => {
+        setDataOcurre({
+            ...dataOcurre,
+            [event.target.name]: event.target.value,
+        })
+    }
+
     return (
         <div>
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
                 fullWidth maxWidth="md"
+                aria-labelledby="form-dialog-title"
             >
+                {showDialogOcurre && <p style={{marginTop: '30px', marginLeft: '30px'}}>Ocurre</p>}
                 <DialogContent>
                     {state.tipoModal === 6 &&
                     <div className="row" style={{backgroundColor: '#FFFFFF'}}>
@@ -2086,6 +2164,116 @@ function Guia(props) {
                         </DialogActions>
                     </div>
                     }
+                    {showDialogOcurre &&
+                        <form onSubmit={(e) => handleEntregaOcurre(e)}>
+                            <Grid container spacing={3}>
+                                <Grid item xs={6}>
+                                    <TextField
+                                        variant="outlined"
+                                        id="fechaOcurre"
+                                        name="fechaOcurre"
+                                        label="Fecha"
+                                        type="date"
+                                        onChange={handleFechaOcurre}
+                                        value={dataOcurre.fechaOcurre}
+                                        className={"form-control"}
+                                        InputLabelProps={{shrink: true,}}
+                                        required={showDialogOcurre}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <TextField
+                                        variant="outlined"
+                                        id="horaOcurre"
+                                        name="horaOcurre"
+                                        label="Hora"
+                                        type="time"
+                                        value={dataOcurre.horaOcurre}
+                                        onChange={handleHoraOcurre}
+                                        className={"form-control"}
+                                        InputLabelProps={{shrink: true,}}
+                                        inputProps={{step: 300,}}
+                                        required={showDialogOcurre}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                        <InputLabel id="idTipoCobroLabel">Tipo Cobro</InputLabel>
+                                        <Select
+                                            labelId={"idTipoCobroLabel"}
+                                            label={"Tipo Cobro"}
+                                            className="form-control"
+                                            value={dataOcurre.tipoCobroOcurre}
+                                            disabled={true}
+                                            onChange={(event) => {
+                                                event.preventDefault();
+                                                setState({
+                                                    ...state,
+                                                    tipoCobro: event.target.value,
+                                                });
+                                            }}
+                                            id="tipoCobro"
+                                            InputProps={{
+                                                id: "tipoCobroOcurre",
+                                                name: "tipoCobroOcurre"
+                                            }}
+                                        >
+                                            {dataTipoCobro.map((tipoCobro) => (
+                                                <option
+                                                    key={tipoCobro.m_nIdTipoCobro}
+                                                    value={tipoCobro.m_nIdTipoCobro}
+                                                >
+                                                    {tipoCobro.m_sDescripcion}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <TextField variant="outlined" margin="dense" label="Comentarios"
+                                               onChange={(event) => handleChangeDataOcurre(event)}
+                                               className="form-control"
+                                               type="text"
+                                               value={dataOcurre.comentariosOcurre}
+                                               disabled={state.agregar === "Consultar"}
+                                               placeholder="Comentarios"
+                                               name="comentariosOcurre"
+                                    />
+                                </Grid>
+                                {dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 &&
+                                    <Grid item xs={6}>
+                                    <TextField variant="outlined" margin="dense" label="Importe recibido"
+                                               onChange={(event) => handleChangeDataOcurre(event)}
+                                               className="form-control"
+                                               type="number"
+                                               value={dataOcurre.importeOcurre}
+                                               placeholder="Importe"
+                                               name="importeOcurre"
+                                               required={showDialogOcurre && (dataOcurre.tipoCobroOcurre == 3 || dataOcurre.tipoCobroOcurre == 5)}
+                                    />
+                                    <p style={{marginLeft: '10px', marginTop: '5px'}}> {`Cambio: $${dataOcurre.importeOcurre ? parseFloat(dataOcurre.importeTotal) - parseFloat(dataOcurre.importeOcurre) : 0.0}`}</p>
+                                </Grid>
+                                }
+                                {dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 &&
+                                    <Grid item xs={6}>
+                                        <p> {`Importe a pagar: $${parseFloat(dataOcurre.importeTotal)}`}</p>
+                                    </Grid>
+                                }
+
+                            </Grid>
+                            <DialogActions>
+                                <Button onClick={() => {
+                                    setState({...state, openDialog: false})
+                                    setShowDialogOcurre(false)
+                                }} color="primary">
+                                    Cancelar
+                                </Button>
+                                <Button type={"submit"} color="primary">
+                                    Aceptar
+                                </Button>
+                            </DialogActions>
+                        </form>
+                    }
                 </DialogContent>
             </Dialog>
 
@@ -2122,7 +2310,7 @@ function Guia(props) {
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
-                        <li className="hide">
+                        <li>
                             <a onClick={(event) => {
                                 event.stopPropagation();
                                 setState({

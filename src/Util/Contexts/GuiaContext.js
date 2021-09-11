@@ -15,6 +15,15 @@ function modificarGuia(id, params) {
     return result
 }
 
+function entregaOcurreGuia(id, params) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/EntregaOcurre/` + id;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+    );
+    return result
+}
+
 function agregarGuia(params) {
     const url = `${process.env.REACT_APP_API_URL}/Guia/Agregar`;
     let result;
@@ -136,4 +145,4 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
     return result
 }
 
-export { modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId, obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia, obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte }
+export { entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId, obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia, obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte }
