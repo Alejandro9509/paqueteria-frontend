@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Rediseño del tracking">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se agrego mas tiempo de refrescamiento">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/GuiaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/GuiaContext.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Viajes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +32,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="bugfix/productos" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -140,14 +140,6 @@
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
       <workItem from="1631159140096" duration="18684000" />
-      <workItem from="1631376757440" duration="11079000" />
-    </task>
-    <task id="LOCAL-00027" summary="Se corigio el envio de parametros para el modificar de Zonas">
-      <created>1627980559355</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1627980559355</updated>
     </task>
     <task id="LOCAL-00028" summary="Se corigio la consulta de forma que esta no permita la modificacion de datos en los siguientes catalogos: Tarifas, Remitente/destinatario y Rutas">
       <created>1628110663190</created>
@@ -457,35 +449,42 @@
       <option name="project" value="LOCAL" />
       <updated>1631210673200</updated>
     </task>
-    <task id="LOCAL-00072" summary="Ajustes en embarque">
-      <created>1631252533998</created>
+    <task id="LOCAL-00072" summary="Error al consultar el paquete">
+      <created>1631254419000</created>
       <option name="number" value="00072" />
       <option name="presentableId" value="LOCAL-00072" />
       <option name="project" value="LOCAL" />
-      <updated>1631252533998</updated>
+      <updated>1631254419000</updated>
     </task>
-    <task id="LOCAL-00073" summary="Ajustes en embarque">
-      <created>1631292296188</created>
+    <task id="LOCAL-00073" summary="Errores al cargar ultima milla">
+      <created>1631293132143</created>
       <option name="number" value="00073" />
       <option name="presentableId" value="LOCAL-00073" />
       <option name="project" value="LOCAL" />
-      <updated>1631292296189</updated>
+      <updated>1631293132144</updated>
     </task>
-    <task id="LOCAL-00074" summary="Al modificar un convenio. Cuando se modifican conceptos de facturacion y se da click en gardar tarifa, los productos se borran">
-      <created>1631294232728</created>
+    <task id="LOCAL-00074" summary="Error al guardar UltimaMillaContext.js">
+      <created>1631297876740</created>
       <option name="number" value="00074" />
       <option name="presentableId" value="LOCAL-00074" />
       <option name="project" value="LOCAL" />
-      <updated>1631294232728</updated>
+      <updated>1631297876740</updated>
     </task>
-    <task id="LOCAL-00075" summary="Rediseño del tracking">
-      <created>1631305920472</created>
+    <task id="LOCAL-00075" summary="Error al guardar UltimaMillaContext.js">
+      <created>1631298132308</created>
       <option name="number" value="00075" />
       <option name="presentableId" value="LOCAL-00075" />
       <option name="project" value="LOCAL" />
-      <updated>1631305920472</updated>
+      <updated>1631298132309</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="Se agrego mas tiempo de refrescamiento">
+      <created>1631298363445</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1631298363445</updated>
+    </task>
+    <option name="localTasksCounter" value="77" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -550,7 +549,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Corrección en última milla" />
     <MESSAGE value="Se agrego icono y se mejoro el scroll" />
     <MESSAGE value="Se realizaron ajustes a la ultima milla" />
     <MESSAGE value="Se removieron campos no requeridos en Recoleccion.js y Embarque.js" />
@@ -572,10 +570,11 @@
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Zonas, origen, destino" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos" />
-    <MESSAGE value="Ajustes en embarque" />
-    <MESSAGE value="Al modificar un convenio. Cuando se modifican conceptos de facturacion y se da click en gardar tarifa, los productos se borran" />
-    <MESSAGE value="Rediseño del tracking" />
-    <option name="LAST_COMMIT_MESSAGE" value="Rediseño del tracking" />
+    <MESSAGE value="Error al consultar el paquete" />
+    <MESSAGE value="Errores al cargar ultima milla" />
+    <MESSAGE value="Error al guardar UltimaMillaContext.js" />
+    <MESSAGE value="Se agrego mas tiempo de refrescamiento" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se agrego mas tiempo de refrescamiento" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

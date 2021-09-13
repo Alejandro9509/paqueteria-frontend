@@ -326,6 +326,10 @@ function Viajes() {
             headerName: "Viaje",
             field: "m_sFolioViaje",
             width: 150,
+        },{
+            headerName: "Sucursal receptora",
+            field: "m_sSucursalReceptora",
+            width: 180,
         }, {
             headerName: "Sucursal",
             field: "m_sSucursal",
