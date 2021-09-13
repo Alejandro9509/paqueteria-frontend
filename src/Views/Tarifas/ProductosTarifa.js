@@ -106,7 +106,7 @@ export default function ProductosTarifa({productos = [], productosSeleccionados 
                         onClick={handleToggleAll(items)}
                         checked={numberOfChecked(items) === items.length && items.length !== 0}
                         indeterminate={numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0}
-                        disabled={items.length === 0}
+                        disabled={items.length === 0 || consult}
                         inputProps={{ 'aria-label': 'all items selected' }}
                     />
                 }
@@ -119,12 +119,13 @@ export default function ProductosTarifa({productos = [], productosSeleccionados 
                     const labelId = `transfer-list-all-item-${value}-label`;
 
                     return (
-                        <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)} disabled={consult===true}>
+                        <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)} disabled={consult}>
                             <ListItemIcon>
                                 <Checkbox
                                     checked={checked.indexOf(value) !== -1}
                                     tabIndex={-1}
                                     disableRipple
+                                    disabled={consult}
                                     inputProps={{ 'aria-labelledby': labelId }}
                                 />
                             </ListItemIcon>
