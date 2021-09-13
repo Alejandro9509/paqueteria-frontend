@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
@@ -41,11 +41,12 @@ function union(a, b) {
     return [...a, ...not(b, a)];
 }
 
-export default function ProductosTarifa({productos = [], productosSeleccionados = [], actualizarProductos}){
+export default function ProductosTarifa({productos = [], productosSeleccionados = [], actualizarProductos}, consult = false){
     const classes = useStyles();
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState(productos);
     const [right, setRight] = React.useState(productosSeleccionados);
+    // const [localConsult, setConsult] = useState(consult)
 
     const leftChecked = intersection(checked, left);
     const rightChecked = intersection(checked, right);
@@ -118,7 +119,7 @@ export default function ProductosTarifa({productos = [], productosSeleccionados 
                     const labelId = `transfer-list-all-item-${value}-label`;
 
                     return (
-                        <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)}>
+                        <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)} disabled={consult===true}>
                             <ListItemIcon>
                                 <Checkbox
                                     checked={checked.indexOf(value) !== -1}

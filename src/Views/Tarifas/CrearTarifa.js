@@ -805,6 +805,7 @@ class CrearTarifa extends Component {
                                                     productos={dataProductosTemp}
                                                     productosSeleccionados={dataProductosSeleccionados}
                                                     actualizarProductos={this.actualizarProductos}
+                                                    consult={consult}
                                                 />
 
                                             </TabPanel>
