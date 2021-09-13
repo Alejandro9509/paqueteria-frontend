@@ -460,25 +460,26 @@ function Viajes() {
         {
             headerName: "Folio Informe",
             field: "m_clsInforme",
-            width: 200,
+            width: 130,
             valueFormatter: row => {
                 return (row.value.m_sFolioInforme)
             }
         },
         {
-            headerName: "Origen",
-            field: "m_sOrigen",
-            width: 200,
+            headerName: "Origen - Destino",
+            field: "origenDestino",
+            width: 250,
         },
         {
             headerName: "Salida",
             field: "m_dFechaSalida",
+            width: 130,
             valueFormatter: row => row.value.startsWith("0000") ? "Sin definir" : row.value
         },
         {
             headerName: "Llegada",
             field: "m_dFechaLlegada",
-            width: 100,
+            width: 130,
             valueFormatter: row => row.value.startsWith("0000") ? "Sin definir" : row.value
         },
         {
@@ -494,11 +495,6 @@ function Viajes() {
                     </Link>
                 )
             }
-        },
-        {
-            headerName: "Destino",
-            field: "m_sDestino",
-            width: 200,
         },
         {
             headerName: "Camión",
@@ -525,6 +521,7 @@ function Viajes() {
             var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdOrigen")
             arrayInformes.forEach(a => {
                 a["informes"] = respuesta.data.filter(r => r.m_nIdRuta === a.m_nIdRuta)
+                a.origenDestino = `${a.m_sOrigen} - ${a.m_sDestino}`
             })
             setParadasListado(arrayInformes);
         });
