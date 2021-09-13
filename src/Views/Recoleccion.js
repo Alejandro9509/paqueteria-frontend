@@ -1463,7 +1463,7 @@ function Recoleccion() {
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
                                    title: 'Confirmar Eliminar',
-                                   message: 'Está seguro de eliminar Embarque?',
+                                   message: '¿Está seguro de eliminar Embarque?',
                                    buttons: [
                                        {
                                            label: 'Si',
@@ -1656,7 +1656,8 @@ function Recoleccion() {
     ]);
 
     function getAllData() {
-        obtenerRecoleccion().then((respuesta) => {
+        const {fechaInicial, fechaFinal, sucursalListado, estatusListado, folioRecoleccion} = state
+        obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioRecoleccion).then((respuesta) => {
             console.log('Recolecciones listado', respuesta.data);
             setData(respuesta.data);
         });
@@ -3061,7 +3062,7 @@ function Recoleccion() {
                         </li>
 
                         <li>
-                            <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}
+                            <a onClick={handleShowCancelar}
                                className={state.idRecoleccion === 0 ? classes.disabled : ""}>
                                 <i className="zmdi zmdi-print"/> Cancelar
                             </a>
