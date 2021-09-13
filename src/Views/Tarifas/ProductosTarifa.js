@@ -41,7 +41,7 @@ function union(a, b) {
     return [...a, ...not(b, a)];
 }
 
-export default function ProductosTarifa({productos = [], productosSeleccionados = [], actualizarProductos}, consult = false){
+export default function ProductosTarifa({productos = [], productosSeleccionados = [], actualizarProductos, consult}){
     const classes = useStyles();
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState(productos);
@@ -117,7 +117,7 @@ export default function ProductosTarifa({productos = [], productosSeleccionados 
             <List className={classes.list} dense component="div" role="list">
                 {items.map((value) => {
                     const labelId = `transfer-list-all-item-${value}-label`;
-
+                    console.log(consult)
                     return (
                         <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)} disabled={consult}>
                             <ListItemIcon>

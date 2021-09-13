@@ -376,9 +376,6 @@ class CrearTarifa extends Component {
             dataProductosTemp,dataProductosSeleccionados} = this.state
         let { consult, edit } = this.props
 
-        if (!consult && !edit){
-            consult = disabled
-        }
         return (
             <form className="j-forms" onSubmit={this.onSubmit}>
                 <div className="main-container" style={{ marginLeft: "0px", padding: "0px" }}>
