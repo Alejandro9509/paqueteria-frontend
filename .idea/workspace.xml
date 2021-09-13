@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="En recoleccion los listados se piden al servidor cuando se necesitan">
       <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
     </list>
@@ -141,13 +141,6 @@
       <workItem from="1631159140096" duration="18684000" />
       <workItem from="1631376757440" duration="11079000" />
       <workItem from="1631554999068" duration="606000" />
-    </task>
-    <task id="LOCAL-00028" summary="Se corigio la consulta de forma que esta no permita la modificacion de datos en los siguientes catalogos: Tarifas, Remitente/destinatario y Rutas">
-      <created>1628110663190</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1628110663190</updated>
     </task>
     <task id="LOCAL-00029" summary="Se elimino el codigo que no se estaba usando, se corrigieron los consultar y como se interactua con la informacion, se arreglo el problema de que consultar modificaba">
       <created>1628241188508</created>
@@ -485,7 +478,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631554635388</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="En recoleccion los listados se piden al servidor cuando se necesitan">
+      <created>1631572654000</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1631572654000</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -550,7 +550,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se agrego icono y se mejoro el scroll" />
     <MESSAGE value="Se realizaron ajustes a la ultima milla" />
     <MESSAGE value="Se removieron campos no requeridos en Recoleccion.js y Embarque.js" />
     <MESSAGE value="Corrección de error al generar embarque" />
@@ -575,7 +574,8 @@
     <MESSAGE value="Al modificar un convenio. Cuando se modifican conceptos de facturacion y se da click en gardar tarifa, los productos se borran" />
     <MESSAGE value="Rediseño del tracking" />
     <MESSAGE value="Consultar productos falla" />
-    <option name="LAST_COMMIT_MESSAGE" value="Consultar productos falla" />
+    <MESSAGE value="En recoleccion los listados se piden al servidor cuando se necesitan" />
+    <option name="LAST_COMMIT_MESSAGE" value="En recoleccion los listados se piden al servidor cuando se necesitan" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

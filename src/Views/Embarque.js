@@ -1395,12 +1395,11 @@ function Embarque(props) {
     //Funcion para mostrar datos de embarque para consultar o modificar
     const setDataParaConsultarModificar = (respuesta, duplicar) => {
 
-        getAllTipoMoneda()
-        getAllTipoCobro()
-        getTipoCambio()
+        getDataParaEditar()
         getAllZonas()
         getAllEmbalajes()
         getAllCiudades()
+
 
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
             setState(state => {
@@ -1413,7 +1412,7 @@ function Embarque(props) {
                 setState(state => {
                     return {
                         ...state,
-                        codigoPostalDestinatario: cp.data
+                        codigoPostalRemitente: cp.data
                     }
                 })
         })
@@ -1429,7 +1428,7 @@ function Embarque(props) {
                 setState(state => {
                     return {
                         ...state,
-                        codigoPostalRemitente: cp.data
+                        codigoPostalDestinatario: cp.data
                     }
                 })
             })
@@ -1879,13 +1878,7 @@ function Embarque(props) {
     const getDataParaEditar = () => {
         getAllTipoCobro();
         getAllTipoMoneda();
-        // getAllCiudades();
-        // getAllRemitentesDestinatarios();
-        // getAllEmbalajes();
         getTipoCambio()
-        // getAllClientes()
-        // getAllProductos()
-        // getAllZonas();
     }
 
     async function getAllEmbarque() {
