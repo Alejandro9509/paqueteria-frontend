@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
@@ -41,11 +41,12 @@ function union(a, b) {
     return [...a, ...not(b, a)];
 }
 
-export default function ProductosTarifa({productos = [], productosSeleccionados = [], actualizarProductos}){
+export default function ProductosTarifa({productos = [], productosSeleccionados = [], actualizarProductos, consult}){
     const classes = useStyles();
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState(productos);
     const [right, setRight] = React.useState(productosSeleccionados);
+    // const [localConsult, setConsult] = useState(consult)
 
     const leftChecked = intersection(checked, left);
     const rightChecked = intersection(checked, right);
@@ -105,7 +106,7 @@ export default function ProductosTarifa({productos = [], productosSeleccionados 
                         onClick={handleToggleAll(items)}
                         checked={numberOfChecked(items) === items.length && items.length !== 0}
                         indeterminate={numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0}
-                        disabled={items.length === 0}
+                        disabled={items.length === 0 || consult}
                         inputProps={{ 'aria-label': 'all items selected' }}
                     />
                 }
@@ -116,14 +117,15 @@ export default function ProductosTarifa({productos = [], productosSeleccionados 
             <List className={classes.list} dense component="div" role="list">
                 {items.map((value) => {
                     const labelId = `transfer-list-all-item-${value}-label`;
-
+                    console.log(consult)
                     return (
-                        <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)}>
+                        <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)} disabled={consult}>
                             <ListItemIcon>
                                 <Checkbox
                                     checked={checked.indexOf(value) !== -1}
                                     tabIndex={-1}
                                     disableRipple
+                                    disabled={consult}
                                     inputProps={{ 'aria-labelledby': labelId }}
                                 />
                             </ListItemIcon>
