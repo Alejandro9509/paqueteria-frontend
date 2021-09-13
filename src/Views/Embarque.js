@@ -933,14 +933,6 @@ function Embarque(props) {
 
     }, [dataRemitenteDestinatario, dataCiudad, dataClientes]);
 
-    useEffect((value) => {
-        /*if (dataTipoCobro.length > 0 && dataTipoMoneda.length > 0 && dataTipoCambio.length > 0){
-            if (props.location.idRecoleccion === undefined){
-                limpiarCamposAgregar()
-            }
-        }*/
-    }, [dataTipoCobro, dataTipoMoneda, dataTipoCambio]);
-
     //Se checa si se entró a embarque por una recoleccion
     useEffect(async (value) => {
         if (props.location.idRecoleccion === undefined) {
@@ -1876,24 +1868,6 @@ function Embarque(props) {
             ...state,
             zonaEntrega: event.target.value,
         });
-    }
-
-    async function getAllData() {
-
-        getAllTipoCobro();
-        getAllTipoMoneda();
-        getAllCiudades();
-        getAllOperadores();
-        getAllRemitentesDestinatarios();
-        getAllEmbalajes();
-        getTipoCambio()
-        getAllClientes()
-        getAllProductos()
-        getAllZonas();
-        // getAllCodigosPostales();
-        //getAllTipoUnidad();
-        // getUltimoFolioEmbarque();
-        // getFormatosImpresion()
     }
 
     const getDataParaListado = () => {

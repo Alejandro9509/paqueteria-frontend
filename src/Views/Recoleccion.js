@@ -378,50 +378,6 @@ function Recoleccion() {
         );
     }
 
-    //Se ejecuta cada que el check de mismo paquete se clickea
-    useEffect(value => {
-        if (state.mismoPaquete) {
-            var array = state.paquetes
-            for (var i in array) {
-                array[i] = state.paquetes[0];
-            }
-            setState({...state, paquetes: array})
-        }
-    }, [state.mismoPaquete])
-
-    //Se ejecuta cada que el check de mismo sobre se clickea
-    useEffect(value => {
-        if (state.mismoSobre) {
-            var array = state.sobres
-            for (var i in array) {
-                array[i] = state.sobres[0];
-            }
-            setState({...state, sobres: array})
-        }
-    }, [state.mismoSobre])
-
-    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para recoleccion
-    useEffect(value => {
-        if (state.ciudadRecoleccion != "") {
-            obtenerCodigosPostalesPorCiudad(state.ciudadRecoleccion).then((respuesta) => {
-                if (respuesta.data.length > 0) {
-                    setDataCodigosPostalesRecoleccion(respuesta.data);
-                }
-            });
-        }
-    }, [state.ciudadRecoleccion])
-
-    //Se iba a usar para obtener los cps que correspondieran a la ciudad que se puso para entrega
-    useEffect(value => {
-        if (state.ciudadEntrega != "") {
-            obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
-                if (respuesta.data.length > 0) {
-                    setDataCodigosPostalesEntrega(respuesta.data);
-                }
-            });
-        }
-    }, [state.ciudadEntrega])
-
     useEffect(value => {
         if (state.tipoUnidad != 0 && state.tipoUnidad != '') {
             // console.log('tipo Unidad select: ', state.tipoUnidad)
@@ -438,27 +394,24 @@ function Recoleccion() {
             window.location.replace("login");
             return;
         }
+        getDataParaListado()
+
+    }, []);
+
+    const getDataParaListado = () => {
         getAllData();
         getAllSucursales();
         getAllEstatusRecoleccion();
+    }
+
+    const getDataParaEditar = () => {
+        getUltimoFolioRecoleccion();
         getAllTipoCobro();
         getAllTipoMoneda();
         getAllCiudades();
-        // getAllCodigosPostales();
-        //getAllCodigosPostalesRem(state.ciudadRemitente);
-        //getAllCodigosPostalesDes(state.ciudadDestinatario);
-
-        getAllOperadores();
-        getAllTipoUnidad();
-        getAllRemitentesDestinatarios();
-        getAllEmbalajes();
-        getAllZonas();
         getTipoCambio()
-        getFormatosImpresion()
-        getUltimoFolioRecoleccion();
-        getAllClientes()
-        getAllProductos()
-    }, []);
+
+    }
 
     //setea todos los datos del remitente seleccionado
     function handleSelectRemitente(newValue) {
@@ -487,6 +440,13 @@ function Recoleccion() {
 
         console.log('Remitente')
         console.log(newValue)
+    }
+
+    const handleClickRemitenteDestinatario = (event) => {
+        event.preventDefault()
+        if (dataRemitenteDestinatario.length === 0){
+            getAllRemitentesDestinatarios()
+        }
     }
 
     //setea todos los datos del destinatario seleccionado
@@ -856,6 +816,7 @@ function Recoleccion() {
     }
 
     function handleShowModificar(id) {
+        getDataParaEditar()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -874,6 +835,7 @@ function Recoleccion() {
     }
 
     function handleShowConsultar(id) {
+        getDataParaEditar()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1081,6 +1043,7 @@ function Recoleccion() {
 
     function handleShowAgregar(event) {
         event.stopPropagation()
+        getDataParaEditar()
         limpiarInputsAgregar()
         setState(state => {
             return {
@@ -1158,6 +1121,13 @@ function Recoleccion() {
             ...state,
             clientePaga: newValue
         })
+    }
+
+    const handleClickResponsablePago = (event) => {
+        event.preventDefault();
+        if (dataClientes.length === 0){
+            getAllClientes()
+        }
     }
 
     //Limpia todos los inputs
@@ -1318,6 +1288,15 @@ function Recoleccion() {
             paquetes: paquetes,
         });
     };
+
+    const handleClickProducto = () => {
+        if (dataProductos.length === 0 ){
+            getAllProductos()
+        }
+        if (dataEmbalaje.length === 0 ) {
+            getAllEmbalajes()
+        }
+    }
 
     const handleChangeSobre = (event, index) => {
         var {sobres} = state;
@@ -2449,6 +2428,7 @@ function Recoleccion() {
                                     label="Producto"
                                     margin="dense"
                                     required
+                                    onClick={handleClickProducto}
                                     {...params}
                                 />
                             }
@@ -2675,6 +2655,14 @@ function Recoleccion() {
         })
     }
 
+    const handleClickZona = (event) => {
+        event.preventDefault()
+        if (dataZona.length === 0){
+            getAllZonas()
+        }
+
+    }
+
     const handleZonaDestinatarioSelected = (newValue) => {
         setState({
             ...state,
@@ -2701,6 +2689,74 @@ function Recoleccion() {
             ...state,
             horaCitaMaxima: event.target.value,
         })
+    }
+
+    const handleClickCiudad = (event) => {
+        event.preventDefault()
+        if (dataCiudad.length === 0 ){
+            getAllCiudades()
+        }
+    }
+
+    const handleCodigoPostalRemitenteClick = (event) => {
+        event.preventDefault();
+        if (dataCodigosPostalesRemitente.length > 0){
+            if (dataCodigosPostalesRemitente[0].m_nIdCiudad != state.ciudadRemitente){
+                obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
+                    setDataCodigosPostalesRemitente(respuesta.data);
+                });
+            }
+        }else{
+            obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
+                setDataCodigosPostalesRemitente(respuesta.data);
+            });
+        }
+
+    }
+
+    const handleCodigoPostalDestinatarioClick = (event) => {
+        event.preventDefault();
+        if (dataCodigosPostalesDestinatario.length > 0){
+            if (dataCodigosPostalesDestinatario[0].m_nIdCiudad != state.ciudadDestinatario){
+                obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
+                    setDataCodigosPostalesDestinatario(respuesta.data);
+                });
+            }
+        }else{
+            obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
+                setDataCodigosPostalesDestinatario(respuesta.data);
+            });
+        }
+    }
+
+    const handleCodigoPostalEntregaClick = (event) => {
+        event.preventDefault();
+        if (dataCodigosPostalesEntrega.length > 0){
+            if (dataCodigosPostalesEntrega[0].m_nIdCiudad != state.ciudadEntrega){
+                obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
+                    setDataCodigosPostalesEntrega(respuesta.data);
+                });
+            }
+        }else{
+            obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
+                setDataCodigosPostalesEntrega(respuesta.data);
+            });
+        }
+    }
+
+    const handleCodigoPostalRecoleccionClick = (event) => {
+        event.preventDefault();
+        if (dataCodigosPostalesEntrega.length > 0){
+            if (dataCodigosPostalesEntrega[0].m_nIdCiudad != state.ciudadRecoleccion){
+                obtenerCodigosPostalesPorCiudad(state.ciudadRecoleccion).then((respuesta) => {
+                    setDataCodigosPostalesRecoleccion(respuesta.data);
+                });
+            }
+        }else{
+            obtenerCodigosPostalesPorCiudad(state.ciudadRecoleccion).then((respuesta) => {
+                setDataCodigosPostalesRecoleccion(respuesta.data);
+            });
+        }
     }
 
     return (
@@ -3556,6 +3612,9 @@ function Recoleccion() {
                                                                             label="Responsable de pago"
                                                                             margin="dense"
                                                                             required
+                                                                            placeholder={"No. Cliente: Nombre fiscal"}
+                                                                            InputLabelProps={{shrink: true}}
+                                                                            onClick={handleClickResponsablePago}
                                                                             {...params}
                                                                         />
                                                                     }
@@ -3594,10 +3653,12 @@ function Recoleccion() {
                                                                                         <TextField
                                                                                             required
                                                                                             variant="outlined"
-                                                                                            label="Nombre"
+                                                                                            label={"Alias (Nombre)"}
                                                                                             margin="dense"
                                                                                             className="form-control"
-
+                                                                                            onClick={handleClickRemitenteDestinatario}
+                                                                                            placeholder={"Alias (Nombre)"}
+                                                                                            InputLabelProps={{shrink: true}}
                                                                                             {...params}
                                                                                             InputProps={{
                                                                                                 ...params.InputProps,
@@ -3754,6 +3815,7 @@ function Recoleccion() {
                                                                                     value={state.ciudadRemitente}
                                                                                     disabled={state.agregar === "Consultar"}
                                                                                     onChange={handleChangeCiudadRemitente}
+                                                                                    onClick={handleClickCiudad}
                                                                                     //onSelect={ getAllCodigosPostales(state.ciudadRemitente)}
 
                                                                                     id="ciudadRemitente"
@@ -3872,6 +3934,7 @@ function Recoleccion() {
                                                                                             margin="dense"
                                                                                             variant="outlined"
                                                                                             required
+                                                                                            onClick={handleClickCiudad}
                                                                                             {...params}
                                                                                             InputProps={{
                                                                                                 ...params.InputProps,
@@ -3948,6 +4011,7 @@ function Recoleccion() {
                                                                                             label="Zona"
                                                                                             margin="dense"
                                                                                             required
+                                                                                            onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />
                                                                                     }
@@ -4002,15 +4066,11 @@ function Recoleccion() {
                                                                 <div className="col-sm-12 col-md-12    unit">
                                                                     <div className="input">
                                                                         <Autocomplete
-                                                                            onChange={(event, newValue) => {
-                                                                                handleSelectDestinatario(newValue)
-                                                                            }}
+                                                                            onChange={(event, newValue) => {handleSelectDestinatario(newValue)}}
                                                                             value={state.nombreDestinatario}
                                                                             disabled={state.agregar === "Consultar"}
                                                                             freeSolo
-
-
-                                                                            id="nombreRemitente"
+                                                                            id="nombreDestinatario"
                                                                             disableClearable
                                                                             forcePopupIcon={false}
                                                                             options={dataRemitenteDestinatario}
@@ -4024,10 +4084,13 @@ function Recoleccion() {
                                                                             renderInput={(params) => (
                                                                                 <div>
                                                                                     <TextField
-                                                                                        label="Nombre"
+                                                                                        label={"Alias (Nombre)"}
                                                                                         margin="dense"
                                                                                         variant="outlined"
                                                                                         required
+                                                                                        onClick={handleClickRemitenteDestinatario}
+                                                                                        placeholder={"Alias (Nombre)"}
+                                                                                        InputLabelProps={{shrink: true}}
                                                                                         {...params}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
@@ -4192,6 +4255,7 @@ function Recoleccion() {
                                                                                 value={state.ciudadDestinatario}
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 onChange={handleChangeCiudadDestinatario}
+                                                                                onClick={handleClickCiudad}
                                                                                 //onSelect={ getAllCodigosPostales(state.ciudadDestinatario)}
                                                                                 id="ciudadDestinatario"
                                                                             >
@@ -4310,6 +4374,7 @@ function Recoleccion() {
                                                                                         label="Destino"
                                                                                         margin="dense"
                                                                                         {...params}
+                                                                                        onClick={handleClickCiudad}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
                                                                                             style: {
@@ -4384,6 +4449,7 @@ function Recoleccion() {
                                                                                     <TextField
                                                                                         variant="outlined"
                                                                                         label="Zona"
+                                                                                        onClick={handleClickZona}
                                                                                         margin="dense"
                                                                                         {...params}
                                                                                     />
@@ -4692,6 +4758,7 @@ function Recoleccion() {
                                                                                 value={state.ciudadRecoleccion}
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 onChange={handleChangeCiudadRecoleccion}
+                                                                                onClick={handleClickCiudad}
                                                                                 id="ciudadRecoleccion"
                                                                             >
                                                                                 {dataCiudad.map((ciudad) => (
@@ -4741,6 +4808,7 @@ function Recoleccion() {
                                                                                         label="Código Postal"
                                                                                         margin="dense"
                                                                                         className="form-control"
+                                                                                        onClick={handleCodigoPostalRecoleccionClick}
                                                                                         {...params}
                                                                                         InputProps={{
                                                                                             ...params.InputProps,
@@ -4798,6 +4866,7 @@ function Recoleccion() {
                                                                             <Select
                                                                                 labelId="zonaRecoleccionLabel"
                                                                                 label="Zona"
+                                                                                onClick={handleClickZona}
                                                                                 className="form-control"
                                                                                 required={state.diferenteRecoleccion}
                                                                                 value={state.zonaRecoleccion}
@@ -4907,6 +4976,7 @@ function Recoleccion() {
                                                                                 value={state.ciudadEntrega}
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 onChange={handleChangeCiudadEntrega}
+                                                                                onClick={handleClickCiudad}
                                                                                 id="ciudadEntrega"
                                                                             >
                                                                                 {dataCiudad.map((ciudad) => (
@@ -4953,6 +5023,7 @@ function Recoleccion() {
                                                                                     <TextField
                                                                                         variant="outlined"
                                                                                         label="Código Postal"
+                                                                                        onClick={handleCodigoPostalEntregaClick}
                                                                                         margin="dense"
                                                                                         className="form-control"
                                                                                         {...params}
@@ -5016,6 +5087,7 @@ function Recoleccion() {
                                                                                 value={state.zonaEntrega}
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 onChange={handleChangeZonaEntrega}
+                                                                                onClick={handleClickZona}
                                                                                 id="zonaEntrega"
                                                                             >
                                                                                 <option value="">Selecciona
