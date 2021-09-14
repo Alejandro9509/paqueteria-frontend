@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Nueva forma de administrar paquetes y sobres">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Terminadas las validaciones">
+      <change beforePath="$PROJECT_DIR$/src/Constants/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -140,27 +142,6 @@
       <workItem from="1631159140096" duration="18684000" />
       <workItem from="1631376757440" duration="11079000" />
       <workItem from="1631554999068" duration="606000" />
-    </task>
-    <task id="LOCAL-00031" summary="* Se renombraron variables para mayor entendimiento en zonas">
-      <created>1628387272782</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1628387272782</updated>
-    </task>
-    <task id="LOCAL-00032" summary="*Los codigos postales ya se acumulan por ciudad">
-      <created>1628396161531</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1628396161531</updated>
-    </task>
-    <task id="LOCAL-00033" summary="*Las localidades ya se acumulan">
-      <created>1628397385643</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1628397385643</updated>
     </task>
     <task id="LOCAL-00034" summary="*Limpieza de código">
       <created>1628397519080</created>
@@ -484,7 +465,28 @@
       <option name="project" value="LOCAL" />
       <updated>1631640408068</updated>
     </task>
-    <option name="localTasksCounter" value="80" />
+    <task id="LOCAL-00080" summary="Terminada vista nueva de recoleccion">
+      <created>1631641377735</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1631641377735</updated>
+    </task>
+    <task id="LOCAL-00081" summary="Terminadas las validaciones">
+      <created>1631643063331</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1631643063331</updated>
+    </task>
+    <task id="LOCAL-00082" summary="Terminadas las validaciones">
+      <created>1631643282977</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1631643282977</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -549,8 +551,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Corrección de error al generar embarque" />
-    <MESSAGE value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
     <MESSAGE value="Se cambio la dsitribución de los campos en informes y viajes" />
     <MESSAGE value="Se ajustaron las columnas de tarifas" />
     <MESSAGE value="Clonar Embarque" />
@@ -574,7 +574,9 @@
     <MESSAGE value="En recoleccion los listados se piden al servidor cuando se necesitan" />
     <MESSAGE value="ajuste" />
     <MESSAGE value="Nueva forma de administrar paquetes y sobres" />
-    <option name="LAST_COMMIT_MESSAGE" value="Nueva forma de administrar paquetes y sobres" />
+    <MESSAGE value="Terminada vista nueva de recoleccion" />
+    <MESSAGE value="Terminadas las validaciones" />
+    <option name="LAST_COMMIT_MESSAGE" value="Terminadas las validaciones" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

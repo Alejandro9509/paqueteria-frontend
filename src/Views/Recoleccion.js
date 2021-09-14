@@ -1024,8 +1024,7 @@ function Recoleccion() {
             obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
                 p.m_sTipoEmbalaje = data.m_sNombre
             })
-            p.m_nIdTipo = 2
-            p.m_sTipo = 'Paquete'
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
         })
 
         setState(state => {
