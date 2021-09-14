@@ -524,7 +524,7 @@ function Viajes() {
         obtenerDetalleParadasIdViaje(row).then(respuesta => {
             var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdOrigen")
             arrayInformes.forEach(a => {
-                a["informes"] = respuesta.data.filter(r => r.m_nIdRuta === a.m_nIdRuta)
+                a["informes"] = respuesta.data.filter(r => r.m_nIdOrigen === a.m_nIdOrigen)
                 a.origenDestino = `${a.m_sOrigen} - ${a.m_sDestino}`
             })
             setParadasListado(arrayInformes);
