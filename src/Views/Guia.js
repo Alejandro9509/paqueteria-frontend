@@ -4,7 +4,7 @@ import Cabecera from "../Components/Template/Cabecera";
 
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
-import {Tab, Tabs, Box, InputAdornment, Button, Grid} from '@material-ui/core';
+import {Tab, Tabs, Box, InputAdornment, Button, Grid, FormControlLabel, Checkbox} from '@material-ui/core';
 import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
 import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
@@ -178,6 +178,9 @@ function Guia(props) {
         conceptosAdicionales: [],
         ivaTraslada: [],
         ivaRetiene: [],
+        tieneRecoleccion: false,
+        tieneEntregaDomicilio: false,
+        tieneCita: false,
 
         //VARIABLES PARA TAB IMPRIMIR (creo)
         paquetesI: [{
@@ -549,6 +552,10 @@ function Guia(props) {
 
                 conceptosAdicionales: conceptosAdicionales,
                 FolioGuiaRelacionada: respuesta.data.m_sFolioGuiaRelacionada,
+                tieneRecoleccion: !!respuesta.data.m_nFolioRecoleccion,
+                tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
+                tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
+                tieneCitaRecoleccion: respuesta.data.m_bRecoleccionConCita
 
             }
         })
@@ -1459,6 +1466,10 @@ function Guia(props) {
                 conceptosAdicionales: [],
                 ivaTraslada: [],
                 ivaRetiene: [],
+                tieneRecoleccion: false,
+                tieneEntregaDomicilio: false,
+                tieneCitaRecoleccion: false,
+                tieneCitaEntrega: false,
             }
         })
         setTotalPaquetes(0)
@@ -3298,106 +3309,115 @@ function Guia(props) {
                                                             <div className="col-md-12">
                                                                 {/*<form className="j-forms">*/}
                                                                 <div className="form-content">
-                                                                    <div className="col-sm-4 col-md-2-5 unit">
+                                                                    <Grid container spacing={2}>
+                                                                        <Grid item xs={2}>
+                                                                            <label className="input select">
+                                                                                <FormControl fullWidth variant="outlined"
+                                                                                             margin="dense">
+                                                                                    <InputLabel id="idTipoCobroLabel">Tipo
+                                                                                        Cobro</InputLabel>
+                                                                                    <Select
+                                                                                        native
+                                                                                        labelId="idTipoCobroLabel"
+                                                                                        label="Tipo Cobro"
+                                                                                        className="form-control"
+                                                                                        required
+                                                                                        onChange={handleChange}
+                                                                                        id="idTipoCobro"
+                                                                                        name="idTipoCobro"
+                                                                                        read="true"
+                                                                                        value={state.idTipoCobro}
+                                                                                        // disabled={state.agregar == "Consultar"}
+                                                                                        disabled="disabled">
 
-                                                                        <label className="input select">
-                                                                            <FormControl fullWidth variant="outlined"
-                                                                                         margin="dense">
-                                                                                <InputLabel id="idTipoCobroLabel">Tipo
-                                                                                    Cobro</InputLabel>
-                                                                                <Select
-                                                                                    native
-                                                                                    labelId="idTipoCobroLabel"
-                                                                                    label="Tipo Cobro"
-                                                                                    className="form-control"
-                                                                                    required
-                                                                                    onChange={handleChange}
-                                                                                    id="idTipoCobro"
-                                                                                    name="idTipoCobro"
-                                                                                    read="true"
-                                                                                    value={state.idTipoCobro}
-                                                                                    // disabled={state.agregar == "Consultar"}
-                                                                                    disabled="disabled">
+                                                                                        <option value="0">
+                                                                                            Seleccionar
+                                                                                        </option>
+                                                                                        {dataTipoCobro.map(
+                                                                                            (tipoCobro) => (
+                                                                                                <option
+                                                                                                    key={tipoCobro.m_nIdTipoCobro}
+                                                                                                    value={tipoCobro.m_nIdTipoCobro}>
+                                                                                                    {
+                                                                                                        tipoCobro.m_sDescripcion
+                                                                                                    }
+                                                                                                </option>
+                                                                                            )
+                                                                                        )}
+                                                                                    </Select>
+                                                                                </FormControl>
+                                                                            </label>
+                                                                        </Grid>
+                                                                        <Grid item xs={2}>
+                                                                            <label className="input select">
+                                                                                <FormControl fullWidth variant="outlined"
+                                                                                             margin="dense">
+                                                                                    <InputLabel id="idTipoServicioLabel">Tipo
+                                                                                        Servicio</InputLabel>
+                                                                                    <Select
+                                                                                        native
+                                                                                        labelId="idTipoServicioLabel"
+                                                                                        label="Tipo Servicio"
+                                                                                        className="form-control"
+                                                                                        required
+                                                                                        onChange={handleChange}
+                                                                                        disabled={state.agregar == "Consultar"}
+                                                                                        id="idTipoServicio"
+                                                                                        name="idTipoServicio"
+                                                                                        read="true"
+                                                                                        value={state.idTipoServicio}
 
-                                                                                    <option value="0">
-                                                                                        Seleccionar
-                                                                                    </option>
-                                                                                    {dataTipoCobro.map(
-                                                                                        (tipoCobro) => (
-                                                                                            <option
-                                                                                                key={tipoCobro.m_nIdTipoCobro}
-                                                                                                value={tipoCobro.m_nIdTipoCobro}>
-                                                                                                {
-                                                                                                    tipoCobro.m_sDescripcion
-                                                                                                }
-                                                                                            </option>
-                                                                                        )
-                                                                                    )}
-                                                                                </Select>
-                                                                            </FormControl>
-                                                                        </label>
-                                                                    </div>
-                                                                    <div className="col-sm-4 col-md-2-5">
-
-                                                                        <label className="input select">
-                                                                            <FormControl fullWidth variant="outlined"
-                                                                                         margin="dense">
-                                                                                <InputLabel id="idTipoServicioLabel">Tipo
-                                                                                    Servicio</InputLabel>
-                                                                                <Select
-                                                                                    native
-                                                                                    labelId="idTipoServicioLabel"
-                                                                                    label="Tipo Servicio"
-                                                                                    className="form-control"
-                                                                                    required
-                                                                                    onChange={handleChange}
-                                                                                    disabled={state.agregar == "Consultar"}
-                                                                                    id="idTipoServicio"
-                                                                                    name="idTipoServicio"
-                                                                                    read="true"
-                                                                                    value={state.idTipoServicio}
-
-                                                                                >
-                                                                                    <option value=""></option>
-                                                                                    {dataTipoServicio.map(
-                                                                                        (tipoServicio) => (
-                                                                                            <option
-                                                                                                key={tipoServicio.m_nIdTipoServicio}
-                                                                                                value={tipoServicio.m_nIdTipoServicio}>
-                                                                                                {
-                                                                                                    tipoServicio.m_sDescripcion
-                                                                                                }
-                                                                                            </option>
-                                                                                        )
-                                                                                    )}
-                                                                                </Select>
-                                                                            </FormControl>
-                                                                        </label>
-                                                                    </div>
-                                                                    <div className="col-sm-4 col-md-2-5">
-
-                                                                        <div className="input">
-                                                                            <TextField variant="outlined" margin="dense"
-                                                                                       onChange={handleChange}
-                                                                                       className="form-control"
-                                                                                       type="text"
-                                                                                       InputLabelProps={{
-                                                                                           shrink: true,
-                                                                                       }}
-                                                                                       label="Valor Declarado"
-                                                                                       placeholder={state.ValorDeclarado}
-                                                                                       readOnly={state.agregar == "Consultar"}
-                                                                                       value={state.ValorDeclarado}
-                                                                                       disabled
-                                                                                       id="ValorDeclarado"
-                                                                                       name="ValorDeclarado"
-                                                                                       startAdornment={<InputAdornment
-                                                                                           position="start">$</InputAdornment>}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
-
+                                                                                    >
+                                                                                        <option value=""></option>
+                                                                                        {dataTipoServicio.map(
+                                                                                            (tipoServicio) => (
+                                                                                                <option
+                                                                                                    key={tipoServicio.m_nIdTipoServicio}
+                                                                                                    value={tipoServicio.m_nIdTipoServicio}>
+                                                                                                    {
+                                                                                                        tipoServicio.m_sDescripcion
+                                                                                                    }
+                                                                                                </option>
+                                                                                            )
+                                                                                        )}
+                                                                                    </Select>
+                                                                                </FormControl>
+                                                                            </label>
+                                                                        </Grid>
+                                                                        <Grid item xs={2}>
+                                                                            <div className="input">
+                                                                                <TextField variant="outlined" margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Valor Declarado"
+                                                                                           placeholder={state.ValorDeclarado}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           value={state.ValorDeclarado}
+                                                                                           disabled
+                                                                                           id="ValorDeclarado"
+                                                                                           name="ValorDeclarado"
+                                                                                           startAdornment={<InputAdornment
+                                                                                               position="start">$</InputAdornment>}
+                                                                                />
+                                                                            </div>
+                                                                        </Grid>
+                                                                        <Grid item xs={1.5}>
+                                                                            <FormControlLabel disabled control={<Checkbox checked={state.tieneRecoleccion}  name="tieneRecolecion" />} label="Tiene recolección" />
+                                                                        </Grid>
+                                                                        <Grid item xs={1.5}>
+                                                                            <FormControlLabel disabled control={<Checkbox checked={state.tieneEntregaDomicilio}  name="tieneEntregaDomicilio" />} label="Tiene entrega a domicilio" />
+                                                                        </Grid>
+                                                                        <Grid item xs={1.5}>
+                                                                            <FormControlLabel disabled control={<Checkbox checked={state.tieneCitaRecoleccion} name="tieneCita" />} label="Tiene cita para recolección" />
+                                                                        </Grid>
+                                                                        <Grid item xs={1.5}>
+                                                                            <FormControlLabel disabled control={<Checkbox checked={state.tieneCitaEntrega} name="tieneCita" />} label="Tiene cita para entrega" />
+                                                                        </Grid>
+                                                                    </Grid>
                                                                 </div>
                                                                 {/*</form>*/}
                                                             </div>

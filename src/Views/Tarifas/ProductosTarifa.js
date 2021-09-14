@@ -117,7 +117,6 @@ export default function ProductosTarifa({productos = [], productosSeleccionados 
             <List className={classes.list} dense component="div" role="list">
                 {items.map((value) => {
                     const labelId = `transfer-list-all-item-${value}-label`;
-                    console.log(consult)
                     return (
                         <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)} disabled={consult}>
                             <ListItemIcon>
