@@ -493,12 +493,12 @@ function Embarque(props) {
         {
             headerName: "Origen",
             field: "m_sCiudadOrigen",
-            width: 150,
+            width: 200,
         },
         {
             headerName: "Destino",
             field: "m_sCiudadDestino",
-            width: 150,
+            width: 200,
         },
         {
             headerName: "Folio",
@@ -509,6 +509,11 @@ function Embarque(props) {
             headerName: "Folio Relacionado",
             field: "m_sFolioEmbarqueRelacionado",
             width: 150,
+        },
+        {
+            headerName: "Cliente",
+            field: "m_sNombreCliente",
+            width: 300,
         },
         {
             headerName: "Sucursal",

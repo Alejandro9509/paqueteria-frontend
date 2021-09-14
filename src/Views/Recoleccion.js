@@ -743,6 +743,11 @@ function Recoleccion() {
         JSON.stringify(params)
         cancelarRecoleccion(state.idRecoleccion, params).then((respuesta) => {
             showSuccess(respuesta.data)
+            getAllData()
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(0).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Listado').addClass('in show');
             /*setState({
                 ...state,
                 idRecoleccion: 0,
@@ -1143,7 +1148,6 @@ function Recoleccion() {
                 estatusRecoleccion: dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == m_nIdEstatusRecoleccion).m_sEstatus,
                 motivoCancelacion: m_sMotivoCancelacion,
             })
-            console.log(respuesta.data)
             if (respuesta.data.m_nSePuedeCancelar == 0)
                 showSuccess("Recolección no se puede cancelar")
         })
@@ -1449,13 +1453,13 @@ function Recoleccion() {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab"
+                            <a data-toggle="tab"
                                onClick={() => (handleShowModificar(row.row.m_nIdRecoleccion))}
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs"
+                            <a  className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row.m_nIdRecoleccion))}><i className="fa fa-eye"
                                                                                                   style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
@@ -1488,15 +1492,28 @@ function Recoleccion() {
             width: 200,
         },
         {
+            headerName: "Estatus",
+            field: "m_sEstatusRecoleccion",
+            width: 125,
+        },
+        {
+            headerName: "Origen",
+            field: "m_sCiudadOrigen",
+            width: 125,
+        }, {
+            headerName: "Destino",
+            field: "m_sCiudadDestino",
+            width: 125,
+        },
+        {
             headerName: "Folio",
             field: "m_sFolioRecoleccion",
             width: 125,
         },
-
         {
-            headerName: "Fecha/Hora Recolección",
-            field: "m_sFechaHoraDetalleRec",
-            width: 200,
+            headerName: "Cliente",
+            field: "m_sNombreCliente",
+            width: 300,
         },
         {
             headerName: "Sucursal",
@@ -1504,19 +1521,15 @@ function Recoleccion() {
             width: 125,
         },
         {
+            headerName: "Fecha/Hora Recolección",
+            field: "m_sFechaHoraDetalleRec",
+            width: 250,
+        },
+
+        {
             headerName: "Zona Recolección",
             field: "m_sZonaRecoleccion",
-            width: 150,
-        },
-        {
-            headerName: "Recoger En",
-            field: "m_sRecogerEnDetalleRecoleccion",
-            width: 125,
-        },
-        {
-            headerName: "Estatus",
-            field: "m_sEstatusRecoleccion",
-            width: 125,
+            width: 200,
         },
         {
             headerName: "Operador",
@@ -1527,13 +1540,7 @@ function Recoleccion() {
             headerName: "Unidad",
             field: "m_sUnidad",
             width: 125,
-        },
-
-        {
-            headerName: "Remolque",
-            field: "m_sTipoRemolque",
-            width: 125,
-        },
+        }
     ]);
 
     const columnsCP = React.useMemo(() => [
@@ -3069,14 +3076,14 @@ function Recoleccion() {
                         </li>
 
                         <li>
-                            <a data-toggle="tab" href="#Salida-Llegada" onClick={() => handleShowSalidaLlegada(4)}
+                            <a onClick={() => handleShowSalidaLlegada(4)}
                                className={state.idRecoleccion === 0 ? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Salida
                             </a>
                         </li>
 
                         <li>
-                            <a data-toggle="tab" href="#Salida-Llegada" onClick={() => handleShowSalidaLlegada(5)}
+                            <a onClick={() => handleShowSalidaLlegada(5)}
                                className={state.idRecoleccion === 0 ? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Llegada
                             </a>

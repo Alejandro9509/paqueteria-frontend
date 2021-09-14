@@ -868,7 +868,13 @@ function Guia(props) {
             headerName: "Folio Relacionado",
             field: "m_sFolioGuiaRelacionada",
             width: 125,
-        }, {
+
+        },
+        {
+            headerName: "Cliente",
+            field: "m_sCliente",
+            width: 300,
+        },{
             headerName: "Sucursal",
             field: "m_sSucursal",
             width: 125,
