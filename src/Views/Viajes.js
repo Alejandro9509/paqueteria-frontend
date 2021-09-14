@@ -579,7 +579,7 @@ function Viajes() {
             m_nKmViaje: data.kms,
             m_nMillasViaje: data.millas,
             m_sMotivoRetraso: data.motivoRetraso,
-            m_nIdCiudadorigen: paradaData.m_nIdOrigen,
+            m_nIdCiudadOrigen: paradaData.m_nIdOrigen,
             IdRuta: paradaData.m_nIdRuta,
 
 
