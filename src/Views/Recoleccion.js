@@ -416,6 +416,7 @@ function Recoleccion() {
         getAllTipoCobro();
         getAllTipoMoneda();
         getTipoCambio()
+        getAllCiudades()
 
     }
 
@@ -482,18 +483,14 @@ function Recoleccion() {
     }
 
     const validarPaquetes = (paquete) => {
-        if (paquete.m_rPeso != ''
+        return !!(paquete.m_rPeso != ''
             && paquete.m_rLargo != ''
             && paquete.m_rAncho != ''
             && paquete.m_rAlto != ''
             && paquete.m_sDescripcion != ''
-            && paquete.m_cyValorDeclarado != ''
             && paquete.m_nCantidad != ''
-        ){
-            return true
-        }else {
-            return false
-        }
+            && paquete.producto
+            && paquete.m_nIdTipoEmbalaje);
     }
 
     const validarSobre = (sobre) => {
@@ -508,7 +505,7 @@ function Recoleccion() {
         e.preventDefault();
         let sinPaquetes = false
 
-        for (let i = 0; i < state.paquetes.length; i++) {
+        /*for (let i = 0; i < state.paquetes.length; i++) {
             if (!validarPaquetes(state.paquetes[i])){
                 sinPaquetes = true
             }
@@ -520,6 +517,10 @@ function Recoleccion() {
                     return
                 }
             }
+        }*/
+        if (state.paquetes.length === 0){
+            showSuccess("Debe agregar al menos 1 paquete o sobre.")
+            return
         }
 
         let params = {
@@ -743,7 +744,7 @@ function Recoleccion() {
         })
     };
 
-    function addPaquete() {
+    /*function addPaquete() {
         const {paquetes} = state;
         paquetes.push({
             m_xPeso: "",
@@ -762,34 +763,40 @@ function Recoleccion() {
         });
         console.log(paquetes);
         setState({...state, paquetes: paquetes, countPaquetes: state.countPaquetes + 1});
-    }
+    }*/
 
-    function addPaquetev2() {
+    const addPaquetev2 = (event) => {
         const {paquetes} = state;
         let paq = paquete
-        paq.m_nIdPaquete = paq.m_nIdPaquete ? paq.m_nIdPaquete : paquetes.length + 1
-        paquetes.push(paq);
-        setPaquete({
-            m_rPeso: "",
-            m_rLargo: "",
-            m_rAncho: "",
-            m_rAlto: "",
-            m_rVolumen: "",
-            m_nIdTIpoEmpaque: "",
-            m_cyValorDeclarado: "",
-            m_sDescripcion: "",
-            m_nCantidad: "",
-            m_nIdTipo: 2,
-            m_sObservaciones: "",
-            producto: null,
-            m_nIdProducto: "",
-            m_sTipo: "Paquete",
-        })
-        console.log(paquetes);
-        setState({...state, paquetes: paquetes, countPaquetes: state.countPaquetes + 1});
+        if (validarPaquetes(paq)){
+            paq.m_nIdPaquete = paq.m_nIdPaquete ? paq.m_nIdPaquete : paquetes.length + 1
+            paq.m_cyValorDeclarado = paq.m_cyValorDeclarado ? paq.m_cyValorDeclarado : 0
+            paquetes.push(paq);
+            setPaquete({
+                m_rPeso: "",
+                m_rLargo: "",
+                m_rAncho: "",
+                m_rAlto: "",
+                m_rVolumen: "",
+                m_nIdTipoEmpaque: "",
+                m_cyValorDeclarado: "",
+                m_sDescripcion: "",
+                m_nCantidad: "",
+                m_nIdTipo: 2,
+                m_sObservaciones: "",
+                producto: null,
+                m_nIdProducto: "",
+                m_sTipo: "Paquete",
+            })
+            console.log(paquetes);
+            setState({...state, paquetes: paquetes, countPaquetes: state.countPaquetes + 1});
+        }else{
+            showSuccess("Rellene los campos obligatorios.")
+        }
+
     }
 
-    function removePaquete(index) {
+    /*function removePaquete(index) {
         var {paquetes} = state;
         if (paquetes.length !== 1) {
             paquetes.pop()
@@ -801,9 +808,10 @@ function Recoleccion() {
             setTotalPaquetes(totalCantidad)
         }
 
-    }
+    }*/
 
-    const removePaquetev2 = () => {
+    const removePaquetev2 = (event) => {
+        event.preventDefault()
         setPaquete({
             m_rPeso: "",
             m_rLargo: "",
@@ -824,7 +832,7 @@ function Recoleccion() {
 
     }
 
-    function addSobre() {
+    /*function addSobre() {
         const {sobres} = state;
         sobres.push({
             descripcion: "",
@@ -839,7 +847,7 @@ function Recoleccion() {
             sobres.pop()
             setState({...state, sobres: sobres, countSobres: state.countSobres - 1});
         }
-    }
+    }*/
 
     function handleEliminar(id) {
         var derecho;
@@ -3818,7 +3826,7 @@ function Recoleccion() {
                                                         <Grid container spacing={1}>
                                                             <Grid item xs={2}>
                                                                 <label className="input select">
-                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <FormControl fullWidth variant="outlined" margin="dense" required>
                                                                         <InputLabel id="m_nIdTipoEmbalajeLabel">Tipo de paquete</InputLabel>
                                                                         <Select
                                                                             label="Tipo de paquete"
@@ -3829,7 +3837,6 @@ function Recoleccion() {
                                                                             onChange={(event) => handleChangePaquetev2(event)}
                                                                             id="m_nIdTipo"
                                                                             name="m_nIdTipo"
-                                                                            required
                                                                         >
                                                                             <option key={2} value={2}>
                                                                                 Paquete
@@ -3862,7 +3869,6 @@ function Recoleccion() {
                                                                                 variant="outlined"
                                                                                 label="Producto"
                                                                                 margin="dense"
-                                                                                required
                                                                                 onClick={handleClickProducto}
                                                                                 {...params}
                                                                             />
@@ -3878,7 +3884,6 @@ function Recoleccion() {
                                                                                type="text"
                                                                                label="Peso"
                                                                                value={paquete.m_rPeso}
-                                                                               required
                                                                                disabled={state.agregar === "Consultar"}
                                                                                placeholder="kg"
                                                                                name="m_rPeso"
@@ -3892,7 +3897,6 @@ function Recoleccion() {
                                                                                className="form-control"
                                                                                type="text"
                                                                                value={paquete.m_rLargo}
-                                                                               required
                                                                                label="Largo"
                                                                                disabled={state.agregar === "Consultar"}
                                                                                placeholder="cms"
@@ -3908,7 +3912,6 @@ function Recoleccion() {
                                                                                type="text"
                                                                                label="Ancho"
                                                                                value={paquete.m_rAncho}
-                                                                               required
                                                                                disabled={state.agregar === "Consultar"}
                                                                                placeholder="cms"
                                                                                name="m_rAncho"
@@ -3922,7 +3925,6 @@ function Recoleccion() {
                                                                                className="form-control"
                                                                                type="text"
                                                                                value={paquete.m_rAlto}
-                                                                               required
                                                                                label="Alto"
                                                                                disabled={state.agregar === "Consultar"}
                                                                                placeholder="cms"
@@ -3937,7 +3939,6 @@ function Recoleccion() {
                                                                                className="form-control"
                                                                                type="text"
                                                                                value={paquete.m_rVolumen}
-                                                                               required
                                                                                label="Volumen"
                                                                                disabled
                                                                                placeholder="cm3"
@@ -3947,7 +3948,7 @@ function Recoleccion() {
                                                             </Grid>
                                                             <Grid item xs={1}>
                                                                 <label className="input select">
-                                                                    <FormControl fullWidth variant="outlined" margin="dense">
+                                                                    <FormControl fullWidth variant="outlined" margin="dense" >
                                                                         <InputLabel id="m_nIdTipoEmbalajeLabel">Embalaje</InputLabel>
                                                                         <Select
                                                                             label="Embalaje"
@@ -3958,7 +3959,6 @@ function Recoleccion() {
                                                                             onChange={(event) => handleChangePaquetev2(event)}
                                                                             id="m_nIdTipoEmbalaje"
                                                                             name="m_nIdTipoEmbalaje"
-                                                                            required
                                                                         >
                                                                             {dataEmbalaje.map((embalaje) => (
                                                                                 <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
@@ -3978,7 +3978,6 @@ function Recoleccion() {
                                                                                type="text"
                                                                                label="Valor Declarado"
                                                                                value={paquete.m_cyValorDeclarado}
-                                                                               required
                                                                                disabled={state.agregar === "Consultar"}
                                                                                placeholder="$"
                                                                                name="m_cyValorDeclarado"
@@ -3993,7 +3992,6 @@ function Recoleccion() {
                                                                                type="text"
                                                                                label="Descripción"
                                                                                value={paquete.m_sDescripcion}
-                                                                               required
                                                                                disabled={state.agregar === "Consultar"}
                                                                                placeholder="Descripción"
                                                                                name="m_sDescripcion"
@@ -4008,7 +4006,6 @@ function Recoleccion() {
                                                                                type="text"
                                                                                label="Ctd"
                                                                                value={paquete.m_nCantidad}
-                                                                               required
                                                                                disabled={state.agregar === "Consultar"}
                                                                                placeholder="Ctd"
                                                                                name="m_nCantidad"
@@ -4023,7 +4020,6 @@ function Recoleccion() {
                                                                                type="text"
                                                                                label="Observaciones"
                                                                                value={paquete.m_sObservaciones}
-                                                                               required
                                                                                disabled={state.agregar === "Consultar"}
                                                                                placeholder="Observaciones"
                                                                                name="m_sObservaciones"
