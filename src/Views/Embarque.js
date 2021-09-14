@@ -952,6 +952,31 @@ function Embarque(props) {
         }
         }, []);
 
+    useEffect( value => {
+        let newTiposCobro = []
+        if (state.entregaEnSucursal){
+            if (state.tipoCobro == 3 || state.tipoCobro == 5){
+                showSuccess("No se puede hacer cobro en origen ni destino cuando es entrega en sucursal, elige otra opción.")
+                setState(state => {
+                    return{
+                        ...state,
+                        tipoCobro: 0
+                    }
+                })
+            }
+            dataTipoCobro.forEach((i) => {
+                i.valid = !(i.m_nIdTipoCobro == 3 || i.m_nIdTipoCobro == 5);
+                newTiposCobro.push(i)
+            })
+        }else{
+            dataTipoCobro.forEach((i) => {
+                i.valid = true
+                newTiposCobro.push(i)
+            })
+        }
+        setDataTipoCobro(newTiposCobro)
+    }, [state.entregaEnSucursal])
+
     function handleShowCancelar() {
         var today = new Date();
         var hours = today.getHours();
@@ -1625,14 +1650,12 @@ function Embarque(props) {
     };
 
     const handleChangeSucursalEntrega = (event) => {
-        console.log(event)
         setState({
             ...state,
             [event.target.name]: event.target.value,
             codigoPostalEntrega: dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_nIdCodigoPostal
 
         });
-        console.log(state.codigoPostalEntrega)
     };
 
     const handleEntregaCheckboxChange = (event) => {
@@ -1915,6 +1938,9 @@ function Embarque(props) {
 
     async function getAllTipoCobro() {
         obtenerTipoCobro().then((respuesta) => {
+            respuesta.data.forEach((i) => {
+                i.valid = true
+            })
             setDataTipoCobro(respuesta.data);
         });
     }
@@ -3875,6 +3901,7 @@ function Embarque(props) {
                                                                         }}
                                                                     >
                                                                         {dataTipoCobro.map((tipoCobro) => (
+                                                                            tipoCobro.valid &&
                                                                             <option
                                                                                 key={tipoCobro.m_nIdTipoCobro}
                                                                                 value={tipoCobro.m_nIdTipoCobro}

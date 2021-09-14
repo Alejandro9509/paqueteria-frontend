@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="En recoleccion los listados se piden al servidor cuando se necesitan">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="ajuste">
       <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +30,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="feature/optrecoleccion" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -141,13 +140,6 @@
       <workItem from="1631159140096" duration="18684000" />
       <workItem from="1631376757440" duration="11079000" />
       <workItem from="1631554999068" duration="606000" />
-    </task>
-    <task id="LOCAL-00029" summary="Se elimino el codigo que no se estaba usando, se corrigieron los consultar y como se interactua con la informacion, se arreglo el problema de que consultar modificaba">
-      <created>1628241188508</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1628241188508</updated>
     </task>
     <task id="LOCAL-00030" summary="* Se renombraron variables para mayor entendimiento en ciudades">
       <created>1628386757831</created>
@@ -485,7 +477,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631572654000</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="ajuste">
+      <created>1631574971546</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1631574971546</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -550,7 +549,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se realizaron ajustes a la ultima milla" />
     <MESSAGE value="Se removieron campos no requeridos en Recoleccion.js y Embarque.js" />
     <MESSAGE value="Corrección de error al generar embarque" />
     <MESSAGE value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
@@ -575,7 +573,19 @@
     <MESSAGE value="Rediseño del tracking" />
     <MESSAGE value="Consultar productos falla" />
     <MESSAGE value="En recoleccion los listados se piden al servidor cuando se necesitan" />
-    <option name="LAST_COMMIT_MESSAGE" value="En recoleccion los listados se piden al servidor cuando se necesitan" />
+    <MESSAGE value="ajuste" />
+    <option name="LAST_COMMIT_MESSAGE" value="ajuste" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/Views/Recoleccion.js</url>
+          <line>392</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
