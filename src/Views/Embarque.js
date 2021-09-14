@@ -32,7 +32,17 @@ import SvgIcon from "@material-ui/core/SvgIcon";
 import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";
 import Noty from "noty";
-import {Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper, Tooltip} from "@material-ui/core";
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    Step,
+    StepLabel,
+    Stepper,
+    Tooltip
+} from "@material-ui/core";
 import {ToggleButtonGroup} from "@material-ui/lab";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -50,7 +60,7 @@ import {
     obtenerRemitentesDestinatarios,
     obtenerRemitentesDestinatariosId
 } from "../Util/Contexts/RemitenteDestinatarioContext";
-import {obtenerEmbalajes} from "../Util/Contexts/EmbalajesContext";
+import {obtenerEmbalajes, obtenerEmbalajesId} from "../Util/Contexts/EmbalajesContext";
 import {
     cancelarEmbarque,
     eliminarEmbarques,
@@ -76,6 +86,8 @@ import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/For
 import {obtenerCliente, obtenerClienteId} from "../Util/Contexts/ClientesContext";
 import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
 import {obtenerZonasById} from "../Util/Contexts/ZonasContext";
+import AddBoxIcon from "@material-ui/icons/AddBox";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -256,7 +268,8 @@ function Embarque(props) {
 
         //Paquetes/sobres
         paquetes: [
-            {
+            /*{
+                m_nIdEmbarqueDetalle:
                 m_xPeso: "",
                 m_xLargo: "",
                 m_xAncho: "",
@@ -269,7 +282,7 @@ function Embarque(props) {
                 m_nTipo: 2,
                 m_sObservaciones: "",
                 m_nIdProducto:'',
-            },
+            },*/
         ],
         sobres: [
             {
@@ -578,8 +591,85 @@ function Embarque(props) {
             }
         },
     ]);
+    const columnsPaquetes = React.useMemo(() => [
+        {
+            headerName: "Tipo",
+            field: "m_sTipo",
+            minWidth: 100,
+            width: 100,
+        },
+        {
+            headerName: "Producto",
+            field: "m_sProducto",
+            flex: 1,
+        },
+        {
+            headerName: "Peso",
+            field: "m_xPeso",
+            width: 100,
+        },
+        {
+            headerName: "Largo",
+            field: "m_xLargo",
+            width: 100,
+        },
+        {
+            headerName: "Ancho",
+            field: "m_xAncho",
+            width: 100,
+        },
+        {
+            headerName: "Alto",
+            field: "m_xAlto",
+            width: 100,
+        },
+        {
+            headerName: "Volumen",
+            field: "m_xVolumen",
+            width: 100,
+        },
+        {
+            headerName: "Embalaje",
+            field: "m_sTipoEmbalaje",
+            flex: 1,
+        },
+        {
+            headerName: "Valor",
+            field: "m_cValorDeclarado",
+            width: 100,
+        },
+        {
+            headerName: "Descripcion",
+            field: "m_sDescripcion",
+            flex: 1,
+        },
+        {
+            headerName: "Cantidad",
+            field: "ctd",
+            width: 100,
+        },
+        {
+            headerName: "Observaciones",
+            field: "m_sObservaciones",
+            flex: 1,
+        }
+    ]);
     const [dataProductos, setDataProductos] = useState([])
     const [totalPaquetes, setTotalPaquetes] = useState(0)
+    const [paquete, setPaquete] = useState({
+        m_xPeso: "",
+        m_xLargo: "",
+        m_xAncho: "",
+        m_xAlto: "",
+        m_xVolumen: "",
+        m_nIdTIpoEmpaque: "",
+        m_cyValorDeclarado: "",
+        m_sDescripcion: "",
+        m_nCantidad: "",
+        m_nTipo: 2,
+        m_sObservaciones: "",
+        m_nIdProducto:'',
+    })
 
     const history = useHistory();
 
@@ -1100,7 +1190,7 @@ function Embarque(props) {
 
                 //Paquetes/sobres
                 paquetes: [
-                    {
+                    /*{
                         m_xPeso: "",
                         m_xLargo: "",
                         m_xAncho: "",
@@ -1114,7 +1204,7 @@ function Embarque(props) {
                         m_sObservaciones: "",
                         m_nIdProducto:'',
                         producto: ''
-                    },
+                    },*/
                 ],
                 sobres: [
                     {
@@ -1430,7 +1520,6 @@ function Embarque(props) {
         getAllEmbalajes()
         getAllCiudades()
 
-
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
             setState(state => {
                 return {
@@ -1475,10 +1564,12 @@ function Embarque(props) {
         let totalPaquetes = 0
         respuesta.data.m_arrPaquetes.forEach(p => {
             obtenerProductoById(p.m_nIdProducto).then(({data}) => {
-                console.log('producto consultar ',data)
-                p["m_nCantidad"] = p.ctd
                 p.producto = data
                 totalPaquetes += parseInt(p.ctd)
+            })
+            obtenerEmbalajesId(p.m_nIdTIpoEmpaque).then(({data}) => {
+                p.m_sTipoEmbalaje = data.m_sNombre
+                p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
             })
         })
         setTotalPaquetes(totalPaquetes)
@@ -2732,6 +2823,8 @@ function Embarque(props) {
         });
     }
 
+
+
     const framesPaquete = state.paquetes.map((p, index) => {
         return (
             <div key={`paquete${index}`}>
@@ -3923,6 +4016,249 @@ function Embarque(props) {
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div className="widget-wrap" id="paquetesSobres">
+                                        <div>
+                                            <Grid container>
+                                                <Grid item xs={6}>
+                                                    <div className="widget-header">
+                                                        <h2>Paquetes y sobres</h2>
+                                                    </div>
+                                                </Grid>
+                                            </Grid>
+
+                                            <div className="widget-container">
+                                                <div className="widget-content">
+                                                    <div className="row">
+                                                        {/*<Grid container spacing={1}>
+                                                            <Grid item xs={2}>
+                                                                <label className="input select">
+                                                                    <FormControl fullWidth variant="outlined" margin="dense" required>
+                                                                        <InputLabel id="m_nIdTipoEmbalajeLabel">Tipo de paquete</InputLabel>
+                                                                        <Select
+                                                                            label="Tipo de paquete"
+                                                                            labelId="m_nIdTipoLabel"
+                                                                            className="form-control"
+                                                                            value={paquete.m_nIdTipo}
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            onChange={(event) => handleChangePaquetev2(event)}
+                                                                            id="m_nIdTipo"
+                                                                            name="m_nIdTipo"
+                                                                        >
+                                                                            <option key={2} value={2}>
+                                                                                Paquete
+                                                                            </option>
+                                                                            <option key={1} value={1}>
+                                                                                Sobre
+                                                                            </option>
+                                                                        </Select>
+                                                                    </FormControl>
+                                                                    <i className="fa fa-arrow-down"/>
+                                                                </label>
+                                                            </Grid>
+                                                            <Grid item xs={2}>
+                                                                <div className="input">
+                                                                    <Autocomplete
+                                                                        value={paquete.producto}
+                                                                        freeSolo
+                                                                        onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
+                                                                        disableClearable
+                                                                        forcePopupIcon={false}
+                                                                        options={dataProductos}
+                                                                        disabled={state.agregar === "Consultar"}
+                                                                        getOptionLabel={(option) => `${option.m_sDescripcion}`}
+                                                                        variant="outlined"
+                                                                        inputValue={`${paquete.producto == null ? '' : paquete.producto.m_sDescripcion}`}
+                                                                        name={"producto"}
+                                                                        style={{transform: "translate(14px, 10px) scale(1) !important"}}
+                                                                        renderInput={(params) =>
+                                                                            <TextField
+                                                                                variant="outlined"
+                                                                                label="Producto"
+                                                                                margin="dense"
+                                                                                onClick={handleClickProducto}
+                                                                                {...params}
+                                                                            />
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={1}>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               onChange={(event) => handleChangePaquetev2(event)}
+                                                                               className="form-control"
+                                                                               type="text"
+                                                                               label="Peso"
+                                                                               value={paquete.m_rPeso}
+                                                                               disabled={state.agregar === "Consultar"}
+                                                                               placeholder="kg"
+                                                                               name="m_rPeso"
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={1}>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               onChange={(event) => handleChangePaquetev2(event)}
+                                                                               className="form-control"
+                                                                               type="text"
+                                                                               value={paquete.m_rLargo}
+                                                                               label="Largo"
+                                                                               disabled={state.agregar === "Consultar"}
+                                                                               placeholder="cms"
+                                                                               name="m_rLargo"
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={1}>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               onChange={(event) => handleChangePaquetev2(event)}
+                                                                               className="form-control"
+                                                                               type="text"
+                                                                               label="Ancho"
+                                                                               value={paquete.m_rAncho}
+                                                                               disabled={state.agregar === "Consultar"}
+                                                                               placeholder="cms"
+                                                                               name="m_rAncho"
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={1}>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               onChange={(event) => handleChangePaquetev2(event)}
+                                                                               className="form-control"
+                                                                               type="text"
+                                                                               value={paquete.m_rAlto}
+                                                                               label="Alto"
+                                                                               disabled={state.agregar === "Consultar"}
+                                                                               placeholder="cms"
+                                                                               name="m_rAlto"
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={1}>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                        // onChange={(event) => handleChangePaquete(event, index)}
+                                                                               className="form-control"
+                                                                               type="text"
+                                                                               value={paquete.m_rVolumen}
+                                                                               label="Volumen"
+                                                                               disabled
+                                                                               placeholder="cm3"
+                                                                               name="m_rVolumen"
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={1}>
+                                                                <label className="input select">
+                                                                    <FormControl fullWidth variant="outlined" margin="dense" >
+                                                                        <InputLabel id="m_nIdTipoEmbalajeLabel">Embalaje</InputLabel>
+                                                                        <Select
+                                                                            label="Embalaje"
+                                                                            labelId="m_nIdTipoEmbalajeLabel"
+                                                                            className="form-control"
+                                                                            value={paquete.m_nIdTipoEmbalaje}
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            onChange={(event) => handleChangePaquetev2(event)}
+                                                                            id="m_nIdTipoEmbalaje"
+                                                                            name="m_nIdTipoEmbalaje"
+                                                                        >
+                                                                            {dataEmbalaje.map((embalaje) => (
+                                                                                <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
+                                                                                    {embalaje.m_sNombre}
+                                                                                </option>
+                                                                            ))}
+                                                                        </Select>
+                                                                    </FormControl>
+                                                                    <i className="fa fa-arrow-down"/>
+                                                                </label>
+                                                            </Grid>
+                                                            <Grid item xs={2}>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               onChange={(event) => handleChangePaquetev2(event)}
+                                                                               className="form-control"
+                                                                               type="text"
+                                                                               label="Valor Declarado"
+                                                                               value={paquete.m_cyValorDeclarado}
+                                                                               disabled={state.agregar === "Consultar"}
+                                                                               placeholder="$"
+                                                                               name="m_cyValorDeclarado"
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={5}>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               onChange={(event) => handleChangePaquetev2(event)}
+                                                                               className="form-control"
+                                                                               type="text"
+                                                                               label="Descripción"
+                                                                               value={paquete.m_sDescripcion}
+                                                                               disabled={state.agregar === "Consultar"}
+                                                                               placeholder="Descripción"
+                                                                               name="m_sDescripcion"
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={1}>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               onChange={(event) => handleChangePaquetev2(event)}
+                                                                               className="form-control"
+                                                                               type="text"
+                                                                               label="Ctd"
+                                                                               value={paquete.m_nCantidad}
+                                                                               disabled={state.agregar === "Consultar"}
+                                                                               placeholder="Ctd"
+                                                                               name="m_nCantidad"
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={5}>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               onChange={(event) => handleChangePaquetev2(event)}
+                                                                               className="form-control"
+                                                                               type="text"
+                                                                               label="Observaciones"
+                                                                               value={paquete.m_sObservaciones}
+                                                                               disabled={state.agregar === "Consultar"}
+                                                                               placeholder="Observaciones"
+                                                                               name="m_sObservaciones"
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs={1}>
+                                                                <IconButton onClick={addPaquetev2} style={{ padding: "0px" }} disabled={state.agregar === "Consultar"}>
+                                                                    <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
+                                                                </IconButton>
+                                                                <IconButton onClick={removePaquetev2} style={{ padding: "0px" }} disabled={state.agregar === "Consultar"}>
+                                                                    <DeleteIcon style={{ fill: "red", fontSize: "xx-large" }} />
+                                                                </IconButton>
+                                                            </Grid>
+                                                        </Grid>*/}
+                                                    </div>
+                                                    <div className="row" style={{ height: 200}}>
+                                                        <DataGrid
+                                                            localeText={dataGridLocaleText}
+                                                            density="compact"
+                                                            pageSize={10}
+                                                            columns={columnsPaquetes}
+                                                            rows={state.paquetes}
+                                                            getRowId={(row) => row.m_nIdEmbarqueDetalle}
+                                                            // onRowSelected={(row) => handlePaqueteClick(row.data)}/>
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div className="row">
                                         <div className="col-md-7">
                                             <div className="widget-wrap" id="remitenteDestinatario">
@@ -5166,6 +5502,7 @@ function Embarque(props) {
                                             </div>
                                         </div>
                                     </div>
+
                                     <div className="row">
 
                                         {state.diferenteEntrega ? (
