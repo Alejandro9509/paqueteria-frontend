@@ -528,7 +528,7 @@ function Viajes() {
         obtenerDetalleParadasIdViaje(row).then(respuesta => {
             var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdOrigen")
             arrayInformes.forEach(a => {
-                a["informes"] = respuesta.data.filter(r => r.m_nIdRuta === a.m_nIdRuta)
+                a["informes"] = respuesta.data.filter(r => r.m_nIdOrigen === a.m_nIdOrigen)
             })
             setParadasListado(arrayInformes);
         });
@@ -582,6 +582,7 @@ function Viajes() {
             m_nKmViaje: data.kms,
             m_nMillasViaje: data.millas,
             m_sMotivoRetraso: data.motivoRetraso,
+            m_nIdCiudadorigen: paradaData.m_nIdOrigen,
             IdRuta: paradaData.m_nIdRuta,
 
 

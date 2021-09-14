@@ -227,6 +227,9 @@ class PaquetesList extends Component {
                                 align="left">Tipo de cobro</TableCell>
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
+                                align="left">Zona</TableCell>
+                            <TableCell
+                                sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
                                 align="left">Cliente</TableCell>
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
@@ -262,6 +265,7 @@ class PaquetesList extends Component {
                                         <TableCell align="left">{u.m_bEsRecoleccion ? "Recolección" : "Entrega"}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_parrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0) : u.m_arrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0)}</TableCell>
                                         <TableCell align="left">{u.m_sTipoCobro}</TableCell>
+                                        <TableCell align="left">{u.m_sZona}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sNombreRemitente : u.m_sNombreDestinatario}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sDomicilioRemitente: u.m_sDomicilioDestinatario}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? (u.m_bRecoleccionConCita ? "" : "Sin cita") : ""}</TableCell>
