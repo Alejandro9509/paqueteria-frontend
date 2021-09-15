@@ -57,7 +57,7 @@ async function convertData(trucks, guias, dateFilter) {
                 "end": dateFilter.finishDate + "T" + dateFilter.finishTime + ":00+00:00"
             }
             ],
-            "serviceTimePerStop": "300.0"
+            "serviceTimePerStop": "600.0"
         }
     ))))
     return array
@@ -78,7 +78,9 @@ async function obtenerGuiasUbicacion(paquetes) {
     var guias = []
     for (var i = 0; i < paquetes.length; i++) {
         var g = paquetes[i]
-        if (!g.lat) {
+        console.log("Inicio de validación")
+        if (g.m_sLatitud.length === 0) {
+            console.log("Se buscara la dirección")
             var location = await searchLocationGuia(g.m_bEsRecoleccion ? g.m_sCiudadOrigen : g.m_sCiudadDestino, g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioDestinatario, g.m_bEsRecoleccion ? g.m_sCodigoPostalRemitente : g.m_sCodigoPostalDestinatario)
             guias.push({
                 ...g,
@@ -87,6 +89,7 @@ async function obtenerGuiasUbicacion(paquetes) {
                 index: i
             })
         } else {
+            console.log("Dirección ya obtenida")
             guias.push({
                 ...g,
                 lat: g.m_sLatitud,
@@ -290,13 +293,22 @@ function agregarRuta(tour, data) {
         ultimaMillaObject.rutas.push({
             idOperador: u.m_nIdOperador,
             idUnidad: u.m_nIdUnidad,
-            guias: guias.map((g, index) => ({
-                idGuia: g.m_nId,
-                lat: g.lat,
-                lng: g.lng,
-                orden: index + 1,
-                esRecoleccion: g.m_bEsRecoleccion
-            }))
+            guias: guias.map((g, index) => {
+                var tour = this.props.tourReport.tourReports.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
+                var reportTime = tour.tourEvents.find(t => t.eventTypes[0] === "SERVICE" && g.index === parseInt(t.orderId))
+                var date = new Date(reportTime.startTime)
+                var userTimezoneOffset = date.getTimezoneOffset() * 60000;
+                date = new Date(date.getTime() + userTimezoneOffset);
+                var time = date.toLocaleTimeString()
+                return ({
+                    idGuia: g.m_nId,
+                    lat: g.lat,
+                    lng: g.lng,
+                    orden: index + 1,
+                    horaEstimada: time,
+                    esRecoleccion: g.m_bEsRecoleccion
+                })
+            })
         })
     })
     data.zonasSeleccionada.forEach((z) => {

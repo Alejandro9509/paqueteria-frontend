@@ -84,6 +84,7 @@ import {obtenerFormatosImpresion, imprimirFormatosId} from "../Util/Contexts/For
 import {obtenerCliente, obtenerClienteId} from "../Util/Contexts/ClientesContext";
 import {forEach} from "react-bootstrap/ElementChildren";
 import {obtenerZonasById} from "../Util/Contexts/ZonasContext";
+import ConfirmarUbicacion from "../Components/Map/ConfirmarUbicacion";
 
 let timer;
 
@@ -244,7 +245,7 @@ function Recoleccion() {
                 //checar cual de las dos es la que se usa
                 m_cyValorDeclarado: "",
                 m_nTipo: 2,
-                m_nIdProducto:'',
+                m_nIdProducto: '',
             },
         ],
         sobres: [
@@ -435,7 +436,10 @@ function Recoleccion() {
                     calleRemitente: newValue.m_sCalle,
                     numeroExtRemitente: newValue.m_sNoExterior,
                     numeroIntRemitente: newValue.m_sNoInterior || 0,
-                    coloniaRemitente: newValue.m_sColonia
+                    coloniaRemitente: newValue.m_sColonia,
+                    remitente: newValue,
+                    latitudR: newValue.m_sLatitud,
+                    longitudR: newValue.m_sLongitud
                 }
             })
         })
@@ -446,7 +450,7 @@ function Recoleccion() {
 
     const handleClickRemitenteDestinatario = (event) => {
         event.preventDefault()
-        if (dataRemitenteDestinatario.length === 0){
+        if (dataRemitenteDestinatario.length === 0) {
             getAllRemitentesDestinatarios()
         }
     }
@@ -471,7 +475,10 @@ function Recoleccion() {
                     calleDestinatario: newValue.m_sCalle,
                     numeroExtDestinatario: newValue.m_sNoExterior,
                     numeroIntDestinatario: newValue.m_sNoInterior || 0,
-                    coloniaDestinatario: newValue.m_sColonia
+                    coloniaDestinatario: newValue.m_sColonia,
+                    destinatario: newValue,
+                    latitudD: newValue.m_sLatitud,
+                    longitudD: newValue.m_sLongitud
                 }
             })
         })
@@ -485,37 +492,49 @@ function Recoleccion() {
             && paquete.m_sDescripcion != ''
             && paquete.m_cyValorDeclarado != ''
             && paquete.m_nCantidad != ''
-        ){
+        ) {
             return true
-        }else {
+        } else {
             return false
         }
     }
 
     const validarSobre = (sobre) => {
-        if (sobre.m_sDescripcion != ''){
+        if (sobre.m_sDescripcion != '') {
             return true
-        }else {
+        } else {
             return false
         }
     }
 
-    const handleAceptar = (e) => {
+    const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
+        setState({
+            ...state,
+            showConfirmarUbicacion: false
+        })
         let sinPaquetes = false
 
         for (let i = 0; i < state.paquetes.length; i++) {
-            if (!validarPaquetes(state.paquetes[i])){
+            if (!validarPaquetes(state.paquetes[i])) {
                 sinPaquetes = true
             }
         }
-        if (sinPaquetes){
+        if (sinPaquetes) {
             for (let i = 0; i < state.sobres.length; i++) {
-                if (!validarSobre(state.sobres[i])){
+                if (!validarSobre(state.sobres[i])) {
                     showSuccess("Verifique haber llenado todos los datos de paquetes y/o sobres");
                     return
                 }
             }
+        }
+        if (state.latitudR.length === 0 && state.longitudR.length === 0 && !coordenadas) {
+            setState({
+                ...state,
+                showConfirmarUbicacion: true,
+                titulo: "recolección"
+            })
+            return
         }
 
         let params = {
@@ -570,6 +589,10 @@ function Recoleccion() {
             m_sNoIntDestinatario: state.numeroIntDestinatario,
             m_sNoExtDestinatario: state.numeroExtDestinatario,
             m_sColoniaDestinatario: state.coloniaDestinatario,
+            m_sLatitudR: coordenadas ? coordenadas.lat : state.latitudR ,
+            m_sLongitudR: coordenadas ? coordenadas.lng : state.latitudR,
+            m_sLatitudD: state.latitudD,
+            m_sLongitudD: state.latitudD,
 
             //Cita de recoleccion
             m_bRecoleccionConCita: false,
@@ -758,7 +781,7 @@ function Recoleccion() {
             ctd: "",
             m_nTipo: 2,
             m_sObservaciones: "",
-            producto:'',
+            producto: '',
             m_nIdProducto: "",
         });
         console.log(paquetes);
@@ -1129,7 +1152,13 @@ function Recoleccion() {
         minutes = minutes < 10 ? '0' + minutes : minutes;
         let strTime = hours + ':' + minutes + ' ' + ampm;
         obtenerRecoleccionCancelada(state.idRecoleccion).then((respuesta) => {
-            const {m_sFolioRecoleccion, m_nIdSucursal, m_nIdEstatusRecoleccion, m_dtFechaCancelacion, m_sMotivoCancelacion} = respuesta.data
+            const {
+                m_sFolioRecoleccion,
+                m_nIdSucursal,
+                m_nIdEstatusRecoleccion,
+                m_dtFechaCancelacion,
+                m_sMotivoCancelacion
+            } = respuesta.data
             setState({
                 ...state,
                 folioRecoleccion: m_sFolioRecoleccion,
@@ -1159,7 +1188,7 @@ function Recoleccion() {
 
     const handleClickResponsablePago = (event) => {
         event.preventDefault();
-        if (dataClientes.length === 0){
+        if (dataClientes.length === 0) {
             getAllClientes()
         }
     }
@@ -1324,10 +1353,10 @@ function Recoleccion() {
     };
 
     const handleClickProducto = () => {
-        if (dataProductos.length === 0 ){
+        if (dataProductos.length === 0) {
             getAllProductos()
         }
-        if (dataEmbalaje.length === 0 ) {
+        if (dataEmbalaje.length === 0) {
             getAllEmbalajes()
         }
     }
@@ -1433,7 +1462,7 @@ function Recoleccion() {
 
     //Maneja filtrado de listado embarque
     const handleFolioRecoleccionFiltro = async (event) => {
-        if(event.keyCode == 13) {
+        if (event.keyCode == 13) {
             let value = event.target.value
             if (event.target.value == '') {
                 value = 0
@@ -1468,7 +1497,7 @@ function Recoleccion() {
                                                                      style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a  className="btn btn-default btn-xs"
+                            <a className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row.m_nIdRecoleccion))}><i className="fa fa-eye"
                                                                                                   style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
@@ -1679,6 +1708,10 @@ function Recoleccion() {
         });
     }
 
+    function confirmarUbicacion(coordenadas, e) {
+        handleAceptar(e, coordenadas)
+    }
+
     const getAllClientes = () => {
         obtenerCliente().then((respuesta) => {
             setDataClientes(respuesta.data)
@@ -1730,7 +1763,7 @@ function Recoleccion() {
 
     const getAllProductos = () => {
         const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        axios.get(url, {headers}).then(respuesta => {
             setDataProductos(respuesta.data)
         });
     }
@@ -2695,7 +2728,7 @@ function Recoleccion() {
 
     const handleClickZona = (event) => {
         event.preventDefault()
-        if (dataZona.length === 0){
+        if (dataZona.length === 0) {
             getAllZonas()
         }
 
@@ -2731,35 +2764,36 @@ function Recoleccion() {
 
     const handleClickCiudad = (event) => {
         event.preventDefault()
-        if (dataCiudad.length === 0 ){
+        if (dataCiudad.length === 0) {
             getAllCiudades()
         }
     }
 
     const handleCodigoPostalEntregaClick = (event) => {
         event.preventDefault();
-        if (dataCodigosPostalesEntrega.length > 0){
-            if (dataCodigosPostalesEntrega[0].m_nIdCiudad != state.ciudadEntrega){
+        if (dataCodigosPostalesEntrega.length > 0) {
+            if (dataCodigosPostalesEntrega[0].m_nIdCiudad != state.ciudadEntrega) {
                 obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
                     setDataCodigosPostalesEntrega(respuesta.data);
                 });
             }
-        }else{
+        } else {
             obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
                 setDataCodigosPostalesEntrega(respuesta.data);
             });
         }
     }
 
+
     const handleCodigoPostalRecoleccionClick = (event) => {
         event.preventDefault();
-        if (dataCodigosPostalesEntrega.length > 0){
-            if (dataCodigosPostalesEntrega[0].m_nIdCiudad != state.ciudadRecoleccion){
+        if (dataCodigosPostalesEntrega.length > 0) {
+            if (dataCodigosPostalesEntrega[0].m_nIdCiudad != state.ciudadRecoleccion) {
                 obtenerCodigosPostalesPorCiudad(state.ciudadRecoleccion).then((respuesta) => {
                     setDataCodigosPostalesRecoleccion(respuesta.data);
                 });
             }
-        }else{
+        } else {
             obtenerCodigosPostalesPorCiudad(state.ciudadRecoleccion).then((respuesta) => {
                 setDataCodigosPostalesRecoleccion(respuesta.data);
             });
@@ -2768,6 +2802,15 @@ function Recoleccion() {
 
     return (
         <div>
+            {
+                state.showConfirmarUbicacion &&
+                <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
+                                    titulo={state.titulo}
+                                    direccion={state.remitente}>
+
+                </ConfirmarUbicacion>
+            }
+
             <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})} fullWidth
                     maxWidth="md">
                 <DialogContent>
@@ -3845,22 +3888,22 @@ function Recoleccion() {
                                                                     <div className="col-sm-12 col-md-12 unit">
 
                                                                         <div className="input">
-                                                                        <TextField
-                                                                                        required
-                                                                                        variant="outlined"
-                                                                                        label="Código Postal"
-                                                                                        margin="dense"
-                                                                                        value={state.codigoPostalRemitente}
-                                                                                        InputProps={{
-                                                                                            style: {
-                                                                                                height: "33px",
-                                                                                                fontSize: "14px"
-                                                                                            },
-                                                                                            type: "search",
-                                                                                            disableUnderline: true,
-                                                                                        }}
-                                                                                        disabled={state.agregar === "Consultar"}
-                                                                                    />
+                                                                            <TextField
+                                                                                required
+                                                                                variant="outlined"
+                                                                                label="Código Postal"
+                                                                                margin="dense"
+                                                                                value={state.codigoPostalRemitente}
+                                                                                InputProps={{
+                                                                                    style: {
+                                                                                        height: "33px",
+                                                                                        fontSize: "14px"
+                                                                                    },
+                                                                                    type: "search",
+                                                                                    disableUnderline: true,
+                                                                                }}
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                            />
                                                                         </div>
                                                                     </div>
                                                                     {/* --------------------------------------- Correo ------------------------------------------------- */}
@@ -4073,7 +4116,9 @@ function Recoleccion() {
                                                                 <div className="col-sm-12 col-md-12    unit">
                                                                     <div className="input">
                                                                         <Autocomplete
-                                                                            onChange={(event, newValue) => {handleSelectDestinatario(newValue)}}
+                                                                            onChange={(event, newValue) => {
+                                                                                handleSelectDestinatario(newValue)
+                                                                            }}
                                                                             value={state.nombreDestinatario}
                                                                             disabled={state.agregar === "Consultar"}
                                                                             freeSolo
@@ -4283,22 +4328,22 @@ function Recoleccion() {
                                                                 <div className="col-sm-12 col-md-12 unit">
                                                                     <div className="input">
 
-                                                                                    <TextField
-                                                                                        required
-                                                                                        variant="outlined"
-                                                                                        label="Código Postal"
-                                                                                        margin="dense"
-                                                                                        value={state.codigoPostalDestinatario}
-                                                                                        InputProps={{
-                                                                                            style: {
-                                                                                                height: "33px",
-                                                                                                fontSize: "14px"
-                                                                                            },
-                                                                                            type: "search",
-                                                                                            disableUnderline: true,
-                                                                                        }}
-                                                                                        disabled={state.agregar === "Consultar"}
-                                                                                    />
+                                                                        <TextField
+                                                                            required
+                                                                            variant="outlined"
+                                                                            label="Código Postal"
+                                                                            margin="dense"
+                                                                            value={state.codigoPostalDestinatario}
+                                                                            InputProps={{
+                                                                                style: {
+                                                                                    height: "33px",
+                                                                                    fontSize: "14px"
+                                                                                },
+                                                                                type: "search",
+                                                                                disableUnderline: true,
+                                                                            }}
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                        />
 
                                                                     </div>
                                                                 </div>
@@ -4605,7 +4650,8 @@ function Recoleccion() {
                                                                             widgets={[IndicatorDots, Buttons]}
                                                                             frames={framesPaquete}
                                                                         />
-                                                                        <h2>Número total de elementos: {totalPaquetes}</h2>
+                                                                        <h2>Número total de
+                                                                            elementos: {totalPaquetes}</h2>
 
                                                                         {state.agregar !== "Consultar" ?
                                                                             <div style={{

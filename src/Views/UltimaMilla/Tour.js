@@ -59,9 +59,14 @@ class Tour extends Component {
             <div style={{backgroundColor: "transparent"}}>
                 {
                     this.props.tour.trips[0].stops.map((s, index) => {
-                            const paquete = this.props.paquetes.find((p, i) => (parseInt(s.tasks[0].orderId)) === i )
-
-                            return (
+                        const paquete = this.props.paquetes.find((p, i) => (parseInt(s.tasks[0].orderId)) === i )
+                        var tour = this.props.tourReport.tourReports.find(t => t.vehicleId === this.props.tour.vehicleId)
+                        var reportTime = tour.tourEvents.find(t => t.eventTypes[0] === "SERVICE" && paquete.index === parseInt(t.orderId))
+                        var date = new Date(reportTime.startTime)
+                        var userTimezoneOffset = date.getTimezoneOffset() * 60000;
+                        date = new Date(date.getTime() + userTimezoneOffset);
+                        var time = date.toLocaleTimeString()
+                        return (
                                 <Marker key={index}
                                         icon={<MarkerComponent color={this.props.tour.color} index={index + 1}/>}
                                         position={[paquete.lat, paquete.lng]}>
@@ -70,7 +75,9 @@ class Tour extends Component {
                                             <Grid item md={12}>
                                                 <Typography variant={"h2"}>{paquete.m_sFolio} - {paquete.m_bEsRecoleccion ? paquete.m_sEstatusRecoleccion : paquete.m_sEstatusEmbarque}</Typography>
                                             </Grid>
-
+                                            <Grid item md={12}>
+                                                <Typography variant={"body1"} style={{fontWeight:"bold"}}>Hora Estimada de entrega: {time}</Typography>
+                                            </Grid>
                                             <Grid item md={12}>
                                                 <Typography variant={"body2"} style={{fontWeight:"bold"}}>Datos de la {paquete.m_bEsRecoleccion ? "Recolección" : "Entrega"}</Typography>
                                             </Grid>

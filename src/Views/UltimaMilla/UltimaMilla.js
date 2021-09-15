@@ -325,7 +325,7 @@ class UltimaMilla extends Component {
 
                                 {
                                     this.state.tour && this.state.tour.tour.tours.map(t =>
-                                        <Tour tour={t} data={this.state} paquetes={this.state.tour.paquetes}/>
+                                        <Tour tourReport={this.state.tour.tour} tour={t} data={this.state} paquetes={this.state.tour.paquetes}/>
                                     )
                                 }
                                 {

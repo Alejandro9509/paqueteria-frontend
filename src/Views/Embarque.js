@@ -76,6 +76,7 @@ import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/For
 import {obtenerCliente, obtenerClienteId} from "../Util/Contexts/ClientesContext";
 import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
 import {obtenerZonasById} from "../Util/Contexts/ZonasContext";
+import ConfirmarUbicacion from "../Components/Map/ConfirmarUbicacion";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -603,7 +604,10 @@ function Embarque(props) {
                     calleRemitente: newValue.m_sCalle,
                     numeroExtRemitente: newValue.m_sNoExterior,
                     numeroIntRemitente: newValue.m_sNoInterior || 0,
-                    coloniaRemitente: newValue.m_sColonia
+                    coloniaRemitente: newValue.m_sColonia,
+                    remitente: newValue,
+                    latitudR: newValue.m_sLatitud,
+                    longitudR: newValue.m_sLongitud
 
                 }
             });
@@ -629,7 +633,10 @@ function Embarque(props) {
                     calleDestinatario: newValue.m_sCalle,
                     numeroExtDestinatario: newValue.m_sNoExterior,
                     numeroIntDestinatario: newValue.m_sNoInterior || 0,
-                    coloniaDestinatario: newValue.m_sColonia
+                    coloniaDestinatario: newValue.m_sColonia,
+                    destinatario: newValue,
+                    latitudD: newValue.m_sLatitud,
+                    longitudD: newValue.m_sLongitud
                 }
             });
         })
@@ -666,8 +673,15 @@ function Embarque(props) {
         }
     }
 
-    const handleAceptar = (e) => {
+    function confirmarUbicacion(coordenadas, e) {
+        handleAceptar(e, coordenadas)
+    }
+    const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
+        setState({
+            ...state,
+            showConfirmarUbicacion: false
+        })
         const {paquetes, sobres} = state;
         let sinPaquetes = false
 
@@ -676,6 +690,7 @@ function Embarque(props) {
                 sinPaquetes = true
             }
         }
+
         if (sinPaquetes){
             for (let i = 0; i < sobres.length; i++) {
                 if (!validarSobre(sobres[i])){
@@ -684,7 +699,14 @@ function Embarque(props) {
                 }
             }
         }
-
+        if (state.latitudD.length === 0 && state.longitudD.length === 0 && !coordenadas) {
+            setState({
+                ...state,
+                showConfirmarUbicacion: true,
+                titulo: "entrega"
+            })
+            return
+        }
 
         const soloPaquetesLenth = paquetes.length
         const paquetesYSobres = []
@@ -750,6 +772,10 @@ function Embarque(props) {
             m_sNoIntDestinatario: state.numeroIntDestinatario,
             m_sNoExtDestinatario: state.numeroExtDestinatario,
             m_sColoniaDestinatario: state.coloniaDestinatario,
+            m_sLatitudD: coordenadas ? coordenadas.lat : state.latitudR ,
+            m_sLongitudD: coordenadas ? coordenadas.lng : state.latitudR,
+            m_sLatitudR: state.latitudR,
+            m_sLongitudR: state.latitudR,
 
             m_nNoPaquetes: state.paquetes.length,
             m_nNoSobres: state.sobres.length,
@@ -2978,6 +3004,15 @@ function Embarque(props) {
 
     return (
         <div>
+
+            {
+                state.showConfirmarUbicacion &&
+                <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
+                                    titulo={state.titulo}
+                                    direccion={state.destinatario}>
+
+                </ConfirmarUbicacion>
+            }
 
             <Dialog
                 open={state.openDialog}

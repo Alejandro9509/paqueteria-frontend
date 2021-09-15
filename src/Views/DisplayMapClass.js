@@ -73,7 +73,8 @@ export function LocationMarker(props) {
           dragend() {
             const marker = markerRef.current
             if (marker != null) {
-                console.log(markerRef)
+                console.log(marker._latlng)
+                props.cambiarUbicacion(marker._latlng)
             }
           },
         }),
@@ -81,8 +82,8 @@ export function LocationMarker(props) {
       )
 
     return (
-        <Marker key={props.markerId} eventHandlers={eventHandlers} icon={MarkerIcon} draggable={false} position={props.position} ref={markerRef}>
-            <Popup>{props.label}</Popup>
+        <Marker key={props.markerId} eventHandlers={eventHandlers} icon={MarkerIcon} draggable={props.draggable} position={props.position} ref={markerRef}>
+            {props.children}
         </Marker>
     )
 }
