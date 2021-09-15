@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Productos se setean correctamente al venir de recoleccion">
-      <change afterPath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCaja.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se inicio proceso de corte caja">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/GuiaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/GuiaContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCaja.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCaja.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,13 +140,6 @@
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
       <workItem from="1631159140096" duration="18684000" />
-    </task>
-    <task id="LOCAL-00033" summary="*Las localidades ya se acumulan">
-      <created>1628397385643</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1628397385643</updated>
     </task>
     <task id="LOCAL-00034" summary="*Limpieza de código">
       <created>1628397519080</created>
@@ -483,7 +477,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631669162010</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="Se inicio proceso de corte caja">
+      <created>1631681179385</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1631681179385</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -548,7 +549,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se cambio la dsitribución de los campos en informes y viajes" />
     <MESSAGE value="Se ajustaron las columnas de tarifas" />
     <MESSAGE value="Clonar Embarque" />
     <MESSAGE value="Se hicieron ajustes en viajes" />
@@ -573,7 +573,8 @@
     <MESSAGE value="Lista implementada" />
     <MESSAGE value="Nuevo acomodo de componentes terminado" />
     <MESSAGE value="Productos se setean correctamente al venir de recoleccion" />
-    <option name="LAST_COMMIT_MESSAGE" value="Productos se setean correctamente al venir de recoleccion" />
+    <MESSAGE value="Se inicio proceso de corte caja" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se inicio proceso de corte caja" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
