@@ -8,6 +8,7 @@ import ViajesPage from './Views/Viajes'
 import CatalogosPage from './Views/Catalogos';
 import ConfiguracionPage from './Views/Configuracion';
 import InicadoresPage from './Views/Indicadores';
+import CorteCajaPage from './Views/CorteCaja/CorteCaja';
 import Historial from './Views/Viajes/Historial';
 import UltimaMillaPage from './Views/UltimaMilla/UltimaMilla';
 
@@ -95,6 +96,14 @@ const dashboardRoutes = [
     name: "Viajes",
     icon: viajeIcon,
     component: ViajesPage,
+    single: true,
+    child:[]
+  },
+  {
+    path: "/CorteCaja",
+    name: "Corte de Caja",
+    icon: viajeIcon,
+    component: CorteCajaPage,
     single: true,
     child:[]
   },
