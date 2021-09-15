@@ -2664,7 +2664,7 @@ function Recoleccion() {
         });
     }
 
-    const framesPaquete = state.paquetes.map((p, index) => {
+    /*const framesPaquete = state.paquetes.map((p, index) => {
         return (
             <div key={`paquete${index}`}>
                 <h4><strong>{`Paquete #${index + 1}`}</strong></h4>
@@ -2895,7 +2895,7 @@ function Recoleccion() {
                 </div>
             </div>
         );
-    });
+    });*/
 
     if (redirect) {
         if (data.find((o) => o.m_nIdRecoleccion == state.idRecoleccion).m_nIdEmbarque != 0) {

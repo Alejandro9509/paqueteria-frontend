@@ -267,23 +267,7 @@ function Embarque(props) {
         horaCitaMaxima: '',
 
         //Paquetes/sobres
-        paquetes: [
-            {
-                m_nIdEmbarqueDetalle: 0,
-                m_xPeso: "",
-                m_xLargo: "",
-                m_xAncho: "",
-                m_xAlto: "",
-                m_xVolumen: "",
-                m_nIdTIpoEmpaque: "",
-                m_cyValorDeclarado: "",
-                m_sDescripcion: "",
-                m_nCantidad: "",
-                m_nTipo: 2,
-                m_sObservaciones: "",
-                m_nIdProducto:'',
-            },
-        ],
+        paquetes: [],
         sobres: [
             {
                 m_nTipo: 1,
@@ -663,10 +647,11 @@ function Embarque(props) {
         m_xAlto: "",
         m_xVolumen: "",
         m_nIdTIpoEmpaque: "",
-        m_cyValorDeclarado: "",
+        m_cValorDeclarado: "",
         m_sDescripcion: "",
-        m_nCantidad: "",
+        ctd: "",
         m_nTipo: 2,
+        m_sTipo: "Paquete",
         m_sObservaciones: "",
         m_nIdProducto:'',
     })
@@ -755,35 +740,11 @@ function Embarque(props) {
     const handleAceptar = (e) => {
         e.preventDefault();
         const {paquetes, sobres} = state;
-        let sinPaquetes = false
 
-        for (let i = 0; i < paquetes.length; i++) {
-            if (!validarPaquetes(paquetes[i])){
-                sinPaquetes = true
-            }
+        if (paquetes.length === 0){
+            showSuccess("Debe agregar al menos un paquete")
+            return
         }
-        if (sinPaquetes){
-            for (let i = 0; i < sobres.length; i++) {
-                if (!validarSobre(sobres[i])){
-                    showSuccess("Verifique haber llenado todos los datos de paquetes y/o sobres");
-                    return
-                }
-            }
-        }
-
-
-        const soloPaquetesLenth = paquetes.length
-        const paquetesYSobres = []
-
-        paquetes.forEach(p => {
-            p["ctd"] = p.m_nCantidad
-        })
-        paquetes.forEach(p => {
-            paquetesYSobres.push(p)
-        })
-        sobres.forEach(s => {
-            paquetesYSobres.push(s)
-        })
 
         const params = {
             m_nIdEmbarque: state.idEmbarque,
@@ -839,7 +800,7 @@ function Embarque(props) {
 
             m_nNoPaquetes: state.paquetes.length,
             m_nNoSobres: state.sobres.length,
-            m_arrClsDetalle: paquetesYSobres,
+            m_arrClsDetalle: state.paquetes,
             // m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
             // m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
             // FechaLlegada: state.fechaHoraLlegada.split("T")[0],
@@ -1297,6 +1258,9 @@ function Embarque(props) {
 
         const {m_parrPaquetes, m_parrSobres} = respuesta.data;
         let totalPaquetes = 0
+        m_parrSobres.forEach(sobre => {
+            m_parrPaquetes.push(sobre)
+        })
         m_parrPaquetes.forEach(paq => {
             paq.m_nIdEmbarqueDetalle = paq.m_nIdPaquete
             paq["m_nTipo"] = paq.m_nIdTipo;
@@ -1536,6 +1500,10 @@ function Embarque(props) {
         })
 
         let totalPaquetes = 0
+        respuesta.data.m_arrSobres.forEach((s) => {
+            respuesta.data.m_arrPaquetes.push(s)
+        })
+
         respuesta.data.m_arrPaquetes.forEach(p => {
             obtenerProductoById(p.m_nIdProducto).then(({data}) => {
                 p.producto = data
@@ -2757,9 +2725,9 @@ function Embarque(props) {
             m_xVolumen: "",
             m_nIdTIpoEmpaque: "",
             m_sTipoEmbalaje: "",
-            m_cyValorDeclarado: "",
+            m_cValorDeclarado: "",
             m_sDescripcion: "",
-            m_nCantidad: "",
+            ctd: "",
             m_nTipo: 2,
             m_sObservaciones: "",
             producto: null,
@@ -2928,7 +2896,7 @@ function Embarque(props) {
 
 
 
-    const framesPaquete = state.paquetes.map((p, index) => {
+    /*const framesPaquete = state.paquetes.map((p, index) => {
         return (
             <div key={`paquete${index}`}>
                 <div className="col-sm-12 col-md-12 unit">
@@ -3149,7 +3117,7 @@ function Embarque(props) {
                 </div>
             </div>
         );
-    });
+    });*/
 
     const handleFechaCita = (event) => {
         setState({
