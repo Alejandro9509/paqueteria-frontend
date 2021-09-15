@@ -1023,7 +1023,7 @@ function Recoleccion() {
 
         respuesta.data.m_parrPaquetes.forEach((p) => {
             obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
-                p["producto"] = dataProductos.find((pd) => pd.m_nIdProducto == p.m_nIdProducto)
+                p["producto"] = data
                 p.m_sProducto = data.m_sDescripcion
             })
             obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {

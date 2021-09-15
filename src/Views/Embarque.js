@@ -1298,34 +1298,29 @@ function Embarque(props) {
         const {m_parrPaquetes, m_parrSobres} = respuesta.data;
         let totalPaquetes = 0
         m_parrPaquetes.forEach(paq => {
+            paq.m_nIdEmbarqueDetalle = paq.m_nIdPaquete
+            paq["m_nTipo"] = paq.m_nIdTipo;
+            paq["m_xPeso"] = paq.m_rPeso;
+            paq["m_xLargo"] = paq.m_rLargo;
+            paq["m_xAncho"] = paq.m_rAncho;
+            paq["m_xAlto"] = paq.m_rAlto;
+            paq["m_xVolumen"] = paq.m_rVolumen;
+            paq["m_nIdTIpoEmpaque"] = paq.m_nIdTipoEmbalaje;
+            paq["m_cValorDeclarado"] = paq.m_cyValorDeclarado;
+            paq.ctd = paq.m_nCantidad
             obtenerProductoById(paq.m_nIdProducto).then(({data}) => {
-                paq["m_nTipo"] = 2;
-                paq["m_xPeso"] = paq.m_rPeso;
-                paq["m_xLargo"] = paq.m_rLargo;
-                paq["m_xAncho"] = paq.m_rAncho;
-                paq["m_xAlto"] = paq.m_rAlto;
-                paq["m_xVolumen"] = paq.m_rVolumen;
-                paq["m_nIdTIpoEmpaque"] = paq.m_nIdTipoEmbalaje;
-                paq["m_cValorDeclarado"] = paq.m_cyValorDeclarado;
-                paq["producto"] = data
+                paq.producto = data
+                paq.m_sProducto = data.m_sDescripcion
                 totalPaquetes += parseInt(paq.ctd)
             })
+            obtenerEmbalajesId(paq.m_nIdTipoEmbalaje).then(({data}) => {
+                paq.m_sTipoEmbalaje = data.m_sNombre
+            })
+            paq.m_sTipo = paq.m_nTipo == 1 ? 'Sobre': 'Paquete'
         })
         m_parrSobres.forEach(sobre => {
             sobre["m_nTipo"] = 1
         })
-        /*let remitente = {}
-        let destinatario = {}
-        if (respuesta.data.m_sAliasRemitente) {
-            remitente = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasRemitente && o.m_sNombre == respuesta.data.m_sNombreRemitente)
-        } else {
-            remitente = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNombreRemitente)
-        }
-        if (respuesta.data.m_sAliasDestinatario) {
-            destinatario = dataRemitenteDestinatario.find((o) => o.m_sAlias == respuesta.data.m_sAliasDestinatario && o.m_sNombre == respuesta.data.m_sNombreDestinatario)
-        } else {
-            destinatario = dataRemitenteDestinatario.find((o) => o.m_sNombre == respuesta.data.m_sNombreDestinatario)
-        }*/
 
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
             setState(state => {
@@ -1368,23 +1363,6 @@ function Embarque(props) {
                 })
             })
         })
-
-        /*obtenerCodigoPostalId(remitente.m_nIdCP).then((cp) => {
-            setState(state => {
-                return {
-                    ...state,
-                    codigoPostalRemitente: cp.data
-                }
-            })
-        })
-        obtenerCodigoPostalId(destinatario.m_nIdCP).then((cp) => {
-            setState(state => {
-                return {
-                    ...state,
-                    codigoPostalDestinatario: cp.data
-                }
-            })
-        })*/
 
         obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
             setState(state => {
@@ -1476,7 +1454,7 @@ function Embarque(props) {
                 // zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
 
                 paquetes: m_parrPaquetes,
-                sobres: m_parrSobres,
+                // sobres: m_parrSobres,
 
                 //Datos entrega
                 diferenteEntrega: false,
@@ -1565,7 +1543,7 @@ function Embarque(props) {
             })
             obtenerEmbalajesId(p.m_nIdTIpoEmpaque).then(({data}) => {
                 p.m_sTipoEmbalaje = data.m_sNombre
-                p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
+                p.m_sTipo = p.m_nTipo == 1 ? 'Sobre': 'Paquete'
             })
         })
         setTotalPaquetes(totalPaquetes)
@@ -2739,7 +2717,7 @@ function Embarque(props) {
                 m_cValorDeclarado: "",
                 m_sDescripcion: "",
                 ctd: "",
-                m_nIdTipo: 2,
+                m_nTipo: 2,
                 m_sObservaciones: "",
                 producto: null,
                 m_nIdProducto: "",
@@ -2782,7 +2760,7 @@ function Embarque(props) {
             m_cyValorDeclarado: "",
             m_sDescripcion: "",
             m_nCantidad: "",
-            m_nIdTipo: 2,
+            m_nTipo: 2,
             m_sObservaciones: "",
             producto: null,
             m_nIdProducto: "",
@@ -2845,7 +2823,7 @@ function Embarque(props) {
                 }
             })
         }
-        if (event.target.name == "m_nIdTipo"){
+        if (event.target.name == "m_nTipo"){
             setPaquete(paquete => {
                 return {
                     ...paquete,
@@ -4164,11 +4142,11 @@ function Embarque(props) {
                                                                             label="Tipo de paquete"
                                                                             labelId="m_nIdTipoLabel"
                                                                             className="form-control"
-                                                                            value={paquete.m_nIdTipo}
+                                                                            value={paquete.m_nTipo}
                                                                             disabled={state.agregar === "Consultar"}
                                                                             onChange={(event) => handleChangePaquetev2(event)}
-                                                                            id="m_nIdTipo"
-                                                                            name="m_nIdTipo"
+                                                                            id="m_nTipo"
+                                                                            name="m_nTipo"
                                                                         >
                                                                             <option key={2} value={2}>
                                                                                 Paquete
