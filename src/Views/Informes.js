@@ -20,7 +20,7 @@ import {
     Select,
     Step,
     StepLabel,
-    Stepper,
+    Stepper, Tooltip,
 } from "@material-ui/core";
 
 
@@ -50,7 +50,7 @@ import Noty from "noty";
 import {API_BASE_URL, dataGridLocaleText} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusInforme} from "../Util/Contexts/EstatusContext";
-import {obtenerGuia, obtenerGuiaPendientes, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
+import {obtenerGuia, obtenerGuiaPendientes, obtenerGuiaReporte, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
 import {obtenerOperadores} from "../Util/Contexts/OperadoresContext";
 import {obtenerUnidades, obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
 import {obtenerRutas} from "../Util/Contexts/RutasContext";
@@ -58,7 +58,7 @@ import {
     agregarInformes,
     cancelarInformes,
     eliminarInformes,
-    modificarInformes, obtenerInformeFiltro,
+    modificarInformes, obtenerInformeFiltro, obtenerInformeReporte,
     obtenerInformes,
     obtenerInformesId
 } from "../Util/Contexts/InformesContext";
@@ -149,6 +149,7 @@ function Informes({history}) {
             headerName: "Acciones",
             sortable: false, filterable: false,
             field: "",
+            width: 200,
             renderCell: (row) => {
                 return (
                     <div>
@@ -167,6 +168,12 @@ function Informes({history}) {
                         >
                             <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                         </a>
+                        <Tooltip title="Reporte">
+                            <a  className="btn btn-default btn-xs"
+                                onClick={() => generarReporte(row.row.m_nIdInforme, row.row.m_sFolioInforme)}><i className="zmdi zmdi-file"
+                                                                                                           style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
                         <a
                             href="#"
                             className="btn btn-default btn-xs"
@@ -230,6 +237,15 @@ function Informes({history}) {
             width: 150,
         },
     ]);
+
+    function generarReporte(id, folio){
+        obtenerInformeReporte(id).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Informe " + folio;
+        })
+    }
 
     function getAllGuias() {
         obtenerGuia().then((respuesta) => {
