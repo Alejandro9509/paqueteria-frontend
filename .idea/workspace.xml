@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se concidero solo el origen en el listado de paradas">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se regreso la etiqueta actual">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/InformesContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/InformesContext.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Informes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Informes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Constants/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,6 +114,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
+      <changelist id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="" />
       <created>1622499461827</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -140,13 +140,8 @@
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
       <workItem from="1631159140096" duration="18684000" />
-    </task>
-    <task id="LOCAL-00032" summary="*Los codigos postales ya se acumulan por ciudad">
-      <created>1628396161531</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1628396161531</updated>
+      <workItem from="1631750064945" duration="25000" />
+      <workItem from="1631812359785" duration="336000" />
     </task>
     <task id="LOCAL-00033" summary="*Las localidades ya se acumulan">
       <created>1628397385643</created>
@@ -484,7 +479,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631638557687</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="Se integro el reporte de informes">
+      <created>1631744154510</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1631744154511</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -549,7 +551,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Corrección de error al generar embarque" />
     <MESSAGE value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
     <MESSAGE value="Se cambio la dsitribución de los campos en informes y viajes" />
     <MESSAGE value="Se ajustaron las columnas de tarifas" />
@@ -574,7 +575,8 @@
     <MESSAGE value="Homologar tablas de listados" />
     <MESSAGE value="Se agrego el origen al generar salida de viaje" />
     <MESSAGE value="Se concidero solo el origen en el listado de paradas" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se concidero solo el origen en el listado de paradas" />
+    <MESSAGE value="Se integro el reporte de informes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se integro el reporte de informes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
