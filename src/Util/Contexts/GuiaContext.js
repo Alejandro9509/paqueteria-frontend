@@ -145,4 +145,22 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
     return result
 }
 
-export { entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId, obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia, obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte }
+function obtenerGuiasFiltroCorteCaja(fecha, destino, idMoneda, idTipoPago) {
+
+    const url =
+        `${process.env.REACT_APP_API_URL}/Guias/GetListadoFiltrosCorteCaja/` +
+        fecha +
+        "/" +
+        destino +
+        "/" +
+        idMoneda +
+        "/" +
+        idTipoPago
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export { obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId, obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia, obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte }

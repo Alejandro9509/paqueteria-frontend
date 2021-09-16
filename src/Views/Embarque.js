@@ -726,14 +726,18 @@ function Embarque(props) {
     }
 
     const validarPaquetes = (paquete) => {
-        return !!(paquete.m_xPeso != ''
-            && paquete.m_xLargo != ''
-            && paquete.m_xAncho != ''
-            && paquete.m_xAlto != ''
-            && paquete.m_sDescripcion != ''
-            && paquete.ctd != ''
-            && paquete.producto
-            && paquete.m_nIdTIpoEmpaque);
+        if (paquete.m_nTipo == 1){
+            return !!(paquete.m_sDescripcion != '');
+        }else{
+            return !!(paquete.m_xPeso != ''
+                && paquete.m_xLargo != ''
+                && paquete.m_xAncho != ''
+                && paquete.m_xAlto != ''
+                && paquete.m_sDescripcion != ''
+                && paquete.ctd != ''
+                && paquete.producto
+                && paquete.m_nIdTIpoEmpaque);
+        }
     }
 
     const validarSobre = (sobre) => {
@@ -4162,141 +4166,157 @@ function Embarque(props) {
                                                                     <i className="fa fa-arrow-down"/>
                                                                 </label>
                                                             </Grid>
-                                                            <Grid item xs={2}>
-                                                                <div className="input">
-                                                                    <Autocomplete
-                                                                        value={paquete.producto}
-                                                                        freeSolo
-                                                                        onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
-                                                                        disableClearable
-                                                                        forcePopupIcon={false}
-                                                                        options={dataProductos}
-                                                                        disabled={state.agregar === "Consultar"}
-                                                                        getOptionLabel={(option) => `${option.m_sDescripcion}`}
-                                                                        variant="outlined"
-                                                                        inputValue={`${paquete.producto == null ? '' : paquete.producto.m_sDescripcion}`}
-                                                                        name={"producto"}
-                                                                        style={{transform: "translate(14px, 10px) scale(1) !important"}}
-                                                                        renderInput={(params) =>
-                                                                            <TextField
-                                                                                variant="outlined"
-                                                                                label="Producto"
-                                                                                margin="dense"
-                                                                                onClick={handleClickProducto}
-                                                                                {...params}
-                                                                            />
-                                                                        }
-                                                                    />
-                                                                </div>
-                                                            </Grid>
-                                                            <Grid item xs={1}>
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                               onChange={(event) => handleChangePaquetev2(event)}
-                                                                               className="form-control"
-                                                                               type="text"
-                                                                               label="Peso"
-                                                                               value={paquete.m_xPeso}
-                                                                               disabled={state.agregar === "Consultar"}
-                                                                               placeholder="kg"
-                                                                               name="m_XPeso"
-                                                                    />
-                                                                </div>
-                                                            </Grid>
-                                                            <Grid item xs={1}>
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                               onChange={(event) => handleChangePaquetev2(event)}
-                                                                               className="form-control"
-                                                                               type="text"
-                                                                               value={paquete.m_xLargo}
-                                                                               label="Largo"
-                                                                               disabled={state.agregar === "Consultar"}
-                                                                               placeholder="cms"
-                                                                               name="m_xLargo"
-                                                                    />
-                                                                </div>
-                                                            </Grid>
-                                                            <Grid item xs={1}>
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                               onChange={(event) => handleChangePaquetev2(event)}
-                                                                               className="form-control"
-                                                                               type="text"
-                                                                               label="Ancho"
-                                                                               value={paquete.m_xAncho}
-                                                                               disabled={state.agregar === "Consultar"}
-                                                                               placeholder="cms"
-                                                                               name="m_xAncho"
-                                                                    />
-                                                                </div>
-                                                            </Grid>
-                                                            <Grid item xs={1}>
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                               onChange={(event) => handleChangePaquetev2(event)}
-                                                                               className="form-control"
-                                                                               type="text"
-                                                                               value={paquete.m_xAlto}
-                                                                               label="Alto"
-                                                                               disabled={state.agregar === "Consultar"}
-                                                                               placeholder="cms"
-                                                                               name="m_xAlto"
-                                                                    />
-                                                                </div>
-                                                            </Grid>
-                                                            <Grid item xs={1}>
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                        // onChange={(event) => handleChangePaquete(event, index)}
-                                                                               className="form-control"
-                                                                               type="text"
-                                                                               value={paquete.m_xVolumen}
-                                                                               label="Volumen"
-                                                                               disabled
-                                                                               placeholder="cm3"
-                                                                               name="m_xVolumen"
-                                                                    />
-                                                                </div>
-                                                            </Grid>
-                                                            <Grid item xs={1}>
-                                                                <label className="input select">
-                                                                    <FormControl fullWidth variant="outlined" margin="dense" >
-                                                                        <InputLabel id="m_nIdTipoEmbalajeLabel">Embalaje</InputLabel>
-                                                                        <Select
-                                                                            label="Embalaje"
-                                                                            labelId="m_nIdTipoEmbalajeLabel"
-                                                                            className="form-control"
-                                                                            value={paquete.m_nIdTIpoEmpaque}
+                                                            {paquete.m_nTipo != 1 &&
+                                                                <Grid item xs={2}>
+                                                                    <div className="input">
+                                                                        <Autocomplete
+                                                                            value={paquete.producto}
+                                                                            freeSolo
+                                                                            onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
+                                                                            disableClearable
+                                                                            forcePopupIcon={false}
+                                                                            options={dataProductos}
                                                                             disabled={state.agregar === "Consultar"}
-                                                                            onChange={(event) => handleChangePaquetev2(event)}
-                                                                            id="m_nIdTIpoEmpaque"
-                                                                            name="m_nIdTIpoEmpaque"
-                                                                        >
-                                                                            {dataEmbalaje.map((embalaje) => (
-                                                                                <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
-                                                                                    {embalaje.m_sNombre}
-                                                                                </option>
-                                                                            ))}
-                                                                        </Select>
-                                                                    </FormControl>
-                                                                    <i className="fa fa-arrow-down"/>
-                                                                </label>
-                                                            </Grid>
-                                                            <Grid item xs={2}>
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                               onChange={(event) => handleChangePaquetev2(event)}
-                                                                               className="form-control"
-                                                                               type="text"
-                                                                               label="Valor Declarado"
-                                                                               value={paquete.m_cValorDeclarado}
-                                                                               disabled={state.agregar === "Consultar"}
-                                                                               placeholder="$"
-                                                                               name="m_cValorDeclarado"
-                                                                    />
-                                                                </div>
-                                                            </Grid>
+                                                                            getOptionLabel={(option) => `${option.m_sDescripcion}`}
+                                                                            variant="outlined"
+                                                                            inputValue={`${paquete.producto == null ? '' : paquete.producto.m_sDescripcion}`}
+                                                                            name={"producto"}
+                                                                            style={{transform: "translate(14px, 10px) scale(1) !important"}}
+                                                                            renderInput={(params) =>
+                                                                                <TextField
+                                                                                    variant="outlined"
+                                                                                    label="Producto"
+                                                                                    margin="dense"
+                                                                                    onClick={handleClickProducto}
+                                                                                    {...params}
+                                                                                />
+                                                                            }
+                                                                        />
+                                                                    </div>
+                                                                </Grid>
+                                                            }
+                                                            {paquete.m_nTipo != 1 &&
+                                                                <Grid item xs={1}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Peso"
+                                                                                   value={paquete.m_xPeso}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   placeholder="kg"
+                                                                                   name="m_XPeso"
+                                                                        />
+                                                                    </div>
+                                                                </Grid>
+                                                            }
+                                                            {paquete.m_nTipo != 1 &&
+                                                                <Grid item xs={1}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   value={paquete.m_xLargo}
+                                                                                   label="Largo"
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   placeholder="cms"
+                                                                                   name="m_xLargo"
+                                                                        />
+                                                                    </div>
+                                                                </Grid>
+                                                            }
+                                                            {paquete.m_nTipo != 1 &&
+                                                                <Grid item xs={1}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Ancho"
+                                                                                   value={paquete.m_xAncho}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   placeholder="cms"
+                                                                                   name="m_xAncho"
+                                                                        />
+                                                                    </div>
+                                                                </Grid>
+                                                            }
+                                                            {paquete.m_nTipo != 1 &&
+                                                                <Grid item xs={1}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   value={paquete.m_xAlto}
+                                                                                   label="Alto"
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   placeholder="cms"
+                                                                                   name="m_xAlto"
+                                                                        />
+                                                                    </div>
+                                                                </Grid>
+                                                            }
+                                                            {paquete.m_nTipo != 1 &&
+                                                                <Grid item xs={1}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                            // onChange={(event) => handleChangePaquete(event, index)}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   value={paquete.m_xVolumen}
+                                                                                   label="Volumen"
+                                                                                   disabled
+                                                                                   placeholder="cm3"
+                                                                                   name="m_xVolumen"
+                                                                        />
+                                                                    </div>
+                                                                </Grid>
+                                                            }
+                                                            {paquete.m_nTipo != 1 &&
+                                                                <Grid item xs={1}>
+                                                                    <label className="input select">
+                                                                        <FormControl fullWidth variant="outlined" margin="dense" >
+                                                                            <InputLabel id="m_nIdTipoEmbalajeLabel">Embalaje</InputLabel>
+                                                                            <Select
+                                                                                label="Embalaje"
+                                                                                labelId="m_nIdTipoEmbalajeLabel"
+                                                                                className="form-control"
+                                                                                value={paquete.m_nIdTIpoEmpaque}
+                                                                                disabled={state.agregar === "Consultar"}
+                                                                                onChange={(event) => handleChangePaquetev2(event)}
+                                                                                id="m_nIdTIpoEmpaque"
+                                                                                name="m_nIdTIpoEmpaque"
+                                                                            >
+                                                                                {dataEmbalaje.map((embalaje) => (
+                                                                                    <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
+                                                                                        {embalaje.m_sNombre}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </Select>
+                                                                        </FormControl>
+                                                                        <i className="fa fa-arrow-down"/>
+                                                                    </label>
+                                                                </Grid>
+                                                            }
+                                                            {paquete.m_nTipo != 1 &&
+                                                                <Grid item xs={2}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Valor Declarado"
+                                                                                   value={paquete.m_cValorDeclarado}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   placeholder="$"
+                                                                                   name="m_cValorDeclarado"
+                                                                        />
+                                                                    </div>
+                                                                </Grid>
+                                                            }
                                                             <Grid item xs={5}>
                                                                 <div className="input">
                                                                     <TextField variant="outlined" margin="dense"
@@ -4311,34 +4331,38 @@ function Embarque(props) {
                                                                     />
                                                                 </div>
                                                             </Grid>
-                                                            <Grid item xs={1}>
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                               onChange={(event) => handleChangePaquetev2(event)}
-                                                                               className="form-control"
-                                                                               type="text"
-                                                                               label="Ctd"
-                                                                               value={paquete.ctd}
-                                                                               disabled={state.agregar === "Consultar"}
-                                                                               placeholder="Ctd"
-                                                                               name="ctd"
-                                                                    />
-                                                                </div>
-                                                            </Grid>
-                                                            <Grid item xs={5}>
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                               onChange={(event) => handleChangePaquetev2(event)}
-                                                                               className="form-control"
-                                                                               type="text"
-                                                                               label="Observaciones"
-                                                                               value={paquete.m_sObservaciones}
-                                                                               disabled={state.agregar === "Consultar"}
-                                                                               placeholder="Observaciones"
-                                                                               name="m_sObservaciones"
-                                                                    />
-                                                                </div>
-                                                            </Grid>
+                                                            {paquete.m_nTipo != 1 &&
+                                                                <Grid item xs={1}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Ctd"
+                                                                                   value={paquete.ctd}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   placeholder="Ctd"
+                                                                                   name="ctd"
+                                                                        />
+                                                                    </div>
+                                                                </Grid>
+                                                            }
+                                                            {paquete.m_nTipo != 1 &&
+                                                                <Grid item xs={5}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Observaciones"
+                                                                                   value={paquete.m_sObservaciones}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   placeholder="Observaciones"
+                                                                                   name="m_sObservaciones"
+                                                                        />
+                                                                    </div>
+                                                                </Grid>
+                                                            }
                                                             <Grid item xs={1}>
                                                                 <IconButton onClick={addPaquetev2} style={{ padding: "0px" }} disabled={state.agregar === "Consultar"}>
                                                                     <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
