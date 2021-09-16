@@ -15,6 +15,15 @@ function modificarInformes(id, params){
     return result
 }
 
+function obtenerInformeReporte(id) {
+    const url = `http://190.9.53.4:8081/reportes/api/GenerarReporte/Informe/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 function cancelarInformes(id, params){
     const url = `${process.env.REACT_APP_API_URL}/Informes/Cancelar/${id}`;
     let result;
@@ -88,4 +97,5 @@ function obtenerInformeFiltro(folioInforme) {
     return result
 }
 
-export {modificarInformes, agregarInformes, eliminarInformes, obtenerInformes, obtenerInformesId, cancelarInformes, obtenerInformesDisponiblesViajes, obtenerInformesPorViaje,obtenerInformeFiltro }
+export {modificarInformes, agregarInformes, eliminarInformes, obtenerInformes, obtenerInformesId, cancelarInformes, obtenerInformesDisponiblesViajes, obtenerInformesPorViaje,obtenerInformeFiltro,
+    obtenerInformeReporte}
