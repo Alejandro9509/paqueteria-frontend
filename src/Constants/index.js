@@ -218,6 +218,7 @@ export const TICKET_ZABRA_TAMPLATE = (guia, paquete, index) => (
     ^FDQA,http://190.9.53.4:8081/app/applications/${guia.m_nIdGuia}/tracking^FS
     ^PQ1,0,1,Y^XZ`*/
 `^XA
+^CI28
 ^MUm
 ^LL150,^PW100^LH0,0
 ^FO3,7

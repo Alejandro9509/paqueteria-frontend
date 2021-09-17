@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se regreso la etiqueta actual">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/sonarIssues.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Constants/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,14 +143,7 @@
       <workItem from="1630947747664" duration="1625000" />
       <workItem from="1631159140096" duration="18684000" />
       <workItem from="1631750064945" duration="25000" />
-      <workItem from="1631812359785" duration="336000" />
-    </task>
-    <task id="LOCAL-00033" summary="*Las localidades ya se acumulan">
-      <created>1628397385643</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1628397385643</updated>
+      <workItem from="1631812359785" duration="11813000" />
     </task>
     <task id="LOCAL-00034" summary="*Limpieza de código">
       <created>1628397519080</created>
@@ -486,7 +481,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631744154511</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="Se agregaron los datos a la etiqueta">
+      <created>1631812725385</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1631812725386</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -551,7 +553,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
     <MESSAGE value="Se cambio la dsitribución de los campos en informes y viajes" />
     <MESSAGE value="Se ajustaron las columnas de tarifas" />
     <MESSAGE value="Clonar Embarque" />
@@ -576,7 +577,8 @@
     <MESSAGE value="Se agrego el origen al generar salida de viaje" />
     <MESSAGE value="Se concidero solo el origen en el listado de paradas" />
     <MESSAGE value="Se integro el reporte de informes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se integro el reporte de informes" />
+    <MESSAGE value="Se agregaron los datos a la etiqueta" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se agregaron los datos a la etiqueta" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
