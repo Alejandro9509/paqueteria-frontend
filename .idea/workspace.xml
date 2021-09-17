@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se concidero solo el origen en el listado de paradas">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Validacion al agregar sobres">
+      <change afterPath="$PROJECT_DIR$/src/Util/Contexts/CorteCajaContext.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCajaAgregar.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCaja.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCaja.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +18,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="XHTML File" />
         <option value="JavaScript File" />
       </list>
     </option>
@@ -60,6 +62,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="XHTML File" />
     <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -140,13 +143,7 @@
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
       <workItem from="1631159140096" duration="18684000" />
-    </task>
-    <task id="LOCAL-00032" summary="*Los codigos postales ya se acumulan por ciudad">
-      <created>1628396161531</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1628396161531</updated>
+      <workItem from="1631848278297" duration="5868000" />
     </task>
     <task id="LOCAL-00033" summary="*Las localidades ya se acumulan">
       <created>1628397385643</created>
@@ -484,7 +481,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631638557687</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="Validacion al agregar sobres">
+      <created>1631755357053</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1631755357054</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -549,7 +553,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Corrección de error al generar embarque" />
     <MESSAGE value="Se cambio la logica para mostrar sucursal en el listado de usuarios" />
     <MESSAGE value="Se cambio la dsitribución de los campos en informes y viajes" />
     <MESSAGE value="Se ajustaron las columnas de tarifas" />
@@ -574,7 +577,8 @@
     <MESSAGE value="Homologar tablas de listados" />
     <MESSAGE value="Se agrego el origen al generar salida de viaje" />
     <MESSAGE value="Se concidero solo el origen en el listado de paradas" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se concidero solo el origen en el listado de paradas" />
+    <MESSAGE value="Validacion al agregar sobres" />
+    <option name="LAST_COMMIT_MESSAGE" value="Validacion al agregar sobres" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
