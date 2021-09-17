@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/sonarIssues.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Ajuste embarque">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Constants/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCajaAgregar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCajaAgregar.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,12 +16,13 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="XHTML File" />
         <option value="JavaScript File" />
       </list>
     </option>
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="bugfix/zonas" />
+    <option name="BRANCH" value="feature/scanner" />
     <option name="OPTIONS">
       <set>
         <option value="NO_FF" />
@@ -33,7 +32,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="feature/scanner" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -61,6 +60,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="XHTML File" />
     <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -116,7 +116,6 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="" />
       <created>1622499461827</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -142,8 +141,8 @@
       <workItem from="1630703848244" duration="9624000" />
       <workItem from="1630947747664" duration="1625000" />
       <workItem from="1631159140096" duration="18684000" />
-      <workItem from="1631750064945" duration="25000" />
-      <workItem from="1631812359785" duration="11813000" />
+      <workItem from="1631848278297" duration="5868000" />
+      <workItem from="1631890755501" duration="4425000" />
     </task>
     <task id="LOCAL-00034" summary="*Limpieza de código">
       <created>1628397519080</created>
@@ -474,19 +473,19 @@
       <option name="project" value="LOCAL" />
       <updated>1631638557687</updated>
     </task>
-    <task id="LOCAL-00081" summary="Se integro el reporte de informes">
-      <created>1631744154510</created>
+    <task id="LOCAL-00081" summary="Validacion al agregar sobres">
+      <created>1631755357053</created>
       <option name="number" value="00081" />
       <option name="presentableId" value="LOCAL-00081" />
       <option name="project" value="LOCAL" />
-      <updated>1631744154511</updated>
+      <updated>1631755357054</updated>
     </task>
-    <task id="LOCAL-00082" summary="Se agregaron los datos a la etiqueta">
-      <created>1631812725385</created>
+    <task id="LOCAL-00082" summary="Ajuste embarque">
+      <created>1631892059864</created>
       <option name="number" value="00082" />
       <option name="presentableId" value="LOCAL-00082" />
       <option name="project" value="LOCAL" />
-      <updated>1631812725386</updated>
+      <updated>1631892059865</updated>
     </task>
     <option name="localTasksCounter" value="83" />
     <servers />
@@ -576,9 +575,9 @@
     <MESSAGE value="Homologar tablas de listados" />
     <MESSAGE value="Se agrego el origen al generar salida de viaje" />
     <MESSAGE value="Se concidero solo el origen en el listado de paradas" />
-    <MESSAGE value="Se integro el reporte de informes" />
-    <MESSAGE value="Se agregaron los datos a la etiqueta" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se agregaron los datos a la etiqueta" />
+    <MESSAGE value="Validacion al agregar sobres" />
+    <MESSAGE value="Ajuste embarque" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajuste embarque" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

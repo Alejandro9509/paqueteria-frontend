@@ -170,7 +170,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         if (pantallaActiva === 2){
             if (state.ciudadDestino && state.idTipoMoneda && state.idTipoPago && infoGeneral.fechaRegistro){
                 //pedir guias filtradas filtrado
-                obtenerGuiasFiltroCorteCaja(infoGeneral.fechaRegistro, state.ciudadDestino, state.idTipoMoneda, state.idTipoPago).then(({data}) => {
+                obtenerGuiasFiltroCorteCaja(infoGeneral.fechaRegistro, state.ciudadDestino.m_nIdCiudad, state.idTipoMoneda, state.idTipoPago).then(({data}) => {
                     let totalTotal = 0.0
                     data.forEach((i) => {
                         let m_cImporte = 0
