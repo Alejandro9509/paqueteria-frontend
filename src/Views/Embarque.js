@@ -4206,7 +4206,7 @@ function Embarque(props) {
                                                                                    value={paquete.m_xPeso}
                                                                                    disabled={state.agregar === "Consultar"}
                                                                                    placeholder="kg"
-                                                                                   name="m_XPeso"
+                                                                                   name="m_xPeso"
                                                                         />
                                                                     </div>
                                                                 </Grid>
