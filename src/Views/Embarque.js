@@ -4199,20 +4199,20 @@ function Embarque(props) {
                                                             </Grid>
                                                             }
                                                             {paquete.m_nTipo != 1 &&
-                                                            <Grid item xs={1}>
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                               onChange={(event) => handleChangePaquetev2(event)}
-                                                                               className="form-control"
-                                                                               type="text"
-                                                                               label="Peso"
-                                                                               value={paquete.m_xPeso}
-                                                                               disabled={state.agregar === "Consultar"}
-                                                                               placeholder="kg"
-                                                                               name="m_XPeso"
-                                                                    />
-                                                                </div>
-                                                            </Grid>
+                                                                <Grid item xs={1}>
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined" margin="dense"
+                                                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Peso"
+                                                                                   value={paquete.m_xPeso}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   placeholder="kg"
+                                                                                   name="m_xPeso"
+                                                                        />
+                                                                    </div>
+                                                                </Grid>
                                                             }
                                                             {paquete.m_nTipo != 1 &&
                                                             <Grid item xs={1}>
