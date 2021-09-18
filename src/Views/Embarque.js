@@ -2672,33 +2672,6 @@ function Embarque(props) {
         }
     }
 
-    /*=PAQUETES Y SOBRES=*/
-
-    function addPaquete() {
-        const {paquetes} = state;
-        paquetes.push({
-            m_xPeso: "",
-            m_xLargo: "",
-            m_xAncho: "",
-            m_xAlto: "",
-            m_xVolumen: "",
-            m_nIdTIpoEmpaque: "",
-            m_cValorDeclarado: "",
-            m_sDescripcion: "",
-            m_nCantidad: "",
-            m_nTipo: 2,
-            m_sObservaciones: "",
-            producto: '',
-            m_nIdProducto: "",
-        });
-        console.log(paquetes);
-        setState({
-            ...state,
-            paquetes: paquetes,
-            countPaquetes: paquetes.length,
-        });
-    }
-
     const addPaquetev2 = (event) => {
         const {paquetes} = state;
         let paq = paquete
@@ -2706,48 +2679,20 @@ function Embarque(props) {
             paq.m_nIdEmbarqueDetalle = paq.m_nIdEmbarqueDetalle ? paq.m_nIdEmbarqueDetalle : paquetes.length + 1
             paq.m_cValorDeclarado = paq.m_cValorDeclarado ? paq.m_cValorDeclarado : 0
             paquetes.push(paq);
-            setPaquete({
-                m_xPeso: "",
-                m_xLargo: "",
-                m_xAncho: "",
-                m_xAlto: "",
-                m_xVolumen: "",
-                m_nIdTIpoEmpaque: "",
-                m_cValorDeclarado: "",
-                m_sDescripcion: "",
-                ctd: "",
-                m_nTipo: 2,
-                m_sObservaciones: "",
-                producto: null,
-                m_nIdProducto: "",
-                m_sTipo: "Paquete",
-            })
+            resetProducto()
             console.log(paquetes);
             setState({...state, paquetes: paquetes, countPaquetes: state.countPaquetes + 1});
+            let aux = []
+            dataProductos.forEach((i) =>{
+                aux.push(i)
+            })
+            setDataProductos(aux)
         } else {
             showSuccess("Rellene los campos obligatorios.")
         }
     }
 
-    function removePaquete(index) {
-        var {paquetes} = state;
-        if (paquetes.length !== 1) {
-            paquetes.pop();
-            setState({
-                ...state,
-                paquetes: paquetes,
-                countPaquetes: state.paquetes.length,
-            });
-            let totalCantidad = 0
-            paquetes.forEach((p) => {
-                totalCantidad += parseInt(p.m_nCantidad)
-            })
-            setTotalPaquetes(totalCantidad)
-        }
-    }
-
-    const removePaquetev2 = (event) => {
-        event.preventDefault()
+    const resetProducto = () => {
         setPaquete({
             m_xPeso: "",
             m_xLargo: "",
@@ -2759,51 +2704,17 @@ function Embarque(props) {
             m_cValorDeclarado: "",
             m_sDescripcion: "",
             ctd: "",
+            producto: null,
             m_nTipo: 2,
             m_sObservaciones: "",
-            producto: null,
             m_nIdProducto: "",
             m_sTipo: "Paquete",
         })
-
     }
-
-    function addSobre() {
-        const {sobres} = state;
-        sobres.push({
-            m_nTipo: 1,
-            m_sDescripcion: "",
-        });
-        console.log(sobres);
-        setState({...state, sobres: sobres, countSobres: state.sobres.length});
+    const removePaquetev2 = (event) => {
+        event.preventDefault()
+        resetProducto()
     }
-
-    function removeSobre(index) {
-        var {sobres} = state;
-        if (sobres.length !== 1) {
-            sobres.pop();
-            setState({
-                ...state,
-                sobres: sobres,
-                countSobres: state.sobres.length,
-            });
-        }
-    }
-
-    const handleChangePaquete = (event, index) => {
-        var {paquetes} = state;
-        paquetes[index][event.target.name] = event.target.value;
-        paquetes[index].m_xVolumen = paquetes[index].m_xLargo * paquetes[index].m_xAlto * paquetes[index].m_xAncho;
-        setState({
-            ...state,
-            paquetes: paquetes,
-        });
-        let totalCantidad = 0
-        paquetes.forEach((p) => {
-            totalCantidad += parseInt(p.m_nCantidad)
-        })
-        setTotalPaquetes(totalCantidad)
-    };
 
     const handleChangePaquetev2 = (event) => {
         let {paquetes} = state;
@@ -2837,25 +2748,10 @@ function Embarque(props) {
         setTotalPaquetes(totalCantidad)
     };
 
-    const handleChangePaqueteProducto = (event, index, newValue) => {
-        let {paquetes} = state;
-        console.log('seleccion ', newValue)
-        paquetes[index].producto = newValue;
-        paquetes[index].m_nIdProducto = newValue.m_nIdProducto
-        paquetes[index].m_xLargo = newValue.m_xLargo
-        paquetes[index].m_xAlto = newValue.m_xAlto
-        paquetes[index].m_xAncho = newValue.m_xAncho
-        paquetes[index].m_xPeso = newValue.m_xPeso
-        paquetes[index].m_nIdTIpoEmpaque = newValue.m_nIdEmbalaje
-        paquetes[index].m_sDescripcion = newValue.m_nIdProducto == 1 ? "" : newValue.m_sDescripcion
-        paquetes[index].m_xVolumen = paquetes[index].m_xLargo * paquetes[index].m_xAlto * paquetes[index].m_xAncho;
-        setState({
-            ...state,
-            paquetes: paquetes,
-        });
-    };
-
     const handleChangePaqueteProductov2 = (event, newValue) => {
+        if (!newValue){
+            return
+        }
         setPaquete(paquete => {
             return {
                 ...paquete,
@@ -2868,13 +2764,8 @@ function Embarque(props) {
                 m_nIdTIpoEmpaque: newValue.m_nIdEmbalaje,
                 m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == newValue.m_nIdEmbalaje).m_sNombre,
                 m_sDescripcion: newValue.m_nIdProducto == 1 ? "" : newValue.m_sDescripcion,
-                m_sProducto: newValue.m_sDescripcion
-            }
-        })
-        setPaquete(paquete => {
-            return {
-                ...paquete,
-                m_xVolumen: paquete.m_xLargo * paquete.m_xAlto * paquete.m_xAncho
+                m_sProducto: newValue.m_sDescripcion,
+                m_xVolumen: newValue.m_xLargo * newValue.m_xAlto * newValue.m_xAncho
             }
         })
 
@@ -2910,245 +2801,12 @@ function Embarque(props) {
         }
     }
 
-    const handleChangeSobre = (event, index) => {
-        var {sobres} = state;
-        sobres[index][event.target.name] = event.target.value;
-        setState({
-            ...state,
-            sobres: sobres,
-        });
-    };
-
     const getAllProductos = () => {
         const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
         axios.get(url, {headers}).then(respuesta => {
             setDataProductos(respuesta.data)
         });
     }
-
-
-    /*const framesPaquete = state.paquetes.map((p, index) => {
-        return (
-            <div key={`paquete${index}`}>
-                <div className="col-sm-12 col-md-12 unit">
-                    <h4>
-                        <strong>{`Paquete #${index + 1}`}</strong>
-                    </h4>
-                </div>
-
-                <div className="col-sm-4 col-md-12 unit">
-                    <div className="input">
-                        <Autocomplete
-                            value={state.paquetes[index].producto}
-                            freeSolo
-                            onChange={(event, newValue) => handleChangePaqueteProducto(event, index, newValue)}
-                            disableClearable
-                            forcePopupIcon={false}
-                            options={dataProductos}
-                            disabled={state.agregar === "Consultar"}
-                            getOptionLabel={(option) => `${option.m_sDescripcion}`}
-                            variant="outlined"
-                            name={"producto"}
-                            style={{
-                                transform: "translate(14px, 10px) scale(1) !important"
-                            }}
-                            renderInput={(params) =>
-                                <TextField
-                                    variant="outlined"
-                                    label="Producto"
-                                    margin="dense"
-                                    onClick={handleClickProducto}
-                                    required
-                                    {...params}
-                                />
-                            }
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Peso"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_xPeso}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="kg"
-                                   name="m_xPeso"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Largo"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_xLargo}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="cms"
-                                   name="m_xLargo"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Ancho"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_xAncho}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="cms"
-                                   name="m_xAncho"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Alto"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_xAlto}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="cms"
-                                   name="m_xAlto"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Volumen"
-                            // onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_xVolumen}
-                                   disabled
-                                   placeholder="cms3"
-                                   name="m_xVolumen"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-6 unit">
-                    <label className="input select">
-                        <FormControl fullWidth variant="outlined" margin="dense">
-                            <InputLabel id="idTipoEmbalajeLabel">Tipo de Embalaje</InputLabel>
-                            <Select
-                                labelId="idTipoEmbalajeLabel"
-                                className="form-control"
-                                value={state.paquetes[index].m_nIdTIpoEmpaque}
-                                onChange={(event) => handleChangePaquete(event, index)}
-                                disabled={state.agregar === "Consultar"}
-                                id="m_nIdTIpoEmpaque"
-                                label={"Tipo de Embalaje"}
-                                name="m_nIdTIpoEmpaque"
-                                InputProps={{
-                                    name: "m_nIdTIpoEmpaque"
-                                }}
-                            >
-                                {dataEmbalaje.map((embalaje) => (
-                                    <option
-                                        key={embalaje.m_nIdEmbalaje}
-                                        value={embalaje.m_nIdEmbalaje}
-                                    >
-                                        {embalaje.m_sNombre}
-                                    </option>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </label>
-                </div>
-
-                <div className="col-sm-4 col-md-6 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Valor Declarado"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_cValorDeclarado}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="$"
-                                   name="m_cValorDeclarado"
-                                   InputLabelProps={{shrink: true,}}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-8 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Descripción"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_sDescripcion}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="Descripción"
-                                   name="m_sDescripcion"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Ctd"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_nCantidad}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="Cantidad"
-                                   name="m_nCantidad"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-12 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Observaciones"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_sObservaciones}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="Observaciones"
-                                   name="m_sObservaciones"
-                        />
-                    </div>
-                </div>
-            </div>
-        );
-    });
-
-    const framesSobre = state.sobres.map((p, index) => {
-        return (
-            <div key={`sobre${index}`}>
-                <div className="col-md-12 unit">
-                    <h4>
-                        {" "}
-                        <strong>{`Sobre #${index + 1}`}</strong>
-                    </h4>
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Descripcion"
-                                   onChange={(event) => handleChangeSobre(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.sobres[index].m_sDescripcion}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="Descripción"
-                                   name="m_sDescripcion"
-                        />
-                    </div>
-                </div>
-            </div>
-        );
-    });*/
 
     const handleFechaCita = (event) => {
         setState({
@@ -4176,13 +3834,11 @@ function Embarque(props) {
                                                                         value={paquete.producto}
                                                                         freeSolo
                                                                         onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
-                                                                        disableClearable
-                                                                        forcePopupIcon={false}
                                                                         options={dataProductos}
                                                                         disabled={state.agregar === "Consultar"}
                                                                         getOptionLabel={(option) => `${option.m_sDescripcion}`}
                                                                         variant="outlined"
-                                                                        inputValue={`${paquete.producto == null ? '' : paquete.producto.m_sDescripcion}`}
+                                                                        inputValue={`${!paquete.producto ? '' : paquete.producto.m_sDescripcion}`}
                                                                         name={"producto"}
                                                                         style={{transform: "translate(14px, 10px) scale(1) !important"}}
                                                                         renderInput={(params) =>
