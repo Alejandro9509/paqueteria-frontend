@@ -655,6 +655,7 @@ function Embarque(props) {
         m_sObservaciones: "",
         m_nIdProducto: '',
     })
+    const [dataTiposSeguro, setDataTiposSeguro] = useState([])
 
     const history = useHistory();
 
@@ -1286,6 +1287,7 @@ function Embarque(props) {
         getAllCiudades()
         getAllSucursales()
         getAllEstatusEmbarque()
+        getAllTiposSeguro()
 
         const {m_parrPaquetes, m_parrSobres} = respuesta.data;
         let totalPaquetes = 0
@@ -1971,6 +1973,7 @@ function Embarque(props) {
         getAllTipoCobro();
         getAllTipoMoneda();
         getTipoCambio()
+        getAllTiposSeguro()
     }
 
     async function getAllEmbarque() {
@@ -2026,23 +2029,10 @@ function Embarque(props) {
         });
     }
 
-    async function getAllOperadores() {
-        obtenerOperadores().then((respuesta) => {
-            setDataOperador(respuesta.data);
-        });
-    }
-
-    async function getAllTipoUnidad() {
-        obtenerTipoUnidades().then((respuesta) => {
-            setDataTipoUnidad(respuesta.data);
-            getAllUnidades(1);
-        });
-    }
-
-    async function getAllUnidades(id) {
-        obtenerUnidadesTipo(id).then((respuesta) => {
-            setDataUnidad(respuesta.data);
-        });
+    async function getAllTiposSeguro(){
+        axios.get(`${process.env.REACT_APP_API_URL}/TipoSeguros/GetListado`, {headers}).then(({data}) => {
+            setDataTiposSeguro(data)
+        })
     }
 
     async function getAllEmbalajes() {
@@ -2053,12 +2043,6 @@ function Embarque(props) {
 
     const headers = {
         "Content-Type": "application/json",
-    };
-
-    const headers2 = {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     };
 
     function conDatos() {
@@ -4061,7 +4045,7 @@ function Embarque(props) {
                                             <div className="widget-wrap" id="remitenteDestinatario">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <div className="col-sm-12 col-md-12 unit">
+                                                        <div className="col-md-6">
                                                             <div className="input">
                                                                 <Autocomplete
                                                                     value={state.clientePaga}
@@ -4092,6 +4076,13 @@ function Embarque(props) {
                                                                     }
                                                                 />
                                                             </div>
+                                                        </div>
+                                                        <div className="col-md-6">
+                                                            {
+                                                                state.clientePaga.m_nIdTipoSeguro === undefined ? ``
+                                                                    : state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}`: `NO tiene seguro`
+
+                                                            }
                                                         </div>
                                                     </div>
                                                     <div className="col-md-6">
