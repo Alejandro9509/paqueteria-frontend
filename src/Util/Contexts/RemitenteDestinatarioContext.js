@@ -44,6 +44,7 @@ function obtenerUbicacion(city, address, subdistrict, number, code) {
                         resolve({x: 0.0, y: 0.0})
                     }
                 }
+                reject(null)
             });
         })
     )
