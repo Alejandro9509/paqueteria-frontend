@@ -276,10 +276,11 @@ async function searchLocation(city, address) {
     }
 }
 
-function agregarRuta(tour, data) {
+function agregarRuta(idUltimamilla, tour, data) {
     const url = `${process.env.REACT_APP_API_URL}/GuardarUltimaMilla`;
     let result;
     var ultimaMillaObject = {
+        idUltimamilla: idUltimamilla,
         fecha: moment(data.fecha).format("YYYYMMDD"),
         m_nCreadoPor: localStorage.getItem("UsuarioId"),
         idSucursal: data.sucursalSeleccionada.m_nIdSucursal,
