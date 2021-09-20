@@ -174,13 +174,21 @@ class UltimaMilla extends Component {
     }
 
     guardarRuta() {
-
-        agregarRuta(this.state.tour, this.state.filtros).then((data) => {
-            showSuccess("Se guardo la información con éxito")
-            actualizar = true
-            this.setState({tour:null})
-            this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona),  parseInt(this.state.filtros.tipoBusqueda))
-        })
+        if (this.state.ultimaMilla) {
+            agregarRuta(this.state.ultimaMilla.m_nIdUltimaMilla,this.state.tour, this.state.filtros).then((data) => {
+                showSuccess("Se guardo la información con éxito")
+                actualizar = true
+                this.setState({tour: null})
+                this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.filtros.tipoBusqueda))
+            })
+        }else {
+            agregarRuta(0,this.state.tour, this.state.filtros).then((data) => {
+                showSuccess("Se guardo la información con éxito")
+                actualizar = true
+                this.setState({tour: null})
+                this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.filtros.tipoBusqueda))
+            })
+        }
     }
 
     async searchLocation(address) {

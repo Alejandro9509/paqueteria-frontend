@@ -824,8 +824,8 @@ function Embarque(props) {
             m_sNoIntDestinatario: state.numeroIntDestinatario,
             m_sNoExtDestinatario: state.numeroExtDestinatario,
             m_sColoniaDestinatario: state.coloniaDestinatario,
-            m_sLatitudD: coordenadas ? coordenadas.lat : state.latitudR,
-            m_sLongitudD: coordenadas ? coordenadas.lng : state.latitudR,
+            m_sLatitudD: coordenadas ? coordenadas.lat : state.latitudD,
+            m_sLongitudD: coordenadas ? coordenadas.lng : state.latitudD,
             m_sLatitudR: state.latitudR,
             m_sLongitudR: state.latitudR,
 

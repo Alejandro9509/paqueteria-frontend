@@ -184,6 +184,7 @@ class DetalleParadas extends Component {
                             pointerEvents: "auto",
                             height: window.innerHeight - 100,
                             backgroundColor: "white",
+                            overflow: "auto",
                             top: "80px",
                             right: "10px",
                             position: "fixed",
@@ -348,6 +349,8 @@ class DetalleParadas extends Component {
                                                     <div align={"right"} style={{
                                                         borderRadius: "5px",
                                                         margin: "5px",
+                                                        height:"100%",
+                                                        overflow: "auto"
                                                     }}>
 
                                                         <Button variant={"contained"} color={"primary"}

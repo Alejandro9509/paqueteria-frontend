@@ -23,6 +23,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/public/index.html">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/App.js">
           <value>
             <set />
@@ -624,6 +629,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/context/ProgramEvidenceContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/context/UserContext.js">
           <value>
             <set />
           </value>
