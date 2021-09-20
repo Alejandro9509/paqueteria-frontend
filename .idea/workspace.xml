@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,13 +141,6 @@
       <workItem from="1631159140096" duration="18684000" />
       <workItem from="1631750064945" duration="25000" />
       <workItem from="1631812359785" duration="11813000" />
-    </task>
-    <task id="LOCAL-00035" summary="*Se arregló validacion para que mande a modificar o agregar respectivamente">
-      <created>1628399351166</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1628399351166</updated>
     </task>
     <task id="LOCAL-00036" summary="*Se arregló problema par que se vea el listado de unidades por id de tipo">
       <created>1628749514212</created>
@@ -487,7 +478,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632157841773</updated>
     </task>
-    <option name="localTasksCounter" value="84" />
+    <task id="LOCAL-00084" summary="Se agrego para permitir mas rutass en una fecha">
+      <created>1632159557707</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1632159557708</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -552,7 +550,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Se ajustaron las columnas de tarifas" />
     <MESSAGE value="Clonar Embarque" />
     <MESSAGE value="Se hicieron ajustes en viajes" />
     <MESSAGE value="Precargar estatus de la guia en pendiente al traer datos de embarque" />
@@ -577,7 +574,8 @@
     <MESSAGE value="Se integro el reporte de informes" />
     <MESSAGE value="Se agregaron los datos a la etiqueta" />
     <MESSAGE value="Error al crear últimaMilla" />
-    <option name="LAST_COMMIT_MESSAGE" value="Error al crear últimaMilla" />
+    <MESSAGE value="Se agrego para permitir mas rutass en una fecha" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se agrego para permitir mas rutass en una fecha" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
