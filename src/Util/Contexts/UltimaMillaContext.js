@@ -294,8 +294,8 @@ function agregarRuta(tour, data) {
             idOperador: u.m_nIdOperador,
             idUnidad: u.m_nIdUnidad,
             guias: guias.map((g, index) => {
-                var tour = this.props.tourReport.tourReports.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
-                var reportTime = tour.tourEvents.find(t => t.eventTypes[0] === "SERVICE" && g.index === parseInt(t.orderId))
+                var tourReport = tour.tour.tourReports.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
+                var reportTime = tourReport.tourEvents.find(t => t.eventTypes[0] === "SERVICE" && g.index === parseInt(t.orderId))
                 var date = new Date(reportTime.startTime)
                 var userTimezoneOffset = date.getTimezoneOffset() * 60000;
                 date = new Date(date.getTime() + userTimezoneOffset);
