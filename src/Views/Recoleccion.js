@@ -141,7 +141,6 @@ function Recoleccion() {
     const [dataZona, setDataZona] = React.useState([]);
     const [dataFolioRecoleccion, SetDataFolioRecoleccion] = React.useState([]);
 
-    const [dataCodigoPostal, setDataCodigoPostal] = React.useState([]);
     const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
     const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
     const [dataCodigosPostalesRecoleccion, setDataCodigosPostalesRecoleccion] = React.useState([]);
@@ -374,6 +373,7 @@ function Recoleccion() {
         m_nIdProducto:'',
         m_sTipo: "Paquete"
     })
+    const [dataTiposSeguro, setDataTiposSeguro] = useState([])
 
     const history = useHistory()
 
@@ -418,6 +418,7 @@ function Recoleccion() {
         getAllTipoMoneda();
         getTipoCambio()
         getAllCiudades()
+        getAllTiposSeguro()
 
     }
 
@@ -501,14 +502,6 @@ function Recoleccion() {
                 && paquete.m_nCantidad != ''
                 && paquete.producto
                 && paquete.m_nIdTipoEmbalaje);
-        }
-    }
-
-    const validarSobre = (sobre) => {
-        if (sobre.m_sDescripcion != ''){
-            return true
-        }else {
-            return false
         }
     }
 
@@ -776,27 +769,6 @@ function Recoleccion() {
         })
     };
 
-    /*function addPaquete() {
-        const {paquetes} = state;
-        paquetes.push({
-            m_xPeso: "",
-            m_xLargo: "",
-            m_xAncho: "",
-            m_xAlto: "",
-            m_xVolumen: "",
-            m_nIdTIpoEmpaque: "",
-            m_cyValorDeclarado: "",
-            m_sDescripcion: "",
-            ctd: "",
-            m_nTipo: 2,
-            m_sObservaciones: "",
-            producto: '',
-            m_nIdProducto: "",
-        });
-        console.log(paquetes);
-        setState({...state, paquetes: paquetes, countPaquetes: state.countPaquetes + 1});
-    }*/
-
     const addPaquetev2 = (event) => {
         const {paquetes} = state;
         let paq = paquete
@@ -828,20 +800,6 @@ function Recoleccion() {
 
     }
 
-    /*function removePaquete(index) {
-        var {paquetes} = state;
-        if (paquetes.length !== 1) {
-            paquetes.pop()
-            setState({...state, paquetes: paquetes, countPaquetes: state.countPaquetes - 1});
-            let totalCantidad = 0
-            paquetes.forEach((p) => {
-                totalCantidad += parseInt(p.m_nCantidad)
-            })
-            setTotalPaquetes(totalCantidad)
-        }
-
-    }*/
-
     const removePaquetev2 = (event) => {
         event.preventDefault()
         setPaquete({
@@ -863,23 +821,6 @@ function Recoleccion() {
         })
 
     }
-
-    /*function addSobre() {
-        const {sobres} = state;
-        sobres.push({
-            descripcion: "",
-        });
-        console.log(sobres);
-        setState({...state, sobres: sobres, countSobres: state.countSobres + 1});
-    }
-
-    function removeSobre(index) {
-        var {sobres} = state;
-        if (sobres.length !== 1) {
-            sobres.pop()
-            setState({...state, sobres: sobres, countSobres: state.countSobres - 1});
-        }
-    }*/
 
     function handleEliminar(id) {
         var derecho;
@@ -1408,21 +1349,6 @@ function Recoleccion() {
 
     }
 
-    const handleChangePaquete = (event, index) => {
-        var {paquetes} = state;
-        paquetes[index][event.target.name] = event.target.value;
-        paquetes[index].m_rVolumen = paquetes[index].m_rLargo * paquetes[index].m_rAlto * paquetes[index].m_rAncho;
-        setState({
-            ...state,
-            paquetes: paquetes,
-        });
-        let totalCantidad = 0
-        paquetes.forEach((p) => {
-            totalCantidad += parseInt(p.m_nCantidad)
-        })
-        setTotalPaquetes(totalCantidad)
-    };
-
     const handleChangePaquetev2 = (event) => {
         let {paquetes} = state;
         setPaquete(paquete => {
@@ -1453,23 +1379,6 @@ function Recoleccion() {
             totalCantidad += parseInt(p.m_nCantidad)
         })
         setTotalPaquetes(totalCantidad)
-    };
-
-    const handleChangePaqueteProducto = (event, index, newValue) => {
-        let {paquetes} = state;
-        paquetes[index][event.target.name] = newValue;
-        paquetes[index].m_nIdProducto = newValue.m_nIdProducto
-        paquetes[index].m_rLargo = newValue.m_xLargo
-        paquetes[index].m_rAlto = newValue.m_xAlto
-        paquetes[index].m_rAncho = newValue.m_xAncho
-        paquetes[index].m_rPeso = newValue.m_xPeso
-        paquetes[index].m_nIdTipoEmbalaje = newValue.m_nIdEmbalaje
-        paquetes[index].m_sDescripcion = newValue.m_nIdProducto == 1 ? "" : newValue.m_sDescripcion
-        paquetes[index].m_rVolumen = paquetes[index].m_rLargo * paquetes[index].m_rAlto * paquetes[index].m_rAncho;
-        setState({
-            ...state,
-            paquetes: paquetes,
-        });
     };
 
     const handleChangePaqueteProductov2 = (event, newValue) => {
@@ -1525,15 +1434,6 @@ function Recoleccion() {
             getAllEmbalajes()
         }
     }
-
-    const handleChangeSobre = (event, index) => {
-        var {sobres} = state;
-        sobres[index][event.target.name] = event.target.value;
-        setState({
-            ...state,
-            sobres: sobres,
-        });
-    };
 
     //setea si la recoleccion es en diferente direccion a la del remitente
     const handleRecoleccionCheckboxChange = (event) => {
@@ -1995,6 +1895,12 @@ function Recoleccion() {
         axios.get(url, {headers}).then(respuesta => {
             setDataProductos(respuesta.data)
         });
+    }
+
+    async function getAllTiposSeguro(){
+        axios.get(`${process.env.REACT_APP_API_URL}/TipoSeguros/GetListado`, {headers}).then(({data}) => {
+            setDataTiposSeguro(data)
+        })
     }
 
     function getUltimoFolioRecoleccion() {
@@ -4130,7 +4036,7 @@ function Recoleccion() {
                                             <div className="widget-wrap" id="remitenteDestinatario">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <div className="col-sm-12 col-md-12 unit">
+                                                        <div className="col-md-6">
                                                             <div className="input">
                                                                 <Autocomplete
                                                                     value={state.clientePaga}
@@ -4161,6 +4067,13 @@ function Recoleccion() {
                                                                     }
                                                                 />
                                                             </div>
+                                                        </div>
+                                                        <div className="col-md-6">
+                                                            {
+                                                                state.clientePaga.m_nIdTipoSeguro === undefined ? ``
+                                                                    : state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}`: `NO tiene seguro`
+
+                                                            }
                                                         </div>
                                                     </div>
                                                     <div className="col-md-6">
