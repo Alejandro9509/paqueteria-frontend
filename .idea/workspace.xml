@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*En fecha de registro para corte caja se muestra un dia extra.&#10;*Dar formato a informacion monetaria en corte de caja">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se agregó columna de estados listado de cortes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCaja.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCaja.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCajaAgregar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCajaAgregar.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,14 +144,7 @@
       <workItem from="1631159140096" duration="18684000" />
       <workItem from="1631848278297" duration="5868000" />
       <workItem from="1631890755501" duration="5647000" />
-      <workItem from="1632198227679" duration="2951000" />
-    </task>
-    <task id="LOCAL-00039" summary="Ajuste en viajes">
-      <created>1629094799183</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1629094799183</updated>
+      <workItem from="1632198227679" duration="5682000" />
     </task>
     <task id="LOCAL-00040" summary="Se realizo el ajuste de multiplicar el peso por la cantidad de paquetes">
       <created>1629136704580</created>
@@ -488,7 +482,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632201425087</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="Se agregó columna de estados listado de cortes">
+      <created>1632241067415</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1632241067415</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -553,7 +554,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Precargar estatus de la guia en pendiente al traer datos de embarque" />
     <MESSAGE value="En guia se encima dato de tipo de servicio al traer datos de embarque" />
     <MESSAGE value="Al no encontrar ninguna tarifa que cuadre con el embarque mostrar mensaje al usuario" />
     <MESSAGE value="Optimizar consulta al traer datos de embarque para generar guia" />
@@ -578,7 +578,8 @@
     <MESSAGE value="Intento fallido de reiniciar campo de producto al agregar" />
     <MESSAGE value="Se muestra tipo de seguro del cliente seleccionado" />
     <MESSAGE value="*En fecha de registro para corte caja se muestra un dia extra.&#10;*Dar formato a informacion monetaria en corte de caja" />
-    <option name="LAST_COMMIT_MESSAGE" value="*En fecha de registro para corte caja se muestra un dia extra.&#10;*Dar formato a informacion monetaria en corte de caja" />
+    <MESSAGE value="Se agregó columna de estados listado de cortes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se agregó columna de estados listado de cortes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
