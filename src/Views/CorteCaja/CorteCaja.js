@@ -87,6 +87,13 @@ function CorteCaja(){
             minWidth: 200,
             flex: 1
         },
+        {
+            headerName: "Estado",
+            field: 'm_sEstatusCorte',
+            minWidth: 200,
+            flex: 1
+        },
+
     ])
     const [listaCortes, setListaCortes] = useState([])
     const [corteSeleccionado, setCorteSeleccionado] = useState(0)
@@ -97,6 +104,9 @@ function CorteCaja(){
         height: window. innerHeight,
     })
 
+    const listado = 1
+    const agregar = 2
+    const modificar = 3
 
     useEffect(value => {
         getAllCortes()
@@ -112,7 +122,7 @@ function CorteCaja(){
         event.stopPropagation();
         getAllCortes()
         // limpiarInputsAgregar()
-        setPantallaActiva(1)
+        setPantallaActiva(listado)
         setCorteSeleccionado(0)
         setConsult(false)
         setState(state =>{
@@ -131,7 +141,7 @@ function CorteCaja(){
         event.stopPropagation()
         // limpiarInputsAgregar()
         setCorteSeleccionado(0)
-        setPantallaActiva(2)
+        setPantallaActiva(agregar)
         setState(state => {
             return {
                 ...state,
@@ -146,7 +156,7 @@ function CorteCaja(){
     const handleShowModificar = (corte) => {
         setConsult(false)
         setCorteSeleccionado(corte.m_nIdCorte)
-        setPantallaActiva(3)
+        setPantallaActiva(modificar)
         setState(state =>{
             return {
                 ...state,
@@ -160,7 +170,7 @@ function CorteCaja(){
     }
     const handleShowConsultar = (corte) => {
         setCorteSeleccionado(corte.m_nIdCorte)
-        setPantallaActiva(3)
+        setPantallaActiva(modificar)
         setConsult(true)
         setState(state =>{
             return {
