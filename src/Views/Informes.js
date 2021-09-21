@@ -418,7 +418,7 @@ function Informes({history}) {
             m_nIdRuta: 0,
             m_nIdSucursalEmisora: state.sucursalEmisora,
             m_nIdSucursalReceptora: state.sucursalReceptora,
-            m_nIdDolly: state.IdTipoUnidad.m_nIdUnidad,
+            m_nIdDolly: state.IdTipoUnidad ? state.IdTipoUnidad.m_nIdUnidad : 0,
             m_sPlacasDolly: state.PlacasDolly,
 
             m_nIdViaje: state.IdViaje.m_nIdViaje,
@@ -431,7 +431,7 @@ function Informes({history}) {
             m_arrClsProInformeGuia: dataGuias.filter(g => g.select),
         };
 
-        if (state.IdInforme != 0) {
+        if (state.IdInforme !== 0) {
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1024,7 +1024,7 @@ function Informes({history}) {
             setDataGuias(data.m_arrClsProGuia)
             setState({
                 ...state,
-
+                IdInforme: id,
                 fechaHora: data.m_sFechayHora,
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadOrigen),

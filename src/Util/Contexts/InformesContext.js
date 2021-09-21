@@ -7,7 +7,7 @@ const headers = {
 }
 
 function modificarInformes(id, params){
-    const url = `${process.env.REACT_APP_API_URL}/Informes/Modificar/${id}`;
+    const url = `${process.env.REACT_APP_API_URL}/Informes/Modificar`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })

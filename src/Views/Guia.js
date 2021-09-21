@@ -1011,8 +1011,8 @@ function Guia(props) {
          })*/
         guia.m_arrClsDetalle.forEach((p, index) => {
             const contadorPaquetesTotales = parseInt(p.ctd);
-            [Array(contadorPaquetesTotales).keys()].forEach((i) => {
-                selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+            [Array(contadorPaquetesTotales).keys()].forEach((i, count) => {
+                selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, count), undefined, errorCallback);
             })
 
         })
