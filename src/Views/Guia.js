@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, {useEffect, useState, useMemo} from "react";
 import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
 
@@ -8,25 +8,38 @@ import {Tab, Tabs, Box, InputAdornment, Button, Grid, FormControlLabel, Checkbox
 import ConceptosAdicionalesManiobra from './Tarifas/ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesEntrega from './Tarifas/ConceptosAdicionalesEntrega';
 import ConceptosAdicionalesRecoleccion from './Tarifas/ConceptosAdicionalesRecoleccion';
-import Carousel, { propTypes } from "re-carousel";
+import Carousel, {propTypes} from "re-carousel";
 import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import * as XLSX from 'xlsx';
-import { useTable, useFilters, useAsyncDebounce, useSortBy } from 'react-table'
+import {useTable, useFilters, useAsyncDebounce, useSortBy} from 'react-table'
 import $ from 'jquery';
-import { getUniqueListBy, remove_array_element } from "../Util/Util";
+import {getUniqueListBy, remove_array_element} from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
 import {DataGrid} from '@material-ui/data-grid';
 
 import Noty from 'noty';
 import {SignalCellularNoSimOutlined} from "@material-ui/icons";
 import ConceptosAdicionales from "./Tarifas/ConceptosAdicionales";
-import { Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Select, Step, StepLabel, Stepper, TextField, Tooltip } from "@material-ui/core";
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    InputLabel,
+    Select,
+    Step,
+    StepLabel,
+    Stepper,
+    TextField,
+    Tooltip
+} from "@material-ui/core";
 import {dataGridLocaleText, TICKET_ZABRA_TAMPLATE} from "../Constants";
-import { obtenerCiudades } from "../Util/Contexts/CiudadesContext";
-import { obtenerEstatusGuia } from "../Util/Contexts/EstatusContext";
-import { obtenerEmbarquesId, obtenerEmbarqueMoneda } from "../Util/Contexts/EmbarquesContext";
+import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
+import {obtenerEstatusGuia} from "../Util/Contexts/EstatusContext";
+import {obtenerEmbarquesId, obtenerEmbarqueMoneda} from "../Util/Contexts/EmbarquesContext";
 import {
     ultimoFolioGuia,
     eliminarGuia,
@@ -39,18 +52,18 @@ import {
     imprimirGuia,
     obtenerGuiaReporte, entregaOcurreGuia
 } from "../Util/Contexts/GuiaContext";
-import { obtenerMonedas } from "../Util/Contexts/MonedaContext";
-import { obtenerTipoCambio } from "../Util/Contexts/TipoCambioContext";
-import { validarPermisos } from "../Util/Contexts/UsuarioContext";
-import { obtenerSucursales } from "../Util/Contexts/SucursalContext";
+import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
+import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
+import {validarPermisos} from "../Util/Contexts/UsuarioContext";
+import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {
     obtenerConceptosDefectoListado,
     obtenerConceptosFacturacion
 } from "../Util/Contexts/ConceptosFacturacionContext";
-import { obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
-import { obtenerTipoServicio } from "../Util/Contexts/TipoServiciosContext";
-import { obtenerImpuestosTipo } from "../Util/Contexts/ImpuestosContext";
-import { imprimirFormatosId, obtenerFormatosImpresion } from "../Util/Contexts/FormatosImpresionContext";
+import {obtenerTipoCobro} from "../Util/Contexts/TipoCobroContext";
+import {obtenerTipoServicio} from "../Util/Contexts/TipoServiciosContext";
+import {obtenerImpuestosTipo} from "../Util/Contexts/ImpuestosContext";
+import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
 import {obtenerCodigoPostalId} from "../Util/Contexts/CodigoPostalContext";
 import {obtenerRecoleccionFiltro} from "../Util/Contexts/RecoleccionContext";
 
@@ -445,16 +458,16 @@ function Guia(props) {
     }
 
     const setDataGuiaParaConsultarModificar = (respuesta) => {
-        console.log('Guia datos:',respuesta.data )
+        console.log('Guia datos:', respuesta.data)
 
         const paquetes = []
         const sobres = []
         const {m_arrClsDetalle, m_arClsGuiaConceptos} = respuesta.data
 
         m_arrClsDetalle.forEach((item) => {
-            if (item.m_nTipo == 1){
+            if (item.m_nTipo == 1) {
                 sobres.push(item)
-            }else if (item.m_nTipo == 2){
+            } else if (item.m_nTipo == 2) {
                 paquetes.push(item)
             }
         })
@@ -474,7 +487,7 @@ function Guia(props) {
 
             totalCantidad += parseInt(paq.ctd)
         })
-            setTotalPaquetes(totalCantidad)
+        setTotalPaquetes(totalCantidad)
 
         sobres.forEach((sob) => {
             sob["descripcionSobre"] = sob.m_sDescripcion
@@ -652,7 +665,7 @@ function Guia(props) {
         limpiarCamposAgregar()
         setState(state => {
             return {
-            ...state,
+                ...state,
                 agregar: "Agregar",
                 idEstatusGuia: 4
             }
@@ -667,7 +680,7 @@ function Guia(props) {
     const handleShowListado = (event) => {
         event.stopPropagation();
         limpiarCamposAgregar()
-        setState(state =>{
+        setState(state => {
             return {
                 ...state,
                 fechaInicial: 0,
@@ -700,11 +713,11 @@ function Guia(props) {
             ...state,
             fechaInicial: event.target.value,
         })
-        const {fechaFinal, sucursalListado, estatusListado,folioGuia} = state
+        const {fechaFinal, sucursalListado, estatusListado, folioGuia} = state
         obtenerGuiasFiltro(event.target.value, fechaFinal, sucursalListado, estatusListado).then(respuesta => {
-            if (respuesta.data == "Vacio"){
+            if (respuesta.data == "Vacio") {
                 setData([])
-            }else {
+            } else {
                 setData(respuesta.data)
             }
         })
@@ -716,11 +729,11 @@ function Guia(props) {
             ...state,
             fechaFinal: event.target.value,
         })
-        const {fechaInicial, sucursalListado, estatusListado,folioGuia} = state
-        obtenerGuiasFiltro(fechaInicial, event.target.value, sucursalListado, estatusListado,folioGuia).then(respuesta => {
-            if (respuesta.data == "Vacio"){
+        const {fechaInicial, sucursalListado, estatusListado, folioGuia} = state
+        obtenerGuiasFiltro(fechaInicial, event.target.value, sucursalListado, estatusListado, folioGuia).then(respuesta => {
+            if (respuesta.data == "Vacio") {
                 setData([])
-            }else {
+            } else {
                 setData(respuesta.data)
             }
         })
@@ -732,11 +745,11 @@ function Guia(props) {
             ...state,
             sucursalListado: event.target.value,
         })
-        const {fechaInicial, fechaFinal, estatusListado,folioGuia} = state
-        obtenerGuiasFiltro(fechaInicial, fechaFinal, event.target.value, estatusListado,folioGuia).then(respuesta => {
-            if (respuesta.data == "Vacio"){
+        const {fechaInicial, fechaFinal, estatusListado, folioGuia} = state
+        obtenerGuiasFiltro(fechaInicial, fechaFinal, event.target.value, estatusListado, folioGuia).then(respuesta => {
+            if (respuesta.data == "Vacio") {
                 setData([])
-            }else {
+            } else {
                 setData(respuesta.data)
             }
         })
@@ -748,11 +761,11 @@ function Guia(props) {
             ...state,
             estatusListado: event.target.value,
         })
-        const {fechaInicial, fechaFinal, sucursalListado,folioGuia} = state
-        obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, event.target.value,folioGuia).then(respuesta => {
-            if (respuesta.data == "Vacio"){
+        const {fechaInicial, fechaFinal, sucursalListado, folioGuia} = state
+        obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, event.target.value, folioGuia).then(respuesta => {
+            if (respuesta.data == "Vacio") {
                 setData([])
-            }else {
+            } else {
                 setData(respuesta.data)
             }
         })
@@ -760,7 +773,7 @@ function Guia(props) {
 
     //Maneja filtrado de listado guia
     const handleFolioGuiaFiltro = async (event) => {
-        if(event.keyCode == 13) {
+        if (event.keyCode == 13) {
             let value = event.target.value
             if (event.target.value == '') {
                 value = 0
@@ -810,33 +823,35 @@ function Guia(props) {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a  data-toggle="tab"
+                            <a data-toggle="tab"
                                onClick={() => (handleShowModificar(row.row.m_nIdGuia))}
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a  className="btn btn-default btn-xs"
+                            <a className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row.m_nIdGuia))}><i className="fa fa-eye"
                                                                                            style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Reporte">
-                            <a  className="btn btn-default btn-xs"
-                                onClick={() => generarReporte(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i className="zmdi zmdi-file"
-                                                                        style={{color: "#F9A03E"}}/></a>
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => generarReporte(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i
+                                className="zmdi zmdi-file"
+                                style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Ocurre">
-                            <a  className="btn btn-default btn-xs"
-                                onClick={(event) => mostrarDialogoOcurre(event, row.row)}><i className="zmdi zmdi-sign-in" style={{color: "#F9A03E"}}/></a>
+                            <a className="btn btn-default btn-xs"
+                               onClick={(event) => mostrarDialogoOcurre(event, row.row)}><i
+                                className="zmdi zmdi-sign-in" style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Imprimir">
-                            <a  className="btn btn-default btn-xs"
+                            <a className="btn btn-default btn-xs"
                                onClick={() => printTicket(row.row)}><i className="zmdi zmdi-print"
-                                                                style={{color: "#F9A03E"}}/></a>
+                                                                       style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
@@ -881,11 +896,11 @@ function Guia(props) {
             headerName: "Cliente",
             field: "m_sCliente",
             width: 300,
-        },{
+        }, {
             headerName: "Sucursal",
             field: "m_sSucursal",
             width: 125,
-        },    {
+        }, {
             headerName: "Folio Informe",
             field: "m_sFolioInforme",
             width: 125,
@@ -925,10 +940,10 @@ function Guia(props) {
         // getFormatosImpresion()
     }, []);
 
-    function generarReporte(id, folio){
+    function generarReporte(id, folio) {
         obtenerGuiaReporte(id).then(({data}) => {
             let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
             pdfWindow.document.title = "Guía " + folio;
         })
@@ -953,31 +968,30 @@ function Guia(props) {
     }, []);
 
     useEffect(value => {
-        BrowserPrint.getDefaultDevice("printer", function(device)
-        {
+        BrowserPrint.getDefaultDevice("printer", function (device) {
 
             //Add device to list of devices and to html select element
             selected_device = device;
             devices.push(device);
 
             //Discover any other devices available to the application
-            BrowserPrint.getLocalDevices(function(device_list){
-                for(var i = 0; i < device_list.length; i++)
-                {
+            BrowserPrint.getLocalDevices(function (device_list) {
+                for (var i = 0; i < device_list.length; i++) {
                     //Add device to list of devices and to html select element
                     var device = device_list[i];
-                    if(!selected_device || device.uid != selected_device.uid)
-                    {
+                    if (!selected_device || device.uid != selected_device.uid) {
                         devices.push(device);
                     }
                 }
 
-            }, function(){alert("Error getting local devices")},"printer");
+            }, function () {
+                alert("Error getting local devices")
+            }, "printer");
 
-        }, function(error){
+        }, function (error) {
             console.log(error);
         })
-    },[])
+    }, [])
 
     function printTicket(guia) {
         /* EB = window.EB
@@ -996,12 +1010,16 @@ function Guia(props) {
              })
          })*/
         guia.m_arrClsDetalle.forEach((p, index) => {
-            selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, index), undefined, errorCallback);
+            const contadorPaquetesTotales = parseInt(p.ctd);
+            [Array(contadorPaquetesTotales).keys()].forEach((i) => {
+                selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+            })
+
         })
 
     }
 
-    var errorCallback = function(errorMessage){
+    var errorCallback = function (errorMessage) {
         alert("Error: " + errorMessage);
     }
 
@@ -1016,7 +1034,7 @@ function Guia(props) {
         var ivaTraslada = []
         var ivaRetiene = []
         conceptosAdicionales.push({
-            idConcepto : data.concepto.m_nIdConceptosFacturacion,
+            idConcepto: data.concepto.m_nIdConceptosFacturacion,
             concepto: data.concepto,
             importe: data.importe,
             retiene: data.retiene,
@@ -1041,7 +1059,7 @@ function Guia(props) {
     }
 
     const filtrarConceptoAdicional = (c, item) => {
-        let valid =  c.idConcepto == item.idConcepto
+        let valid = c.idConcepto == item.idConcepto
             && c.importe == item.importe
             && c.importeRet == item.importeRet
             && c.retiene == item.retiene
@@ -1097,23 +1115,23 @@ function Guia(props) {
         const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
         let totalCantidad = 0
         paquetes.forEach((paq) => {
-                paq["producto"] = paq.m_sProducto ? paq.m_sProducto : ""
-                paq["peso"] = paq.m_xPeso
-                paq["largo"] = paq.m_xLargo
-                paq["ancho"] = paq.m_xAncho
-                paq["alto"] = paq.m_xAlto
-                paq["cdt"] = paq.ctd
-                paq["volumen"] = paq.m_xVolumen
-                paq["tipoEmbalaje"] = paq.m_nTipo
-                paq["valorDeclarado"] = paq.m_cValorDeclarado
-                paq["descripcionPaquete"] = paq.m_sDescripcion
-                paq["observacionesPaquete"] = paq.m_sObservaciones
-                paq["id"] = paq.m_nIdEmbarqueDetalle
-                valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
-                totalCantidad += parseInt(paq.ctd)
+            paq["producto"] = paq.m_sProducto ? paq.m_sProducto : ""
+            paq["peso"] = paq.m_xPeso
+            paq["largo"] = paq.m_xLargo
+            paq["ancho"] = paq.m_xAncho
+            paq["alto"] = paq.m_xAlto
+            paq["cdt"] = paq.ctd
+            paq["volumen"] = paq.m_xVolumen
+            paq["tipoEmbalaje"] = paq.m_nTipo
+            paq["valorDeclarado"] = paq.m_cValorDeclarado
+            paq["descripcionPaquete"] = paq.m_sDescripcion
+            paq["observacionesPaquete"] = paq.m_sObservaciones
+            paq["id"] = paq.m_nIdEmbarqueDetalle
+            valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
+            totalCantidad += parseInt(paq.ctd)
 
-            })
-            setTotalPaquetes(totalCantidad)
+        })
+        setTotalPaquetes(totalCantidad)
 
         sobres.forEach((sob) => {
             sob["descripcionSobre"] = sob.m_sDescripcion
@@ -1171,57 +1189,57 @@ function Guia(props) {
 
     const [dataTodosConceptosByEmbarque, setDataTodosConceptosByEmbarque] = useState([])
 
-    const obtenerTarifasPorEmbarque = (embarque,paquetesTemp) => {
+    const obtenerTarifasPorEmbarque = (embarque, paquetesTemp) => {
         const conceptosTemp = []
         let ivaTraslada = []
         let ivaRetiene = []
-        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque.m_nIdEmbarque}`, { headers }).then(tarifa => {
-            console.log('tarifas by embarque ',tarifa.data)
+        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque.m_nIdEmbarque}`, {headers}).then(tarifa => {
+            console.log('tarifas by embarque ', tarifa.data)
             // debugger
             if (tarifa.data.length != 0) {
-            let pesoTotal = 0
-            let pesoKg = 0
-            let pesoVolumetrico = 0
+                let pesoTotal = 0
+                let pesoKg = 0
+                let pesoVolumetrico = 0
                 paquetesTemp.forEach((p) => {
-                pesoKg = pesoKg + p.peso * p.cdt
-                //xPesoVolumetrico += (clPaquete.m_xAlto * clPaquete.m_xLargo * clPaquete.m_xAncho)* 0.0005
-                pesoVolumetrico = (p.alto * p.ancho * p.largo) * p.cdt * 0.0005
-            })
-            if (pesoKg > pesoVolumetrico){
-                pesoTotal = pesoKg
-            }else{
-                pesoTotal = pesoVolumetrico
-            }
-
-            tarifa.data[0].m_arrArConceptos.forEach(element => {
-                conceptosTemp.push({
-                    concepto: element,
-                    idConcepto: element.m_nIdConceptosFacturacion,
-                    importe: element.m_cImporte,
-                    retiene: element.m_nIdImpuestoRetiene,
-                    traslada: element.m_nIdImpuestoTraslada,
-                    importeIVA: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoTraslada).m_xPorcentaje / 100) * element.m_cImporte,
-                    importeRet: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoRetiene).m_xPorcentaje / 100) * element.m_cImporte,
-                    rangoMinimo: element.m_xnRangoMinimo,
-                    rangoMaximo: element.m_xnRangoMaximo,
-                    nombreConcepto: element.m_sConcepto,
-                    tipoCalculo: element.m_nIdTipoCalculo
+                    pesoKg = pesoKg + p.peso * p.cdt
+                    //xPesoVolumetrico += (clPaquete.m_xAlto * clPaquete.m_xLargo * clPaquete.m_xAncho)* 0.0005
+                    pesoVolumetrico = (p.alto * p.ancho * p.largo) * p.cdt * 0.0005
                 })
-            })
-            ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
-            ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
-
-            setState(state => {
-                return {
-                    ...state,
-                    fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-                    conceptosAdicionales: conceptosTemp,
-                    ivaRetiene: ivaRetiene,
-                    ivaTraslada: ivaTraslada
+                if (pesoKg > pesoVolumetrico) {
+                    pesoTotal = pesoKg
+                } else {
+                    pesoTotal = pesoVolumetrico
                 }
-            })
-            obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal,paquetesTemp)
-        }else{
+
+                tarifa.data[0].m_arrArConceptos.forEach(element => {
+                    conceptosTemp.push({
+                        concepto: element,
+                        idConcepto: element.m_nIdConceptosFacturacion,
+                        importe: element.m_cImporte,
+                        retiene: element.m_nIdImpuestoRetiene,
+                        traslada: element.m_nIdImpuestoTraslada,
+                        importeIVA: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoTraslada).m_xPorcentaje / 100) * element.m_cImporte,
+                        importeRet: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoRetiene).m_xPorcentaje / 100) * element.m_cImporte,
+                        rangoMinimo: element.m_xnRangoMinimo,
+                        rangoMaximo: element.m_xnRangoMaximo,
+                        nombreConcepto: element.m_sConcepto,
+                        tipoCalculo: element.m_nIdTipoCalculo
+                    })
+                })
+                ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
+                ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
+
+                setState(state => {
+                    return {
+                        ...state,
+                        fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+                        conceptosAdicionales: conceptosTemp,
+                        ivaRetiene: ivaRetiene,
+                        ivaTraslada: ivaTraslada
+                    }
+                })
+                obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal, paquetesTemp)
+            } else {
                 showSuccess("No se encontró tarifa con las caracteristicas especificadas")
             }
         })
@@ -1234,13 +1252,13 @@ function Guia(props) {
         let ivaTraslada = []
         let ivaRetiene = []
         //Logica para filtrar guias y solo dejar las que son por defecto y el peso está dentro del rango
-        todosConceptos.forEach( element => {
+        todosConceptos.forEach(element => {
             conceptosDefecto.forEach(concepto => {
-                if (concepto.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion){
+                if (concepto.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion) {
                     //Si el embarque implica recolecta y el concepto por defecto es el de recolecta se calcula el rango maximo y minimo
-                    if (concepto.m_nIdConcepto == 2 && (embarque.m_bEsRecolecta == 1 || embarque.m_bEsRecolecta == true)){
+                    if (concepto.m_nIdConcepto == 2 && (embarque.m_bEsRecolecta == 1 || embarque.m_bEsRecolecta == true)) {
                         //Si el peso total de los paquetes es menor mayor al rango minimo  y menor al rango maximo se va mostrar en la lista
-                        if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
+                        if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
                             conceptosTemp.push({
                                 concepto: element,
                                 importe: element.m_cImporte,
@@ -1256,8 +1274,8 @@ function Guia(props) {
                         }
                     }
                     //Si el concepto es de entrega pasa directo a comparar el peso porque eso siempre se cobra
-                    if (concepto.m_nIdConcepto == 1 ){
-                        if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
+                    if (concepto.m_nIdConcepto == 1) {
+                        if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
                             conceptosTemp.push({
                                 concepto: element,
                                 importe: element.m_cImporte,
@@ -1273,8 +1291,8 @@ function Guia(props) {
                         }
                     }
                     //Si el embarque implica envio a domicilio y el concepto es el de envio a domicilio se calcula el peso
-                    if (concepto.m_nIdConcepto == 3 && !embarque.m_bEntregaEnSucursal){
-                        if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal ){
+                    if (concepto.m_nIdConcepto == 3 && !embarque.m_bEntregaEnSucursal) {
+                        if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
                             conceptosTemp.push({
                                 concepto: element,
                                 importe: element.m_cImporte,
@@ -1297,7 +1315,7 @@ function Guia(props) {
         //Se busca si el concepto en curso es uno por defecto
 
         //Si es uno por defecto se checa los diferentes estados del embarque
-        todosConceptos.forEach( element => {
+        todosConceptos.forEach(element => {
             let concepto = conceptosDefecto.find(c => c.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion)
             if (concepto != undefined) {
                 console.log('concepto defecto: ', concepto)
@@ -1366,25 +1384,25 @@ function Guia(props) {
     const obtenerConceptosByTarifa = (idTarifa, pesoTotal, paquetesEmbarque) => {
         console.log('pesoTotal: ', pesoTotal)
         const conceptosDentroRango = []
-        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetById/${idTarifa}`, { headers }).then(tarifa => {
+        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetById/${idTarifa}`, {headers}).then(tarifa => {
             console.log("Tarifas/GetById ", tarifa)
 
             paquetesEmbarque.forEach((p) => {
-                tarifa.data.m_arrArConceptos.forEach( element => {
-                    if (element.m_nIdAgregadoDesde == 0){
+                tarifa.data.m_arrArConceptos.forEach(element => {
+                    if (element.m_nIdAgregadoDesde == 0) {
                         conceptosDentroRango.push(element)
-                    }else {
-                        if (element.m_nIdTipoCalculo == 3){
-                            if (element.m_xnRangoMinimo <= p.ctd && element.m_xnRangoMaximo >= p.ctd){
+                    } else {
+                        if (element.m_nIdTipoCalculo == 3) {
+                            if (element.m_xnRangoMinimo <= p.ctd && element.m_xnRangoMaximo >= p.ctd) {
                                 conceptosDentroRango.push(element)
                             }
-                        }else{
+                        } else {
                             if (element.m_xnRangoMinimo <= pesoTotal && element.m_xnRangoMaximo >= pesoTotal) {
-                                if (element.m_nIdTipoCalculo == 2){
-                                    if ((pesoTotal/1000) * element.m_cImporte < 51.5) {
+                                if (element.m_nIdTipoCalculo == 2) {
+                                    if ((pesoTotal / 1000) * element.m_cImporte < 51.5) {
                                         element.m_cImporte = 51.5
-                                    }else {
-                                        element.m_cImporte = (pesoTotal/1000) * element.m_cImporte
+                                    } else {
+                                        element.m_cImporte = (pesoTotal / 1000) * element.m_cImporte
                                     }
                                     element.m_cImporteRetiene = (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoRetiene).m_xPorcentaje / 100) * element.m_cImporte
                                     element.m_cImporteIva = (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoTraslada).m_xPorcentaje / 100) * element.m_cImporte
@@ -1507,7 +1525,7 @@ function Guia(props) {
 
     //Recibe el id de moneda seleccionado para traer los embarques registrados con ese tipo de moneda
     async function cargaEmbarqueMoneda(idMoneda) {
-        setState(state =>{
+        setState(state => {
             return {
                 ...state,
                 idMoneda: idMoneda
@@ -1582,7 +1600,7 @@ function Guia(props) {
     //objeto de paquetes
     const framesPaquete = state.paquetes.map((p, index) => {
         return (
-            <div key={`paquete${index}`} style={{padding:"10px"}}>
+            <div key={`paquete${index}`} style={{padding: "10px"}}>
 
                 <div className="col-xs-6 col-sm-4 col-md-12 unit">
                     <div className="input">
@@ -2082,12 +2100,12 @@ function Guia(props) {
 
     const mostrarDialogoOcurre = (event, guia) => {
         event.stopPropagation();
-        if (guia.m_nIdEstatusGuia == 7){
-            if (!guia.m_nClienteBloqueado){
+        if (guia.m_nIdEstatusGuia == 7) {
+            if (!guia.m_nClienteBloqueado) {
                 let importeTotal = 0
                 guia.m_arClsGuiaConceptos.forEach((c) => importeTotal += parseFloat(c.m_cTotal))
                 setDataOcurre({
-                    idGuia : guia.m_nIdGuia,
+                    idGuia: guia.m_nIdGuia,
                     tipoCobroOcurre: guia.m_nIdTIpoCobro,
                     importeTotal: importeTotal
                 })
@@ -2096,10 +2114,10 @@ function Guia(props) {
                     openDialog: true
                 })
                 setShowDialogOcurre(true)
-            }else{
+            } else {
                 showSuccess("El cliente responsable de pago está bloqueado. No se puede realizar entrega.")
             }
-        }else{
+        } else {
             showSuccess("La guia debe tener estado completado para poder entregar.")
         }
 
@@ -2182,114 +2200,117 @@ function Guia(props) {
                     </div>
                     }
                     {showDialogOcurre &&
-                        <form onSubmit={(e) => handleEntregaOcurre(e)}>
-                            <Grid container spacing={3}>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        variant="outlined"
-                                        id="fechaOcurre"
-                                        name="fechaOcurre"
-                                        label="Fecha"
-                                        type="date"
-                                        onChange={handleFechaOcurre}
-                                        value={dataOcurre.fechaOcurre}
-                                        className={"form-control"}
-                                        InputLabelProps={{shrink: true,}}
-                                        required={showDialogOcurre}
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        variant="outlined"
-                                        id="horaOcurre"
-                                        name="horaOcurre"
-                                        label="Hora"
-                                        type="time"
-                                        value={dataOcurre.horaOcurre}
-                                        onChange={handleHoraOcurre}
-                                        className={"form-control"}
-                                        InputLabelProps={{shrink: true,}}
-                                        inputProps={{step: 300,}}
-                                        required={showDialogOcurre}
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <FormControl fullWidth variant="outlined" margin="dense">
-                                        <InputLabel id="idTipoCobroLabel">Tipo Cobro</InputLabel>
-                                        <Select
-                                            labelId={"idTipoCobroLabel"}
-                                            label={"Tipo Cobro"}
-                                            className="form-control"
-                                            value={dataOcurre.tipoCobroOcurre}
-                                            disabled={true}
-                                            onChange={(event) => {
-                                                event.preventDefault();
-                                                setState({
-                                                    ...state,
-                                                    tipoCobro: event.target.value,
-                                                });
-                                            }}
-                                            id="tipoCobro"
-                                            InputProps={{
-                                                id: "tipoCobroOcurre",
-                                                name: "tipoCobroOcurre"
-                                            }}
-                                        >
-                                            {dataTipoCobro.map((tipoCobro) => (
-                                                <option
-                                                    key={tipoCobro.m_nIdTipoCobro}
-                                                    value={tipoCobro.m_nIdTipoCobro}
-                                                >
-                                                    {tipoCobro.m_sDescripcion}
-                                                </option>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <TextField variant="outlined" margin="dense" label="Comentarios"
-                                               onChange={(event) => handleChangeDataOcurre(event)}
-                                               className="form-control"
-                                               type="text"
-                                               value={dataOcurre.comentariosOcurre}
-                                               disabled={state.agregar === "Consultar"}
-                                               placeholder="Comentarios"
-                                               name="comentariosOcurre"
-                                    />
-                                </Grid>
-                                {dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 &&
-                                    <Grid item xs={6}>
-                                    <TextField variant="outlined" margin="dense" label="Importe recibido"
-                                               onChange={(event) => handleChangeDataOcurre(event)}
-                                               className="form-control"
-                                               type="number"
-                                               value={dataOcurre.importeOcurre}
-                                               placeholder="Importe"
-                                               name="importeOcurre"
-                                               required={showDialogOcurre && (dataOcurre.tipoCobroOcurre == 3 || dataOcurre.tipoCobroOcurre == 5)}
-                                    />
-                                    <p style={{marginLeft: '10px', marginTop: '5px'}}> {`Cambio: $${dataOcurre.importeOcurre ? parseFloat(dataOcurre.importeTotal) - parseFloat(dataOcurre.importeOcurre) : 0.0}`}</p>
-                                </Grid>
-                                }
-                                {dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 &&
-                                    <Grid item xs={6}>
-                                        <p> {`Importe a pagar: $${parseFloat(dataOcurre.importeTotal)}`}</p>
-                                    </Grid>
-                                }
-
+                    <form onSubmit={(e) => handleEntregaOcurre(e)}>
+                        <Grid container spacing={3}>
+                            <Grid item xs={6}>
+                                <TextField
+                                    variant="outlined"
+                                    id="fechaOcurre"
+                                    name="fechaOcurre"
+                                    label="Fecha"
+                                    type="date"
+                                    onChange={handleFechaOcurre}
+                                    value={dataOcurre.fechaOcurre}
+                                    className={"form-control"}
+                                    InputLabelProps={{shrink: true,}}
+                                    required={showDialogOcurre}
+                                />
                             </Grid>
-                            <DialogActions>
-                                <Button onClick={() => {
-                                    setState({...state, openDialog: false})
-                                    setShowDialogOcurre(false)
-                                }} color="primary">
-                                    Cancelar
-                                </Button>
-                                <Button type={"submit"} color="primary">
-                                    Aceptar
-                                </Button>
-                            </DialogActions>
-                        </form>
+                            <Grid item xs={6}>
+                                <TextField
+                                    variant="outlined"
+                                    id="horaOcurre"
+                                    name="horaOcurre"
+                                    label="Hora"
+                                    type="time"
+                                    value={dataOcurre.horaOcurre}
+                                    onChange={handleHoraOcurre}
+                                    className={"form-control"}
+                                    InputLabelProps={{shrink: true,}}
+                                    inputProps={{step: 300,}}
+                                    required={showDialogOcurre}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                    <InputLabel id="idTipoCobroLabel">Tipo Cobro</InputLabel>
+                                    <Select
+                                        labelId={"idTipoCobroLabel"}
+                                        label={"Tipo Cobro"}
+                                        className="form-control"
+                                        value={dataOcurre.tipoCobroOcurre}
+                                        disabled={true}
+                                        onChange={(event) => {
+                                            event.preventDefault();
+                                            setState({
+                                                ...state,
+                                                tipoCobro: event.target.value,
+                                            });
+                                        }}
+                                        id="tipoCobro"
+                                        InputProps={{
+                                            id: "tipoCobroOcurre",
+                                            name: "tipoCobroOcurre"
+                                        }}
+                                    >
+                                        {dataTipoCobro.map((tipoCobro) => (
+                                            <option
+                                                key={tipoCobro.m_nIdTipoCobro}
+                                                value={tipoCobro.m_nIdTipoCobro}
+                                            >
+                                                {tipoCobro.m_sDescripcion}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField variant="outlined" margin="dense" label="Comentarios"
+                                           onChange={(event) => handleChangeDataOcurre(event)}
+                                           className="form-control"
+                                           type="text"
+                                           value={dataOcurre.comentariosOcurre}
+                                           disabled={state.agregar === "Consultar"}
+                                           placeholder="Comentarios"
+                                           name="comentariosOcurre"
+                                />
+                            </Grid>
+                            {dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 &&
+                            <Grid item xs={6}>
+                                <TextField variant="outlined" margin="dense" label="Importe recibido"
+                                           onChange={(event) => handleChangeDataOcurre(event)}
+                                           className="form-control"
+                                           type="number"
+                                           value={dataOcurre.importeOcurre}
+                                           placeholder="Importe"
+                                           name="importeOcurre"
+                                           required={showDialogOcurre && (dataOcurre.tipoCobroOcurre == 3 || dataOcurre.tipoCobroOcurre == 5)}
+                                />
+                                <p style={{
+                                    marginLeft: '10px',
+                                    marginTop: '5px'
+                                }}> {`Cambio: $${dataOcurre.importeOcurre ? parseFloat(dataOcurre.importeTotal) - parseFloat(dataOcurre.importeOcurre) : 0.0}`}</p>
+                            </Grid>
+                            }
+                            {dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 &&
+                            <Grid item xs={6}>
+                                <p> {`Importe a pagar: $${parseFloat(dataOcurre.importeTotal)}`}</p>
+                            </Grid>
+                            }
+
+                        </Grid>
+                        <DialogActions>
+                            <Button onClick={() => {
+                                setState({...state, openDialog: false})
+                                setShowDialogOcurre(false)
+                            }} color="primary">
+                                Cancelar
+                            </Button>
+                            <Button type={"submit"} color="primary">
+                                Aceptar
+                            </Button>
+                        </DialogActions>
+                    </form>
                     }
                 </DialogContent>
             </Dialog>
@@ -2318,11 +2339,11 @@ function Guia(props) {
                     {/*tabs de pantalla*/}
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a  onClick={(event) => handleShowListado(event)}>
-                                <i className="fa fa-list" /> Listado
+                            <a onClick={(event) => handleShowListado(event)}>
+                                <i className="fa fa-list"/> Listado
                             </a>
                         </li>
-                        <li >
+                        <li>
                             <a onClick={() => handleShowAgregar()}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
@@ -2670,7 +2691,6 @@ function Guia(props) {
                                                                 />
                                                             </div>
                                                         </div>
-
 
 
                                                         <div className="col-sm-4 col-md-2-5 unit">
@@ -3238,60 +3258,61 @@ function Guia(props) {
 
                                     <div className="row" id="paquetesSobres">
 
-                                            <div className="col-md-6">
-                                                <div className="widget-wrap">
-                                                    <div className="widget-header">
-                                                        <div className="col-md-12">
-                                                            <h2>Número de Paquetes</h2>
-                                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="widget-wrap">
+                                                <div className="widget-header">
+                                                    <div className="col-md-12">
+                                                        <h2>Número de Paquetes</h2>
                                                     </div>
-                                                    <div className="widget-container">
-                                                        <div className="widget-content">
-                                                            <div className="row">
-                                                                <div className="col-md-12">
-                                                                    <form className="j-forms">
-                                                                        <div className="form-content">
-                                                                            <Carousel
-                                                                                className={classes.paqueteCarrusel}
-                                                                                widgets={[IndicatorDots, Buttons]}
-                                                                                frames={framesPaquete}
-                                                                            />
-                                                                            <h2>Número total de elementos: {totalPaquetes}</h2>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
+                                                </div>
+                                                <div className="widget-container">
+                                                    <div className="widget-content">
+                                                        <div className="row">
+                                                            <div className="col-md-12">
+                                                                <form className="j-forms">
+                                                                    <div className="form-content">
+                                                                        <Carousel
+                                                                            className={classes.paqueteCarrusel}
+                                                                            widgets={[IndicatorDots, Buttons]}
+                                                                            frames={framesPaquete}
+                                                                        />
+                                                                        <h2>Número total de
+                                                                            elementos: {totalPaquetes}</h2>
+                                                                    </div>
+                                                                </form>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="col-md-6">
-                                                <div className="widget-wrap">
-                                                    <div className="widget-header">
-                                                        <div className="col-md-12">
-                                                            <h2>Número de Sobres</h2>
-                                                        </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="widget-wrap">
+                                                <div className="widget-header">
+                                                    <div className="col-md-12">
+                                                        <h2>Número de Sobres</h2>
+                                                    </div>
 
-                                                    </div>
-                                                    <div className="widget-container">
-                                                        <div className="widget-content">
-                                                            <div className="row">
-                                                                <div className="col-md-12">
-                                                                    <form className="j-forms">
-                                                                        <div className="form-content">
-                                                                            <Carousel
-                                                                                className={classes.paqueteCarrusel}
-                                                                                widgets={[IndicatorDots, Buttons]}
-                                                                                frames={framesSobres}
-                                                                            />
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
+                                                </div>
+                                                <div className="widget-container">
+                                                    <div className="widget-content">
+                                                        <div className="row">
+                                                            <div className="col-md-12">
+                                                                <form className="j-forms">
+                                                                    <div className="form-content">
+                                                                        <Carousel
+                                                                            className={classes.paqueteCarrusel}
+                                                                            widgets={[IndicatorDots, Buttons]}
+                                                                            frames={framesSobres}
+                                                                        />
+                                                                    </div>
+                                                                </form>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
                                     </div>
                                     <div className="widget-wrap" id="detalleFacturacion">
                                         <div className="widget-header">
@@ -3312,7 +3333,8 @@ function Guia(props) {
                                                                     <Grid container spacing={2}>
                                                                         <Grid item xs={2}>
                                                                             <label className="input select">
-                                                                                <FormControl fullWidth variant="outlined"
+                                                                                <FormControl fullWidth
+                                                                                             variant="outlined"
                                                                                              margin="dense">
                                                                                     <InputLabel id="idTipoCobroLabel">Tipo
                                                                                         Cobro</InputLabel>
@@ -3350,9 +3372,11 @@ function Guia(props) {
                                                                         </Grid>
                                                                         <Grid item xs={2}>
                                                                             <label className="input select">
-                                                                                <FormControl fullWidth variant="outlined"
+                                                                                <FormControl fullWidth
+                                                                                             variant="outlined"
                                                                                              margin="dense">
-                                                                                    <InputLabel id="idTipoServicioLabel">Tipo
+                                                                                    <InputLabel
+                                                                                        id="idTipoServicioLabel">Tipo
                                                                                         Servicio</InputLabel>
                                                                                     <Select
                                                                                         native
@@ -3386,7 +3410,8 @@ function Guia(props) {
                                                                         </Grid>
                                                                         <Grid item xs={2}>
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
                                                                                            onChange={handleChange}
                                                                                            className="form-control"
                                                                                            type="text"
@@ -3400,22 +3425,39 @@ function Guia(props) {
                                                                                            disabled
                                                                                            id="ValorDeclarado"
                                                                                            name="ValorDeclarado"
-                                                                                           startAdornment={<InputAdornment
-                                                                                               position="start">$</InputAdornment>}
+                                                                                           startAdornment={
+                                                                                               <InputAdornment
+                                                                                                   position="start">$</InputAdornment>}
                                                                                 />
                                                                             </div>
                                                                         </Grid>
                                                                         <Grid item xs={1.5}>
-                                                                            <FormControlLabel disabled control={<Checkbox checked={state.tieneRecoleccion}  name="tieneRecolecion" />} label="Tiene recolección" />
+                                                                            <FormControlLabel disabled
+                                                                                              control={<Checkbox
+                                                                                                  checked={state.tieneRecoleccion}
+                                                                                                  name="tieneRecolecion"/>}
+                                                                                              label="Tiene recolección"/>
                                                                         </Grid>
                                                                         <Grid item xs={1.5}>
-                                                                            <FormControlLabel disabled control={<Checkbox checked={state.tieneEntregaDomicilio}  name="tieneEntregaDomicilio" />} label="Tiene entrega a domicilio" />
+                                                                            <FormControlLabel disabled
+                                                                                              control={<Checkbox
+                                                                                                  checked={state.tieneEntregaDomicilio}
+                                                                                                  name="tieneEntregaDomicilio"/>}
+                                                                                              label="Tiene entrega a domicilio"/>
                                                                         </Grid>
                                                                         <Grid item xs={1.5}>
-                                                                            <FormControlLabel disabled control={<Checkbox checked={state.tieneCitaRecoleccion} name="tieneCita" />} label="Tiene cita para recolección" />
+                                                                            <FormControlLabel disabled
+                                                                                              control={<Checkbox
+                                                                                                  checked={state.tieneCitaRecoleccion}
+                                                                                                  name="tieneCita"/>}
+                                                                                              label="Tiene cita para recolección"/>
                                                                         </Grid>
                                                                         <Grid item xs={1.5}>
-                                                                            <FormControlLabel disabled control={<Checkbox checked={state.tieneCitaEntrega} name="tieneCita" />} label="Tiene cita para entrega" />
+                                                                            <FormControlLabel disabled
+                                                                                              control={<Checkbox
+                                                                                                  checked={state.tieneCitaEntrega}
+                                                                                                  name="tieneCita"/>}
+                                                                                              label="Tiene cita para entrega"/>
                                                                         </Grid>
                                                                     </Grid>
                                                                 </div>
@@ -3593,16 +3635,16 @@ function Guia(props) {
                                                         <label className="label">Fecha</label>
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                InputLabelProps={{
-                                                                    shrink: true,
-                                                                }}
-                                                                value={state.fechaCancelado}
-                                                                id="fechaCancelado"
-                                                                name="fechaCancelado"
-                                                                readOnly
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       InputLabelProps={{
+                                                                           shrink: true,
+                                                                       }}
+                                                                       value={state.fechaCancelado}
+                                                                       id="fechaCancelado"
+                                                                       name="fechaCancelado"
+                                                                       readOnly
                                                             />
                                                         </div>
                                                     </div>

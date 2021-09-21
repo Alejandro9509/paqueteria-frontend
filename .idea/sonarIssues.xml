@@ -38,12 +38,32 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Util/Contexts/InformesContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Util/Contexts/OperadoresContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Views/Login.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Views/Scanner.js">
           <value>
             <set />
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Views/carga/carga.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Views/descarga/descarga.js">
           <value>
             <set />
           </value>

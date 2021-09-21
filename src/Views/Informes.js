@@ -358,7 +358,7 @@ function Informes({history}) {
         tipoModal: 0,
         IdInforme: 0,
         FolioInforme: 0,
-        fechaHora: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+        fechaHora: `${new Date().getFullYear()}-${`${new Date().getMonth()}`.padStart(2, 0)}-${`${new Date().getDate() }`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
         DerechoBorrar: 151,
         EstatusInforme: 5,
         IdViaje: {},

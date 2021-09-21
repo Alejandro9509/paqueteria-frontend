@@ -223,7 +223,7 @@ export const TICKET_ZABRA_TAMPLATE = (guia, paquete, index) => (
 ^LL150,^PW100^LH0,0
 ^FO3,7
 ^BQN,2,8
-^FDQA,${guia.m_nIdGuia}^FS
+^FDQA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
 ^FS^CI28^A0,4,4^FT27,49^FWB^FDGuía:^FS
 ^FS^CI28^A0,8,8^FT38,49^FWB^FH^FD${guia.m_nFolioGuia}^FS
 ^FS^CI28^AC,3,3^FT44,49^FWB^FDRemitente:^FS
@@ -237,9 +237,9 @@ export const TICKET_ZABRA_TAMPLATE = (guia, paquete, index) => (
 ^FS^CI28^AC,3,3^FT84,49^FWB^FDDestino:^FS
 ^FS^CI28^A0,5,5^FT89,50^FWB^FD ${guia.m_sCiudadDestino}^FS
 ^FS^CI28^A0,4,4^FT95,49^FWB^FDPaquetes:^FS
-^FS^CI28^A0,5,5^FT95,31^FWB^FD 1 ^FS
+^FS^CI28^A0,5,5^FT95,31^FWB^FD ${index + 1} ^FS
 ^FS^CI28^A0,4,4^FT95,23^FWB^FDde^FS
-^FS^CI28^A0,5,5^FT95,17^FWB^FD 1 ^FS
+^FS^CI28^A0,5,5^FT95,17^FWB^FD ${paquete.cdt} ^FS
 ^MUd
 ^XZ`)
 
