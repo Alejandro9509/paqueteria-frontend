@@ -775,6 +775,10 @@ function Recoleccion() {
         if (validarPaquetes(paq)){
             paq.m_nIdPaquete = paq.m_nIdPaquete ? paq.m_nIdPaquete : paquetes.length + 1
             paq.m_cyValorDeclarado = paq.m_cyValorDeclarado ? paq.m_cyValorDeclarado : 0
+            if (paq.m_cyValorDeclarado === 0 && (state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4)){
+                showSuccess("El campo de valor declarado es necesario para el seguro.")
+                return
+            }
             paquetes.push(paq);
             setPaquete({
                 m_rPeso: "",
@@ -1755,28 +1759,33 @@ function Recoleccion() {
             flex: 1,
         },
         {
-            headerName: "Peso",
-            field: "m_rPeso",
-            width: 100,
-        },
-        {
             headerName: "Largo",
             field: "m_rLargo",
+            type:'number',
             width: 100,
         },
         {
             headerName: "Ancho",
             field: "m_rAncho",
+            type:'number',
             width: 100,
         },
         {
             headerName: "Alto",
             field: "m_rAlto",
+            type:'number',
+            width: 100,
+        },
+        {
+            headerName: "Peso",
+            field: "m_rPeso",
+            type:'number',
             width: 100,
         },
         {
             headerName: "Volumen",
             field: "m_rVolumen",
+            type:'number',
             width: 100,
         },
         {
@@ -1787,6 +1796,8 @@ function Recoleccion() {
         {
             headerName: "Valor",
             field: "m_cyValorDeclarado",
+            type:'number',
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             width: 100,
         },
         {
@@ -1797,6 +1808,7 @@ function Recoleccion() {
         {
             headerName: "Cantidad",
             field: "m_nCantidad",
+            type:'number',
             width: 100,
         },
         {
@@ -1828,6 +1840,11 @@ function Recoleccion() {
             accessor: "m_sNombre",
         },
     ]);
+
+    const currencyFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
 
     function getAllData() {
         const {fechaInicial, fechaFinal, sucursalListado, estatusListado, folioRecoleccion} = state
@@ -3727,7 +3744,6 @@ function Recoleccion() {
                                                             </label>
                                                         </div>
 
-
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
@@ -3763,6 +3779,48 @@ function Recoleccion() {
                                                                 </FormControl>
                                                             </label>
                                                         </div>
+
+                                                        <div className="col-md-12">
+                                                            <div className="col-md-6">
+                                                                <div className="input">
+                                                                    <Autocomplete
+                                                                        value={state.clientePaga}
+                                                                        freeSolo
+                                                                        onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
+                                                                        id="clientePaga"
+                                                                        disableClearable
+                                                                        forcePopupIcon={false}
+                                                                        options={dataClientes}
+                                                                        disabled={state.agregar === "Consultar"}
+                                                                        getOptionLabel={(option) => `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`}
+                                                                        variant="outlined"
+                                                                        name={"clientePaga"}
+                                                                        style={{
+                                                                            transform: "translate(14px, 10px) scale(1) !important"
+                                                                        }}
+                                                                        renderInput={(params) =>
+                                                                            <TextField
+                                                                                variant="outlined"
+                                                                                label="Responsable de pago"
+                                                                                margin="dense"
+                                                                                required
+                                                                                placeholder={"No. Cliente: Nombre fiscal"}
+                                                                                InputLabelProps={{shrink: true}}
+                                                                                onClick={handleClickResponsablePago}
+                                                                                {...params}
+                                                                            />
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-md-6">
+                                                                {
+                                                                    state.clientePaga.m_nIdTipoSeguro === undefined ? ``
+                                                                        : state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}`: `NO tiene seguro`
+
+                                                                }
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -3792,7 +3850,7 @@ function Recoleccion() {
                                                                             labelId="m_nIdTipoLabel"
                                                                             className="form-control"
                                                                             value={paquete.m_nIdTipo}
-                                                                            disabled={state.agregar === "Consultar"}
+                                                                            disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                             onChange={(event) => handleChangePaquetev2(event)}
                                                                             id="m_nIdTipo"
                                                                             name="m_nIdTipo"
@@ -3818,7 +3876,7 @@ function Recoleccion() {
                                                                         disableClearable
                                                                         forcePopupIcon={false}
                                                                         options={dataProductos}
-                                                                        disabled={state.agregar === "Consultar"}
+                                                                        disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                         getOptionLabel={(option) => `${option.m_sDescripcion}`}
                                                                         variant="outlined"
                                                                         inputValue={`${paquete.producto == null ? '' : paquete.producto.m_sDescripcion}`}
@@ -3837,23 +3895,6 @@ function Recoleccion() {
                                                                 </div>
                                                             </Grid>
                                                             }
-
-                                                            {paquete.m_nIdTipo != 1 &&
-                                                                <Grid item xs={1}>
-                                                                    <div className="input">
-                                                                        <TextField variant="outlined" margin="dense"
-                                                                                   onChange={(event) => handleChangePaquetev2(event)}
-                                                                                   className="form-control"
-                                                                                   type="text"
-                                                                                   label="Peso"
-                                                                                   value={paquete.m_rPeso}
-                                                                                   disabled={state.agregar === "Consultar"}
-                                                                                   placeholder="kg"
-                                                                                   name="m_rPeso"
-                                                                        />
-                                                                    </div>
-                                                                </Grid>
-                                                            }
                                                             {paquete.m_nIdTipo != 1 &&
                                                                 <Grid item xs={1}>
                                                                     <div className="input">
@@ -3863,7 +3904,7 @@ function Recoleccion() {
                                                                                    type="text"
                                                                                    value={paquete.m_rLargo}
                                                                                    label="Largo"
-                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                    placeholder="cms"
                                                                                    name="m_rLargo"
                                                                         />
@@ -3879,7 +3920,7 @@ function Recoleccion() {
                                                                                    type="text"
                                                                                    label="Ancho"
                                                                                    value={paquete.m_rAncho}
-                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                    placeholder="cms"
                                                                                    name="m_rAncho"
                                                                         />
@@ -3895,12 +3936,28 @@ function Recoleccion() {
                                                                                    type="text"
                                                                                    value={paquete.m_rAlto}
                                                                                    label="Alto"
-                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                    placeholder="cms"
                                                                                    name="m_rAlto"
                                                                         />
                                                                     </div>
                                                                 </Grid>
+                                                            }
+                                                            {paquete.m_nIdTipo != 1 &&
+                                                            <Grid item xs={1}>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               onChange={(event) => handleChangePaquetev2(event)}
+                                                                               className="form-control"
+                                                                               type="text"
+                                                                               label="Peso"
+                                                                               value={paquete.m_rPeso}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
+                                                                               placeholder="kg"
+                                                                               name="m_rPeso"
+                                                                    />
+                                                                </div>
+                                                            </Grid>
                                                             }
                                                             {paquete.m_nIdTipo != 1 &&
                                                                 <Grid item xs={1}>
@@ -3928,7 +3985,7 @@ function Recoleccion() {
                                                                                 labelId="m_nIdTipoEmbalajeLabel"
                                                                                 className="form-control"
                                                                                 value={paquete.m_nIdTipoEmbalaje}
-                                                                                disabled={state.agregar === "Consultar"}
+                                                                                disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                 onChange={(event) => handleChangePaquetev2(event)}
                                                                                 id="m_nIdTipoEmbalaje"
                                                                                 name="m_nIdTipoEmbalaje"
@@ -3953,7 +4010,7 @@ function Recoleccion() {
                                                                                    type="text"
                                                                                    label="Valor Declarado"
                                                                                    value={paquete.m_cyValorDeclarado}
-                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                    placeholder="$"
                                                                                    name="m_cyValorDeclarado"
                                                                         />
@@ -3968,7 +4025,7 @@ function Recoleccion() {
                                                                                type="text"
                                                                                label="Descripción"
                                                                                value={paquete.m_sDescripcion}
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="Descripción"
                                                                                name="m_sDescripcion"
                                                                     />
@@ -3983,7 +4040,7 @@ function Recoleccion() {
                                                                                    type="text"
                                                                                    label="Ctd"
                                                                                    value={paquete.m_nCantidad}
-                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                    placeholder="Ctd"
                                                                                    name="m_nCantidad"
                                                                         />
@@ -3999,7 +4056,7 @@ function Recoleccion() {
                                                                                    type="text"
                                                                                    label="Observaciones"
                                                                                    value={paquete.m_sObservaciones}
-                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                    placeholder="Observaciones"
                                                                                    name="m_sObservaciones"
                                                                         />
@@ -4007,10 +4064,10 @@ function Recoleccion() {
                                                                 </Grid>
                                                             }
                                                             <Grid item xs={1}>
-                                                                <IconButton onClick={addPaquetev2} style={{ padding: "0px" }} disabled={state.agregar === "Consultar"}>
+                                                                <IconButton onClick={addPaquetev2} style={{ padding: "0px" }} disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}>
                                                                     <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
                                                                 </IconButton>
-                                                                <IconButton onClick={removePaquetev2} style={{ padding: "0px" }} disabled={state.agregar === "Consultar"}>
+                                                                <IconButton onClick={removePaquetev2} style={{ padding: "0px" }} disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}>
                                                                     <DeleteIcon style={{ fill: "red", fontSize: "xx-large" }} />
                                                                 </IconButton>
                                                             </Grid>
@@ -4035,47 +4092,6 @@ function Recoleccion() {
                                         <div className="col-md-12">
                                             <div className="widget-wrap" id="remitenteDestinatario">
                                                 <div className="row">
-                                                    <div className="col-md-12">
-                                                        <div className="col-md-6">
-                                                            <div className="input">
-                                                                <Autocomplete
-                                                                    value={state.clientePaga}
-                                                                    freeSolo
-                                                                    onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
-                                                                    id="clientePaga"
-                                                                    disableClearable
-                                                                    forcePopupIcon={false}
-                                                                    options={dataClientes}
-                                                                    disabled={state.agregar === "Consultar"}
-                                                                    getOptionLabel={(option) => `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`}
-                                                                    variant="outlined"
-                                                                    name={"clientePaga"}
-                                                                    style={{
-                                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                                    }}
-                                                                    renderInput={(params) =>
-                                                                        <TextField
-                                                                            variant="outlined"
-                                                                            label="Responsable de pago"
-                                                                            margin="dense"
-                                                                            required
-                                                                            placeholder={"No. Cliente: Nombre fiscal"}
-                                                                            InputLabelProps={{shrink: true}}
-                                                                            onClick={handleClickResponsablePago}
-                                                                            {...params}
-                                                                        />
-                                                                    }
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <div className="col-md-6">
-                                                            {
-                                                                state.clientePaga.m_nIdTipoSeguro === undefined ? ``
-                                                                    : state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}`: `NO tiene seguro`
-
-                                                            }
-                                                        </div>
-                                                    </div>
                                                     <div className="col-md-6">
                                                         <div className="widget-header">
                                                             <h2>Remitente</h2>

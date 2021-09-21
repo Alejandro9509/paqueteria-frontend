@@ -588,28 +588,33 @@ function Embarque(props) {
             flex: 1,
         },
         {
-            headerName: "Peso",
-            field: "m_xPeso",
-            width: 100,
-        },
-        {
             headerName: "Largo",
             field: "m_xLargo",
+            type:'number',
             width: 100,
         },
         {
             headerName: "Ancho",
             field: "m_xAncho",
+            type:'number',
             width: 100,
         },
         {
             headerName: "Alto",
             field: "m_xAlto",
+            type:'number',
+            width: 100,
+        },
+        {
+            headerName: "Peso",
+            field: "m_xPeso",
+            type:'number',
             width: 100,
         },
         {
             headerName: "Volumen",
             field: "m_xVolumen",
+            type:'number',
             width: 100,
         },
         {
@@ -620,6 +625,8 @@ function Embarque(props) {
         {
             headerName: "Valor",
             field: "m_cValorDeclarado",
+            type:'number',
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             width: 100,
         },
         {
@@ -630,6 +637,7 @@ function Embarque(props) {
         {
             headerName: "Cantidad",
             field: "ctd",
+            type:'number',
             width: 100,
         },
         {
@@ -658,6 +666,11 @@ function Embarque(props) {
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
 
     const history = useHistory();
+
+    const currencyFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
 
     function handleSelectRemitente(newValue) {
         console.log(newValue)
@@ -2662,6 +2675,10 @@ function Embarque(props) {
         if (validarPaquetes(paq)) {
             paq.m_nIdEmbarqueDetalle = paq.m_nIdEmbarqueDetalle ? paq.m_nIdEmbarqueDetalle : paquetes.length + 1
             paq.m_cValorDeclarado = paq.m_cValorDeclarado ? paq.m_cValorDeclarado : 0
+            if (paq.m_cValorDeclarado === 0 && (state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4)){
+                showSuccess("El campo de valor declarado es necesario para el seguro.")
+                return
+            }
             paquetes.push(paq);
             resetProducto()
             console.log(paquetes);
@@ -3764,7 +3781,50 @@ function Embarque(props) {
                                                                 </FormControl>
                                                             </label>
                                                         </div>
+
+                                                        <div className="col-md-12">
+                                                            <div className="col-md-6">
+                                                                <div className="input">
+                                                                    <Autocomplete
+                                                                        value={state.clientePaga}
+                                                                        freeSolo
+                                                                        onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
+                                                                        id="clientePaga"
+                                                                        disableClearable
+                                                                        forcePopupIcon={false}
+                                                                        options={dataClientes}
+                                                                        disabled={state.agregar === "Consultar"}
+                                                                        getOptionLabel={(option) => `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`}
+                                                                        variant="outlined"
+                                                                        name={"clientePaga"}
+                                                                        style={{
+                                                                            transform: "translate(14px, 10px) scale(1) !important"
+                                                                        }}
+                                                                        renderInput={(params) =>
+                                                                            <TextField
+                                                                                variant="outlined"
+                                                                                label="Responsable de pago"
+                                                                                margin="dense"
+                                                                                required
+                                                                                placeholder={"No. Cliente: Nombre fiscal"}
+                                                                                InputLabelProps={{shrink: true}}
+                                                                                onClick={handleClickResponsablePago}
+                                                                                {...params}
+                                                                            />
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-md-6">
+                                                                {
+                                                                    state.clientePaga.m_nIdTipoSeguro === undefined ? ``
+                                                                        : state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}`: `NO tiene seguro`
+
+                                                                }
+                                                            </div>
+                                                        </div>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -3795,7 +3855,7 @@ function Embarque(props) {
                                                                             labelId="m_nIdTipoLabel"
                                                                             className="form-control"
                                                                             value={paquete.m_nTipo}
-                                                                            disabled={state.agregar === "Consultar"}
+                                                                            disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                             onChange={(event) => handleChangePaquetev2(event)}
                                                                             id="m_nTipo"
                                                                             name="m_nTipo"
@@ -3819,7 +3879,7 @@ function Embarque(props) {
                                                                         freeSolo
                                                                         onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
                                                                         options={dataProductos}
-                                                                        disabled={state.agregar === "Consultar"}
+                                                                        disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                         getOptionLabel={(option) => `${option.m_sDescripcion}`}
                                                                         variant="outlined"
                                                                         inputValue={`${!paquete.producto ? '' : paquete.producto.m_sDescripcion}`}
@@ -3839,22 +3899,6 @@ function Embarque(props) {
                                                             </Grid>
                                                             }
                                                             {paquete.m_nTipo != 1 &&
-                                                                <Grid item xs={1}>
-                                                                    <div className="input">
-                                                                        <TextField variant="outlined" margin="dense"
-                                                                                   onChange={(event) => handleChangePaquetev2(event)}
-                                                                                   className="form-control"
-                                                                                   type="text"
-                                                                                   label="Peso"
-                                                                                   value={paquete.m_xPeso}
-                                                                                   disabled={state.agregar === "Consultar"}
-                                                                                   placeholder="kg"
-                                                                                   name="m_xPeso"
-                                                                        />
-                                                                    </div>
-                                                                </Grid>
-                                                            }
-                                                            {paquete.m_nTipo != 1 &&
                                                             <Grid item xs={1}>
                                                                 <div className="input">
                                                                     <TextField variant="outlined" margin="dense"
@@ -3863,7 +3907,7 @@ function Embarque(props) {
                                                                                type="text"
                                                                                value={paquete.m_xLargo}
                                                                                label="Largo"
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="cms"
                                                                                name="m_xLargo"
                                                                     />
@@ -3879,7 +3923,7 @@ function Embarque(props) {
                                                                                type="text"
                                                                                label="Ancho"
                                                                                value={paquete.m_xAncho}
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="cms"
                                                                                name="m_xAncho"
                                                                     />
@@ -3895,9 +3939,25 @@ function Embarque(props) {
                                                                                type="text"
                                                                                value={paquete.m_xAlto}
                                                                                label="Alto"
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="cms"
                                                                                name="m_xAlto"
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            }
+                                                            {paquete.m_nTipo != 1 &&
+                                                            <Grid item xs={1}>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               onChange={(event) => handleChangePaquetev2(event)}
+                                                                               className="form-control"
+                                                                               type="text"
+                                                                               label="Peso"
+                                                                               value={paquete.m_xPeso}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
+                                                                               placeholder="kg"
+                                                                               name="m_xPeso"
                                                                     />
                                                                 </div>
                                                             </Grid>
@@ -3930,7 +3990,7 @@ function Embarque(props) {
                                                                             labelId="m_nIdTipoEmbalajeLabel"
                                                                             className="form-control"
                                                                             value={paquete.m_nIdTIpoEmpaque}
-                                                                            disabled={state.agregar === "Consultar"}
+                                                                            disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                             onChange={(event) => handleChangePaquetev2(event)}
                                                                             id="m_nIdTIpoEmpaque"
                                                                             name="m_nIdTIpoEmpaque"
@@ -3956,7 +4016,7 @@ function Embarque(props) {
                                                                                type="text"
                                                                                label="Valor Declarado"
                                                                                value={paquete.m_cValorDeclarado}
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="$"
                                                                                name="m_cValorDeclarado"
                                                                     />
@@ -3971,7 +4031,7 @@ function Embarque(props) {
                                                                                type="text"
                                                                                label="Descripción"
                                                                                value={paquete.m_sDescripcion}
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="Descripción"
                                                                                name="m_sDescripcion"
                                                                     />
@@ -3986,7 +4046,7 @@ function Embarque(props) {
                                                                                type="text"
                                                                                label="Ctd"
                                                                                value={paquete.ctd}
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="Ctd"
                                                                                name="ctd"
                                                                     />
@@ -4002,7 +4062,7 @@ function Embarque(props) {
                                                                                type="text"
                                                                                label="Observaciones"
                                                                                value={paquete.m_sObservaciones}
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="Observaciones"
                                                                                name="m_sObservaciones"
                                                                     />
@@ -4012,13 +4072,13 @@ function Embarque(props) {
                                                             <Grid item xs={1}>
                                                                 <IconButton onClick={addPaquetev2}
                                                                             style={{padding: "0px"}}
-                                                                            disabled={state.agregar === "Consultar"}>
+                                                                            disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}>
                                                                     <AddBoxIcon
                                                                         style={{fill: "green", fontSize: "xx-large"}}/>
                                                                 </IconButton>
                                                                 <IconButton onClick={removePaquetev2}
                                                                             style={{padding: "0px"}}
-                                                                            disabled={state.agregar === "Consultar"}>
+                                                                            disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}>
                                                                     <DeleteIcon
                                                                         style={{fill: "red", fontSize: "xx-large"}}/>
                                                                 </IconButton>
@@ -4044,47 +4104,6 @@ function Embarque(props) {
                                         <div className="col-md-12">
                                             <div className="widget-wrap" id="remitenteDestinatario">
                                                 <div className="row">
-                                                    <div className="col-md-12">
-                                                        <div className="col-md-6">
-                                                            <div className="input">
-                                                                <Autocomplete
-                                                                    value={state.clientePaga}
-                                                                    freeSolo
-                                                                    onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
-                                                                    id="clientePaga"
-                                                                    disableClearable
-                                                                    forcePopupIcon={false}
-                                                                    options={dataClientes}
-                                                                    disabled={state.agregar === "Consultar"}
-                                                                    getOptionLabel={(option) => `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`}
-                                                                    variant="outlined"
-                                                                    name={"clientePaga"}
-                                                                    style={{
-                                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                                    }}
-                                                                    renderInput={(params) =>
-                                                                        <TextField
-                                                                            variant="outlined"
-                                                                            label="Responsable de pago"
-                                                                            margin="dense"
-                                                                            required
-                                                                            placeholder={"No. Cliente: Nombre fiscal"}
-                                                                            InputLabelProps={{shrink: true}}
-                                                                            onClick={handleClickResponsablePago}
-                                                                            {...params}
-                                                                        />
-                                                                    }
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <div className="col-md-6">
-                                                            {
-                                                                state.clientePaga.m_nIdTipoSeguro === undefined ? ``
-                                                                    : state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}`: `NO tiene seguro`
-
-                                                            }
-                                                        </div>
-                                                    </div>
                                                     <div className="col-md-6">
                                                         <div className="widget-header">
                                                             <h2>Remitente</h2>

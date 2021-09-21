@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se agregó columna de estados listado de cortes">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*En fecha de registro para corte caja se muestra un dia extra.&#10;*Dar formato a informacion monetaria en corte de caja">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCaja.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCaja.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCajaAgregar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCajaAgregar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Embarque.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Embarque.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Recoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Recoleccion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +23,7 @@
     </option>
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="feature/seguro" />
+    <option name="BRANCH" value="feature/estatus_corte" />
     <option name="OPTIONS">
       <set>
         <option value="NO_FF" />
@@ -33,7 +33,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feature/embarque" />
+        <entry key="$PROJECT_DIR$" value="feature/estatus_corte" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
