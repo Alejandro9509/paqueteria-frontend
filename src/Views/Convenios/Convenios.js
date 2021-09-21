@@ -90,6 +90,11 @@ function Convenios(){
             width: 200,
         },
         {
+            headerName: "Cuota Mensual",
+            field: 'm_xCuotaMensual',
+            width: 200,
+        },
+        {
             headerName: "Activo",
             field: 'm_bActivo',
             width: 100,
