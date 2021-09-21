@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/sonarIssues.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Map/ConfirmarUbicacion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Map/ConfirmarUbicacion.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Constants/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Informes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Informes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Viajes/AgregarViaje.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,13 +142,6 @@
       <workItem from="1631159140096" duration="18684000" />
       <workItem from="1631750064945" duration="25000" />
       <workItem from="1631812359785" duration="11813000" />
-    </task>
-    <task id="LOCAL-00038" summary="*Se corrigieron datos al agregar embarque">
-      <created>1628794437290</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1628794437290</updated>
     </task>
     <task id="LOCAL-00039" summary="Ajuste en viajes">
       <created>1629094799183</created>
@@ -492,7 +479,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632164709607</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="Se hicieron ajustes a la etiqueta">
+      <created>1632255073020</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1632255073022</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -557,7 +551,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Precargar estatus de la guia en pendiente al traer datos de embarque" />
     <MESSAGE value="En guia se encima dato de tipo de servicio al traer datos de embarque" />
     <MESSAGE value="Al no encontrar ninguna tarifa que cuadre con el embarque mostrar mensaje al usuario" />
     <MESSAGE value="Optimizar consulta al traer datos de embarque para generar guia" />
@@ -582,7 +575,8 @@
     <MESSAGE value="Se agrego para permitir mas rutass en una fecha" />
     <MESSAGE value="Error en el nombre de la variable" />
     <MESSAGE value="Error al obtener ubicación del destinatario" />
-    <option name="LAST_COMMIT_MESSAGE" value="Error al obtener ubicación del destinatario" />
+    <MESSAGE value="Se hicieron ajustes a la etiqueta" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se hicieron ajustes a la etiqueta" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
