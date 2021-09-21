@@ -65,7 +65,7 @@ import TipoUnidad from "./Views/TipoUnidad/TipoUnidad";
 
 
 const catalogRoutes = [
-  {
+  /*{
     path: "/GrupoCliente",
     name: "Grupo Clientes",
     icon:  <GClienteIcon/>,
@@ -88,14 +88,14 @@ const catalogRoutes = [
     name: "Puesto",
     icon: <PuestoIcon/>,
     component: PuestoPage,
-  },
+  },*/
   {
     path: "/Departamento",
     name: "Departamento",
     icon: <DepartamentoIcon/>,
     component: DepartamentoPage,
   },
-  {
+  /*{
     path: "/Operador",
     name: "Operadores",
     icon: <OperadorIcon/>,
@@ -106,27 +106,25 @@ const catalogRoutes = [
     name: "Tipo Unidad",
     icon: <TUnidadIcon/>,
     component: TipoUnidad,
-  },
+  },*/
   {
     path: "/GrupoUnidades",
     name: "Grupo Unidades",
     icon: <GUnidadesIcon/>,
     component: GrupoUnidadPage,
   },
-  {
+  /*{
     path: "/Unidades",
     name: "Unidades",
     icon: <UnidadesIcon/>,
     component: UnidadesPage,
   },
-
-
   {
     path: "/EstatusUnidad",
     name: "Estatus Unidades",
     icon: <EUnidadIcon/>,
     component: EstatusUnidadPage,
-  },
+  },*/
   {
     path: "/Embalajes",
     name: "Embalajes",
@@ -188,7 +186,7 @@ const catalogRoutes = [
     icon: <ClasificacionIcon/>,
     component: ClasificacionViajePage,
   },
-  {
+  /*{
     path: "/Caseta",
     name: "Casetas",
     icon: <CasetaIcon/>,
@@ -205,7 +203,7 @@ const catalogRoutes = [
     name: "Conceptos Fact.",
     icon: <CFacturaIcon/>,
     component: ConceptosFacturacionPage,
-  },
+  },*/
   {
     path: "/Rutas",
     name: "Rutas",

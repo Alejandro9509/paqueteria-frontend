@@ -588,28 +588,33 @@ function Embarque(props) {
             flex: 1,
         },
         {
-            headerName: "Peso",
-            field: "m_xPeso",
-            width: 100,
-        },
-        {
             headerName: "Largo",
             field: "m_xLargo",
+            type:'number',
             width: 100,
         },
         {
             headerName: "Ancho",
             field: "m_xAncho",
+            type:'number',
             width: 100,
         },
         {
             headerName: "Alto",
             field: "m_xAlto",
+            type:'number',
+            width: 100,
+        },
+        {
+            headerName: "Peso",
+            field: "m_xPeso",
+            type:'number',
             width: 100,
         },
         {
             headerName: "Volumen",
             field: "m_xVolumen",
+            type:'number',
             width: 100,
         },
         {
@@ -620,6 +625,8 @@ function Embarque(props) {
         {
             headerName: "Valor",
             field: "m_cValorDeclarado",
+            type:'number',
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             width: 100,
         },
         {
@@ -630,6 +637,7 @@ function Embarque(props) {
         {
             headerName: "Cantidad",
             field: "ctd",
+            type:'number',
             width: 100,
         },
         {
@@ -655,8 +663,14 @@ function Embarque(props) {
         m_sObservaciones: "",
         m_nIdProducto: '',
     })
+    const [dataTiposSeguro, setDataTiposSeguro] = useState([])
 
     const history = useHistory();
+
+    const currencyFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
 
     function handleSelectRemitente(newValue) {
         console.log(newValue)
@@ -1286,6 +1300,7 @@ function Embarque(props) {
         getAllCiudades()
         getAllSucursales()
         getAllEstatusEmbarque()
+        getAllTiposSeguro()
 
         const {m_parrPaquetes, m_parrSobres} = respuesta.data;
         let totalPaquetes = 0
@@ -1971,6 +1986,7 @@ function Embarque(props) {
         getAllTipoCobro();
         getAllTipoMoneda();
         getTipoCambio()
+        getAllTiposSeguro()
     }
 
     async function getAllEmbarque() {
@@ -2026,23 +2042,10 @@ function Embarque(props) {
         });
     }
 
-    async function getAllOperadores() {
-        obtenerOperadores().then((respuesta) => {
-            setDataOperador(respuesta.data);
-        });
-    }
-
-    async function getAllTipoUnidad() {
-        obtenerTipoUnidades().then((respuesta) => {
-            setDataTipoUnidad(respuesta.data);
-            getAllUnidades(1);
-        });
-    }
-
-    async function getAllUnidades(id) {
-        obtenerUnidadesTipo(id).then((respuesta) => {
-            setDataUnidad(respuesta.data);
-        });
+    async function getAllTiposSeguro(){
+        axios.get(`${process.env.REACT_APP_API_URL}/TipoSeguros/GetListado`, {headers}).then(({data}) => {
+            setDataTiposSeguro(data)
+        })
     }
 
     async function getAllEmbalajes() {
@@ -2053,12 +2056,6 @@ function Embarque(props) {
 
     const headers = {
         "Content-Type": "application/json",
-    };
-
-    const headers2 = {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     };
 
     function conDatos() {
@@ -2672,82 +2669,31 @@ function Embarque(props) {
         }
     }
 
-    /*=PAQUETES Y SOBRES=*/
-
-    function addPaquete() {
-        const {paquetes} = state;
-        paquetes.push({
-            m_xPeso: "",
-            m_xLargo: "",
-            m_xAncho: "",
-            m_xAlto: "",
-            m_xVolumen: "",
-            m_nIdTIpoEmpaque: "",
-            m_cValorDeclarado: "",
-            m_sDescripcion: "",
-            m_nCantidad: "",
-            m_nTipo: 2,
-            m_sObservaciones: "",
-            producto: '',
-            m_nIdProducto: "",
-        });
-        console.log(paquetes);
-        setState({
-            ...state,
-            paquetes: paquetes,
-            countPaquetes: paquetes.length,
-        });
-    }
-
     const addPaquetev2 = (event) => {
         const {paquetes} = state;
         let paq = paquete
         if (validarPaquetes(paq)) {
             paq.m_nIdEmbarqueDetalle = paq.m_nIdEmbarqueDetalle ? paq.m_nIdEmbarqueDetalle : paquetes.length + 1
             paq.m_cValorDeclarado = paq.m_cValorDeclarado ? paq.m_cValorDeclarado : 0
+            if (paq.m_cValorDeclarado === 0 && (state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4)){
+                showSuccess("El campo de valor declarado es necesario para el seguro.")
+                return
+            }
             paquetes.push(paq);
-            setPaquete({
-                m_xPeso: "",
-                m_xLargo: "",
-                m_xAncho: "",
-                m_xAlto: "",
-                m_xVolumen: "",
-                m_nIdTIpoEmpaque: "",
-                m_cValorDeclarado: "",
-                m_sDescripcion: "",
-                ctd: "",
-                m_nTipo: 2,
-                m_sObservaciones: "",
-                producto: null,
-                m_nIdProducto: "",
-                m_sTipo: "Paquete",
-            })
+            resetProducto()
             console.log(paquetes);
             setState({...state, paquetes: paquetes, countPaquetes: state.countPaquetes + 1});
+            let aux = []
+            dataProductos.forEach((i) =>{
+                aux.push(i)
+            })
+            setDataProductos(aux)
         } else {
             showSuccess("Rellene los campos obligatorios.")
         }
     }
 
-    function removePaquete(index) {
-        var {paquetes} = state;
-        if (paquetes.length !== 1) {
-            paquetes.pop();
-            setState({
-                ...state,
-                paquetes: paquetes,
-                countPaquetes: state.paquetes.length,
-            });
-            let totalCantidad = 0
-            paquetes.forEach((p) => {
-                totalCantidad += parseInt(p.m_nCantidad)
-            })
-            setTotalPaquetes(totalCantidad)
-        }
-    }
-
-    const removePaquetev2 = (event) => {
-        event.preventDefault()
+    const resetProducto = () => {
         setPaquete({
             m_xPeso: "",
             m_xLargo: "",
@@ -2759,51 +2705,17 @@ function Embarque(props) {
             m_cValorDeclarado: "",
             m_sDescripcion: "",
             ctd: "",
+            producto: null,
             m_nTipo: 2,
             m_sObservaciones: "",
-            producto: null,
             m_nIdProducto: "",
             m_sTipo: "Paquete",
         })
-
     }
-
-    function addSobre() {
-        const {sobres} = state;
-        sobres.push({
-            m_nTipo: 1,
-            m_sDescripcion: "",
-        });
-        console.log(sobres);
-        setState({...state, sobres: sobres, countSobres: state.sobres.length});
+    const removePaquetev2 = (event) => {
+        event.preventDefault()
+        resetProducto()
     }
-
-    function removeSobre(index) {
-        var {sobres} = state;
-        if (sobres.length !== 1) {
-            sobres.pop();
-            setState({
-                ...state,
-                sobres: sobres,
-                countSobres: state.sobres.length,
-            });
-        }
-    }
-
-    const handleChangePaquete = (event, index) => {
-        var {paquetes} = state;
-        paquetes[index][event.target.name] = event.target.value;
-        paquetes[index].m_xVolumen = paquetes[index].m_xLargo * paquetes[index].m_xAlto * paquetes[index].m_xAncho;
-        setState({
-            ...state,
-            paquetes: paquetes,
-        });
-        let totalCantidad = 0
-        paquetes.forEach((p) => {
-            totalCantidad += parseInt(p.m_nCantidad)
-        })
-        setTotalPaquetes(totalCantidad)
-    };
 
     const handleChangePaquetev2 = (event) => {
         let {paquetes} = state;
@@ -2837,25 +2749,10 @@ function Embarque(props) {
         setTotalPaquetes(totalCantidad)
     };
 
-    const handleChangePaqueteProducto = (event, index, newValue) => {
-        let {paquetes} = state;
-        console.log('seleccion ', newValue)
-        paquetes[index].producto = newValue;
-        paquetes[index].m_nIdProducto = newValue.m_nIdProducto
-        paquetes[index].m_xLargo = newValue.m_xLargo
-        paquetes[index].m_xAlto = newValue.m_xAlto
-        paquetes[index].m_xAncho = newValue.m_xAncho
-        paquetes[index].m_xPeso = newValue.m_xPeso
-        paquetes[index].m_nIdTIpoEmpaque = newValue.m_nIdEmbalaje
-        paquetes[index].m_sDescripcion = newValue.m_nIdProducto == 1 ? "" : newValue.m_sDescripcion
-        paquetes[index].m_xVolumen = paquetes[index].m_xLargo * paquetes[index].m_xAlto * paquetes[index].m_xAncho;
-        setState({
-            ...state,
-            paquetes: paquetes,
-        });
-    };
-
     const handleChangePaqueteProductov2 = (event, newValue) => {
+        if (!newValue){
+            return
+        }
         setPaquete(paquete => {
             return {
                 ...paquete,
@@ -2868,13 +2765,8 @@ function Embarque(props) {
                 m_nIdTIpoEmpaque: newValue.m_nIdEmbalaje,
                 m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == newValue.m_nIdEmbalaje).m_sNombre,
                 m_sDescripcion: newValue.m_nIdProducto == 1 ? "" : newValue.m_sDescripcion,
-                m_sProducto: newValue.m_sDescripcion
-            }
-        })
-        setPaquete(paquete => {
-            return {
-                ...paquete,
-                m_xVolumen: paquete.m_xLargo * paquete.m_xAlto * paquete.m_xAncho
+                m_sProducto: newValue.m_sDescripcion,
+                m_xVolumen: newValue.m_xLargo * newValue.m_xAlto * newValue.m_xAncho
             }
         })
 
@@ -2910,245 +2802,12 @@ function Embarque(props) {
         }
     }
 
-    const handleChangeSobre = (event, index) => {
-        var {sobres} = state;
-        sobres[index][event.target.name] = event.target.value;
-        setState({
-            ...state,
-            sobres: sobres,
-        });
-    };
-
     const getAllProductos = () => {
         const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
         axios.get(url, {headers}).then(respuesta => {
             setDataProductos(respuesta.data)
         });
     }
-
-
-    /*const framesPaquete = state.paquetes.map((p, index) => {
-        return (
-            <div key={`paquete${index}`}>
-                <div className="col-sm-12 col-md-12 unit">
-                    <h4>
-                        <strong>{`Paquete #${index + 1}`}</strong>
-                    </h4>
-                </div>
-
-                <div className="col-sm-4 col-md-12 unit">
-                    <div className="input">
-                        <Autocomplete
-                            value={state.paquetes[index].producto}
-                            freeSolo
-                            onChange={(event, newValue) => handleChangePaqueteProducto(event, index, newValue)}
-                            disableClearable
-                            forcePopupIcon={false}
-                            options={dataProductos}
-                            disabled={state.agregar === "Consultar"}
-                            getOptionLabel={(option) => `${option.m_sDescripcion}`}
-                            variant="outlined"
-                            name={"producto"}
-                            style={{
-                                transform: "translate(14px, 10px) scale(1) !important"
-                            }}
-                            renderInput={(params) =>
-                                <TextField
-                                    variant="outlined"
-                                    label="Producto"
-                                    margin="dense"
-                                    onClick={handleClickProducto}
-                                    required
-                                    {...params}
-                                />
-                            }
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Peso"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_xPeso}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="kg"
-                                   name="m_xPeso"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Largo"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_xLargo}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="cms"
-                                   name="m_xLargo"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Ancho"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_xAncho}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="cms"
-                                   name="m_xAncho"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Alto"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_xAlto}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="cms"
-                                   name="m_xAlto"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Volumen"
-                            // onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_xVolumen}
-                                   disabled
-                                   placeholder="cms3"
-                                   name="m_xVolumen"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-6 unit">
-                    <label className="input select">
-                        <FormControl fullWidth variant="outlined" margin="dense">
-                            <InputLabel id="idTipoEmbalajeLabel">Tipo de Embalaje</InputLabel>
-                            <Select
-                                labelId="idTipoEmbalajeLabel"
-                                className="form-control"
-                                value={state.paquetes[index].m_nIdTIpoEmpaque}
-                                onChange={(event) => handleChangePaquete(event, index)}
-                                disabled={state.agregar === "Consultar"}
-                                id="m_nIdTIpoEmpaque"
-                                label={"Tipo de Embalaje"}
-                                name="m_nIdTIpoEmpaque"
-                                InputProps={{
-                                    name: "m_nIdTIpoEmpaque"
-                                }}
-                            >
-                                {dataEmbalaje.map((embalaje) => (
-                                    <option
-                                        key={embalaje.m_nIdEmbalaje}
-                                        value={embalaje.m_nIdEmbalaje}
-                                    >
-                                        {embalaje.m_sNombre}
-                                    </option>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </label>
-                </div>
-
-                <div className="col-sm-4 col-md-6 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Valor Declarado"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_cValorDeclarado}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="$"
-                                   name="m_cValorDeclarado"
-                                   InputLabelProps={{shrink: true,}}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-8 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Descripción"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_sDescripcion}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="Descripción"
-                                   name="m_sDescripcion"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Ctd"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_nCantidad}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="Cantidad"
-                                   name="m_nCantidad"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-12 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Observaciones"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_sObservaciones}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="Observaciones"
-                                   name="m_sObservaciones"
-                        />
-                    </div>
-                </div>
-            </div>
-        );
-    });
-
-    const framesSobre = state.sobres.map((p, index) => {
-        return (
-            <div key={`sobre${index}`}>
-                <div className="col-md-12 unit">
-                    <h4>
-                        {" "}
-                        <strong>{`Sobre #${index + 1}`}</strong>
-                    </h4>
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense" label="Descripcion"
-                                   onChange={(event) => handleChangeSobre(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.sobres[index].m_sDescripcion}
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="Descripción"
-                                   name="m_sDescripcion"
-                        />
-                    </div>
-                </div>
-            </div>
-        );
-    });*/
 
     const handleFechaCita = (event) => {
         setState({
@@ -4122,7 +3781,50 @@ function Embarque(props) {
                                                                 </FormControl>
                                                             </label>
                                                         </div>
+
+                                                        <div className="col-md-12">
+                                                            <div className="col-md-6">
+                                                                <div className="input">
+                                                                    <Autocomplete
+                                                                        value={state.clientePaga}
+                                                                        freeSolo
+                                                                        onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
+                                                                        id="clientePaga"
+                                                                        disableClearable
+                                                                        forcePopupIcon={false}
+                                                                        options={dataClientes}
+                                                                        disabled={state.agregar === "Consultar"}
+                                                                        getOptionLabel={(option) => `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`}
+                                                                        variant="outlined"
+                                                                        name={"clientePaga"}
+                                                                        style={{
+                                                                            transform: "translate(14px, 10px) scale(1) !important"
+                                                                        }}
+                                                                        renderInput={(params) =>
+                                                                            <TextField
+                                                                                variant="outlined"
+                                                                                label="Responsable de pago"
+                                                                                margin="dense"
+                                                                                required
+                                                                                placeholder={"No. Cliente: Nombre fiscal"}
+                                                                                InputLabelProps={{shrink: true}}
+                                                                                onClick={handleClickResponsablePago}
+                                                                                {...params}
+                                                                            />
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-md-6">
+                                                                {
+                                                                    state.clientePaga.m_nIdTipoSeguro === undefined ? ``
+                                                                        : state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}`: `NO tiene seguro`
+
+                                                                }
+                                                            </div>
+                                                        </div>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -4153,7 +3855,7 @@ function Embarque(props) {
                                                                             labelId="m_nIdTipoLabel"
                                                                             className="form-control"
                                                                             value={paquete.m_nTipo}
-                                                                            disabled={state.agregar === "Consultar"}
+                                                                            disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                             onChange={(event) => handleChangePaquetev2(event)}
                                                                             id="m_nTipo"
                                                                             name="m_nTipo"
@@ -4176,13 +3878,11 @@ function Embarque(props) {
                                                                         value={paquete.producto}
                                                                         freeSolo
                                                                         onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
-                                                                        disableClearable
-                                                                        forcePopupIcon={false}
                                                                         options={dataProductos}
-                                                                        disabled={state.agregar === "Consultar"}
+                                                                        disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                         getOptionLabel={(option) => `${option.m_sDescripcion}`}
                                                                         variant="outlined"
-                                                                        inputValue={`${paquete.producto == null ? '' : paquete.producto.m_sDescripcion}`}
+                                                                        inputValue={`${!paquete.producto ? '' : paquete.producto.m_sDescripcion}`}
                                                                         name={"producto"}
                                                                         style={{transform: "translate(14px, 10px) scale(1) !important"}}
                                                                         renderInput={(params) =>
@@ -4199,22 +3899,6 @@ function Embarque(props) {
                                                             </Grid>
                                                             }
                                                             {paquete.m_nTipo != 1 &&
-                                                                <Grid item xs={1}>
-                                                                    <div className="input">
-                                                                        <TextField variant="outlined" margin="dense"
-                                                                                   onChange={(event) => handleChangePaquetev2(event)}
-                                                                                   className="form-control"
-                                                                                   type="text"
-                                                                                   label="Peso"
-                                                                                   value={paquete.m_xPeso}
-                                                                                   disabled={state.agregar === "Consultar"}
-                                                                                   placeholder="kg"
-                                                                                   name="m_xPeso"
-                                                                        />
-                                                                    </div>
-                                                                </Grid>
-                                                            }
-                                                            {paquete.m_nTipo != 1 &&
                                                             <Grid item xs={1}>
                                                                 <div className="input">
                                                                     <TextField variant="outlined" margin="dense"
@@ -4223,7 +3907,7 @@ function Embarque(props) {
                                                                                type="text"
                                                                                value={paquete.m_xLargo}
                                                                                label="Largo"
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="cms"
                                                                                name="m_xLargo"
                                                                     />
@@ -4239,7 +3923,7 @@ function Embarque(props) {
                                                                                type="text"
                                                                                label="Ancho"
                                                                                value={paquete.m_xAncho}
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="cms"
                                                                                name="m_xAncho"
                                                                     />
@@ -4255,9 +3939,25 @@ function Embarque(props) {
                                                                                type="text"
                                                                                value={paquete.m_xAlto}
                                                                                label="Alto"
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="cms"
                                                                                name="m_xAlto"
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            }
+                                                            {paquete.m_nTipo != 1 &&
+                                                            <Grid item xs={1}>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               onChange={(event) => handleChangePaquetev2(event)}
+                                                                               className="form-control"
+                                                                               type="text"
+                                                                               label="Peso"
+                                                                               value={paquete.m_xPeso}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
+                                                                               placeholder="kg"
+                                                                               name="m_xPeso"
                                                                     />
                                                                 </div>
                                                             </Grid>
@@ -4290,7 +3990,7 @@ function Embarque(props) {
                                                                             labelId="m_nIdTipoEmbalajeLabel"
                                                                             className="form-control"
                                                                             value={paquete.m_nIdTIpoEmpaque}
-                                                                            disabled={state.agregar === "Consultar"}
+                                                                            disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                             onChange={(event) => handleChangePaquetev2(event)}
                                                                             id="m_nIdTIpoEmpaque"
                                                                             name="m_nIdTIpoEmpaque"
@@ -4316,7 +4016,7 @@ function Embarque(props) {
                                                                                type="text"
                                                                                label="Valor Declarado"
                                                                                value={paquete.m_cValorDeclarado}
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="$"
                                                                                name="m_cValorDeclarado"
                                                                     />
@@ -4331,7 +4031,7 @@ function Embarque(props) {
                                                                                type="text"
                                                                                label="Descripción"
                                                                                value={paquete.m_sDescripcion}
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="Descripción"
                                                                                name="m_sDescripcion"
                                                                     />
@@ -4346,7 +4046,7 @@ function Embarque(props) {
                                                                                type="text"
                                                                                label="Ctd"
                                                                                value={paquete.ctd}
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="Ctd"
                                                                                name="ctd"
                                                                     />
@@ -4362,7 +4062,7 @@ function Embarque(props) {
                                                                                type="text"
                                                                                label="Observaciones"
                                                                                value={paquete.m_sObservaciones}
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
                                                                                placeholder="Observaciones"
                                                                                name="m_sObservaciones"
                                                                     />
@@ -4372,13 +4072,13 @@ function Embarque(props) {
                                                             <Grid item xs={1}>
                                                                 <IconButton onClick={addPaquetev2}
                                                                             style={{padding: "0px"}}
-                                                                            disabled={state.agregar === "Consultar"}>
+                                                                            disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}>
                                                                     <AddBoxIcon
                                                                         style={{fill: "green", fontSize: "xx-large"}}/>
                                                                 </IconButton>
                                                                 <IconButton onClick={removePaquetev2}
                                                                             style={{padding: "0px"}}
-                                                                            disabled={state.agregar === "Consultar"}>
+                                                                            disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}>
                                                                     <DeleteIcon
                                                                         style={{fill: "red", fontSize: "xx-large"}}/>
                                                                 </IconButton>
@@ -4404,40 +4104,6 @@ function Embarque(props) {
                                         <div className="col-md-12">
                                             <div className="widget-wrap" id="remitenteDestinatario">
                                                 <div className="row">
-                                                    <div className="col-md-12">
-                                                        <div className="col-sm-12 col-md-12 unit">
-                                                            <div className="input">
-                                                                <Autocomplete
-                                                                    value={state.clientePaga}
-                                                                    freeSolo
-                                                                    onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
-                                                                    id="clientePaga"
-                                                                    disableClearable
-                                                                    forcePopupIcon={false}
-                                                                    options={dataClientes}
-                                                                    disabled={state.agregar === "Consultar"}
-                                                                    getOptionLabel={(option) => `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`}
-                                                                    variant="outlined"
-                                                                    name={"clientePaga"}
-                                                                    style={{
-                                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                                    }}
-                                                                    renderInput={(params) =>
-                                                                        <TextField
-                                                                            variant="outlined"
-                                                                            label="Responsable de pago"
-                                                                            margin="dense"
-                                                                            required
-                                                                            placeholder={"No. Cliente: Nombre fiscal"}
-                                                                            InputLabelProps={{shrink: true}}
-                                                                            onClick={handleClickResponsablePago}
-                                                                            {...params}
-                                                                        />
-                                                                    }
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                     <div className="col-md-6">
                                                         <div className="widget-header">
                                                             <h2>Remitente</h2>

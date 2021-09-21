@@ -47,6 +47,11 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
     const [guiaSelect, setGuiaSelect] = useState(null)
     const [dataGuiasAgregar, setDataGuiasAgregar] = useState([])
     const [showDialog, setShowDialog] = useState(false)
+
+    const currencyFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
     const columnsGuias = React.useMemo(() => [
         {
             headerName: "Fecha/Hora Elaboración",
@@ -75,24 +80,32 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         },{
             headerName: "Importe",
             field: "m_cImporte",
+            type:'number',
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             flex: 1,
         },{
             headerName: "Importe IVA",
             field: "m_cImporteIva",
+            type:'number',
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             flex: 1,
         },{
             headerName: "Importe Retiene",
             field: "m_cImporteRetiene",
+            type:'number',
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             flex: 1,
         },{
             headerName: "Total",
             field: "m_cTotal",
+            type:'number',
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             flex: 1,
         },
     ]);
     const [infoGeneral, setInfoGeneral] = useState({
         idSucursal: localStorage.getItem("Sucursal"),
-        fechaRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}`,
+        fechaRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}`,
         horaRegistro: `${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
     })
     const [guiasSeleccionadas, setGuiasSeleccionadas] = useState([])
@@ -102,8 +115,13 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         idTipoMoneda: 0,
         idTipoPago: 0,
         folioGuia: null,
-        total: 0.0
+        total: 0.0,
+        idEstatus: 0
     })
+
+    const listado = 1
+    const agregar = 2
+    const modificar = 3
 
     useEffect(value =>{
         getAllSucursales()
@@ -113,11 +131,11 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
     }, [])
 
     useEffect( value => {
-        if (pantallaActiva === 1){
+        if (pantallaActiva === listado){
             limpiarCampos()
-        }else if (pantallaActiva === 2){
+        }else if (pantallaActiva === agregar){
             limpiarCampos()
-        }else if (pantallaActiva === 3){
+        }else if (pantallaActiva === modificar){
             limpiarCampos()
             obtenerCorteId(select).then(({data}) =>{
                 obtenerCiudadId(data.m_nIdDestino).then(({data}) => {
@@ -127,15 +145,6 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                             ciudadDestino: data
                         }
                     })
-                })
-                setState(state =>{
-                    return {
-                        ...state,
-                        idCorte: data.m_nIdCorte,
-                        idTipoMoneda: data.m_nIdTipoMoneda,
-                        idTipoPago: data.m_nIdTipoPago,
-                        folioGuia: null,
-                    }
                 })
                 let totalTotal = 0.0
                 data.m_arrGuias.forEach((i) => {
@@ -155,22 +164,28 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                     i.m_cTotal = m_cTotal
                     totalTotal += parseFloat(m_cTotal)
                 })
-                setState( state => {
-                    return{
+                setState(state =>{
+                    return {
                         ...state,
-                        total: totalTotal
+                        idCorte: data.m_nIdCorte,
+                        idTipoMoneda: data.m_nIdTipoMoneda,
+                        idTipoPago: data.m_nIdTipoPago,
+                        folioGuia: null,
+                        total: totalTotal,
+                        idEstatus: data.m_nIdEstatusCorte
                     }
                 })
+
                 setDataGuias(data.m_arrGuias)
             })
         }
     }, [pantallaActiva])
 
     useEffect( value => {
-        if (pantallaActiva === 2){
+        if (pantallaActiva === agregar){
             if (state.ciudadDestino && state.idTipoMoneda && state.idTipoPago && infoGeneral.fechaRegistro){
                 //pedir guias filtradas filtrado
-                obtenerGuiasFiltroCorteCaja(infoGeneral.fechaRegistro, state.ciudadDestino, state.idTipoMoneda, state.idTipoPago).then(({data}) => {
+                obtenerGuiasFiltroCorteCaja(infoGeneral.fechaRegistro, state.ciudadDestino.m_nIdCiudad, state.idTipoMoneda, state.idTipoPago).then(({data}) => {
                     let totalTotal = 0.0
                     data.forEach((i) => {
                         let m_cImporte = 0
@@ -211,7 +226,8 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                 idTipoMoneda: 0,
                 idTipoPago: 0,
                 folioGuia: null,
-                total: 0.0
+                total: 0.0,
+                idEstatus: 0
             }
         })
 
@@ -358,7 +374,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         setGuiaSelect(null)
     }
 
-    const handleAceptar = (e) => {
+    const handleGuardarCorte = (e) => {
         e.preventDefault()
         if (dataGuias.length === 0 ){
             showSuccess("Debe haber al menos una guia.")
@@ -377,6 +393,45 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
             m_nIdTipoMoneda: state.idTipoMoneda,
             m_nIdTipoPago: state.idTipoPago,
             m_cTotal: state.total,
+            m_nIdEstatusCorte: state.idEstatus==2 ? 3 : 1,
+            m_arrGuias: dataGuias
+        }
+        console.log(params)
+        console.log(JSON.stringify(params))
+
+        if (state.idCorte === 0){
+            agregarCorte(params).then((respuesta) =>{
+                showSuccess(respuesta.data)
+                limpiarCampos()
+            })
+        }else{
+            modificarCorte(state.idCorte, params).then((respuesta) => {
+                showSuccess(respuesta.data)
+                limpiarCampos()
+            })
+        }
+    }
+
+    const handleCerrarCorte = (e) => {
+        e.preventDefault()
+        if (dataGuias.length === 0 ){
+            showSuccess("Debe haber al menos una guia.")
+            return
+        }
+        if (!state.ciudadDestino || !state.idTipoMoneda || !state.idTipoPago){
+            showSuccess("Debe haber al menos una guia.")
+            return
+        }
+        let params = {
+            m_nIdCorte: state.idCorte,
+            m_nIdSucursal: infoGeneral.idSucursal,
+            m_sFechaRegistro: infoGeneral.fechaRegistro,
+            m_sHoraRegistro: infoGeneral.horaRegistro,
+            m_nIdDestino: state.ciudadDestino.m_nIdCiudad,
+            m_nIdTipoMoneda: state.idTipoMoneda,
+            m_nIdTipoPago: state.idTipoPago,
+            m_cTotal: state.total,
+            m_nIdEstatusCorte: 2,
             m_arrGuias: dataGuias
         }
         console.log(params)
@@ -567,7 +622,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                     <div className={'row'}>
                         <div className="widget-wrap">
                             <div>
-                                <form className="j-forms" onSubmit={handleAceptar}>
+                                <form className="j-forms">
                                     <div className="widget-container">
                                         <div className="widget-content">
                                             <div className="row">
@@ -701,11 +756,14 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                                             <div className="row">
                                                 <Grid container spacing={2}>
                                                     <Grid item xs={12}>
-                                                        <h3>Total: ${state.total}</h3>
+                                                        <h3>Total: {currencyFormatter.format(Number(state.total.toFixed(2)))}</h3>
                                                     </Grid>
                                                     <Grid item xs={12}>
-                                                        <button type={"submit"} className="btn btn-primary primary-btn" disabled={consult}>
-                                                            Aceptar
+                                                        <button type={"button"} className="btn btn-primary primary-btn" disabled={consult} onClick={handleCerrarCorte}>
+                                                            Cerrar corte
+                                                        </button>
+                                                        <button type={"button"} className="btn btn-primary primary-btn" disabled={consult} onClick={handleGuardarCorte}>
+                                                            Guardar sin cerrar
                                                         </button>
                                                     </Grid>
 
