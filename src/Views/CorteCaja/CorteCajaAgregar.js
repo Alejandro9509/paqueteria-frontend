@@ -47,6 +47,11 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
     const [guiaSelect, setGuiaSelect] = useState(null)
     const [dataGuiasAgregar, setDataGuiasAgregar] = useState([])
     const [showDialog, setShowDialog] = useState(false)
+
+    const currencyFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
     const columnsGuias = React.useMemo(() => [
         {
             headerName: "Fecha/Hora Elaboración",
@@ -75,24 +80,32 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         },{
             headerName: "Importe",
             field: "m_cImporte",
+            type:'number',
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             flex: 1,
         },{
             headerName: "Importe IVA",
             field: "m_cImporteIva",
+            type:'number',
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             flex: 1,
         },{
             headerName: "Importe Retiene",
             field: "m_cImporteRetiene",
+            type:'number',
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             flex: 1,
         },{
             headerName: "Total",
             field: "m_cTotal",
+            type:'number',
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             flex: 1,
         },
     ]);
     const [infoGeneral, setInfoGeneral] = useState({
         idSucursal: localStorage.getItem("Sucursal"),
-        fechaRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}`,
+        fechaRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}`,
         horaRegistro: `${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
     })
     const [guiasSeleccionadas, setGuiasSeleccionadas] = useState([])
@@ -701,7 +714,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                                             <div className="row">
                                                 <Grid container spacing={2}>
                                                     <Grid item xs={12}>
-                                                        <h3>Total: ${state.total}</h3>
+                                                        <h3>Total: {currencyFormatter.format(Number(state.total.toFixed(2)))}</h3>
                                                     </Grid>
                                                     <Grid item xs={12}>
                                                         <button type={"submit"} className="btn btn-primary primary-btn" disabled={consult}>
