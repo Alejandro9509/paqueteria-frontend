@@ -141,13 +141,6 @@
       <workItem from="1631750064945" duration="25000" />
       <workItem from="1631812359785" duration="11813000" />
     </task>
-    <task id="LOCAL-00041" summary="Correccion al agregar embarque">
-      <created>1629307018255</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1629307018255</updated>
-    </task>
     <task id="LOCAL-00042" summary="Se corrigio espacio al presionar consultar o editar en guias">
       <created>1629308522459</created>
       <option name="number" value="00042" />
@@ -484,7 +477,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632262863292</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="cambio en la etiqueta">
+      <created>1632263433995</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1632263433995</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -549,7 +549,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Optimizar consulta al traer datos de embarque para generar guia" />
     <MESSAGE value="Folio relacionado no se muestra al consultar guia" />
     <MESSAGE value="Ciudad de destinatario no se muestra al consultar guia" />
     <MESSAGE value="Ocultar pestaña imprimir en guias" />
@@ -574,7 +573,8 @@
     <MESSAGE value="Se hicieron ajustes a la etiqueta" />
     <MESSAGE value="Se quito el id de la ruta" />
     <MESSAGE value="Se hizo ajustes al qr" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se hizo ajustes al qr" />
+    <MESSAGE value="cambio en la etiqueta" />
+    <option name="LAST_COMMIT_MESSAGE" value="cambio en la etiqueta" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
