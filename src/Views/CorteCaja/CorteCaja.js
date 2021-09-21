@@ -87,6 +87,13 @@ function CorteCaja(){
             minWidth: 200,
             flex: 1
         },
+        {
+            headerName: "Estado",
+            field: 'm_sEstatusCorte',
+            minWidth: 200,
+            flex: 1
+        },
+
     ])
     const [listaCortes, setListaCortes] = useState([])
     const [corteSeleccionado, setCorteSeleccionado] = useState(0)

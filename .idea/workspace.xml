@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="*En fecha de registro para corte caja se muestra un dia extra.&#10;*Dar formato a informacion monetaria en corte de caja">
-      <change beforePath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCajaAgregar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCajaAgregar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCaja.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/CorteCaja/CorteCaja.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,14 +143,7 @@
       <workItem from="1631159140096" duration="18684000" />
       <workItem from="1631848278297" duration="5868000" />
       <workItem from="1631890755501" duration="5647000" />
-      <workItem from="1632198227679" duration="1757000" />
-    </task>
-    <task id="LOCAL-00038" summary="*Se corrigieron datos al agregar embarque">
-      <created>1628794437290</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1628794437290</updated>
+      <workItem from="1632198227679" duration="2951000" />
     </task>
     <task id="LOCAL-00039" summary="Ajuste en viajes">
       <created>1629094799183</created>
@@ -487,7 +481,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632200971555</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="*En fecha de registro para corte caja se muestra un dia extra.&#10;*Dar formato a informacion monetaria en corte de caja">
+      <created>1632201425087</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1632201425087</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
