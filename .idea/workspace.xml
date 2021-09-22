@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/Util/Contexts/ZonaOperativaContext.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaAgregar.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaOperativa.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +23,7 @@
     </option>
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="bugfix/zonas" />
+    <option name="BRANCH" value="feature/ocurre" />
     <option name="OPTIONS">
       <set>
         <option value="NO_FF" />
@@ -31,7 +33,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="feature/ocurre" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -553,7 +555,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Folio relacionado no se muestra al consultar guia" />
     <MESSAGE value="Ciudad de destinatario no se muestra al consultar guia" />
     <MESSAGE value="Ocultar pestaña imprimir en guias" />
     <MESSAGE value="Optimizar consulta al traer datos de guia" />
@@ -578,7 +579,8 @@
     <MESSAGE value="Se quito el id de la ruta" />
     <MESSAGE value="Se hizo ajustes al qr" />
     <MESSAGE value="cambio en la etiqueta" />
-    <option name="LAST_COMMIT_MESSAGE" value="cambio en la etiqueta" />
+    <MESSAGE value="Se agregó tipo de pago a entrega ocurre" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se agregó tipo de pago a entrega ocurre" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
