@@ -240,6 +240,7 @@ function Guia(props) {
     const [dataSucursal, setDataSucursal] = React.useState([])
     const [dataMoneda, setDataMoneda] = React.useState([])
     const [dataTipoCobro, setDataTipoCobro] = React.useState([])
+    const [dataTipoPago, setDataTipoPago] = React.useState([])
     const [dataEstatusGuia, setDataEstatusGuia] = React.useState([])
     const [dataEmbarque, setDataEmbarque] = React.useState([])
     const [dataConceptosDefecto, setDataConceptosDefecto] = useState([])
@@ -309,7 +310,8 @@ function Guia(props) {
             m_sFechaOcurre: dataOcurre.fechaOcurre,
             m_sHoraOcurre: dataOcurre.horaOcurre,
             m_sComentariosOcurre: dataOcurre.comentariosOcurre,
-            m_sMontoRecibidoOcurre: dataOcurre.importeOcurre
+            m_sMontoRecibidoOcurre: dataOcurre.importeOcurre,
+            m_nIdTipoPago: dataOcurre.tipoPago
 
         }
         console.log(params)
@@ -937,6 +939,7 @@ function Guia(props) {
         getUltimoFolioGuia()
         getTipoCambio()
         cargaEmbarqueMoneda(1)
+        getAllDataTipoPago()
         // getFormatosImpresion()
     }, []);
 
@@ -1502,6 +1505,12 @@ function Guia(props) {
     async function getAllDataTipoCobro() {
         obtenerTipoCobro().then(respuesta => {
             setDataTipoCobro(respuesta.data)
+        });
+    };
+
+    async function getAllDataTipoPago() {
+        axios.get(`${process.env.REACT_APP_API_URL}/TiposPago/GetListado`, {headers}).then(({data}) => {
+            setDataTipoPago(data)
         });
     };
 
@@ -2276,7 +2285,36 @@ function Guia(props) {
                                 />
                             </Grid>
                             {dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 &&
-                            <Grid item xs={6}>
+                                <Grid item xs={12}>
+                                <FormControl fullWidth variant="outlined" margin="dense">
+                                    <InputLabel id="idTipoPagoLabel">Tipo Pago</InputLabel>
+                                    <Select
+                                        labelId={"idTipoPagoLabel"}
+                                        label={"Tipo Pago"}
+                                        className="form-control"
+                                        value={dataOcurre.tipoPago}
+                                        onChange={(event) => handleChangeDataOcurre(event)}
+                                        id="tipoPago"
+                                        InputProps={{
+                                            id: "tipoPago",
+                                            name: "tipoPago"
+                                        }}
+                                        name={"tipoPago"}
+                                    >
+                                        {dataTipoPago.map((tipoPago) => (
+                                            <option
+                                                key={tipoPago.m_nIdTipoPago}
+                                                value={tipoPago.m_nIdTipoPago}
+                                            >
+                                                {tipoPago.m_sTipoPago}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            }
+                            {(dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3) && dataOcurre.tipoPago == 1 &&
+                                <Grid item xs={6}>
                                 <TextField variant="outlined" margin="dense" label="Importe recibido"
                                            onChange={(event) => handleChangeDataOcurre(event)}
                                            className="form-control"
@@ -2292,11 +2330,12 @@ function Guia(props) {
                                 }}> {`Cambio: $${dataOcurre.importeOcurre ? parseFloat(dataOcurre.importeTotal) - parseFloat(dataOcurre.importeOcurre) : 0.0}`}</p>
                             </Grid>
                             }
-                            {dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 &&
-                            <Grid item xs={6}>
+                            {(dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3) && dataOcurre.tipoPago == 1 &&
+                                <Grid item xs={6}>
                                 <p> {`Importe a pagar: $${parseFloat(dataOcurre.importeTotal)}`}</p>
                             </Grid>
                             }
+
 
                         </Grid>
                         <DialogActions>
