@@ -63,6 +63,7 @@ import {ReactComponent as ViajesIcon} from './iconos/Catalogos/Icono Viajes/icon
 import {ReactComponent as TarifasIcon} from './iconos/Catalogos/Icono Tarifas/icono_tarifas.svg';
 import TipoUnidad from "./Views/TipoUnidad/TipoUnidad";
 import ZonaOperativa from "./Views/ZonasOperativas/ZonaOperativa";
+import ZonaTarifas from "./Views/ZonasTarifas/ZonaTarifas";
 
 
 const catalogRoutes = [
@@ -258,6 +259,12 @@ const catalogRoutes = [
     name: "Zonas Operativas",
     icon: <PConfiguracionIcon/>,
     component: ZonaOperativa
+  },
+  {
+    path: "/ZonasTarifas",
+    name: "Zonas Tarifas",
+    icon: <PConfiguracionIcon/>,
+    component: ZonaTarifas
   }
 ];
 

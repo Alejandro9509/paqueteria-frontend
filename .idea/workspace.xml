@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Primera version de Zonas operativas terminada">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Ajustes">
+      <change afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTariafasAgregar.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifas.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifasTabs.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routesCatalogos.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routesCatalogos.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +66,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Util/Contexts" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Views/ZonasTarifas" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -76,10 +79,12 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Certuit\WebstormProjects\gm-paqueteria\src\Views\ZonasTarifas" />
       <recent name="C:\Users\Certuit\WebstormProjects\gm-paqueteria\src\Util\Contexts" />
       <recent name="$PROJECT_DIR$/public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Certuit\WebstormProjects\gm-paqueteria\src\Views\ZonasTarifas" />
       <recent name="$PROJECT_DIR$/public/js" />
       <recent name="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla" />
       <recent name="$PROJECT_DIR$/src/Components/Map" />
@@ -144,13 +149,6 @@
       <workItem from="1631750064945" duration="25000" />
       <workItem from="1631812359785" duration="11813000" />
       <workItem from="1632273626530" duration="2847000" />
-    </task>
-    <task id="LOCAL-00044" summary="Se calculo de iva conceptos">
-      <created>1629387190042</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1629387190042</updated>
     </task>
     <task id="LOCAL-00045" summary="Se corrigio al momento de consultar y editar guia">
       <created>1629472137588</created>
@@ -488,7 +486,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632427045219</updated>
     </task>
-    <option name="localTasksCounter" value="93" />
+    <task id="LOCAL-00093" summary="Ajustes">
+      <created>1632427764285</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1632427764286</updated>
+    </task>
+    <option name="localTasksCounter" value="94" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -553,7 +558,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Optimizar consulta al traer datos de guia" />
     <MESSAGE value="Los codigos postales se buscan al hacer click en el campo" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Zonas, origen, destino" />
@@ -578,7 +582,8 @@
     <MESSAGE value="Se agregó tipo de pago a entrega ocurre" />
     <MESSAGE value="Se agregó Catalogo de zonas operativas.&#10;*Se agregó pestaña de listado." />
     <MESSAGE value="Primera version de Zonas operativas terminada" />
-    <option name="LAST_COMMIT_MESSAGE" value="Primera version de Zonas operativas terminada" />
+    <MESSAGE value="Ajustes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajustes" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
