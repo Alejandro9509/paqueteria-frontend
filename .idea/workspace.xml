@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se agregó Catalogo de zonas operativas.&#10;*Se agregó pestaña de listado.">
-      <change afterPath="$PROJECT_DIR$/src/Util/Contexts/MunicipiosContext.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/CPTransferList.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Primera version de Zonas operativas terminada">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/CodigoPostalContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/CodigoPostalContext.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaAgregar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaAgregar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaOperativa.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaOperativa.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,13 +144,6 @@
       <workItem from="1631750064945" duration="25000" />
       <workItem from="1631812359785" duration="11813000" />
       <workItem from="1632273626530" duration="2847000" />
-    </task>
-    <task id="LOCAL-00043" summary="Se corrigio conceptos">
-      <created>1629386868915</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1629386868915</updated>
     </task>
     <task id="LOCAL-00044" summary="Se calculo de iva conceptos">
       <created>1629387190042</created>
@@ -493,7 +481,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632348919515</updated>
     </task>
-    <option name="localTasksCounter" value="92" />
+    <task id="LOCAL-00092" summary="Primera version de Zonas operativas terminada">
+      <created>1632427045218</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1632427045219</updated>
+    </task>
+    <option name="localTasksCounter" value="93" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -558,7 +553,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ocultar pestaña imprimir en guias" />
     <MESSAGE value="Optimizar consulta al traer datos de guia" />
     <MESSAGE value="Los codigos postales se buscan al hacer click en el campo" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario" />
@@ -583,7 +577,8 @@
     <MESSAGE value="cambio en la etiqueta" />
     <MESSAGE value="Se agregó tipo de pago a entrega ocurre" />
     <MESSAGE value="Se agregó Catalogo de zonas operativas.&#10;*Se agregó pestaña de listado." />
-    <option name="LAST_COMMIT_MESSAGE" value="Se agregó Catalogo de zonas operativas.&#10;*Se agregó pestaña de listado." />
+    <MESSAGE value="Primera version de Zonas operativas terminada" />
+    <option name="LAST_COMMIT_MESSAGE" value="Primera version de Zonas operativas terminada" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

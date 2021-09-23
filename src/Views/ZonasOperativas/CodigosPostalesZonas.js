@@ -28,19 +28,20 @@ function CodigosPostalesZonas({seleccion, onChange,consult}) {
     }, [])
 
     useEffect( value => {
-        if (seleccion.m_nIdSucursal && seleccion.m_sCodigoZona && seleccion.m_sIdEstado && seleccion.m_sCodMunicipio && seleccion.m_arrCPs){
-            setState(state => {
-                return {
-                    idZona: seleccion.m_nIdZona,
-                    idSucursal: seleccion.m_nIdSucursal,
-                    codigoZona: seleccion.m_sCodigoZona,
-                    idEstado: seleccion.m_sIdEstado,
-                    estado: seleccion.m_sEstado,
-                    municipio: seleccion.m_sMunicipio,
-                    idMunicipio: seleccion.m_sCodMunicipio,
-                    selectedCP: seleccion.m_arrCPs,
-                }
-            })
+        setState(state => {
+            return {
+                idZona: seleccion.m_nIdZona ? seleccion.m_nIdZona : 0,
+                idSucursal: seleccion.m_nIdSucursal ? seleccion.m_nIdSucursal: localStorage.getItem("Sucursal"),
+                codigoZona: seleccion.m_sCodigoZona ? seleccion.m_sCodigoZona : '',
+                idEstado: seleccion.m_sIdEstado ? seleccion.m_sIdEstado: '',
+                estado: seleccion.m_sEstado ? seleccion.m_sEstado : '',
+                municipio: seleccion.m_sMunicipio ? seleccion.m_sMunicipio : '',
+                idMunicipio: seleccion.m_sCodMunicipio ? seleccion.m_sCodMunicipio : '',
+                selectedCP: seleccion.m_arrCPs ? seleccion.m_arrCPs : [],
+            }
+        })
+        if (!seleccion.m_arrCPs){
+            setAllCP([])
         }
     }, [seleccion])
 
