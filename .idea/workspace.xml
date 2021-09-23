@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Guia.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Guia.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se arreglaron filtrados y estilos para zonas">
+      <change beforePath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTariafasAgregar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifasAgregar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifas.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +21,7 @@
     </option>
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="bugfix/zonas" />
+    <option name="BRANCH" value="feature/ocurre" />
     <option name="OPTIONS">
       <set>
         <option value="NO_FF" />
@@ -31,7 +31,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop" />
+        <entry key="$PROJECT_DIR$" value="feature/ocurre" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -63,7 +63,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Util/Contexts" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Views/ZonasTarifas" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -76,10 +76,12 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Certuit\WebstormProjects\gm-paqueteria\src\Views\ZonasTarifas" />
       <recent name="C:\Users\Certuit\WebstormProjects\gm-paqueteria\src\Util\Contexts" />
       <recent name="$PROJECT_DIR$/public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Certuit\WebstormProjects\gm-paqueteria\src\Views\ZonasTarifas" />
       <recent name="$PROJECT_DIR$/public/js" />
       <recent name="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla" />
       <recent name="$PROJECT_DIR$/src/Components/Map" />
@@ -144,48 +146,6 @@
       <workItem from="1631750064945" duration="25000" />
       <workItem from="1631812359785" duration="11813000" />
       <workItem from="1632273626530" duration="2847000" />
-    </task>
-    <task id="LOCAL-00042" summary="Se corrigio espacio al presionar consultar o editar en guias">
-      <created>1629308522459</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1629308522459</updated>
-    </task>
-    <task id="LOCAL-00043" summary="Se corrigio conceptos">
-      <created>1629386868915</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1629386868915</updated>
-    </task>
-    <task id="LOCAL-00044" summary="Se calculo de iva conceptos">
-      <created>1629387190042</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1629387190042</updated>
-    </task>
-    <task id="LOCAL-00045" summary="Se corrigio al momento de consultar y editar guia">
-      <created>1629472137588</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1629472137588</updated>
-    </task>
-    <task id="LOCAL-00046" summary="Se corrigio el filio del embarque al editar">
-      <created>1629472642299</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1629472642299</updated>
-    </task>
-    <task id="LOCAL-00047" summary="Se corrigio boton de agregar guias">
-      <created>1629472917226</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1629472917226</updated>
     </task>
     <task id="LOCAL-00048" summary="Error al agregar guia">
       <created>1629481428234</created>
@@ -488,7 +448,49 @@
       <option name="project" value="LOCAL" />
       <updated>1632263433995</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="Se agregó Catalogo de zonas operativas.&#10;*Se agregó pestaña de listado.">
+      <created>1632348919514</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1632348919515</updated>
+    </task>
+    <task id="LOCAL-00092" summary="Primera version de Zonas operativas terminada">
+      <created>1632427045218</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1632427045219</updated>
+    </task>
+    <task id="LOCAL-00093" summary="Ajustes">
+      <created>1632427764285</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1632427764286</updated>
+    </task>
+    <task id="LOCAL-00094" summary="Se creó el catálogo de Tarifas por zona">
+      <created>1632429870319</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1632429870319</updated>
+    </task>
+    <task id="LOCAL-00095" summary="Se arreglaron filtrados y estilos para zonas">
+      <created>1632433379019</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1632433379019</updated>
+    </task>
+    <task id="LOCAL-00096" summary="Se arreglaron filtrados y estilos para zonas">
+      <created>1632433399881</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1632433399881</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -553,12 +555,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Folio relacionado no se muestra al consultar guia" />
-    <MESSAGE value="Ciudad de destinatario no se muestra al consultar guia" />
-    <MESSAGE value="Ocultar pestaña imprimir en guias" />
-    <MESSAGE value="Optimizar consulta al traer datos de guia" />
-    <MESSAGE value="Los codigos postales se buscan al hacer click en el campo" />
-    <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Zonas, origen, destino" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos" />
     <MESSAGE value="Error al consultar el paquete" />
@@ -578,7 +574,13 @@
     <MESSAGE value="Se quito el id de la ruta" />
     <MESSAGE value="Se hizo ajustes al qr" />
     <MESSAGE value="cambio en la etiqueta" />
-    <option name="LAST_COMMIT_MESSAGE" value="cambio en la etiqueta" />
+    <MESSAGE value="Se agregó tipo de pago a entrega ocurre" />
+    <MESSAGE value="Se agregó Catalogo de zonas operativas.&#10;*Se agregó pestaña de listado." />
+    <MESSAGE value="Primera version de Zonas operativas terminada" />
+    <MESSAGE value="Ajustes" />
+    <MESSAGE value="Se creó el catálogo de Tarifas por zona" />
+    <MESSAGE value="Se arreglaron filtrados y estilos para zonas" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se arreglaron filtrados y estilos para zonas" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

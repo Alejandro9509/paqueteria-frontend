@@ -78,4 +78,13 @@ function obtenerCodigosPostalesPorCiudad(id){
     );
     return result
 }
-export {modificarCodigoPostal, agregarCodigoPostal, eliminarCodigoPostal, obtenerCodigoPostalId, obtenerCodigoPostalCiudad, obtenerCodigoPostal, obtenerCodigoPostalEstado, obtenerCodigosPostalesPorCiudad}
+
+function obtenerCodigosPostalesPorEstadoMunicipio(estado, municipio){
+    const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetByEstadoMunicipio/${estado}/${municipio}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+export {obtenerCodigosPostalesPorEstadoMunicipio,modificarCodigoPostal, agregarCodigoPostal, eliminarCodigoPostal, obtenerCodigoPostalId, obtenerCodigoPostalCiudad, obtenerCodigoPostal, obtenerCodigoPostalEstado, obtenerCodigosPostalesPorCiudad}
