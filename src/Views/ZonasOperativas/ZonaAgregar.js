@@ -72,7 +72,7 @@ function ZonaAgregar({idZona, consult}) {
                     <div className="widget-wrap">
                         <form className="j-forms" onSubmit={handleAceptar}>
                             <div className="widget-header">
-                                <h2>Información general</h2>
+                                <h2></h2>
                             </div>
                             <div className="widget-container">
                                 <div className="widget-content">

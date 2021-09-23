@@ -7,6 +7,10 @@ import CPTransferList from "./CPTransferList";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {obtenerCodigosPostalesPorEstadoMunicipio} from "../../Util/Contexts/CodigoPostalContext";
 
+function not(a, b) {
+    return a.filter((value) => b.find(v => v.m_nIdCP == value.m_nIdCP) === undefined);
+}
+
 function CodigosPostalesZonas({seleccion, onChange,consult}) {
     const [state, setState] = useState({
         idSucursal: localStorage.getItem("Sucursal"),
@@ -42,6 +46,11 @@ function CodigosPostalesZonas({seleccion, onChange,consult}) {
         })
         if (!seleccion.m_arrCPs){
             setAllCP([])
+        }
+        if (seleccion.m_sIdEstado && seleccion.m_sCodMunicipio){
+            obtenerCodigosPostalesPorEstadoMunicipio(seleccion.m_sIdEstado, seleccion.m_sCodMunicipio).then(({data}) => {
+                setAllCP(not(data,seleccion.m_arrCPs))
+            })
         }
     }, [seleccion])
 
@@ -116,6 +125,10 @@ function CodigosPostalesZonas({seleccion, onChange,consult}) {
 
     const handleGetCPS = (e) =>{
         e.preventDefault()
+        getAllCPByEstadoMunicipio()
+    }
+
+    const getAllCPByEstadoMunicipio = () =>{
         obtenerCodigosPostalesPorEstadoMunicipio(state.idEstado, state.idMunicipio).then(({data}) => {
             setAllCP(data)
         })
@@ -229,7 +242,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult}) {
                     </Grid>
                 </Grid>
             </div>
-            <div className="row" style={{ height: 500}}>
+            <div className="row" style={{ height: 500, margin: 50}}>
                 <CPTransferList
                     onChange={onChangeList}
                     allItems={allCP}

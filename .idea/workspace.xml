@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Ajustes">
-      <change afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTariafasAgregar.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifas.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifasTabs.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se creó el catálogo de Tarifas por zona">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routesCatalogos.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routesCatalogos.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/ZonasOperativas/CPTransferList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/CPTransferList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,13 +147,6 @@
       <workItem from="1631750064945" duration="25000" />
       <workItem from="1631812359785" duration="11813000" />
       <workItem from="1632273626530" duration="2847000" />
-    </task>
-    <task id="LOCAL-00045" summary="Se corrigio al momento de consultar y editar guia">
-      <created>1629472137588</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1629472137588</updated>
     </task>
     <task id="LOCAL-00046" summary="Se corrigio el filio del embarque al editar">
       <created>1629472642299</created>
@@ -493,7 +484,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632427764286</updated>
     </task>
-    <option name="localTasksCounter" value="94" />
+    <task id="LOCAL-00094" summary="Se creó el catálogo de Tarifas por zona">
+      <created>1632429870319</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1632429870319</updated>
+    </task>
+    <option name="localTasksCounter" value="95" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -558,7 +556,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Los codigos postales se buscan al hacer click en el campo" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Zonas, origen, destino" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos" />
@@ -583,7 +580,8 @@
     <MESSAGE value="Se agregó Catalogo de zonas operativas.&#10;*Se agregó pestaña de listado." />
     <MESSAGE value="Primera version de Zonas operativas terminada" />
     <MESSAGE value="Ajustes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajustes" />
+    <MESSAGE value="Se creó el catálogo de Tarifas por zona" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se creó el catálogo de Tarifas por zona" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

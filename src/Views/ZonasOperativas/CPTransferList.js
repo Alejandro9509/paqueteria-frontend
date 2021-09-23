@@ -82,84 +82,89 @@ export default function CPTransferList({allItems = [],selectedItems = [],onChang
     };
 
     const customList = (items) => (
-        <List dense component="div" role="list">
-            {items.map((value) => {
-                const labelId = `transfer-list-item-${value.m_nIdCP}-label`;
+        <Paper style={{ width: '100%', height: 500, overflow: 'auto' }}>
+            <List dense component="div" role="list">
+                {items.map((value) => {
+                    const labelId = `transfer-list-item-${value.m_nIdCP}-label`;
 
-                return (
-                    <ListItem
-                        key={value.m_nIdCP}
-                        role="listitem"
-                        button
-                        onClick={handleToggle(value)}
-                    >
-                        <ListItemIcon>
-                            <Checkbox
-                                checked={checked.indexOf(value) !== -1}
-                                tabIndex={-1}
-                                disableRipple
-                                disabled={consult}
-                                inputProps={{
-                                    'aria-labelledby': labelId,
-                                }}
-                            />
-                        </ListItemIcon>
-                        <ListItemText id={labelId} primary={`${value.m_sCP} - ${value.m_sColonia}`} />
-                    </ListItem>
-                );
-            })}
-            <ListItem />
-        </List>
+                    return (
+                        <ListItem
+                            key={value.m_nIdCP}
+                            role="listitem"
+                            button
+                            onClick={handleToggle(value)}
+                        >
+                            <ListItemIcon>
+                                <Checkbox
+                                    checked={checked.indexOf(value) !== -1}
+                                    tabIndex={-1}
+                                    disableRipple
+                                    disabled={consult}
+                                    inputProps={{
+                                        'aria-labelledby': labelId,
+                                    }}
+                                />
+                            </ListItemIcon>
+                            <ListItemText id={labelId} primary={`${value.m_sCP} - ${value.m_sColonia}`} />
+                        </ListItem>
+                    );
+                })}
+                <ListItem />
+            </List>
+        </Paper>
     );
 
     return (
-        <Grid container spacing={2} justifyContent="center" alignItems="center" style={{}}>
-            <Grid item>{customList(left)}</Grid>
-            <Grid item>
-                <Grid container direction="column" alignItems="center">
-                    <Button
-                        sx={{ my: 0.5 }}
-                        variant="outlined"
-                        size="small"
-                        onClick={handleAllRight}
-                        disabled={left.length === 0 || consult}
-                        aria-label="move all right"
-                    >
-                        ≫
-                    </Button>
-                    <Button
-                        sx={{ my: 0.5 }}
-                        variant="outlined"
-                        size="small"
-                        onClick={handleCheckedRight}
-                        disabled={leftChecked.length === 0 || consult}
-                        aria-label="move selected right"
-                    >
-                        &gt;
-                    </Button>
-                    <Button
-                        sx={{ my: 0.5 }}
-                        variant="outlined"
-                        size="small"
-                        onClick={handleCheckedLeft}
-                        disabled={rightChecked.length === 0 || consult}
-                        aria-label="move selected left"
-                    >
-                        &lt;
-                    </Button>
-                    <Button
-                        sx={{ my: 0.5 }}
-                        variant="outlined"
-                        size="small"
-                        onClick={handleAllLeft}
-                        disabled={right.length === 0 || consult}
-                        aria-label="move all left"
-                    >
-                        ≪
-                    </Button>
+        <div align={'center'}>
+            <Grid container spacing={2} justifyContent="center" alignItems="center">
+                <Grid item xs={5}>{customList(left)}</Grid>
+                <Grid item xs={1}>
+                    <Grid container direction="column" alignItems="center">
+                        <Button
+                            sx={{ my: 0.5 }}
+                            variant="outlined"
+                            size="small"
+                            onClick={handleAllRight}
+                            disabled={left.length === 0 || consult}
+                            aria-label="move all right"
+                        >
+                            ≫
+                        </Button>
+                        <Button
+                            sx={{ my: 0.5 }}
+                            variant="outlined"
+                            size="small"
+                            onClick={handleCheckedRight}
+                            disabled={leftChecked.length === 0 || consult}
+                            aria-label="move selected right"
+                        >
+                            &gt;
+                        </Button>
+                        <Button
+                            sx={{ my: 0.5 }}
+                            variant="outlined"
+                            size="small"
+                            onClick={handleCheckedLeft}
+                            disabled={rightChecked.length === 0 || consult}
+                            aria-label="move selected left"
+                        >
+                            &lt;
+                        </Button>
+                        <Button
+                            sx={{ my: 0.5 }}
+                            variant="outlined"
+                            size="small"
+                            onClick={handleAllLeft}
+                            disabled={right.length === 0 || consult}
+                            aria-label="move all left"
+                        >
+                            ≪
+                        </Button>
+                    </Grid>
                 </Grid>
+                <Grid item xs={5}>{customList(right)}</Grid>
             </Grid>
-            <Grid item>{customList(right)}</Grid>
-        </Grid>
+        </div>
+
     );
 }
