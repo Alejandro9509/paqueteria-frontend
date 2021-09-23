@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se creó el catálogo de Tarifas por zona">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/ZonasOperativas/CPTransferList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/CPTransferList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se arreglaron filtrados y estilos para zonas">
+      <change beforePath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTariafasAgregar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifasAgregar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifas.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,20 +146,6 @@
       <workItem from="1631750064945" duration="25000" />
       <workItem from="1631812359785" duration="11813000" />
       <workItem from="1632273626530" duration="2847000" />
-    </task>
-    <task id="LOCAL-00046" summary="Se corrigio el filio del embarque al editar">
-      <created>1629472642299</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1629472642299</updated>
-    </task>
-    <task id="LOCAL-00047" summary="Se corrigio boton de agregar guias">
-      <created>1629472917226</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1629472917226</updated>
     </task>
     <task id="LOCAL-00048" summary="Error al agregar guia">
       <created>1629481428234</created>
@@ -491,7 +476,21 @@
       <option name="project" value="LOCAL" />
       <updated>1632429870319</updated>
     </task>
-    <option name="localTasksCounter" value="95" />
+    <task id="LOCAL-00095" summary="Se arreglaron filtrados y estilos para zonas">
+      <created>1632433379019</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1632433379019</updated>
+    </task>
+    <task id="LOCAL-00096" summary="Se arreglaron filtrados y estilos para zonas">
+      <created>1632433399881</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1632433399881</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -556,7 +555,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en codigos postales, responsable de pago, nombre remitente y destinatario" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Zonas, origen, destino" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos" />
     <MESSAGE value="Error al consultar el paquete" />
@@ -581,7 +579,8 @@
     <MESSAGE value="Primera version de Zonas operativas terminada" />
     <MESSAGE value="Ajustes" />
     <MESSAGE value="Se creó el catálogo de Tarifas por zona" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se creó el catálogo de Tarifas por zona" />
+    <MESSAGE value="Se arreglaron filtrados y estilos para zonas" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se arreglaron filtrados y estilos para zonas" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

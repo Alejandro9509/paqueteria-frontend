@@ -12,7 +12,7 @@ import {
     modificarZonaOperativa, obtenerByIdZonaOperativa,
     obtenerListadoZonaOperativa
 } from "../../Util/Contexts/ZonaOperativaContext";
-import ZonaTarifasAgregar from "./ZonaTariafasAgregar";
+import ZonaTarifasAgregar from "./ZonaTarifasAgregar";
 import Noty from "noty";
 window.jQuery = window.$ = $;
 
