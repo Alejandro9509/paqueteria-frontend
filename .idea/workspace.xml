@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Util/Contexts/ZonaOperativaContext.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaAgregar.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaOperativa.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se agregó Catalogo de zonas operativas.&#10;*Se agregó pestaña de listado.">
+      <change afterPath="$PROJECT_DIR$/src/Util/Contexts/MunicipiosContext.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/CPTransferList.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/CodigoPostalContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/CodigoPostalContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaAgregar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaAgregar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaOperativa.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaOperativa.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,13 +149,6 @@
       <workItem from="1631750064945" duration="25000" />
       <workItem from="1631812359785" duration="11813000" />
       <workItem from="1632273626530" duration="2847000" />
-    </task>
-    <task id="LOCAL-00042" summary="Se corrigio espacio al presionar consultar o editar en guias">
-      <created>1629308522459</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1629308522459</updated>
     </task>
     <task id="LOCAL-00043" summary="Se corrigio conceptos">
       <created>1629386868915</created>
@@ -490,7 +486,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632263433995</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="Se agregó Catalogo de zonas operativas.&#10;*Se agregó pestaña de listado.">
+      <created>1632348919514</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1632348919515</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -555,7 +558,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ciudad de destinatario no se muestra al consultar guia" />
     <MESSAGE value="Ocultar pestaña imprimir en guias" />
     <MESSAGE value="Optimizar consulta al traer datos de guia" />
     <MESSAGE value="Los codigos postales se buscan al hacer click en el campo" />
@@ -580,7 +582,8 @@
     <MESSAGE value="Se hizo ajustes al qr" />
     <MESSAGE value="cambio en la etiqueta" />
     <MESSAGE value="Se agregó tipo de pago a entrega ocurre" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se agregó tipo de pago a entrega ocurre" />
+    <MESSAGE value="Se agregó Catalogo de zonas operativas.&#10;*Se agregó pestaña de listado." />
+    <option name="LAST_COMMIT_MESSAGE" value="Se agregó Catalogo de zonas operativas.&#10;*Se agregó pestaña de listado." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

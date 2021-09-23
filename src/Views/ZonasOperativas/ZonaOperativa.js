@@ -9,8 +9,8 @@ import {Tooltip} from "@material-ui/core";
 import {confirmAlert} from "react-confirm-alert";
 import {eliminarCorte, obtenerCortes} from "../../Util/Contexts/CorteCajaContext";
 import {
-    agregarZonaOperativa,
-    modificarZonaOperativa,
+    agregarZonaOperativa, eliminarZonaOperativa,
+    modificarZonaOperativa, obtenerByIdZonaOperativa,
     obtenerListadoZonaOperativa
 } from "../../Util/Contexts/ZonaOperativaContext";
 import ZonaAgregar from "./ZonaAgregar";
@@ -49,7 +49,7 @@ function ZonaOperativa() {
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
                                    title: 'Confirmar Eliminar',
-                                   message: 'Está seguro de eliminar Convenio?',
+                                   message: 'Está seguro de eliminar la zona?',
                                    buttons: [
                                        {
                                            label: 'Si',
@@ -102,6 +102,8 @@ function ZonaOperativa() {
     const handleShowListado = (event) => {
         event.stopPropagation();
         setPantallaActiva(listado)
+        setSeleccion({})
+        getAllZonas()
         setConsult(false)
         setState(state =>{
             return {
@@ -132,6 +134,7 @@ function ZonaOperativa() {
     }
 
     const handleShowModificar = (zona) => {
+        setSeleccion(zona.m_nIdZona)
         setConsult(false)
         setPantallaActiva(modificar)
         setState(state =>{
@@ -147,6 +150,7 @@ function ZonaOperativa() {
     }
 
     const handleShowConsultar = (zona) => {
+        setSeleccion(zona.m_nIdZona)
         setPantallaActiva(modificar)
         setConsult(true)
         setState(state =>{
@@ -162,7 +166,10 @@ function ZonaOperativa() {
     }
 
     const handleEliminar = (zona) => {
-
+        eliminarZonaOperativa(zona.m_nIdZona, 0).then(({data}) => {
+            showSuccess(data)
+            getAllZonas()
+        })
     }
 
     useEffect(value => {
@@ -175,21 +182,14 @@ function ZonaOperativa() {
         })
     }
 
-    const onAgregar = (zona) => {
-        agregarZonaOperativa(zona).then(({data}) => {
-            showSuccess(data)
-        }).catch((err) => {
-            console.log(err);
-            showSuccess(err);
-        });
-    }
-
-    const onModificar = (zona) => {
-        modificarZonaOperativa(zona).then(({data}) => {
-            showSuccess(data)
-        }).catch((err) => {
-            console.log(err)
-            showSuccess(err)
+    const onSubmit = () => {
+        setSeleccion({
+            idSucursal: localStorage.getItem("Sucursal"),
+            idZona: '',
+            codigoZona: '',
+            idEstado: '',
+            idMunicipio: '',
+            selectedCP: [],
         })
     }
 
@@ -239,9 +239,6 @@ function ZonaOperativa() {
                                                   locateText={dataGridLocaleText}
                                                   density={"compact"}
                                                   pageSize={Math.floor((state.height - 310) / 30)}
-                                                  components={{
-                                                      Toolbar: GridToolbar,
-                                                  }}
                                                   getRowId={(row => row.m_nIdZona)}
                                                   disableColumnSelector
                                                   disableDensitySelector
@@ -252,12 +249,15 @@ function ZonaOperativa() {
                         </div>
 
                         <div id="Agregar" className="tab-pane fade">
-                            <ZonaAgregar
-                                consult={consult}
-                                seleccion={seleccion}
-                                onAgregar={onAgregar}
-                                onModificar={onModificar}
-                            />
+                            {
+                                (pantallaActiva === 2 || pantallaActiva === 3) &&
+                                    <ZonaAgregar
+                                        consult={consult}
+                                        idZona={seleccion}
+                                        onSubmit={onSubmit}
+                                    />
+                            }
+
 
                         </div>
                     </div>
