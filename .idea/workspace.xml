@@ -4,14 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Ajustes en el valor de QR">
-      <change afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesPlaneacion.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/sonarIssues.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarIssues.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/FiltersMap.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/UltimaMilla.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Util/Contexts/ZonaOperativaContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Util/Contexts/ZonaOperativaContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesPlaneacion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesPlaneacion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/UltimaMilla/ZonasList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/UltimaMilla/ZonasList.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,13 +147,6 @@
       <workItem from="1631159140096" duration="18684000" />
       <workItem from="1631750064945" duration="25000" />
       <workItem from="1631812359785" duration="11813000" />
-    </task>
-    <task id="LOCAL-00043" summary="Se corrigio conceptos">
-      <created>1629386868915</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1629386868915</updated>
     </task>
     <task id="LOCAL-00044" summary="Se calculo de iva conceptos">
       <created>1629387190042</created>
@@ -492,7 +484,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632263738494</updated>
     </task>
-    <option name="localTasksCounter" value="92" />
+    <task id="LOCAL-00092" summary="Primera versión para la planeación de ultima milla">
+      <created>1632505942863</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1632505942864</updated>
+    </task>
+    <option name="localTasksCounter" value="93" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -557,7 +556,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ciudad de destinatario no se muestra al consultar guia" />
     <MESSAGE value="Ocultar pestaña imprimir en guias" />
     <MESSAGE value="Optimizar consulta al traer datos de guia" />
     <MESSAGE value="Los codigos postales se buscan al hacer click en el campo" />
@@ -582,7 +580,8 @@
     <MESSAGE value="Se hizo ajustes al qr" />
     <MESSAGE value="cambio en la etiqueta" />
     <MESSAGE value="Ajustes en el valor de QR" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajustes en el valor de QR" />
+    <MESSAGE value="Primera versión para la planeación de ultima milla" />
+    <option name="LAST_COMMIT_MESSAGE" value="Primera versión para la planeación de ultima milla" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -351,27 +351,27 @@ function obtenerUltimaMillaFecha(date, idSucursal, zonas) {
     return result
 }
 
-function obtenerPaquetesInforme(idInforme) {
+function obtenerPaquetesInforme(idInforme, zonasIds) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetListadoPaquetesByInforme/` + idInforme;
     let result;
     trackPromise(
-        result = axios.get(url, {headers})
+        result = axios.post(url, Object.assign({}, {zonas: zonasIds.join(",")}), {headers})
     );
     return result
 }
-function obtenerPaquetesViaje(idViaje) {
+function obtenerPaquetesViaje(idViaje, zonasIds) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetListadoPaquetesByViaje/` + idViaje;
     let result;
     trackPromise(
-        result = axios.get(url, {headers})
+        result = axios.post(url, Object.assign({}, {zonas: zonasIds.join(",")}), {headers})
     );
     return result
 }
-function obtenerPaquetesUnidadOperador(idUnidad, idOperador) {
+function obtenerPaquetesUnidadOperador(idUnidad, idOperador,zonasIds ) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetListadoPaquetesByUnidadOperador/${idUnidad}/${idOperador}` ;
     let result;
     trackPromise(
-        result = axios.get(url, {headers})
+        result = axios.post(url,   Object.assign({}, {zonas: zonasIds.join(",")}), {headers})
     );
     return result
 }

@@ -258,6 +258,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/ZonaOperativaContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/ZonasContext.js">
           <value>
             <set />

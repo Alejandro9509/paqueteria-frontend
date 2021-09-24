@@ -153,17 +153,17 @@ class PaquetesPlaneacion extends Component {
     };
 
     handleInforme(value){
-        obtenerPaquetesInforme(value).then(({data}) => {
+        obtenerPaquetesInforme(value, this.props.zonasIds).then(({data}) => {
             this.setState({paquetes: data, idInforme: value})
         })
     }
     handleViaje(value){
-        obtenerPaquetesViaje(value).then(({data}) => {
+        obtenerPaquetesViaje(value, this.props.zonasIds).then(({data}) => {
             this.setState({paquetes: data, idViaje: value})
         })
     }
     handleUnidadOperador(idUnidad, idOperador){
-        obtenerPaquetesUnidadOperador(idUnidad, idOperador).then(({data}) => {
+        obtenerPaquetesUnidadOperador(idUnidad, idOperador, this.props.zonasIds).then(({data}) => {
             this.setState({paquetes: data, idOperador: idOperador, idUnidad: idUnidad})
         })
     }
