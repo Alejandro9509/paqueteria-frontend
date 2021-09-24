@@ -4,14 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="se integraron los endpoints de zonastarifas">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesRecoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesRecoleccion.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaOperativa.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaOperativa.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifas.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifasTabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifasTabs.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se muestra informacion de impuestos">
+      <change beforePath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifasAgregar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifasAgregar.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +20,7 @@
     </option>
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="feature/ocurre" />
+    <option name="BRANCH" value="feature/zonas_tarifas" />
     <option name="OPTIONS">
       <set>
         <option value="NO_FF" />
@@ -36,7 +30,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feature/ocurre" />
+        <entry key="$PROJECT_DIR$" value="feature/zonas_tarifas" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -151,27 +145,6 @@
       <workItem from="1631750064945" duration="25000" />
       <workItem from="1631812359785" duration="11813000" />
       <workItem from="1632273626530" duration="2847000" />
-    </task>
-    <task id="LOCAL-00049" summary="error al editar informe">
-      <created>1629482255289</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1629482255289</updated>
-    </task>
-    <task id="LOCAL-00050" summary="Corrección en última milla">
-      <created>1629565116123</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1629565116127</updated>
-    </task>
-    <task id="LOCAL-00051" summary="Se agrego icono y se mejoro el scroll">
-      <created>1629837314582</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1629837314582</updated>
     </task>
     <task id="LOCAL-00052" summary="Se realizaron ajustes a la ultima milla">
       <created>1629929945152</created>
@@ -495,7 +468,28 @@
       <option name="project" value="LOCAL" />
       <updated>1632438307711</updated>
     </task>
-    <option name="localTasksCounter" value="98" />
+    <task id="LOCAL-00098" summary="Ajustes en zonas">
+      <created>1632512556534</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1632512556534</updated>
+    </task>
+    <task id="LOCAL-00099" summary="Se agregan y modifican tarifas por zonas">
+      <created>1632513991296</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1632513991296</updated>
+    </task>
+    <task id="LOCAL-00100" summary="Se muestra informacion de impuestos">
+      <created>1632515316173</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1632515316173</updated>
+    </task>
+    <option name="localTasksCounter" value="101" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -560,9 +554,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos" />
-    <MESSAGE value="Error al consultar el paquete" />
-    <MESSAGE value="Errores al cargar ultima milla" />
     <MESSAGE value="Error al guardar UltimaMillaContext.js" />
     <MESSAGE value="Se agrego mas tiempo de refrescamiento" />
     <MESSAGE value="Homologar tablas de listados" />
@@ -585,7 +576,10 @@
     <MESSAGE value="Se creó el catálogo de Tarifas por zona" />
     <MESSAGE value="Se arreglaron filtrados y estilos para zonas" />
     <MESSAGE value="se integraron los endpoints de zonastarifas" />
-    <option name="LAST_COMMIT_MESSAGE" value="se integraron los endpoints de zonastarifas" />
+    <MESSAGE value="Ajustes en zonas" />
+    <MESSAGE value="Se agregan y modifican tarifas por zonas" />
+    <MESSAGE value="Se muestra informacion de impuestos" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se muestra informacion de impuestos" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

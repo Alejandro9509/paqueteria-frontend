@@ -123,7 +123,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult}) {
 
     const getAllCPByEstadoMunicipio = () =>{
         obtenerCodigosPostalesPorEstadoMunicipio(state.idEstado, state.idMunicipio).then(({data}) => {
-            setAllCP(not(data,seleccion.m_arrCPs))
+            setAllCP(not(data,state.selectedCP))
             // setAllCP(data)
         })
     }
