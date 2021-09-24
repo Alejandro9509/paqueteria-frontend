@@ -247,10 +247,6 @@ function ZonaTarifasAgregar({idZona, consult}) {
                                             </div>
                                         </TabPanel>
                                     </Box>
-                                    {/*<ZonaTarifasTabs
-                                        selec={selec}
-                                        handleDataCodigosPostalesChange={handleDataCodigosPostalesChange}
-                                        consult={consult}/>*/}
                                 </div>
                             </div>
                             <div className="row">
