@@ -84,6 +84,7 @@ class UltimaMilla extends Component {
             resumenFullscreen: true,
             filtros: {},
             modoEdicion: true,
+            modoPlaneacion: false,
             ultimaMilla: null,
             openDialog: false,
 
@@ -122,7 +123,7 @@ class UltimaMilla extends Component {
         this.setState({mostrarRuta: false})
         obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
             if (data.m_nIdUltimaMilla !== 0) {
-                if (actualizar) {
+                if (actualizar && !this.state.modoPlaneacion) {
                     this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 30000);
                 }
                 if (!this.state.ultimaMilla) {
@@ -328,6 +329,8 @@ class UltimaMilla extends Component {
                                                 changeConfiguration={this.changeConfiguration}
                                                 searchLocation={this.searchLocation} generarRuta={this.generarRuta}
                                                 guardarRuta={this.guardarRuta}
+                                                cambiarModo={(value) => this.setState({modoPlaneacion: value })}
+                                                guardarFiltros={(data) => this.setState({filtros: data})}
                                                 changeMapLocation={this.changeMapLocation} data={this.state}/>
                                 }
 

@@ -358,7 +358,7 @@ function Informes({history}) {
         tipoModal: 0,
         IdInforme: 0,
         FolioInforme: 0,
-        fechaHora: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+        fechaHora: `${new Date().getFullYear()}-${`${new Date().getMonth()}`.padStart(2, 0)}-${`${new Date().getDate() }`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
         DerechoBorrar: 151,
         EstatusInforme: 5,
         IdViaje: {},
@@ -415,10 +415,10 @@ function Informes({history}) {
             m_nIdRemolque2: state.IdRemolque2 ? state.IdRemolque2.m_nIdUnidad : 0,
             m_sPlacasRemolque1: state.PlacasRemolque1,
             m_sPlacasRemolque2: state.PlacasRemolque2,
-            m_nIdRuta: state.IdRuta.m_nIdRuta,
+            m_nIdRuta: 0,
             m_nIdSucursalEmisora: state.sucursalEmisora,
             m_nIdSucursalReceptora: state.sucursalReceptora,
-            m_nIdDolly: state.IdTipoUnidad.m_nIdUnidad,
+            m_nIdDolly: state.IdTipoUnidad ? state.IdTipoUnidad.m_nIdUnidad : 0,
             m_sPlacasDolly: state.PlacasDolly,
 
             m_nIdViaje: state.IdViaje.m_nIdViaje,
@@ -431,7 +431,7 @@ function Informes({history}) {
             m_arrClsProInformeGuia: dataGuias.filter(g => g.select),
         };
 
-        if (state.IdInforme != 0) {
+        if (state.IdInforme !== 0) {
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1024,7 +1024,7 @@ function Informes({history}) {
             setDataGuias(data.m_arrClsProGuia)
             setState({
                 ...state,
-
+                IdInforme: id,
                 fechaHora: data.m_sFechayHora,
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadOrigen),

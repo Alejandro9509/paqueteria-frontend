@@ -13,7 +13,17 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/build/less/bootstrap/type.less">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/package.json">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/public/css/bootstrap.css">
           <value>
             <set />
           </value>
@@ -28,6 +38,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/public/less/bootstrap-custom-vars.less">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/App.js">
           <value>
             <set />
@@ -38,12 +53,32 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Util/Contexts/InformesContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Util/Contexts/OperadoresContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Views/Login.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Views/Scanner.js">
           <value>
             <set />
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Views/carga/carga.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Views/descarga/descarga.js">
           <value>
             <set />
           </value>
@@ -118,6 +153,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/.gitignore">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/.idea/workspace.xml">
           <value>
             <set />
@@ -144,6 +184,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/public/index.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/App.css">
           <value>
             <set />
           </value>
@@ -214,6 +259,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/ViajesContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/ZonaOperativaContext.js">
           <value>
             <set />
           </value>
@@ -399,6 +449,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesPlaneacion.js">
           <value>
             <set />
           </value>
@@ -618,6 +673,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/components/login-form/oauth2/OAuth2RedirectHandler.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/components/side-navigation-menu/side-navigation-menu.scss">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/context/IndicatorContext.js">
           <value>
             <set />
@@ -634,6 +699,21 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/context/UserContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/layouts/side-nav-inner-toolbar/side-nav-inner-toolbar.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/layouts/side-nav-outer-toolbar/side-nav-outer-toolbar.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/follow-up/recomendations.js">
           <value>
             <set />
           </value>

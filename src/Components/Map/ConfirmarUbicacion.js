@@ -58,6 +58,10 @@ class ConfirmarUbicacion extends Component {
                         </Grid>
                     </Grid>
                     <br/>
+                    <Grid item sm={12}>
+                        <Typography variant={"h2"}></Typography>
+                    </Grid>
+                    <br/>
                     <MapContainer style={{width: "100%", height: "500px"}} center={[32.62781 ,  -115.44632]} zoom={18}
                                   scrollWheelZoom={false} whenCreated={m => this.setState({map: m})}>
                         <TileLayer style={{width: "100%", height: "500px"}}

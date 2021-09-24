@@ -189,22 +189,24 @@ class ConceptosAdicionales extends Component {
     }
 
     handleRowClick(event, index, concepto) {
-        const {removeConcepto} = this.props
-        removeConcepto(concepto)
-        const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
-        this.setState({
-            concepto: conceptoSelect,
-            importe: concepto.importe,
-            nombreConcepto: concepto.m_sConcepto,
-            importeRet: concepto.importeRet,
-            retiene: concepto.retiene,
-            traslada: concepto.traslada,
-            importeIVA: concepto.importeIVA,
-            rangoMinimo: concepto.rangoMinimo,
-            rangoMaximo: concepto.rangoMaximo,
-            tipoCalculo: concepto.tipoCalculo,
-            tipoMedida: concepto.tipoMedida,
-        })
+        if (!this.props.consult) {
+            const {removeConcepto} = this.props
+            removeConcepto(concepto)
+            const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
+            this.setState({
+                concepto: conceptoSelect,
+                importe: concepto.importe,
+                nombreConcepto: concepto.m_sConcepto,
+                importeRet: concepto.importeRet,
+                retiene: concepto.retiene,
+                traslada: concepto.traslada,
+                importeIVA: concepto.importeIVA,
+                rangoMinimo: concepto.rangoMinimo,
+                rangoMaximo: concepto.rangoMaximo,
+                tipoCalculo: concepto.tipoCalculo,
+                tipoMedida: concepto.tipoMedida,
+            })
+        }
     }
 
     render() {

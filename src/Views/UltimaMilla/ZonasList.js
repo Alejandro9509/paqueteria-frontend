@@ -15,6 +15,10 @@ import {
 import {fade} from "@material-ui/core/styles";
 import {obtenerZonasSucursal} from "../../Util/Contexts/ZonasContext";
 import SearchIcon from "@material-ui/icons/Search";
+import {
+    obtenerListadoZonaOperativa,
+    obtenerListadoZonaOperativaBySucursal
+} from "../../Util/Contexts/ZonaOperativaContext";
 
 const useStyles = theme => ({
     visuallyHidden: {
@@ -90,7 +94,7 @@ class ZonasList extends Component {
     }
 
     getAllzonas() {
-        obtenerZonasSucursal(this.props.sucursalSeleccionada).then(({data}) => {
+        obtenerListadoZonaOperativaBySucursal(this.props.sucursalSeleccionada).then(({data}) => {
             this.setState({zonas: data, zonasFiltradas: data})
         })
     }
