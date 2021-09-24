@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Ajustes en zonas">
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se agregan y modifican tarifas por zonas">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesEntrega.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesEntrega.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifasAgregar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifasAgregar.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -147,13 +147,6 @@
       <workItem from="1631750064945" duration="25000" />
       <workItem from="1631812359785" duration="11813000" />
       <workItem from="1632273626530" duration="2847000" />
-    </task>
-    <task id="LOCAL-00050" summary="Corrección en última milla">
-      <created>1629565116123</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1629565116127</updated>
     </task>
     <task id="LOCAL-00051" summary="Se agrego icono y se mejoro el scroll">
       <created>1629837314582</created>
@@ -491,7 +484,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632512556534</updated>
     </task>
-    <option name="localTasksCounter" value="99" />
+    <task id="LOCAL-00099" summary="Se agregan y modifican tarifas por zonas">
+      <created>1632513991296</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1632513991296</updated>
+    </task>
+    <option name="localTasksCounter" value="100" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -556,7 +556,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Error al consultar el paquete" />
     <MESSAGE value="Errores al cargar ultima milla" />
     <MESSAGE value="Error al guardar UltimaMillaContext.js" />
     <MESSAGE value="Se agrego mas tiempo de refrescamiento" />
@@ -581,7 +580,8 @@
     <MESSAGE value="Se arreglaron filtrados y estilos para zonas" />
     <MESSAGE value="se integraron los endpoints de zonastarifas" />
     <MESSAGE value="Ajustes en zonas" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajustes en zonas" />
+    <MESSAGE value="Se agregan y modifican tarifas por zonas" />
+    <option name="LAST_COMMIT_MESSAGE" value="Se agregan y modifican tarifas por zonas" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

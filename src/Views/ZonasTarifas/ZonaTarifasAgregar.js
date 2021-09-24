@@ -55,6 +55,10 @@ function not(a, b) {
 
 function ZonaTarifasAgregar({idZona, consult}) {
     const [state, setState] = useState({})
+    const [ivas, setIvas] = useState({
+        ivaRetiene:[],
+        ivaTraslada:[]
+    })
     const [selec, setSelec] = useState({})
     const [value, setValue] = React.useState(0);
     const [todosConceptos, setTodosConceptos] = useState([])
@@ -72,6 +76,8 @@ function ZonaTarifasAgregar({idZona, consult}) {
                 setSelec(data)
                 let conceptosCast = []
                 data.m_arrArConceptos.forEach(element => {
+                    let ivaTraslada = []
+                    let ivaRetiene = []
                     conceptosCast.push({
                         idConcepto : element.m_nIdConceptosFacturacion,
                         importe: element.m_cImporte,
@@ -86,6 +92,9 @@ function ZonaTarifasAgregar({idZona, consult}) {
                         agregadoDesde: element.m_nIdAgregadoDesde,
                         tipoMedida: element.m_nIdTipoMedida
                     })
+                    ivaTraslada = getUniqueListBy(conceptosCast, "traslada").map(i => i.traslada);
+                    ivaRetiene = getUniqueListBy(conceptosCast, "retiene").map(i => i.retiene);
+                    setIvas({ ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
                 })
 
                 setTodosConceptos(conceptosCast)
@@ -99,8 +108,8 @@ function ZonaTarifasAgregar({idZona, consult}) {
 
     const addConcepto = (data) => {
         // const { conceptosRecoleccion, todosConceptos,conceptosAdicionales, conceptosManiobra, conceptosEntrega } = this.state
-        // let ivaTraslada = [];
-        // let ivaRetiene = [];
+        let ivaTraslada = [];
+        let ivaRetiene = [];
         const concept = {
             idConcepto : data.concepto.m_nIdConceptosFacturacion,
             concepto: data.concepto,
@@ -119,21 +128,10 @@ function ZonaTarifasAgregar({idZona, consult}) {
         let newArray = []
         todosConceptos.forEach((i) => newArray.push(i))
         newArray.push(concept)
-        // ivaTraslada = getUniqueListBy(todosConceptos, "traslada").map(i => i.traslada);
-        // ivaRetiene = getUniqueListBy(todosConceptos, "retiene").map(i => i.retiene);
-        /*if (data.agregadoDesde == 0){
-            conceptosAdicionales.push(concept)
-            this.setState({ conceptosAdicionales: conceptosAdicionales, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }else if (data.agregadoDesde == 1){
-            conceptosManiobra.push(concept)
-            this.setState({ conceptosManiobra: conceptosManiobra, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }else if (data.agregadoDesde == 2){
-            conceptosEntrega.push(concept)
-            this.setState({ conceptosEntrega: conceptosEntrega, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }else if (data.agregadoDesde == 3){
-            conceptosRecoleccion.push(concept)
-            this.setState({ conceptosRecoleccion: conceptosRecoleccion, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }*/
+        ivaTraslada = getUniqueListBy(newArray, "traslada").map(i => i.traslada);
+        ivaRetiene = getUniqueListBy(newArray, "retiene").map(i => i.retiene);
+
+        setIvas({ ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
         setTodosConceptos(newArray)
     }
 
@@ -229,8 +227,8 @@ function ZonaTarifasAgregar({idZona, consult}) {
                                                                                      conceptosAdicionales={todosConceptos.filter(i => i.agregadoDesde == 3)}
                                                                                      addConcepto={addConcepto}
                                                                                      removeConcepto={removeConcepto}
-                                                                                     ivaRetiene={[]}
-                                                                                     ivaTraslada={[]}/>
+                                                                                     ivaRetiene={ivas.ivaRetiene}
+                                                                                     ivaTraslada={ivas.ivaTraslada}/>
                                                 </div>
                                             </div>
 
@@ -243,8 +241,8 @@ function ZonaTarifasAgregar({idZona, consult}) {
                                                                                  conceptosAdicionales={todosConceptos.filter(i => i.agregadoDesde == 2)}
                                                                                  addConcepto={addConcepto}
                                                                                  removeConcepto={removeConcepto}
-                                                                                 ivaRetiene={[]}
-                                                                                 ivaTraslada={[]}/>
+                                                                                 ivaRetiene={ivas.ivaRetiene}
+                                                                                 ivaTraslada={ivas.ivaTraslada}/>
                                                 </div>
                                             </div>
                                         </TabPanel>
