@@ -5,6 +5,8 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import CodigosPostalesZonas from "../ZonasOperativas/CodigosPostalesZonas";
+import ConceptosAdicionalesRecoleccion from "../Tarifas/ConceptosAdicionalesRecoleccion";
+import ConceptosAdicionalesEntrega from "../Tarifas/ConceptosAdicionalesEntrega";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -64,15 +66,27 @@ export default function ZonaTarifasTabs({selec, handleDataCodigosPostalesChange,
             <TabPanel value={value} index={1}>
                 <div className="widget-container">
                     <div className="widget-content">
-
+                        <ConceptosAdicionalesRecoleccion consult={consult} edit={true}
+                                                         select={{}}
+                                                         conceptosAdicionales={[]}
+                                                         addConcepto={{}}
+                                                         removeConcepto={{}}
+                                                         ivaRetiene={[]}
+                                                         ivaTraslada={[]}/>
                     </div>
                 </div>
-                Item Two
+
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <div className="widget-container">
                     <div className="widget-content">
-
+                        <ConceptosAdicionalesEntrega consult={consult} edit={true}
+                                                     select={{}}
+                                                     conceptosAdicionales={[]}
+                                                     addConcepto={{}}
+                                                     removeConcepto={{}}
+                                                     ivaRetiene={[]}
+                                                     ivaTraslada={[]}/>
                     </div>
                 </div>
             </TabPanel>
