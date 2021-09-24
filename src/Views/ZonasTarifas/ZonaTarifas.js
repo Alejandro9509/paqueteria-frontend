@@ -82,7 +82,7 @@ function ZonaTarifas() {
         agregar: "Agregar",
         height: window. innerHeight,
     })
-    const [seleccion, setSeleccion] = useState({})
+    const [seleccion, setSeleccion] = useState(0)
 
     const listado = 1
     const agregar = 2
@@ -91,7 +91,7 @@ function ZonaTarifas() {
     const handleShowListado = (event) => {
         event.stopPropagation();
         setPantallaActiva(listado)
-        setSeleccion({})
+        setSeleccion(0)
         getAllZonas()
         setConsult(false)
         setState(state =>{
@@ -171,17 +171,6 @@ function ZonaTarifas() {
         })
     }
 
-    const onSubmit = () => {
-        setSeleccion({
-            idSucursal: localStorage.getItem("Sucursal"),
-            idZona: '',
-            codigoZona: '',
-            idEstado: '',
-            idMunicipio: '',
-            selectedCP: [],
-        })
-    }
-
     return(
         <div>
             <header className="topbar clearfix">
@@ -243,7 +232,6 @@ function ZonaTarifas() {
                                 <ZonaTarifasAgregar
                                     consult={consult}
                                     idZona={seleccion}
-                                    onSubmit={onSubmit}
                                 />
                             }
 
