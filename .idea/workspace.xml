@@ -4,9 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="Se arreglaron filtrados y estilos para zonas">
-      <change beforePath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTariafasAgregar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifasAgregar.js" afterDir="false" />
+    <list default="true" id="845cb761-b038-44c6-962b-157ac9cfe3e3" name="Changes" comment="se integraron los endpoints de zonastarifas">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesRecoleccion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/ConceptosAdicionalesRecoleccion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaOperativa.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasOperativas/ZonaOperativa.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifas.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifasTabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/ZonasTarifas/ZonaTarifasTabs.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +68,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Views/ZonasTarifas" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Util/Contexts" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -76,8 +81,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Certuit\WebstormProjects\gm-paqueteria\src\Views\ZonasTarifas" />
       <recent name="C:\Users\Certuit\WebstormProjects\gm-paqueteria\src\Util\Contexts" />
+      <recent name="C:\Users\Certuit\WebstormProjects\gm-paqueteria\src\Views\ZonasTarifas" />
       <recent name="$PROJECT_DIR$/public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -146,13 +151,6 @@
       <workItem from="1631750064945" duration="25000" />
       <workItem from="1631812359785" duration="11813000" />
       <workItem from="1632273626530" duration="2847000" />
-    </task>
-    <task id="LOCAL-00048" summary="Error al agregar guia">
-      <created>1629481428234</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1629481428234</updated>
     </task>
     <task id="LOCAL-00049" summary="error al editar informe">
       <created>1629482255289</created>
@@ -490,7 +488,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632433399881</updated>
     </task>
-    <option name="localTasksCounter" value="97" />
+    <task id="LOCAL-00097" summary="se integraron los endpoints de zonastarifas">
+      <created>1632438307711</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1632438307711</updated>
+    </task>
+    <option name="localTasksCounter" value="98" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -555,7 +560,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Zonas, origen, destino" />
     <MESSAGE value="La carga de datos se hace al hacer click sobre el componente que ocupa la informacion. Terminado en Productos" />
     <MESSAGE value="Error al consultar el paquete" />
     <MESSAGE value="Errores al cargar ultima milla" />
@@ -580,7 +584,8 @@
     <MESSAGE value="Ajustes" />
     <MESSAGE value="Se creó el catálogo de Tarifas por zona" />
     <MESSAGE value="Se arreglaron filtrados y estilos para zonas" />
-    <option name="LAST_COMMIT_MESSAGE" value="Se arreglaron filtrados y estilos para zonas" />
+    <MESSAGE value="se integraron los endpoints de zonastarifas" />
+    <option name="LAST_COMMIT_MESSAGE" value="se integraron los endpoints de zonastarifas" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

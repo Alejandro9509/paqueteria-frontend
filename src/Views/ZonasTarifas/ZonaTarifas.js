@@ -7,13 +7,9 @@ import $ from "jquery";
 import {Tooltip} from "@material-ui/core";
 import {confirmAlert} from "react-confirm-alert";
 import {eliminarCorte, obtenerCortes} from "../../Util/Contexts/CorteCajaContext";
-import {
-    agregarZonaOperativa, eliminarZonaOperativa,
-    modificarZonaOperativa, obtenerByIdZonaOperativa,
-    obtenerListadoZonaOperativa
-} from "../../Util/Contexts/ZonaOperativaContext";
 import ZonaTarifasAgregar from "./ZonaTarifasAgregar";
 import Noty from "noty";
+import {eliminarZonaTarifa, obtenerListadoZonaTarifa} from "../../Util/Contexts/ZonaTarifaContext";
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -75,12 +71,6 @@ function ZonaTarifas() {
         {
             headerName: "Estado",
             field: 'm_sEstado',
-            minWidth: 200,
-            flex: 1
-        },
-        {
-            headerName: "Municipio",
-            field: 'm_sMunicipio',
             minWidth: 200,
             flex: 1
         },
@@ -165,7 +155,7 @@ function ZonaTarifas() {
     }
 
     const handleEliminar = (zona) => {
-        eliminarZonaOperativa(zona.m_nIdZona, 0).then(({data}) => {
+        eliminarZonaTarifa(zona.m_nIdZona, 0).then(({data}) => {
             showSuccess(data)
             getAllZonas()
         })
@@ -176,7 +166,7 @@ function ZonaTarifas() {
     }, [])
 
     const getAllZonas = () => {
-        obtenerListadoZonaOperativa().then(({data}) => {
+        obtenerListadoZonaTarifa().then(({data}) => {
             setListadoZonas(data)
         })
     }

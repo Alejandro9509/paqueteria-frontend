@@ -39,18 +39,11 @@ function CodigosPostalesZonas({seleccion, onChange,consult}) {
                 codigoZona: seleccion.m_sCodigoZona ? seleccion.m_sCodigoZona : '',
                 idEstado: seleccion.m_sIdEstado ? seleccion.m_sIdEstado: '',
                 estado: seleccion.m_sEstado ? seleccion.m_sEstado : '',
-                municipio: seleccion.m_sMunicipio ? seleccion.m_sMunicipio : '',
-                idMunicipio: seleccion.m_sCodMunicipio ? seleccion.m_sCodMunicipio : '',
                 selectedCP: seleccion.m_arrCPs ? seleccion.m_arrCPs : [],
             }
         })
         if (!seleccion.m_arrCPs){
             setAllCP([])
-        }
-        if (seleccion.m_sIdEstado && seleccion.m_sCodMunicipio){
-            obtenerCodigosPostalesPorEstadoMunicipio(seleccion.m_sIdEstado, seleccion.m_sCodMunicipio).then(({data}) => {
-                setAllCP(not(data,seleccion.m_arrCPs))
-            })
         }
     }, [seleccion])
 
@@ -130,7 +123,8 @@ function CodigosPostalesZonas({seleccion, onChange,consult}) {
 
     const getAllCPByEstadoMunicipio = () =>{
         obtenerCodigosPostalesPorEstadoMunicipio(state.idEstado, state.idMunicipio).then(({data}) => {
-            setAllCP(data)
+            setAllCP(not(data,seleccion.m_arrCPs))
+            // setAllCP(data)
         })
     }
 
@@ -210,7 +204,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult}) {
                         </FormControl>
                     </Grid>
                     <Grid item xs={2}>
-                        <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
+                        <FormControl className="input select" fullWidth variant="outlined" margin="dense">
                             <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
                             <Select
                                 fullWidth

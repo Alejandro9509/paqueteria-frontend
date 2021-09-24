@@ -1,13 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {FormControl, Grid, InputLabel, Select} from "@material-ui/core";
 
-import {
-    agregarZonaOperativa,
-    modificarZonaOperativa,
-    obtenerByIdZonaOperativa
-} from "../../Util/Contexts/ZonaOperativaContext";
 import Noty from "noty";
 import ZonaTarifasTabs from "./ZonaTarifasTabs";
+import {agregarZonaTarifa, modificarZonaTarifa, obtenerByIdZonaTarifa} from "../../Util/Contexts/ZonaTarifaContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -23,7 +19,7 @@ function ZonaTarifasAgregar({idZona, consult}) {
     const [selec, setSelec] = useState({})
     useEffect(value => {
         if (idZona){
-            obtenerByIdZonaOperativa(idZona).then(({data}) =>{
+            obtenerByIdZonaTarifa(idZona).then(({data}) =>{
                 setSelec(data)
             })
         }
@@ -48,7 +44,7 @@ function ZonaTarifasAgregar({idZona, consult}) {
         }
         console.log(JSON.stringify(params))
         if (state.idZona){
-            modificarZonaOperativa(state.idZona, params).then(({data}) => {
+            modificarZonaTarifa(state.idZona, params).then(({data}) => {
                 showSuccess(data)
                 setSelec({})
             }).catch((err) => {
@@ -56,7 +52,7 @@ function ZonaTarifasAgregar({idZona, consult}) {
                 showSuccess(err);
             });
         }else {
-            agregarZonaOperativa(params).then(({data}) => {
+            agregarZonaTarifa(params).then(({data}) => {
                 showSuccess(data)
                 setSelec({})
             }).catch((err) => {

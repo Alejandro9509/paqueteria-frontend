@@ -79,12 +79,6 @@ function ZonaOperativa() {
             minWidth: 200,
             flex: 1
         },
-        {
-            headerName: "Municipio",
-            field: 'm_sMunicipio',
-            minWidth: 200,
-            flex: 1
-        },
     ])
     const [pantallaActiva, setPantallaActiva ] = useState(1)
     const [consult, setConsult] = useState(false)
