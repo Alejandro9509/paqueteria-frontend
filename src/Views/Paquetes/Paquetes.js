@@ -21,7 +21,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-function Paquetes({dataPaquetes = [],updatePaquetes, disabled, handleChangePaqueteProductov2, tieneSeguro}) {
+function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro}) {
 
     const columnsPaquetes = React.useMemo(() => [
         {
@@ -39,36 +39,41 @@ function Paquetes({dataPaquetes = [],updatePaquetes, disabled, handleChangePaque
             headerName: "Largo",
             field: "m_rLargo",
             type:'number',
+            valueFormatter: ({ value }) => `${value}cm`,
             width: 100,
         },
         {
             headerName: "Ancho",
             field: "m_rAncho",
             type:'number',
+            valueFormatter: ({ value }) => `${value}cm`,
             width: 100,
         },
         {
             headerName: "Alto",
             field: "m_rAlto",
             type:'number',
+            valueFormatter: ({ value }) => `${value}cm`,
             width: 100,
         },
         {
             headerName: "Peso",
             field: "m_rPeso",
             type:'number',
+            valueFormatter: ({ value }) => `${value}kg`,
             width: 100,
         },
         {
             headerName: "Volumen",
             field: "m_rVolumen",
             type:'number',
-            width: 100,
+            valueFormatter: ({ value }) => `${value}cm3`,
+            width: 150,
         },
         {
             headerName: "Embalaje",
             field: "m_sTipoEmbalaje",
-            flex: 1,
+            width: 150,
         },
         {
             headerName: "Valor",
@@ -86,6 +91,7 @@ function Paquetes({dataPaquetes = [],updatePaquetes, disabled, handleChangePaque
             headerName: "Cantidad",
             field: "m_nCantidad",
             type:'number',
+            valueFormatter: ({ value }) => `${value}pz`,
             width: 100,
         },
         {
@@ -117,6 +123,10 @@ function Paquetes({dataPaquetes = [],updatePaquetes, disabled, handleChangePaque
         m_sTipo: "Paquete"
     })
 
+    useEffect(value => {
+        getAllEmbalajes()
+    }, [])
+
     const validarPaquetes = (paquete) => {
         if (paquete.m_nIdTipo == 1){
             return !!(paquete.m_sDescripcion != '');
@@ -144,7 +154,7 @@ function Paquetes({dataPaquetes = [],updatePaquetes, disabled, handleChangePaque
             dataPaquetes.push(paq);
             resetPaquete()
             console.log(dataPaquetes);
-            updatePaquetes(dataPaquetes)
+            onChangeList(dataPaquetes)
         }else{
             showSuccess("Rellene los campos obligatorios.")
         }
@@ -156,14 +166,14 @@ function Paquetes({dataPaquetes = [],updatePaquetes, disabled, handleChangePaque
     }
 
     const handlePaqueteClick = (data) =>{
-        if(disabled){
-            updatePaquetes(dataPaquetes.filter((i) => i.m_nIdPaquete != data.m_nIdPaquete))
+        if(!disabled){
+            onChangeList(dataPaquetes.filter((i) => i.m_nIdPaquete != data.m_nIdPaquete))
             if (dataProductos.length === 0 ){
                 obtenerProductoById(data.m_nIdProducto).then((respuesta) =>{
                     data.producto = respuesta.data
                     data.m_sProducto = respuesta.data.m_sDescripcion
                 })
-            }else{
+            }else if (data.m_nIdProducto){
                 data.producto = dataProductos.find((i) => i.m_nIdProducto == data.m_nIdProducto)
                 data.m_sProducto = data.producto.m_sDescripcion
             }
@@ -171,6 +181,30 @@ function Paquetes({dataPaquetes = [],updatePaquetes, disabled, handleChangePaque
         }
 
     }
+
+    const handleChangePaqueteProductov2 = (event, newValue) => {
+        setPaquete(paquete =>{
+            return{
+                ...paquete,
+                producto: newValue,
+                m_nIdProducto: newValue.m_nIdProducto,
+                m_rLargo: newValue.m_xLargo,
+                m_rAlto: newValue.m_xAlto,
+                m_rAncho: newValue.m_xAncho,
+                m_rPeso: newValue.m_xPeso,
+                m_nIdTipoEmbalaje: newValue.m_nIdEmbalaje,
+                m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == newValue.m_nIdEmbalaje).m_sNombre,
+                m_sDescripcion: newValue.m_nIdProducto== 1 ? "" : newValue.m_sDescripcion,
+                m_sProducto: newValue.m_sDescripcion
+            }
+        })
+        setPaquete(paquete =>{
+            return{
+                ...paquete,
+                m_rVolumen: paquete.m_rLargo * paquete.m_rAlto * paquete.m_rAncho
+            }})
+
+    };
 
     const handleChangePaquetev2 = (event) => {
 
