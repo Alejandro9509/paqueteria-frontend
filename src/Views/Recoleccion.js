@@ -89,6 +89,7 @@ import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ConfirmarUbicacion from "../Components/Map/ConfirmarUbicacion";
+import Paquetes from "./Paquetes/Paquetes";
 
 let timer;
 
@@ -234,7 +235,6 @@ function Recoleccion() {
         countSobres: 1,
         mismoPaquete: false,
         mismoSobre: false,
-        paquetes: [],
         sobres: [
             {
                 m_sDescripcion: "",
@@ -355,25 +355,8 @@ function Recoleccion() {
     const [Modal, open, close, isOpen] = useModal("root", {
         preventScroll: true,
     });
-    const [dataProductos, setDataProductos] = useState([])
-    const [totalPaquetes, setTotalPaquetes] = useState(0)
-    const [paquete, setPaquete] = useState({
-        m_nIdPaquete: 0,
-        m_rPeso: "",
-        m_rLargo: "",
-        m_rAncho: "",
-        m_rAlto: "",
-        m_rVolumen: "",
-        m_nIdTipoEmbalaje: "",
-        m_sDescripcion: "",
-        m_nCantidad: "",
-        m_sObservaciones: "",
-        m_cyValorDeclarado: "",
-        m_nIdTipo: 2,
-        m_nIdProducto:'',
-        m_sTipo: "Paquete"
-    })
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
+    const [dataPaquetes, setDataPaquetes] = useState([])
 
     const history = useHistory()
 
@@ -490,21 +473,6 @@ function Recoleccion() {
         })
     }
 
-    const validarPaquetes = (paquete) => {
-        if (paquete.m_nIdTipo == 1){
-            return !!(paquete.m_sDescripcion != '');
-        }else{
-            return !!(paquete.m_rPeso != ''
-                && paquete.m_rLargo != ''
-                && paquete.m_rAncho != ''
-                && paquete.m_rAlto != ''
-                && paquete.m_sDescripcion != ''
-                && paquete.m_nCantidad != ''
-                && paquete.producto
-                && paquete.m_nIdTipoEmbalaje);
-        }
-    }
-
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
         setState({
@@ -526,7 +494,7 @@ function Recoleccion() {
                 }
             }
         }*/
-        if (state.paquetes.length === 0){
+        if (dataPaquetes.length === 0){
             showSuccess("Debe agregar al menos 1 paquete o sobre.")
             return
         }
@@ -612,8 +580,8 @@ function Recoleccion() {
             m_dFechaLlegada: state.fechaHoraLlegada.split("T")[0],
             m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
             m_tHoraLlegada: state.fechaHoraLlegada.split("T")[1],
-            m_parrPaquetes: state.paquetes,
-            m_nNoPaquetes: state.paquetes.length,
+            m_parrPaquetes: dataPaquetes,
+            m_nNoPaquetes: dataPaquetes.length,
             m_parrSobres: state.sobres,
             m_nNoSobres: state.sobres.length,
             m_nIdOperador: state.operador.m_nIdOperador,
@@ -768,63 +736,6 @@ function Recoleccion() {
             uploadedFileContent: "reader.result"
         })
     };
-
-    const addPaquetev2 = (event) => {
-        const {paquetes} = state;
-        let paq = paquete
-        if (validarPaquetes(paq)){
-            paq.m_nIdPaquete = paq.m_nIdPaquete ? paq.m_nIdPaquete : paquetes.length + 1
-            paq.m_cyValorDeclarado = paq.m_cyValorDeclarado ? paq.m_cyValorDeclarado : 0
-            if (paq.m_cyValorDeclarado === 0 && (state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4)){
-                showSuccess("El campo de valor declarado es necesario para el seguro.")
-                return
-            }
-            paquetes.push(paq);
-            setPaquete({
-                m_rPeso: "",
-                m_rLargo: "",
-                m_rAncho: "",
-                m_rAlto: "",
-                m_rVolumen: "",
-                m_nIdTipoEmpaque: "",
-                m_cyValorDeclarado: "",
-                m_sDescripcion: "",
-                m_nCantidad: "",
-                m_nIdTipo: 2,
-                m_sObservaciones: "",
-                producto: null,
-                m_nIdProducto: "",
-                m_sTipo: "Paquete",
-            })
-            console.log(paquetes);
-            setState({...state, paquetes: paquetes, countPaquetes: state.countPaquetes + 1});
-        }else{
-            showSuccess("Rellene los campos obligatorios.")
-        }
-
-    }
-
-    const removePaquetev2 = (event) => {
-        event.preventDefault()
-        setPaquete({
-            m_rPeso: "",
-            m_rLargo: "",
-            m_rAncho: "",
-            m_rAlto: "",
-            m_rVolumen: "",
-            m_nIdTipoEmbalaje: "",
-            m_sTipoEmbalaje: "",
-            m_cyValorDeclarado: "",
-            m_sDescripcion: "",
-            m_nCantidad: "",
-            m_nIdTipo: 2,
-            m_sObservaciones: "",
-            producto: null,
-            m_nIdProducto: "",
-            m_sTipo: "Paquete",
-        })
-
-    }
 
     function handleEliminar(id) {
         var derecho;
@@ -1003,6 +914,7 @@ function Recoleccion() {
             })
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
         })
+        setDataPaquetes(respuesta.data.m_parrPaquetes)
 
         setState(state => {
             return {
@@ -1048,11 +960,10 @@ function Recoleccion() {
                 coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
 
                 //Paquetes/Sobres
-                countPaquetes: respuesta.data.m_parrPaquetes.length,
+                countPaquetes: dataPaquetes.length,
                 countSobres: respuesta.data.m_parrSobres.length,
                 mismoPaquete: false,
                 mismoSobre: false,
-                paquetes: respuesta.data.m_parrPaquetes,
                 sobres: respuesta.data.m_parrSobres,
 
                 //Cita de recoleccion
@@ -1149,23 +1060,6 @@ function Recoleccion() {
                 agregar: "Agregar",
             }
         });
-        setPaquete({
-            m_nIdPaquete: 0,
-            m_rPeso: "",
-            m_rLargo: "",
-            m_rAncho: "",
-            m_rAlto: "",
-            m_rVolumen: "",
-            m_nIdTipoEmbalaje: "",
-            m_sDescripcion: "",
-            m_nCantidad: "",
-            m_sObservaciones: "",
-            m_cyValorDeclarado: "",
-            m_nIdTipo: 2,
-            m_nIdProducto:'',
-            m_sTipo: "Paquete",
-            producto: null
-        })
         getAllSucursales()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
@@ -1336,6 +1230,7 @@ function Recoleccion() {
                 fechaHoraLlegada: '',
             }
         });
+        setDataPaquetes([])
     }
 
     const handleChange = (event) => {
@@ -1351,92 +1246,6 @@ function Recoleccion() {
             window.open(new Blob([response.data]));
         })
 
-    }
-
-    const handleChangePaquetev2 = (event) => {
-        let {paquetes} = state;
-        setPaquete(paquete => {
-            return {
-                ...paquete,
-                [event.target.name]: event.target.value,
-                m_rVolumen: paquete.m_rLargo * paquete.m_rAlto * paquete.m_rAncho,
-            }
-        })
-        if (event.target.name == "m_nIdTipoEmbalaje"){
-            setPaquete(paquete => {
-                return {
-                    ...paquete,
-                    m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == event.target.value).m_sNombre,
-                }
-            })
-        }
-        if (event.target.name == "m_nIdTipo"){
-            setPaquete(paquete => {
-                return {
-                    ...paquete,
-                    m_sTipo: event.target.value == 1 ? "Sobre" : "Paquete",
-                }
-            })
-        }
-        let totalCantidad = 0
-        paquetes.forEach((p) => {
-            totalCantidad += parseInt(p.m_nCantidad)
-        })
-        setTotalPaquetes(totalCantidad)
-    };
-
-    const handleChangePaqueteProductov2 = (event, newValue) => {
-        setPaquete(paquete =>{
-            return{
-                ...paquete,
-                producto: newValue,
-                m_nIdProducto: newValue.m_nIdProducto,
-                m_rLargo: newValue.m_xLargo,
-                m_rAlto: newValue.m_xAlto,
-                m_rAncho: newValue.m_xAncho,
-                m_rPeso: newValue.m_xPeso,
-                m_nIdTipoEmbalaje: newValue.m_nIdEmbalaje,
-                m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == newValue.m_nIdEmbalaje).m_sNombre,
-                m_sDescripcion: newValue.m_nIdProducto== 1 ? "" : newValue.m_sDescripcion,
-                m_sProducto: newValue.m_sDescripcion
-            }
-        })
-        setPaquete(paquete =>{
-            return{
-                ...paquete,
-                m_rVolumen: paquete.m_rLargo * paquete.m_rAlto * paquete.m_rAncho
-        }})
-
-    };
-
-    const handlePaqueteClick = (data) =>{
-        if(state.agregar != "Consultar"){
-            setState({
-                ...state,
-                paquetes: state.paquetes.filter((i) => i.m_nIdPaquete != data.m_nIdPaquete)
-            })
-
-            if (dataProductos.length === 0 ){
-                obtenerProductoById(data.m_nIdProducto).then((respuesta) =>{
-                    data.producto = respuesta.data
-                    data.m_sProducto = respuesta.data.m_sDescripcion
-                })
-            }else{
-                data.producto = dataProductos.find((i) => i.m_nIdProducto == data.m_nIdProducto)
-                data.m_sProducto = data.producto.m_sDescripcion
-            }
-            setPaquete(data)
-        }
-
-    }
-
-    const handleClickProducto = () => {
-        if (dataProductos.length === 0 ){
-            getAllProductos()
-        }
-        if (dataEmbalaje.length === 0 ) {
-            getAllEmbalajes()
-        }
     }
 
     //setea si la recoleccion es en diferente direccion a la del remitente
@@ -1746,78 +1555,6 @@ function Recoleccion() {
         },
     ]);
 
-    const columnsPaquetes = React.useMemo(() => [
-        {
-            headerName: "Tipo",
-            field: "m_sTipo",
-            minWidth: 100,
-            width: 100,
-        },
-        {
-            headerName: "Producto",
-            field: "m_sProducto",
-            flex: 1,
-        },
-        {
-            headerName: "Largo",
-            field: "m_rLargo",
-            type:'number',
-            width: 100,
-        },
-        {
-            headerName: "Ancho",
-            field: "m_rAncho",
-            type:'number',
-            width: 100,
-        },
-        {
-            headerName: "Alto",
-            field: "m_rAlto",
-            type:'number',
-            width: 100,
-        },
-        {
-            headerName: "Peso",
-            field: "m_rPeso",
-            type:'number',
-            width: 100,
-        },
-        {
-            headerName: "Volumen",
-            field: "m_rVolumen",
-            type:'number',
-            width: 100,
-        },
-        {
-            headerName: "Embalaje",
-            field: "m_sTipoEmbalaje",
-            flex: 1,
-        },
-        {
-            headerName: "Valor",
-            field: "m_cyValorDeclarado",
-            type:'number',
-            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
-            width: 100,
-        },
-        {
-            headerName: "Descripcion",
-            field: "m_sDescripcion",
-            flex: 1,
-        },
-        {
-            headerName: "Cantidad",
-            field: "m_nCantidad",
-            type:'number',
-            width: 100,
-        },
-        {
-            headerName: "Observaciones",
-            field: "m_sObservaciones",
-            flex: 1,
-        }
-    ]);
-
     const columnsRemitenteDestinatarios = React.useMemo(() => [
         {
             Name: "Número",
@@ -1840,11 +1577,6 @@ function Recoleccion() {
             accessor: "m_sNombre",
         },
     ]);
-
-    const currencyFormatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-    });
 
     function getAllData() {
         const {fechaInicial, fechaFinal, sucursalListado, estatusListado, folioRecoleccion} = state
@@ -1904,13 +1636,6 @@ function Recoleccion() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
         axios.get(url, {headers}).then((respuesta) => {
             setDataZona(respuesta.data);
-        });
-    }
-
-    const getAllProductos = () => {
-        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
-        axios.get(url, {headers}).then(respuesta => {
-            setDataProductos(respuesta.data)
         });
     }
 
@@ -2936,7 +2661,6 @@ function Recoleccion() {
         }
     }
 
-
     const handleCodigoPostalRecoleccionClick = (event) => {
         event.preventDefault();
         if (dataCodigosPostalesEntrega.length > 0) {
@@ -2950,6 +2674,10 @@ function Recoleccion() {
                 setDataCodigosPostalesRecoleccion(respuesta.data);
             });
         }
+    }
+
+    const handleListPaquetesChange = (newList) => {
+        setDataPaquetes(newList)
     }
 
     return (
@@ -3828,7 +3556,7 @@ function Recoleccion() {
                                     </div>
 
                                     <div className="widget-wrap" id="paquetesSobres">
-                                        <div>
+                                        {/*<div>
                                             <Grid container>
                                                 <Grid item xs={6}>
                                                     <div className="widget-header">
@@ -4085,7 +3813,13 @@ function Recoleccion() {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>*/}
+
+                                        <Paquetes
+                                            dataPaquetes={dataPaquetes}
+                                            onChangeList={handleListPaquetesChange}
+                                            disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
+                                        />
                                     </div>
 
                                     <div className="row ">
