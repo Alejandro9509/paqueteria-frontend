@@ -8,11 +8,13 @@ import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import $ from "jquery";
 import CorteCajaAgregar from "./CorteCajaAgregar";
-import {Tooltip} from "@material-ui/core";
+import {FormControl, Grid, InputLabel, Select, Tooltip} from "@material-ui/core";
 import {confirmAlert} from "react-confirm-alert";
 import axios from "axios";
 import Noty from "noty";
-import {eliminarCorte, obtenerCortes} from "../../Util/Contexts/CorteCajaContext";
+import {eliminarCorte, obtenerCortes, obtenerCortesByFiltros} from "../../Util/Contexts/CorteCajaContext";
+import TextField from "@material-ui/core/TextField";
+import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 
 window.jQuery = window.$ = $;
 
@@ -103,6 +105,11 @@ function CorteCaja(){
         agregar: "Agregar",
         height: window. innerHeight,
     })
+    const [dataSucursal, setDataSucursal] = useState([])
+    const [filtros, setFiltros] = useState({
+        fechaRegistro: 0,
+        idSucursal: 0
+    })
 
     const listado = 1
     const agregar = 2
@@ -110,6 +117,7 @@ function CorteCaja(){
 
     useEffect(value => {
         getAllCortes()
+        getAllSucursales()
     }, [])
 
     const getAllCortes = () => {
@@ -120,6 +128,7 @@ function CorteCaja(){
 
     const handleShowListado = (event) => {
         event.stopPropagation();
+        resetFiltros()
         getAllCortes()
         // limpiarInputsAgregar()
         setPantallaActiva(listado)
@@ -191,6 +200,39 @@ function CorteCaja(){
         });
     }
 
+    const getAllSucursales = () => {
+        obtenerSucursales().then((respuesta) => {
+            setDataSucursal(respuesta.data);
+        });
+    }
+
+    const handleChangeFiltros = (event) => {
+        event.preventDefault()
+        const {target} = event
+        setFiltros(filtros => {
+            return {
+                ...filtros,
+                [target.name]: target.value
+            }
+        })
+        if (target.name === "fechaRegistro"){
+            getCortesByFiltros(target.value, filtros.idSucursal)
+        }else if (target.name === "idSucursal"){
+            getCortesByFiltros(filtros.fechaRegistro, target.value)
+        }
+    }
+
+    const resetFiltros = () => {
+        setFiltros({
+            fechaRegistro: 0,
+            idSucursal: 0
+        })
+    }
+    const getCortesByFiltros = (fecha, sucursal) =>{
+        obtenerCortesByFiltros(fecha, sucursal).then(({data}) => {
+            setListaCortes(data)
+        })
+    }
 
     return(
         <div>
@@ -233,6 +275,53 @@ function CorteCaja(){
                         <div id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <Grid container spacing={2}>
+                                                <Grid item xs={4}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <InputLabel
+                                                            id="idSucursalLabel">Sucursal</InputLabel>
+                                                        <Select
+                                                            labelId="idSucursalLabel"
+                                                            label="Sucursal"
+                                                            className="form-control"
+                                                            required
+                                                            value={filtros.idSucursal}
+                                                            onChange={handleChangeFiltros}
+                                                            id="idSucursal"
+                                                            name="idSucursal"
+                                                        >
+                                                            {dataSucursal.map((sucursal) => (
+                                                                <option
+                                                                    key={sucursal.m_nIdSucursal}
+                                                                    value={sucursal.m_nIdSucursal}
+                                                                >
+                                                                    {sucursal.m_sSucursal}
+                                                                </option>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={4}>
+                                                    <div className="input">
+                                                        <TextField
+                                                            variant="outlined"
+                                                            id="fechaRegistro"
+                                                            label="Fecha de registro"
+                                                            type="date"
+                                                            onChange={handleChangeFiltros}
+                                                            value={filtros.fechaRegistro}
+                                                            className={"form-control"}
+                                                            InputLabelProps={{shrink: true,}}
+                                                            name={"fechaRegistro"}
+                                                            // required={state.recoleccionConCita}
+                                                        />
+                                                    </div>
+                                                </Grid>
+                                            </Grid>
+                                        </div>
+                                    </div>
                                     <div className={"row"} style={{height: state.height -250, width: '100%'}}>
                                         <DataGrid columns={columns} rows={listaCortes}
                                                   locateText={dataGridLocaleText}
