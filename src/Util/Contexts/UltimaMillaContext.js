@@ -6,6 +6,7 @@ import moment from "moment";
 
 const headers = {
     'Content-Type': 'application/json',
+    'TiemZone' : Intl.DateTimeFormat().resolvedOptions().timeZone
     //    'access-control-allow-origin': '*'
 }
 
