@@ -2284,7 +2284,7 @@ function Guia(props) {
                                            name="comentariosOcurre"
                                 />
                             </Grid>
-                            {dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 &&
+                            {(dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3) &&
                                 <Grid item xs={12}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
                                     <InputLabel id="idTipoPagoLabel">Tipo Pago</InputLabel>
@@ -2313,7 +2313,7 @@ function Guia(props) {
                                 </FormControl>
                             </Grid>
                             }
-                            {(dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3) && dataOcurre.tipoPago == 1 &&
+                            {((dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3) && dataOcurre.tipoPago == 1) &&
                                 <Grid item xs={6}>
                                 <TextField variant="outlined" margin="dense" label="Importe recibido"
                                            onChange={(event) => handleChangeDataOcurre(event)}
