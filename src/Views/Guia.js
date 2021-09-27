@@ -2116,7 +2116,8 @@ function Guia(props) {
                 setDataOcurre({
                     idGuia: guia.m_nIdGuia,
                     tipoCobroOcurre: guia.m_nIdTIpoCobro,
-                    importeTotal: importeTotal
+                    importeTotal: importeTotal,
+                    tipoPago: guia.m_nIdTIpoCobro == 11 && 7
                 })
                 setState({
                     ...state,
@@ -2284,7 +2285,7 @@ function Guia(props) {
                                            name="comentariosOcurre"
                                 />
                             </Grid>
-                            {dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 &&
+                            {(dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 || dataOcurre.tipoCobroOcurre == 11) &&
                                 <Grid item xs={12}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
                                     <InputLabel id="idTipoPagoLabel">Tipo Pago</InputLabel>
@@ -2313,7 +2314,7 @@ function Guia(props) {
                                 </FormControl>
                             </Grid>
                             }
-                            {(dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3) && dataOcurre.tipoPago == 1 &&
+                            {(dataOcurre.tipoPago == 1) &&
                                 <Grid item xs={6}>
                                 <TextField variant="outlined" margin="dense" label="Importe recibido"
                                            onChange={(event) => handleChangeDataOcurre(event)}
@@ -2322,7 +2323,7 @@ function Guia(props) {
                                            value={dataOcurre.importeOcurre}
                                            placeholder="Importe"
                                            name="importeOcurre"
-                                           required={showDialogOcurre && (dataOcurre.tipoCobroOcurre == 3 || dataOcurre.tipoCobroOcurre == 5)}
+                                           required={showDialogOcurre && (dataOcurre.tipoPago == 1)}
                                 />
                                 <p style={{
                                     marginLeft: '10px',
@@ -2330,7 +2331,7 @@ function Guia(props) {
                                 }}> {`Cambio: $${dataOcurre.importeOcurre ? parseFloat(dataOcurre.importeTotal) - parseFloat(dataOcurre.importeOcurre) : 0.0}`}</p>
                             </Grid>
                             }
-                            {(dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3) && dataOcurre.tipoPago == 1 &&
+                            {dataOcurre.tipoPago == 1 &&
                                 <Grid item xs={6}>
                                 <p> {`Importe a pagar: $${parseFloat(dataOcurre.importeTotal)}`}</p>
                             </Grid>
