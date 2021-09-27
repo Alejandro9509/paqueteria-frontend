@@ -263,7 +263,7 @@ class FiltersMap extends Component {
                                     changeDate={this.changeDate} data={this.state}
                                     paquetesSeleccionadas={this.state.paquetesSeleccionadas}
                                     selectPaquetes={this.selectPaquetes}/>
-                <Dialog open={this.state.openOperadorDialog} on
+                <Dialog open={this.state.openOperadorDialog} fullWidth maxWidth={"md"}
                         onClose={() => this.setState({openOperadorDialog: false})}>
                     <DialogTitle>Asignar Operador</DialogTitle>
 
@@ -592,7 +592,7 @@ class FiltersMap extends Component {
                             />
                         </Tooltip>
 
-                        <Tooltip title={"Enviar ruta a operadores"}>
+                        <Tooltip title={this.props.data.modoPlaneacion ? "Guardar ruta" : "Enviar ruta a operadores"}>
                             <IconButton
                                 onClick={() => this.props.guardarRuta()}
                                 style={{
