@@ -136,7 +136,6 @@ function CorteCaja(){
         $('.tab-content div ').removeClass('in show');
         $('#Listado').addClass('in show');
     }
-
     const handleShowAgregar = (event) => {
         event.stopPropagation()
         // limpiarInputsAgregar()
@@ -239,17 +238,7 @@ function CorteCaja(){
                                                   locateText={dataGridLocaleText}
                                                   density={"compact"}
                                                   pageSize={Math.floor((state.height - 310) / 30)}
-                                                  components={{
-                                                      Toolbar: GridToolbar,
-                                                  }}
                                                   getRowId={(row => row.m_nIdCorte)}
-                                                  disableColumnSelector
-                                                  disableDensitySelector
-                                                  filterModel={{
-                                                      items: [
-                                                          { columnField: '', operatorValue: '', value: '' },
-                                                      ],
-                                                  }}
                                         />
                                     </div>
                                 </div>
