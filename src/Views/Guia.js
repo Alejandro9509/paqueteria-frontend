@@ -2116,7 +2116,8 @@ function Guia(props) {
                 setDataOcurre({
                     idGuia: guia.m_nIdGuia,
                     tipoCobroOcurre: guia.m_nIdTIpoCobro,
-                    importeTotal: importeTotal
+                    importeTotal: importeTotal,
+                    tipoPago: guia.m_nIdTIpoCobro == 11 && 7
                 })
                 setState({
                     ...state,
@@ -2284,7 +2285,7 @@ function Guia(props) {
                                            name="comentariosOcurre"
                                 />
                             </Grid>
-                            {(dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3) &&
+                            {(dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 || dataOcurre.tipoCobroOcurre == 11) &&
                                 <Grid item xs={12}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
                                     <InputLabel id="idTipoPagoLabel">Tipo Pago</InputLabel>
