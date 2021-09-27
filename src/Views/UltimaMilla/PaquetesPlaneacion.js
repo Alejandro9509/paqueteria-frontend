@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
 import {
-    Checkbox, Dialog, FormControl, FormControlLabel, FormLabel,
+    Button,
+    Checkbox, Dialog, DialogActions, FormControl, FormControlLabel, FormLabel,
     Grid, InputLabel, Radio, RadioGroup, Select,
     Table, TableBody,
     TableCell,
@@ -510,6 +511,11 @@ class PaquetesPlaneacion extends Component {
                     </Table>
                 </TableContainer>
 
+                <DialogActions>
+                    <Button color={"primary"} variant={"contained"} onClick={() => this.props.close()}>
+                        Aceptar
+                    </Button>
+                </DialogActions>
             </Dialog>
         );
     }

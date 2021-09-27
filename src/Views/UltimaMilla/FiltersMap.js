@@ -308,9 +308,7 @@ class FiltersMap extends Component {
                     </DialogContent>
                 </Dialog>
                 <div className="leaflet-control leaflet-bar" style={{border: "none"}}>
-                    <div>
-                        <Typography style={{paddingRight: "10px"}} variant={"h2"}>Modo: {this.props.data.modoPlaneacion ? `Planeación` : `Fecha Actual`}</Typography>
-                    </div>
+
                     <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: "center"}}>
                         <BootstrapTooltip
                             PopperProps={{
@@ -629,7 +627,9 @@ class FiltersMap extends Component {
                                    }}
                         />
                     </div>
-
+                    <div>
+                        <Typography style={{paddingRight: "10px"}} variant={"h2"}>Modo: {this.props.data.modoPlaneacion ? `Planeación` : `Fecha Actual`}</Typography>
+                    </div>
                 </div>
 
                 <IconButton
