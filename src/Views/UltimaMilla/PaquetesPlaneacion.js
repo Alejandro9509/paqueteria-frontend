@@ -13,8 +13,8 @@ import {
     TextField,
     Typography
 } from "@material-ui/core";
-import {obtenerInformes, obtenerInformesId} from "../../Util/Contexts/InformesContext";
-import {obtenerViajes} from "../../Util/Contexts/ViajesContext";
+import {obtenerInformes, obtenerInformesEstatus, obtenerInformesId} from "../../Util/Contexts/InformesContext";
+import {obtenerViajes, obtenerViajesEstatus} from "../../Util/Contexts/ViajesContext";
 import {obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
 import {
@@ -62,12 +62,12 @@ class PaquetesPlaneacion extends Component {
     }
 
     componentDidMount() {
-        obtenerInformes().then(({data}) => {
+        obtenerInformesEstatus(7).then(({data}) => {
             this.setState({
                 dataInformes: data
             })
         })
-        obtenerViajes().then(({data}) => {
+        obtenerViajesEstatus(5).then(({data}) => {
             this.setState({
                 dataViajes: data
             })
@@ -315,7 +315,7 @@ class PaquetesPlaneacion extends Component {
                                             label="Folio Viaje"
                                             className="form-control"
                                             required
-                                            onChange={event => (this.handleInforme(event.target.value))}
+                                            onChange={event => (this.handleViaje(event.target.value))}
                                             id="idViaje"
                                             read="true"
                                             value={this.state.idViaje}
