@@ -315,7 +315,10 @@ function CorteCaja(){
     };
 
     function generarReporte(id) {
+        console.log('corte id: ' + id)
         obtenerCorteReporte(id).then(({data}) => {
+            console.log(data)
+            // debugger
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
@@ -324,7 +327,10 @@ function CorteCaja(){
     }
 
     function generarResumenReporte(destino, fecha) {
+        console.log('corte resumen id: ' + destino + " " + fecha)
         obtenerCortesResumenReporte(destino, fecha).then(({data}) => {
+            console.log(data)
+            // debugger
             let pdfWindow = window.open("");
             pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
             pdfWindow.document.body.style.margin = "0px";
@@ -448,7 +454,7 @@ function CorteCaja(){
                                                             <ListItemText primary={
                                                                 <Grid container spacing={1} alignItems="center">
                                                                     <Grid item xs={1}>
-                                                                        <IconButton aria-label="file" onClick={() => generarResumenReporte(group[0].m_sDestino, group[0].m_sFechaRegistro)}>
+                                                                        <IconButton aria-label="file" onClick={() => generarResumenReporte(group[0].m_nIdDestino, group[0].m_sFechaRegistro)}>
                                                                             <InsertDriveFile fontSize={"large"}/>
                                                                         </IconButton>
                                                                     </Grid>
