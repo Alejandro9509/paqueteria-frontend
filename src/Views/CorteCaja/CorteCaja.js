@@ -164,6 +164,12 @@ function CorteCaja(){
                 newArray.push(group[k])
             });
             setListaCortes(newArray)
+            if (data.length > 0){
+                setFiltros({
+                    ...filtros,
+                    fechaRegistro: data[0].m_sFechaRegistro,
+                })
+            }
 
         })
     }
