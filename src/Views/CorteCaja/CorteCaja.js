@@ -164,12 +164,10 @@ function CorteCaja(){
                 newArray.push(group[k])
             });
             setListaCortes(newArray)
-            if (data.length > 0){
-                setFiltros({
-                    ...filtros,
-                    fechaRegistro: data[0].m_sFechaRegistro,
-                })
-            }
+            setFiltros({
+                ...filtros,
+                fechaRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}`,
+            })
 
         })
     }
