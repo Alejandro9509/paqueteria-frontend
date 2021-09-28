@@ -44,10 +44,12 @@ class Tour extends Component {
         })
         if (result.length !== 0) {
             calcularRuta(result, this.props.data).then((result) => {
-                result.polyline.plain.polyline.map(c => {
-                    polygon.push([c.y, c.x])
-                })
-                this.setState({polygon: polygon})
+                if (result) {
+                    result.polyline.plain.polyline.map(c => {
+                        polygon.push([c.y, c.x])
+                    })
+                    this.setState({polygon: polygon})
+                }
             })
         }
 

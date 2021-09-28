@@ -59,6 +59,15 @@ function obtenerInformes(){
         );
     return result
 }
+
+function obtenerInformesEstatus(idEstatus){
+    const url = `${process.env.REACT_APP_API_URL}/Informes/GetListadoEstatus/${idEstatus}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 function obtenerInformesPorViaje(id){
     const url = `${process.env.REACT_APP_API_URL}/Informes/GetByIdViaje/${id}`;
     let result;
@@ -98,4 +107,4 @@ function obtenerInformeFiltro(folioInforme) {
 }
 
 export {modificarInformes, agregarInformes, eliminarInformes, obtenerInformes, obtenerInformesId, cancelarInformes, obtenerInformesDisponiblesViajes, obtenerInformesPorViaje,obtenerInformeFiltro,
-    obtenerInformeReporte}
+    obtenerInformeReporte, obtenerInformesEstatus}

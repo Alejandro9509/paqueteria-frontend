@@ -390,7 +390,7 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                label={this.state.zonasSeleccionada.length !== 0 ? this.state.zonasSeleccionada.map(z => z.m_sDescripcion).join(", ") : "Zona"}
+                                label={this.state.zonasSeleccionada.length !== 0 ? this.state.zonasSeleccionada.map(z => z.m_sCodigoZona).join(", ") : "Zona"}
                                 disabled={this.state.sucursalSeleccionada == null}
                                 onDelete={() => this.setState({
                                     openZona: !this.state.openZona, openSucursales: false,
@@ -628,7 +628,7 @@ class FiltersMap extends Component {
                         />
                     </div>
                     <div>
-                        <Typography style={{paddingRight: "10px"}} variant={"h2"}>Modo: {this.props.data.modoPlaneacion ? `Planeación` : `Fecha Actual`}</Typography>
+                        <Typography style={{paddingLeft: "10px", color: "black"}} variant={"h1"}>Modo: <strong style={{color: this.props.data.modoPlaneacion ? "red": "blue"}}>{this.props.data.modoPlaneacion ? `Planeación` : `Fecha Actual`} </strong></Typography>
                     </div>
                 </div>
 
@@ -639,7 +639,7 @@ class FiltersMap extends Component {
                         borderRadius: "10px",
                         width: "40px",
                         height: "40px",
-                        backgroundColor: "#4F6AF3",
+                        backgroundColor: this.props.data.modoPlaneacion ? "red" : "#4F6AF3",
                         top: "150px",
                         pointerEvents: "auto",
                         left: "10px",

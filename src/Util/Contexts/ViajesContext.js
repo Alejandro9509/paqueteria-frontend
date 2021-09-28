@@ -3,7 +3,7 @@ import { trackPromise } from "react-promise-tracker";
 
 const headers = {
     'Content-Type': 'application/json',
-    // 'TimeZone' : Intl.DateTimeFormat().resolvedOptions().timeZone
+    //'TimeZone' : Intl.DateTimeFormat().resolvedOptions().timeZone
     //    'access-control-allow-origin': '*'
 }
 
@@ -55,6 +55,15 @@ function obtenerViajes(){
     return result
 }
 
+function obtenerViajesEstatus(idEstatus){
+    const url = `${process.env.REACT_APP_API_URL}/Viajes/GetListadoEstatus/${idEstatus}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
+
 
 function obetenerViajeId( id){
     const url = `${process.env.REACT_APP_API_URL}/Viajes/GetById/${id}`;
@@ -68,4 +77,4 @@ function obetenerViajeId( id){
 
 
 
-export {agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje, obtenerViajes}
+export {agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje, obtenerViajes, obtenerViajesEstatus}

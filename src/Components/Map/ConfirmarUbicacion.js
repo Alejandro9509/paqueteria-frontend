@@ -65,7 +65,7 @@ class ConfirmarUbicacion extends Component {
                     <MapContainer style={{width: "100%", height: "500px"}} center={[32.62781 ,  -115.44632]} zoom={18}
                                   scrollWheelZoom={false} whenCreated={m => this.setState({map: m})}>
                         <TileLayer style={{width: "100%", height: "500px"}}
-                                   url="https://xserver2-america-test.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es&amp;xtok={token}"
+                                   url="https://xserver2-america.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es&amp;xtok={token}"
                                    token="51FA3E8E-8BF3-49EF-AB82-59D807A0645C"
                         />
 
