@@ -52,4 +52,13 @@ function obtenerCorteId(id) {
     return result
 }
 
-export { modificarCorte, obtenerCorteId, obtenerCortes, eliminarCorte, agregarCorte}
+function obtenerCortesByFiltros(fecha, idSucursal) {
+    const url = `${process.env.REACT_APP_API_URL}/CorteCaja/GetListadoByFiltros/` + fecha +`/` + idSucursal;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export { obtenerCortesByFiltros,modificarCorte, obtenerCorteId, obtenerCortes, eliminarCorte, agregarCorte}

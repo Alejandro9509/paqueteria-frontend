@@ -104,6 +104,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         },
     ]);
     const [infoGeneral, setInfoGeneral] = useState({
+        idUsuario: localStorage.getItem("UsuarioId"),
         idSucursal: localStorage.getItem("Sucursal"),
         fechaRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}`,
         horaRegistro: `${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
@@ -386,6 +387,7 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         }
         let params = {
             m_nIdCorte: state.idCorte,
+            m_nIdUsuario: infoGeneral.idUsuario,
             m_nIdSucursal: infoGeneral.idSucursal,
             m_sFechaRegistro: infoGeneral.fechaRegistro,
             m_sHoraRegistro: infoGeneral.horaRegistro,
