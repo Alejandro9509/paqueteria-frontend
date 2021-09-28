@@ -107,6 +107,12 @@ function CorteCaja(){
             flex: 1
         },
         {
+            headerName: "Usuario",
+            field: 'm_sUsuario',
+            minWidth: 200,
+            flex: 1
+        },
+        {
             headerName: "Estado",
             field: 'm_sEstatusCorte',
             minWidth: 200,
@@ -352,6 +358,7 @@ function CorteCaja(){
                                                             id="idCiudad"
                                                             name="idCiudad"
                                                         >
+                                                            <option key={0} value={0}>{"Seleccionar"}</option>
                                                             {dataCiudad.map((ciudad) => (
                                                                 <option
                                                                     key={ciudad.m_nIdCiudad}
