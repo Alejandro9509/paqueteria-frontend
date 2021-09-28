@@ -31,6 +31,7 @@ import List from "@material-ui/core/List";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import DeleteIcon from "@material-ui/icons/Delete";
 import RestartAltIcon from '@material-ui/icons/Refresh';
+import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
 
 window.jQuery = window.$ = $;
 
@@ -64,6 +65,13 @@ function CorteCaja(){
                         <Tooltip title="Consultar">
                             <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                        </Tooltip>
+                        <Tooltip title="Reporte">
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => generarReporte(row.row.m_nIdCorte)}><i
+                                className="zmdi zmdi-file"
+                                style={{color: "#F9A03E"}}/></a>
+
                         </Tooltip>
                         <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs"
@@ -151,6 +159,15 @@ function CorteCaja(){
         getAllCortes()
         getAllCiudades()
     }, [])
+
+    function generarReporte(id) {
+        /*obtenerGuiaReporte(id).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Guía " + folio;
+        })*/
+    }
 
     const getAllCortes = () => {
         obtenerCortes().then(({data}) => {
