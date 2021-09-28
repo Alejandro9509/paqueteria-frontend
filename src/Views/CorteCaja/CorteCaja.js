@@ -8,13 +8,17 @@ import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import $ from "jquery";
 import CorteCajaAgregar from "./CorteCajaAgregar";
-import {FormControl, Grid, InputLabel, Select, Tooltip} from "@material-ui/core";
+import {Collapse, FormControl, Grid, InputLabel, ListItem, ListItemText, Select, Tooltip} from "@material-ui/core";
 import {confirmAlert} from "react-confirm-alert";
 import axios from "axios";
 import Noty from "noty";
 import {eliminarCorte, obtenerCortes, obtenerCortesByFiltros} from "../../Util/Contexts/CorteCajaContext";
 import TextField from "@material-ui/core/TextField";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
+import {ExpandLess} from "@material-ui/icons";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import List from "@material-ui/core/List";
+import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 
 window.jQuery = window.$ = $;
 
@@ -87,12 +91,20 @@ function CorteCaja(){
             headerName: "Fecha Registro",
             field: 'm_sFechaRegistro',
             minWidth: 200,
+            type: 'date',
             flex: 1
         },
         {
             headerName: "Estado",
             field: 'm_sEstatusCorte',
             minWidth: 200,
+            flex: 1
+        },
+        {
+            headerName: "Total",
+            field: 'm_cTotal',
+            minWidth: 200,
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             flex: 1
         },
 
@@ -105,11 +117,13 @@ function CorteCaja(){
         agregar: "Agregar",
         height: window. innerHeight,
     })
-    const [dataSucursal, setDataSucursal] = useState([])
+    const [dataCiudad, setDataCiudad] = useState([])
     const [filtros, setFiltros] = useState({
         fechaRegistro: 0,
-        idSucursal: 0
+        idCiudad: 0
     })
+    const [openItemKey, setOpenItemKey] = useState(0);
+
 
     const listado = 1
     const agregar = 2
@@ -117,14 +131,31 @@ function CorteCaja(){
 
     useEffect(value => {
         getAllCortes()
-        getAllSucursales()
+        getAllCiudades()
     }, [])
 
     const getAllCortes = () => {
         obtenerCortes().then(({data}) => {
-            setListaCortes(data)
+            data.map((i) => i.destinoFecha = i.m_sDestino+i.m_sFechaRegistro)
+            let group = groupBy(data, 'destinoFecha')
+            console.log(group)
+            // debugger
+            let newArray = []
+            Object.keys(group).forEach(function(k){
+                console.log(k + ' - ' + group[k]);
+                newArray.push(group[k])
+            });
+            setListaCortes(newArray)
+
         })
     }
+
+    const groupBy = function(xs, key) {
+        return xs.reduce(function(rv, x) {
+            (rv[x[key]] = rv[x[key]] || []).push(x);
+            return rv;
+        }, {});
+    };
 
     const handleShowListado = (event) => {
         event.stopPropagation();
@@ -200,9 +231,9 @@ function CorteCaja(){
         });
     }
 
-    const getAllSucursales = () => {
-        obtenerSucursales().then((respuesta) => {
-            setDataSucursal(respuesta.data);
+    const getAllCiudades = () => {
+        obtenerCiudades().then((respuesta) => {
+            setDataCiudad(respuesta.data);
         });
     }
 
@@ -216,8 +247,8 @@ function CorteCaja(){
             }
         })
         if (target.name === "fechaRegistro"){
-            getCortesByFiltros(target.value, filtros.idSucursal)
-        }else if (target.name === "idSucursal"){
+            getCortesByFiltros(target.value, filtros.idCiudad)
+        }else if (target.name === "idCiudad"){
             getCortesByFiltros(filtros.fechaRegistro, target.value)
         }
     }
@@ -225,15 +256,32 @@ function CorteCaja(){
     const resetFiltros = () => {
         setFiltros({
             fechaRegistro: 0,
-            idSucursal: 0
+            idCiudad: 0
         })
     }
-    const getCortesByFiltros = (fecha, sucursal) =>{
-        obtenerCortesByFiltros(fecha, sucursal).then(({data}) => {
-            setListaCortes(data)
+    const getCortesByFiltros = (fecha, ciudad) =>{
+        obtenerCortesByFiltros(fecha, ciudad).then(({data}) => {
+            console.log(data)
+            data.map((i) => i.destinoFecha = i.m_sDestino+i.m_sFechaRegistro)
+            let group = groupBy(data, 'destinoFecha')
+            console.log(group)
+            // debugger
+            let newArray = []
+            Object.keys(group).forEach(function(k){
+                newArray.push(group[k])
+            });
+            setListaCortes(newArray)
         })
     }
 
+    const handleClick = (itemKey) => {
+        setOpenItemKey(itemKey);
+    };
+
+    const currencyFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
     return(
         <div>
             <header className="topbar clearfix">
@@ -281,23 +329,23 @@ function CorteCaja(){
                                                 <Grid item xs={4}>
                                                     <FormControl className="input select" fullWidth variant="outlined">
                                                         <InputLabel
-                                                            id="idSucursalLabel">Sucursal</InputLabel>
+                                                            id="idCiudadLabel">Ciudad</InputLabel>
                                                         <Select
-                                                            labelId="idSucursalLabel"
-                                                            label="Sucursal"
+                                                            labelId="idCiudadLabel"
+                                                            label="Ciudad"
                                                             className="form-control"
                                                             required
-                                                            value={filtros.idSucursal}
+                                                            value={filtros.idCiudad}
                                                             onChange={handleChangeFiltros}
-                                                            id="idSucursal"
-                                                            name="idSucursal"
+                                                            id="idCiudad"
+                                                            name="idCiudad"
                                                         >
-                                                            {dataSucursal.map((sucursal) => (
+                                                            {dataCiudad.map((ciudad) => (
                                                                 <option
-                                                                    key={sucursal.m_nIdSucursal}
-                                                                    value={sucursal.m_nIdSucursal}
+                                                                    key={ciudad.m_nIdCiudad}
+                                                                    value={ciudad.m_nIdCiudad}
                                                                 >
-                                                                    {sucursal.m_sSucursal}
+                                                                    {ciudad.m_sCiudad}
                                                                 </option>
                                                             ))}
                                                         </Select>
@@ -322,14 +370,42 @@ function CorteCaja(){
                                             </Grid>
                                         </div>
                                     </div>
-                                    <div className={"row"} style={{height: state.height -250, width: '100%'}}>
-                                        <DataGrid columns={columns} rows={listaCortes}
-                                                  locateText={dataGridLocaleText}
-                                                  density={"compact"}
-                                                  pageSize={Math.floor((state.height - 310) / 30)}
-                                                  getRowId={(row => row.m_nIdCorte)}
-                                        />
+                                    <div className={"row"}>
+                                        <List
+                                            sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+                                            component="nav"
+                                            aria-labelledby="nested-list-subheader"
+                                        >
+                                            {
+                                                listaCortes.map((group,index) => (
+                                                    <div>
+                                                        <ListItem button key={index} onClick={() => handleClick(index)} style={{backgroundColor:"lightgrey"}}>
+                                                            <ListItemText primary={
+                                                                <Grid container spacing={1}>
+                                                                    <Grid item xs={2}>{group[0].m_sDestino}</Grid>
+                                                                    <Grid item xs={2}>{group[0].m_sFechaRegistro}</Grid>
+                                                                    <Grid item xs={2}>Total: {currencyFormatter.format(Number(group.reduce((a, b) => +a + +b.m_cTotal, 0)))}</Grid>
+                                                                </Grid>
+                                                            } />
+                                                            {openItemKey === index ? <ExpandLess /> : <ExpandMore />}
+                                                        </ListItem>
+                                                        <Collapse in={openItemKey === index} timeout="auto" unmountOnExit>
+                                                            <div className={"row"} style={{height: (group.length + 1) * 50, width: '100%'}}>
+                                                                <DataGrid columns={columns} rows={group}
+                                                                          locateText={dataGridLocaleText}
+                                                                          density={"compact"}
+                                                                          pageSize={Math.floor((state.height - 310) / 30)}
+                                                                          getRowId={(row => row.m_nIdCorte)}
+                                                                />
+                                                            </div>
+                                                        </Collapse>
+                                                    </div>
+                                                ))
+                                            }
+
+                                        </List>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
