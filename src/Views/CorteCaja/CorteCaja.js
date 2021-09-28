@@ -8,7 +8,17 @@ import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import $ from "jquery";
 import CorteCajaAgregar from "./CorteCajaAgregar";
-import {Collapse, FormControl, Grid, InputLabel, ListItem, ListItemText, Select, Tooltip} from "@material-ui/core";
+import {
+    Collapse,
+    FormControl,
+    Grid,
+    IconButton,
+    InputLabel,
+    ListItem,
+    ListItemText,
+    Select,
+    Tooltip
+} from "@material-ui/core";
 import {confirmAlert} from "react-confirm-alert";
 import axios from "axios";
 import Noty from "noty";
@@ -19,6 +29,8 @@ import {ExpandLess} from "@material-ui/icons";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import List from "@material-ui/core/List";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
+import DeleteIcon from "@material-ui/icons/Delete";
+import RestartAltIcon from '@material-ui/icons/Refresh';
 
 window.jQuery = window.$ = $;
 
@@ -367,6 +379,16 @@ function CorteCaja(){
                                                         />
                                                     </div>
                                                 </Grid>
+                                                <Grid item container xs={4}>
+                                                    <IconButton aria-label="delete" onClick={() => {
+                                                        resetFiltros()
+                                                        getAllCortes()
+                                                    }}>
+                                                        <RestartAltIcon fontSize={"large"}/>
+                                                        Limpiar filtros
+                                                    </IconButton>
+                                                </Grid>
+
                                             </Grid>
                                         </div>
                                     </div>
@@ -384,6 +406,7 @@ function CorteCaja(){
                                                                 <Grid container spacing={1}>
                                                                     <Grid item xs={2}>{group[0].m_sDestino}</Grid>
                                                                     <Grid item xs={2}>{group[0].m_sFechaRegistro}</Grid>
+                                                                    <Grid item xs={6}/>
                                                                     <Grid item xs={2}>Total: {currencyFormatter.format(Number(group.reduce((a, b) => +a + +b.m_cTotal, 0)))}</Grid>
                                                                 </Grid>
                                                             } />
@@ -411,12 +434,14 @@ function CorteCaja(){
                         </div>
 
                         <div id="Agregar" className="tab-pane fade">
-                            <CorteCajaAgregar
-                                select={corteSeleccionado}
-                                consult={consult}
-                                pantallaActiva={pantallaActiva}
-                            />
-
+                            {
+                                (pantallaActiva === agregar || pantallaActiva === modificar) &&
+                                <CorteCajaAgregar
+                                    select={corteSeleccionado}
+                                    consult={consult}
+                                    pantallaActiva={pantallaActiva}
+                                />
+                            }
                         </div>
                     </div>
                 </div>
