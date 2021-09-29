@@ -527,6 +527,7 @@ function Viajes() {
                 a["informes"] = respuesta.data.filter(r => r.m_nIdOrigen === a.m_nIdOrigen)
                 a.origenDestino = `${a.m_sOrigen} - ${a.m_sDestino}`
             })
+            console.log(arrayInformes)
             setParadasListado(arrayInformes);
         });
     }
@@ -594,6 +595,7 @@ function Viajes() {
 
         }
 
+        console.log(params)
 
         agregarViajeSalida(params)
             .then((respuesta) => {

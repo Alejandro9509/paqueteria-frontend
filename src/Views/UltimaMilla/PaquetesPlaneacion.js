@@ -459,6 +459,9 @@ class PaquetesPlaneacion extends Component {
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
                                     align="left">Domicilio</TableCell>
+                                <TableCell
+                                    sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
+                                    align="left">Flete</TableCell>
 
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sNombreOperador" ? this.state.order : false}
@@ -491,13 +494,15 @@ class PaquetesPlaneacion extends Component {
                                             <TableCell
                                                 align="left">{u.m_bEsRecoleccion ? "Recolección" : "Entrega"}</TableCell>
                                             <TableCell
-                                                align="left">{u.m_bEsRecoleccion ? u.m_parrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0) : u.m_arrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0)}</TableCell>
+                                                align="left">{u.m_bEsRecoleccion ? u.m_parrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0) : u.m_arrPaquetes.reduce((a, b) => +a + +b.m_xVolumen, 0)}</TableCell>
                                             <TableCell align="left">{u.m_sTipoCobro}</TableCell>
                                             <TableCell align="left">{u.m_sZona}</TableCell>
                                             <TableCell
                                                 align="left">{u.m_bEsRecoleccion ? u.m_sNombreRemitente : u.m_sNombreDestinatario}</TableCell>
                                             <TableCell
                                                 align="left">{u.m_bEsRecoleccion ? u.m_sDomicilioRemitente : u.m_sDomicilioDestinatario}</TableCell>
+                                            <TableCell
+                                                align="left">{u.m_bEsRecoleccion ? "N/A" : u.m_nImporteFlete}</TableCell>
                                             <TableCell
                                                 align="left">{u.m_bEsRecoleccion ? (u.m_bRecoleccionConCita ? "" : "Sin cita") : ""}</TableCell>
                                             <TableCell align="left">{u.m_dFechaRegistro}</TableCell>

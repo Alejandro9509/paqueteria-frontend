@@ -263,7 +263,7 @@ class PaquetesList extends Component {
                                         </TableCell>
                                         <TableCell align="left">{u.m_sFolio}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? "Recolección" : "Entrega"}</TableCell>
-                                        <TableCell align="left">{u.m_bEsRecoleccion ? u.m_parrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0) : u.m_arrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0)}</TableCell>
+                                        <TableCell align="left">{u.m_bEsRecoleccion ? u.m_parrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0) : u.m_arrPaquetes.reduce((a, b) => +a + +b.m_xVolumen, 0)}</TableCell>
                                         <TableCell align="left">{u.m_sTipoCobro}</TableCell>
                                         <TableCell align="left">{u.m_sZona}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sNombreRemitente : u.m_sNombreDestinatario}</TableCell>
