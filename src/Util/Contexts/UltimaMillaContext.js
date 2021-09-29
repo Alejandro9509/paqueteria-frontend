@@ -405,8 +405,18 @@ function eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion) {
     return result
 }
 
+function obtenerUltimaMillaReporte(id) {
+    const url = `http://190.9.53.4:8081/reportes/api/GenerarReporte/UltimaMilla/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 
 export {
+    obtenerUltimaMillaReporte,
     obtenerRutas,
     obtenerGuiasUbicacion,
     calcularRuta,

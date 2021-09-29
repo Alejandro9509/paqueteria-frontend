@@ -2,11 +2,14 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Marker from "react-leaflet-enhanced-marker";
 import {Polyline, Popup} from "react-leaflet";
-import {calcularRuta} from "../../Util/Contexts/UltimaMillaContext";
+import {calcularRuta, obtenerUltimaMillaReporte} from "../../Util/Contexts/UltimaMillaContext";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
 import {Grid, Typography, Dialog, DialogTitle, DialogActions, DialogContent} from "@material-ui/core";
+import {InsertDriveFile} from "@material-ui/icons";
+import IconButton from "@material-ui/core/IconButton";
+import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
 
 
 class TourUltimaMilla extends Component {
@@ -66,6 +69,16 @@ class TourUltimaMilla extends Component {
 
     }
 
+    generarReporte(guia) {
+        console.log(guia)
+        obtenerGuiaReporte(guia.m_nId).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Guía ";
+        })
+    }
+
 
     render() {
         const blackOptions = {color: this.props.data.color}
@@ -106,9 +119,14 @@ class TourUltimaMilla extends Component {
                                                 <Typography
                                                     variant={"body1"}>{g.m_bEsRecoleccion ? g.m_sTelefonoRemitente : g.m_sTelefonoDestinatario}</Typography>
                                             </Grid>
-                                            <Grid item md={12}>
+                                            <Grid item md={10}>
                                                 <Typography variant={"body1"}>No.
                                                     Paquetes: {g.m_bEsRecoleccion ? g.m_parrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0) : g.m_arrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0)}</Typography>
+                                            </Grid>
+                                            <Grid item md={2}>
+                                                <IconButton aria-label="file" onClick={() => this.generarReporte(g)}>
+                                                    <InsertDriveFile fontSize={"default"}/>
+                                                </IconButton>
                                             </Grid>
                                         </Grid>
 
