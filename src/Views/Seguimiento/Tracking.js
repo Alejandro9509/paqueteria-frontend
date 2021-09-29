@@ -106,11 +106,11 @@ export default function Tracking(...props){
     
     useEffect(value =>{
         const { match: { params } } = props[0];
-        handleShowConsultar(params.id)
+        handleShowConsultar(params.esRecoleccion, params.id)
     }, []);
 
-    function handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + id;
+    function handleShowConsultar(esRecoleccion,id) {
+        const url = `${process.env.REACT_APP_API_URL}/GetParadasEsRecoleccion/${esRecoleccion}/${id}`;
         axios.get(url, { headers }).then(({data}) => {
             console.log('data guia ',data)
 
