@@ -22,14 +22,19 @@ import {
 import {confirmAlert} from "react-confirm-alert";
 import axios from "axios";
 import Noty from "noty";
-import {eliminarCorte, obtenerCortes, obtenerCortesByFiltros} from "../../Util/Contexts/CorteCajaContext";
+import {
+    eliminarCorte,
+    obtenerCorteReporte,
+    obtenerCortes,
+    obtenerCortesByFiltros, obtenerCortesResumenReporte
+} from "../../Util/Contexts/CorteCajaContext";
 import TextField from "@material-ui/core/TextField";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
-import {ExpandLess} from "@material-ui/icons";
+import {ExpandLess, FileCopy, InsertDriveFile} from "@material-ui/icons";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import List from "@material-ui/core/List";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
-import DeleteIcon from "@material-ui/icons/Delete";
+import File from "@material-ui/icons/AttachFile";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
 
@@ -52,6 +57,7 @@ function CorteCaja(){
         {
             headerName: "Acciones",
             field: "",
+            width: 150,
             sortable: false, filterable: false,
             renderCell: (row) => {
                 return (
@@ -159,15 +165,6 @@ function CorteCaja(){
         getAllCortes()
         getAllCiudades()
     }, [])
-
-    function generarReporte(id) {
-        /*obtenerGuiaReporte(id).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía " + folio;
-        })*/
-    }
 
     const getAllCortes = () => {
         obtenerCortes().then(({data}) => {
@@ -317,6 +314,30 @@ function CorteCaja(){
         setOpenItemKey(itemKey);
     };
 
+    function generarReporte(id) {
+        console.log('corte id: ' + id)
+        obtenerCorteReporte(id).then(({data}) => {
+            console.log(data)
+            // debugger
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Corte de Caja";
+        })
+    }
+
+    function generarResumenReporte(destino, fecha) {
+        console.log('corte resumen id: ' + destino + " " + fecha)
+        obtenerCortesResumenReporte(destino, fecha).then(({data}) => {
+            console.log(data)
+            // debugger
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Corte de Caja";
+        })
+    }
+
     const currencyFormatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -364,7 +385,7 @@ function CorteCaja(){
                                 <div className="widget-content">
                                     <div className="row">
                                         <div className="col-md-12">
-                                            <Grid container spacing={2}>
+                                            <Grid container spacing={2} alignItems="center">
                                                 <Grid item xs={4}>
                                                     <FormControl className="input select" fullWidth variant="outlined">
                                                         <InputLabel
@@ -412,7 +433,7 @@ function CorteCaja(){
                                                         resetFiltros()
                                                         getAllCortes()
                                                     }}>
-                                                        <RestartAltIcon fontSize={"large"}/>
+                                                        <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                                                         Limpiar filtros
                                                     </IconButton>
                                                 </Grid>
@@ -431,10 +452,15 @@ function CorteCaja(){
                                                     <div>
                                                         <ListItem button key={index} onClick={() => handleClick(index)} style={{backgroundColor:"lightgrey"}}>
                                                             <ListItemText primary={
-                                                                <Grid container spacing={1}>
+                                                                <Grid container spacing={1} alignItems="center">
+                                                                    <Grid item xs={1}>
+                                                                        <IconButton aria-label="file" onClick={() => generarResumenReporte(group[0].m_nIdDestino, group[0].m_sFechaRegistro)}>
+                                                                            <InsertDriveFile fontSize={"large"}/>
+                                                                        </IconButton>
+                                                                    </Grid>
                                                                     <Grid item xs={2}>{group[0].m_sDestino}</Grid>
                                                                     <Grid item xs={2}>{group[0].m_sFechaRegistro}</Grid>
-                                                                    <Grid item xs={6}/>
+                                                                    <Grid item xs={5}/>
                                                                     <Grid item xs={2}>Total: {currencyFormatter.format(Number(group.reduce((a, b) => +a + +b.m_cTotal, 0)))}</Grid>
                                                                 </Grid>
                                                             } />

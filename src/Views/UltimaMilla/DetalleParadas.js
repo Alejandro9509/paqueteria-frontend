@@ -30,11 +30,13 @@ import AgregarPaqueteUltimaMilla from "./AgregarPaqueteUltimaMilla";
 import PaquetesList from "./PaquetesList";
 import {obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
 import {
-    eliminarPaqueteUltimaMilla,
+    eliminarPaqueteUltimaMilla, obtenerUltimaMillaReporte,
     ordenarParada,
     remplazarPaqueteUltimaMilla
 } from "../../Util/Contexts/UltimaMillaContext";
 import Noty from "noty";
+import {obtenerCorteReporte} from "../../Util/Contexts/CorteCajaContext";
+import {InsertDriveFile} from "@material-ui/icons";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -130,6 +132,19 @@ class DetalleParadas extends Component {
             showSuccess("Parada Actualizada")
             this.setState({openRemplazar: false})
             this.props.refresh()
+        })
+    }
+
+    generarReporte(e, id) {
+        e.preventDefault()
+        // console.log('corte id: ' + id)
+        obtenerUltimaMillaReporte(id).then(({data}) => {
+            // console.log(data)
+            // debugger
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Última Milla";
         })
     }
 
@@ -335,11 +350,13 @@ class DetalleParadas extends Component {
                                                                 {r.m_sPlacasUnidad}
 
                                                             </Grid>
-                                                            <Grid item sm={6}>
+                                                            <Grid item>
                                                                 {tour.m_arrClsProGuia.length} Paradas
                                                             </Grid>
-                                                            <Grid item sm={6}>
-
+                                                            <Grid item>
+                                                                <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour.m_nIdUltimaMilla)}>
+                                                                    <InsertDriveFile fontSize={"large"}/>
+                                                                </IconButton>
                                                             </Grid>
                                                         </Grid>
                                                     }/>
