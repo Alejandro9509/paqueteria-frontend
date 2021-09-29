@@ -1303,6 +1303,8 @@ function Recoleccion() {
             } else {
                 setData(respuesta.data)
             }
+
+            console.log(JSON.stringify(respuesta.data))
         })
     }
 
@@ -3191,6 +3193,16 @@ function Recoleccion() {
                                                     </Select>
                                                 </FormControl>
                                             </label>
+                                        </div>
+                                        <div className="col-sm-6 col-md-2 unit" style={{paddingLeft: "0px"}}>
+                                        <button
+            
+                                            className="btn btn-primary primary-btn"
+                                          
+                                        >
+                                            Limpiar
+                                        </button>
+                                       
                                         </div>
 
                                     </div>
