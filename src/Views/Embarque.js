@@ -1301,7 +1301,7 @@ function Embarque(props) {
         getAllSucursales()
         getAllEstatusEmbarque()
         getAllTiposSeguro()
-
+debugger
         const {m_parrPaquetes, m_parrSobres} = respuesta.data;
         let totalPaquetes = 0
         m_parrSobres.forEach(sobre => {
@@ -1428,7 +1428,7 @@ function Embarque(props) {
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-                clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
+                // clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
 
                 // nombreRemitente: remitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
