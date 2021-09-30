@@ -128,7 +128,7 @@ class PaquetesList extends Component {
         return (
             <TableContainer className={"j-forms"} style={{height:"300px"}}>
                 <Typography variant={"h4"}>Seleccionar Paquetes </Typography>
-                <Grid container spacing={2} style={{padding:"10px"}}>
+                {/*<Grid container spacing={2} style={{padding:"10px"}}>
                     <Grid item >
                         <div className="input">
                             <TextField variant="outlined" margin="dense" label="Fecha inicial"
@@ -185,7 +185,7 @@ class PaquetesList extends Component {
                             />
                         </div>
                     </Grid>
-                </Grid>
+                </Grid>*/}
                 <Table>
                     <TableHead>
 

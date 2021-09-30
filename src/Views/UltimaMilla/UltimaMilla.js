@@ -135,7 +135,7 @@ class UltimaMilla extends Component {
                         data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
                     }
                 }
-
+                console.log(data)
                 this.setState({mostrarRuta: true,modoEdicion: false, ultimaMilla: data, idSucursal: idSucursal, fechaUltimaMilla: date, zonasIds: zonas, tipoBusqueda: tipoBusqueda })
                 actualizar = false
             } else {

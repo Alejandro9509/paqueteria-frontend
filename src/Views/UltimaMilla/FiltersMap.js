@@ -471,7 +471,7 @@ class FiltersMap extends Component {
                                         margin: "1px",
                                         boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                     }}
-                                    disabled={this.state.sucursalSeleccionada == null}
+                                    disabled={this.state.zonasSeleccionada.length === 0 }
                                     icon={<EmbarqueIcon
                                         style={{fill: "#F9A03E", paddingTop: "5px", paddingBottom: "5px"}}/>}
                                     label={`Paquetes (${this.state.paquetesSeleccionadas.length})`}
@@ -493,7 +493,7 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                disabled={this.state.sucursalSeleccionada == null}
+                                disabled={this.state.zonasSeleccionada.length === 0}
                                 icon={<EmbarqueIcon
                                     style={{fill: "#F9A03E", paddingTop: "5px", paddingBottom: "5px"}}/>}
                                 label={`Paquetes (${this.state.paquetesSeleccionadas.length})`}

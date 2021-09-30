@@ -74,6 +74,12 @@ class DetalleParadas extends Component {
     }
 
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla) {
+            this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla})
+        }
+    }
+
     searchRepartidor(event) {
         event.stopPropagation()
         event.preventDefault()
@@ -322,7 +328,7 @@ class DetalleParadas extends Component {
                             <List style={{overflow: "auto"}}>
                                 {
                                     this.state.repartidoresFiltrados.map((r, index) => {
-                                        var tour = this.props.tour.m_arrClsParadaUltimaMilla.find(t => t.m_nIdUnidad === r.m_nIdUnidad)
+                                        var tour = r
                                         var color = tour.color
                                         return (
                                             <div key={r.m_sNombreOperador}>
@@ -380,7 +386,7 @@ class DetalleParadas extends Component {
 
                                                         <List component="div" disablePadding style={{
                                                             padding: "5px",
-                                                            height: "400px",
+                                                            height: "200px",
                                                             overflow: "auto"
                                                         }}>
 

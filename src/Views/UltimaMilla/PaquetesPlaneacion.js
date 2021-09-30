@@ -178,7 +178,7 @@ class PaquetesPlaneacion extends Component {
             <Dialog open={this.props.open} fullWidth maxWidth={"lg"} onClose={this.props.close}>
                 <TableContainer className={"j-forms"} style={{height: "400px", padding: "15px"}}>
                     <Typography variant={"h3"}>Seleccionar Paquetes </Typography>
-                    <Grid container spacing={2} style={{padding: "10px"}}>
+                    {/*<Grid container spacing={2} style={{padding: "10px"}}>
                         <Grid item>
                             <div className="input">
                                 <TextField variant="outlined" margin="dense" label="Fecha inicial"
@@ -247,7 +247,7 @@ class PaquetesPlaneacion extends Component {
                                 />
                             </div>
                         </Grid>
-                    </Grid>
+                    </Grid>*/}
                     <Grid container spacing={2} style={{padding: "10px"}} alignItems={"center"}>
                         <Typography variant={"h4"}>Buscar por: </Typography>
                         <FormControl component="fieldset" style={{paddingLeft: "5px"}}>

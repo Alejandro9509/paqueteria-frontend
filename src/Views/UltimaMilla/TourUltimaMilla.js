@@ -23,9 +23,9 @@ class TourUltimaMilla extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
 
-       if (this.props.data.m_arrClsProGuia.length !== prevProps.data.m_arrClsProGuia.length){
-           this.getRoute()
-       }
+        if (this.props.data.m_arrClsProGuia.length !== prevProps.data.m_arrClsProGuia.length) {
+            this.getRoute()
+        }
     }
 
     componentDidMount() {
@@ -96,7 +96,7 @@ class TourUltimaMilla extends Component {
                                         <Grid container spacing={1}>
                                             <Grid item md={12}>
                                                 <Typography
-                                                    variant={"h2"}>{g.m_sFolio} - {g.m_bEsRecoleccion ? g.m_sEstatusRecoleccion : g.m_sEstatusEmbarque}</Typography>
+                                                    variant={"h2"}>{g.m_sFolio} - { g.m_sEstatusUltimaMilla}</Typography>
                                             </Grid>
 
                                             <Grid item md={12}>
@@ -128,6 +128,18 @@ class TourUltimaMilla extends Component {
                                                     <InsertDriveFile fontSize={"default"}/>
                                                 </IconButton>
                                             </Grid>
+                                            {
+
+                                                g.m_arrImagenes.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
+                                                <Grid item md={12}>
+                                                    <div align={"center"}>
+                                                        <img style={{width: "80px", height: "80px"}}
+                                                             src={`data:image/jpeg;base64,${g.m_arrImagenes.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
+                                                    </div>
+                                                </Grid>
+                                            }
+
+
                                         </Grid>
 
                                     </Popup>
