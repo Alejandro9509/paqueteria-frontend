@@ -33,6 +33,7 @@ import {remove_array_element} from "../Util/Util";
 import {useHistory, Redirect} from 'react-router-dom';
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import RestartAltIcon from '@material-ui/icons/Refresh';
 
 import Noty from 'noty';
 import {
@@ -156,10 +157,7 @@ function Recoleccion() {
     const [state, setState] = React.useState({
         // ===VARIABLES DE LISTADO===
         idRecoleccion: 0,
-        fechaInicial: 0,
-        fechaFinal: 0,
-        sucursalListado: 0,
-        estatusListado: 0,
+       
 
         // ===VARIABLES DE CANCELAR===
         // folioRecoleccion: '', Se usa en agregar tambien
@@ -348,6 +346,25 @@ function Recoleccion() {
         // motivoCancelacion: "",
 
     });
+
+    const [filtros, setFiltros] = useState({
+        fechaInicial: 0,
+        fechaFinal: 0,
+        estatusListado:0,
+        sucursalListado: 0,
+        folio: 0,
+    })
+
+    const resetFiltros = () => {
+        setFiltros({
+           
+            fechaInicial: 0,
+            fechaFinal: 0,
+            estatusListado:0,
+            sucursalListado: 0,
+            folio: 0,
+        })
+    }
     const [fileUploaded, setFileUploaded] = React.useState([]);
     const [selectedFile, setSelectedFile] = useState();
     const [isFilePicked, setIsFilePicked] = useState(false);
@@ -1232,7 +1249,30 @@ function Recoleccion() {
         });
         setDataPaquetes([])
     }
-
+    const handleChangeFiltros = (event) => {
+        event.preventDefault()
+        const {target} = event
+        setFiltros(filtros => {
+            return {
+                ...filtros,
+                [target.name]: target.value
+            }
+        })
+        if (target.name === "fechaInicial"){
+            obtenerRecoleccionFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio)
+        }else if (target.name === "fechaFinal"){
+            obtenerRecoleccionFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio)
+        }
+        else if (target.name === "sucursalListado"){
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio)
+        }
+        else if (target.name === "estatusListado"){
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio)
+        }
+        else if (target.name === "folio"){
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado, target.value)
+        }
+    }
     const handleChange = (event) => {
         event.preventDefault();
         setState({
@@ -1579,8 +1619,9 @@ function Recoleccion() {
     ]);
 
     function getAllData() {
-        const {fechaInicial, fechaFinal, sucursalListado, estatusListado, folioRecoleccion} = state
-        obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioRecoleccion).then((respuesta) => {
+        
+        const {fechaInicial, fechaFinal, sucursalListado, estatusListado, folio} = filtros
+        obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folio).then((respuesta) => {
             console.log('Recolecciones listado', respuesta.data);
             setData(respuesta.data);
         });
@@ -3083,25 +3124,32 @@ function Recoleccion() {
                     >
                         <div id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
-                                <form className="j-forms">
-                                    <div className="row" style={{display: "flex"}}>
 
-                                        <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
-                                            <div className="input">
+                            <div className="widget-content">
+
+                                    
+                        <div className="row">
+                            <div className="col-md-12">
+                            <Grid container spacing={2} alignItems="center">
+
+                            <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+
                                                 <TextField variant="outlined" margin="dense"
-                                                           onChange={handleChange}
-                                                           onKeyDown={handleFolioRecoleccionFiltro}
+                                                           
+                                                           onChange={handleChangeFiltros}
                                                            className="form-control"
+                                                           InputLabelProps={{shrink: true,}}
                                                            type="text"
                                                            label="Folio Recolección"
-                                                           value={state.folioRecoleccion}
-                                                           id="folioRecoleccion"
+                                                           id="folio"
+                                                           name="folio"
                                                 />
-                                            </div>
-                                        </div>
+                                        </FormControl>
+                                        </Grid>
 
-                                        <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
-                                            <div className="input">
+                                        <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
                                                 <TextField
                                                     autoFocus
                                                     type="date"
@@ -3113,14 +3161,15 @@ function Recoleccion() {
                                                         shrink: true,
                                                     }}
                                                     value={state.fechaInicial}
-                                                    onChange={handleFechaInicialFiltro}
+                                                    onChange={handleChangeFiltros}
                                                     id="fechaInicial"
+                                                    name="fechaInicial"
                                                 />
-                                            </div>
-                                        </div>
+                                            </FormControl>
+                                        </Grid>
 
-                                        <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
-                                            <div className="input">
+                                        <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
                                                 <TextField variant="outlined" margin="dense"
                                                            type="date"
                                                            className="form-control"
@@ -3129,25 +3178,26 @@ function Recoleccion() {
                                                                shrink: true,
                                                            }}
                                                            value={state.fechaFinal}
-                                                           onChange={handleFechaFinalFiltro}
+                                                           onChange={handleChangeFiltros}
                                                            id="fechaFinal"
+                                                           name="fechaFinal"
+
                                                 />
-                                            </div>
+                                            </FormControl>
 
-                                        </div>
+                                        </Grid>
 
-                                        <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
-                                            <label className="input select">
-                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                    <InputLabel id="sucursalListadoLabel">Sucursal</InputLabel>
+                                        <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
                                                     <Select
                                                         labelId="sucursalListadoLabel"
                                                         label="Sucursal"
                                                         className="form-control"
                                                         required
                                                         value={state.sucursalListado}
-                                                        onChange={handleSucursalFiltro}
+                                                        onChange={handleChangeFiltros}
                                                         id="sucursalListado"
+                                                        name="sucursalListado"
                                                     >
                                                         <option value="0">Todas</option>
                                                         {dataSucursal.map((sucursal) => (
@@ -3159,25 +3209,22 @@ function Recoleccion() {
                                                             </option>
                                                         ))}
                                                     </Select>
+</FormControl>
+</Grid>
 
-                                                </FormControl>
-                                            </label>
 
 
-                                        </div>
-
-                                        <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
-                                            <label className="input select">
-                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                    <InputLabel id="estatusListadoLabel">Estatus</InputLabel>
+<Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
                                                     <Select
                                                         labelId="estatusListadoLabel"
                                                         className="form-control"
                                                         required
                                                         label="Estatus"
                                                         value={state.estatusListado}
-                                                        onChange={handleEstatusFiltro}
+                                                        onChange={handleChangeFiltros}
                                                         id="estatusListado"
+                                                        name="estatusListado"
                                                     >
                                                         <option value="0">Todos</option>
                                                         {dataEstatusRecoleccion.map((estatus) => (
@@ -3190,11 +3237,27 @@ function Recoleccion() {
                                                         ))}
                                                     </Select>
                                                 </FormControl>
-                                            </label>
-                                        </div>
+                                                </Grid>
+                                                <Grid item container xs={2}>
+                                                    <IconButton aria-label="delete" onClick={() => {
+                                                       resetFiltros()
+                                                        getAllData()
+                                                    }}>
+                                                        <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
+                                                        Limpiar filtros
+                                                    </IconButton>
+                                                </Grid>
+</Grid>
+                                </div>
+                                </div>
+                                </div>
 
-                                    </div>
-                                </form>
+
+
+
+
+
+
                                 <div className="row" style={{height: state.height - 250, width: '100%'}}>
                                     <DataGrid
                                         localeText={dataGridLocaleText}
