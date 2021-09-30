@@ -1343,6 +1343,8 @@ function Recoleccion() {
             } else {
                 setData(respuesta.data)
             }
+
+            console.log(JSON.stringify(respuesta.data))
         })
     }
 
