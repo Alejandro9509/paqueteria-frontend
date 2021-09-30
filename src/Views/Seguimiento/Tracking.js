@@ -112,20 +112,32 @@ export default function Tracking(...props){
     function handleShowConsultar(esRecoleccion,id) {
         const url = `${process.env.REACT_APP_API_URL}/GetParadasEsRecoleccion/${esRecoleccion}/${id}`;
         axios.get(url, { headers }).then(({data}) => {
-            console.log('data guia ',data)
+            console.log(data)
+            let direccionDestino
+            if(data.m_bEsRecoleccion){
+                direccionDestino = data.m_bRecoleccionDiferenteDomicilio ? data.m_sDomicilioDetalleRecoleccion : data.m_sDomicilioRemitente
+            }else{
+                direccionDestino = data.m_bEntregaDiferenteDomicilio ? data.m_sDomicilioDetalleEntrega : data.m_sDomicilioDestinatario
+            }
 
             setGuiaData({
-                ...guiaData,
-                destinatario: data.m_sDomicilioDestinatario,
-                folio: data.m_nFolioGuia,
-                fechaEnvio: data.m_dFecha,
-                tipoServicio: data.m_sTipoServicio,
-                paquetes: data.m_arrClsDetalle,
-                estatusGuia: data.m_nIdEstatusGuia
+                destinatario: direccionDestino,
+                folio: data.m_sFolio,
+                fechaEnvio: data.m_dFechaRegistro,
+                tipoServicio: 'No disponible',
+                paquetes: data.m_bEsRecoleccion? data.m_parrPaquetes : data.m_arrPaquetes,
+                estatusGuia: 'No disponible'
             })
         }).catch(function (err) {
             console.log(err.data)
-        });   
+        });
+
+        /*datos faltantes en servicio
+        * fecha (actualmente se muestra la de registro)
+        * tipo de servicio
+        * Tipo de embalaje por paquete
+        * estatus guia
+        * */
 
     }
 
