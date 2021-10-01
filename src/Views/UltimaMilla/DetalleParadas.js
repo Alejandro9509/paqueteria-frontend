@@ -360,7 +360,7 @@ class DetalleParadas extends Component {
                                                                 {tour.m_arrClsProGuia.length} Paradas
                                                             </Grid>
                                                             <Grid item>
-                                                                <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour.m_nIdUltimaMilla)}>
+                                                                <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour.m_nIdParadaUltimaMilla)}>
                                                                     <InsertDriveFile fontSize={"large"}/>
                                                                 </IconButton>
                                                             </Grid>
