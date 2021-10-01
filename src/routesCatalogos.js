@@ -91,12 +91,12 @@ const catalogRoutes = [
     icon: <PuestoIcon/>,
     component: PuestoPage,
   },*/
-  {
-    path: "/Departamento",
-    name: "Departamento",
-    icon: <DepartamentoIcon/>,
-    component: DepartamentoPage,
-  },
+  /*  {
+     path: "/Departamento",
+     name: "Departamento",
+     icon: <DepartamentoIcon/>,
+     component: DepartamentoPage,
+   }, */
   /*{
     path: "/Operador",
     name: "Operadores",
@@ -109,12 +109,12 @@ const catalogRoutes = [
     icon: <TUnidadIcon/>,
     component: TipoUnidad,
   },*/
-  {
-    path: "/GrupoUnidades",
-    name: "Grupo Unidades",
-    icon: <GUnidadesIcon/>,
-    component: GrupoUnidadPage,
-  },
+  /*  {
+     path: "/GrupoUnidades",
+     name: "Grupo Unidades",
+     icon: <GUnidadesIcon/>,
+     component: GrupoUnidadPage,
+   }, */
   /*{
     path: "/Unidades",
     name: "Unidades",
@@ -206,12 +206,12 @@ const catalogRoutes = [
     icon: <CFacturaIcon/>,
     component: ConceptosFacturacionPage,
   },*/
-  {
+  /* {
     path: "/Rutas",
     name: "Rutas",
     icon: <ViajesIcon/>,
     component: RutasPage,
-  },
+  }, */
   {
     path: "/Tarifas",
     name: "Tarifas",
@@ -224,24 +224,24 @@ const catalogRoutes = [
     icon: <TCobreIcon/>,
     component: TipoCobroPage,
   },
-  {
+  /* {
     path: "/ParametrosConfiguracion",
     name: "Parámetros Configuración",
     icon: <PConfiguracionIcon/>,
     component: ParametrosConfiguracionPage,
-  },
+  }, */
   {
     path: "/PlantillaCorreo",
     name: "Plantilla de Correo",
     icon: <PConfiguracionIcon/>,
     component: PlantillaCorreo,
   },
-  {
-    path: "/CondicionesRecepcionEntrega",
-    name: "Condiciones de recepcion y entrega",
-    icon: <PConfiguracionIcon/>,
-    component: CondicionesRecepcionEntrega,
-  },
+  /*  {
+     path: "/CondicionesRecepcionEntrega",
+     name: "Condiciones de recepcion y entrega",
+     icon: <PConfiguracionIcon/>,
+     component: CondicionesRecepcionEntrega,
+   }, */
   {
     path: "/Productos",
     name: "Productos",
