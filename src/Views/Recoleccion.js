@@ -3053,14 +3053,14 @@ function Recoleccion() {
                             </a>
                         </li>
 
-                        <li>
+                        <li className="hide">
                             <a onClick={() => handleShowSalidaLlegada(4)}
                                className={state.idRecoleccion === 0 ? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Salida
                             </a>
                         </li>
 
-                        <li>
+                        <li className="hide">
                             <a onClick={() => handleShowSalidaLlegada(5)}
                                className={state.idRecoleccion === 0 ? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Llegada
