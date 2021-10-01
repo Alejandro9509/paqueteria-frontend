@@ -61,6 +61,10 @@ import {ReactComponent as TViajeIcon} from './iconos/Catalogos/Icono Tipos Viaje
 import {ReactComponent as UnidadesIcon} from './iconos/Catalogos/Icono Unidades/icono_unidades.svg';
 import {ReactComponent as ViajesIcon} from './iconos/Catalogos/Icono Viajes/icono_viajes.svg';
 import {ReactComponent as TarifasIcon} from './iconos/Catalogos/Icono Tarifas/icono_tarifas.svg';
+import {ReactComponent as ConveniosIcon} from './iconos/Catalogos/Icono Convenios/icono_convenios.svg';
+import {ReactComponent as PCorreosIcon} from './iconos/Catalogos/Icono Plantilla Correo/IconoPlantillaCorreoNaranja.svg';
+import {ReactComponent as ProductosIcon} from './iconos/Catalogos/Icono Productos/IconoProductos.svg';
+import {ReactComponent as ZonaTarifaIcon} from './iconos/Catalogos/Icono Zonas Tarifas/IconoTarifaZona.svg';
 import TipoUnidad from "./Views/TipoUnidad/TipoUnidad";
 import ZonaOperativa from "./Views/ZonasOperativas/ZonaOperativa";
 import ZonaTarifas from "./Views/ZonasTarifas/ZonaTarifas";
@@ -233,7 +237,7 @@ const catalogRoutes = [
   {
     path: "/PlantillaCorreo",
     name: "Plantilla de Correo",
-    icon: <PConfiguracionIcon/>,
+    icon: <PCorreosIcon/>,
     component: PlantillaCorreo,
   },
   /*  {
@@ -245,25 +249,25 @@ const catalogRoutes = [
   {
     path: "/Productos",
     name: "Productos",
-    icon: <PConfiguracionIcon/>,
+    icon: <ProductosIcon/>,
     component: Productos,
   },
   {
     path: "/Convenios",
     name: "Convenios",
-    icon: <PConfiguracionIcon/>,
+    icon: <ConveniosIcon/>,
     component: Convenios
   },
   {
     path: "/ZonasOperativas",
     name: "Zonas Operativas",
-    icon: <PConfiguracionIcon/>,
+    icon: <ZonaTarifaIcon/>,
     component: ZonaOperativa
   },
   {
     path: "/ZonasTarifas",
     name: "Zonas Tarifas",
-    icon: <PConfiguracionIcon/>,
+    icon: <ZonaTarifaIcon/>,
     component: ZonaTarifas
   }
 ];

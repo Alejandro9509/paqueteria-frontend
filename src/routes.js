@@ -23,7 +23,7 @@ import {ReactComponent as GuiasIcon} from './iconos/Menu/IconoGuias/iconoGuia.sv
 import {ReactComponent as UltimaMillaIcono} from './iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg';
 
 import {ReactComponent as viajeIcon} from './iconos/Menu/IconoViajes/iconoViajes.svg';
-
+import {ReactComponent as corteCajaIcon} from './iconos/Menu/IconoCorteCaja/IconoCorteCaja.svg';
 
 const dashboardRoutes = [
   {
@@ -102,7 +102,7 @@ const dashboardRoutes = [
   {
     path: "/CorteCaja",
     name: "Corte de Caja",
-    icon: viajeIcon,
+    icon: corteCajaIcon,
     component: CorteCajaPage,
     single: true,
     child:[]
