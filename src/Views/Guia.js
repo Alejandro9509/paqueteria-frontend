@@ -679,8 +679,7 @@ function Guia(props) {
         //getImpresion(38);
     }
 
-    const handleShowListado = (event) => {
-        event.stopPropagation();
+    const handleShowListado = () => {
         limpiarCamposAgregar()
         setState(state => {
             return {
