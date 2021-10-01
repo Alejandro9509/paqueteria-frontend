@@ -1,7 +1,8 @@
 import React, {useEffect, useState, useMemo} from "react";
 import axios from "axios";
 import Cabecera from "../Components/Template/Cabecera";
-
+import IconButton from "@material-ui/core/IconButton";
+import RestartAltIcon from '@material-ui/icons/Refresh';
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import {Tab, Tabs, Box, InputAdornment, Button, Grid, FormControlLabel, Checkbox} from '@material-ui/core';
@@ -39,7 +40,7 @@ import {
 import {dataGridLocaleText, TICKET_ZABRA_TAMPLATE} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusGuia} from "../Util/Contexts/EstatusContext";
-import {obtenerEmbarquesId, obtenerEmbarqueMoneda} from "../Util/Contexts/EmbarquesContext";
+import {obtenerEmbarquesId, obtenerEmbarqueMoneda, obtenerEmbarquesFiltro} from "../Util/Contexts/EmbarquesContext";
 import {
     ultimoFolioGuia,
     eliminarGuia,
@@ -228,6 +229,87 @@ function Guia(props) {
 
     })
 
+    const [filtros, setFiltros] = useState({
+        fechaInicial: 0,
+        fechaFinal: 0,
+        estatusListado:0,
+        sucursalListado: 0,
+        folio: '',
+    })
+    
+    const handleChangeFiltros = (event) => {
+        event.preventDefault()
+        const {target} = event
+        setFiltros(filtros => {
+            return {
+                ...filtros,
+                [target.name]: target.value
+            }
+        })
+        if (target.name === "fechaInicial"){
+            obtenerGuiasFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }else if (target.name === "fechaFinal"){
+            obtenerGuiasFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "sucursalListado"){
+            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "estatusListado"){
+            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+    }
+    const handleFolioEmbarqueFiltro = async (event) => {
+        if (event.keyCode == 13) {
+            const {target} = event
+            let value = target.value
+            if (event.target.value == '') {
+                value = 0
+            }
+            setFiltros(filtros => {
+                return {
+                    ...filtros,
+                    [target.name]: target.value
+                }
+            })
+            /*setState({
+                ...state,
+                folioRecoleccion: event.target.value,
+            })*/
+            const {fechaInicial, fechaFinal, sucursalListado, estatusListado} = filtros
+            obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+    }
+
     function cargaDiv(indice, valor) {
         //	showSuccess(indice);
         $("#idBarra" + indice).barcode(valor, "code128");
@@ -250,6 +332,17 @@ function Guia(props) {
     const [showDialogOcurre, setShowDialogOcurre] = useState(false)
     const [dataOcurre, setDataOcurre] = useState()
 
+   
+
+    const resetFiltros = () => {
+        setFiltros({
+            fechaInicial: 0,
+            fechaFinal: 0,
+            estatusListado:0,
+            sucursalListado: 0,
+            folio: '',
+        })
+    }
     const handleAceptar = (e) => {
         e.preventDefault()
         let params = {
@@ -2426,123 +2519,124 @@ function Guia(props) {
                         <div id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
-                                    <form className="j-forms">
-                                        <div className="row " style={{display: "flex"}}>
-
-                                            <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
-
-                                                <div className="input">
-                                                    <TextField variant="outlined" margin="dense"
-                                                               onChange={handleChange}
-                                                               onKeyDown={handleFolioGuiaFiltro}
-                                                               className="form-control"
-                                                               type="text"
-                                                               label="Folio Guia"
-                                                               placeholder={state.folioGuia}
-                                                               id="folioGuia"
-                                                               name="folioGuia"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
-                                                <div className="input">
-                                                    <TextField
-                                                        autoFocus
-                                                        type="date"
-                                                        margin="dense"
-                                                        label="Fecha Inicial"
-                                                        variant="outlined"
-                                                        className="form-control"
-                                                        InputLabelProps={{
-                                                            shrink: true,
-                                                        }}
-                                                        value={state.fechaInicial}
-                                                        onChange={handleFechaInicialFiltro}
-                                                        id="fechaInicial"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
-                                                <div className="input">
-                                                    <TextField variant="outlined" margin="dense"
-                                                               type="date"
-                                                               className="form-control"
-                                                               label="Fecha Final"
-                                                               InputLabelProps={{
-                                                                   shrink: true,
-                                                               }}
-                                                               value={state.fechaFinal}
-                                                               onChange={handleFechaFinalFiltro}
-                                                               id="fechaFinal"
-                                                    />
-                                                </div>
-
-                                            </div>
-
-                                            <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
-                                                <label className="input select">
-                                                    <FormControl fullWidth variant="outlined" margin="dense">
-                                                        <InputLabel id="sucursalListadoLabel">Sucursal</InputLabel>
-                                                        <Select
-                                                            labelId="sucursalListadoLabel"
-                                                            label="Sucursal"
-                                                            className="form-control"
-                                                            required
-                                                            label="Sucursal"
-                                                            value={state.sucursalListado}
-                                                            onChange={handleSucursalFiltro}
-                                                            id="sucursalListado"
-                                                            InputLabelProps={{
-                                                                shrink: true,
-                                                            }}>
-                                                            <option value="0">Todas</option>
-                                                            {dataSucursal.map((sucursal) => (
-                                                                <option
-                                                                    key={sucursal.m_nIdSucursal}
-                                                                    value={sucursal.m_nIdSucursal}
-                                                                >
-                                                                    {sucursal.m_sSucursal}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-
-                                                    </FormControl>
-                                                </label>
 
 
-                                            </div>
+                                <div className="widget-content">
 
-                                            <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
-                                                <label className="input select">
-                                                    <FormControl fullWidth variant="outlined" margin="dense">
-                                                        <InputLabel id="estatusListadoLabel">Estatus</InputLabel>
-                                                        <Select
-                                                            native
-                                                            labelId="estatusListadoLabel"
-                                                            className="form-control"
-                                                            required
-                                                            label="Estatus"
-                                                            value={state.estatusListado}
-                                                            onChange={handleEstatusFiltro}
-                                                            id="estatusListado"
-                                                        >
-                                                            <option value="0">Todos</option>
-                                                            {dataEstatusGuia.map((estatus) => (
-                                                                <option
-                                                                    key={estatus.m_nIdEstatusGuia}
-                                                                    value={estatus.m_nIdEstatusGuia}
-                                                                >
-                                                                    {estatus.m_sEstatus}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </form>
+                                    
+<div className="row">
+    <div className="col-md-12">
+    <Grid container spacing={2} alignItems="center">
+
+        <Grid item xs={2}>
+            <TextField variant="outlined" margin="dense"
+                       onChange={handleChangeFiltros}
+                       onKeyDown={handleFolioEmbarqueFiltro}
+                       className="form-control"
+                       type="text"
+                       label="Folio Guía"
+                       id="folio"
+                       name="folio"
+                       value={filtros.folio}
+            />
+        </Grid>
+        <Grid item xs={2}>
+            <FormControl className="input select" fullWidth variant="outlined">
+                <TextField
+                    autoFocus
+                    type="date"
+                    margin="dense"
+                    label="Fecha Inicial"
+                    variant="outlined"
+                    className="form-control"
+                    InputLabelProps={{shrink: true,}}
+                    value={filtros.fechaInicial}
+                    onChange={handleChangeFiltros}
+                    id="fechaInicial"
+                    name="fechaInicial"
+                />
+            </FormControl>
+        </Grid>
+        <Grid item xs={2}>
+            <FormControl className="input select" fullWidth variant="outlined">
+                <TextField variant="outlined" margin="dense"
+                           type="date"
+                           className="form-control"
+                           label="Fecha Final"
+                           InputLabelProps={{
+                               shrink: true,
+                           }}
+                           value={filtros.fechaFinal}
+                           onChange={handleChangeFiltros}
+                           id="fechaFinal"
+                           name="fechaFinal"
+
+                />
+            </FormControl>
+
+        </Grid>
+        <Grid item xs={2}>
+            <FormControl className="input select" fullWidth variant="outlined">
+                <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
+                <Select
+                    labelId="sucursalListadoLabel"
+                    label="Sucursal"
+                    className="form-control"
+                    required
+                    value={filtros.sucursalListado}
+                    onChange={handleChangeFiltros}
+                    id="sucursalListado"
+                    name="sucursalListado"
+                >
+                    <option value="0">Todas</option>
+                    {dataSucursal.map((sucursal) => (
+                        <option
+                            key={sucursal.m_nIdSucursal}
+                            value={sucursal.m_nIdSucursal}
+                        >
+                            {sucursal.m_sSucursal}
+                        </option>
+                    ))}
+                </Select>
+            </FormControl>
+        </Grid>
+        <Grid item xs={2}>
+            <FormControl className="input select" fullWidth variant="outlined">
+                <InputLabel id="idEstatusLabel">Estatus</InputLabel>
+                <Select
+                    labelId="estatusListadoLabel"
+                    className="form-control"
+                    required
+                    label="Estatus"
+                    value={filtros.estatusListado}
+                    onChange={handleChangeFiltros}
+                    id="estatusListado"
+                    name="estatusListado"
+                >
+                    <option value="0">Todos</option>
+                    {dataEstatusGuia.map((estatus) => (
+                        <option
+                            key={estatus.m_nIdEstatusGuia}
+                            value={estatus.m_nIdEstatusGuia}
+                        >
+                            {estatus.m_sEstatus}
+                        </option>
+                    ))}
+                </Select>
+            </FormControl>
+        </Grid>
+        <Grid item container xs={2}>
+            <IconButton aria-label="delete" onClick={() => {
+                resetFiltros()
+                getAllData()
+            }}>
+                <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
+                Limpiar filtros
+            </IconButton>
+        </Grid>
+    </Grid>
+        </div>
+        </div></div>
 
                                     <div className="row" style={{height: state.height - 250, width: '100%'}}>
                                         {data.length != 0 ? (
