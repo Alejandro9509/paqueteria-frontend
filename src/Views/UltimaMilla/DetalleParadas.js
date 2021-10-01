@@ -143,7 +143,7 @@ class DetalleParadas extends Component {
 
     generarReporte(e, id) {
         e.preventDefault()
-        // console.log('corte id: ' + id)
+        console.log(' id: ' + id)
         obtenerUltimaMillaReporte(id).then(({data}) => {
             // console.log(data)
             // debugger
