@@ -29,9 +29,9 @@ function BarraLateralDerecha() {
                     style={{
                       height: "100%",
                       textAlign: "center",
-                      width: "70%",
+                      width: "75%",
                     }}
-                    viewBox="0 0 40 40"
+                    viewBox="0 0 45 45"
                   />
                 </i>
                 <span className="list-label">{r.name}</span>
