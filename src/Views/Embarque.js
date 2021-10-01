@@ -1378,7 +1378,7 @@ function Embarque(props) {
         getAllSucursales()
         getAllEstatusEmbarque()
         getAllTiposSeguro()
-debugger
+
         const {m_parrPaquetes, m_parrSobres} = respuesta.data;
         let totalPaquetes = 0
         m_parrSobres.forEach(sobre => {
