@@ -10,6 +10,7 @@ import IndicatorDots from "../Util/Dots";
 import Buttons from "../Util/CarruselButtons";
 import {makeStyles} from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
+import RestartAltIcon from '@material-ui/icons/Refresh';
 import InputAdornment from "@material-ui/core/InputAdornment";
 import {
     ReactTable,
@@ -289,6 +290,76 @@ function Embarque(props) {
         height: window.innerHeight,
 
     });
+
+    function getAllData() {
+        obtenerEmbarques().then((respuesta) => {
+            setData(respuesta.data);
+        });
+    }
+    const [filtros, setFiltros] = useState({
+        fechaInicial: 0,
+        fechaFinal: 0,
+        estatusListado:0,
+        sucursalListado: 0,
+        folio: '',
+    })
+
+    const resetFiltros = () => {
+        setFiltros({
+            fechaInicial: 0,
+            fechaFinal: 0,
+            estatusListado:0,
+            sucursalListado: 0,
+            folio: '',
+        })
+    }
+
+
+    const handleChangeFiltros = (event) => {
+        event.preventDefault()
+        const {target} = event
+        setFiltros(filtros => {
+            return {
+                ...filtros,
+                [target.name]: target.value
+            }
+        })
+        if (target.name === "fechaInicial"){
+            obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }else if (target.name === "fechaFinal"){
+            obtenerEmbarquesFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "sucursalListado"){
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "estatusListado"){
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+    }
     const [dataClientes, setDataClientes] = useState([])
     const [stepActive, setStepActive] = React.useState(1);
     const [Modal, open, close, isOpen] = useModal("root", {
@@ -702,6 +773,12 @@ function Embarque(props) {
         })
 
     }
+
+
+
+
+
+
 
     function handleSelectDestinatario(newValue) {
         obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
@@ -1991,6 +2068,7 @@ debugger
 
     async function getAllEmbarque() {
         obtenerEmbarques().then((respuesta) => {
+            console.log(respuesta.data)
             setData(respuesta.data);
         });
     }
@@ -3321,165 +3399,138 @@ debugger
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in show"}>
 
                             <div className="widget-wrap">
-                                <div className="widget-content">
-                                    <div className="row" style={{paddingLeft: "8px"}}>
-                                        <form className="j-forms">
-                                            <div className="row" style={{display: "flex"}}>
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <Grid container spacing={2} alignItems="center">
+                                            <Grid item xs={2}>
+                                                <TextField variant="outlined" margin="dense"
+                                                           onChange={handleChangeFiltros}
+                                                           onKeyDown={handleFolioEmbarqueFiltro}
+                                                           className="form-control"
+                                                           type="text"
+                                                           label="Folio Embarque"
+                                                           id="folio"
+                                                           name="folio"
+                                                           value={filtros.folio}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <FormControl className="input select" fullWidth variant="outlined">
+                                                    <TextField
+                                                        autoFocus
+                                                        type="date"
+                                                        margin="dense"
+                                                        label="Fecha Inicial"
+                                                        variant="outlined"
+                                                        className="form-control"
+                                                        InputLabelProps={{shrink: true,}}
+                                                        value={filtros.fechaInicial}
+                                                        onChange={handleChangeFiltros}
+                                                        id="fechaInicial"
+                                                        name="fechaInicial"
+                                                    />
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <FormControl className="input select" fullWidth variant="outlined">
+                                                    <TextField variant="outlined" margin="dense"
+                                                               type="date"
+                                                               className="form-control"
+                                                               label="Fecha Final"
+                                                               InputLabelProps={{
+                                                                   shrink: true,
+                                                               }}
+                                                               value={filtros.fechaFinal}
+                                                               onChange={handleChangeFiltros}
+                                                               id="fechaFinal"
+                                                               name="fechaFinal"
 
-                                                <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
-                                                    <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
-                                                                   onChange={handleChange}
-                                                            // onBlur={handleFolioEmbarqueFiltro}
-                                                                   onKeyDown={handleFolioEmbarqueFiltro}
-                                                                   className="form-control"
-                                                                   type="text"
-                                                                   label="Folio Embarque"
-                                                                   value={state.folioEmbarque}
-                                                                   id="folioEmbarque"
-                                                                   name="folioEmbarque"
-                                                        />
-                                                    </div>
-                                                </div>
+                                                    />
+                                                </FormControl>
 
-                                                <div
-                                                    className="col-sm-6 col-md-3 "
-                                                    style={{paddingLeft: "0px"}}
-                                                >
-                                                    <div className="input">
-                                                        <TextField
-                                                            autoFocus
-                                                            type="date"
-                                                            margin="dense"
-                                                            label="Fecha Inicial"
-                                                            variant="outlined"
-                                                            className="form-control"
-                                                            InputLabelProps={{
-                                                                shrink: true,
-                                                            }}
-                                                            value={state.fechaInicial}
-                                                            onChange={handleFechaInicialFiltro}
-                                                            id="fechaInicial"
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div
-                                                    className="col-sm-6 col-md-3 "
-                                                    style={{paddingLeft: "0px"}}
-                                                >
-                                                    <div className="input">
-                                                        <TextField
-                                                            autoFocus
-                                                            type="date"
-                                                            margin="dense"
-                                                            label="Fecha Final"
-                                                            variant="outlined"
-                                                            className="form-control"
-                                                            InputLabelProps={{
-                                                                shrink: true,
-                                                            }}
-                                                            value={state.fechaFinal}
-                                                            onChange={handleFechaFinalFiltro}
-                                                            id="fechaInicial"
-                                                        />
-                                                    </div>
-
-                                                </div>
-
-                                                <div
-                                                    className="col-sm-6 col-md-3 "
-                                                    style={{paddingLeft: "0px"}}
-                                                >
-                                                    <label className="input select">
-                                                        <FormControl fullWidth variant="outlined" margin="dense">
-                                                            <InputLabel
-                                                                id="idSucursalAgregarLabel">Sucursal</InputLabel>
-                                                            <Select
-                                                                labelId="idSucursalAgregarLabel"
-                                                                className="form-control"
-                                                                required
-                                                                value={state.sucursalListado}
-                                                                onChange={handleSucursalFiltro}
-                                                                id="idSucursalAgregar"
-                                                                label="Sucursal"
-                                                                InputProps={{
-                                                                    name: "Sucursal"
-                                                                }}
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <FormControl className="input select" fullWidth variant="outlined">
+                                                    <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
+                                                    <Select
+                                                        labelId="sucursalListadoLabel"
+                                                        label="Sucursal"
+                                                        className="form-control"
+                                                        required
+                                                        value={filtros.sucursalListado}
+                                                        onChange={handleChangeFiltros}
+                                                        id="sucursalListado"
+                                                        name="sucursalListado"
+                                                    >
+                                                        <option value="0">Todas</option>
+                                                        {dataSucursal.map((sucursal) => (
+                                                            <option
+                                                                key={sucursal.m_nIdSucursal}
+                                                                value={sucursal.m_nIdSucursal}
                                                             >
-                                                                <option value="0">Todas</option>
-                                                                {dataSucursal.map((sucursal) => (
-                                                                    <option
-                                                                        key={sucursal.m_nIdSucursal}
-                                                                        value={sucursal.m_nIdSucursal}
-                                                                    >
-                                                                        {sucursal.m_sSucursal}
-                                                                    </option>
-                                                                ))}
-                                                            </Select>
-                                                        </FormControl>
-                                                    </label>
-                                                </div>
-
-                                                <div
-                                                    className="col-sm-6 col-md-3 "
-                                                    style={{paddingLeft: "0px"}}
-                                                >
-                                                    <label className="input select">
-                                                        <FormControl fullWidth variant="outlined" margin="dense">
-                                                            <InputLabel id="idEstatusViajeLabel">Estatus</InputLabel>
-                                                            <Select
-                                                                labelId="idEstatusViajeLabel"
-                                                                className="form-control"
-                                                                required
-                                                                value={state.estatusListado}
-                                                                onChange={handleEstatusFiltro}
-                                                                id="estatusListado"
-                                                                label="Estatus"
-                                                                InputProps={{
-                                                                    id: "estatusListado"
-                                                                }}
+                                                                {sucursal.m_sSucursal}
+                                                            </option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <FormControl className="input select" fullWidth variant="outlined">
+                                                    <InputLabel id="idEstatusLabel">Estatus</InputLabel>
+                                                    <Select
+                                                        labelId="estatusListadoLabel"
+                                                        className="form-control"
+                                                        required
+                                                        label="Estatus"
+                                                        value={filtros.estatusListado}
+                                                        onChange={handleChangeFiltros}
+                                                        id="estatusListado"
+                                                        name="estatusListado"
+                                                    >
+                                                        <option value="0">Todos</option>
+                                                        {dataEstatusEmbarque.map((estatus) => (
+                                                            <option
+                                                                key={estatus.m_nIdEstatusEmbarque}
+                                                                value={estatus.m_nIdEstatusEmbarque}
                                                             >
-                                                                <option value="0">Todos</option>
-                                                                {dataEstatusEmbarque.map((estatus) => (
-                                                                    <option
-                                                                        key={estatus.m_nIdEstatusEmbarque}
-                                                                        value={estatus.m_nIdEstatusEmbarque}
-                                                                    >
-                                                                        {estatus.m_sEstatus}
-                                                                    </option>
-                                                                ))}
-                                                            </Select>
-                                                        </FormControl>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </form>
+                                                                {estatus.m_sEstatus}
+                                                            </option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item container xs={2}>
+                                                <IconButton aria-label="delete" onClick={() => {
+                                                    resetFiltros()
+                                                    getAllEmbarque()
+                                                }}>
+                                                    <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
+                                                    Limpiar filtros
+                                                </IconButton>
+                                            </Grid>
+                                        </Grid>
                                     </div>
-                                    <div
-                                        className="row"
-                                        style={{height: state.height - 250, width: "100%"}}
-                                    >
-                                        {conDatos() ? (
-                                            <DataGrid
-                                                localeText={dataGridLocaleText}
-                                                className={classes.root}
-                                                rows={data}
-                                                columns={columns}
-                                                density="compact"
-                                                pageSize={Math.floor((state.height - 310) / 30)}
-                                                getRowId={(row) => row.m_nIdEmbarque}
-                                                onRowSelected={(row) => {
-                                                    setState({
-                                                        ...state,
-                                                        idEmbarque: row.data.m_nIdEmbarque,
-                                                    });
-                                                }}
-                                            />
-                                        ) : (
-                                            <div>No se encontró ningún registro</div>
-                                        )}
-                                    </div>
+                                </div>
+                                <div className="row" style={{height: state.height - 250, width: "100%"}}>
+                                    {conDatos() ? (
+                                        <DataGrid
+                                            localeText={dataGridLocaleText}
+                                            className={classes.root}
+                                            rows={data}
+                                            columns={columns}
+                                            density="compact"
+                                            pageSize={Math.floor((state.height - 310) / 30)}
+                                            getRowId={(row) => row.m_nIdEmbarque}
+                                            onRowSelected={(row) => {
+                                                setState({
+                                                    ...state,
+                                                    idEmbarque: row.data.m_nIdEmbarque,
+                                                });
+                                            }}
+                                        />
+                                    ) : (
+                                        <div>No se encontró ningún registro</div>
+                                    )}
                                 </div>
                             </div>
                         </div>
