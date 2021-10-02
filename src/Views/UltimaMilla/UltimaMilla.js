@@ -154,7 +154,7 @@ class UltimaMilla extends Component {
         searchLocationWeb(location.m_sMunicipio, location.m_sCalle, location.m_sColonia, location.m_sNoExterior).then((data) => {
             if (data) {
                 this.setState({lat: data.y, lng: data.x})
-                this.state.map.setView([data.y, data.x], 15)
+                this.state.map.setView([data.y, data.x], 14)
             }
         })
 
@@ -194,7 +194,7 @@ class UltimaMilla extends Component {
 
     async searchLocation(address) {
         let location = await searchLocationAddress(address)
-        this.state.map.setView([location.y, location.x], 15)
+        this.state.map.setView([location.y, location.x], 14)
     }
 
 
@@ -361,7 +361,7 @@ class UltimaMilla extends Component {
                                 }
                                 {
                                     !this.state.modoEdicion && (this.state.fullScreen === false || this.state.resumenFullscreen) &&
-                                    <DetalleParadas refresh={this.refreshUltimaMilla} filtros={{zonasSeleccionada: this.state.zonasIds, tipoBusqueda: this.state.tipoBusqueda}} tour={this.state.ultimaMilla}/>
+                                    <DetalleParadas refresh={this.refreshUltimaMilla} fecha={this.state.fechaUltimaMilla} filtros={{zonasSeleccionada: this.state.zonasIds, tipoBusqueda: this.state.tipoBusqueda}} tour={this.state.ultimaMilla}/>
                                 }
                                 {/*{*/}
                                 {/*    (this.state.tour || this.state.ultimaMilla) &&*/}

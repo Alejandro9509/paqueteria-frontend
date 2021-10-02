@@ -16,6 +16,7 @@ import "../node_modules/noty/lib/themes/mint.css";
 import Indicadores from './Views/Indicadores';
 import Tracking from './Views/Seguimiento/Tracking';
 import cabeceraRoutes from "./routesCabecera";
+import LoginExterno from "./Components/Login/LoginExterno";
 
 
 class App extends Component {
@@ -31,6 +32,7 @@ render(){
       return(
         localStorage.getItem(ACCESS_TOKEN) ? (
           <Switch>
+            <Route path="/LoginERP" component={LoginExterno} />
             <Route path="/Indicadores" component={Indicadores} />
             <Route path="/Configuracion" component={Configuracion} />
             <Route exact path="/app/applications/:id/tracking" component={Tracking} />
