@@ -52,8 +52,8 @@ function obtenerByIdZonaTarifa(id) {
     return result
 }
 
-function obtenerByIdCodigoPostal(id) {
-    const url = `${process.env.REACT_APP_API_URL}/ZonaTarifa/GetById/` + id;
+function obtenerZonaTarifaByIdCodigoPostal(id) {
+    const url = `${process.env.REACT_APP_API_URL}/ZonaTarifa/GetByIdCodigoPostal/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -61,4 +61,4 @@ function obtenerByIdCodigoPostal(id) {
     return result
 }
 
-export { modificarZonaTarifa, obtenerByIdZonaTarifa, obtenerListadoZonaTarifa, eliminarZonaTarifa, agregarZonaTarifa}
+export {obtenerZonaTarifaByIdCodigoPostal, modificarZonaTarifa, obtenerByIdZonaTarifa, obtenerListadoZonaTarifa, eliminarZonaTarifa, agregarZonaTarifa}

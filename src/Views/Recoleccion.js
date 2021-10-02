@@ -92,6 +92,8 @@ import ConfirmarUbicacion from "../Components/Map/ConfirmarUbicacion";
 import Paquetes from "./Paquetes/Paquetes";
 import {obtenerMunicipiosByIdEstado} from "../Util/Contexts/MunicipiosContext";
 import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
+import {obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
+import {obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
 
 let timer;
 
@@ -197,7 +199,7 @@ function Recoleccion() {
         clientePaga: {},
 
         //Remitente
-        idRemitente: '',
+        /*idRemitente: '',
         aliasRemitente: '',
         nombreRemitente: '',
         RFCRemitente: '',
@@ -212,10 +214,10 @@ function Recoleccion() {
         telefonoRemitente: '',
         contactoRemitente: '',
         origenRemitente: '',
-        zonaRemitente: {},
+        zonaRemitente: {},*/
 
         //Destinatario
-        idDestinatario: '',
+        /*idDestinatario: '',
         aliasDestinatario: '',
         nombreDestinatario: '',
         RFCDestinatario: '',
@@ -230,7 +232,7 @@ function Recoleccion() {
         telefonoDestinatario: '',
         contactoDestinatario: '',
         destinoDestinatario: '',
-        zonaDestinatario: {},
+        zonaDestinatario: {},*/
 
         //Paquetes/Sobres
         countPaquetes: 1,
@@ -252,22 +254,22 @@ function Recoleccion() {
 
         //Entrega
         diferenteEntrega: false,
-        ciudadEntrega: '',
+        /*ciudadEntrega: '',
         codigoPostalEntrega: '',
         zonaEntrega: '',
         domicilioEntrega: '',
         entregaEn: '',
-        datosAdicionalesEntrega: '',
+        datosAdicionalesEntrega: '',*/
 
         //Recoleccion
         diferenteRecoleccion: false,
-        fechaRecoleccion: '',
+        /*fechaRecoleccion: '',
         ciudadRecoleccion: '',
         codigoPostalRecoleccion: '',
         zonaRecoleccion: '',
         domicilioRecoleccion: '',
         recogerEn: '',
-        datosAdicionalesRecoleccion: '',
+        datosAdicionalesRecoleccion: '',*/
 
         //Operador
         operador: '',
@@ -321,8 +323,8 @@ function Recoleccion() {
         telefonoRemitente: '',
         contactoRemitente: '',
         origenRemitente: '',
-        zonaOperativaRemitente: {},
-        zonaTarifaRemitente: {},
+        zonaOperativaRemitente: '',
+        zonaTarifaRemitente: '',
         latitudR: 0,
         longitudR: 0
     })
@@ -345,8 +347,8 @@ function Recoleccion() {
             telefonoRemitente: '',
             contactoRemitente: '',
             origenRemitente: '',
-            zonaOperativaRemitente: {},
-            zonaTarifaRemitente: {},
+            zonaOperativaRemitente: '',
+            zonaTarifaRemitente: '',
             latitudR: 0,
             longitudR: 0
         })
@@ -373,9 +375,11 @@ function Recoleccion() {
     };
 
     const handleChangeAutocompleteRemitente = (input, newValue) => {
-        setRemitente({
-            ...remitente,
-            [input]: newValue
+        setRemitente(remitente => {
+            return {
+                ...remitente,
+                [input]: newValue
+            }
         })
         if (input === "Remitente"){
             setRemitente({
@@ -403,6 +407,24 @@ function Recoleccion() {
                 longitudR: newValue.m_sLongitud
             })
         }
+        if (input === "codigoPostalRemitente"){
+            obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
+                setRemitente(remitente => {
+                    return{
+                        ...remitente,
+                        zonaOperativaRemitente: data
+                    }
+                })
+            })
+            obtenerZonaTarifaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
+                setRemitente(remitente => {
+                    return{
+                        ...remitente,
+                        zonaTarifaRemitente: data
+                    }
+                })
+            })
+        }
     }
 
     const [destinatario, setDestinatario] = useState({
@@ -422,8 +444,8 @@ function Recoleccion() {
         telefonoDestinatario: '',
         contactoDestinatario: '',
         destinoDestinatario: '',
-        zonaOperativaDestinatario: {},
-        zonaTarifaDestinatario: {},
+        zonaOperativaDestinatario: '',
+        zonaTarifaDestinatario: '',
         latitudD: 0,
         longitudD: 0
     })
@@ -446,8 +468,8 @@ function Recoleccion() {
             telefonoDestinatario: '',
             contactoDestinatario: '',
             destinoDestinatario: '',
-            zonaOperativaDestinatario: {},
-            zonaTarifaDestinatario: {},
+            zonaOperativaDestinatario: '',
+            zonaTarifaDestinatario: '',
             latitudD: 0,
             longitudD: 0
         })
@@ -504,14 +526,32 @@ function Recoleccion() {
                 longitudR: newValue.m_sLongitud
             })
         }
+        if (input === "codigoPostalDestinatario"){
+            obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
+                setDestinatario(destinatario => {
+                    return{
+                        ...destinatario,
+                        zonaOperativaDestinatario: data
+                    }
+                })
+            })
+            obtenerZonaTarifaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
+                setDestinatario(destinatario => {
+                    return{
+                        ...destinatario,
+                        zonaTarifaDestinatario: data
+                    }
+                })
+            })
+        }
     }
 
     const [recoleccionDD, setRecoleccionDD] = useState({
         estadoRec: '',
         municipioRec: '',
         codigoPostalRec: '',
-        zonaOperativaRec: {},
-        zonaTarifaRec: {},
+        zonaOperativaRec: '',
+        zonaTarifaRec: '',
         domicilioRec: '',
         recogerEnRec: '',
         datosAdicionalesRec: ''
@@ -522,8 +562,8 @@ function Recoleccion() {
             estadoRec: '',
             municipioRec: '',
             codigoPostalRec: '',
-            zonaOperativaRec: {},
-            zonaTarifaRec: {},
+            zonaOperativaRec: '',
+            zonaTarifaRec: '',
             domicilioRec: '',
             recogerEnRec: '',
             datosAdicionalesRec: ''
@@ -555,14 +595,32 @@ function Recoleccion() {
             ...recoleccionDD,
             [input]: newValue
         })
+        if (input === "codigoPostalRecoleccionDD"){
+            obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
+                setRecoleccionDD(recoleccionDD => {
+                    return{
+                        ...recoleccionDD,
+                        zonaOperativaRec: data
+                    }
+                })
+            })
+            obtenerZonaTarifaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
+                setRecoleccionDD(recoleccionDD => {
+                    return{
+                        ...recoleccionDD,
+                        zonaTarifaRec: data
+                    }
+                })
+            })
+        }
     }
 
     const [entregaDD, setEntregaDD] = useState({
         estadoEnt: '',
         municipioEnt: '',
         codigoPostalEnt: '',
-        zonaOperativaEnt: {},
-        zonaTarifaEnt: {},
+        zonaOperativaEnt: '',
+        zonaTarifaEnt: '',
         domicilioEnt: '',
         entregarEnEnt: '',
         datosAdicionalesEnt: ''
@@ -573,8 +631,8 @@ function Recoleccion() {
             estadoEnt: '',
             municipioEnt: '',
             codigoPostalEnt: '',
-            zonaOperativaEnt: {},
-            zonaTarifaEnt: {},
+            zonaOperativaEnt: '',
+            zonaTarifaEnt: '',
             domicilioEnt: '',
             recogerEnEnt: '',
             datosAdicionalesEnt: ''
@@ -606,6 +664,24 @@ function Recoleccion() {
             ...entregaDD,
             [input]: newValue
         })
+        if (input === "codigoPostalEntregaDD"){
+            obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
+                setEntregaDD(entregaDD => {
+                    return{
+                        ...entregaDD,
+                        zonaOperativaEnt: data
+                    }
+                })
+            })
+            obtenerZonaTarifaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
+                setEntregaDD(entregaDD => {
+                    return{
+                        ...entregaDD,
+                        zonaTarifaEnt: data
+                    }
+                })
+            })
+        }
     }
 
     const getAllEstados = () => {
@@ -4158,7 +4234,11 @@ function Recoleccion() {
                                                                                     forcePopupIcon={false}
                                                                                     // options={dataZona.filter((z) => z.m_nIdSucursal == state.idSucursalAgregar)}
                                                                                     disabled={true}
-                                                                                    getOptionLabel={(option) => option.m_sDescripcion}
+                                                                                    getOptionLabel={(option) => (
+                                                                                        option ?
+                                                                                            option.m_sCodigoZona || 'Código Postal sin zona asignada'
+                                                                                            : ''
+                                                                                    )}
                                                                                     variant="outlined"
                                                                                     name={"zonaOperativaRemitente"}
                                                                                     style={{transform: "translate(14px, 10px) scale(1) !important"}}
@@ -4189,7 +4269,11 @@ function Recoleccion() {
                                                                                     forcePopupIcon={false}
                                                                                     // options={dataZona.filter((z) => z.m_nIdSucursal == state.idSucursalAgregar)}
                                                                                     disabled={true}
-                                                                                    getOptionLabel={(option) => option.m_sDescripcion}
+                                                                                    getOptionLabel={(option) => (
+                                                                                        option ?
+                                                                                            option.m_sCodigoZona || 'Código Postal sin zona asignada'
+                                                                                            : ''
+                                                                                    )}
                                                                                     variant="outlined"
                                                                                     name={"zonaTarifaRemitente"}
                                                                                     style={{transform: "translate(14px, 10px) scale(1) !important"}}
@@ -4671,7 +4755,11 @@ function Recoleccion() {
                                                                                     forcePopupIcon={false}
                                                                                     // options={dataZona.filter((z) => z.m_nIdSucursal == state.idSucursalAgregar)}
                                                                                     disabled={true}
-                                                                                    getOptionLabel={(option) => option.m_sDescripcion}
+                                                                                    getOptionLabel={(option) => (
+                                                                                        option ?
+                                                                                            option.m_sCodigoZona || 'Código Postal sin zona asignada'
+                                                                                            : ''
+                                                                                    )}
                                                                                     variant="outlined"
                                                                                     name={"zonaOperativaDestinatario"}
                                                                                     style={{transform: "translate(14px, 10px) scale(1) !important"}}
@@ -4702,7 +4790,11 @@ function Recoleccion() {
                                                                                     forcePopupIcon={false}
                                                                                     // options={dataZona.filter((z) => z.m_nIdSucursal == state.idSucursalAgregar)}
                                                                                     disabled={true}
-                                                                                    getOptionLabel={(option) => option.m_sDescripcion}
+                                                                                    getOptionLabel={(option) => (
+                                                                                        option ?
+                                                                                            option.m_sCodigoZona || 'Código Postal sin zona asignada'
+                                                                                            : ''
+                                                                                    )}
                                                                                     variant="outlined"
                                                                                     name={"zonaTarifaDestinatario"}
                                                                                     style={{transform: "translate(14px, 10px) scale(1) !important"}}
@@ -4936,7 +5028,11 @@ function Recoleccion() {
                                                                             disableClearable
                                                                             forcePopupIcon={false}
                                                                             disabled={true}
-                                                                            getOptionLabel={(option) => option.m_sDescripcion}
+                                                                            getOptionLabel={(option) => (
+                                                                                option ?
+                                                                                    option.m_sCodigoZona || 'Código Postal sin zona asignada'
+                                                                                    : ''
+                                                                            )}
                                                                             variant="outlined"
                                                                             name={"zonaOperativaRec"}
                                                                             style={{transform: "translate(14px, 10px) scale(1) !important"}}
@@ -4963,7 +5059,11 @@ function Recoleccion() {
                                                                             disableClearable
                                                                             forcePopupIcon={false}
                                                                             disabled={true}
-                                                                            getOptionLabel={(option) => option.m_sDescripcion}
+                                                                            getOptionLabel={(option) => (
+                                                                                option ?
+                                                                                    option.m_sCodigoZona || 'Código Postal sin zona asignada'
+                                                                                    : ''
+                                                                            )}
                                                                             variant="outlined"
                                                                             name={"zonaTarifaRec"}
                                                                             style={{transform: "translate(14px, 10px) scale(1) !important"}}
@@ -5152,7 +5252,11 @@ function Recoleccion() {
                                                                             disableClearable
                                                                             forcePopupIcon={false}
                                                                             disabled={true}
-                                                                            getOptionLabel={(option) => option.m_sDescripcion}
+                                                                            getOptionLabel={(option) => (
+                                                                                option ?
+                                                                                    option.m_sCodigoZona || 'Código Postal sin zona asignada'
+                                                                                    : ''
+                                                                            )}
                                                                             variant="outlined"
                                                                             name={"zonaOperativaEnt"}
                                                                             style={{transform: "translate(14px, 10px) scale(1) !important"}}
@@ -5179,7 +5283,11 @@ function Recoleccion() {
                                                                             disableClearable
                                                                             forcePopupIcon={false}
                                                                             disabled={true}
-                                                                            getOptionLabel={(option) => option.m_sDescripcion}
+                                                                            getOptionLabel={(option) => (
+                                                                                option ?
+                                                                                    option.m_sCodigoZona || 'Código Postal sin zona asignada'
+                                                                                    : ''
+                                                                            )}
                                                                             variant="outlined"
                                                                             name={"zonaTarifaEnt"}
                                                                             style={{transform: "translate(14px, 10px) scale(1) !important"}}
