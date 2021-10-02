@@ -143,7 +143,7 @@ class DetalleParadas extends Component {
 
     generarReporte(e, id) {
         e.preventDefault()
-        // console.log('corte id: ' + id)
+        console.log(' id: ' + id)
         obtenerUltimaMillaReporte(id).then(({data}) => {
             // console.log(data)
             // debugger
@@ -360,8 +360,7 @@ class DetalleParadas extends Component {
                                                                 {tour.m_arrClsProGuia.length} Paradas
                                                             </Grid>
                                                             <Grid item>
-                                                                <IconButton aria-label="file"
-                                                                            onClick={(e) => this.generarReporte(e, tour.m_nIdUltimaMilla)}>
+                                                                <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour.m_nIdParadaUltimaMilla)}>
                                                                     <InsertDriveFile fontSize={"large"}/>
                                                                 </IconButton>
                                                             </Grid>
