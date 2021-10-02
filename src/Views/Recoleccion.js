@@ -147,7 +147,7 @@ function Recoleccion() {
     const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
     const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
     const [dataCodigosPostalesRecoleccionDD, setDataCodigosPostalesRecoleccionDD] = React.useState([]);
-    const [dataCodigosPostalesEntrega, setDataCodigosPostalesEntrega] = React.useState([]);
+    const [dataCodigosPostalesEntregaDD, setDataCodigosPostalesEntregaDD] = React.useState([]);
 
     const [dataClientes, setDataClientes] = useState([])
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario] = React.useState([]);
@@ -301,7 +301,7 @@ function Recoleccion() {
     const [dataMunicipiosRemitente, setDataMunicipiosRemitente] = useState([])
     const [dataMunicipiosDestinatario, setDataMunicipiosDestinatario] = useState([])
     const [dataMunicipiosRecoleccionDD, setDataMunicipiosRecoleccionDD] = useState([])
-    const [dataMunicipiosEntrega, setDataMunicipiosEntrega] = useState([])
+    const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
 
 
     const [remitente, setRemitente] = useState({
@@ -557,10 +557,55 @@ function Recoleccion() {
         })
     }
 
-    const [entrega, setEntrega] = useState({})
+    const [entregaDD, setEntregaDD] = useState({
+        estadoEnt: '',
+        municipioEnt: '',
+        codigoPostalEnt: '',
+        zonaOperativaEnt: {},
+        zonaTarifaEnt: {},
+        domicilioEnt: '',
+        entregarEnEnt: '',
+        datosAdicionalesEnt: ''
+    })
 
-    const resetEntrega = () =>{
-        setEntrega({})
+    const resetEntregaDD = () =>{
+        setEntregaDD({
+            estadoEnt: '',
+            municipioEnt: '',
+            codigoPostalEnt: '',
+            zonaOperativaEnt: {},
+            zonaTarifaEnt: {},
+            domicilioEnt: '',
+            recogerEnEnt: '',
+            datosAdicionalesEnt: ''
+        })
+    }
+
+    const handleChangeEntregaDD = (event) => {
+        event.preventDefault();
+        setEntregaDD(entregaDD => {
+            return{
+                ...entregaDD,
+                [event.target.name]: event.target.value,
+            }
+        });
+        if (event.target.name === "estadoEnt"){
+            obtenerMunicipiosByIdEstado(event.target.value).then(({data}) =>{
+                setDataMunicipiosEntregaDD(data)
+            })
+        }
+        if (event.target.name === "municipioEnt"){
+            obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoEnt, event.target.value).then(({data}) => {
+                setDataCodigosPostalesEntregaDD(data)
+            })
+        }
+    };
+
+    const handleChangeAutocompleteEntregaDD = (input, newValue) => {
+        setEntregaDD({
+            ...entregaDD,
+            [input]: newValue
+        })
     }
 
     const getAllEstados = () => {
@@ -673,7 +718,7 @@ function Recoleccion() {
             m_sTelefonoRemitente: remitente.telefonoRemitente,
             m_sContactoRemitente: remitente.contactoRemitente,
             m_nIdCiudadOrigen: remitente.origenRemitente.m_nIdCiudad,
-            m_nIdZonaRemitente: remitente.zonaRemitente.m_nIdZona,
+            // m_nIdZonaRemitente: remitente.zonaRemitente.m_nIdZona,
             m_nIdRemitente: remitente.idRemitente,
             m_sAliasRemitente: remitente.aliasRemitente,
             m_sCalleRemitente: remitente.calleRemitente,
@@ -683,6 +728,8 @@ function Recoleccion() {
             m_nIdEstadoRemitene: remitente.estadoRemitente,
             m_sLatitudR: coordenadas ? coordenadas.lat : remitente.latitudR ,
             m_sLongitudR: coordenadas ? coordenadas.lng : remitente.longitudR,
+            m_nIdZonaOperativa: remitente.zonaOperativaRemitente,
+            m_nIdZonaTarifa: remitente.zonaTarifaRemitente,
 
             //Destinatario
             m_sNombreDestinatario: destinatario.nombreDestinatario.m_sNombre,
@@ -694,7 +741,7 @@ function Recoleccion() {
             m_sTelefonoDestinatario: destinatario.telefonoDestinatario,
             m_sContactoDestinatario: destinatario.contactoDestinatario,
             m_nIdCiudadDestino: destinatario.destinoDestinatario.m_nIdCiudad,
-            m_nIdZonaDestinatario: destinatario.zonaDestinatario.m_nIdZona,
+            // m_nIdZonaDestinatario: destinatario.zonaDestinatario.m_nIdZona,
             m_nIdDestinatario: destinatario.idDestinatario,
             m_sAliasDestinatario: destinatario.aliasDestinatario,
             m_sCalleDestinatario: destinatario.calleDestinatario,
@@ -704,17 +751,19 @@ function Recoleccion() {
             m_nIdEstadoDestinatario: destinatario.estadoDestinatario,
             m_sLatitudD: destinatario.latitudD,
             m_sLongitudD: destinatario.longitudD,
+            m_nIdZonaOperativaEntrega: destinatario.zonaOperativaDestinatario,
+            m_nIdZonaTarifaEntrega: destinatario.zonaTarifaDestinatario,
 
             //Cita de recoleccion
             m_bRecoleccionConCita: false,
 
             //Recoleccion
-            m_nIdCPDetalleRecoleccion: state.idCodigoPostalRemitente,
-            m_bRecoleccionDiferenteDomicilio: false,
+            m_nIdCPDetalleRecoleccion: remitente.codigoPostalRemitente.m_nIdCP,
+            m_bRecoleccionDiferenteDomicilio: state.diferenteRecoleccion,
 
             //Entrega
-            m_nIdCPDetalleEntrega: state.idCodigoPostalDestinatario,
-            m_bEntregaDiferenteDomicilio: false,
+            m_nIdCPDetalleEntrega: destinatario.codigoPostalDestinatario.m_nIdCP,
+            m_bEntregaDiferenteDomicilio: state.diferenteEntrega,
 
             //Detalles de la operación
             m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
@@ -732,25 +781,26 @@ function Recoleccion() {
             m_nModificadoPor: state.ModificadoPor
         }
         if (state.diferenteRecoleccion) {
-            params.m_dFechaDetalleRecoleccion = state.fechaRecoleccion.split("T")[0]
-            params.m_tHoraDetalleRecoleccion = state.fechaRecoleccion.split("T")[1]
-            params.m_nIdCPDetalleRecoleccion = state.codigoPostalRecoleccion.m_nIdCP
-            params.m_nIdCiudadDetalleRecoleccion = state.ciudadRecoleccion
-            params.m_nIdZonaDetalleRecoleccion = state.zonaRecoleccion
-            params.m_sDomicilioDetalleRecoleccion = state.domicilioRecoleccion
-            params.m_sRecogerEnDetalleRecoleccion = state.recogerEn
-            params.m_sDatosAdicionalesDetalleRecoleccion = state.datosAdicionalesRecoleccion
-            params.m_bRecoleccionDiferenteDomicilio = state.diferenteRecoleccion
+            params.m_nIdCPDetalleRecoleccion = recoleccionDD.codigoPostalRec.m_nIdCP
+            // params.m_nIdCiudadDetalleRecoleccion = state.ciudadRecoleccion
+            // params.m_nIdZonaDetalleRecoleccion = state.zonaRecoleccion
+            params.m_sDomicilioDetalleRecoleccion = recoleccionDD.domicilioRec
+            params.m_sRecogerEnDetalleRecoleccion = recoleccionDD.recogerEnRec
+            params.m_sDatosAdicionalesDetalleRecoleccion = recoleccionDD.datosAdicionalesRec
+            params.m_nIdZonaOperativa = recoleccionDD.zonaOperativaEnt
+            params.m_nIdZonaTarifa = recoleccionDD.zonaTarifaEnt
+
         }
 
         if (state.diferenteEntrega) {
-            params.m_bEntregaDiferenteDomicilio = state.diferenteEntrega
-            params.m_nIdCPDetalleEntrega = state.codigoPostalEntrega.m_nIdCP
-            params.m_nIdCiudadDetalleEntrega = state.ciudadEntrega
-            params.m_nIdZonaDetalleEntrega = state.zonaEntrega
-            params.m_sDomicilioDetalleEntrega = state.domicilioEntrega
-            params.m_sEntregarEnDetalleEntrega = state.entregaEn
-            params.m_sDatosAdicionalesDetalleEntrega = state.datosAdicionalesEntrega
+            params.m_nIdCPDetalleEntrega = entregaDD.codigoPostalEnt.m_nIdCP
+            // params.m_nIdCiudadDetalleEntrega = entregaDD.ciudadEntrega
+            // params.m_nIdZonaDetalleEntrega = entregaDD.zonaEntrega
+            params.m_sDomicilioDetalleEntrega = entregaDD.domicilioEnt
+            params.m_sEntregarEnDetalleEntrega = entregaDD.entregarEnEnt
+            params.m_sDatosAdicionalesDetalleEntrega = entregaDD.datosAdicionalesEnt
+            params.m_nIdZonaOperativaEntrega = entregaDD.zonaOperativaEnt
+            params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt
         }
 
         if (state.recoleccionConCita) {
@@ -1034,19 +1084,38 @@ function Recoleccion() {
         })
 
         obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleRecoleccion).then((cp) => {
-            setState(state => {
-                return {
-                    ...state,
-                    codigoPostalRecoleccion: cp.data
-                }
+            setRecoleccionDD({
+                //Recoleccion
+                estadoRec: respuesta.data.m_nIdEstadoRecoleccion || 0,
+                municipioRec: respuesta.data.m_nIdMunicipioRecoleccion || 0,
+                codigoPostalRec: {
+                    m_nIdCP: cp.data.m_nIdCP,
+                    m_sCP: cp.data.m_sCP,
+                    m_sColonia: cp.data.m_sColonia
+                },
+                zonaOperativaRec: {},
+                zonaTarifaRec: {},
+                domicilioRec: respuesta.data.m_sDomicilioDetalleRecoleccion,
+                recogerEnRec: respuesta.data.m_sRecogerEnDetalleRecoleccion,
+                datosAdicionalesRec: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
             })
         })
+
         obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
-            setState(state => {
-                return {
-                    ...state,
-                    codigoPostalEntrega: cp.data
-                }
+            setEntregaDD({
+                estadoEnt: respuesta.data.m_nIdEstadoRecoleccion || 0,
+                municipioEnt: respuesta.data.m_nIdMunicipioRecoleccion || 0,
+                codigoPostalEnt: {
+                    m_nIdCP: cp.data.m_nIdCP,
+                    m_sCP: cp.data.m_sCP,
+                    m_sColonia: cp.data.m_sColonia
+                },
+                zonaOperativaEnt: {},
+                zonaTarifaEnt: {},
+                domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
+                entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
+                datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+
             })
         })
 
@@ -1099,28 +1168,9 @@ function Recoleccion() {
                 horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
                 horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
 
-                //Entrega
-                diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
-                ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
-                zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
-                domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
-                entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
-                datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-
-                //Recoleccion
                 diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio,
                 fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
-                ciudadRecoleccion: respuesta.data.m_nIdCiudadDetalleRecoleccion,
-                zonaRecoleccion: respuesta.data.m_nIdZonaDetalleRecoleccion,
-                domicilioRecoleccion: respuesta.data.m_sDomicilioDetalleRecoleccion,
-                recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
-                datosAdicionalesRecoleccion: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
-
-                //Operador
-                /*operador: respuesta.data.m_nIdOperador > 0 ? dataOperador.find((o) => o.m_nIdOperador == respuesta.data.m_nIdOperador) : respuesta.data.m_nIdOperador,
-                fechaHoraSalida: respuesta.data.m_dFechaSalida + "T" + respuesta.data.m_tHoraSalida.slice(0, 5),
-                fechaHoraLlegada: respuesta.data.m_dFechaLlegada + "T" + respuesta.data.m_tHoraLlegada.slice(0, 5),*/
-
+                diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
 
             }
         });
@@ -1281,7 +1331,7 @@ function Recoleccion() {
                 coloniaRemitente: '',*/
 
                 //Destinatario
-                nombreDestinatario: {m_sNombre: "Nombre", m_sAlias: "Alias"},
+                /*nombreDestinatario: {m_sNombre: "Nombre", m_sAlias: "Alias"},
                 RFCDestinatario: '',
                 domicilioDestinatario: '',
                 ciudadDestinatario: '',
@@ -1296,7 +1346,7 @@ function Recoleccion() {
                 calleDestinatario: '',
                 numeroIntDestinatario: '0',
                 numeroExtDestinatario: '',
-                coloniaDestinatario: '',
+                coloniaDestinatario: '',*/
 
                 //Paquetes/Sobres
                 countPaquetes: 1,
@@ -1332,22 +1382,22 @@ function Recoleccion() {
 
                 //Entrega
                 diferenteEntrega: false,
-                ciudadEntrega: '',
+                /*ciudadEntrega: '',
                 codigoPostalEntrega: '',
                 zonaEntrega: '',
                 domicilioEntrega: '',
                 entregaEn: '',
-                datosAdicionalesEntrega: '',
+                datosAdicionalesEntrega: '',*/
 
                 //Recoleccion
                 diferenteRecoleccion: false,
-                fechaRecoleccion: '',
+                /*fechaRecoleccion: '',
                 ciudadRecoleccion: '',
                 codigoPostalRecoleccion: '',
                 zonaRecoleccion: '',
                 domicilioRecoleccion: '',
                 recogerEn: '',
-                datosAdicionalesRecoleccion: '',
+                datosAdicionalesRecoleccion: '',*/
 
                 //Operador
                 operador: '',
@@ -1360,6 +1410,8 @@ function Recoleccion() {
         setDataPaquetes([])
         resetRemitente()
         resetDestinatario()
+        resetRecoleccionDD()
+        resetEntregaDD()
     }
 
     const handleChange = (event) => {
@@ -2770,23 +2822,23 @@ function Recoleccion() {
 
     const handleCodigoPostalEntregaClick = (event) => {
         event.preventDefault();
-        if (dataCodigosPostalesEntrega.length > 0) {
-            if (dataCodigosPostalesEntrega[0].m_nIdCiudad != state.ciudadEntrega) {
+        if (dataCodigosPostalesEntregaDD.length > 0) {
+            if (dataCodigosPostalesEntregaDD[0].m_nIdCiudad != state.ciudadEntrega) {
                 obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
-                    setDataCodigosPostalesEntrega(respuesta.data);
+                    setDataCodigosPostalesEntregaDD(respuesta.data);
                 });
             }
         } else {
             obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
-                setDataCodigosPostalesEntrega(respuesta.data);
+                setDataCodigosPostalesEntregaDD(respuesta.data);
             });
         }
     }
 
     const handleCodigoPostalRecoleccionClick = (event) => {
         event.preventDefault();
-        if (dataCodigosPostalesEntrega.length > 0) {
-            if (dataCodigosPostalesEntrega[0].m_nIdCiudad != state.ciudadRecoleccion) {
+        if (dataCodigosPostalesEntregaDD.length > 0) {
+            if (dataCodigosPostalesEntregaDD[0].m_nIdCiudad != state.ciudadRecoleccion) {
                 obtenerCodigosPostalesPorCiudad(state.ciudadRecoleccion).then((respuesta) => {
                     setDataCodigosPostalesRecoleccionDD(respuesta.data);
                 });
@@ -2913,10 +2965,10 @@ function Recoleccion() {
 
                         </div>
 
-                        {dataCodigosPostalesEntrega.length !== 0 ? <TableCodigoPostal object={state}
+                        {dataCodigosPostalesEntregaDD.length !== 0 ? <TableCodigoPostal object={state}
                                                                                       select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
                                                                                       columns={columnsCP}
-                                                                                      data={dataCodigosPostalesEntrega.filter((cp) => cp.m_nIdCiudad == state.ciudadEntrega)}
+                                                                                      data={dataCodigosPostalesEntregaDD.filter((cp) => cp.m_nIdCiudad == state.ciudadEntrega)}
                                                                                       identificadorModal={state.identificadorModal}/> :
                             <div>No se encontró ningún registro</div>}
 
@@ -4930,51 +4982,49 @@ function Recoleccion() {
                                                                 </div>
 
                                                                 <div className="col-sm-6 col-md-4  unit">
-
                                                                     <div className="input">
                                                                         <TextField variant="outlined"
                                                                                    margin="dense"
-                                                                                   onChange={handleChange}
+                                                                                   onChange={handleChangeRecoleccionDD}
                                                                                    className="form-control"
                                                                                    type="text"
                                                                                    label="Domicilio"
-                                                                                   value={state.domicilioRecoleccion}
+                                                                                   value={recoleccionDD.domicilioRec}
                                                                                    disabled={state.agregar === "Consultar"}
-                                                                                   id="domicilioRecoleccion"
+                                                                                   id="domicilioRec"
+                                                                                   name="domicilioRec"
                                                                                    required={state.diferenteRecoleccion}
                                                                         />
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-sm-6 col-md-4  unit">
-
                                                                     <div className="input">
                                                                         <TextField variant="outlined"
                                                                                    margin="dense"
-                                                                                   onChange={handleChange}
+                                                                                   onChange={handleChangeRecoleccionDD}
                                                                                    className="form-control"
                                                                                    type="text"
                                                                                    label="Recoger En"
-                                                                                   value={state.recogerEn}
+                                                                                   value={recoleccionDD.recogerEnRec}
                                                                                    disabled={state.agregar === "Consultar"}
-                                                                                   id="recogerEn"
+                                                                                   id="recogerEnRec"
+                                                                                   name="recogerEnRec"
                                                                                    required={state.diferenteRecoleccion}
                                                                         />
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-sm-6 col-md-4  unit">
-
                                                                     <div className="input">
                                                                         <TextField variant="outlined"
                                                                                    margin="dense"
-                                                                                   onChange={handleChange}
+                                                                                   onChange={handleChangeRecoleccionDD}
                                                                                    className="form-control"
                                                                                    type="text"
                                                                                    label="Datos Adicionales para la Recolección"
-                                                                                   value={
-                                                                                       state.datosAdicionalesRecoleccion
-                                                                                   }
+                                                                                   value={recoleccionDD.datosAdicionalesRec}
                                                                                    disabled={state.agregar === "Consultar"}
-                                                                                   id="datosAdicionalesRecoleccion"
+                                                                                   id="datosAdicionalesRec"
+                                                                                   name="datosAdicionalesRec"
                                                                                    required={state.diferenteRecoleccion}
                                                                         />
                                                                     </div>
@@ -4997,6 +5047,210 @@ function Recoleccion() {
                                                         <div className="row">
                                                             <div className="col-md-12">
                                                                 <div className="col-sm-6 col-md-4  unit">
+                                                                    <FormControl
+                                                                        className="input select"
+                                                                        fullWidth variant="outlined"
+                                                                        margin="dense"
+                                                                        required={state.diferenteEntrega}>
+                                                                        <InputLabel
+                                                                            id="idEstadoLabel">Estado</InputLabel>
+                                                                        <Select
+                                                                            fullWidth
+                                                                            labelId="idEstadoLabel"
+                                                                            label="Estado"
+                                                                            className="form-control"
+                                                                            value={entregaDD.estadoEnt}
+                                                                            onChange={handleChangeEntregaDD}
+                                                                            id="estadoEnt"
+                                                                            name="estadoEnt"
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                        >
+                                                                            {dataEstados.map((estado) => (
+                                                                                <option
+                                                                                    key={estado.m_nIdEstado}
+                                                                                    value={estado.m_nIdEstado}
+                                                                                >
+                                                                                    {estado.m_sEstado}
+                                                                                </option>
+                                                                            ))}
+                                                                        </Select>
+                                                                    </FormControl>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-4  unit">
+                                                                    <FormControl
+                                                                        className="input select"
+                                                                        fullWidth
+                                                                        variant="outlined"
+                                                                        margin="dense"
+                                                                        required={state.diferenteEntrega}>
+                                                                        <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
+                                                                        <Select
+                                                                            fullWidth
+                                                                            labelId={"idMunicipioLabel"}
+                                                                            label={"Municipio"}
+                                                                            className="form-control"
+                                                                            value={entregaDD.municipioEnt}
+                                                                            onChange={handleChangeEntregaDD}
+                                                                            // onSelect={handleClickCiudad}
+                                                                            id="municipioEnt"
+                                                                            name="municipioEnt"
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            InputProps={{name: "municipioEnt"}}
+                                                                        >
+                                                                            {dataMunicipiosEntregaDD.map((municipio) => (
+                                                                                <option
+                                                                                    key={municipio.m_sCodigoMunicipio}
+                                                                                    value={municipio.m_sCodigoMunicipio}
+                                                                                >
+                                                                                    {municipio.m_sMunicipio}
+                                                                                </option>
+                                                                            ))}
+                                                                        </Select>
+                                                                    </FormControl>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-4  unit">
+                                                                    <div className="input">
+                                                                        <Autocomplete
+                                                                            freeSolo
+                                                                            onChange={(event, newValue) => handleChangeAutocompleteEntregaDD("codigoPostalEnt", newValue)}
+                                                                            value={entregaDD.codigoPostalEnt}
+                                                                            disabled={state.agregar === "Consultar"}
+                                                                            id="codigoPostalEnt"
+                                                                            name="codigoPostalEnt"
+                                                                            disableClearable
+                                                                            forcePopupIcon={false}
+                                                                            options={dataCodigosPostalesEntregaDD}
+                                                                            getOptionLabel={(option) => (
+                                                                                option ?
+                                                                                    `${option.m_sCP} - ${option.m_sColonia}`
+                                                                                    : ''
+                                                                            )}
+                                                                            style={{
+                                                                                transform: "translate(14px, 10px) scale(1) !important"
+                                                                            }}
+                                                                            renderInput={(params) => (
+                                                                                <div>
+                                                                                    <TextField
+                                                                                        label="Código Postal"
+                                                                                        margin="dense"
+                                                                                        variant="outlined"
+                                                                                        required={state.diferenteEntrega}
+                                                                                        {...params}
+                                                                                    />
+                                                                                </div>
+                                                                            )}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-sm-6 col-md-6 unit">
+                                                                    <div className="input">
+                                                                        <Autocomplete
+                                                                            value={entregaDD.zonaOperativaEnt}
+                                                                            freeSolo
+                                                                            id="zonaOperativaEnt"
+                                                                            disableClearable
+                                                                            forcePopupIcon={false}
+                                                                            disabled={true}
+                                                                            getOptionLabel={(option) => option.m_sDescripcion}
+                                                                            variant="outlined"
+                                                                            name={"zonaOperativaEnt"}
+                                                                            style={{transform: "translate(14px, 10px) scale(1) !important"}}
+                                                                            renderInput={(params) =>
+                                                                                <TextField
+                                                                                    variant="outlined"
+                                                                                    label="Zona Operativa"
+                                                                                    margin="dense"
+                                                                                    required
+                                                                                    // onClick={handleClickZona}
+                                                                                    {...params}
+                                                                                />
+                                                                            }
+                                                                        />
+                                                                    </div>
+
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-6 unit">
+                                                                    <div className="input">
+                                                                        <Autocomplete
+                                                                            value={entregaDD.zonaTarifaEnt}
+                                                                            freeSolo
+                                                                            id="zonaTarifaEnt"
+                                                                            disableClearable
+                                                                            forcePopupIcon={false}
+                                                                            disabled={true}
+                                                                            getOptionLabel={(option) => option.m_sDescripcion}
+                                                                            variant="outlined"
+                                                                            name={"zonaTarifaEnt"}
+                                                                            style={{transform: "translate(14px, 10px) scale(1) !important"}}
+                                                                            renderInput={(params) =>
+                                                                                <TextField
+                                                                                    variant="outlined"
+                                                                                    label="Zona Tarifa"
+                                                                                    margin="dense"
+                                                                                    required
+                                                                                    // onClick={handleClickZona}
+                                                                                    {...params}
+                                                                                />
+                                                                            }
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="col-sm-6 col-md-4  unit">
+
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined"
+                                                                                   margin="dense"
+                                                                                   onChange={handleChangeEntregaDD}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Domicilio"
+                                                                                   value={entregaDD.domicilioEnt}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="domicilioEnt"
+                                                                                   name="domicilioEnt"
+                                                                                   required={state.diferenteEntrega}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-4  unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined"
+                                                                                   margin="dense"
+                                                                                   onChange={handleChangeEntregaDD}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Entregar En"
+                                                                                   value={entregaDD.entregarEnEnt}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="entregarEnEnt"
+                                                                                   name="entregarEnEnt"
+                                                                                   required={state.diferenteEntrega}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-sm-6 col-md-4  unit">
+                                                                    <div className="input">
+                                                                        <TextField variant="outlined"
+                                                                                   margin="dense"
+                                                                                   onChange={handleChangeEntregaDD}
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Datos Adicionales para la Entrega"
+                                                                                   value={entregaDD.datosAdicionalesEnt}
+                                                                                   disabled={state.agregar === "Consultar"}
+                                                                                   id="datosAdicionalesEnt"
+                                                                                   name="datosAdicionalesEnt"
+                                                                                   required={state.diferenteEntrega}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+
+
+
+                                                                {/*<div className="col-sm-6 col-md-4  unit">
                                                                     <label className="input select">
                                                                         <FormControl fullWidth
                                                                                      variant="outlined"
@@ -5033,7 +5287,6 @@ function Recoleccion() {
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             freeSolo
-
                                                                             onChange={(event, newValue) =>
                                                                                 setState({
                                                                                     ...state,
@@ -5142,8 +5395,7 @@ function Recoleccion() {
                                                                     </label>
                                                                 </div>
 
-                                                                <div
-                                                                    className="col-sm-4 col-md-4 col-lg-4 unit">
+                                                                <div className="col-sm-4 col-md-4 col-lg-4 unit">
 
                                                                     <div className="input">
                                                                         <TextField variant="outlined"
@@ -5160,8 +5412,7 @@ function Recoleccion() {
                                                                     </div>
                                                                 </div>
 
-                                                                <div
-                                                                    className="col-sm-4 col-md-4 col-lg-4 unit">
+                                                                <div className="col-sm-4 col-md-4 col-lg-4 unit">
 
                                                                     <div className="input">
                                                                         <TextField variant="outlined"
@@ -5178,8 +5429,7 @@ function Recoleccion() {
                                                                     </div>
                                                                 </div>
 
-                                                                <div
-                                                                    className="col-sm-4 col-md-4 col-lg-4 unit">
+                                                                <div className="col-sm-4 col-md-4 col-lg-4 unit">
 
                                                                     <div className="input">
                                                                         <TextField variant="outlined"
@@ -5196,7 +5446,7 @@ function Recoleccion() {
                                                                                    required={state.diferenteEntrega}
                                                                         />
                                                                     </div>
-                                                                </div>
+                                                                </div>*/}
                                                             </div>
                                                         </div>
                                                     </div>
