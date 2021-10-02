@@ -347,57 +347,6 @@ function Recoleccion() {
             longitudR: 0
         })
     }
-    //setea todos los datos del remitente seleccionado
-    const handleSelectRemitente = (newValue) => {
-        /*obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
-            console.log(newValue)
-            setRemitente({
-                idRemitente: newValue.m_nIdRemitenteDestinatario,
-                aliasRemitente: newValue.m_sAlias,
-                nombreRemitente: newValue,
-                RFCRemitente: newValue.m_sRFC,
-                domicilioRemitente: newValue.m_sDomicilio || "No especificado",
-                codigoPostalRemitente: respuesta.data.m_sCP,
-                idCodigoPostalRemitente: respuesta.data.m_nIdCP,
-                estadoRemitente: respuesta.data.m_nIdEstado,
-                municipioRemitente: respuesta.data.m_nIdMunicipio ? respuesta.data.m_nIdMunicipio : 0,
-                correoRemitente: newValue.m_sCorreoElectronico || "No especificado",
-                telefonoRemitente: newValue.m_sTelefono || 0,
-                contactoRemitente: newValue.m_sContacto || "No especificado",
-                calleRemitente: newValue.m_sCalle || "No especificado",
-                numeroExtRemitente: newValue.m_sNoExterior || 0,
-                numeroIntRemitente: newValue.m_sNoInterior || 0,
-                coloniaRemitente: newValue.m_sColonia || "No especificado",
-                remitente: newValue,
-                latitudR: newValue.m_sLatitud,
-                longitudR: newValue.m_sLongitud
-            })
-        })*/
-        setRemitente({
-            idRemitente: newValue.m_nIdRemitenteDestinatario,
-            aliasRemitente: newValue.m_sAlias,
-            nombreRemitente: newValue,
-            RFCRemitente: newValue.m_sRFC,
-            domicilioRemitente: newValue.m_sDomicilio || "No especificado",
-            codigoPostalRemitente: {
-                m_nIdCP: newValue.m_nIdCP,
-                m_sCP: newValue.m_sCodigoPostal,
-                m_sColonia: newValue.m_sColonia
-            },
-            estadoRemitente: newValue.m_nIdEstado,
-            municipioRemitente: newValue.m_nIdMunicipio ? newValue.m_nIdMunicipio : 0,
-            correoRemitente: newValue.m_sCorreoElectronico || "No especificado",
-            telefonoRemitente: newValue.m_sTelefono || 0,
-            contactoRemitente: newValue.m_sContacto || "No especificado",
-            calleRemitente: newValue.m_sCalle || "No especificado",
-            numeroExtRemitente: newValue.m_sNoExterior || 0,
-            numeroIntRemitente: newValue.m_sNoInterior || 0,
-            coloniaRemitente: newValue.m_sColonia || "No especificado",
-            remitente: newValue,
-            latitudR: newValue.m_sLatitud,
-            longitudR: newValue.m_sLongitud
-        })
-    }
 
     const handleChangeRemitente = (event) => {
         event.preventDefault();
@@ -424,6 +373,32 @@ function Recoleccion() {
             ...remitente,
             [input]: newValue
         })
+        if (input === "Remitente"){
+            setRemitente({
+                idRemitente: newValue.m_nIdRemitenteDestinatario,
+                aliasRemitente: newValue.m_sAlias,
+                nombreRemitente: newValue,
+                RFCRemitente: newValue.m_sRFC,
+                domicilioRemitente: newValue.m_sDomicilio || "No especificado",
+                codigoPostalRemitente: {
+                    m_nIdCP: newValue.m_nIdCP,
+                    m_sCP: newValue.m_sCodigoPostal,
+                    m_sColonia: newValue.m_sColonia
+                },
+                estadoRemitente: newValue.m_nIdEstado,
+                municipioRemitente: newValue.m_nIdMunicipio ? newValue.m_nIdMunicipio : 0,
+                correoRemitente: newValue.m_sCorreoElectronico || "No especificado",
+                telefonoRemitente: newValue.m_sTelefono || 0,
+                contactoRemitente: newValue.m_sContacto || "No especificado",
+                calleRemitente: newValue.m_sCalle || "No especificado",
+                numeroExtRemitente: newValue.m_sNoExterior || 0,
+                numeroIntRemitente: newValue.m_sNoInterior || 0,
+                coloniaRemitente: newValue.m_sColonia || "No especificado",
+                remitente: newValue,
+                latitudR: newValue.m_sLatitud,
+                longitudR: newValue.m_sLongitud
+            })
+        }
     }
 
     const [destinatario, setDestinatario] = useState({
@@ -447,7 +422,7 @@ function Recoleccion() {
         longitudD: 0
     })
 
-    const resetDestinatario = () =>{
+    const resetDestinatario = () => {
         setDestinatario({
             idDestinatario: '',
             aliasDestinatario: '',
@@ -467,34 +442,6 @@ function Recoleccion() {
             destinoDestinatario: '',
             latitudD: 0,
             longitudD: 0
-        })
-    }
-
-    //setea todos los datos del remitente seleccionado
-    const handleSelectDestinatario = (newValue) => {
-        setDestinatario({
-            idDestinatario: newValue.m_nIdRemitenteDestinatario,
-            aliasDestinatario: newValue.m_sAlias,
-            nombreDestinatario: newValue,
-            RFCDestinatario: newValue.m_sRFC,
-            domicilioDestinatario: newValue.m_sDomicilio || "No especificado",
-            codigoPostalDestinatario: {
-                m_nIdCP: newValue.m_nIdCP,
-                m_sCP: newValue.m_sCodigoPostal,
-                m_sColonia: newValue.m_sColonia
-            },
-            estadoDestinatario: newValue.m_nIdEstado,
-            municipioDestinatario: newValue.m_nIdMunicipio ? newValue.m_nIdMunicipio : 0,
-            correoDestinatario: newValue.m_sCorreoElectronico || "No especificado",
-            telefonoDestinatario: newValue.m_sTelefono || 0,
-            contactoDestinatario: newValue.m_sContacto || "No especificado",
-            calleDestinatario: newValue.m_sCalle || "No especificado",
-            numeroExtDestinatario: newValue.m_sNoExterior || 0,
-            numeroIntDestinatario: newValue.m_sNoInterior || 0,
-            coloniaDestinatario: newValue.m_sColonia || "No especificado",
-            destinatario: newValue,
-            latitudR: newValue.m_sLatitud,
-            longitudR: newValue.m_sLongitud
         })
     }
 
@@ -523,6 +470,32 @@ function Recoleccion() {
             ...destinatario,
             [input]: newValue
         })
+        if (input === "Destinatario"){
+            setDestinatario({
+                idDestinatario: newValue.m_nIdRemitenteDestinatario,
+                aliasDestinatario: newValue.m_sAlias,
+                nombreDestinatario: newValue,
+                RFCDestinatario: newValue.m_sRFC,
+                domicilioDestinatario: newValue.m_sDomicilio || "No especificado",
+                codigoPostalDestinatario: {
+                    m_nIdCP: newValue.m_nIdCP,
+                    m_sCP: newValue.m_sCodigoPostal,
+                    m_sColonia: newValue.m_sColonia
+                },
+                estadoDestinatario: newValue.m_nIdEstado,
+                municipioDestinatario: newValue.m_nIdMunicipio ? newValue.m_nIdMunicipio : 0,
+                correoDestinatario: newValue.m_sCorreoElectronico || "No especificado",
+                telefonoDestinatario: newValue.m_sTelefono || 0,
+                contactoDestinatario: newValue.m_sContacto || "No especificado",
+                calleDestinatario: newValue.m_sCalle || "No especificado",
+                numeroExtDestinatario: newValue.m_sNoExterior || 0,
+                numeroIntDestinatario: newValue.m_sNoInterior || 0,
+                coloniaDestinatario: newValue.m_sColonia || "No especificado",
+                destinatario: newValue,
+                latitudR: newValue.m_sLatitud,
+                longitudR: newValue.m_sLongitud
+            })
+        }
     }
 
     const [recoleccion, setRecoleccion] = useState({})
@@ -598,56 +571,15 @@ function Recoleccion() {
         }
     }
 
-    /*//setea todos los datos del destinatario seleccionado
-    function handleSelectDestinatario(newValue) {
-        obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
-            setState(state => {
-                return {
-                    ...state,
-                    idDestinatario: newValue.m_nIdRemitenteDestinatario,
-                    aliasDestinatario: newValue.m_sAlias,
-                    nombreDestinatario: newValue,
-                    RFCDestinatario: newValue.m_sRFC,
-                    domicilioDestinatario: newValue.m_sDomicilio,
-                    codigoPostalDestinatario: respuesta.data.m_sCP,
-                    idCodigoPostalDestinatario: respuesta.data.m_nIdCP,
-                    ciudadDestinatario: respuesta.data.m_nIdCiudad,
-                    correoDestinatario: newValue.m_sCorreoElectronico,
-                    telefonoDestinatario: newValue.m_sTelefono,
-                    contactoDestinatario: newValue.m_sContacto,
-                    calleDestinatario: newValue.m_sCalle,
-                    numeroExtDestinatario: newValue.m_sNoExterior,
-                    numeroIntDestinatario: newValue.m_sNoInterior || 0,
-                    coloniaDestinatario: newValue.m_sColonia,
-                    destinatario: newValue,
-                    latitudD: newValue.m_sLatitud,
-                    longitudD: newValue.m_sLongitud
-                }
-            })
-        })
-    }*/
-
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
-        setState({
-            ...state,
-            showConfirmarUbicacion: false
+        setState(state => {
+            return {
+                ...state,
+                showConfirmarUbicacion: false
+            }
         })
-        let sinPaquetes = false
 
-        /*for (let i = 0; i < state.paquetes.length; i++) {
-            if (!validarPaquetes(state.paquetes[i])){
-                sinPaquetes = true
-            }
-        }
-        if (sinPaquetes){
-            for (let i = 0; i < state.sobres.length; i++) {
-                if (!validarSobre(state.sobres[i])){
-                    showSuccess("Verifique haber llenado todos los datos de paquetes y/o sobres");
-                    return
-                }
-            }
-        }*/
         if (dataPaquetes.length === 0){
             showSuccess("Debe agregar al menos 1 paquete o sobre.")
             return
@@ -3718,7 +3650,9 @@ function Recoleccion() {
                                                                                 value={remitente.nombreRemitente}
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 freeSolo
-                                                                                onChange={(event, newValue) => handleSelectRemitente(newValue)}
+                                                                                onChange={(event, newValue) =>
+                                                                                    handleChangeAutocompleteRemitente("Remitente", newValue)
+                                                                                }
                                                                                 id="nombreRemitente"
                                                                                 disableClearable
                                                                                 label="Nombre"
@@ -4223,7 +4157,9 @@ function Recoleccion() {
                                                                     <div className="col-sm-12 col-md-12    unit">
                                                                         <div className="input">
                                                                             <Autocomplete
-                                                                                onChange={(event, newValue) => {handleSelectDestinatario(newValue)}}
+                                                                                onChange={(event, newValue) =>
+                                                                                    handleChangeAutocompleteDestinatario("Destinatario", newValue)
+                                                                                }
                                                                                 value={destinatario.nombreDestinatario}
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 freeSolo
@@ -4462,7 +4398,9 @@ function Recoleccion() {
                                                                         <div className="input">
                                                                             <Autocomplete
                                                                                 freeSolo
-                                                                                onChange={(event, newValue) => handleChangeAutocompleteDestinatario("codigoPostalDestinatario", newValue)}
+                                                                                onChange={(event, newValue) =>
+                                                                                    handleChangeAutocompleteDestinatario("codigoPostalDestinatario", newValue)
+                                                                                }
                                                                                 value={destinatario.codigoPostalDestinatario}
                                                                                 disabled={state.agregar === "Consultar"}
                                                                                 id="codigoPostalDestinatario"
