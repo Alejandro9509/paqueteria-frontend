@@ -52,4 +52,13 @@ function obtenerByIdZonaTarifa(id) {
     return result
 }
 
+function obtenerByIdCodigoPostal(id) {
+    const url = `${process.env.REACT_APP_API_URL}/ZonaTarifa/GetById/` + id;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 export { modificarZonaTarifa, obtenerByIdZonaTarifa, obtenerListadoZonaTarifa, eliminarZonaTarifa, agregarZonaTarifa}
