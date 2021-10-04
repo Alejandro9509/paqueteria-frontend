@@ -62,6 +62,7 @@ function Moneda() {
             "CreadoPor": state.CreadoPor,
             "ModificadoPor": state.ModificadoPor
         }
+        console.log(params)
         if (state.idMoneda != 0) {
             modificarMonedas(state.idMoneda, params).then(respuesta => {
                 showSuccess(respuesta.data)
@@ -73,7 +74,7 @@ function Moneda() {
         } else {
             agregarMonedas(params).then(respuesta => {
                 showSuccess(respuesta.data)
-                window.location.reload();
+              //  window.location.reload();
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)

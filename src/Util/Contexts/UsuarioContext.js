@@ -3,7 +3,7 @@ import { trackPromise } from "react-promise-tracker";
 
 const headers = {
     'Content-Type': 'application/json',
-    'TimeZone' : Intl.DateTimeFormat().resolvedOptions().timeZone
+  //  'TimeZone' : Intl.DateTimeFormat().resolvedOptions().timeZone
     //    'access-control-allow-origin': '*'
 }
 
