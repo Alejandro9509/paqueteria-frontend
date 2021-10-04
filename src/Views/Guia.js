@@ -517,13 +517,8 @@ function Guia(props) {
     function handleShowModificar(id) {
         obtenerGuiaId(id).then(respuesta => {
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-            setState(state => {
-                return {
-                    ...state,
-                    agregar: "Modificar",
-                }
-            });
-            setDataGuiaParaConsultarModificar(respuesta)
+
+            setDataGuiaParaConsultarModificar(respuesta, "Modificar")
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(1).addClass('active');
             $('.tab-content div ').removeClass('in show');
@@ -536,13 +531,8 @@ function Guia(props) {
     function handleShowConsultar(id) {
         obtenerGuiaId(id).then(respuesta => {
             cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-            setState(state => {
-                return {
-                    ...state,
-                    agregar: "Consultar",
-                }
-            });
-            setDataGuiaParaConsultarModificar(respuesta)
+
+            setDataGuiaParaConsultarModificar(respuesta, "Consultar")
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(1).addClass('active');
             $('.tab-content div ').removeClass('in show');
@@ -552,7 +542,7 @@ function Guia(props) {
         });
     }
 
-    const setDataGuiaParaConsultarModificar = (respuesta) => {
+    const setDataGuiaParaConsultarModificar = (respuesta, label) => {
         console.log('Guia datos:', respuesta.data)
 
         const paquetes = []
@@ -653,7 +643,7 @@ function Guia(props) {
 
                 paquetes: paquetes,
                 sobres: sobres,
-
+                agregar: label,
                 ValorDeclarado: respuesta.data.m_cValorDeclarado,
                 idTipoServicio: respuesta.data.m_nIdTipoServicio,
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,

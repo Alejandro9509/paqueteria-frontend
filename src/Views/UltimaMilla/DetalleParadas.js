@@ -372,17 +372,23 @@ class DetalleParadas extends Component {
                                                     <div align={"right"} style={{
                                                         borderRadius: "5px",
                                                         margin: "5px",
-                                                        height:"100%",
+                                                        height: "100%",
                                                         overflow: "auto"
                                                     }}>
+                                                        {
+                                                            console.log(+this.props.fecha <= +(new Date()))
+                                                        }
+                                                        {
+                                                            +this.props.fecha >= +(new Date()) &&
+                                                            <Button variant={"contained"} color={"primary"}
+                                                                    onClick={() => this.setState({
+                                                                        paquetes: tour.m_arrClsProGuia,
+                                                                        tour: tour,
+                                                                        openAgregar: true
+                                                                    })}>Ordenar
+                                                                Paradas</Button>
+                                                        }
 
-                                                        <Button variant={"contained"} color={"primary"}
-                                                                onClick={() => this.setState({
-                                                                    paquetes: tour.m_arrClsProGuia,
-                                                                    tour: tour,
-                                                                    openAgregar: true
-                                                                })}>Ordenar
-                                                            Paradas</Button>
 
                                                         <List component="div" disablePadding style={{
                                                             padding: "5px",
