@@ -746,6 +746,12 @@ function Embarque(props) {
     const [dataMunicipiosRemitente, setDataMunicipiosRemitente] = useState([])
     const [dataMunicipiosDestinatario, setDataMunicipiosDestinatario] = useState([])
     const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
+    const [dataZonasOperativasRemitente, setDataZonasOperativasRemitente] = useState([])
+    const [dataZonasTarifaRemitente, setDataZonasTarifaRemitente] = useState([])
+    const [dataZonasOperativasDestinatario, setDataZonasOperativasDestinatario] = useState([])
+    const [dataZonasTarifaDestinatario, setDataZonasTarifaDestinatario] = useState([])
+    const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
+    const [dataZonasTarifaEntregaDD, setDataZonasTarifaEntregaDD] = useState([])
 
     const [remitente, setRemitente] = useState({
         idRemitente: '',
@@ -855,39 +861,79 @@ function Embarque(props) {
             obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado,newValue.m_nIdMunicipio).then(({data}) => {
                 setDataCodigosPostalesRemitente(data)
             })
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
-                setRemitente(remitente => {
-                    return{
-                        ...remitente,
-                        zonaOperativaRemitente: data
-                    }
-                })
+            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
+                /*if (data.length > 0){
+                    setRemitente(remitente => {
+                        return{
+                            ...remitente,
+                            zonaOperativaRemitente: data[0]
+                        }
+                    })
+                }else{
+                    setRemitente(remitente => {
+                        return{
+                            ...remitente,
+                            zonaOperativaRemitente: {}
+                        }
+                    })
+                }*/
+                setDataZonasOperativasRemitente(data)
             })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
-                setRemitente(remitente => {
-                    return{
-                        ...remitente,
-                        zonaTarifaRemitente: data
-                    }
-                })
+            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
+                /*if (data.length > 0){
+                    setRemitente(remitente => {
+                        return{
+                            ...remitente,
+                            zonaTarifaRemitente: data[0]
+                        }
+                    })
+                }else{
+                    setRemitente(remitente => {
+                        return{
+                            ...remitente,
+                            zonaTarifaRemitente: {}
+                        }
+                    })
+                }*/
+                setDataZonasTarifaRemitente(data)
             })
         }
         if (input === "codigoPostalRemitente"){
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
-                setRemitente(remitente => {
-                    return{
-                        ...remitente,
-                        zonaOperativaRemitente: data
-                    }
-                })
+            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
+                /*if (data.length > 0){
+                    setRemitente(remitente => {
+                        return{
+                            ...remitente,
+                            zonaOperativaRemitente: data[0]
+                        }
+                    })
+                }else{
+                    setRemitente(remitente => {
+                        return{
+                            ...remitente,
+                            zonaOperativaRemitente: {}
+                        }
+                    })
+                }*/
+                setDataZonasOperativasRemitente(data)
             })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
-                setRemitente(remitente => {
-                    return{
-                        ...remitente,
-                        zonaTarifaRemitente: data
-                    }
-                })
+            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
+                /*if (data.length > 0){
+                    setRemitente(remitente => {
+                        return{
+                            ...remitente,
+                            zonaTarifaRemitente: data[0]
+                        }
+                    })
+                }else{
+                    setRemitente(remitente => {
+                        return{
+                            ...remitente,
+                            zonaTarifaRemitente: {}
+                        }
+                    })
+                }*/
+                setDataZonasTarifaRemitente(data)
             })
         }
     }
@@ -996,39 +1042,79 @@ function Embarque(props) {
             obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado,newValue.m_nIdMunicipio).then(({data}) => {
                 setDataCodigosPostalesDestinatario(data)
             })
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
-                setDestinatario(destinatario => {
-                    return{
-                        ...destinatario,
-                        zonaOperativaDestinatario: data
-                    }
-                })
+            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
+                /*if (data.length > 0){
+                    setDestinatario(destinatario => {
+                        return{
+                            ...destinatario,
+                            zonaOperativaDestinatario: data[0]
+                        }
+                    })
+                }else{
+                    setDestinatario(destinatario => {
+                        return{
+                            ...destinatario,
+                            zonaOperativaDestinatario: {}
+                        }
+                    })
+                }*/
+                setDataZonasOperativasDestinatario(data)
             })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
-                setDestinatario(destinatario => {
-                    return{
-                        ...destinatario,
-                        zonaTarifaDestinatario: data
-                    }
-                })
+            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
+                /*if (data.length > 0){
+                    setDestinatario(destinatario => {
+                        return{
+                            ...destinatario,
+                            zonaTarifaDestinatario: data[0]
+                        }
+                    })
+                }else{
+                    setDestinatario(destinatario => {
+                        return{
+                            ...destinatario,
+                            zonaTarifaDestinatario: {}
+                        }
+                    })
+                }*/
+                setDataZonasTarifaDestinatario(data)
             })
         }
         if (input === "codigoPostalDestinatario"){
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
-                setDestinatario(destinatario => {
-                    return{
-                        ...destinatario,
-                        zonaOperativaDestinatario: data
-                    }
-                })
+            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
+                /*if (data.length > 0){
+                    setDestinatario(destinatario => {
+                        return{
+                            ...destinatario,
+                            zonaOperativaDestinatario: data[0]
+                        }
+                    })
+                }else{
+                    setDestinatario(destinatario => {
+                        return{
+                            ...destinatario,
+                            zonaOperativaDestinatario: {}
+                        }
+                    })
+                }*/
+                setDataZonasOperativasDestinatario(data)
             })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
-                setDestinatario(destinatario => {
-                    return{
-                        ...destinatario,
-                        zonaTarifaDestinatario: data
-                    }
-                })
+            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
+                /*if (data.length > 0){
+                    setDestinatario(destinatario => {
+                        return{
+                            ...destinatario,
+                            zonaTarifaDestinatario: data[0]
+                        }
+                    })
+                }else{
+                    setDestinatario(destinatario => {
+                        return{
+                            ...destinatario,
+                            zonaTarifaDestinatario: {}
+                        }
+                    })
+                }*/
+                setDataZonasTarifaDestinatario(data)
             })
         }
     }
@@ -1083,21 +1169,41 @@ function Embarque(props) {
             [input]: newValue
         })
         if (input === "codigoPostalEnt"){
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
-                setEntregaDD(entregaDD => {
-                    return{
-                        ...entregaDD,
-                        zonaOperativaEnt: data
-                    }
-                })
+            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
+                /*if (data.length > 0){
+                    setEntregaDD(entregaDD => {
+                        return{
+                            ...entregaDD,
+                            zonaOperativaEnt: data[0]
+                        }
+                    })
+                }else{
+                    setEntregaDD(entregaDD => {
+                        return{
+                            ...entregaDD,
+                            zonaOperativaEnt: {}
+                        }
+                    })
+                }*/
+                setDataZonasOperativasEntregaDD(data)
             })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
-                setEntregaDD(entregaDD => {
-                    return{
-                        ...entregaDD,
-                        zonaTarifaEnt: data
-                    }
-                })
+            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
+                /*if (data.length > 0){
+                    setEntregaDD(entregaDD => {
+                        return{
+                            ...entregaDD,
+                            zonaTarifaEnt: data[0]
+                        }
+                    })
+                }else{
+                    setEntregaDD(entregaDD => {
+                        return{
+                            ...entregaDD,
+                            zonaTarifaEnt: {}
+                        }
+                    })
+                }*/
+                setDataZonasTarifaEntregaDD(data)
             })
         }
     }
@@ -2157,25 +2263,6 @@ function Embarque(props) {
             })
         })
 
-
-        /*obtenerZonasById(respuesta.data.m_nIdZonaRemitente).then(({data}) => {
-            setState(state => {
-                return {
-                    ...state,
-                    zonaRemitente: data
-                }
-            })
-        })
-
-        obtenerZonasById(respuesta.data.m_nIdZonaDestinatario).then(({data}) => {
-            setState(state => {
-                return {
-                    ...state,
-                    zonaDestinatario: data
-                }
-            })
-        })*/
-
         setState(state => {
             return {
                 ...state,
@@ -2253,24 +2340,6 @@ function Embarque(props) {
             }
         });
 
-        //si el cp de entrega es igual al de destinatario significa que no es entrega en diferente domicilio
-        if (respuesta.data.m_nIdCPDetalleEntrega != respuesta.data.m_sIdCodigoPostalDestinatario) {
-            obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then(cp => {
-                setState(state => {
-                    return {
-                        ...state,
-                        diferenteEntrega: true,
-                        zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
-                        domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
-                        entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
-                        datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-                        // fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
-                        codigoPostalEntrega: cp.data,
-                        ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
-                    }
-                })
-            })
-        }
     }
 
     const handleShowListado = (event) => {
@@ -5055,12 +5124,12 @@ function Embarque(props) {
                                                                             <Autocomplete
                                                                                 value={remitente.zonaOperativaRemitente}
                                                                                 freeSolo
-                                                                                // onChange={(event, newValue) => handleZonaRemitenteSelected(newValue)}
+                                                                                onChange={(event, newValue) => handleChangeAutocompleteRemitente("zonaOperativaRemitente",newValue)}
                                                                                 id="zonaOperativaRemitente"
                                                                                 disableClearable
                                                                                 forcePopupIcon={false}
-                                                                                // options={dataZona.filter((z) => z.m_nIdSucursal == state.idSucursalAgregar)}
-                                                                                disabled={true}
+                                                                                options={dataZonasOperativasRemitente}
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 getOptionLabel={(option) => (
                                                                                     option ?
                                                                                         option.m_sCodigoZona || 'Código Postal sin zona asignada'
@@ -5087,12 +5156,12 @@ function Embarque(props) {
                                                                             <Autocomplete
                                                                                 value={remitente.zonaTarifaRemitente}
                                                                                 freeSolo
-                                                                                // onChange={(event, newValue) => handleZonaRemitenteSelected(newValue)}
+                                                                                onChange={(event, newValue) => handleChangeAutocompleteRemitente("zonaTarifaRemitente",newValue)}
                                                                                 id="zonaTarifaRemitente"
                                                                                 disableClearable
                                                                                 forcePopupIcon={false}
-                                                                                // options={dataZona.filter((z) => z.m_nIdSucursal == state.idSucursalAgregar)}
-                                                                                disabled={true}
+                                                                                options={dataZonasTarifaRemitente}
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 getOptionLabel={(option) => (
                                                                                     option ?
                                                                                         option.m_sCodigoZona || 'Código Postal sin zona asignada'
@@ -5537,12 +5606,12 @@ function Embarque(props) {
                                                                                 <Autocomplete
                                                                                     value={destinatario.zonaOperativaDestinatario}
                                                                                     freeSolo
-                                                                                    // onChange={(event, newValue) => handleZonaRemitenteSelected(newValue)}
+                                                                                    onChange={(event, newValue) => handleChangeAutocompleteDestinatario("zonaOperativaDestinatario",newValue)}
                                                                                     id="zonaOperativaDestinatario"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
-                                                                                    // options={dataZona.filter((z) => z.m_nIdSucursal == state.idSucursalAgregar)}
-                                                                                    disabled={true}
+                                                                                    options={dataZonasOperativasDestinatario}
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     getOptionLabel={(option) => (
                                                                                         option ?
                                                                                             option.m_sCodigoZona || 'Código Postal sin zona asignada'
@@ -5571,12 +5640,12 @@ function Embarque(props) {
                                                                                 <Autocomplete
                                                                                     value={destinatario.zonaTarifaDestinatario}
                                                                                     freeSolo
-                                                                                    // onChange={(event, newValue) => handleZonaRemitenteSelected(newValue)}
+                                                                                    onChange={(event, newValue) => handleChangeAutocompleteDestinatario("zonaTarifaDestinatario",newValue)}
                                                                                     id="zonaTarifaDestinatario"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
-                                                                                    // options={dataZona.filter((z) => z.m_nIdSucursal == state.idSucursalAgregar)}
-                                                                                    disabled={true}
+                                                                                    options={dataZonasTarifaDestinatario}
+                                                                                    disabled={state.agregar === "Consultar"}
                                                                                     getOptionLabel={(option) => (
                                                                                         option ?
                                                                                             option.m_sCodigoZona || 'Código Postal sin zona asignada'
@@ -5914,10 +5983,12 @@ function Embarque(props) {
                                                                             <Autocomplete
                                                                                 value={entregaDD.zonaOperativaEnt}
                                                                                 freeSolo
+                                                                                onChange={(event, newValue) => handleChangeAutocompleteEntregaDD("zonaOperativaEnt",newValue)}
                                                                                 id="zonaOperativaEnt"
                                                                                 disableClearable
                                                                                 forcePopupIcon={false}
-                                                                                disabled={true}
+                                                                                options={dataZonasOperativasEntregaDD}
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 getOptionLabel={(option) => (
                                                                                     option ?
                                                                                         option.m_sCodigoZona || 'Código Postal sin zona asignada'
@@ -5947,8 +6018,10 @@ function Embarque(props) {
                                                                                 freeSolo
                                                                                 id="zonaTarifaEnt"
                                                                                 disableClearable
+                                                                                onChange={(event, newValue) => handleChangeAutocompleteEntregaDD("zonaTarifaEnt",newValue)}
                                                                                 forcePopupIcon={false}
-                                                                                disabled={true}
+                                                                                options={dataZonasTarifaEntregaDD}
+                                                                                disabled={state.agregar === "Consultar"}
                                                                                 getOptionLabel={(option) => (
                                                                                     option ?
                                                                                         option.m_sCodigoZona || 'Código Postal sin zona asignada'

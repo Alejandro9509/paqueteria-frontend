@@ -51,7 +51,7 @@ function obtenerByIdZonaTarifa(id) {
     );
     return result
 }
-
+//Se va mandar el codigo postal porque surgio la necesidad
 function obtenerZonaTarifaByIdCodigoPostal(id) {
     const url = `${process.env.REACT_APP_API_URL}/ZonaTarifa/GetByIdCodigoPostal/` + id;
     let result;
