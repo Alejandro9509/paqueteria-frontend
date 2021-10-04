@@ -1263,6 +1263,7 @@ function Embarque(props) {
             m_sCalleRemitente: remitente.calleRemitente,
             m_sNoIntRemitente: remitente.numeroIntRemitente,
             m_sNoExtRemitente: remitente.numeroExtRemitente,
+            m_nIdEstadoRemitente: remitente.estadoRemitente,
             m_sColoniaRemitente: remitente.coloniaRemitente,
 
             m_sNombreDestinatario: destinatario.nombreDestinatario.m_sNombre,
@@ -1277,6 +1278,7 @@ function Embarque(props) {
             // m_nIdZonaDestinatario: destinatario.zonaDestinatario.m_nIdZona,
             m_nIdDestinatario: destinatario.idDestinatario,
             m_sAliasDestinatario: destinatario.aliasDestinatario,
+            m_nIdEstadoDestinatario: destinatario.estadoDestinatario,
             m_sCalleDestinatario: destinatario.calleDestinatario,
             m_sNoIntDestinatario: destinatario.numeroIntDestinatario,
             m_sNoExtDestinatario: destinatario.numeroExtDestinatario,
@@ -1803,7 +1805,7 @@ function Embarque(props) {
                         numeroIntRemitente: respuesta.data.m_sNoIntRemitente || 0,
                         numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
                         coloniaRemitente: respuesta.data.m_sColoniaRemitente,
-                        estadoRemitente: respuesta.data.m_nEstadoRemitente || 0,
+                        estadoRemitente: respuesta.data.m_nIdEstadoRemitente || 0,
                         municipioRemitente: respuesta.data.m_nIdCiudadRemitente,
                         codigoPostalRemitente: {
                             m_nIdCP: cp.data.m_nIdCP,
@@ -1813,8 +1815,8 @@ function Embarque(props) {
                         correoRemitente: respuesta.data.m_sCorreoRemitente,
                         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                         contactoRemitente: respuesta.data.m_sContactoRemitente,
-                        latitudR: respuesta.data.m_sLatitudR,
-                        longitudR: respuesta.data.m_sLongitudR
+                        latitudR: data.m_sLatitudR,
+                        longitudR: data.m_sLongitudR
                     }
                 })
             })
@@ -1828,12 +1830,6 @@ function Embarque(props) {
             })
         })
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
-            setState(state => {
-                return {
-                    ...state,
-                    nombreDestinatario: data
-                }
-            })
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
                 setDestinatario(destinatario => {
                     return {
@@ -1847,7 +1843,7 @@ function Embarque(props) {
                         numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0,
                         numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
                         coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
-                        estadoDestinatario: respuesta.data.m_nEstadoDestinatario || 0,
+                        estadoDestinatario: respuesta.data.m_nIdEstadoDestinatario || 0,
                         municipioDestinatario: respuesta.data.m_nIdCiudadDestinatario,
                         codigoPostalDestinatario: {
                             m_nIdCP: cp.data.m_nIdCP,
@@ -1857,8 +1853,8 @@ function Embarque(props) {
                         correoDestinatario: respuesta.data.m_sCorreoDestinatario,
                         telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                         contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                        latitudD: respuesta.data.m_sLatitudD,
-                        longitudD: respuesta.data.m_sLongitudD
+                        latitudD: data.m_sLatitudD,
+                        longitudD: data.m_sLongitudD
                     }
                 })
             })
@@ -2007,7 +2003,11 @@ function Embarque(props) {
                     return {
                         ...remitente,
                         nombreRemitente: data,
-                        codigoPostalRemitente: cp.data,
+                        codigoPostalRemitente: {
+                            m_nIdCP: cp.data.m_nIdCP,
+                            m_sCP: cp.data.m_sCP,
+                            m_sColonia: respuesta.data.m_sColoniaRemitente
+                        },
                         RFCRemitente: respuesta.data.m_sRFCRemitente,
                         domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
                         ciudadRemitente: respuesta.data.m_nCiudadRemitente,
@@ -2024,6 +2024,8 @@ function Embarque(props) {
                         coloniaRemitente: respuesta.data.m_sColoniaRemitente,
                         estadoRemitente: respuesta.data.m_nIdEstadoRemitente || 0,
                         municipioRemitente: respuesta.data.m_nIdCiudadRemitente,
+                        latitudR: data.m_sLatitudR,
+                        longitudR: data.m_sLongitudR
                     }
                 })
             })
@@ -2052,11 +2054,19 @@ function Embarque(props) {
                         // zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
                         idDestinatario: respuesta.data.m_nIdDestinatario,
                         aliasDestinatario: respuesta.data.m_sAliasDestinatario,
+                        estadoDestinatario: respuesta.data.m_nIdEstadoDestinatario || 0,
                         calleDestinatario: respuesta.data.m_sCalleDestinatario,
                         numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0,
                         numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
+
                         coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
-                        codigoPostalDestinatario: cp.data
+                        codigoPostalDestinatario: {
+                            m_nIdCP: cp.data.m_nIdCP,
+                            m_sCP: cp.data.m_sCP,
+                            m_sColonia: respuesta.data.m_sColoniaDestinatario
+                        },
+                        latitudD: data.m_sLatitudD,
+                        longitudD: data.m_sLongitudD
                     }
                 })
             })

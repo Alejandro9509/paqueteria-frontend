@@ -863,7 +863,7 @@ function Recoleccion() {
             m_sNoIntRemitente: remitente.numeroIntRemitente,
             m_sNoExtRemitente: remitente.numeroExtRemitente,
             m_sColoniaRemitente: remitente.coloniaRemitente,
-            m_nIdEstadoRemitene: remitente.estadoRemitente,
+            m_nIdEstadoRemitente: remitente.estadoRemitente,
             m_sLatitudR: coordenadas ? coordenadas.lat : remitente.latitudR ,
             m_sLongitudR: coordenadas ? coordenadas.lng : remitente.longitudR,
             m_nIdZonaOperativa: remitente.zonaOperativaRemitente.m_nIdZona,
@@ -1161,8 +1161,8 @@ function Recoleccion() {
                         correoRemitente: respuesta.data.m_sCorreoRemitente,
                         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                         contactoRemitente: respuesta.data.m_sContactoRemitente,
-                        latitudR: respuesta.data.m_sLatitudR,
-                        longitudR: respuesta.data.m_sLongitudR
+                        latitudR: data.m_sLatitudR,
+                        longitudR: data.m_sLongitudR
                     }
                 })
             })
@@ -1196,12 +1196,6 @@ function Recoleccion() {
 
 
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
-            setState(state => {
-                return {
-                    ...state,
-                    nombreDestinatario: data
-                }
-            })
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
                 setDestinatario(destinatario => {
                     return {
@@ -1225,8 +1219,8 @@ function Recoleccion() {
                         correoDestinatario: respuesta.data.m_sCorreoDestinatario,
                         telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                         contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                        latitudD: respuesta.data.m_sLatitudD,
-                        longitudD: respuesta.data.m_sLongitudD
+                        latitudD: data.m_sLatitudD,
+                        longitudD: data.m_sLongitudD
                     }
                 })
             })
