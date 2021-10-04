@@ -1955,13 +1955,13 @@ function Embarque(props) {
                         municipioRemitente: respuesta.data.m_nIdCiudadRemitente,
                     }
                 })
-                obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
-                    setRemitente(remitente => {
-                        return {
-                            ...remitente,
-                            origenRemitente: data
-                        }
-                    })
+            })
+            obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
+                setRemitente(remitente => {
+                    return {
+                        ...remitente,
+                        origenRemitente: data
+                    }
                 })
             })
         })
@@ -2035,7 +2035,6 @@ function Embarque(props) {
                 })
             })
             obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
-                debugger
                 setEntregaDD(entregaDD => {
                     return{
                         ...entregaDD,

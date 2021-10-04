@@ -92,8 +92,8 @@ import ConfirmarUbicacion from "../Components/Map/ConfirmarUbicacion";
 import Paquetes from "./Paquetes/Paquetes";
 import {obtenerMunicipiosByIdEstado} from "../Util/Contexts/MunicipiosContext";
 import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
-import {obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
-import {obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
+import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
+import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
 
 let timer;
 
@@ -546,8 +546,8 @@ function Recoleccion() {
                 numeroIntDestinatario: newValue.m_sNoInterior || 0,
                 coloniaDestinatario: newValue.m_sColonia || "No especificado",
                 destinatario: newValue,
-                latitudR: newValue.m_sLatitud,
-                longitudR: newValue.m_sLongitud
+                latitudD: newValue.m_sLatitud,
+                longitudD: newValue.m_sLongitud
             })
             obtenerMunicipiosByIdEstado(newValue.m_nIdEstado).then(({data}) =>{
                 setDataMunicipiosDestinatario(data)
@@ -641,7 +641,7 @@ function Recoleccion() {
             ...recoleccionDD,
             [input]: newValue
         })
-        if (input === "codigoPostalRecoleccionDD"){
+        if (input === "codigoPostalRec"){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
                 setRecoleccionDD(recoleccionDD => {
                     return{
@@ -804,7 +804,7 @@ function Recoleccion() {
             showSuccess("Debe agregar al menos 1 paquete o sobre.")
             return
         }
-        if (state.latitudR.length === 0 && state.longitudR.length === 0 && !coordenadas) {
+        if (remitente.latitudR.length === 0 && remitente.longitudR.length === 0 && !coordenadas) {
             setState({
                 ...state,
                 showConfirmarUbicacion: true,
@@ -850,8 +850,8 @@ function Recoleccion() {
             m_nIdEstadoRemitene: remitente.estadoRemitente,
             m_sLatitudR: coordenadas ? coordenadas.lat : remitente.latitudR ,
             m_sLongitudR: coordenadas ? coordenadas.lng : remitente.longitudR,
-            m_nIdZonaOperativa: remitente.zonaOperativaRemitente,
-            m_nIdZonaTarifa: remitente.zonaTarifaRemitente,
+            m_nIdZonaOperativa: remitente.zonaOperativaRemitente.m_nIdZona,
+            m_nIdZonaTarifa: remitente.zonaTarifaRemitente.m_nIdZona,
 
             //Destinatario
             m_sNombreDestinatario: destinatario.nombreDestinatario.m_sNombre,
@@ -873,8 +873,8 @@ function Recoleccion() {
             m_nIdEstadoDestinatario: destinatario.estadoDestinatario,
             m_sLatitudD: destinatario.latitudD,
             m_sLongitudD: destinatario.longitudD,
-            m_nIdZonaOperativaEntrega: destinatario.zonaOperativaDestinatario,
-            m_nIdZonaTarifaEntrega: destinatario.zonaTarifaDestinatario,
+            m_nIdZonaOperativaEntrega: destinatario.zonaOperativaDestinatario.m_nIdZona,
+            m_nIdZonaTarifaEntrega: destinatario.zonaTarifaDestinatario.m_nIdZona,
 
             //Cita de recoleccion
             m_bRecoleccionConCita: false,
@@ -909,8 +909,8 @@ function Recoleccion() {
             params.m_sDomicilioDetalleRecoleccion = recoleccionDD.domicilioRec
             params.m_sRecogerEnDetalleRecoleccion = recoleccionDD.recogerEnRec
             params.m_sDatosAdicionalesDetalleRecoleccion = recoleccionDD.datosAdicionalesRec
-            params.m_nIdZonaOperativa = recoleccionDD.zonaOperativaEnt
-            params.m_nIdZonaTarifa = recoleccionDD.zonaTarifaEnt
+            params.m_nIdZonaOperativa = recoleccionDD.zonaOperativaRec.m_nIdZona
+            params.m_nIdZonaTarifa = recoleccionDD.zonaTarifaRec.m_nIdZona
 
         }
 
@@ -921,8 +921,8 @@ function Recoleccion() {
             params.m_sDomicilioDetalleEntrega = entregaDD.domicilioEnt
             params.m_sEntregarEnDetalleEntrega = entregaDD.entregarEnEnt
             params.m_sDatosAdicionalesDetalleEntrega = entregaDD.datosAdicionalesEnt
-            params.m_nIdZonaOperativaEntrega = entregaDD.zonaOperativaEnt
-            params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt
+            params.m_nIdZonaOperativaEntrega = entregaDD.zonaOperativaEnt.m_nIdZona
+            params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt.m_nIdZona
         }
 
         if (state.recoleccionConCita) {
@@ -934,7 +934,7 @@ function Recoleccion() {
 
         console.log(params)
         console.log(JSON.stringify(params))
-        if (state.idRecoleccion != 0) {
+        /*if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -965,7 +965,7 @@ function Recoleccion() {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
 
     };
 
@@ -1150,15 +1150,34 @@ function Recoleccion() {
                     }
                 })
             })
-        })
-        obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
-            setRemitente(remitente => {
-                return {
-                    ...remitente,
-                    origenRemitente: data
-                }
+            obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
+                setRemitente(remitente => {
+                    return {
+                        ...remitente,
+                        origenRemitente: data
+                    }
+                })
             })
+            if (!respuesta.data.m_bRecoleccionDiferenteDomicilio){
+                obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+                    setRemitente(remitente => {
+                        return {
+                            ...remitente,
+                            zonaOperativaRemitente: data
+                        }
+                    })
+                })
+                obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
+                    setRemitente(remitente => {
+                        return {
+                            ...remitente,
+                            zonaTarifaRemitente: data
+                        }
+                    })
+                })
+            }
         })
+
 
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
             setState(state => {
@@ -1195,33 +1214,51 @@ function Recoleccion() {
                     }
                 })
             })
-        })
-        obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(({data}) => {
-            setDestinatario(destinatario => {
-                return {
-                    ...destinatario,
-                    destinoDestinatario: data
-                }
+            obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(({data}) => {
+                setDestinatario(destinatario => {
+                    return {
+                        ...destinatario,
+                        destinoDestinatario: data
+                    }
+                })
             })
         })
 
-        obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleRecoleccion).then((cp) => {
-            setRecoleccionDD({
-                //Recoleccion
-                estadoRec: respuesta.data.m_nIdEstadoRecoleccion || 0,
-                municipioRec: respuesta.data.m_nIdMunicipioRecoleccion || 0,
-                codigoPostalRec: {
-                    m_nIdCP: cp.data.m_nIdCP,
-                    m_sCP: cp.data.m_sCP,
-                    m_sColonia: cp.data.m_sColonia
-                },
-                zonaOperativaRec: {},
-                zonaTarifaRec: {},
-                domicilioRec: respuesta.data.m_sDomicilioDetalleRecoleccion,
-                recogerEnRec: respuesta.data.m_sRecogerEnDetalleRecoleccion,
-                datosAdicionalesRec: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+        if (respuesta.data.m_bRecoleccionDiferenteDomicilio){
+            obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleRecoleccion).then((cp) => {
+                setRecoleccionDD(recoleccionDD => {
+                    return {
+                        ...recoleccionDD,
+                        estadoRec: respuesta.data.m_nIdEstadoRecoleccion || 0,
+                        municipioRec: respuesta.data.m_nIdMunicipioRecoleccion || 0,
+                        codigoPostalRec: {
+                        m_nIdCP: cp.data.m_nIdCP,
+                            m_sCP: cp.data.m_sCP,
+                            m_sColonia: cp.data.m_sColonia
+                    },
+                        domicilioRec: respuesta.data.m_sDomicilioDetalleRecoleccion,
+                        recogerEnRec: respuesta.data.m_sRecogerEnDetalleRecoleccion,
+                        datosAdicionalesRec: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+                    }
+                })
             })
-        })
+            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+                setRecoleccionDD(recoleccionDD => {
+                    return {
+                        ...recoleccionDD,
+                        zonaOperativaRec: data
+                    }
+                })
+            })
+            obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
+                setRecoleccionDD(recoleccionDD => {
+                    return {
+                        ...recoleccionDD,
+                        zonaTarifaRec: data
+                    }
+                })
+            })
+        }
 
         obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
             setEntregaDD({
@@ -2982,7 +3019,7 @@ function Recoleccion() {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     titulo={state.titulo}
-                                    direccion={state.remitente}>
+                                    direccion={remitente.remitente}>
 
                 </ConfirmarUbicacion>
             }
@@ -4673,6 +4710,7 @@ function Recoleccion() {
                                                                                        value={destinatario.correoDestinatario}
                                                                                        disabled={state.agregar === "Consultar"}
                                                                                        id="correoDestinatario"
+                                                                                       name="correoDestinatario"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -4688,6 +4726,7 @@ function Recoleccion() {
                                                                                        value={destinatario.telefonoDestinatario}
                                                                                        disabled={state.agregar === "Consultar"}
                                                                                        id="telefonoDestinatario"
+                                                                                       name="telefonoDestinatario"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -4703,6 +4742,7 @@ function Recoleccion() {
                                                                                        value={destinatario.contactoDestinatario}
                                                                                        disabled={state.agregar === "Consultar"}
                                                                                        id="contactoDestinatario"
+                                                                                       name="contactoDestinatario"
                                                                             />
                                                                         </div>
                                                                     </div>
