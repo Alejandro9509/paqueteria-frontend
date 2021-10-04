@@ -1135,7 +1135,7 @@ function Recoleccion() {
                         numeroIntRemitente: respuesta.data.m_sNoIntRemitente || 0,
                         numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
                         coloniaRemitente: respuesta.data.m_sColoniaRemitente,
-                        estadoRemitente: respuesta.data.m_nEstadoRemitente || 0,
+                        estadoRemitente: respuesta.data.m_nIdEstadoRemitente || 0,
                         municipioRemitente: respuesta.data.m_nIdCiudadRemitente,
                         codigoPostalRemitente: {
                             m_nIdCP: cp.data.m_nIdCP,
