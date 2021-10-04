@@ -1243,7 +1243,7 @@ function Embarque(props) {
         if (state.diferenteEntrega) {
             params.m_bEntregaEnSucursal = false
             // params.IdCiudadEntrega = state.ciudadEntrega
-            params.CodigoPostalEntrega = entregaDD.codigoPostalEntrega.m_nIdCP
+            params.CodigoPostalEntrega = entregaDD.codigoPostalEnt.m_nIdCP
             // params.IdZonaEntrega = entregaDD.zonaEntrega
             params.DomicilioEntrega = entregaDD.domicilioEnt
             params.EntregarEn = entregaDD.entregarEnEnt
@@ -2000,35 +2000,59 @@ function Embarque(props) {
                     }
                 })
             })
+            if (respuesta.data.EntregarMismoDomicilio){
+                obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+                    setDestinatario(destinatario => {
+                        return{
+                            ...destinatario,
+                            zonaOperativaDestinatario: data
+                        }
+                    })
+                })
+                obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
+                    setDestinatario(destinatario => {
+                        return{
+                            ...destinatario,
+                            zonaTarifaDestinatario: data
+                        }
+                    })
+                })
+            }
+        })
+
+        if (!respuesta.data.EntregarMismoDomicilio){
+            obtenerCodigoPostalId(respuesta.data.CodigoPostalEntrega).then((cp) => {
+                setEntregaDD(entregaDD => {
+                    return {
+                        ...entregaDD,
+                        codigoPostalEnt: cp.data,
+                        // ciudadEntrega: respuesta.data.IdCiudadEntrega,
+                        // zonaEntrega: respuesta.data.IdZonaEntrega,
+                        domicilioEnt: respuesta.data.DomicilioEntrega,
+                        entregarEnEnt: respuesta.data.EntregarEn,
+                        datosAdicionalesEnt: respuesta.data.DatosAdicionalesis,
+                        }
+                })
+            })
             obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
-                setDestinatario(destinatario => {
+                debugger
+                setEntregaDD(entregaDD => {
                     return{
-                        ...destinatario,
-                        zonaOperativaDestinatario: data
+                        ...entregaDD,
+                        zonaOperativaEnt: data
                     }
                 })
             })
             obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
-                setDestinatario(destinatario => {
+                setEntregaDD(entregaDD => {
                     return{
-                        ...destinatario,
-                        zonaTarifaDestinatario: data
+                        ...entregaDD,
+                        zonaTarifaEnt: data
                     }
                 })
             })
-        })
+        }
 
-
-        obtenerCodigoPostalId(respuesta.data.CodigoPostalEntrega).then((cp) => {
-            setEntregaDD({
-                codigoPostalEnt: cp.data,
-                // ciudadEntrega: respuesta.data.IdCiudadEntrega,
-                // zonaEntrega: respuesta.data.IdZonaEntrega,
-                domicilioEnt: respuesta.data.DomicilioEntrega,
-                entregarEnEnt: respuesta.data.EntregarEn,
-                datosAdicionalesEnt: respuesta.data.DatosAdicionalesis,
-            })
-        })
 
         let totalPaquetes = 0
         respuesta.data.m_arrSobres.forEach((s) => {
