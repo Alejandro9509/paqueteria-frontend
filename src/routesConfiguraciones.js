@@ -26,13 +26,13 @@ import CuentasCorreo from "./Views/CuentasCorreo/CuentasCorreo";
 
 const configurationRoutes = [
 
-  {
-    path: "/Parametros",
-    name: "Parámetros",
-    icon:  <GParametroIcon/>,
-    component: ParametrosPage,
-    isDialog: false
-  },
+  /*   {
+      path: "/Parametros",
+      name: "Parámetros",
+      icon:  <GParametroIcon/>,
+      component: ParametrosPage,
+      isDialog: false
+    }, */
   {
     path: "/Usuarios",
     name: "Usuarios",
@@ -40,7 +40,7 @@ const configurationRoutes = [
     component: UsuariosPage,
     isDialog: false
   },
-  {
+  /* {
     path: "/Paises",
     name: "Países",
     icon: <GPaisIcon/>,
@@ -53,7 +53,7 @@ const configurationRoutes = [
     icon:  <GCiudadIcon/>,
     component: CiudadesCodigoPostalPage,
     isDialog: false
-  },
+  }, */
   {
     path: "/Sucursales",
     name: "Sucursales",
@@ -61,13 +61,13 @@ const configurationRoutes = [
     component: SucursalesPage,
     isDialog: false
   },
-  {
-    path: "/Zonas",
-    name: "Zonas",
-    icon:  <GZonasIcon/>,
-    component: ZonasPage,
-    isDialog: false
-  },
+  /*  {
+     path: "/Zonas",
+     name: "Zonas",
+     icon:  <GZonasIcon/>,
+     component: ZonasPage,
+     isDialog: false
+   }, */
   {
     path: "/FormatosImpresion",
     name: "Formatos Impresión",
@@ -103,13 +103,13 @@ const configurationRoutes = [
     component: CuentasCorreo,
     isDialog: true
   },
-  {
-    path: "/BitacoraProcesos",
-    name: "Bitácora Procesos",
-    icon:  <GBitacoraIcon/>,
-    component: DepartamentoPage,
-    isDialog: false
-  },
+  /*  {
+     path: "/BitacoraProcesos",
+     name: "Bitácora Procesos",
+     icon:  <GBitacoraIcon/>,
+     component: DepartamentoPage,
+     isDialog: false
+   }, */
 ]
 
 export default configurationRoutes;

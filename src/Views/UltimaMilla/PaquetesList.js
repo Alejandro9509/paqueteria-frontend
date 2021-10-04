@@ -232,6 +232,9 @@ class PaquetesList extends Component {
                                 sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
                                 align="left">Cliente</TableCell>
                             <TableCell
+                                sortDirection={this.state.orderBy === "m_bClienteBloqueado" ? this.state.order : false}
+                                align="left">Estatus cliente</TableCell>
+                            <TableCell
                                 sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
                                 align="left">Domicilio</TableCell>
 
@@ -267,6 +270,8 @@ class PaquetesList extends Component {
                                         <TableCell align="left">{u.m_sTipoCobro}</TableCell>
                                         <TableCell align="left">{u.m_sZona}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sNombreRemitente : u.m_sNombreDestinatario}</TableCell>
+                                        <TableCell style={{color: u.m_bClienteBloqueado ? "red": "black"}}
+                                                   align="left">{u.m_bClienteBloqueado ? "Bloqueado" : "Activo"}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sDomicilioRemitente: u.m_sDomicilioDestinatario}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? (u.m_bRecoleccionConCita ? "" : "Sin cita") : ""}</TableCell>
                                         <TableCell align="left">{u.m_dFechaRegistro}</TableCell>

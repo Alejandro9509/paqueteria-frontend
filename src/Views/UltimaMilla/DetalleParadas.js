@@ -143,7 +143,7 @@ class DetalleParadas extends Component {
 
     generarReporte(e, id) {
         e.preventDefault()
-        // console.log('corte id: ' + id)
+        console.log(' id: ' + id)
         obtenerUltimaMillaReporte(id).then(({data}) => {
             // console.log(data)
             // debugger
@@ -360,7 +360,7 @@ class DetalleParadas extends Component {
                                                                 {tour.m_arrClsProGuia.length} Paradas
                                                             </Grid>
                                                             <Grid item>
-                                                                <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour.m_nIdUltimaMilla)}>
+                                                                <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour.m_nIdParadaUltimaMilla)}>
                                                                     <InsertDriveFile fontSize={"large"}/>
                                                                 </IconButton>
                                                             </Grid>
@@ -372,17 +372,23 @@ class DetalleParadas extends Component {
                                                     <div align={"right"} style={{
                                                         borderRadius: "5px",
                                                         margin: "5px",
-                                                        height:"100%",
+                                                        height: "100%",
                                                         overflow: "auto"
                                                     }}>
+                                                        {
+                                                            console.log(+this.props.fecha <= +(new Date()))
+                                                        }
+                                                        {
+                                                            +this.props.fecha >= +(new Date()) &&
+                                                            <Button variant={"contained"} color={"primary"}
+                                                                    onClick={() => this.setState({
+                                                                        paquetes: tour.m_arrClsProGuia,
+                                                                        tour: tour,
+                                                                        openAgregar: true
+                                                                    })}>Ordenar
+                                                                Paradas</Button>
+                                                        }
 
-                                                        <Button variant={"contained"} color={"primary"}
-                                                                onClick={() => this.setState({
-                                                                    paquetes: tour.m_arrClsProGuia,
-                                                                    tour: tour,
-                                                                    openAgregar: true
-                                                                })}>Ordenar
-                                                            Paradas</Button>
 
                                                         <List component="div" disablePadding style={{
                                                             padding: "5px",

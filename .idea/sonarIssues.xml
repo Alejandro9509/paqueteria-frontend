@@ -198,6 +198,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Components/Login/LoginExterno.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Components/Map/ConfirmarUbicacion.js">
           <value>
             <set />
@@ -598,7 +603,27 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Catalogos/Icono Convenios/icono_convenios.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Catalogos/Icono Plantilla Correo/IconoPlantillaCorreoNaranja.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Catalogos/Icono Productos/IconoProductos.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Catalogos/Icono Zonas Tarifas/IconoTarifaZona.svg">
           <value>
             <set />
           </value>
@@ -624,6 +649,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/iconos/Mapa/paradas.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Menu/IconoCorteCaja/IconoCorteCaja.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Menu/IconoCorteCaja/IconoCorteCajaGris.svg">
           <value>
             <set />
           </value>
