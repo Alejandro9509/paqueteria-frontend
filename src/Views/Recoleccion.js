@@ -406,6 +406,30 @@ function Recoleccion() {
                 latitudR: newValue.m_sLatitud,
                 longitudR: newValue.m_sLongitud
             })
+
+            obtenerMunicipiosByIdEstado(newValue.m_nIdEstado).then(({data}) =>{
+                setDataMunicipiosRemitente(data)
+            })
+
+            obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado,newValue.m_nIdMunicipio).then(({data}) => {
+                setDataCodigosPostalesRemitente(data)
+            })
+            obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
+                setRemitente(remitente => {
+                    return{
+                        ...remitente,
+                        zonaOperativaRemitente: data
+                    }
+                })
+            })
+            obtenerZonaTarifaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
+                setRemitente(remitente => {
+                    return{
+                        ...remitente,
+                        zonaTarifaRemitente: data
+                    }
+                })
+            })
         }
         if (input === "codigoPostalRemitente"){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
@@ -524,6 +548,28 @@ function Recoleccion() {
                 destinatario: newValue,
                 latitudR: newValue.m_sLatitud,
                 longitudR: newValue.m_sLongitud
+            })
+            obtenerMunicipiosByIdEstado(newValue.m_nIdEstado).then(({data}) =>{
+                setDataMunicipiosDestinatario(data)
+            })
+            obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado,newValue.m_nIdMunicipio).then(({data}) => {
+                setDataCodigosPostalesDestinatario(data)
+            })
+            obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
+                setDestinatario(destinatario => {
+                    return{
+                        ...destinatario,
+                        zonaOperativaDestinatario: data
+                    }
+                })
+            })
+            obtenerZonaTarifaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
+                setDestinatario(destinatario => {
+                    return{
+                        ...destinatario,
+                        zonaTarifaDestinatario: data
+                    }
+                })
             })
         }
         if (input === "codigoPostalDestinatario"){
