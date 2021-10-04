@@ -90,8 +90,8 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ConfirmarUbicacion from "../Components/Map/ConfirmarUbicacion";
 import {obtenerMunicipiosByIdEstado} from "../Util/Contexts/MunicipiosContext";
-import {obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
-import {obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
+import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
+import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
 import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
 
 function showSuccess(mensaje) {
@@ -250,7 +250,7 @@ function Embarque(props) {
         correoDestinatario: '',
         telefonoDestinatario: '',
         contactoDestinatario: '',
-        ciudadDestino: '',
+        destinoDestinatario: '',
         zonaDestinatario: {},
         calleDestinatario: '',
         numeroIntDestinatario: '0',
@@ -916,8 +916,8 @@ function Embarque(props) {
                 numeroIntDestinatario: newValue.m_sNoInterior || 0,
                 coloniaDestinatario: newValue.m_sColonia || "No especificado",
                 destinatario: newValue,
-                latitudR: newValue.m_sLatitud,
-                longitudR: newValue.m_sLongitud
+                latitudD: newValue.m_sLatitud,
+                longitudD: newValue.m_sLongitud
             })
             obtenerMunicipiosByIdEstado(newValue.m_nIdEstado).then(({data}) =>{
                 setDataMunicipiosDestinatario(data)
@@ -1011,7 +1011,7 @@ function Embarque(props) {
             ...entregaDD,
             [input]: newValue
         })
-        if (input === "codigoPostalEntregaDD"){
+        if (input === "codigoPostalEnt"){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
                 setEntregaDD(entregaDD => {
                     return{
@@ -1150,7 +1150,7 @@ function Embarque(props) {
             return
         }
         if (!state.entregaEnSucursal) {
-            if (state.latitudD.length === 0 && state.longitudD.length === 0 && !coordenadas) {
+            if (destinatario.latitudD.length === 0 && destinatario.longitudD.length === 0 && !coordenadas) {
                 setState({
                     ...state,
                     showConfirmarUbicacion: true,
@@ -1181,16 +1181,16 @@ function Embarque(props) {
             m_sRFCRemitente: remitente.RFCRemitente,
             m_sDomicilioRemitente: remitente.domicilioRemitente,
             m_nIdCodigoPostalRemitente: remitente.codigoPostalRemitente.m_nIdCP,
-            m_nCiudadRemitente: remitente.ciudadRemitente,
+            // m_nCiudadRemitente: remitente.ciudadRemitente,
             m_sCorreoRemitente: remitente.correoRemitente,
             m_sTelefonoRemitente: remitente.telefonoRemitente,
             m_sContactoRemitente: remitente.contactoRemitente,
-            m_nIdCiudadOrigen: remitente.ciudadOrigen.m_nIdCiudad,
+            m_nIdCiudadOrigen: remitente.origenRemitente.m_nIdCiudad,
             // m_nIdZonaRemitente: remitente.zonaRemitente.m_nIdZona,
             m_nIdRemitente: remitente.idRemitente,
             m_sAliasRemitente: remitente.aliasRemitente,
             m_sCalleRemitente: remitente.calleRemitente,
-            m_sNoIntRemitente: state.numeroIntRemitente,
+            m_sNoIntRemitente: remitente.numeroIntRemitente,
             m_sNoExtRemitente: remitente.numeroExtRemitente,
             m_sColoniaRemitente: remitente.coloniaRemitente,
 
@@ -1202,7 +1202,7 @@ function Embarque(props) {
             m_sCorreoDestinatario: destinatario.correoDestinatario,
             m_sTelefonoDestinatario: destinatario.telefonoDestinatario,
             m_sContactoDestinatario: destinatario.contactoDestinatario,
-            m_nIdCiudadDestino: destinatario.ciudadDestino.m_nIdCiudad,
+            m_nIdCiudadDestino: destinatario.destinoDestinatario.m_nIdCiudad,
             // m_nIdZonaDestinatario: destinatario.zonaDestinatario.m_nIdZona,
             m_nIdDestinatario: destinatario.idDestinatario,
             m_sAliasDestinatario: destinatario.aliasDestinatario,
@@ -1210,10 +1210,12 @@ function Embarque(props) {
             m_sNoIntDestinatario: destinatario.numeroIntDestinatario,
             m_sNoExtDestinatario: destinatario.numeroExtDestinatario,
             m_sColoniaDestinatario: destinatario.coloniaDestinatario,
-            m_sLatitudD: coordenadas ? coordenadas.lat : state.latitudD,
-            m_sLongitudD: coordenadas ? coordenadas.lng : state.latitudD,
-            m_sLatitudR: state.latitudR,
-            m_sLongitudR: state.latitudR,
+            m_sLatitudD: coordenadas ? coordenadas.lat : destinatario.latitudD,
+            m_sLongitudD: coordenadas ? coordenadas.lng : destinatario.latitudD,
+            m_sLatitudR: remitente.latitudR,
+            m_sLongitudR: remitente.latitudR,
+            m_nIdZonaOperativa: destinatario.zonaOperativaDestinatario.m_nIdZona,
+            m_nIdZonaTarifa: destinatario.zonaTarifaDestinatario.m_nIdZona,
 
             m_nNoPaquetes: state.paquetes.length,
             m_nNoSobres: state.sobres.length,
@@ -1246,8 +1248,8 @@ function Embarque(props) {
             params.DomicilioEntrega = entregaDD.domicilioEnt
             params.EntregarEn = entregaDD.entregarEnEnt
             params.DatosAdicionales = entregaDD.datosAdicionalesEnt
-            params.m_nIdZonaOperativaEntrega = entregaDD.zonaOperativaEnt
-            params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt
+            params.m_nIdZonaOperativa = entregaDD.zonaOperativaEnt.m_nIdZona
+            params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
         }
         if (state.entregaConCita) {
 
@@ -1512,7 +1514,7 @@ function Embarque(props) {
                 estatusEmbarque: 16,
 
                 //Remitente
-                nombreRemitente: {m_sNombre: "Nombre", m_sAlias: "Alias"},
+                /*nombreRemitente: {m_sNombre: "Nombre", m_sAlias: "Alias"},
                 RFCRemitente: '',
                 domicilioRemitente: '',
                 ciudadRemitente: '',
@@ -1520,7 +1522,7 @@ function Embarque(props) {
                 correoRemitente: '',
                 telefonoRemitente: '',
                 contactoRemitente: '',
-                ciudadOrigen: '',
+                origenRemitente: '',
                 zonaRemitente: {},
                 idRemitente: '',
                 aliasRemitente: '',
@@ -1528,9 +1530,9 @@ function Embarque(props) {
                 numeroIntRemitente: '0',
                 numeroExtRemitente: '',
                 coloniaRemitente: '',
-
+*/
                 //Destinatario
-                nombreDestinatario: {m_sNombre: "Nombre", m_sAlias: "Alias"},
+                /*nombreDestinatario: {m_sNombre: "Nombre", m_sAlias: "Alias"},
                 RFCDestinatario: '',
                 domicilioDestinatario: '',
                 ciudadDestinatario: '',
@@ -1538,25 +1540,25 @@ function Embarque(props) {
                 correoDestinatario: '',
                 telefonoDestinatario: '',
                 contactoDestinatario: '',
-                ciudadDestino: '',
+                destinoDestinatario: '',
                 zonaDestinatario: {},
                 idDestinatario: '',
                 aliasDestinatario: '',
                 calleDestinatario: '',
                 numeroIntDestinatario: '0',
                 numeroExtDestinatario: '',
-                coloniaDestinatario: '',
+                coloniaDestinatario: '',*/
 
                 //Entrega
                 entregaEnSucursal: false,
                 diferenteEntrega: false,
                 idSucursalEntrega: '',
-                ciudadEntrega: '',
+                /*ciudadEntrega: '',
                 codigoPostalEntrega: '',
                 zonaEntrega: '',
                 domicilioEntrega: '',
                 entregaEn: '',
-                datosAdicionalesEntrega: '',
+                datosAdicionalesEntrega: '',*/
 
                 //Cita de recoleccion
                 entregaConCita: false,
@@ -1844,7 +1846,7 @@ function Embarque(props) {
                 correoRemitente: respuesta.data.m_sCorreoRemitente,
                 telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                 contactoRemitente: respuesta.data.m_sContactoRemitente,
-                */// ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+                */// origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                 /*idRemitente: respuesta.data.m_nIdRemitente,
                 aliasRemitente: respuesta.data.m_sAliasRemitente,
                 calleRemitente: respuesta.data.m_sCalleRemitente,
@@ -1866,7 +1868,7 @@ function Embarque(props) {
                 numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
                 coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
 */
-                // ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
+                // destinoDestinatario: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
                 // zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
                 // zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
 
@@ -1941,7 +1943,7 @@ function Embarque(props) {
                         correoRemitente: respuesta.data.m_sCorreoRemitente,
                         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                         contactoRemitente: respuesta.data.m_sContactoRemitente,
-                        // ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+                        origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                         // zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
                         idRemitente: respuesta.data.m_nIdRemitente,
                         aliasRemitente: respuesta.data.m_sAliasRemitente,
@@ -1953,16 +1955,18 @@ function Embarque(props) {
                         municipioRemitente: respuesta.data.m_nIdCiudadRemitente,
                     }
                 })
+                obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
+                    setRemitente(remitente => {
+                        return {
+                            ...remitente,
+                            origenRemitente: data
+                        }
+                    })
+                })
             })
         })
-        obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
-            setRemitente(remitente => {
-                return {
-                    ...remitente,
-                    ciudadOrigen: data
-                }
-            })
-        })
+
+
 
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
@@ -1976,7 +1980,7 @@ function Embarque(props) {
                         correoDestinatario: respuesta.data.m_sCorreoDestinatario,
                         telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                         contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                        // ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
+                        // destinoDestinatario: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
                         // zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
                         idDestinatario: respuesta.data.m_nIdDestinatario,
                         aliasDestinatario: respuesta.data.m_sAliasDestinatario,
@@ -1988,16 +1992,32 @@ function Embarque(props) {
                     }
                 })
             })
-
-        })
-        obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(({data}) => {
-            setDestinatario(destinatario => {
-                return {
-                    ...destinatario,
-                    ciudadDestino: data
-                }
+            obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(({data}) => {
+                setDestinatario(destinatario => {
+                    return {
+                        ...destinatario,
+                        destinoDestinatario: data
+                    }
+                })
+            })
+            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+                setDestinatario(destinatario => {
+                    return{
+                        ...destinatario,
+                        zonaOperativaDestinatario: data
+                    }
+                })
+            })
+            obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
+                setDestinatario(destinatario => {
+                    return{
+                        ...destinatario,
+                        zonaTarifaDestinatario: data
+                    }
+                })
             })
         })
+
 
         obtenerCodigoPostalId(respuesta.data.CodigoPostalEntrega).then((cp) => {
             setEntregaDD({
@@ -2081,7 +2101,7 @@ function Embarque(props) {
                 correoRemitente: respuesta.data.m_sCorreoRemitente,
                 telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                 contactoRemitente: respuesta.data.m_sContactoRemitente,
-                // ciudadOrigen: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+                // origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                 // zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
                 idRemitente: respuesta.data.m_nIdRemitente,
                 aliasRemitente: respuesta.data.m_sAliasRemitente,
@@ -2098,7 +2118,7 @@ function Embarque(props) {
                 correoDestinatario: respuesta.data.m_sCorreoDestinatario,
                 telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
                 contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                // ciudadDestino: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
+                // destinoDestinatario: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
                 // zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
                 idDestinatario: respuesta.data.m_nIdDestinatario,
                 aliasDestinatario: respuesta.data.m_sAliasDestinatario,
@@ -3286,7 +3306,7 @@ function Embarque(props) {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     titulo={state.titulo}
-                                    direccion={state.destinatario}>
+                                    direccion={destinatario.destinatario}>
 
                 </ConfirmarUbicacion>
             }
@@ -4980,7 +5000,6 @@ function Embarque(props) {
                                                                                         variant="outlined"
                                                                                         label="Zona Operativa"
                                                                                         margin="dense"
-                                                                                        required
                                                                                         // onClick={handleClickZona}
                                                                                         {...params}
                                                                                     />
@@ -5013,7 +5032,6 @@ function Embarque(props) {
                                                                                         variant="outlined"
                                                                                         label="Zona Tarifa"
                                                                                         margin="dense"
-                                                                                        required
                                                                                         // onClick={handleClickZona}
                                                                                         {...params}
                                                                                     />
@@ -5320,6 +5338,7 @@ function Embarque(props) {
                                                                                        value={destinatario.correoDestinatario}
                                                                                        disabled={state.agregar === "Consultar"}
                                                                                        id="correoDestinatario"
+                                                                                       name="correoDestinatario"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -5335,6 +5354,7 @@ function Embarque(props) {
                                                                                        value={destinatario.telefonoDestinatario}
                                                                                        disabled={state.agregar === "Consultar"}
                                                                                        id="telefonoDestinatario"
+                                                                                       name="telefonoDestinatario"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -5350,6 +5370,7 @@ function Embarque(props) {
                                                                                        value={destinatario.contactoDestinatario}
                                                                                        disabled={state.agregar === "Consultar"}
                                                                                        id="contactoDestinatario"
+                                                                                       name="contactoDestinatario"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -5461,7 +5482,6 @@ function Embarque(props) {
                                                                                             variant="outlined"
                                                                                             label="Zona Operativa"
                                                                                             margin="dense"
-                                                                                            required
                                                                                             // onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />
@@ -5496,7 +5516,6 @@ function Embarque(props) {
                                                                                             variant="outlined"
                                                                                             label="Zona Tarifa"
                                                                                             margin="dense"
-                                                                                            required
                                                                                             // onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />
