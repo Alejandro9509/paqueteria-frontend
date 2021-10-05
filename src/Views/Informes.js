@@ -987,6 +987,7 @@ function Informes({history}) {
             ...state,
             agregar: "Agregar",
             showPopUp: true,
+            IdInforme: 0,
             IdGrupoUnidad: 0,
             Codigo: 0,
             GrupoUnidad: "",
