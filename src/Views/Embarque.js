@@ -835,13 +835,13 @@ function Embarque(props) {
                 nombreRemitente: newValue,
                 RFCRemitente: newValue.m_sRFC,
                 domicilioRemitente: newValue.m_sDomicilio || "No especificado",
-                codigoPostalRemitente: {
+                codigoPostalRemitente: newValue.m_nIdCP != 0 ? {
                     m_nIdCP: newValue.m_nIdCP,
                     m_sCP: newValue.m_sCodigoPostal,
                     m_sColonia: newValue.m_sColonia
-                },
+                }: '',
                 estadoRemitente: newValue.m_nIdEstado,
-                municipioRemitente: newValue.m_nIdMunicipio ? newValue.m_nIdMunicipio : 0,
+                municipioRemitente: newValue.m_nIdMunicipio ? newValue.m_nIdMunicipio : '',
                 correoRemitente: newValue.m_sCorreoElectronico || "No especificado",
                 telefonoRemitente: newValue.m_sTelefono || 0,
                 contactoRemitente: newValue.m_sContacto || "No especificado",
@@ -1023,13 +1023,13 @@ function Embarque(props) {
                 nombreDestinatario: newValue,
                 RFCDestinatario: newValue.m_sRFC,
                 domicilioDestinatario: newValue.m_sDomicilio || "No especificado",
-                codigoPostalDestinatario: {
+                codigoPostalDestinatario: newValue.m_nIdCP != 0 ? {
                     m_nIdCP: newValue.m_nIdCP,
                     m_sCP: newValue.m_sCodigoPostal,
                     m_sColonia: newValue.m_sColonia
-                },
+                } : '',
                 estadoDestinatario: newValue.m_nIdEstado,
-                municipioDestinatario: newValue.m_nIdMunicipio ? newValue.m_nIdMunicipio : 0,
+                municipioDestinatario: newValue.m_nIdMunicipio ? newValue.m_nIdMunicipio : '',
                 correoDestinatario: newValue.m_sCorreoElectronico || "No especificado",
                 telefonoDestinatario: newValue.m_sTelefono || 0,
                 contactoDestinatario: newValue.m_sContacto || "No especificado",
@@ -1041,7 +1041,13 @@ function Embarque(props) {
                 latitudD: newValue.m_sLatitud,
                 longitudD: newValue.m_sLongitud
             })
-            obtenerMunicipiosByIdEstado(newValue.m_nIdEstado).then(({data}) =>{
+            let estado
+            if (newValue.m_nIdEstado < 10){
+                estado = `0${newValue.m_nIdEstado}`
+            }else{
+                estado = newValue.m_nIdEstado
+            }
+            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipiosDestinatario(data)
             })
             obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado,newValue.m_nIdMunicipio).then(({data}) => {
