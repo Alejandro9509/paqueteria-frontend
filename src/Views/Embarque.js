@@ -94,6 +94,7 @@ import {obtenerMunicipiosByIdEstado} from "../Util/Contexts/MunicipiosContext";
 import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
 import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
 import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
+import Paquetes from "./Paquetes/Paquetes";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -741,6 +742,7 @@ function Embarque(props) {
         m_sObservaciones: "",
         m_nIdProducto: '',
     })
+    const [dataPaquetes, setDataPaquetes] = useState([])
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
     const [dataEstados, setDataEstados] = useState([])
     const [dataMunicipiosRemitente, setDataMunicipiosRemitente] = useState([])
@@ -1339,10 +1341,24 @@ function Embarque(props) {
         })
         const {paquetes, sobres} = state;
 
-        if (paquetes.length === 0) {
+        if (dataPaquetes.length === 0) {
             showSuccess("Debe agregar al menos un paquete")
             return
         }
+        let packs = []
+        dataPaquetes.forEach((p) => {
+            p.m_xPeso = p.m_rPeso
+            p.m_xLargo = p.m_rLargo
+            p.m_xAncho = p.m_rAncho
+            p.m_xAlto = p.m_rAlto
+            p.m_xVolumen = p.m_rVolumen
+            p.m_nIdTIpoEmpaque = p.m_nIdTipoEmbalaje
+            p.ctd = p.m_nCantidad
+            p.m_cValorDeclarado = p.m_cyValorDeclarado
+            p.m_nTipo = p.m_nIdTipo
+
+            packs.push(p)
+        })
         if (!state.entregaEnSucursal) {
             if (destinatario.latitudD.length === 0 && destinatario.longitudD.length === 0 && !coordenadas) {
                 setState({
@@ -1413,7 +1429,7 @@ function Embarque(props) {
 
             m_nNoPaquetes: state.paquetes.length,
             m_nNoSobres: state.sobres.length,
-            m_arrClsDetalle: state.paquetes,
+            m_arrClsDetalle: packs,
             // m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
             // m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
             // FechaLlegada: state.fechaHoraLlegada.split("T")[0],
@@ -1794,6 +1810,7 @@ function Embarque(props) {
         })
         resetRemitente()
         resetDestinatario()
+        setDataPaquetes([])
         resetEntregaDD()
     }
 
@@ -1875,36 +1892,6 @@ function Embarque(props) {
         getAllSucursales()
         getAllEstatusEmbarque()
         getAllTiposSeguro()
-
-        const {m_parrPaquetes, m_parrSobres} = respuesta.data;
-        let totalPaquetes = 0
-        m_parrSobres.forEach(sobre => {
-            m_parrPaquetes.push(sobre)
-        })
-        m_parrPaquetes.forEach(paq => {
-            paq.m_nIdEmbarqueDetalle = paq.m_nIdPaquete
-            paq["m_nTipo"] = paq.m_nIdTipo;
-            paq["m_xPeso"] = paq.m_rPeso;
-            paq["m_xLargo"] = paq.m_rLargo;
-            paq["m_xAncho"] = paq.m_rAncho;
-            paq["m_xAlto"] = paq.m_rAlto;
-            paq["m_xVolumen"] = paq.m_rVolumen;
-            paq["m_nIdTIpoEmpaque"] = paq.m_nIdTipoEmbalaje;
-            paq["m_cValorDeclarado"] = paq.m_cyValorDeclarado;
-            paq.ctd = paq.m_nCantidad
-            obtenerProductoById(paq.m_nIdProducto).then(({data}) => {
-                paq.producto = data
-                paq.m_sProducto = data.m_sDescripcion
-                totalPaquetes += parseInt(paq.ctd)
-            })
-            obtenerEmbalajesId(paq.m_nIdTipoEmbalaje).then(({data}) => {
-                paq.m_sTipoEmbalaje = data.m_sNombre
-            })
-            paq.m_sTipo = paq.m_nTipo == 1 ? 'Sobre' : 'Paquete'
-        })
-        m_parrSobres.forEach(sobre => {
-            sobre["m_nTipo"] = 1
-        })
 
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
             setState(state => {
@@ -2010,6 +1997,48 @@ function Embarque(props) {
             })
         })*/
 
+        /*const {m_parrPaquetes, m_parrSobres} = respuesta.data;
+        let totalPaquetes = 0
+        m_parrSobres.forEach(sobre => {
+            m_parrPaquetes.push(sobre)
+        })
+        m_parrPaquetes.forEach(paq => {
+            paq.m_nIdEmbarqueDetalle = paq.m_nIdPaquete
+            paq["m_nTipo"] = paq.m_nIdTipo;
+            paq["m_xPeso"] = paq.m_rPeso;
+            paq["m_xLargo"] = paq.m_rLargo;
+            paq["m_xAncho"] = paq.m_rAncho;
+            paq["m_xAlto"] = paq.m_rAlto;
+            paq["m_xVolumen"] = paq.m_rVolumen;
+            paq["m_nIdTIpoEmpaque"] = paq.m_nIdTipoEmbalaje;
+            paq["m_cValorDeclarado"] = paq.m_cyValorDeclarado;
+            paq.ctd = paq.m_nCantidad
+            obtenerProductoById(paq.m_nIdProducto).then(({data}) => {
+                paq.producto = data
+                paq.m_sProducto = data.m_sDescripcion
+                totalPaquetes += parseInt(paq.ctd)
+            })
+            obtenerEmbalajesId(paq.m_nIdTipoEmbalaje).then(({data}) => {
+                paq.m_sTipoEmbalaje = data.m_sNombre
+            })
+            paq.m_sTipo = paq.m_nTipo == 1 ? 'Sobre' : 'Paquete'
+        })
+        m_parrSobres.forEach(sobre => {
+            sobre["m_nTipo"] = 1
+        })*/
+
+        respuesta.data.m_parrPaquetes.forEach((p) => {
+            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+                p["producto"] = data
+                p.m_sProducto = data.m_sDescripcion
+            })
+            obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
+                p.m_sTipoEmbalaje = data.m_sNombre
+            })
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
+        })
+        setDataPaquetes(respuesta.data.m_parrPaquetes)
+
         setState(state => {
             return {
                 ...state,
@@ -2063,7 +2092,7 @@ function Embarque(props) {
                 // zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
                 // zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
 
-                paquetes: m_parrPaquetes,
+                // paquetes: m_parrPaquetes,
                 // sobres: m_parrSobres,
 
                 //Datos entrega
@@ -2261,7 +2290,7 @@ function Embarque(props) {
             respuesta.data.m_arrPaquetes.push(s)
         })
 
-        respuesta.data.m_arrPaquetes.forEach(p => {
+        /*respuesta.data.m_arrPaquetes.forEach(p => {
             obtenerProductoById(p.m_nIdProducto).then(({data}) => {
                 p.producto = data
                 totalPaquetes += parseInt(p.ctd)
@@ -2270,8 +2299,30 @@ function Embarque(props) {
                 p.m_sTipoEmbalaje = data.m_sNombre
                 p.m_sTipo = p.m_nTipo == 1 ? 'Sobre' : 'Paquete'
             })
-        })
+        })*/
         // setTotalPaquetes(totalPaquetes)
+        respuesta.data.m_arrPaquetes.forEach((p) => {
+            p.m_nIdPaquete = p.m_nIdEmbarqueDetalle
+            p.m_rPeso = p.m_xPeso
+            p.m_rLargo = p.m_xLargo
+            p.m_rAncho = p.m_xAncho
+            p.m_rAlto = p.m_xAlto
+            p.m_rVolumen = p.m_xVolumen
+            p.m_nIdTipoEmbalaje = p.m_nIdTIpoEmpaque
+            p.m_nCantidad = p.ctd
+            p.m_cyValorDeclarado = p.m_cValorDeclarado
+            p.m_nIdTipo = p.m_nTipo
+
+            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+                p["producto"] = data
+                p.m_sProducto = data.m_sDescripcion
+            })
+            obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
+                p.m_sTipoEmbalaje = data.m_sNombre
+            })
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
+        })
+        setDataPaquetes(respuesta.data.m_arrPaquetes)
 
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
             setState(state => {
@@ -3488,6 +3539,10 @@ function Embarque(props) {
         })
     }
 
+    const handleListPaquetesChange = (newList) => {
+        setDataPaquetes(newList)
+    }
+
     return (
         <div>
 
@@ -4464,7 +4519,7 @@ function Embarque(props) {
                                     </div>
 
                                     <div className="widget-wrap" id="paquetesSobres">
-                                        <div>
+                                        {/*<div>
                                             <Grid container>
                                                 <Grid item xs={6}>
                                                     <div className="widget-header">
@@ -4730,7 +4785,12 @@ function Embarque(props) {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>*/}
+                                        <Paquetes
+                                            dataPaquetes={dataPaquetes}
+                                            onChangeList={handleListPaquetesChange}
+                                            disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
+                                        />
                                     </div>
 
                                     <div className="row">
