@@ -221,7 +221,7 @@ function Embarque(props) {
         moneda: '',
         tipoCambio: '',
         tipoCobro: '',
-        clientePaga: {},
+        clientePaga: '',
 
         //Remitente
         /*idRemitente: '',
@@ -1410,8 +1410,6 @@ function Embarque(props) {
             m_sLongitudD: coordenadas ? coordenadas.lng : destinatario.latitudD,
             m_sLatitudR: remitente.latitudR,
             m_sLongitudR: remitente.latitudR,
-            m_nIdZonaOperativa: destinatario.zonaOperativaDestinatario.m_nIdZona,
-            m_nIdZonaTarifa: destinatario.zonaTarifaDestinatario.m_nIdZona,
 
             m_nNoPaquetes: state.paquetes.length,
             m_nNoSobres: state.sobres.length,
@@ -1446,6 +1444,9 @@ function Embarque(props) {
             params.DatosAdicionales = entregaDD.datosAdicionalesEnt
             params.m_nIdZonaOperativa = entregaDD.zonaOperativaEnt.m_nIdZona
             params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
+        }else{
+            params.m_nIdZonaOperativa = destinatario.zonaOperativaDestinatario.m_nIdZona
+            params.m_nIdZonaTarifa = destinatario.zonaTarifaDestinatario.m_nIdZona
         }
         if (state.entregaConCita) {
 
@@ -1624,8 +1625,8 @@ function Embarque(props) {
     useEffect(value => {
         let newTiposCobro = []
         if (state.entregaEnSucursal) {
-            if (state.tipoCobro == 3 || state.tipoCobro == 5) {
-                showSuccess("No se puede hacer cobro en origen ni destino cuando es entrega en sucursal, elige otra opción.")
+            if (state.tipoCobro == 5) {
+                showSuccess("No se puede hacer cobro en origen cuando es entrega en sucursal, elige otra opción.")
                 setState(state => {
                     return {
                         ...state,
@@ -1634,7 +1635,7 @@ function Embarque(props) {
                 })
             }
             dataTipoCobro.forEach((i) => {
-                i.valid = !(i.m_nIdTipoCobro == 3 || i.m_nIdTipoCobro == 5);
+                i.valid = !(i.m_nIdTipoCobro == 5);
                 newTiposCobro.push(i)
             })
         } else {
@@ -1701,7 +1702,7 @@ function Embarque(props) {
                 folioInforme: '',
                 tipoCambio: '',
                 tipoCobro: '',
-                clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
+                clientePaga: '',
                 idEmbarque: 0,
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
@@ -2121,7 +2122,6 @@ function Embarque(props) {
         getAllCiudades()
 
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
-            debugger
 
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
                 setRemitente(remitente => {
@@ -4339,7 +4339,8 @@ function Embarque(props) {
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5  unit">
                                                             <div className="input">
-                                                                <FormControl fullWidth variant="outlined"
+                                                                <FormControl fullWidth variant="outlined"                                                                         required
+
                                                                              margin="dense">
                                                                     <InputLabel id="tipoCambioLabel">Tipo de
                                                                         Cambio</InputLabel>
@@ -4347,7 +4348,6 @@ function Embarque(props) {
                                                                         labelId="tipoCambioLabel"
                                                                         label="Tipo de Cambio"
                                                                         className="form-control"
-                                                                        required
                                                                         value={state.tipoCambio}
                                                                         onChange={(event) => {
                                                                             event.preventDefault();
@@ -4375,7 +4375,7 @@ function Embarque(props) {
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="input select">
-                                                                <FormControl fullWidth variant="outlined"
+                                                                <FormControl fullWidth variant="outlined" required
                                                                              margin="dense">
                                                                     <InputLabel id="idTipoCobroLabel">Tipo
                                                                         Cobro</InputLabel>
@@ -4383,7 +4383,6 @@ function Embarque(props) {
                                                                         labelId={"idTipoCobroLabel"}
                                                                         label={"Tipo Cobro"}
                                                                         className="form-control"
-                                                                        required
                                                                         value={state.tipoCobro}
                                                                         disabled={state.agregar === "Consultar"}
                                                                         onChange={(event) => {
@@ -4425,7 +4424,11 @@ function Embarque(props) {
                                                                         forcePopupIcon={false}
                                                                         options={dataClientes}
                                                                         disabled={state.agregar === "Consultar"}
-                                                                        getOptionLabel={(option) => `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`}
+                                                                        getOptionLabel={(option) => (
+                                                                            option ?
+                                                                            `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`
+                                                                                : ''
+                                                                        )}
                                                                         variant="outlined"
                                                                         name={"clientePaga"}
                                                                         style={{
@@ -4438,7 +4441,6 @@ function Embarque(props) {
                                                                                 margin="dense"
                                                                                 required
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
-                                                                                InputLabelProps={{shrink: true}}
                                                                                 onClick={handleClickResponsablePago}
                                                                                 {...params}
                                                                             />
@@ -4448,8 +4450,8 @@ function Embarque(props) {
                                                             </div>
                                                             <div className="col-md-6">
                                                                 {
-                                                                    state.clientePaga.m_nIdTipoSeguro === undefined ? ``
-                                                                        : state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}`: `NO tiene seguro`
+                                                                    state.clientePaga ? state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}`: `NO tiene seguro`
+                                                                        : ''
 
                                                                 }
                                                             </div>
