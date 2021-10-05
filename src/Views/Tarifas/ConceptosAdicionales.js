@@ -94,12 +94,12 @@ class ConceptosAdicionales extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const {customConceptos, listadoConceptosAlternativos} = this.props
+        /*const {customConceptos, listadoConceptosAlternativos} = this.props
         if (listadoConceptosAlternativos != prevProps.listadoConceptosAlternativos){
             if (customConceptos){
                 this.setState({ conceptos: listadoConceptosAlternativos })
             }
-        }
+        }*/
 
     }
 
