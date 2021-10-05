@@ -829,6 +829,9 @@ function Embarque(props) {
             }
         })
         if (input === "Remitente"){
+            if (newValue.m_nIdCP == 0){
+                showSuccess("El remitente o destinatario seleccionado no cuenta con Código Postal registrado. Contacte a un Administrador.")
+            }
             setRemitente({
                 idRemitente: newValue.m_nIdRemitenteDestinatario,
                 aliasRemitente: newValue.m_sAlias,
@@ -840,8 +843,8 @@ function Embarque(props) {
                     m_sCP: newValue.m_sCodigoPostal,
                     m_sColonia: newValue.m_sColonia
                 }: '',
-                estadoRemitente: newValue.m_nIdEstado,
-                municipioRemitente: newValue.m_nIdMunicipio ? newValue.m_nIdMunicipio : '',
+                estadoRemitente: newValue.m_nIdEstado || 0,
+                municipioRemitente: newValue.m_nIdMunicipio || '',
                 correoRemitente: newValue.m_sCorreoElectronico || "No especificado",
                 telefonoRemitente: newValue.m_sTelefono || 0,
                 contactoRemitente: newValue.m_sContacto || "No especificado",
@@ -1017,6 +1020,9 @@ function Embarque(props) {
             [input]: newValue
         })
         if (input === "Destinatario"){
+            if (newValue.m_nIdCP == 0){
+                showSuccess("El remitente o destinatario seleccionado no cuenta con Código Postal registrado. Contacte a un Administrador.")
+            }
             setDestinatario({
                 idDestinatario: newValue.m_nIdRemitenteDestinatario,
                 aliasDestinatario: newValue.m_sAlias,
@@ -1028,8 +1034,8 @@ function Embarque(props) {
                     m_sCP: newValue.m_sCodigoPostal,
                     m_sColonia: newValue.m_sColonia
                 } : '',
-                estadoDestinatario: newValue.m_nIdEstado,
-                municipioDestinatario: newValue.m_nIdMunicipio ? newValue.m_nIdMunicipio : '',
+                estadoDestinatario: newValue.m_nIdEstado || '',
+                municipioDestinatario: newValue.m_nIdMunicipio || '',
                 correoDestinatario: newValue.m_sCorreoElectronico || "No especificado",
                 telefonoDestinatario: newValue.m_sTelefono || 0,
                 contactoDestinatario: newValue.m_sContacto || "No especificado",
