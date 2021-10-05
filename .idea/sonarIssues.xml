@@ -728,6 +728,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/context/AcademicUnitContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/context/CampusContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/context/IndicatorContext.js">
           <value>
             <set />
@@ -759,6 +769,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/catalogs/academic-unit/catalog-academic-unit.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/follow-up/indicators.js">
           <value>
             <set />
           </value>

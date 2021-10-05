@@ -32,7 +32,7 @@ render(){
       return(
         localStorage.getItem(ACCESS_TOKEN) ? (
           <Switch>
-            <Route path="/LoginERP" component={LoginExterno} />
+            <Route path="/loginERP" component={LoginExterno} />
             <Route path="/Indicadores" component={Indicadores} />
             <Route path="/Configuracion" component={Configuracion} />
             <Route exact path="/app/applications/:esRecoleccion/:id/tracking" component={Tracking} />
