@@ -1045,7 +1045,6 @@ function Embarque(props) {
                 numeroExtDestinatario: newValue.m_sNoExterior || 0,
                 numeroIntDestinatario: newValue.m_sNoInterior || 0,
                 coloniaDestinatario: newValue.m_sColonia || "No especificado",
-                destinatario: newValue,
                 latitudD: newValue.m_sLatitud,
                 longitudD: newValue.m_sLongitud
             })
@@ -1474,7 +1473,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-      /*  if (state.idEmbarque != 0) {
+        if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1503,7 +1502,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }*/
+        }
     };
 
     function handleSelectCP(id, cp) {
@@ -2219,8 +2218,8 @@ function Embarque(props) {
                             m_sCP: cp.data.m_sCP,
                             m_sColonia: respuesta.data.m_sColoniaDestinatario
                         },
-                        latitudD: data.m_sLatitudD,
-                        longitudD: data.m_sLongitudD
+                        latitudD: data.m_sLatitudD || '',
+                        longitudD: data.m_sLongitudD || ''
                     }
                 })
             })
@@ -3550,7 +3549,7 @@ function Embarque(props) {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     titulo={state.titulo}
-                                    direccion={destinatario.destinatario}>
+                                    direccion={destinatario.nombreDestinatario}>
 
                 </ConfirmarUbicacion>
             }
