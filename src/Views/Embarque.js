@@ -853,8 +853,13 @@ function Embarque(props) {
                 latitudR: newValue.m_sLatitud,
                 longitudR: newValue.m_sLongitud
             })
-
-            obtenerMunicipiosByIdEstado(newValue.m_nIdEstado).then(({data}) =>{
+            let estado
+            if (newValue.m_nIdEstado < 10){
+                estado = `0${newValue.m_nIdEstado}`
+            }else{
+                estado = newValue.m_nIdEstado
+            }
+            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipiosRemitente(data)
             })
 
@@ -2104,6 +2109,8 @@ function Embarque(props) {
         getAllCiudades()
 
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
+            debugger
+
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
                 setRemitente(remitente => {
                     return {
@@ -2120,7 +2127,7 @@ function Embarque(props) {
                         correoRemitente: respuesta.data.m_sCorreoRemitente,
                         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                         contactoRemitente: respuesta.data.m_sContactoRemitente,
-                        origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+                        // origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
                         // zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
                         idRemitente: respuesta.data.m_nIdRemitente,
                         aliasRemitente: respuesta.data.m_sAliasRemitente,
