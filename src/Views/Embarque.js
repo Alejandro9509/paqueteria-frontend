@@ -181,17 +181,18 @@ function Embarque(props) {
 
     const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
     const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
-    const [dataCodigosPostalesRecoleccionDD, setDataCodigosPostalesRecoleccionDD] = React.useState([]);
+    // const [dataCodigosPostalesRecoleccionDD, setDataCodigosPostalesRecoleccionDD] = React.useState([]);
     const [dataCodigosPostalesEntregaDD, setDataCodigosPostalesEntregaDD] = React.useState([]);
 
-    const [dataOperador, setDataOperador] = React.useState([]);
+    /*const [dataOperador, setDataOperador] = React.useState([]);
     const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
-    const [dataUnidad, setDataUnidad] = React.useState([]);
-    const [dataZona, setDataZona] = React.useState([]);
+    const [dataUnidad, setDataUnidad] = React.useState([]);*/
+
+    // const [dataZona, setDataZona] = React.useState([]);
 
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
-    const [dataFolioEmbarque, SetDataFolioEmbarque] = React.useState([]);
-    const [dataFormatos, setFormatosImpresion] = React.useState([]);
+    // const [dataFolioEmbarque, SetDataFolioEmbarque] = React.useState([]);
+    // const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario,] = React.useState([]);
     const [state, setState] = React.useState({
         //==VARIABLES DE LISTADO==
@@ -298,11 +299,11 @@ function Embarque(props) {
 
     });
 
-    function getAllData() {
-        obtenerEmbarques().then((respuesta) => {
-            setData(respuesta.data);
-        });
-    }
+    // function getAllData() {
+    //     obtenerEmbarques().then((respuesta) => {
+    //         setData(respuesta.data);
+    //     });
+    // }
     const [filtros, setFiltros] = useState({
         fechaInicial: 0,
         fechaFinal: 0,
@@ -320,7 +321,6 @@ function Embarque(props) {
             folio: '',
         })
     }
-
 
     const handleChangeFiltros = (event) => {
         event.preventDefault()
@@ -427,7 +427,7 @@ function Embarque(props) {
             accessor: "m_nIdEstado",
         },
     ]);
-    const columnsOperadores = React.useMemo(() => [
+    /*const columnsOperadores = React.useMemo(() => [
         {
             Name: "Numero Operador",
             accessor: "m_nNumeroOperador",
@@ -494,7 +494,7 @@ function Embarque(props) {
             Name: "Estatus",
             accessor: "m_bActivo",
         },
-    ]);
+    ]);*/
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -725,7 +725,7 @@ function Embarque(props) {
         }
     ]);
     const [dataProductos, setDataProductos] = useState([])
-    const [totalPaquetes, setTotalPaquetes] = useState(0)
+    // const [totalPaquetes, setTotalPaquetes] = useState(0)
     const [paquete, setPaquete] = useState({
         m_xPeso: "",
         m_xLargo: "",
@@ -1238,7 +1238,7 @@ function Embarque(props) {
         currency: 'USD',
     });
 
-    function handleSelectRemitente(newValue) {
+    /*function handleSelectRemitente(newValue) {
         console.log(newValue)
         let user = newValue
         obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
@@ -1295,7 +1295,7 @@ function Embarque(props) {
             });
         })
 
-    }
+    }*/
 
     const handleClickRemitenteDestinatario = (event) => {
         event.preventDefault()
@@ -1319,13 +1319,13 @@ function Embarque(props) {
         }
     }
 
-    const validarSobre = (sobre) => {
+    /*const validarSobre = (sobre) => {
         if (sobre.m_sDescripcion != '') {
             return true
         } else {
             return false
         }
-    }
+    }*/
 
     function confirmarUbicacion(coordenadas, e) {
         handleAceptar(e, coordenadas)
@@ -2271,7 +2271,7 @@ function Embarque(props) {
                 p.m_sTipo = p.m_nTipo == 1 ? 'Sobre' : 'Paquete'
             })
         })
-        setTotalPaquetes(totalPaquetes)
+        // setTotalPaquetes(totalPaquetes)
 
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
             setState(state => {
@@ -2377,11 +2377,11 @@ function Embarque(props) {
         $('#Listado').addClass('in show');
     }
 
-    function getUltimoFolioEmbarque() {
+    /*function getUltimoFolioEmbarque() {
         obtenerUltimoFolioEmbarques().then((respuesta) => {
             SetDataFolioEmbarque(respuesta.data);
         });
-    }
+    }*/
 
     const handleChange = (event) => {
         setState({
@@ -2424,7 +2424,7 @@ function Embarque(props) {
         });
     };
 
-    const handleCodigoPostalRemitenteClick = (event) => {
+    /*const handleCodigoPostalRemitenteClick = (event) => {
         event.preventDefault();
         if (dataCodigosPostalesRemitente.length > 0) {
             if (dataCodigosPostalesRemitente[0].m_nIdCiudad != state.ciudadRemitente) {
@@ -2453,7 +2453,7 @@ function Embarque(props) {
                 setDataCodigosPostalesDestinatario(respuesta.data);
             });
         }
-    }
+    }*/
 
     /*const handleCodigoPostalEntregaClick = (event) => {
         event.preventDefault();
@@ -2470,13 +2470,13 @@ function Embarque(props) {
         }
     }*/
 
-    const handleChangeCiudadRemitente = (event) => {
+    /*const handleChangeCiudadRemitente = (event) => {
         event.preventDefault();
         setState({
             ...state,
             ciudadRemitente: event.target.value,
         });
-    }
+    }*/
 
     const handleClickCiudad = (event) => {
         event.preventDefault()
@@ -2485,7 +2485,7 @@ function Embarque(props) {
         }
     }
 
-    const handleChangeCiudadDestinatario = (event) => {
+    /*const handleChangeCiudadDestinatario = (event) => {
         event.preventDefault();
         setState({
             ...state,
@@ -2521,7 +2521,7 @@ function Embarque(props) {
         obtenerEmbarquesFiltro(fechaInicial, event.target.value, sucursalListado, estatusListado, folioEmbarque).then((respuesta) => {
             setData(respuesta.data);
         });
-    };
+    };*/
 
     const handleSucursalFiltro = async (event) => {
         setState({
@@ -2534,7 +2534,7 @@ function Embarque(props) {
         });
     };
 
-    const handleEstatusFiltro = async (event) => {
+    /*const handleEstatusFiltro = async (event) => {
         setState({
             ...state,
             estatusListado: event.target.value,
@@ -2543,7 +2543,7 @@ function Embarque(props) {
         obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, event.target.value, folioEmbarque).then((respuesta) => {
             setData(respuesta.data);
         });
-    };
+    };*/
 
     //Maneja filtrado de listado embarque
     const handleFolioEmbarqueFiltro = async (event) => {
@@ -2576,7 +2576,7 @@ function Embarque(props) {
         console.log(state.identificadorModal);
     }
 
-    const handleZonaRemitenteSelected = (newValue) => {
+    /*const handleZonaRemitenteSelected = (newValue) => {
         setState({
             ...state,
             zonaRemitente: newValue,
@@ -2596,7 +2596,7 @@ function Embarque(props) {
             ...state,
             zonaDestinatario: newValue
         })
-    }
+    }*/
 
     const handlePatrocinadorSelected = (newValue) => {
         setState({
@@ -2612,12 +2612,12 @@ function Embarque(props) {
         }
     }
 
-    function getAllZonas() {
+    /*function getAllZonas() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
         axios.get(url, {headers}).then((respuesta) => {
             setDataZona(respuesta.data);
         });
-    }
+    }*/
 
     const getAllClientes = () => {
         obtenerCliente().then((respuesta) => {
@@ -2625,13 +2625,13 @@ function Embarque(props) {
         })
     }
 
-    const handleChangeZonaEntrega = (event) => {
+    /*const handleChangeZonaEntrega = (event) => {
         event.preventDefault();
         setState({
             ...state,
             zonaEntrega: event.target.value,
         });
-    }
+    }*/
 
     const getDataParaListado = () => {
         getAllEmbarque();
@@ -2653,11 +2653,11 @@ function Embarque(props) {
         });
     }
 
-    function getFormatosImpresion() {
+    /*function getFormatosImpresion() {
         obtenerFormatosImpresion().then(respuesta => {
             setFormatosImpresion(respuesta.data)
         });
-    };
+    };*/
 
     const getAllRemitentesDestinatarios = () => {
         obtenerRemitentesDestinatarios().then((respuesta) => {
@@ -3002,7 +3002,7 @@ function Embarque(props) {
         );
     }
 
-    function TableOperadores({columns, data, select}) {
+    /*function TableOperadores({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -3042,7 +3042,7 @@ function Embarque(props) {
                                 // we can add them into the header props
                                 <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                                     {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
+                                    {/!* Add a sort direction indicator *!/}
                                     <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
@@ -3088,9 +3088,9 @@ function Embarque(props) {
                 </table>
             </div>
         );
-    }
+    }*/
 
-    function TableTipoUnidad({columns, data, select}) {
+    /*function TableTipoUnidad({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -3127,7 +3127,7 @@ function Embarque(props) {
                                 // we can add them into the header props
                                 <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                                     {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
+                                    {/!* Add a sort direction indicator *!/}
                                     <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
@@ -3173,9 +3173,9 @@ function Embarque(props) {
                 </table>
             </div>
         );
-    }
+    }*/
 
-    function TableUnidad({columns, data, select}) {
+    /*function TableUnidad({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -3215,7 +3215,7 @@ function Embarque(props) {
                                 // we can add them into the header props
                                 <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                                     {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
+                                    {/!* Add a sort direction indicator *!/}
                                     <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
@@ -3259,9 +3259,9 @@ function Embarque(props) {
                 </table>
             </div>
         );
-    }
+    }*/
 
-    const handleImprimir = () => {
+    /*const handleImprimir = () => {
         imprimirFormatosId(state.formatoSeleccionado).then((response) => {
             var file = new Blob([response.data], {type: 'application/pdf'})
             var fileURL = URL.createObjectURL(file)
@@ -3269,7 +3269,7 @@ function Embarque(props) {
             window.open(fileURL);
         })
 
-    }
+    }*/
 
     function openSection(index) {
         // closeSeccions()
@@ -3404,7 +3404,7 @@ function Embarque(props) {
         paquetes.forEach((p) => {
             totalCantidad += parseInt(p.ctd)
         })
-        setTotalPaquetes(totalCantidad)
+        // setTotalPaquetes(totalCantidad)
     };
 
     const handleChangePaqueteProductov2 = (event, newValue) => {
@@ -3681,7 +3681,7 @@ function Embarque(props) {
                             </DialogActions>
                         </div>
                     )}
-                    {state.tipoModal === 2 && (
+                    {/*{state.tipoModal === 2 && (
                         <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
@@ -3723,8 +3723,8 @@ function Embarque(props) {
                                 </button>
                             </DialogActions>
                         </div>
-                    )}
-                    {state.tipoModal === 3 && (
+                    )}*/}
+                    {/*{state.tipoModal === 3 && (
                         <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
@@ -3765,8 +3765,8 @@ function Embarque(props) {
                                 </button>
                             </DialogActions>
                         </div>
-                    )}
-                    {state.tipoModal === 4 && (
+                    )}*/}
+                    {/*{state.tipoModal === 4 && (
                         <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
@@ -3808,7 +3808,7 @@ function Embarque(props) {
                                 </button>
                             </DialogActions>
                         </div>
-                    )}
+                    )}*/}
                     {state.tipoModal === 5 && (
                         <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
@@ -3852,7 +3852,7 @@ function Embarque(props) {
                             </DialogActions>
                         </div>
                     )}
-                    {state.tipoModal === 6 &&
+                    {/*{state.tipoModal === 6 &&
                     <div className="row" style={{backgroundColor: '#FFFFFF'}}>
                         <DialogTitle style={{padding: "0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
                         <div>
@@ -3896,7 +3896,7 @@ function Embarque(props) {
 
                         </DialogActions>
                     </div>
-                    }
+                    }*/}
                 </DialogContent>
             </Dialog>
 
