@@ -968,7 +968,7 @@ function Informes({history}) {
     }
 
     useEffect(value => {
-        if (state.IdCiudadOrigen && state.IdCiudadDestino && state.IdRuta != 0 && state.IdRuta != undefined && state.IdRuta != "") {
+        if (state.IdCiudadOrigen && state.IdCiudadDestino ) {
             getAllGuiasFrom();
 
         }
@@ -1026,7 +1026,7 @@ function Informes({history}) {
             setState({
                 ...state,
                 IdInforme: id,
-                fechaHora: data.m_sFechayHora,
+                fechaHora: data.m_dFecha + "T" + data.m_tHora,
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadOrigen),
                 IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
