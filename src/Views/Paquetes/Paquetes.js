@@ -145,7 +145,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
     const addPaquetev2 = (event) => {
         let paq = paquete
         if (validarPaquetes(paq)){
-            paq.m_nIdPaquete = paq.m_nIdPaquete ? paq.m_nIdPaquete : dataPaquetes.length + 1
+            paq.m_nIdPaquete = paq.m_nIdPaquete != 0 ? paq.m_nIdPaquete : dataPaquetes.length + 1
             paq.m_cyValorDeclarado = paq.m_cyValorDeclarado ? paq.m_cyValorDeclarado : 0
             if (paq.m_cyValorDeclarado === 0 && tieneSeguro){
                 showSuccess("El campo de valor declarado es necesario para el seguro.")
@@ -183,27 +183,36 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
     }
 
     const handleChangePaqueteProductov2 = (event, newValue) => {
-        setPaquete(paquete =>{
-            return{
-                ...paquete,
-                producto: newValue,
-                m_nIdProducto: newValue.m_nIdProducto,
-                m_rLargo: newValue.m_xLargo,
-                m_rAlto: newValue.m_xAlto,
-                m_rAncho: newValue.m_xAncho,
-                m_rPeso: newValue.m_xPeso,
-                m_nIdTipoEmbalaje: newValue.m_nIdEmbalaje,
-                m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == newValue.m_nIdEmbalaje).m_sNombre,
-                m_sDescripcion: newValue.m_nIdProducto== 1 ? "" : newValue.m_sDescripcion,
-                m_sProducto: newValue.m_sDescripcion
-            }
-        })
-        setPaquete(paquete =>{
-            return{
-                ...paquete,
-                m_rVolumen: paquete.m_rLargo * paquete.m_rAlto * paquete.m_rAncho
-            }})
-
+        if (newValue){
+            setPaquete(paquete =>{
+                return{
+                    ...paquete,
+                    producto: newValue,
+                    m_nIdProducto: newValue.m_nIdProducto || 0,
+                    m_rLargo: newValue.m_xLargo,
+                    m_rAlto: newValue.m_xAlto,
+                    m_rAncho: newValue.m_xAncho,
+                    m_rPeso: newValue.m_xPeso,
+                    m_nIdTipoEmbalaje: newValue.m_nIdEmbalaje,
+                    m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == newValue.m_nIdEmbalaje).m_sNombre,
+                    m_sDescripcion: newValue.m_nIdProducto== 1 ? "" : newValue.m_sDescripcion,
+                    m_sProducto: newValue.m_sDescripcion
+                }
+            })
+            setPaquete(paquete =>{
+                return{
+                    ...paquete,
+                    m_rVolumen: paquete.m_rLargo * paquete.m_rAlto * paquete.m_rAncho
+                }})
+        }else{
+            setPaquete(paquete =>{
+                return{
+                    ...paquete,
+                    producto: null,
+                    m_nIdProducto:  0,
+                }
+            })
+        }
     };
 
     const handleChangePaquetev2 = (event) => {
@@ -235,22 +244,24 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
     };
 
     const resetPaquete = () =>{
-        setPaquete({
-            m_rPeso: "",
-            m_rLargo: "",
-            m_rAncho: "",
-            m_rAlto: "",
-            m_rVolumen: "",
-            m_nIdTipoEmbalaje: "",
-            m_sTipoEmbalaje: "",
-            m_cyValorDeclarado: "",
-            m_sDescripcion: "",
-            m_nCantidad: "",
-            m_nIdTipo: 2,
-            m_sObservaciones: "",
-            producto: null,
-            m_nIdProducto: "",
-            m_sTipo: "Paquete",
+        setPaquete(paquete => {
+            return {
+                ...paquete,
+                m_nIdPaquete: 0,
+                m_rPeso: "",
+                m_rLargo: "",
+                m_rAncho: "",
+                m_rAlto: "",
+                m_rVolumen: "",
+                m_nIdTipoEmbalaje: "",
+                m_sTipoEmbalaje: "",
+                m_cyValorDeclarado: "",
+                m_sDescripcion: "",
+                m_nCantidad: "",
+                m_nIdTipo: 2,
+                m_sObservaciones: "",
+                m_sTipo: "Paquete",
+            }
         })
     }
 
@@ -327,13 +338,12 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
                                         value={paquete.producto}
                                         freeSolo
                                         onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
-                                        disableClearable
+                                        // disableClearable
                                         forcePopupIcon={false}
                                         options={dataProductos}
                                         disabled={disabled}
                                         getOptionLabel={(option) => `${option.m_sDescripcion}`}
                                         variant="outlined"
-                                        inputValue={`${paquete.producto == null ? '' : paquete.producto.m_sDescripcion}`}
                                         name={"producto"}
                                         style={{transform: "translate(14px, 10px) scale(1) !important"}}
                                         renderInput={(params) =>

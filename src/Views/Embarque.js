@@ -94,6 +94,7 @@ import {obtenerMunicipiosByIdEstado} from "../Util/Contexts/MunicipiosContext";
 import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
 import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
 import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
+import Paquetes from "./Paquetes/Paquetes";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -181,17 +182,18 @@ function Embarque(props) {
 
     const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
     const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
-    const [dataCodigosPostalesRecoleccionDD, setDataCodigosPostalesRecoleccionDD] = React.useState([]);
+    // const [dataCodigosPostalesRecoleccionDD, setDataCodigosPostalesRecoleccionDD] = React.useState([]);
     const [dataCodigosPostalesEntregaDD, setDataCodigosPostalesEntregaDD] = React.useState([]);
 
-    const [dataOperador, setDataOperador] = React.useState([]);
+    /*const [dataOperador, setDataOperador] = React.useState([]);
     const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
-    const [dataUnidad, setDataUnidad] = React.useState([]);
-    const [dataZona, setDataZona] = React.useState([]);
+    const [dataUnidad, setDataUnidad] = React.useState([]);*/
+
+    // const [dataZona, setDataZona] = React.useState([]);
 
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
-    const [dataFolioEmbarque, SetDataFolioEmbarque] = React.useState([]);
-    const [dataFormatos, setFormatosImpresion] = React.useState([]);
+    // const [dataFolioEmbarque, SetDataFolioEmbarque] = React.useState([]);
+    // const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario,] = React.useState([]);
     const [state, setState] = React.useState({
         //==VARIABLES DE LISTADO==
@@ -220,7 +222,7 @@ function Embarque(props) {
         moneda: '',
         tipoCambio: '',
         tipoCobro: '',
-        clientePaga: {},
+        clientePaga: '',
 
         //Remitente
         /*idRemitente: '',
@@ -298,11 +300,11 @@ function Embarque(props) {
 
     });
 
-    function getAllData() {
-        obtenerEmbarques().then((respuesta) => {
-            setData(respuesta.data);
-        });
-    }
+    // function getAllData() {
+    //     obtenerEmbarques().then((respuesta) => {
+    //         setData(respuesta.data);
+    //     });
+    // }
     const [filtros, setFiltros] = useState({
         fechaInicial: 0,
         fechaFinal: 0,
@@ -320,7 +322,6 @@ function Embarque(props) {
             folio: '',
         })
     }
-
 
     const handleChangeFiltros = (event) => {
         event.preventDefault()
@@ -427,7 +428,7 @@ function Embarque(props) {
             accessor: "m_nIdEstado",
         },
     ]);
-    const columnsOperadores = React.useMemo(() => [
+    /*const columnsOperadores = React.useMemo(() => [
         {
             Name: "Numero Operador",
             accessor: "m_nNumeroOperador",
@@ -494,7 +495,7 @@ function Embarque(props) {
             Name: "Estatus",
             accessor: "m_bActivo",
         },
-    ]);
+    ]);*/
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -653,7 +654,7 @@ function Embarque(props) {
             }
         },
     ]);
-    const columnsPaquetes = React.useMemo(() => [
+    /*const columnsPaquetes = React.useMemo(() => [
         {
             headerName: "Tipo",
             field: "m_sTipo",
@@ -724,9 +725,9 @@ function Embarque(props) {
             flex: 1,
         }
     ]);
-    const [dataProductos, setDataProductos] = useState([])
-    const [totalPaquetes, setTotalPaquetes] = useState(0)
-    const [paquete, setPaquete] = useState({
+    const [dataProductos, setDataProductos] = useState([])*/
+    // const [totalPaquetes, setTotalPaquetes] = useState(0)
+    /*const [paquete, setPaquete] = useState({
         m_xPeso: "",
         m_xLargo: "",
         m_xAncho: "",
@@ -740,7 +741,8 @@ function Embarque(props) {
         m_sTipo: "Paquete",
         m_sObservaciones: "",
         m_nIdProducto: '',
-    })
+    })*/
+    const [dataPaquetes, setDataPaquetes] = useState([])
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
     const [dataEstados, setDataEstados] = useState([])
     const [dataMunicipiosRemitente, setDataMunicipiosRemitente] = useState([])
@@ -829,19 +831,22 @@ function Embarque(props) {
             }
         })
         if (input === "Remitente"){
+            if (newValue.m_nIdCP == 0){
+                showSuccess("El remitente o destinatario seleccionado no cuenta con Código Postal registrado. Contacte a un Administrador.")
+            }
             setRemitente({
                 idRemitente: newValue.m_nIdRemitenteDestinatario,
                 aliasRemitente: newValue.m_sAlias,
                 nombreRemitente: newValue,
                 RFCRemitente: newValue.m_sRFC,
                 domicilioRemitente: newValue.m_sDomicilio || "No especificado",
-                codigoPostalRemitente: {
+                codigoPostalRemitente: newValue.m_nIdCP != 0 ? {
                     m_nIdCP: newValue.m_nIdCP,
                     m_sCP: newValue.m_sCodigoPostal,
                     m_sColonia: newValue.m_sColonia
-                },
-                estadoRemitente: newValue.m_nIdEstado,
-                municipioRemitente: newValue.m_nIdMunicipio ? newValue.m_nIdMunicipio : 0,
+                }: '',
+                estadoRemitente: newValue.m_nIdEstado || 0,
+                municipioRemitente: newValue.m_nIdMunicipio || '',
                 correoRemitente: newValue.m_sCorreoElectronico || "No especificado",
                 telefonoRemitente: newValue.m_sTelefono || 0,
                 contactoRemitente: newValue.m_sContacto || "No especificado",
@@ -1017,19 +1022,22 @@ function Embarque(props) {
             [input]: newValue
         })
         if (input === "Destinatario"){
+            if (newValue.m_nIdCP == 0){
+                showSuccess("El remitente o destinatario seleccionado no cuenta con Código Postal registrado. Contacte a un Administrador.")
+            }
             setDestinatario({
                 idDestinatario: newValue.m_nIdRemitenteDestinatario,
                 aliasDestinatario: newValue.m_sAlias,
                 nombreDestinatario: newValue,
                 RFCDestinatario: newValue.m_sRFC,
                 domicilioDestinatario: newValue.m_sDomicilio || "No especificado",
-                codigoPostalDestinatario: {
+                codigoPostalDestinatario: newValue.m_nIdCP != 0 ? {
                     m_nIdCP: newValue.m_nIdCP,
                     m_sCP: newValue.m_sCodigoPostal,
                     m_sColonia: newValue.m_sColonia
-                },
-                estadoDestinatario: newValue.m_nIdEstado,
-                municipioDestinatario: newValue.m_nIdMunicipio ? newValue.m_nIdMunicipio : 0,
+                } : '',
+                estadoDestinatario: newValue.m_nIdEstado || '',
+                municipioDestinatario: newValue.m_nIdMunicipio || '',
                 correoDestinatario: newValue.m_sCorreoElectronico || "No especificado",
                 telefonoDestinatario: newValue.m_sTelefono || 0,
                 contactoDestinatario: newValue.m_sContacto || "No especificado",
@@ -1037,11 +1045,16 @@ function Embarque(props) {
                 numeroExtDestinatario: newValue.m_sNoExterior || 0,
                 numeroIntDestinatario: newValue.m_sNoInterior || 0,
                 coloniaDestinatario: newValue.m_sColonia || "No especificado",
-                destinatario: newValue,
                 latitudD: newValue.m_sLatitud,
                 longitudD: newValue.m_sLongitud
             })
-            obtenerMunicipiosByIdEstado(newValue.m_nIdEstado).then(({data}) =>{
+            let estado
+            if (newValue.m_nIdEstado < 10){
+                estado = `0${newValue.m_nIdEstado}`
+            }else{
+                estado = newValue.m_nIdEstado
+            }
+            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipiosDestinatario(data)
             })
             obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado,newValue.m_nIdMunicipio).then(({data}) => {
@@ -1226,7 +1239,7 @@ function Embarque(props) {
         currency: 'USD',
     });
 
-    function handleSelectRemitente(newValue) {
+    /*function handleSelectRemitente(newValue) {
         console.log(newValue)
         let user = newValue
         obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
@@ -1283,7 +1296,7 @@ function Embarque(props) {
             });
         })
 
-    }
+    }*/
 
     const handleClickRemitenteDestinatario = (event) => {
         event.preventDefault()
@@ -1307,13 +1320,13 @@ function Embarque(props) {
         }
     }
 
-    const validarSobre = (sobre) => {
+    /*const validarSobre = (sobre) => {
         if (sobre.m_sDescripcion != '') {
             return true
         } else {
             return false
         }
-    }
+    }*/
 
     function confirmarUbicacion(coordenadas, e) {
         handleAceptar(e, coordenadas)
@@ -1327,10 +1340,24 @@ function Embarque(props) {
         })
         const {paquetes, sobres} = state;
 
-        if (paquetes.length === 0) {
+        if (dataPaquetes.length === 0) {
             showSuccess("Debe agregar al menos un paquete")
             return
         }
+        let packs = []
+        dataPaquetes.forEach((p) => {
+            p.m_xPeso = p.m_rPeso
+            p.m_xLargo = p.m_rLargo
+            p.m_xAncho = p.m_rAncho
+            p.m_xAlto = p.m_rAlto
+            p.m_xVolumen = p.m_rVolumen
+            p.m_nIdTIpoEmpaque = p.m_nIdTipoEmbalaje
+            p.ctd = p.m_nCantidad
+            p.m_cValorDeclarado = p.m_cyValorDeclarado
+            p.m_nTipo = p.m_nIdTipo
+
+            packs.push(p)
+        })
         if (!state.entregaEnSucursal) {
             if (destinatario.latitudD.length === 0 && destinatario.longitudD.length === 0 && !coordenadas) {
                 setState({
@@ -1398,12 +1425,10 @@ function Embarque(props) {
             m_sLongitudD: coordenadas ? coordenadas.lng : destinatario.latitudD,
             m_sLatitudR: remitente.latitudR,
             m_sLongitudR: remitente.latitudR,
-            m_nIdZonaOperativa: destinatario.zonaOperativaDestinatario.m_nIdZona,
-            m_nIdZonaTarifa: destinatario.zonaTarifaDestinatario.m_nIdZona,
 
             m_nNoPaquetes: state.paquetes.length,
             m_nNoSobres: state.sobres.length,
-            m_arrClsDetalle: state.paquetes,
+            m_arrClsDetalle: packs,
             // m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
             // m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
             // FechaLlegada: state.fechaHoraLlegada.split("T")[0],
@@ -1434,6 +1459,9 @@ function Embarque(props) {
             params.DatosAdicionales = entregaDD.datosAdicionalesEnt
             params.m_nIdZonaOperativa = entregaDD.zonaOperativaEnt.m_nIdZona
             params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
+        }else{
+            params.m_nIdZonaOperativa = destinatario.zonaOperativaDestinatario.m_nIdZona
+            params.m_nIdZonaTarifa = destinatario.zonaTarifaDestinatario.m_nIdZona
         }
         if (state.entregaConCita) {
 
@@ -1612,8 +1640,8 @@ function Embarque(props) {
     useEffect(value => {
         let newTiposCobro = []
         if (state.entregaEnSucursal) {
-            if (state.tipoCobro == 3 || state.tipoCobro == 5) {
-                showSuccess("No se puede hacer cobro en origen ni destino cuando es entrega en sucursal, elige otra opción.")
+            if (state.tipoCobro == 5) {
+                showSuccess("No se puede hacer cobro en origen cuando es entrega en sucursal, elige otra opción.")
                 setState(state => {
                     return {
                         ...state,
@@ -1622,7 +1650,7 @@ function Embarque(props) {
                 })
             }
             dataTipoCobro.forEach((i) => {
-                i.valid = !(i.m_nIdTipoCobro == 3 || i.m_nIdTipoCobro == 5);
+                i.valid = !(i.m_nIdTipoCobro == 5);
                 newTiposCobro.push(i)
             })
         } else {
@@ -1689,7 +1717,7 @@ function Embarque(props) {
                 folioInforme: '',
                 tipoCambio: '',
                 tipoCobro: '',
-                clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
+                clientePaga: '',
                 idEmbarque: 0,
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
@@ -1781,6 +1809,7 @@ function Embarque(props) {
         })
         resetRemitente()
         resetDestinatario()
+        setDataPaquetes([])
         resetEntregaDD()
     }
 
@@ -1862,36 +1891,6 @@ function Embarque(props) {
         getAllSucursales()
         getAllEstatusEmbarque()
         getAllTiposSeguro()
-
-        const {m_parrPaquetes, m_parrSobres} = respuesta.data;
-        let totalPaquetes = 0
-        m_parrSobres.forEach(sobre => {
-            m_parrPaquetes.push(sobre)
-        })
-        m_parrPaquetes.forEach(paq => {
-            paq.m_nIdEmbarqueDetalle = paq.m_nIdPaquete
-            paq["m_nTipo"] = paq.m_nIdTipo;
-            paq["m_xPeso"] = paq.m_rPeso;
-            paq["m_xLargo"] = paq.m_rLargo;
-            paq["m_xAncho"] = paq.m_rAncho;
-            paq["m_xAlto"] = paq.m_rAlto;
-            paq["m_xVolumen"] = paq.m_rVolumen;
-            paq["m_nIdTIpoEmpaque"] = paq.m_nIdTipoEmbalaje;
-            paq["m_cValorDeclarado"] = paq.m_cyValorDeclarado;
-            paq.ctd = paq.m_nCantidad
-            obtenerProductoById(paq.m_nIdProducto).then(({data}) => {
-                paq.producto = data
-                paq.m_sProducto = data.m_sDescripcion
-                totalPaquetes += parseInt(paq.ctd)
-            })
-            obtenerEmbalajesId(paq.m_nIdTipoEmbalaje).then(({data}) => {
-                paq.m_sTipoEmbalaje = data.m_sNombre
-            })
-            paq.m_sTipo = paq.m_nTipo == 1 ? 'Sobre' : 'Paquete'
-        })
-        m_parrSobres.forEach(sobre => {
-            sobre["m_nTipo"] = 1
-        })
 
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
             setState(state => {
@@ -1997,6 +1996,48 @@ function Embarque(props) {
             })
         })*/
 
+        /*const {m_parrPaquetes, m_parrSobres} = respuesta.data;
+        let totalPaquetes = 0
+        m_parrSobres.forEach(sobre => {
+            m_parrPaquetes.push(sobre)
+        })
+        m_parrPaquetes.forEach(paq => {
+            paq.m_nIdEmbarqueDetalle = paq.m_nIdPaquete
+            paq["m_nTipo"] = paq.m_nIdTipo;
+            paq["m_xPeso"] = paq.m_rPeso;
+            paq["m_xLargo"] = paq.m_rLargo;
+            paq["m_xAncho"] = paq.m_rAncho;
+            paq["m_xAlto"] = paq.m_rAlto;
+            paq["m_xVolumen"] = paq.m_rVolumen;
+            paq["m_nIdTIpoEmpaque"] = paq.m_nIdTipoEmbalaje;
+            paq["m_cValorDeclarado"] = paq.m_cyValorDeclarado;
+            paq.ctd = paq.m_nCantidad
+            obtenerProductoById(paq.m_nIdProducto).then(({data}) => {
+                paq.producto = data
+                paq.m_sProducto = data.m_sDescripcion
+                totalPaquetes += parseInt(paq.ctd)
+            })
+            obtenerEmbalajesId(paq.m_nIdTipoEmbalaje).then(({data}) => {
+                paq.m_sTipoEmbalaje = data.m_sNombre
+            })
+            paq.m_sTipo = paq.m_nTipo == 1 ? 'Sobre' : 'Paquete'
+        })
+        m_parrSobres.forEach(sobre => {
+            sobre["m_nTipo"] = 1
+        })*/
+
+        respuesta.data.m_parrPaquetes.forEach((p) => {
+            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+                p["producto"] = data
+                p.m_sProducto = data.m_sDescripcion
+            })
+            obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
+                p.m_sTipoEmbalaje = data.m_sNombre
+            })
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
+        })
+        setDataPaquetes(respuesta.data.m_parrPaquetes)
+
         setState(state => {
             return {
                 ...state,
@@ -2050,7 +2091,7 @@ function Embarque(props) {
                 // zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
                 // zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
 
-                paquetes: m_parrPaquetes,
+                // paquetes: m_parrPaquetes,
                 // sobres: m_parrSobres,
 
                 //Datos entrega
@@ -2109,7 +2150,6 @@ function Embarque(props) {
         getAllCiudades()
 
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
-            debugger
 
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
                 setRemitente(remitente => {
@@ -2178,8 +2218,8 @@ function Embarque(props) {
                             m_sCP: cp.data.m_sCP,
                             m_sColonia: respuesta.data.m_sColoniaDestinatario
                         },
-                        latitudD: data.m_sLatitudD,
-                        longitudD: data.m_sLongitudD
+                        latitudD: data.m_sLatitudD || '',
+                        longitudD: data.m_sLongitudD || ''
                     }
                 })
             })
@@ -2249,7 +2289,7 @@ function Embarque(props) {
             respuesta.data.m_arrPaquetes.push(s)
         })
 
-        respuesta.data.m_arrPaquetes.forEach(p => {
+        /*respuesta.data.m_arrPaquetes.forEach(p => {
             obtenerProductoById(p.m_nIdProducto).then(({data}) => {
                 p.producto = data
                 totalPaquetes += parseInt(p.ctd)
@@ -2258,8 +2298,30 @@ function Embarque(props) {
                 p.m_sTipoEmbalaje = data.m_sNombre
                 p.m_sTipo = p.m_nTipo == 1 ? 'Sobre' : 'Paquete'
             })
+        })*/
+        // setTotalPaquetes(totalPaquetes)
+        respuesta.data.m_arrPaquetes.forEach((p) => {
+            p.m_nIdPaquete = p.m_nIdEmbarqueDetalle
+            p.m_rPeso = p.m_xPeso
+            p.m_rLargo = p.m_xLargo
+            p.m_rAncho = p.m_xAncho
+            p.m_rAlto = p.m_xAlto
+            p.m_rVolumen = p.m_xVolumen
+            p.m_nIdTipoEmbalaje = p.m_nIdTIpoEmpaque
+            p.m_nCantidad = p.ctd
+            p.m_cyValorDeclarado = p.m_cValorDeclarado
+            p.m_nIdTipo = p.m_nTipo
+
+            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+                p["producto"] = data
+                p.m_sProducto = data.m_sDescripcion
+            })
+            obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
+                p.m_sTipoEmbalaje = data.m_sNombre
+            })
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
         })
-        setTotalPaquetes(totalPaquetes)
+        setDataPaquetes(respuesta.data.m_arrPaquetes)
 
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
             setState(state => {
@@ -2323,7 +2385,7 @@ function Embarque(props) {
                 coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,*/
 
                 //Entrega
-                entregaEnSucursal: false,
+                entregaEnSucursal: respuesta.data.m_bEntregaEnSucursal,
                 idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
                 diferenteEntrega: !respuesta.data.EntregarMismoDomicilio,
                 /*ciudadEntrega: respuesta.data.IdCiudadEntrega,
@@ -2365,11 +2427,11 @@ function Embarque(props) {
         $('#Listado').addClass('in show');
     }
 
-    function getUltimoFolioEmbarque() {
+    /*function getUltimoFolioEmbarque() {
         obtenerUltimoFolioEmbarques().then((respuesta) => {
             SetDataFolioEmbarque(respuesta.data);
         });
-    }
+    }*/
 
     const handleChange = (event) => {
         setState({
@@ -2412,7 +2474,7 @@ function Embarque(props) {
         });
     };
 
-    const handleCodigoPostalRemitenteClick = (event) => {
+    /*const handleCodigoPostalRemitenteClick = (event) => {
         event.preventDefault();
         if (dataCodigosPostalesRemitente.length > 0) {
             if (dataCodigosPostalesRemitente[0].m_nIdCiudad != state.ciudadRemitente) {
@@ -2441,7 +2503,7 @@ function Embarque(props) {
                 setDataCodigosPostalesDestinatario(respuesta.data);
             });
         }
-    }
+    }*/
 
     /*const handleCodigoPostalEntregaClick = (event) => {
         event.preventDefault();
@@ -2458,13 +2520,13 @@ function Embarque(props) {
         }
     }*/
 
-    const handleChangeCiudadRemitente = (event) => {
+    /*const handleChangeCiudadRemitente = (event) => {
         event.preventDefault();
         setState({
             ...state,
             ciudadRemitente: event.target.value,
         });
-    }
+    }*/
 
     const handleClickCiudad = (event) => {
         event.preventDefault()
@@ -2473,7 +2535,7 @@ function Embarque(props) {
         }
     }
 
-    const handleChangeCiudadDestinatario = (event) => {
+    /*const handleChangeCiudadDestinatario = (event) => {
         event.preventDefault();
         setState({
             ...state,
@@ -2509,7 +2571,7 @@ function Embarque(props) {
         obtenerEmbarquesFiltro(fechaInicial, event.target.value, sucursalListado, estatusListado, folioEmbarque).then((respuesta) => {
             setData(respuesta.data);
         });
-    };
+    };*/
 
     const handleSucursalFiltro = async (event) => {
         setState({
@@ -2522,7 +2584,7 @@ function Embarque(props) {
         });
     };
 
-    const handleEstatusFiltro = async (event) => {
+    /*const handleEstatusFiltro = async (event) => {
         setState({
             ...state,
             estatusListado: event.target.value,
@@ -2531,7 +2593,7 @@ function Embarque(props) {
         obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, event.target.value, folioEmbarque).then((respuesta) => {
             setData(respuesta.data);
         });
-    };
+    };*/
 
     //Maneja filtrado de listado embarque
     const handleFolioEmbarqueFiltro = async (event) => {
@@ -2564,7 +2626,7 @@ function Embarque(props) {
         console.log(state.identificadorModal);
     }
 
-    const handleZonaRemitenteSelected = (newValue) => {
+    /*const handleZonaRemitenteSelected = (newValue) => {
         setState({
             ...state,
             zonaRemitente: newValue,
@@ -2584,7 +2646,7 @@ function Embarque(props) {
             ...state,
             zonaDestinatario: newValue
         })
-    }
+    }*/
 
     const handlePatrocinadorSelected = (newValue) => {
         setState({
@@ -2600,12 +2662,12 @@ function Embarque(props) {
         }
     }
 
-    function getAllZonas() {
+    /*function getAllZonas() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
         axios.get(url, {headers}).then((respuesta) => {
             setDataZona(respuesta.data);
         });
-    }
+    }*/
 
     const getAllClientes = () => {
         obtenerCliente().then((respuesta) => {
@@ -2613,13 +2675,13 @@ function Embarque(props) {
         })
     }
 
-    const handleChangeZonaEntrega = (event) => {
+    /*const handleChangeZonaEntrega = (event) => {
         event.preventDefault();
         setState({
             ...state,
             zonaEntrega: event.target.value,
         });
-    }
+    }*/
 
     const getDataParaListado = () => {
         getAllEmbarque();
@@ -2641,11 +2703,11 @@ function Embarque(props) {
         });
     }
 
-    function getFormatosImpresion() {
+    /*function getFormatosImpresion() {
         obtenerFormatosImpresion().then(respuesta => {
             setFormatosImpresion(respuesta.data)
         });
-    };
+    };*/
 
     const getAllRemitentesDestinatarios = () => {
         obtenerRemitentesDestinatarios().then((respuesta) => {
@@ -2990,7 +3052,7 @@ function Embarque(props) {
         );
     }
 
-    function TableOperadores({columns, data, select}) {
+    /*function TableOperadores({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -3030,7 +3092,7 @@ function Embarque(props) {
                                 // we can add them into the header props
                                 <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                                     {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
+                                    {/!* Add a sort direction indicator *!/}
                                     <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
@@ -3076,9 +3138,9 @@ function Embarque(props) {
                 </table>
             </div>
         );
-    }
+    }*/
 
-    function TableTipoUnidad({columns, data, select}) {
+    /*function TableTipoUnidad({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -3115,7 +3177,7 @@ function Embarque(props) {
                                 // we can add them into the header props
                                 <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                                     {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
+                                    {/!* Add a sort direction indicator *!/}
                                     <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
@@ -3161,9 +3223,9 @@ function Embarque(props) {
                 </table>
             </div>
         );
-    }
+    }*/
 
-    function TableUnidad({columns, data, select}) {
+    /*function TableUnidad({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
                 // Default Filter UI
@@ -3203,7 +3265,7 @@ function Embarque(props) {
                                 // we can add them into the header props
                                 <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                                     {column.render("Name")}
-                                    {/* Add a sort direction indicator */}
+                                    {/!* Add a sort direction indicator *!/}
                                     <span>
                                             {column.isSorted ? (
                                                 column.isSortedDesc ? (
@@ -3247,9 +3309,9 @@ function Embarque(props) {
                 </table>
             </div>
         );
-    }
+    }*/
 
-    const handleImprimir = () => {
+    /*const handleImprimir = () => {
         imprimirFormatosId(state.formatoSeleccionado).then((response) => {
             var file = new Blob([response.data], {type: 'application/pdf'})
             var fileURL = URL.createObjectURL(file)
@@ -3257,7 +3319,7 @@ function Embarque(props) {
             window.open(fileURL);
         })
 
-    }
+    }*/
 
     function openSection(index) {
         // closeSeccions()
@@ -3315,7 +3377,7 @@ function Embarque(props) {
         }
     }
 
-    const addPaquetev2 = (event) => {
+    /*const addPaquetev2 = (event) => {
         const {paquetes} = state;
         let paq = paquete
         if (validarPaquetes(paq)) {
@@ -3337,9 +3399,9 @@ function Embarque(props) {
         } else {
             showSuccess("Rellene los campos obligatorios.")
         }
-    }
+    }*/
 
-    const resetProducto = () => {
+    /*const resetProducto = () => {
         setPaquete({
             m_xPeso: "",
             m_xLargo: "",
@@ -3357,13 +3419,13 @@ function Embarque(props) {
             m_nIdProducto: "",
             m_sTipo: "Paquete",
         })
-    }
-    const removePaquetev2 = (event) => {
+    }*/
+    /*const removePaquetev2 = (event) => {
         event.preventDefault()
         resetProducto()
-    }
+    }*/
 
-    const handleChangePaquetev2 = (event) => {
+    /*const handleChangePaquetev2 = (event) => {
         let {paquetes} = state;
         setPaquete(paquete => {
             return {
@@ -3392,7 +3454,7 @@ function Embarque(props) {
         paquetes.forEach((p) => {
             totalCantidad += parseInt(p.ctd)
         })
-        setTotalPaquetes(totalCantidad)
+        // setTotalPaquetes(totalCantidad)
     };
 
     const handleChangePaqueteProductov2 = (event, newValue) => {
@@ -3446,14 +3508,14 @@ function Embarque(props) {
         if (dataEmbalaje.length === 0) {
             getAllEmbalajes()
         }
-    }
+    }*/
 
-    const getAllProductos = () => {
+    /*const getAllProductos = () => {
         const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
         axios.get(url, {headers}).then(respuesta => {
             setDataProductos(respuesta.data)
         });
-    }
+    }*/
 
     const handleFechaCita = (event) => {
         setState({
@@ -3476,6 +3538,10 @@ function Embarque(props) {
         })
     }
 
+    const handleListPaquetesChange = (newList) => {
+        setDataPaquetes(newList)
+    }
+
     return (
         <div>
 
@@ -3483,7 +3549,7 @@ function Embarque(props) {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     titulo={state.titulo}
-                                    direccion={destinatario.destinatario}>
+                                    direccion={destinatario.nombreDestinatario}>
 
                 </ConfirmarUbicacion>
             }
@@ -3669,7 +3735,7 @@ function Embarque(props) {
                             </DialogActions>
                         </div>
                     )}
-                    {state.tipoModal === 2 && (
+                    {/*{state.tipoModal === 2 && (
                         <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
@@ -3711,8 +3777,8 @@ function Embarque(props) {
                                 </button>
                             </DialogActions>
                         </div>
-                    )}
-                    {state.tipoModal === 3 && (
+                    )}*/}
+                    {/*{state.tipoModal === 3 && (
                         <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
@@ -3753,8 +3819,8 @@ function Embarque(props) {
                                 </button>
                             </DialogActions>
                         </div>
-                    )}
-                    {state.tipoModal === 4 && (
+                    )}*/}
+                    {/*{state.tipoModal === 4 && (
                         <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
                                 <button
@@ -3796,7 +3862,7 @@ function Embarque(props) {
                                 </button>
                             </DialogActions>
                         </div>
-                    )}
+                    )}*/}
                     {state.tipoModal === 5 && (
                         <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
@@ -3840,7 +3906,7 @@ function Embarque(props) {
                             </DialogActions>
                         </div>
                     )}
-                    {state.tipoModal === 6 &&
+                    {/*{state.tipoModal === 6 &&
                     <div className="row" style={{backgroundColor: '#FFFFFF'}}>
                         <DialogTitle style={{padding: "0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
                         <div>
@@ -3884,7 +3950,7 @@ function Embarque(props) {
 
                         </DialogActions>
                     </div>
-                    }
+                    }*/}
                 </DialogContent>
             </Dialog>
 
@@ -4327,7 +4393,8 @@ function Embarque(props) {
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5  unit">
                                                             <div className="input">
-                                                                <FormControl fullWidth variant="outlined"
+                                                                <FormControl fullWidth variant="outlined"                                                                         required
+
                                                                              margin="dense">
                                                                     <InputLabel id="tipoCambioLabel">Tipo de
                                                                         Cambio</InputLabel>
@@ -4335,7 +4402,6 @@ function Embarque(props) {
                                                                         labelId="tipoCambioLabel"
                                                                         label="Tipo de Cambio"
                                                                         className="form-control"
-                                                                        required
                                                                         value={state.tipoCambio}
                                                                         onChange={(event) => {
                                                                             event.preventDefault();
@@ -4363,7 +4429,7 @@ function Embarque(props) {
 
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="input select">
-                                                                <FormControl fullWidth variant="outlined"
+                                                                <FormControl fullWidth variant="outlined" required
                                                                              margin="dense">
                                                                     <InputLabel id="idTipoCobroLabel">Tipo
                                                                         Cobro</InputLabel>
@@ -4371,7 +4437,6 @@ function Embarque(props) {
                                                                         labelId={"idTipoCobroLabel"}
                                                                         label={"Tipo Cobro"}
                                                                         className="form-control"
-                                                                        required
                                                                         value={state.tipoCobro}
                                                                         disabled={state.agregar === "Consultar"}
                                                                         onChange={(event) => {
@@ -4413,7 +4478,11 @@ function Embarque(props) {
                                                                         forcePopupIcon={false}
                                                                         options={dataClientes}
                                                                         disabled={state.agregar === "Consultar"}
-                                                                        getOptionLabel={(option) => `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`}
+                                                                        getOptionLabel={(option) => (
+                                                                            option ?
+                                                                            `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`
+                                                                                : ''
+                                                                        )}
                                                                         variant="outlined"
                                                                         name={"clientePaga"}
                                                                         style={{
@@ -4426,7 +4495,6 @@ function Embarque(props) {
                                                                                 margin="dense"
                                                                                 required
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
-                                                                                InputLabelProps={{shrink: true}}
                                                                                 onClick={handleClickResponsablePago}
                                                                                 {...params}
                                                                             />
@@ -4436,8 +4504,8 @@ function Embarque(props) {
                                                             </div>
                                                             <div className="col-md-6">
                                                                 {
-                                                                    state.clientePaga.m_nIdTipoSeguro === undefined ? ``
-                                                                        : state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}`: `NO tiene seguro`
+                                                                    state.clientePaga ? state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}`: `NO tiene seguro`
+                                                                        : ''
 
                                                                 }
                                                             </div>
@@ -4450,7 +4518,7 @@ function Embarque(props) {
                                     </div>
 
                                     <div className="widget-wrap" id="paquetesSobres">
-                                        <div>
+                                        {/*<div>
                                             <Grid container>
                                                 <Grid item xs={6}>
                                                     <div className="widget-header">
@@ -4716,7 +4784,14 @@ function Embarque(props) {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>*/}
+                                        { (state.agregar === "Agregar" || state.agregar === "Consultar" || state.agregar === "Modificar") &&
+                                            <Paquetes
+                                                dataPaquetes={dataPaquetes}
+                                                onChangeList={handleListPaquetesChange}
+                                                disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
+                                            />
+                                        }
                                     </div>
 
                                     <div className="row">
