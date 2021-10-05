@@ -145,7 +145,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
     const addPaquetev2 = (event) => {
         let paq = paquete
         if (validarPaquetes(paq)){
-            paq.m_nIdPaquete = paq.m_nIdPaquete ? paq.m_nIdPaquete : dataPaquetes.length + 1
+            paq.m_nIdPaquete = paq.m_nIdPaquete != 0 ? paq.m_nIdPaquete : dataPaquetes.length + 1
             paq.m_cyValorDeclarado = paq.m_cyValorDeclarado ? paq.m_cyValorDeclarado : 0
             if (paq.m_cyValorDeclarado === 0 && tieneSeguro){
                 showSuccess("El campo de valor declarado es necesario para el seguro.")
@@ -247,6 +247,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
         setPaquete(paquete => {
             return {
                 ...paquete,
+                m_nIdPaquete: 0,
                 m_rPeso: "",
                 m_rLargo: "",
                 m_rAncho: "",

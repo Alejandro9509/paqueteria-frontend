@@ -654,7 +654,7 @@ function Embarque(props) {
             }
         },
     ]);
-    const columnsPaquetes = React.useMemo(() => [
+    /*const columnsPaquetes = React.useMemo(() => [
         {
             headerName: "Tipo",
             field: "m_sTipo",
@@ -725,9 +725,9 @@ function Embarque(props) {
             flex: 1,
         }
     ]);
-    const [dataProductos, setDataProductos] = useState([])
+    const [dataProductos, setDataProductos] = useState([])*/
     // const [totalPaquetes, setTotalPaquetes] = useState(0)
-    const [paquete, setPaquete] = useState({
+    /*const [paquete, setPaquete] = useState({
         m_xPeso: "",
         m_xLargo: "",
         m_xAncho: "",
@@ -741,7 +741,7 @@ function Embarque(props) {
         m_sTipo: "Paquete",
         m_sObservaciones: "",
         m_nIdProducto: '',
-    })
+    })*/
     const [dataPaquetes, setDataPaquetes] = useState([])
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
     const [dataEstados, setDataEstados] = useState([])
@@ -1474,7 +1474,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        if (state.idEmbarque != 0) {
+      /*  if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1503,7 +1503,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
     };
 
     function handleSelectCP(id, cp) {
@@ -2386,7 +2386,7 @@ function Embarque(props) {
                 coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,*/
 
                 //Entrega
-                entregaEnSucursal: false,
+                entregaEnSucursal: respuesta.data.m_bEntregaEnSucursal,
                 idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
                 diferenteEntrega: !respuesta.data.EntregarMismoDomicilio,
                 /*ciudadEntrega: respuesta.data.IdCiudadEntrega,
@@ -3378,7 +3378,7 @@ function Embarque(props) {
         }
     }
 
-    const addPaquetev2 = (event) => {
+    /*const addPaquetev2 = (event) => {
         const {paquetes} = state;
         let paq = paquete
         if (validarPaquetes(paq)) {
@@ -3400,9 +3400,9 @@ function Embarque(props) {
         } else {
             showSuccess("Rellene los campos obligatorios.")
         }
-    }
+    }*/
 
-    const resetProducto = () => {
+    /*const resetProducto = () => {
         setPaquete({
             m_xPeso: "",
             m_xLargo: "",
@@ -3420,13 +3420,13 @@ function Embarque(props) {
             m_nIdProducto: "",
             m_sTipo: "Paquete",
         })
-    }
-    const removePaquetev2 = (event) => {
+    }*/
+    /*const removePaquetev2 = (event) => {
         event.preventDefault()
         resetProducto()
-    }
+    }*/
 
-    const handleChangePaquetev2 = (event) => {
+    /*const handleChangePaquetev2 = (event) => {
         let {paquetes} = state;
         setPaquete(paquete => {
             return {
@@ -3509,14 +3509,14 @@ function Embarque(props) {
         if (dataEmbalaje.length === 0) {
             getAllEmbalajes()
         }
-    }
+    }*/
 
-    const getAllProductos = () => {
+    /*const getAllProductos = () => {
         const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
         axios.get(url, {headers}).then(respuesta => {
             setDataProductos(respuesta.data)
         });
-    }
+    }*/
 
     const handleFechaCita = (event) => {
         setState({
@@ -4786,11 +4786,13 @@ function Embarque(props) {
                                                 </div>
                                             </div>
                                         </div>*/}
-                                        <Paquetes
-                                            dataPaquetes={dataPaquetes}
-                                            onChangeList={handleListPaquetesChange}
-                                            disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
-                                        />
+                                        { (state.agregar === "Agregar" || state.agregar === "Consultar" || state.agregar === "Modificar") &&
+                                            <Paquetes
+                                                dataPaquetes={dataPaquetes}
+                                                onChangeList={handleListPaquetesChange}
+                                                disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
+                                            />
+                                        }
                                     </div>
 
                                     <div className="row">
