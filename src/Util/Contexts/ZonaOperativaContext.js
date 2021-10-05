@@ -59,5 +59,14 @@ function obtenerByIdZonaOperativa(id) {
     );
     return result
 }
+//Se va mandar el codigo postal porque surgio la necesidad
+function obtenerZonaOperativaByIdCodigoPostal(id) {
+    const url = `${process.env.REACT_APP_API_URL}/ZonaOperativa/GetByIdCodigoPostal/` + id;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 
-export { modificarZonaOperativa, obtenerByIdZonaOperativa, obtenerListadoZonaOperativa, eliminarZonaOperativa, agregarZonaOperativa, obtenerListadoZonaOperativaBySucursal}
+export {obtenerZonaOperativaByIdCodigoPostal, modificarZonaOperativa, obtenerByIdZonaOperativa, obtenerListadoZonaOperativa, eliminarZonaOperativa, agregarZonaOperativa, obtenerListadoZonaOperativaBySucursal}

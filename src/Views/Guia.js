@@ -282,6 +282,7 @@ function Guia(props) {
             })
         }
     }
+
     const handleFolioEmbarqueFiltro = async (event) => {
         if (event.keyCode == 13) {
             const {target} = event
@@ -332,8 +333,6 @@ function Guia(props) {
     const [showDialogOcurre, setShowDialogOcurre] = useState(false)
     const [dataOcurre, setDataOcurre] = useState()
 
-   
-
     const resetFiltros = () => {
         setFiltros({
             fechaInicial: 0,
@@ -343,6 +342,7 @@ function Guia(props) {
             folio: '',
         })
     }
+
     const handleAceptar = (e) => {
         e.preventDefault()
         let params = {
@@ -1096,9 +1096,22 @@ function Guia(props) {
          })*/
         guia.m_arrClsDetalle.forEach((p, index) => {
             const contadorPaquetesTotales = parseInt(p.ctd);
-            [Array(contadorPaquetesTotales).keys()].forEach((i, count) => {
+            // console.log(contadorPaquetesTotales)
+            // console.log([Array(contadorPaquetesTotales).keys()])
+
+            for (let i = 0; i < p.ctd; i++) {
+                console.log('guia: ', guia)
+                console.log('paquete: ', p)
+                console.log('index: ', i+1)
+                console.log(i+1 + ' de ' + p.ctd)
+                selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+            }
+            /*[Array(contadorPaquetesTotales).keys()].forEach((i, count) => {
+                console.log('guia: ', guia)
+                console.log('paquete: ', p)
+                console.log('index: ', count+1)
                 selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, count), undefined, errorCallback);
-            })
+            })*/
 
         })
 
