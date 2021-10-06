@@ -370,6 +370,7 @@ function Guia(props) {
 
         }
         console.log(params)
+        console.log(JSON.stringify(params))
         if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
             agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
