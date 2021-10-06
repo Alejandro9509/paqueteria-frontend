@@ -67,6 +67,7 @@ import {obtenerImpuestosTipo} from "../Util/Contexts/ImpuestosContext";
 import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
 import {obtenerCodigoPostalId} from "../Util/Contexts/CodigoPostalContext";
 import {obtenerRecoleccionFiltro} from "../Util/Contexts/RecoleccionContext";
+import {confirmAlert} from "react-confirm-alert";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -232,11 +233,11 @@ function Guia(props) {
     const [filtros, setFiltros] = useState({
         fechaInicial: 0,
         fechaFinal: 0,
-        estatusListado:0,
+        estatusListado: 0,
         sucursalListado: 0,
         folio: '',
     })
-    
+
     const handleChangeFiltros = (event) => {
         event.preventDefault()
         const {target} = event
@@ -246,34 +247,32 @@ function Guia(props) {
                 [target.name]: target.value
             }
         })
-        if (target.name === "fechaInicial"){
-            obtenerGuiasFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+        if (target.name === "fechaInicial") {
+            obtenerGuiasFiltro(target.value, filtros.fechaFinal, filtros.sucursalListado, filtros.estatusListado, filtros.folio).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
                     setData(respuesta.data)
                 }
             })
-        }else if (target.name === "fechaFinal"){
-            obtenerGuiasFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+        } else if (target.name === "fechaFinal") {
+            obtenerGuiasFiltro(filtros.fechaInicial, target.value, filtros.sucursalListado, filtros.estatusListado, filtros.folio).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
                     setData(respuesta.data)
                 }
             })
-        }
-        else if (target.name === "sucursalListado"){
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio).then(respuesta => {
+        } else if (target.name === "sucursalListado") {
+            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal, target.value, filtros.estatusListado, filtros.folio).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
                     setData(respuesta.data)
                 }
             })
-        }
-        else if (target.name === "estatusListado"){
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio).then(respuesta => {
+        } else if (target.name === "estatusListado") {
+            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.sucursalListado, target.value, filtros.folio).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -337,7 +336,7 @@ function Guia(props) {
         setFiltros({
             fechaInicial: 0,
             fechaFinal: 0,
-            estatusListado:0,
+            estatusListado: 0,
             sucursalListado: 0,
             folio: '',
         })
@@ -1078,7 +1077,7 @@ function Guia(props) {
         })
     }, [])
 
-    function printTicket(guia) {
+    async function printTicket(guia) {
         /* EB = window.EB
          EB.PrinterZebra.searchPrinters({
              "deviceAddress": "192.148.1.143",
@@ -1094,18 +1093,45 @@ function Guia(props) {
                  })
              })
          })*/
-        guia.m_arrClsDetalle.forEach((p, index) => {
+
+        guia.m_arrClsDetalle.forEach(async (p, index) => {
             const contadorPaquetesTotales = parseInt(p.ctd);
+            if (p.ctd >= 10) {
+                confirmAlert({
+                    title: 'Confirmación',
+                    message: '¿Está segura(o) que desea imprimir ' + p.ctd + ' etiqueta(s)?',
+                    buttons: [
+                        {
+                            label: 'Yes',
+                            onClick: async () => {
+                                for (let i = 0; i < p.ctd; i++) {
+                                    console.log('guia: ', guia)
+                                    console.log('paquete: ', p)
+                                    console.log('index: ', i + 1)
+                                    console.log(i + 1 + ' de ' + p.ctd)
+                                    var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                                }
+                            }
+                        },
+                        {
+                            label: 'No'
+                        }
+                    ]
+                });
+            }else {
+                for (let i = 0; i < p.ctd; i++) {
+                    console.log('guia: ', guia)
+                    console.log('paquete: ', p)
+                    console.log('index: ', i + 1)
+                    console.log(i + 1 + ' de ' + p.ctd)
+                    var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                }
+
+            }
             // console.log(contadorPaquetesTotales)
             // console.log([Array(contadorPaquetesTotales).keys()])
 
-            for (let i = 0; i < p.ctd; i++) {
-                console.log('guia: ', guia)
-                console.log('paquete: ', p)
-                console.log('index: ', i+1)
-                console.log(i+1 + ' de ' + p.ctd)
-                selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-            }
+
             /*[Array(contadorPaquetesTotales).keys()].forEach((i, count) => {
                 console.log('guia: ', guia)
                 console.log('paquete: ', p)
@@ -2381,7 +2407,7 @@ function Guia(props) {
                                 />
                             </Grid>
                             {(dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 || dataOcurre.tipoCobroOcurre == 11) &&
-                                <Grid item xs={12}>
+                            <Grid item xs={12}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
                                     <InputLabel id="idTipoPagoLabel">Tipo Pago</InputLabel>
                                     <Select
@@ -2410,7 +2436,7 @@ function Guia(props) {
                             </Grid>
                             }
                             {(dataOcurre.tipoPago == 1) &&
-                                <Grid item xs={6}>
+                            <Grid item xs={6}>
                                 <TextField variant="outlined" margin="dense" label="Importe recibido"
                                            onChange={(event) => handleChangeDataOcurre(event)}
                                            className="form-control"
@@ -2427,7 +2453,7 @@ function Guia(props) {
                             </Grid>
                             }
                             {dataOcurre.tipoPago == 1 &&
-                                <Grid item xs={6}>
+                            <Grid item xs={6}>
                                 <p> {`Importe a pagar: $${parseFloat(dataOcurre.importeTotal)}`}</p>
                             </Grid>
                             }
@@ -2523,122 +2549,128 @@ function Guia(props) {
                                 <div className="widget-content">
 
 
-                                <div className="widget-content">
+                                    <div className="widget-content">
 
-                                    
-<div className="row">
-    <div className="col-md-12">
-    <Grid container spacing={2} alignItems="center">
 
-        <Grid item xs={2}>
-            <TextField variant="outlined" margin="dense"
-                       onChange={handleChangeFiltros}
-                       onKeyDown={handleFolioEmbarqueFiltro}
-                       className="form-control"
-                       type="text"
-                       label="Folio Guía"
-                       id="folio"
-                       name="folio"
-                       value={filtros.folio}
-            />
-        </Grid>
-        <Grid item xs={2}>
-            <FormControl className="input select" fullWidth variant="outlined">
-                <TextField
-                    autoFocus
-                    type="date"
-                    margin="dense"
-                    label="Fecha Inicial"
-                    variant="outlined"
-                    className="form-control"
-                    InputLabelProps={{shrink: true,}}
-                    value={filtros.fechaInicial}
-                    onChange={handleChangeFiltros}
-                    id="fechaInicial"
-                    name="fechaInicial"
-                />
-            </FormControl>
-        </Grid>
-        <Grid item xs={2}>
-            <FormControl className="input select" fullWidth variant="outlined">
-                <TextField variant="outlined" margin="dense"
-                           type="date"
-                           className="form-control"
-                           label="Fecha Final"
-                           InputLabelProps={{
-                               shrink: true,
-                           }}
-                           value={filtros.fechaFinal}
-                           onChange={handleChangeFiltros}
-                           id="fechaFinal"
-                           name="fechaFinal"
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <Grid container spacing={2} alignItems="center">
 
-                />
-            </FormControl>
+                                                    <Grid item xs={2}>
+                                                        <TextField variant="outlined" margin="dense"
+                                                                   onChange={handleChangeFiltros}
+                                                                   onKeyDown={handleFolioEmbarqueFiltro}
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   label="Folio Guía"
+                                                                   id="folio"
+                                                                   name="folio"
+                                                                   value={filtros.folio}
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={2}>
+                                                        <FormControl className="input select" fullWidth
+                                                                     variant="outlined">
+                                                            <TextField
+                                                                autoFocus
+                                                                type="date"
+                                                                margin="dense"
+                                                                label="Fecha Inicial"
+                                                                variant="outlined"
+                                                                className="form-control"
+                                                                InputLabelProps={{shrink: true,}}
+                                                                value={filtros.fechaInicial}
+                                                                onChange={handleChangeFiltros}
+                                                                id="fechaInicial"
+                                                                name="fechaInicial"
+                                                            />
+                                                        </FormControl>
+                                                    </Grid>
+                                                    <Grid item xs={2}>
+                                                        <FormControl className="input select" fullWidth
+                                                                     variant="outlined">
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       type="date"
+                                                                       className="form-control"
+                                                                       label="Fecha Final"
+                                                                       InputLabelProps={{
+                                                                           shrink: true,
+                                                                       }}
+                                                                       value={filtros.fechaFinal}
+                                                                       onChange={handleChangeFiltros}
+                                                                       id="fechaFinal"
+                                                                       name="fechaFinal"
 
-        </Grid>
-        <Grid item xs={2}>
-            <FormControl className="input select" fullWidth variant="outlined">
-                <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
-                <Select
-                    labelId="sucursalListadoLabel"
-                    label="Sucursal"
-                    className="form-control"
-                    required
-                    value={filtros.sucursalListado}
-                    onChange={handleChangeFiltros}
-                    id="sucursalListado"
-                    name="sucursalListado"
-                >
-                    <option value="0">Todas</option>
-                    {dataSucursal.map((sucursal) => (
-                        <option
-                            key={sucursal.m_nIdSucursal}
-                            value={sucursal.m_nIdSucursal}
-                        >
-                            {sucursal.m_sSucursal}
-                        </option>
-                    ))}
-                </Select>
-            </FormControl>
-        </Grid>
-        <Grid item xs={2}>
-            <FormControl className="input select" fullWidth variant="outlined">
-                <InputLabel id="idEstatusLabel">Estatus</InputLabel>
-                <Select
-                    labelId="estatusListadoLabel"
-                    className="form-control"
-                    required
-                    label="Estatus"
-                    value={filtros.estatusListado}
-                    onChange={handleChangeFiltros}
-                    id="estatusListado"
-                    name="estatusListado"
-                >
-                    <option value="0">Todos</option>
-                    {dataEstatusGuia.map((estatus) => (
-                        <option
-                            key={estatus.m_nIdEstatusGuia}
-                            value={estatus.m_nIdEstatusGuia}
-                        >
-                            {estatus.m_sEstatus}
-                        </option>
-                    ))}
-                </Select>
-            </FormControl>
-        </Grid>
-        <Grid item container xs={2}>
-            <IconButton aria-label="delete" onClick={() => {
-                resetFiltros()
-                getAllData()
-            }}>
-                <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
-                Limpiar filtros
-            </IconButton>
-        </Grid>
-    </Grid>
-        </div>
-        </div></div>
+                                                            />
+                                                        </FormControl>
+
+                                                    </Grid>
+                                                    <Grid item xs={2}>
+                                                        <FormControl className="input select" fullWidth
+                                                                     variant="outlined">
+                                                            <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
+                                                            <Select
+                                                                labelId="sucursalListadoLabel"
+                                                                label="Sucursal"
+                                                                className="form-control"
+                                                                required
+                                                                value={filtros.sucursalListado}
+                                                                onChange={handleChangeFiltros}
+                                                                id="sucursalListado"
+                                                                name="sucursalListado"
+                                                            >
+                                                                <option value="0">Todas</option>
+                                                                {dataSucursal.map((sucursal) => (
+                                                                    <option
+                                                                        key={sucursal.m_nIdSucursal}
+                                                                        value={sucursal.m_nIdSucursal}
+                                                                    >
+                                                                        {sucursal.m_sSucursal}
+                                                                    </option>
+                                                                ))}
+                                                            </Select>
+                                                        </FormControl>
+                                                    </Grid>
+                                                    <Grid item xs={2}>
+                                                        <FormControl className="input select" fullWidth
+                                                                     variant="outlined">
+                                                            <InputLabel id="idEstatusLabel">Estatus</InputLabel>
+                                                            <Select
+                                                                labelId="estatusListadoLabel"
+                                                                className="form-control"
+                                                                required
+                                                                label="Estatus"
+                                                                value={filtros.estatusListado}
+                                                                onChange={handleChangeFiltros}
+                                                                id="estatusListado"
+                                                                name="estatusListado"
+                                                            >
+                                                                <option value="0">Todos</option>
+                                                                {dataEstatusGuia.map((estatus) => (
+                                                                    <option
+                                                                        key={estatus.m_nIdEstatusGuia}
+                                                                        value={estatus.m_nIdEstatusGuia}
+                                                                    >
+                                                                        {estatus.m_sEstatus}
+                                                                    </option>
+                                                                ))}
+                                                            </Select>
+                                                        </FormControl>
+                                                    </Grid>
+                                                    <Grid item container xs={2}>
+                                                        <IconButton aria-label="delete" onClick={() => {
+                                                            resetFiltros()
+                                                            getAllData()
+                                                        }}>
+                                                            <RestartAltIcon fontSize={"large"}
+                                                                            style={{marginRight: '10px'}}/>
+                                                            Limpiar filtros
+                                                        </IconButton>
+                                                    </Grid>
+                                                </Grid>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <div className="row" style={{height: state.height - 250, width: '100%'}}>
                                         {data.length != 0 ? (

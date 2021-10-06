@@ -410,7 +410,7 @@ function Informes({history}) {
             m_nIdCiudadDestino: state.IdCiudadDestino.m_nIdCiudad,
             m_nIdCiudadOrigen: state.IdCiudadOrigen.m_nIdCiudad,
             m_nIdEstatusInforme: state.EstatusInforme,
-            m_nIdOperador: state.IdOperador.m_nIdOperador,
+            //m_nIdOperador: state.IdOperador.m_nIdOperador,
             m_nIdRemolque1: state.IdRemolque1.m_nIdUnidad,
             m_nIdRemolque2: state.IdRemolque2 ? state.IdRemolque2.m_nIdUnidad : 0,
             m_sPlacasRemolque1: state.PlacasRemolque1,
@@ -888,7 +888,7 @@ function Informes({history}) {
                 if (respuesta.data !== "Vacio") {
                     if (state.agregar ==="Modificar"){
                         respuesta.data = respuesta.data.concat(state.guiasInforme)
-                        console.log(respuesta.data)
+                        console.log(state.guiasInforme)
                         setDataGuias(respuesta.data);
                     }else {
                         setDataGuias(respuesta.data);
@@ -982,7 +982,7 @@ function Informes({history}) {
                     .m_nIdCiudad
             );
         }
-    }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.IdRuta])
+    }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.IdRuta, state.agregar])
 
     function handleShowAgregar() {
         setState({
@@ -1031,7 +1031,7 @@ function Informes({history}) {
                 fechaHora: data.m_dFecha + "T" + data.m_tHora,
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadOrigen),
-                IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
+                //IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
                 sucursalEmisora: data.m_nIdSucursalEmisora,
                 sucursalReceptora: data.m_nIdSucursalReceptora,
                 IdRemolque1: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
@@ -1046,7 +1046,6 @@ function Informes({history}) {
                 EstatusInforme: data.m_nIdEstatusInforme,
                 agregar: "Modificar"
             });
-
         });
     }
 
