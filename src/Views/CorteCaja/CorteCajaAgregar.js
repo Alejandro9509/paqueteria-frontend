@@ -27,6 +27,7 @@ import {obtenerMonedas} from "../../Util/Contexts/MonedaContext";
 import {obtenerGuiaId, obtenerGuiasFiltro, obtenerGuiasFiltroCorteCaja} from "../../Util/Contexts/GuiaContext";
 import Noty from "noty";
 import {agregarCorte, modificarCorte, obtenerCorteId} from "../../Util/Contexts/CorteCajaContext";
+import {obtenerTiposPago} from "../../Util/Contexts/TipoPagoContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -251,28 +252,9 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
     }
 
     const getAllTipoPago = () => {
-        setDataTipoPago([
-            {
-                m_nIdTipoPago: 1,
-                m_sTipoPago: "Efectivo"
-            },
-            {
-                m_nIdTipoPago: 2,
-                m_sTipoPago: "Cheque"
-            },
-            {
-                m_nIdTipoPago: 3,
-                m_sTipoPago: "Tranferencia"
-            },
-            {
-                m_nIdTipoPago: 4,
-                m_sTipoPago: "Crédito"
-            },
-            {
-                m_nIdTipoPago: 5,
-                m_sTipoPago: "Débito"
-            }
-        ])
+        obtenerTiposPago().then(({data}) => {
+            setDataTipoPago(data)
+        })
     }
 
     async function getAllCiudades() {
