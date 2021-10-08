@@ -1111,6 +1111,7 @@ function Guia(props) {
                                     console.log('index: ', i + 1)
                                     console.log(i + 1 + ' de ' + p.ctd)
                                     var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                                    console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
                                 }
                             }
                         },
@@ -1126,6 +1127,7 @@ function Guia(props) {
                     console.log('index: ', i + 1)
                     console.log(i + 1 + ' de ' + p.ctd)
                     var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                    console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
                 }
 
             }
