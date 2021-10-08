@@ -1219,11 +1219,11 @@ function Recoleccion() {
 
     function handleShowModificar(id) {
         getDataParaEditar()
-        $('.nav-tabs li ').removeClass('active');
-        $('.nav-tabs li').eq(1).addClass('active');
-        $('.tab-content div ').removeClass('in show');
-        $('#Agregar').addClass('in show');
         obtenerRecoleccionId(id).then((respuesta) => {
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(1).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Agregar').addClass('in show');
             console.log('Recoleccion: ', respuesta.data);
             setState(state => {
                 return {
@@ -1232,8 +1232,8 @@ function Recoleccion() {
                 }
             })
             setRecoleccionDataParaConsultaModificacion(respuesta)
-
         });
+
     }
 
     function handleShowConsultar(id) {
@@ -1257,6 +1257,7 @@ function Recoleccion() {
 
     const setRecoleccionDataParaConsultaModificacion = (respuesta) => {
 
+        console.log(respuesta.data)
         getDataParaEditar()
         getAllCiudades()
         getAllZonas()
@@ -1318,7 +1319,6 @@ function Recoleccion() {
                 })
             }
         })
-
 
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
