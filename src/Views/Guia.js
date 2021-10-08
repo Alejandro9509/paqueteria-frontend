@@ -365,6 +365,7 @@ function Guia(props) {
                 m_cImporteRetiene: c.importeRet,
                 m_cImporteIva: c.importeIVA,
                 m_bActivo: true,
+                m_xDescuento: c.descuento || 0
             })),
 
         }
@@ -593,7 +594,8 @@ function Guia(props) {
                 rangoMinimo: element.m_xnRangoMinimo,
                 rangoMaximo: element.m_xnRangoMaximo,
                 nombreConcepto: element.m_sConcepto,
-                tipoCalculo: element.m_nIdTipoCalculo
+                tipoCalculo: element.m_nIdTipoCalculo,
+                descuento: element.m_xDescuento || 0
             })
         })
         var ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
@@ -1172,7 +1174,8 @@ function Guia(props) {
             rangoMaximo: data.rangoMaximo,
             tipoCalculo: data.tipoCalculo,
             nombreConcepto: data.concepto.m_sConcepto,
-            agregadoDesde: data.agregadoDesde
+            agregadoDesde: data.agregadoDesde,
+            descuento: data.descuento
 
         })
         ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
@@ -3674,7 +3677,8 @@ function Guia(props) {
                                                                                           mostrarRangos={false}
                                                                                           customConceptos={true}
                                                                                           listadoConceptosAlternativos={dataTodosConceptosByEmbarque}
-                                                                                          consult={state.agregar == "Consultar"}/>
+                                                                                          consult={state.agregar == "Consultar"}
+                                                                                          mostrarDescuento={true}/>
                                                                 </div>
 
                                                             }
