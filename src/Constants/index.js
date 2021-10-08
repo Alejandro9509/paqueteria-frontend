@@ -217,27 +217,31 @@ export const TICKET_ZABRA_TAMPLATE = (guia, paquete, index) => (
     ^BQN,2,3
     ^FDQA,http://190.9.53.4:8081/app/applications/${guia.m_nIdGuia}/tracking^FS
     ^PQ1,0,1,Y^XZ`*/
-`^XA
+    `^XA
 ^CI28
 ^MUm
 ^LL150,^PW100^LH0,0
-^FO3,7
-^BQN,2,8
+^FO2,7
+^BQN,2,4
 ^FH^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
-^FS^CI28^A0,4,4^FT27,49^FWB^FDGuía:^FS
-^FS^CI28^A0,8,8^FT38,49^FWB^FH^FD${guia.m_nFolioGuia}^FS
-^FS^CI28^AC,3,3^FT44,49^FWB^FDDestinatario:^FS
-^FS^CI28^A0,4,4^FT49,49,0^FWB^FH^FD${guia.m_sNombreDestinatario}^FS
-^FS^CI28^AC,3,3^FT59,49^FWB^FDCliente:^FS
-^FS^CI28^A0,4,4^FT64,49,0^FWB^FD${guia.m_sCliente} ^FS
-^FS^CI28^AC,3,3^FT74,49^FWB^FDOrigen:^FS
-^FS^CI28^A0,5,5^FT79,50^FWB^FD ${guia.m_sCiudadOrigen}^FS
-^FS^CI28^AC,3,3^FT84,49^FWB^FDDestino:^FS
-^FS^CI28^A0,5,5^FT89,50^FWB^FD ${guia.m_sCiudadDestino}^FS
-^FS^CI28^A0,4,4^FT95,49^FWB^FDPaquetes:^FS
-^FS^CI28^A0,5,5^FT95,31^FWB^FD ${index + 1} ^FS
-^FS^CI28^A0,4,4^FT95,23^FWB^FDde^FS
-^FS^CI28^A0,5,5^FT95,17^FWB^FD ${paquete.ctd} ^FS
+^FS^CI28^A0,4,4^FT17,49^FWB^FDGuía:^FS
+^FS^CI28^A0,8,8^FT25,49^FWB^FH^FD${guia.m_nFolioGuia}^FS
+^FS^CI28^AC,3,3^FT32,49^FWB^FDDestinatario:^FS
+^FS^CI28^A0,4,4^FT37,49,0^FWB^FH^FD${guia.m_sNombreDestinatario}^FS
+^FS^CI28^AC,3,3^FT46,49^FWB^FDCliente:^FS
+^FS^CI28^A0,4,4^FT51,49,0^FWB^FD${guia.m_sCliente} ^FS
+^FS^CI28^AC,3,3^FT60,49^FWB^FDOrigen:^FS
+^FS^CI28^A0,5,5^FT65,50^FWB^FD ${guia.m_sCiudadOrigen}^FS
+^FS^CI28^AC,3,3^FT71,49^FWB^FDDestino:^FS
+^FS^CI28^A0,5,5^FT76,50^FWB^FD ${guia.m_sCiudadDestino}^FS
+^FS^CI28^A0,4,4^FT83,49^FWB^FDPaquete:^FS
+^FS^CI28^A0,5,5^FT83,31^FWB^FD ${paquete.m_nIdEmbarqueDetalle}^FS
+^FS^CI28^A0,4,4^FT89,49^FWB^FDCantidad:^FS
+^FS^CI28^A0,5,5^FT89,31^FWB^FD ${index + 1} ^FS
+^FS^CI28^A0,4,4^FT89,23^FWB^FDde^FS
+^FS^CI28^A0,5,5^FT89,17^FWB^FD ${paquete.ctd} ^FS
+^FS^CI28^AC,1,1^FT95,49^FWB^FDPoner Descripcion^FS
+^FS^CI28^A0,5,5^FT89,17^FWB^FD ${paquete.m_sDescripcion}^FS
 ^MUd
 ^XZ`)
 
