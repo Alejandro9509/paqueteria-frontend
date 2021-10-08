@@ -326,6 +326,8 @@ function Recoleccion() {
     const [dataZonasTarifaDestinatario, setDataZonasTarifaDestinatario] = useState([])
     const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
     const [dataZonasTarifaEntregaDD, setDataZonasTarifaEntregaDD] = useState([])
+    const [dataZonasOperativasRecoleccionDD, setDataZonasOperativasRecoleccionDD] = useState([])
+    const [dataZonasTarifaRecoleccionDD, setDataZonasTarifaRecoleccionDD] = useState([])
 
     const [remitente, setRemitente] = useState({
         idRemitente: '',
@@ -849,20 +851,22 @@ function Recoleccion() {
         })
         if (input === "codigoPostalRec"){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
-                setRecoleccionDD(recoleccionDD => {
+                /*setRecoleccionDD(recoleccionDD => {
                     return{
                         ...recoleccionDD,
                         zonaOperativaRec: data
                     }
-                })
+                })*/
+                setDataZonasOperativasRecoleccionDD(data)
             })
             obtenerZonaTarifaByIdCodigoPostal(newValue.m_nIdCP).then(({data}) => {
-                setRecoleccionDD(recoleccionDD => {
+                /*setRecoleccionDD(recoleccionDD => {
                     return{
                         ...recoleccionDD,
                         zonaTarifaRec: data
                     }
-                })
+                })*/
+                setDataZonasTarifaRecoleccionDD(data)
             })
         }
     }

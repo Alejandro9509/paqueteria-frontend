@@ -1448,32 +1448,32 @@ function Embarque(props) {
         if (state.entregaEnSucursal) {
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
             params.EntregarMismoDomicilio = false
-        }
-        if (state.diferenteEntrega) {
-            params.m_bEntregaEnSucursal = false
-            // params.IdCiudadEntrega = state.ciudadEntrega
-            params.CodigoPostalEntrega = entregaDD.codigoPostalEnt.m_nIdCP
-            // params.IdZonaEntrega = entregaDD.zonaEntrega
-            params.DomicilioEntrega = entregaDD.domicilioEnt
-            params.EntregarEn = entregaDD.entregarEnEnt
-            params.DatosAdicionales = entregaDD.datosAdicionalesEnt
-            params.m_nIdZonaOperativa = entregaDD.zonaOperativaEnt.m_nIdZona
-            params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
         }else{
-            params.m_nIdZonaOperativa = destinatario.zonaOperativaDestinatario.m_nIdZona
-            params.m_nIdZonaTarifa = destinatario.zonaTarifaDestinatario.m_nIdZona
-        }
-        if (state.entregaConCita) {
-
-            params.m_sFechaCita = state.fechaCita
-            params.m_sHoraCitaMinima = state.horaCitaMinima
-            params.m_sHoraCitaMaxima = state.horaCitaMaxima
+            if (state.diferenteEntrega) {
+                params.m_bEntregaEnSucursal = false
+                // params.IdCiudadEntrega = state.ciudadEntrega
+                params.CodigoPostalEntrega = entregaDD.codigoPostalEnt.m_nIdCP
+                // params.IdZonaEntrega = entregaDD.zonaEntrega
+                params.DomicilioEntrega = entregaDD.domicilioEnt
+                params.EntregarEn = entregaDD.entregarEnEnt
+                params.DatosAdicionales = entregaDD.datosAdicionalesEnt
+                params.m_nIdZonaOperativa = entregaDD.zonaOperativaEnt.m_nIdZona
+                params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
+            }else{
+                params.m_nIdZonaOperativa = destinatario.zonaOperativaDestinatario.m_nIdZona
+                params.m_nIdZonaTarifa = destinatario.zonaTarifaDestinatario.m_nIdZona
+            }
+            if (state.entregaConCita) {
+                params.m_sFechaCita = state.fechaCita
+                params.m_sHoraCitaMinima = state.horaCitaMinima
+                params.m_sHoraCitaMaxima = state.horaCitaMaxima
+            }
         }
 
         console.log(params)
         console.log(JSON.stringify(params))
 
-        /*if (state.idEmbarque != 0) {
+        if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1502,7 +1502,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }*/
+        }
     };
 
     function handleSelectCP(id, cp) {
