@@ -379,7 +379,7 @@ class DetalleParadas extends Component {
                                                             console.log(+this.props.fecha <= +(new Date()))
                                                         }
                                                         {
-                                                            +this.props.fecha >= +(new Date()) &&
+                                                            +this.props.fecha <= +(new Date()) &&
                                                             <Button variant={"contained"} color={"primary"}
                                                                     onClick={() => this.setState({
                                                                         paquetes: tour.m_arrClsProGuia,

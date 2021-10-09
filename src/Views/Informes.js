@@ -410,7 +410,7 @@ function Informes({history}) {
             m_nIdCiudadDestino: state.IdCiudadDestino.m_nIdCiudad,
             m_nIdCiudadOrigen: state.IdCiudadOrigen.m_nIdCiudad,
             m_nIdEstatusInforme: state.EstatusInforme,
-            m_nIdOperador: state.IdOperador.m_nIdOperador,
+            //m_nIdOperador: state.IdOperador.m_nIdOperador,
             m_nIdRemolque1: state.IdRemolque1.m_nIdUnidad,
             m_nIdRemolque2: state.IdRemolque2 ? state.IdRemolque2.m_nIdUnidad : 0,
             m_sPlacasRemolque1: state.PlacasRemolque1,
@@ -453,11 +453,7 @@ function Informes({history}) {
                         showAgregarFromCubicar(state.indexCubicar++)
                     } else {
                         getAllData();
-                        $('.nav-tabs li ').removeClass('active');
-                        $('.nav-tabs li').eq(0).addClass('active');
-                        $('.tab-content div ').removeClass('in show');
-                        $('#Listado').addClass('in show');
-                        setState({...state, cubicar: false})
+                        handleShowAgregar()
                     }
 
                 })
@@ -890,9 +886,15 @@ function Informes({history}) {
         if (!cubicar) {
             obtenerGuiaPendientes(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad).then((respuesta) => {
                 if (respuesta.data !== "Vacio") {
-                    setDataGuias(respuesta.data);
-                }
+                    if (state.agregar ==="Modificar"){
+                        respuesta.data = respuesta.data.concat(state.guiasInforme)
+                        console.log(state.guiasInforme)
+                        setDataGuias(respuesta.data);
+                    }else {
+                        setDataGuias(respuesta.data);
 
+                    }
+                }
             })
         } else {
             obtenerGuiasFiltro(0, 0, 0, 4).then(async (respuesta) => {
@@ -968,7 +970,7 @@ function Informes({history}) {
     }
 
     useEffect(value => {
-        if (state.IdCiudadOrigen && state.IdCiudadDestino && state.IdRuta != 0 && state.IdRuta != undefined && state.IdRuta != "") {
+        if (state.IdCiudadOrigen && state.IdCiudadDestino && state.agregar !== "Consultar") {
             getAllGuiasFrom();
 
         }
@@ -980,13 +982,14 @@ function Informes({history}) {
                     .m_nIdCiudad
             );
         }
-    }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.IdRuta])
+    }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.IdRuta, state.agregar])
 
     function handleShowAgregar() {
         setState({
             ...state,
             agregar: "Agregar",
             showPopUp: true,
+            IdInforme: 0,
             IdGrupoUnidad: 0,
             Codigo: 0,
             GrupoUnidad: "",
@@ -1021,20 +1024,20 @@ function Informes({history}) {
         $('#Agregar').addClass('in show');
         obtenerInformesId(id).then(({data}) => {
             data.m_arrClsProGuia.forEach(g => g.select = true)
-            setDataGuias(data.m_arrClsProGuia)
             setState({
                 ...state,
                 IdInforme: id,
-                fechaHora: data.m_sFechayHora,
+                guiasInforme: data.m_arrClsProGuia,
+                fechaHora: data.m_dFecha + "T" + data.m_tHora,
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadOrigen),
-                IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
+                //IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
                 sucursalEmisora: data.m_nIdSucursalEmisora,
                 sucursalReceptora: data.m_nIdSucursalReceptora,
                 IdRemolque1: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
                 IdRemolque2: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque2),
                 IdTipoUnidad: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdDolly),
-                IdRuta: dataRutas.find(c => c.m_nIdRuta === data.m_nIdRuta),
+                IdRuta: null,
                 IdEstatusInforme: dataEstatusInformes.find(c => c.m_nIdEstatusInforme === data.m_nIdEstatusInforme),
                 PlacasRemolque1: data.m_sPlacasRemolque1,
                 PlacasRemolque2: data.m_sPlacasRemolque2,
@@ -1043,7 +1046,6 @@ function Informes({history}) {
                 EstatusInforme: data.m_nIdEstatusInforme,
                 agregar: "Modificar"
             });
-
         });
     }
 
@@ -1058,7 +1060,7 @@ function Informes({history}) {
             setDataGuias(data.m_arrClsProGuia)
             setState({
                 ...state,
-                fechaHora: data.m_sFechayHora,
+                fechaHora: data.m_dFecha + "T" + data.m_tHora,
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
