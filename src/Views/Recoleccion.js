@@ -95,6 +95,7 @@ import {obtenerMunicipiosByIdEstado} from "../Util/Contexts/MunicipiosContext";
 import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
 import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
 import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
+import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 
 let timer;
 
@@ -142,6 +143,9 @@ function Recoleccion() {
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataTipoMoneda, setDataTipoMoneda] = React.useState([]);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
+    const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
+    const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
+
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
     const [dataZona, setDataZona] = React.useState([]);
@@ -781,7 +785,8 @@ function Recoleccion() {
             return;
         }
         getDataParaListado()
-
+        getFechaInicial()
+        getFechaFinal()
     }, []);
 
     const getDataParaListado = () => {
@@ -988,6 +993,44 @@ function Recoleccion() {
     function getTipoCambio() {
         obtenerTipoCambio().then(respuesta => {
             setDataTipoCambio(respuesta.data)
+        });
+    };
+
+    
+    function getFechaInicial() {
+        obtenerFechaInicio().then(respuesta => {
+            console.log(respuesta.data[0].m_dtFecha)
+            setDataFechaInicial(respuesta.data)
+
+            setFiltros(filtros => {
+                return {
+                    ...filtros,
+                   fechaInicial: respuesta.data[0].m_dtFecha
+                }
+            })
+           
+        });
+    };
+
+
+    
+    function getFechaFinal() {
+        obtenerFechaFinal().then(respuesta => {
+            console.log(respuesta.data[0].m_dtFecha)
+
+            setDataFechaFinal(respuesta.data)
+
+            setFiltros(filtros => {
+                return {
+                    ...filtros,
+                   fechaFinal: respuesta.data[0].m_dtFecha
+                }
+            })
+
+
+
+
+
         });
     };
 
@@ -1397,8 +1440,8 @@ function Recoleccion() {
         setState(state => {
             return {
                 ...state,
-                fechaInicial: 0,
-                fechaFinal: 0,
+                fechaInicial: dataFechaInicial.data[0].m_dtFecha,
+                fechaFinal: dataFechaFinal.data[0].m_dtFecha,
                 sucursalListado: 0,
                 estatusListado: 0,
                 folioRecoleccion: '',
