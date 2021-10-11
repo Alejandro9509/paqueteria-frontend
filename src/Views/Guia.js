@@ -358,14 +358,14 @@ function Guia(props) {
             "idTipoServicio": state.idTipoServicio,
 
             "arClsGuiaConceptos": state.conceptosAdicionales.map(c => ({
-                m_nIdConceptosFacturacion: c.concepto.m_nIdConceptosFacturacion,
+                m_nIdConceptosFacturacion: c.idConcepto,
                 m_cImporte: c.importe,
                 m_nIdImpuestoTraslada: c.traslada,
                 m_nIdImpuestoRetiene: c.retiene,
                 m_cImporteRetiene: c.importeRet,
                 m_cImporteIva: c.importeIVA,
                 m_bActivo: true,
-                m_xDescuento: c.descuento || 0
+                m_cDescuento: c.descuento || 0
             })),
 
         }
@@ -585,7 +585,7 @@ function Guia(props) {
         m_arClsGuiaConceptos.forEach((element) => {
             conceptosAdicionales.push({
                 concepto: element,
-                idConcepto: element.m_nIdConceptosFacturacion,
+                idConcepto: element.m_nIdConceptoFacturacion,
                 importe: element.m_cImporte,
                 retiene: element.m_nIdImpuestoRetiene,
                 traslada: element.m_nIdImpuestoTraslada,
@@ -595,7 +595,7 @@ function Guia(props) {
                 rangoMaximo: element.m_xnRangoMaximo,
                 nombreConcepto: element.m_sConcepto,
                 tipoCalculo: element.m_nIdTipoCalculo,
-                descuento: element.m_xDescuento || 0
+                descuento: element.m_cDescuento || 0
             })
         })
         var ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
