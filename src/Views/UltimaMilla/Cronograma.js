@@ -140,6 +140,7 @@ class Cronograma extends Component {
                                                     {
                                                         this.props.tour.m_arrClsParadaUltimaMilla.map((u, index) => {
                                                             var tour = this.props.tour.m_arrClsParadaUltimaMilla.find(t => t.m_nIdUnidad ===  u.m_nIdUnidad)
+                                                            var filterEstatus = tour.m_arrClsProGuia.filter(g =>g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3)
                                                             var color = tour.color
                                                             var min = 20, sec = 10;
                                                             return (
@@ -168,9 +169,13 @@ class Cronograma extends Component {
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="center">
                                                                         <div style={{
-                                                                            backgroundColor: "#F9A03E",
+                                                                            backgroundColor: filterEstatus.length === 0 ?  "#06B100" : "#F9A03E",
                                                                             borderRadius: "10px"
-                                                                        }}>En camino
+                                                                        }}>{
+
+                                                                            filterEstatus.length === 0 ? "Completado" :  filterEstatus[0].m_sEstatusUltimaMilla
+
+                                                                        }
                                                                         </div>
                                                                     </TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}

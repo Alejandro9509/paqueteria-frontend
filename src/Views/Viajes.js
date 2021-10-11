@@ -326,6 +326,10 @@ function Viajes() {
             headerName: "Viaje",
             field: "m_sFolioViaje",
             width: 150,
+        },{
+            headerName: "Sucursal receptora",
+            field: "m_sSucursalReceptora",
+            width: 180,
         }, {
             headerName: "Sucursal",
             field: "m_sSucursal",
@@ -460,25 +464,26 @@ function Viajes() {
         {
             headerName: "Folio Informe",
             field: "m_clsInforme",
-            width: 200,
+            width: 130,
             valueFormatter: row => {
                 return (row.value.m_sFolioInforme)
             }
         },
         {
-            headerName: "Origen",
-            field: "m_sOrigen",
-            width: 200,
+            headerName: "Origen - Destino",
+            field: "origenDestino",
+            width: 250,
         },
         {
             headerName: "Salida",
             field: "m_dFechaSalida",
+            width: 130,
             valueFormatter: row => row.value.startsWith("0000") ? "Sin definir" : row.value
         },
         {
             headerName: "Llegada",
             field: "m_dFechaLlegada",
-            width: 100,
+            width: 130,
             valueFormatter: row => row.value.startsWith("0000") ? "Sin definir" : row.value
         },
         {
@@ -494,11 +499,6 @@ function Viajes() {
                     </Link>
                 )
             }
-        },
-        {
-            headerName: "Destino",
-            field: "m_sDestino",
-            width: 200,
         },
         {
             headerName: "Camión",
@@ -524,8 +524,10 @@ function Viajes() {
         obtenerDetalleParadasIdViaje(row).then(respuesta => {
             var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdOrigen")
             arrayInformes.forEach(a => {
-                a["informes"] = respuesta.data.filter(r => r.m_nIdRuta === a.m_nIdRuta)
+                a["informes"] = respuesta.data.filter(r => r.m_nIdOrigen === a.m_nIdOrigen)
+                a.origenDestino = `${a.m_sOrigen} - ${a.m_sDestino}`
             })
+            console.log(arrayInformes)
             setParadasListado(arrayInformes);
         });
     }
@@ -578,6 +580,7 @@ function Viajes() {
             m_nKmViaje: data.kms,
             m_nMillasViaje: data.millas,
             m_sMotivoRetraso: data.motivoRetraso,
+            m_nIdCiudadOrigen: paradaData.m_nIdOrigen,
             IdRuta: paradaData.m_nIdRuta,
 
 
@@ -592,6 +595,7 @@ function Viajes() {
 
         }
 
+        console.log(params)
 
         agregarViajeSalida(params)
             .then((respuesta) => {

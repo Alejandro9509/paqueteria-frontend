@@ -6,6 +6,7 @@ import moment from "moment";
 
 const headers = {
     'Content-Type': 'application/json',
+    // 'TimeZone' : Intl.DateTimeFormat().resolvedOptions().timeZone
     //    'access-control-allow-origin': '*'
 }
 
@@ -57,7 +58,7 @@ async function convertData(trucks, guias, dateFilter) {
                 "end": dateFilter.finishDate + "T" + dateFilter.finishTime + ":00+00:00"
             }
             ],
-            "serviceTimePerStop": "300.0"
+            "serviceTimePerStop": "600.0"
         }
     ))))
     return array
@@ -78,15 +79,18 @@ async function obtenerGuiasUbicacion(paquetes) {
     var guias = []
     for (var i = 0; i < paquetes.length; i++) {
         var g = paquetes[i]
-        if (!g.lat) {
-            var location = await searchLocationGuia(g.m_bEsRecoleccion ? g.m_sCiudadOrigen : g.m_sCiudadDestino, g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioRemitente, g.m_bEsRecoleccion ? g.m_sCodigoPostalRemitente : g.m_sCodigoPostalDestinatario)
+        console.log("Inicio de validación")
+        if (g.m_sLatitud.length === 0) {
+            console.log("Se buscara la dirección")
+            var location = await searchLocationGuia(g.m_bEsRecoleccion ? g.m_sCiudadOrigen : g.m_sCiudadDestino, g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioDestinatario, g.m_bEsRecoleccion ? g.m_sCodigoPostalRemitente : g.m_sCodigoPostalDestinatario)
             guias.push({
                 ...g,
                 lat: location.y,
                 lng: location.x,
                 index: i
             })
-        }else {
+        } else {
+            console.log("Dirección ya obtenida")
             guias.push({
                 ...g,
                 lat: g.m_sLatitud,
@@ -225,29 +229,33 @@ async function searchLocationGuia(city, address, postalCode) {
 
 
 function searchLocationWeb(city, address, subdistrict, number) {
-    return new Promise((resolve, reject) => {
-        xlocate.searchLocations({
-            "$type": "SearchByAddressRequest",
-            "address": {
-                "city": city,
-                "street": address,
-                "subdistrict": subdistrict,
-                "houseNumber": number
-            }
-        }, (location) => {
-            if (location) {
-                if (location.results) {
-                    if (location.results.length !== 0) {
-                        resolve(location.results[0].location.referenceCoordinate)
+    var result;
+    trackPromise(
+        result = new Promise((resolve, reject) => {
+            xlocate.searchLocations({
+                "$type": "SearchByAddressRequest",
+                "address": {
+                    "city": city,
+                    "street": address,
+                    "subdistrict": subdistrict,
+                    "houseNumber": number
+                }
+            }, (location) => {
+                if (location) {
+                    if (location.results) {
+                        if (location.results.length !== 0) {
+                            resolve(location.results[0].location.referenceCoordinate)
+                        } else {
+                            resolve({x: 0.0, y: 0.0})
+                        }
                     } else {
                         resolve({x: 0.0, y: 0.0})
                     }
-                } else {
-                    resolve({x: 0.0, y: 0.0})
                 }
-            }
-        });
-    })
+            });
+        })
+    )
+    return result
 }
 
 async function searchLocation(city, address) {
@@ -269,10 +277,11 @@ async function searchLocation(city, address) {
     }
 }
 
-function agregarRuta(tour, data) {
+function agregarRuta(idUltimaMilla, tour, data) {
     const url = `${process.env.REACT_APP_API_URL}/GuardarUltimaMilla`;
     let result;
     var ultimaMillaObject = {
+        idUltimaMilla: idUltimaMilla,
         fecha: moment(data.fecha).format("YYYYMMDD"),
         m_nCreadoPor: localStorage.getItem("UsuarioId"),
         idSucursal: data.sucursalSeleccionada.m_nIdSucursal,
@@ -281,12 +290,27 @@ function agregarRuta(tour, data) {
     }
     tour.unidades.forEach((u) => {
         var tempTour = tour.tour.tours.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
-        var guias = tour.paquetes.filter((p, index) => tempTour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === index) != null)
+        var guias = tour.paquetes.filter((p, index) => tempTour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === p.index) != null)
         guias = ordenarGuiasPorRuta(tempTour, guias)
         ultimaMillaObject.rutas.push({
             idOperador: u.m_nIdOperador,
             idUnidad: u.m_nIdUnidad,
-            guias: guias.map(g => ({idGuia: g.m_nId, lat: g.lat, lng: g.lng, orden: g.orden, esRecoleccion: g.m_bEsRecoleccion}))
+            guias: guias.map((g, index) => {
+                var tourReport = tour.tour.tourReports.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
+                var reportTime = tourReport.tourEvents.find(t => t.eventTypes[0] === "SERVICE" && g.index === parseInt(t.orderId))
+                var date = new Date(reportTime.startTime)
+                var userTimezoneOffset = date.getTimezoneOffset() * 60000;
+                date = new Date(date.getTime() + userTimezoneOffset);
+                var time = date.toLocaleTimeString()
+                return ({
+                    idGuia: g.m_nId,
+                    lat: g.lat,
+                    lng: g.lng,
+                    orden: index + 1,
+                    horaEstimada: time,
+                    esRecoleccion: g.m_bEsRecoleccion
+                })
+            })
         })
     })
     data.zonasSeleccionada.forEach((z) => {
@@ -296,6 +320,25 @@ function agregarRuta(tour, data) {
     trackPromise(
         result = axios.post(url, Object.assign({}, ultimaMillaObject), {headers})
     );
+    return result
+}
+
+async function ordenarParada(idParada, guias) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/OrdenarParada/${idParada}`;
+    let result;
+
+    guias = await obtenerGuiasUbicacion(guias)
+    var paquetes = guias.map((g, index) => ({
+        idGuia: g.m_nId,
+        lat: g.lat.toString(),
+        lng: g.lng.toString(),
+        orden: index + 1,
+        esRecoleccion: g.m_bEsRecoleccion
+    }))
+    trackPromise(
+        result = axios.put(url, Object.assign({}, {guias: paquetes}), {headers})
+    )
+    ;
     return result
 }
 
@@ -309,18 +352,71 @@ function obtenerUltimaMillaFecha(date, idSucursal, zonas) {
     return result
 }
 
+function obtenerPaquetesInforme(idInforme, zonasIds) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetListadoPaquetesByInforme/` + idInforme;
+    let result;
+    trackPromise(
+        result = axios.post(url, Object.assign({}, {zonas: zonasIds.join(",")}), {headers})
+    );
+    return result
+}
+function obtenerPaquetesViaje(idViaje, zonasIds) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetListadoPaquetesByViaje/` + idViaje;
+    let result;
+    trackPromise(
+        result = axios.post(url, Object.assign({}, {zonas: zonasIds.join(",")}), {headers})
+    );
+    return result
+}
+function obtenerPaquetesUnidadOperador(idUnidad, idOperador,zonasIds ) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetListadoPaquetesByUnidadOperador/${idUnidad}/${idOperador}` ;
+    let result;
+    trackPromise(
+        result = axios.post(url,   Object.assign({}, {zonas: zonasIds.join(",")}), {headers})
+    );
+    return result
+}
 async function remplazarPaqueteUltimaMilla(idParada, paqueteViejo, paqueteNuevo) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/RemplazarParada/${idParada}/${paqueteViejo.m_nId}`;
     let result;
     var guia = await obtenerGuiasUbicacion([paqueteNuevo])
     trackPromise(
-
-        result = axios.put(url, Object.assign({}, {EsRecoleccion: paqueteViejo.m_bEsRecoleccion,IdNuevaGuia: paqueteNuevo.m_nId, NuevoEsRecoleccion: paqueteNuevo.m_bEsRecoleccion, Lat: guia[0].lat, Lng: guia[0].lng}), {headers})
+        result = axios.put(url, Object.assign({}, {
+            EsRecoleccion: paqueteViejo.m_bEsRecoleccion,
+            IdNuevaGuia: paqueteNuevo.m_nId,
+            NuevoEsRecoleccion: paqueteNuevo.m_bEsRecoleccion,
+            Lat: guia[0].lat,
+            Lng: guia[0].lng
+        }), {headers})
     );
     return result
 }
 
+function eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/RemplazarParada`;
+    let result;
+    trackPromise(
+        result = axios.put(url, Object.assign({}, {
+            EsRecoleccion: idParada,
+            IdGuia: idGuia,
+            IdParada: esRecoleccion,
+        }), {headers})
+    );
+    return result
+}
+
+function obtenerUltimaMillaReporte(id) {
+    const url = `http://190.9.53.4:8081/reportes/api/GenerarReporte/UltimaMilla/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+
 export {
+    obtenerUltimaMillaReporte,
     obtenerRutas,
     obtenerGuiasUbicacion,
     calcularRuta,
@@ -329,8 +425,12 @@ export {
     agregarRuta,
     searchLocationAddress,
     obtenerUltimaMillaFecha,
-    remplazarPaqueteUltimaMilla
-
+    remplazarPaqueteUltimaMilla,
+    ordenarParada,
+    eliminarPaqueteUltimaMilla,
+    obtenerPaquetesInforme,
+    obtenerPaquetesViaje,
+    obtenerPaquetesUnidadOperador
 }
 
 
@@ -339,7 +439,7 @@ function ordenarGuiasPorRuta(tour, guias) {
     tour.trips[0].stops.forEach((item, index) => {
         var found = false;
         guias = guias.filter(function (guia, index) {
-            if (!found && index == parseInt(item.tasks[0].orderId)) {
+            if (!found && guia.index == parseInt(item.tasks[0].orderId)) {
                 guia.orden = index + 1
                 result.push(guia);
                 found = true;

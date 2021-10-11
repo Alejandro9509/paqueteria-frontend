@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {Stepper, Step, StepLabel, StepContent, Button, Paper} from '@material-ui/core/';
 
@@ -49,6 +49,34 @@ function getSteps() {
       m_sColor:"#F9A03E47"
     },
     {
+      m_nIdEstatusGuia:14,
+      m_sAbreviacion:"U\/M",
+      m_sEstatus:"Última Milla",
+      m_sDescripcion:"La guía se encuentra en proceso de última milla",
+      m_sColor:"#F9A03E47"
+    },
+    {
+      m_nIdEstatusGuia:17,
+      m_sAbreviacion:"RUTA U\/M",
+      m_sEstatus:"En Ruta UltimaMilla",
+      m_sDescripcion:"La guía se encuentra en ruta",
+      m_sColor:"#F9A03E47"
+    },
+    {
+      m_nIdEstatusGuia:18,
+      m_sAbreviacion:"Ent",
+      m_sEstatus:"Entregada",
+      m_sDescripcion:"La guía fue entregada en el domicilio",
+      m_sColor:"#F9A03E47"
+    },
+    {
+      m_nIdEstatusGuia:19,
+      m_sAbreviacion:"Ent C",
+      m_sEstatus:"Entrega Cancelada",
+      m_sDescripcion:"La guía no pudo ser entregada",
+      m_sColor:"#F70F2647"
+    },
+    {
       m_nIdEstatusGuia:7,
       m_sAbreviacion:"Com",
       m_sEstatus:"Completado",
@@ -70,19 +98,26 @@ function castStatus(status){
     case 4: return 0;
     case 5: return 1;
     case 6: return 2;
-    case 7: return 3;
-    case 8: return 5;
+    case 7: return 8;
+    case 8: return 9;
+    case 14: return 3;
+    case 17: return 4;
+    case 18: return 5;
+    case 19: return 6;
   }
 }
 
 export default function DetallesSeguimiento(props) {
-  const estatusGuia = props.estatusGuia;
   const classes = useStyles();
+  const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
-  const status = castStatus(estatusGuia);
-  console.log(status);
-  const [activeStep, setActiveStep] = React.useState(status);
-  
+
+  useEffect(value =>{
+    const estatusGuia = props.estatusGuia;
+    const status = castStatus(estatusGuia);
+    console.log(status);
+    setActiveStep(status)
+  }, [props.estatusGuia])
 
   const handleReset = () => {
     setActiveStep(0);

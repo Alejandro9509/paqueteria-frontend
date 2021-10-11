@@ -2,11 +2,14 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Marker from "react-leaflet-enhanced-marker";
 import {Polyline, Popup} from "react-leaflet";
-import {calcularRuta} from "../../Util/Contexts/UltimaMillaContext";
+import {calcularRuta, obtenerUltimaMillaReporte} from "../../Util/Contexts/UltimaMillaContext";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
 import {Grid, Typography, Dialog, DialogTitle, DialogActions, DialogContent} from "@material-ui/core";
+import {InsertDriveFile} from "@material-ui/icons";
+import IconButton from "@material-ui/core/IconButton";
+import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
 
 
 class TourUltimaMilla extends Component {
@@ -18,12 +21,15 @@ class TourUltimaMilla extends Component {
         this.getRoute = this.getRoute.bind(this)
     }
 
-    componentWillMount() {
-        this.getRoute()
+    componentDidUpdate(prevProps, prevState, snapshot) {
+
+        if (this.props.data.m_arrClsProGuia.length !== prevProps.data.m_arrClsProGuia.length) {
+            this.getRoute()
+        }
     }
 
     componentDidMount() {
-
+        this.getRoute()
     }
 
     componentWillUnmount() {
@@ -40,23 +46,37 @@ class TourUltimaMilla extends Component {
             g.lng = g.m_sLongitud
         })
         if (guias.length !== 0) {
-            if (this.props.data.m_xlat !== 0 && this.props.data.m_xlng !== 0 ) {
-                calcularRuta(guias, {lat:this.props.data.m_xlat, lng:this.props.data.m_xlng}).then((result) => {
-                    result.polyline.plain.polyline.map(c => {
-                        polygon.push([c.y, c.x])
-                    })
-                    this.setState({polygon: polygon})
+            if (this.props.data.m_xlat !== 0 && this.props.data.m_xlng !== 0) {
+                calcularRuta(guias, {lat: this.props.data.m_xlat, lng: this.props.data.m_xlng}).then((result) => {
+                    if (result) {
+                        result.polyline.plain.polyline.map(c => {
+                            polygon.push([c.y, c.x])
+                        })
+                        this.setState({polygon: polygon})
+                    }
                 })
-            }else {
+            } else {
                 calcularRuta(guias, this.props.sucursal).then((result) => {
-                    result.polyline.plain.polyline.map(c => {
-                        polygon.push([c.y, c.x])
-                    })
-                    this.setState({polygon: polygon})
+                    if (result) {
+                        result.polyline.plain.polyline.map(c => {
+                            polygon.push([c.y, c.x])
+                        })
+                        this.setState({polygon: polygon})
+                    }
                 })
             }
         }
 
+    }
+
+    generarReporte(guia) {
+        console.log(guia)
+        obtenerGuiaReporte(guia.m_nId).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Guía ";
+        })
     }
 
 
@@ -69,32 +89,57 @@ class TourUltimaMilla extends Component {
                     this.props.data.m_arrClsProGuia.map((g, index) => {
                             return (
                                 <Marker key={index}
-                                        icon={<MarkerComponent color={this.props.data.color} index={g.m_nUltimaMillaOrden + 1}/>}
+                                        icon={<MarkerComponent color={this.props.data.color}
+                                                               index={g.m_nUltimaMillaOrden}/>}
                                         position={[parseFloat(g.m_sLatitud), parseFloat(g.m_sLongitud)]}>
                                     <Popup>
                                         <Grid container spacing={1}>
                                             <Grid item md={12}>
-                                                <Typography variant={"h2"}>{g.m_sFolio} - {g.m_bEsRecoleccion ? g.m_sEstatusRecoleccion : g.m_sEstatusEmbarque}</Typography>
+                                                <Typography
+                                                    variant={"h2"}>{g.m_sFolio} - { g.m_sEstatusUltimaMilla}</Typography>
                                             </Grid>
 
                                             <Grid item md={12}>
-                                                <Typography variant={"body2"} style={{fontWeight:"bold"}}>Datos de la {g.m_bEsRecoleccion ? "Recolección" : "Entrega"}</Typography>
+                                                <Typography variant={"body2"} style={{fontWeight: "bold"}}>Datos de
+                                                    la {g.m_bEsRecoleccion ? "Recolección" : "Entrega"}</Typography>
                                             </Grid>
                                             <Grid item md={12}>
-                                                <Typography variant={"body1"} >{g.m_bEsRecoleccion ? g.m_sNombreRemitente : g.m_sNombreDestinatario}</Typography>
+                                                <Typography
+                                                    variant={"body1"}>{g.m_bEsRecoleccion ? g.m_sNombreRemitente : g.m_sNombreDestinatario}</Typography>
                                             </Grid>
                                             <Grid item md={12}>
-                                                <Typography variant={"body1"} >{g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioDestinatario}</Typography>
+                                                <Typography
+                                                    variant={"body1"}>{g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioDestinatario}</Typography>
                                             </Grid>
                                             <Grid item md={12}>
-                                                <Typography variant={"body1"} >{g.m_bEsRecoleccion ? g.m_sContactoRemitente : g.m_sContactoDestinatario}</Typography>
+                                                <Typography
+                                                    variant={"body1"}>{g.m_bEsRecoleccion ? g.m_sContactoRemitente : g.m_sContactoDestinatario}</Typography>
                                             </Grid>
                                             <Grid item md={12}>
-                                                <Typography variant={"body1"} >{g.m_bEsRecoleccion ? g.m_sTelefonoRemitente : g.m_sTelefonoDestinatario}</Typography>
+                                                <Typography
+                                                    variant={"body1"}>{g.m_bEsRecoleccion ? g.m_sTelefonoRemitente : g.m_sTelefonoDestinatario}</Typography>
                                             </Grid>
-                                            <Grid item md={12}>
-                                                <Typography variant={"body1"} >No. Paquetes: {g.m_bEsRecoleccion ? g.m_parrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0) : g.m_arrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0)}</Typography>
+                                            <Grid item md={10}>
+                                                <Typography variant={"body1"}>No.
+                                                    Paquetes: {g.m_bEsRecoleccion ? g.m_parrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0) : g.m_arrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0)}</Typography>
                                             </Grid>
+                                            <Grid item md={2}>
+                                                <IconButton aria-label="file" onClick={() => this.generarReporte(g)}>
+                                                    <InsertDriveFile fontSize={"default"}/>
+                                                </IconButton>
+                                            </Grid>
+                                            {
+
+                                                g.m_arrImagenes.find(i => parseInt(i.m_nTipoArchivo) === 1) !== undefined &&
+                                                <Grid item md={12}>
+                                                    <div align={"center"}>
+                                                        <img style={{width: "80px", height: "80px"}}
+                                                             src={`data:image/jpeg;base64,${g.m_arrImagenes.find(i => parseInt(i.m_nTipoArchivo) === 1).m_sImagen}`}/>
+                                                    </div>
+                                                </Grid>
+                                            }
+
+
                                         </Grid>
 
                                     </Popup>
@@ -155,7 +200,7 @@ class MarkerComponent extends Component {
             borderColor: "white",
             boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
         };
-        return <div  align={"center"} style={markerStyle}>{this.props.index}</div>;
+        return <div align={"center"} style={markerStyle}>{this.props.index}</div>;
     }
 }
 

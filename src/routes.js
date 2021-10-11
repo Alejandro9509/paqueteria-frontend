@@ -8,6 +8,7 @@ import ViajesPage from './Views/Viajes'
 import CatalogosPage from './Views/Catalogos';
 import ConfiguracionPage from './Views/Configuracion';
 import InicadoresPage from './Views/Indicadores';
+import CorteCajaPage from './Views/CorteCaja/CorteCaja';
 import Historial from './Views/Viajes/Historial';
 import UltimaMillaPage from './Views/UltimaMilla/UltimaMilla';
 
@@ -22,7 +23,7 @@ import {ReactComponent as GuiasIcon} from './iconos/Menu/IconoGuias/iconoGuia.sv
 import {ReactComponent as UltimaMillaIcono} from './iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg';
 
 import {ReactComponent as viajeIcon} from './iconos/Menu/IconoViajes/iconoViajes.svg';
-
+import {ReactComponent as corteCajaIcon} from './iconos/Menu/IconoCorteCaja/IconoCorteCaja.svg';
 
 const dashboardRoutes = [
   {
@@ -95,6 +96,14 @@ const dashboardRoutes = [
     name: "Viajes",
     icon: viajeIcon,
     component: ViajesPage,
+    single: true,
+    child:[]
+  },
+  {
+    path: "/CorteCaja",
+    name: "Corte de Caja",
+    icon: corteCajaIcon,
+    component: CorteCajaPage,
     single: true,
     child:[]
   },

@@ -1,5 +1,8 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
+const XLocateClient = window.XLocateClient;
+var xlocate = new XLocateClient();
+xlocate.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 
 const headers = {
     'Content-Type': 'application/json',
@@ -12,6 +15,39 @@ function modificarRemitentesDestinatarios(id, params){
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
         );
+    return result
+}
+
+
+function obtenerUbicacion(city, address, subdistrict, number, code) {
+    var result;
+    trackPromise(
+        result = new Promise((resolve, reject) => {
+            xlocate.searchLocations({
+                "$type": "SearchByAddressRequest",
+                "address": {
+                    "city": city,
+                    "street": address,
+                    "subdistrict": subdistrict,
+                    "houseNumber": number,
+                    "postalCode": code
+                }
+            }, (location) => {
+                if (location) {
+                    if (location.results) {
+                        if (location.results.length !== 0) {
+                            resolve(location.results[0].location.referenceCoordinate)
+                        } else {
+                            resolve({x: 0.0, y: 0.0})
+                        }
+                    } else {
+                        resolve({x: 0.0, y: 0.0})
+                    }
+                }
+                reject(null)
+            });
+        })
+    )
     return result
 }
 
@@ -59,4 +95,4 @@ function obtenerRemitentesDestinatariosId(id){
     return result
 }
 
-export {modificarRemitentesDestinatarios, agregarRemitentesDestinatarios, eliminarRemitentesDestinatarios, obtenerRemitentesDestinatarios, obtenerRemitentesDestinatariosId, validarNumeroRemitente}
+export {modificarRemitentesDestinatarios, agregarRemitentesDestinatarios, eliminarRemitentesDestinatarios, obtenerRemitentesDestinatarios, obtenerRemitentesDestinatariosId, validarNumeroRemitente, obtenerUbicacion}

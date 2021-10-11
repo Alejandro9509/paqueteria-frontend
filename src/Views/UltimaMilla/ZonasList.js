@@ -15,6 +15,10 @@ import {
 import {fade} from "@material-ui/core/styles";
 import {obtenerZonasSucursal} from "../../Util/Contexts/ZonasContext";
 import SearchIcon from "@material-ui/icons/Search";
+import {
+    obtenerListadoZonaOperativa,
+    obtenerListadoZonaOperativaBySucursal
+} from "../../Util/Contexts/ZonaOperativaContext";
 
 const useStyles = theme => ({
     visuallyHidden: {
@@ -90,7 +94,7 @@ class ZonasList extends Component {
     }
 
     getAllzonas() {
-        obtenerZonasSucursal(this.props.sucursalSeleccionada).then(({data}) => {
+        obtenerListadoZonaOperativaBySucursal(this.props.sucursalSeleccionada).then(({data}) => {
             this.setState({zonas: data, zonasFiltradas: data})
         })
     }
@@ -199,15 +203,15 @@ class ZonasList extends Component {
                                 />
                             </TableCell>
                             <TableCell
-                                sortDirection={this.state.orderBy === "m_sDescripcion" ? this.state.order : false}
+                                sortDirection={this.state.orderBy === "m_sCodigoZona" ? this.state.order : false}
                                 align="left">
                                 <TableSortLabel
-                                    active={this.state.orderBy === "m_sDescripcion"}
-                                    direction={this.state.orderBy === "m_sDescripcion" ? this.state.order : 'asc'}
-                                    onClick={(event) => this.createSortHandler("m_sDescripcion", event)}
+                                    active={this.state.orderBy === "m_sCodigoZona"}
+                                    direction={this.state.orderBy === "m_sCodigoZona" ? this.state.order : 'asc'}
+                                    onClick={(event) => this.createSortHandler("m_sCodigoZona", event)}
                                 >
                                     Todas
-                                    {this.state.orderBy === "m_sDescripcion" ? (
+                                    {this.state.orderBy === "m_sCodigoZona" ? (
                                         <span className={classes.visuallyHidden}>
                                             {this.state.order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                         </span>
@@ -231,7 +235,7 @@ class ZonasList extends Component {
                                                 inputProps={{'aria-labelledby': labelId}}
                                             />
                                         </TableCell>
-                                        <TableCell align="left">{u.m_sDescripcion}</TableCell>
+                                        <TableCell align="left">{u.m_sCodigoZona}</TableCell>
                                     </TableRow>
                                 )
                             })

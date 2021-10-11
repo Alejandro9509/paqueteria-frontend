@@ -24,7 +24,7 @@ class Paradas extends Component {
                                 this.props.tour.m_arrClsProGuia.map((s, index) => {
                                     return (
                                         <div className="pointBarPass"
-                                             onClick={()=> this.props.selectGuiaReasignar(this.props.tour.m_nIdParadaUltimaMilla, s.m_nIdGuia)}
+                                             onClick={()=> this.props.selectGuiaReasignar(this.props.tour.m_nIdParadaUltimaMilla, s.m_nId)}
                                              style={{
                                                  left: `${((index+1) / this.props.tour.m_arrClsProGuia.length) * 90}%`,
                                                  color: this.props.color
@@ -37,7 +37,7 @@ class Paradas extends Component {
 
                             <div className="pointBarFlag"
                                  style={{
-                                     left: `${parseInt((this.props.tour.m_arrClsProGuia.filter(g => g.m_nEstatusUlimaMilla === 3).length/this.props.tour.m_arrClsProGuia.length) * 100)}%`
+                                     left: `${parseInt((this.props.tour.m_arrClsProGuia.filter(g => g.m_nEstatusUlimaMilla === 3 || g.m_nEstatusUlimaMilla === 4).length/this.props.tour.m_arrClsProGuia.length) * 97)}%`
 
                                  }}>
                                 <UnidadesIcon

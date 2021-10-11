@@ -29,8 +29,14 @@ import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
 import AgregarPaqueteUltimaMilla from "./AgregarPaqueteUltimaMilla";
 import PaquetesList from "./PaquetesList";
 import {obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
-import {remplazarPaqueteUltimaMilla} from "../../Util/Contexts/UltimaMillaContext";
+import {
+    eliminarPaqueteUltimaMilla, obtenerUltimaMillaReporte,
+    ordenarParada,
+    remplazarPaqueteUltimaMilla
+} from "../../Util/Contexts/UltimaMillaContext";
 import Noty from "noty";
+import {obtenerCorteReporte} from "../../Util/Contexts/CorteCajaContext";
+import {InsertDriveFile} from "@material-ui/icons";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -62,8 +68,17 @@ class DetalleParadas extends Component {
         this.openDetail = this.openDetail.bind(this)
         this.openRemplazarPaquete = this.openRemplazarPaquete.bind(this)
         this.onSubmitRemplazarPaquete = this.onSubmitRemplazarPaquete.bind(this)
+        this.onSubmitOrdenarPaquetes = this.onSubmitOrdenarPaquetes.bind(this)
+        this.onSubmitBorrarPaquete = this.onSubmitBorrarPaquete.bind(this)
+        this.confirmDeleteParada = this.confirmDeleteParada.bind(this)
     }
 
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla) {
+            this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla})
+        }
+    }
 
     searchRepartidor(event) {
         event.stopPropagation()
@@ -87,20 +102,35 @@ class DetalleParadas extends Component {
         })
     }
 
-    deleteParada(idParada) {
+    confirmDeleteParada(idParada, idGuia, esRecoleccion) {
         confirmAlert({
             title: 'Confirmación',
             message: '¿Está segura(o) que desea eliminar la parada?',
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => alert('Click Yes')
+                    onClick: () => this.onSubmitBorrarPaquete(idParada, idGuia, esRecoleccion)
                 },
                 {
                     label: 'No'
                 }
             ]
         });
+    }
+
+    onSubmitBorrarPaquete(idParada, idGuia, esRecoleccion) {
+        eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion).then(({data}) => {
+            showSuccess(data.data)
+            this.props.refresh()
+        })
+    }
+
+    onSubmitOrdenarPaquetes(paquetes) {
+        ordenarParada(this.state.tour.m_nIdParadaUltimaMilla, paquetes).then(({data}) => {
+            showSuccess("Parada Actualizada")
+            this.setState({openAgregar: false})
+            this.props.refresh()
+        })
     }
 
     onSubmitRemplazarPaquete(paqueteNuevo) {
@@ -111,8 +141,22 @@ class DetalleParadas extends Component {
         })
     }
 
-    render() {
+    generarReporte(e, id) {
+        e.preventDefault()
+        console.log(' id: ' + id)
+        obtenerUltimaMillaReporte(id).then(({data}) => {
+            // console.log(data)
+            // debugger
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Última Milla";
+        })
+    }
 
+    render() {
+        var d = new Date();
+        d.setHours(0,0,0,0);
         const totalPaquetes = this.props.tour.m_arrClsParadaUltimaMilla.map(a => a.m_arrClsProGuia.length).reduce((a, b) => a + b)
         const allGuias = [].concat(...this.props.tour.m_arrClsParadaUltimaMilla.map(a => a.m_arrClsProGuia))
         return (
@@ -120,6 +164,8 @@ class DetalleParadas extends Component {
                 {
                     this.state.openAgregar &&
                     <AgregarPaqueteUltimaMilla zonasIds={this.props.filtros.zonasSeleccionada}
+                                               tour={this.state.tour}
+                                               onSubmit={this.onSubmitOrdenarPaquetes}
                                                tipoServicio={parseInt(this.props.filtros.tipoBusqueda)}
                                                close={() => this.setState({openAgregar: false})}
                                                open={this.state.openAgregar} paquetes={this.state.paquetes}/>
@@ -160,6 +206,7 @@ class DetalleParadas extends Component {
                             pointerEvents: "auto",
                             height: window.innerHeight - 100,
                             backgroundColor: "white",
+                            overflow: "auto",
                             top: "80px",
                             right: "10px",
                             position: "fixed",
@@ -258,7 +305,7 @@ class DetalleParadas extends Component {
                                             textAlign: "center"
                                         }}>
                                             <strong>Fallidas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length} de {totalPaquetes}
-                                            <strong>{parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length / totalPaquetes) * 100)}%</strong>
+                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length / totalPaquetes) * 100)}%</strong>
                                         </div>
                                     </Grid>
                                 </Grid>
@@ -282,7 +329,7 @@ class DetalleParadas extends Component {
                             <List style={{overflow: "auto"}}>
                                 {
                                     this.state.repartidoresFiltrados.map((r, index) => {
-                                        var tour = this.props.tour.m_arrClsParadaUltimaMilla.find(t => t.m_nIdUnidad === r.m_nIdUnidad)
+                                        var tour = r
                                         var color = tour.color
                                         return (
                                             <div key={r.m_sNombreOperador}>
@@ -310,11 +357,13 @@ class DetalleParadas extends Component {
                                                                 {r.m_sPlacasUnidad}
 
                                                             </Grid>
-                                                            <Grid item sm={6}>
+                                                            <Grid item>
                                                                 {tour.m_arrClsProGuia.length} Paradas
                                                             </Grid>
-                                                            <Grid item sm={6}>
-
+                                                            <Grid item>
+                                                                <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour.m_nIdParadaUltimaMilla)}>
+                                                                    <InsertDriveFile fontSize={"large"}/>
+                                                                </IconButton>
                                                             </Grid>
                                                         </Grid>
                                                     }/>
@@ -324,19 +373,26 @@ class DetalleParadas extends Component {
                                                     <div align={"right"} style={{
                                                         borderRadius: "5px",
                                                         margin: "5px",
+                                                        height: "100%",
+                                                        overflow: "auto"
                                                     }}>
 
-                                                        <Button variant={"contained"} color={"primary"}
-                                                                onClick={() => this.setState({
-                                                                    paquetes: tour.m_arrClsProGuia,
-                                                                    tour: tour,
-                                                                    openAgregar: true
-                                                                })}>Ordenar
-                                                            Paradas</Button>
+                                                        {
+
+                                                            +this.props.fecha >= +(d) &&
+                                                            <Button variant={"contained"} color={"primary"}
+                                                                    onClick={() => this.setState({
+                                                                        paquetes: tour.m_arrClsProGuia,
+                                                                        tour: tour,
+                                                                        openAgregar: true
+                                                                    })}>Ordenar
+                                                                Paradas</Button>
+                                                        }
+
 
                                                         <List component="div" disablePadding style={{
                                                             padding: "5px",
-                                                            height: "400px",
+                                                            height: "200px",
                                                             overflow: "auto"
                                                         }}>
 
@@ -415,32 +471,36 @@ class DetalleParadas extends Component {
                                                                                             <TableCell
                                                                                                 style={{borderBottom: "none"}}
                                                                                                 align="left">
-                                                                                                <ButtonGroup
-                                                                                                    size="small"
-                                                                                                    disableElevation
-                                                                                                    variant="contained"
-                                                                                                    color="primary">
+                                                                                                {
+                                                                                                    g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 &&
+                                                                                                    <ButtonGroup
+                                                                                                        size="small"
+                                                                                                        disableElevation
+                                                                                                        variant="contained"
+                                                                                                        color="primary">
 
 
-                                                                                                    <IconButton
-                                                                                                        aria-label="reorder">
-                                                                                                        <Tooltip
-                                                                                                            title={"Remplazar"}>
-                                                                                                            <CachedIcon
-                                                                                                                onClick={() => this.openRemplazarPaquete(tour, g)}
-                                                                                                                fontSize="default"/>
-                                                                                                        </Tooltip>
-                                                                                                    </IconButton>
-                                                                                                    <IconButton
-                                                                                                        aria-label="delete">
-                                                                                                        <Tooltip
-                                                                                                            title={"Eliminar"}>
-                                                                                                            <DeleteIcon
-                                                                                                                onClick={() => this.deleteParada(g.m_nId)}
-                                                                                                                fontSize="default"/>
-                                                                                                        </Tooltip>
-                                                                                                    </IconButton>
-                                                                                                </ButtonGroup>
+                                                                                                        <IconButton
+                                                                                                            aria-label="reorder">
+                                                                                                            <Tooltip
+                                                                                                                title={"Remplazar"}>
+                                                                                                                <CachedIcon
+                                                                                                                    onClick={() => this.openRemplazarPaquete(tour, g)}
+                                                                                                                    fontSize="default"/>
+                                                                                                            </Tooltip>
+                                                                                                        </IconButton>
+                                                                                                        <IconButton
+                                                                                                            aria-label="delete">
+                                                                                                            <Tooltip
+                                                                                                                title={"Eliminar"}>
+                                                                                                                <DeleteIcon
+                                                                                                                    onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
+                                                                                                                    fontSize="default"/>
+                                                                                                            </Tooltip>
+                                                                                                        </IconButton>
+                                                                                                    </ButtonGroup>
+                                                                                                }
+
                                                                                             </TableCell>
                                                                                         </TableRow>
                                                                                     )

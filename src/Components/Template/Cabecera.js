@@ -118,13 +118,13 @@ function Cabecera({ titulo, children }) {
                          height: 60
                      }
                  }>
-                <div>
+                {/*<div>
                     <Tooltip title={"Ayuda en línea"}>
                         <a href={pdfAyuda} target={"_blank"}>
                             <img src={iconoAyuda} style={{height: 40, width:40, margin: 10}}/>
                         </a>
                     </Tooltip>
-                </div>
+                </div>*/}
                 <div className="clearfix" style={{display:'block'}}>
                     <div className="user-profile-container" style={{height: 40}}>
                         <div className="user-profile clearfix">
@@ -153,7 +153,7 @@ function Cabecera({ titulo, children }) {
                         </div>
                     </div>
                 </div>
-                <div style={{position: "relative"}}>
+                {/*<div style={{position: "relative"}}>
                     <Tooltip title={"Shortcuts"}>
                         <IconButton
                             style={{height:60, width:60}}
@@ -179,16 +179,16 @@ function Cabecera({ titulo, children }) {
                         {atajos.map((option) => (
                             <Link href={option.m_sURLAtajo}>
                             <MenuItem key={option.m_nIdProceso} onClick={handleShortcutsClose}>
-                                {/*<ListItemIcon>
+                                <ListItemIcon>
                                     {option.icon}
-                                </ListItemIcon>*/}
+                                </ListItemIcon>
                                 {option.m_sNombreAtajo}
                             </MenuItem>
                             </Link>
                         ))}
                     </Menu>
-                </div>
-                <div>
+                </div>*/}
+                {/*<div>
                     <Tooltip title={"Menú"}>
                         <IconButton
                             style={{height:60, width:60}}
@@ -219,7 +219,7 @@ function Cabecera({ titulo, children }) {
                             </Link>
                         ))}
                     </Menu>
-                </div>
+                </div>*/}
             </div>
             {/**Se comentó ruta de navegación. No se borra porque chance y se usa despues.*/}
             {/*<Hidden smDown implementation="css">

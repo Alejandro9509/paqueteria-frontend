@@ -128,7 +128,7 @@ class PaquetesList extends Component {
         return (
             <TableContainer className={"j-forms"} style={{height:"300px"}}>
                 <Typography variant={"h4"}>Seleccionar Paquetes </Typography>
-                <Grid container spacing={2} style={{padding:"10px"}}>
+                {/*<Grid container spacing={2} style={{padding:"10px"}}>
                     <Grid item >
                         <div className="input">
                             <TextField variant="outlined" margin="dense" label="Fecha inicial"
@@ -185,7 +185,7 @@ class PaquetesList extends Component {
                             />
                         </div>
                     </Grid>
-                </Grid>
+                </Grid>*/}
                 <Table>
                     <TableHead>
 
@@ -221,12 +221,19 @@ class PaquetesList extends Component {
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
                                 align="left">Volumen</TableCell>
+
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
                                 align="left">Tipo de cobro</TableCell>
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
+                                align="left">Zona</TableCell>
+                            <TableCell
+                                sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
                                 align="left">Cliente</TableCell>
+                            <TableCell
+                                sortDirection={this.state.orderBy === "m_bClienteBloqueado" ? this.state.order : false}
+                                align="left">Estatus cliente</TableCell>
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sNombreDestinatario" ? this.state.order : false}
                                 align="left">Domicilio</TableCell>
@@ -259,9 +266,12 @@ class PaquetesList extends Component {
                                         </TableCell>
                                         <TableCell align="left">{u.m_sFolio}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? "Recolección" : "Entrega"}</TableCell>
-                                        <TableCell align="left">{u.m_bEsRecoleccion ? u.m_parrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0) : u.m_arrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0)}</TableCell>
+                                        <TableCell align="left">{u.m_bEsRecoleccion ? u.m_parrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0) : u.m_arrPaquetes.reduce((a, b) => +a + +b.m_xVolumen, 0)}</TableCell>
                                         <TableCell align="left">{u.m_sTipoCobro}</TableCell>
+                                        <TableCell align="left">{u.m_sZona}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sNombreRemitente : u.m_sNombreDestinatario}</TableCell>
+                                        <TableCell style={{color: u.m_bClienteBloqueado ? "red": "black"}}
+                                                   align="left">{u.m_bClienteBloqueado ? "Bloqueado" : "Activo"}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sDomicilioRemitente: u.m_sDomicilioDestinatario}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? (u.m_bRecoleccionConCita ? "" : "Sin cita") : ""}</TableCell>
                                         <TableCell align="left">{u.m_dFechaRegistro}</TableCell>

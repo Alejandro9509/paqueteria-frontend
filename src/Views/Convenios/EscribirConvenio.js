@@ -90,6 +90,7 @@ class EscribirConvenio extends Component {
             // precioM3: props.edit ? props.select.m_cPrecioM3 : "",
             disabled: true,
             cliente: '',
+            CuotaMensual:0,
             fechaVigencia: '',
             dataClientes: [],
             openDialog: false,
@@ -432,6 +433,7 @@ class EscribirConvenio extends Component {
                 idConvenio: respuesta.data.m_nIdConvenio,
                 cliente: respuesta.data.m_nIdCliente,
                 fechaVigencia: respuesta.data.m_sVigencia,
+                CuotaMensual:respuesta.data.m_xCuotaMensual,
                 tarifasSeleccionadas : respuesta.data.m_arrArTarifas,
             })
         });
@@ -447,6 +449,7 @@ class EscribirConvenio extends Component {
                     idConvenio: respuesta.data[0].m_nIdConvenio,
                     cliente: respuesta.data[0].m_nIdCliente,
                     fechaVigencia: respuesta.data[0].m_sVigencia,
+                    CuotaMensual:respuesta.data.m_xCuotaMensual,
                     tarifasSeleccionadas : respuesta.data[0].m_arrArTarifas,
                 })
                 showSuccess("Se detectó que el cliente seleccionado ya tiene convenio");
@@ -460,6 +463,7 @@ class EscribirConvenio extends Component {
         this.setState({
             idConvenio: 0,
             fechaVigencia: '',
+            CuotaMensual:'',
             tarifasSeleccionadas : [],
             todosConceptos: [],
             conceptosAdicionales: [],
@@ -598,14 +602,18 @@ class EscribirConvenio extends Component {
                         m_nIdTipoMedida: c.tipoMedida
                     })
                 })
+
+                const listadoProductosTemp = []
+                this.state.dataProductosSeleccionados.forEach((p) => {listadoProductosTemp.push(p)})
                 t.m_arrArProductos.length = 0
-                this.state.dataProductosSeleccionados.forEach((p) => {
-                    t.m_arrArProductos.push(p)
-                })
+                listadoProductosTemp.forEach((p) => {t.m_arrArProductos.push(p)})
             }
         })
-        this.setState({
-            tarifasSeleccionadas: this.state.tarifasSeleccionadas
+        this.setState(state => {
+            return {
+                ...state,
+                tarifasSeleccionadas: this.state.tarifasSeleccionadas
+            }
         })
         console.log(this.state.tarifasSeleccionadas)
     }
@@ -629,6 +637,7 @@ class EscribirConvenio extends Component {
         this.setState({
             idConvenio: 0,
             cliente: '',
+            CuotaMensual:'',
             fechaVigencia: '',
             tarifasSeleccionadas : [],
             todosConceptos: [],
@@ -653,6 +662,7 @@ class EscribirConvenio extends Component {
             m_nIdConvenio: this.state.idConvenio,
             m_nIdCliente: this.state.cliente,
             m_sVigencia: this.state.fechaVigencia,
+            m_xCuotaMensual: this.state.CuotaMensual,
             m_bActivo: true,
             m_arrArTarifas: this.state.tarifasSeleccionadas
         }
@@ -696,7 +706,7 @@ class EscribirConvenio extends Component {
     render() {
         const { disabled, todosConceptos, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, openDialog,
             columnsTarifas, dataTarifas, height, tarifasSeleccionadas, tarifaDetalles, dataProductosTemp,dataProductosSeleccionados, columnsProductos,
-            cliente, fechaVigencia, cardStyle} = this.state
+            cliente, fechaVigencia,CuotaMensual, cardStyle} = this.state
         let { consult, edit} = this.props
 
         return (
@@ -782,6 +792,23 @@ class EscribirConvenio extends Component {
                                                         disabled={consult}
                                                         onChange={this.handleChange}
                                                         value={fechaVigencia}
+                                                        className={"form-control"}
+                                                        InputLabelProps={{shrink: true,}}
+                                                        required
+                                                    />
+                                                </label>
+                                            </div>
+                                            <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                                <label className="input" style={{ width: "100%" }}>
+                                                    <TextField
+                                                        variant="outlined"
+                                                        id="CuotaMensual"
+                                                        name="CuotaMensual"
+                                                        label="Cuota Mensual"
+                                                        type="number"
+                                                        disabled={consult}
+                                                        onChange={this.handleChange}
+                                                        value={CuotaMensual}
                                                         className={"form-control"}
                                                         InputLabelProps={{shrink: true,}}
                                                         required
@@ -912,6 +939,7 @@ class EscribirConvenio extends Component {
                                                     productos={dataProductosTemp}
                                                     productosSeleccionados={dataProductosSeleccionados}
                                                     actualizarProductos={this.actualizarProductos}
+                                                    consult={consult}
                                                 />
 
                                             </TabPanel>

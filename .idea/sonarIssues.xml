@@ -8,7 +8,157 @@
             <set />
           </value>
         </entry>
+        <entry key="$USER_HOME$/Desktop/honeywell-mobility-web-sdk-v1.20.00.0800/samples/BarcodeReaderDemo/BarcodeReaderDemo.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/build/less/bootstrap/type.less">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/package.json">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/public/css/bootstrap.css">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/public/css/project-style.css">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/public/index.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/public/less/bootstrap-custom-vars.less">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/App.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Components/Scanner/ListadoGuias.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Util/Contexts/InformesContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Util/Contexts/OperadoresContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Views/Login.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Views/Scanner.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Views/carga/carga.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Views/descarga/descarga.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Views/home.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/assets/themes/index.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/components/spinner/index.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/index.css">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/index.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/index.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/routes.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/utils/context/CiudadesContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/utils/context/GuiaContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/views/app.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/views/home/home.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/views/scanner/Scanner.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/webpack.config.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/.env">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/.gitignore">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/.idea/workspace.xml">
           <value>
             <set />
           </value>
@@ -38,7 +188,22 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/App.css">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/App.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Components/Login/LoginExterno.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Components/Map/ConfirmarUbicacion.js">
           <value>
             <set />
           </value>
@@ -63,6 +228,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/EmbarquesContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/GuiaContext.js">
           <value>
             <set />
@@ -78,6 +248,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/RecoleccionContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/RemitenteDestinatarioContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/UltimaMillaContext.js">
           <value>
             <set />
@@ -88,7 +268,17 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/UsuarioContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/ViajesContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/ZonaOperativaContext.js">
           <value>
             <set />
           </value>
@@ -223,6 +413,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Tarifas/ProductosTarifa.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/Tarifas/Tarifas.js">
           <value>
             <set />
@@ -269,6 +464,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/UltimaMilla/PaquetesPlaneacion.js">
           <value>
             <set />
           </value>
@@ -403,7 +603,27 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Catalogos/Icono Convenios/icono_convenios.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Catalogos/Icono Plantilla Correo/IconoPlantillaCorreoNaranja.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Catalogos/Icono Productos/IconoProductos.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Catalogos/Icono Zonas Tarifas/IconoTarifaZona.svg">
           <value>
             <set />
           </value>
@@ -433,6 +653,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Menu/IconoCorteCaja/IconoCorteCaja.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/iconos/Menu/IconoCorteCaja/IconoCorteCajaGris.svg">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg">
           <value>
             <set />
@@ -458,6 +688,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/ROOT/WEB-INF/web.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/App.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/app-navigation.js">
           <value>
             <set />
@@ -473,6 +713,31 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/components/login-form/login-form.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/components/login-form/oauth2/OAuth2RedirectHandler.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/components/side-navigation-menu/side-navigation-menu.scss">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/context/AcademicUnitContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/context/CampusContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/context/IndicatorContext.js">
           <value>
             <set />
@@ -484,6 +749,36 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/context/ProgramEvidenceContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/context/UserContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/layouts/side-nav-inner-toolbar/side-nav-inner-toolbar.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/layouts/side-nav-outer-toolbar/side-nav-outer-toolbar.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/catalogs/academic-unit/catalog-academic-unit.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/follow-up/indicators.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/follow-up/recomendations.js">
           <value>
             <set />
           </value>
@@ -509,6 +804,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/program-members/admin-program-members.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/program-members/program-members-detail.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/src/pages/programs/admin-programs.js">
           <value>
             <set />
           </value>

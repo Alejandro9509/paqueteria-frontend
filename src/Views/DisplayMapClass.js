@@ -32,7 +32,7 @@ export function DisplayMapClass(props) {
     return (
         <MapContainer style={{ width: "100%", height: "500px" }} center={[32.62781, -115.44632]} zoom={13} scrollWheelZoom={false} whenCreated={props.setMap}>
             <TileLayer style={{ width: "100%", height: "500px" }}
-                url="https://xserver2-america-test.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es&amp;xtok={token}"
+                url="https://xserver2-america.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es&amp;xtok={token}"
                 token="51FA3E8E-8BF3-49EF-AB82-59D807A0645C"
             />
             {props.markers.map((value, index) => {
@@ -73,7 +73,8 @@ export function LocationMarker(props) {
           dragend() {
             const marker = markerRef.current
             if (marker != null) {
-                console.log(markerRef)
+                console.log(marker._latlng)
+                props.cambiarUbicacion(marker._latlng)
             }
           },
         }),
@@ -81,8 +82,8 @@ export function LocationMarker(props) {
       )
 
     return (
-        <Marker key={props.markerId} eventHandlers={eventHandlers} icon={MarkerIcon} draggable={false} position={props.position} ref={markerRef}>
-            <Popup>{props.label}</Popup>
+        <Marker key={props.markerId} eventHandlers={eventHandlers} icon={MarkerIcon} draggable={props.draggable} position={props.position} ref={markerRef}>
+            {props.children}
         </Marker>
     )
 }

@@ -188,22 +188,24 @@ class ConceptosAdicionales extends Component {
     }
 
     handleRowClick(event, index, concepto) {
-        const {removeConcepto} = this.props
-        removeConcepto(concepto)
-        const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
-        this.setState({
-            concepto: conceptoSelect,
-            importe: concepto.importe,
-            nombreConcepto: concepto.m_sConcepto,
-            importeRet: concepto.importeRet,
-            retiene: concepto.retiene,
-            traslada: concepto.traslada,
-            importeIVA: concepto.importeIVA,
-            rangoMinimo: concepto.rangoMinimo,
-            rangoMaximo: concepto.rangoMaximo,
-            tipoCalculo: concepto.tipoCalculo,
-            tipoMedida: concepto.tipoMedida,
-        })
+        if (!this.props.consult) {
+            const {removeConcepto} = this.props
+            removeConcepto(concepto)
+            const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
+            this.setState({
+                concepto: conceptoSelect,
+                importe: concepto.importe,
+                nombreConcepto: concepto.m_sConcepto,
+                importeRet: concepto.importeRet,
+                retiene: concepto.retiene,
+                traslada: concepto.traslada,
+                importeIVA: concepto.importeIVA,
+                rangoMinimo: concepto.rangoMinimo,
+                rangoMaximo: concepto.rangoMaximo,
+                tipoCalculo: concepto.tipoCalculo,
+                tipoMedida: concepto.tipoMedida,
+            })
+        }
     }
 
     render() {
@@ -568,7 +570,7 @@ class ConceptosAdicionales extends Component {
                         </div>
                         <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
 
-                            <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}>  {this.props.ivaTraslada.map(t => (<div>{`${this.state.impuestos.length !== 0 ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : "" : ""} `}  ${parseFloat(this.props.conceptosAdicionales.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br /></div>))} {this.props.ivaRetiene.map(t => (<div>{`Retención ${this.state.impuestos.length !== 0 ? `${this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : ""}` : ""} `}  ${parseFloat(this.props.conceptosAdicionales.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br /></div>))} </div>
+                            <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}>  {this.props.ivaTraslada.map(t => (<div>{`${this.state.impuestos.length !== 0 ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : "" : ""} `}  ${parseFloat(this.props.conceptosAdicionales.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br /></div>))} {this.props.ivaRetiene.map(t => (<div>{`${this.state.impuestos.length !== 0 ? `${this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : ""}` : ""} `}  ${parseFloat(this.props.conceptosAdicionales.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br /></div>))} </div>
                         </div>
                         <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
                             <div style={{ margin: "5px", padding: "5px" }}>Total</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>

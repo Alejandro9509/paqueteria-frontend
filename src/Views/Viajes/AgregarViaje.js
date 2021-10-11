@@ -85,8 +85,8 @@ class AgregarViaje extends Component {
             idSucursalAgregar: localStorage.getItem("Sucursal"),
             folioViaje: "",
             viajeCliente: "",
-            fechaHoraCreacion: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
-            fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+            fechaHoraCreacion: `${new Date().getFullYear()}-${`${new Date().getMonth()}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+            fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth()}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
             candadoOficial: "",
             identificadorViaje: "",
             estatusListado: '8',
@@ -403,8 +403,8 @@ class AgregarViaje extends Component {
                 flex: 1,
             },
             {
-                headerName: "Ruta",
-                field: "m_sRuta",
+                headerName: "Fecha informe",
+                field: "m_dFecha",
                 flex: 1,
             },
             {
@@ -420,6 +420,16 @@ class AgregarViaje extends Component {
             {
                 headerName: "Operador",
                 field: "m_sNombreCompleto",
+                flex: 1,
+            },
+            {
+                headerName: "Remolque 1",
+                field: "m_sRemolque1",
+                flex: 1,
+            },
+            {
+                headerName: "Remolque 2",
+                field: "m_sRemolque2",
                 flex: 1,
             },
             {
@@ -451,8 +461,8 @@ class AgregarViaje extends Component {
                 flex: 1,
             },
             {
-                headerName: "Ruta",
-                field: "m_sRuta",
+                headerName: "Fecha informe",
+                field: "m_dFecha",
                 flex: 1,
             },
             {
@@ -468,6 +478,16 @@ class AgregarViaje extends Component {
             {
                 headerName: "Operador",
                 field: "m_sNombreCompleto",
+                flex: 1,
+            },
+            {
+                headerName: "Remolque 1",
+                field: "m_sRemolque1",
+                flex: 1,
+            },
+            {
+                headerName: "Remolque 2",
+                field: "m_sRemolque2",
                 flex: 1,
             },
             {
@@ -1511,25 +1531,21 @@ class AgregarViaje extends Component {
                             </div>
 
                             <div className="row" style={{height: "200px", width: '100%'}}>
-                                {this.state.dataInformesPorAsignar.length != 0 ? (
-                                    <DataGrid
-                                        localeText={dataGridLocaleText}
-                                        rows={this.state.dataInformesPorAsignar}
-                                        columns={columnspRorAsignar}
-                                        density="compact"
-                                        pageSize={Math.floor((this.state.height - 310) / 30)}
-                                        getRowId={(row) => row.m_nIdInforme}
-                                        onRowSelected={(row) => {
-                                            this.setState({
-                                                idInforme: row.data.m_nIdInforme
+                                <DataGrid
+                                    localeText={dataGridLocaleText}
+                                    rows={this.state.dataInformesPorAsignar}
+                                    columns={columnspRorAsignar}
+                                    density="compact"
+                                    pageSize={Math.floor((this.state.height - 310) / 30)}
+                                    getRowId={(row) => row.m_nIdInforme}
+                                    onRowSelected={(row) => {
+                                        this.setState({
+                                            idInforme: row.data.m_nIdInforme
 
-                                            })
+                                        })
 
-                                        }}
-                                    />
-                                ) : (
-                                    <div>No se encontró ningún registro</div>
-                                )}
+                                    }}
+                                />
 
                             </div>
 
@@ -1545,13 +1561,9 @@ class AgregarViaje extends Component {
                             </div>
 
                             <div className="row" style={{height: "200px", width: '100%'}}>
-                                {this.state.dataInformesAsignados.length != 0 ? (
-                                    <InformesPorAsignar {...this.props} columns={columnspAsignadas}
-                                                        dataInformesAsignados={this.state.dataInformesAsignados}
-                                    />
-                                ) : (
-                                    <div>No se encontró ningún registro</div>
-                                )}
+                                <InformesPorAsignar {...this.props} columns={columnspAsignadas}
+                                                    dataInformesAsignados={this.state.dataInformesAsignados}
+                                />
 
                             </div>
 

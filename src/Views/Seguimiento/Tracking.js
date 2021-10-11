@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 export default function Tracking(...props){
-    console.log(entrega);
+    // console.log(entrega);
     const classes = useStyles();
     const [openGuia, setOpenGuia] = React.useState(true);
     const [openRastreo, setOpenRastreo] = React.useState(true);
@@ -106,26 +106,38 @@ export default function Tracking(...props){
     
     useEffect(value =>{
         const { match: { params } } = props[0];
-        handleShowConsultar(params.id)
+        handleShowConsultar(params.esRecoleccion, params.id)
     }, []);
 
-    function handleShowConsultar(id) {
-        const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + id;
-        axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta)
+    function handleShowConsultar(esRecoleccion,id) {
+        const url = `${process.env.REACT_APP_API_URL}/GetParadasEsRecoleccion/${esRecoleccion}/${id}`;
+        axios.get(url, { headers }).then(({data}) => {
+            console.log(data)
+            let direccionDestino
+            if(data.m_bEsRecoleccion){
+                direccionDestino = data.m_bRecoleccionDiferenteDomicilio ? data.m_sDomicilioDetalleRecoleccion : data.m_sDomicilioRemitente
+            }else{
+                direccionDestino = data.m_bEntregaDiferenteDomicilio ? data.m_sDomicilioDetalleEntrega : data.m_sDomicilioDestinatario
+            }
 
             setGuiaData({
-                ...guiaData,
-                destinatario: respuesta.data.m_sDomicilioDestinatario,
-                folio: respuesta.data.m_nFolioGuia,
-                fechaEnvio: respuesta.data.m_dFechaSalida,
-                tipoServicio: respuesta.data.m_nIdTipoServicio,
-                paquetes: respuesta.data.m_arrClsDetalle,
-                estatusGuia: respuesta.data.m_nIdEstatusGuia
+                destinatario: direccionDestino,
+                folio: data.m_sFolio,
+                fechaEnvio: data.m_dFechaRegistro,
+                tipoServicio: 'No disponible',
+                paquetes: data.m_bEsRecoleccion? data.m_parrPaquetes : data.m_arrPaquetes,
+                estatusGuia: 'No disponible'
             })
         }).catch(function (err) {
             console.log(err.data)
-        });   
+        });
+
+        /*datos faltantes en servicio
+        * fecha (actualmente se muestra la de registro)
+        * tipo de servicio
+        * Tipo de embalaje por paquete
+        * estatus guia
+        * */
 
     }
 
@@ -138,63 +150,54 @@ export default function Tracking(...props){
     };
     return(
         <div>
-            <header 
-                className={classes.heading}>
-                <img 
-                    className={classes.image} 
-                    src={logo}/>
+            <header className={classes.heading}>
+                <img className={classes.image} src={logo}/>
             </header>
             <div className="widget-wrap" style={{margin:10}}>
                 <div className="widget-container">
                     <div className="widget-content">
                         <div className="row">
-                            <InformacionEntrega 
-                                entrega = {guiaData}/>
-                            <List
-                    component="nav"
-                    className={classes.root}>
-                    <ListItem 
-                        button 
-                        onClick={handleGuiaClick} 
-                        className={classes.listItem}>
-                        <ListItemText 
-                            primary="Descripción Guía"/>
-                        {openGuia ? <ExpandLess className={classes.collapseArrow} /> : <ExpandMore className={classes.collapseArrow} />}
-                    </ListItem>
-                    <Collapse 
-                        in={openGuia} 
-                        timeout="auto" 
-                        unmountOnExit>
-                        <List 
-                            component="div" 
-                            disablePadding>{
-                            guiaData.paquetes.map(
-                                p => (
-                                <ListItem 
-                                    className={classes.nested}>
-                                    <InformacionPaquete 
-                                        package = {p}/>
+                            <InformacionEntrega entrega={guiaData}/>
+                            <List component="nav">
+                                <ListItem
+                                    button
+                                    onClick={handleGuiaClick}
+                                    className={classes.listItem}>
+                                    <ListItemText
+                                        primary="Descripción Guía"/>
+                                    {openGuia ? <ExpandLess className={classes.collapseArrow} /> : <ExpandMore className={classes.collapseArrow} />}
                                 </ListItem>
-                                )
-                            )
-                        }
-                        </List>
-                    </Collapse>
-                    <ListItem 
-                        button 
-                        onClick={handleRastreoClick} 
-                        className={classes.listItem}>
+                                <Collapse
+                                    in={openGuia}
+                                    timeout="auto"
+                                    unmountOnExit>
+                                    <List component="div">
+                                        {
+                                            guiaData.paquetes.map(
+                                            p => (
+                                                <ListItem key={p.m_nIdEmbarqueDetalle}>
+                                                    <InformacionPaquete package = {p}/>
+                                                </ListItem>
+                                                )
+                                            )
+                                        }
+                                    </List>
+                                </Collapse>
+                                <ListItem
+                                    button
+                                    onClick={handleRastreoClick}
+                                    className={classes.listItem}>
                         <ListItemText 
                             primary="Rastreo Envio" />
                         {openRastreo ? <ExpandLess className={classes.collapseArrow} /> : <ExpandMore className={classes.collapseArrow} />}
                     </ListItem>
-                    <Collapse 
-                        in={openRastreo} 
-                        timeout="auto" 
-                        unmountOnExit>
-                        <DetallesSeguimiento estatusGuia = {guiaData.estatusGuia}/>
-                    </Collapse>
-                    </List>
+                                <Collapse
+                                    in={openRastreo}
+                                    timeout="auto"
+                                    unmountOnExit>
+                                    <DetallesSeguimiento estatusGuia = {guiaData.estatusGuia}/>
+                                </Collapse>
+                            </List>
                         </div>
                     </div>
                 </div>

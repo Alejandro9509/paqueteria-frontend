@@ -174,7 +174,7 @@ export default function UltimaMilla(props) {
                                 <MapContainer style={{ width: "100%", height: "100%", zIndex: 1 }} center={[32.62781, -115.44632]} zoom={15} scrollWheelZoom={false} whenCreated={setMap}>
 
                                     <TileLayer style={{ width: "100%", height: "100%" }}
-                                        url="https://xserver2-america-test.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es&amp;xtok={token}"
+                                        url="https://xserver2-america.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es&amp;xtok={token}"
                                         token="51FA3E8E-8BF3-49EF-AB82-59D807A0645C"
                                     />
 

@@ -84,6 +84,7 @@ class UltimaMilla extends Component {
             resumenFullscreen: true,
             filtros: {},
             modoEdicion: true,
+            modoPlaneacion: false,
             ultimaMilla: null,
             openDialog: false,
 
@@ -101,6 +102,7 @@ class UltimaMilla extends Component {
         this.selectGuiaReasignar = this.selectGuiaReasignar.bind(this)
         this.reasignarParada = this.reasignarParada.bind(this)
         this.refreshUltimaMilla = this.refreshUltimaMilla.bind(this)
+        this.refreshFilterUltimaMilla = this.refreshFilterUltimaMilla.bind(this)
     }
 
 
@@ -118,12 +120,11 @@ class UltimaMilla extends Component {
     }
 
     getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda) {
-
+        this.setState({mostrarRuta: false})
         obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
             if (data.m_nIdUltimaMilla !== 0) {
-                if (actualizar) {
-
-                    this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 100000);
+                if (actualizar && !this.state.modoPlaneacion) {
+                    this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 30000);
                 }
                 if (!this.state.ultimaMilla) {
                     data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
@@ -134,10 +135,11 @@ class UltimaMilla extends Component {
                         data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
                     }
                 }
-
-                this.setState({modoEdicion: false, ultimaMilla: data, idSucursal: idSucursal, fechaUltimaMilla: date, zonasIds: zonas, tipoBusqueda: tipoBusqueda })
+                console.log(data)
+                this.setState({mostrarRuta: true,modoEdicion: false, ultimaMilla: data, idSucursal: idSucursal, fechaUltimaMilla: date, zonasIds: zonas, tipoBusqueda: tipoBusqueda })
                 actualizar = false
             } else {
+                actualizar = false
                 this.setState({modoEdicion: true, ultimaMilla: null})
                 clearInterval(this.interval);
             }
@@ -152,31 +154,47 @@ class UltimaMilla extends Component {
         searchLocationWeb(location.m_sMunicipio, location.m_sCalle, location.m_sColonia, location.m_sNoExterior).then((data) => {
             if (data) {
                 this.setState({lat: data.y, lng: data.x})
-                this.state.map.setView([data.y, data.x], 15)
+                this.state.map.setView([data.y, data.x], 14)
             }
         })
 
+    }
+    refreshFilterUltimaMilla(date, idSucursal, zonas, tipoBusqueda){
+        actualizar=true
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
+        this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda)
     }
     refreshUltimaMilla(){
         this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda)
     }
 
     changeConfiguration(name, value) {
-        console.log(name)
         this.setState({[name]: value})
     }
 
     guardarRuta() {
-
-        agregarRuta(this.state.tour, this.state.filtros).then((data) => {
-            showSuccess("Se guardo la información con éxito")
-            this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona),  parseInt(this.state.filtros.tipoBusqueda))
-        })
+        if (this.state.ultimaMilla) {
+            agregarRuta(this.state.ultimaMilla.m_nIdUltimaMilla,this.state.tour, this.state.filtros).then((data) => {
+                showSuccess("Se guardo la información con éxito")
+                actualizar = true
+                this.setState({tour: null})
+                this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.filtros.tipoBusqueda))
+            })
+        }else {
+            agregarRuta(0,this.state.tour, this.state.filtros).then((data) => {
+                showSuccess("Se guardo la información con éxito")
+                actualizar = true
+                this.setState({tour: null})
+                this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.filtros.tipoBusqueda))
+            })
+        }
     }
 
     async searchLocation(address) {
         let location = await searchLocationAddress(address)
-        this.state.map.setView([location.y, location.x], 15)
+        this.state.map.setView([location.y, location.x], 14)
     }
 
 
@@ -302,21 +320,23 @@ class UltimaMilla extends Component {
                                           center={[this.state.lat, this.state.lng]} zoom={15} scrollWheelZoom={false}
                                           whenCreated={(map) => this.setState({map: map})}>
                                 <TileLayer style={{width: "100%", height: "100%"}}
-                                           url="https://xserver2-america-test.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es&amp;xtok={token}"
+                                           url="https://xserver2-america.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es&amp;xtok={token}"
                                            token="51FA3E8E-8BF3-49EF-AB82-59D807A0645C"
                                 />
                                 {
                                     !this.state.fullScreen &&
-                                    <FiltersMap getFechaUltimaMilla={this.getFechaUltimaMilla}
+                                    <FiltersMap refreshFilterUltimaMilla={this.refreshFilterUltimaMilla}
                                                 changeConfiguration={this.changeConfiguration}
                                                 searchLocation={this.searchLocation} generarRuta={this.generarRuta}
                                                 guardarRuta={this.guardarRuta}
+                                                cambiarModo={(value) => this.setState({modoPlaneacion: value })}
+                                                guardarFiltros={(data) => this.setState({filtros: data})}
                                                 changeMapLocation={this.changeMapLocation} data={this.state}/>
                                 }
 
                                 {
                                     this.state.tour && this.state.tour.tour.tours.map(t =>
-                                        <Tour tour={t} data={this.state} paquetes={this.state.tour.paquetes}/>
+                                        <Tour tourReport={this.state.tour.tour} tour={t} data={this.state} paquetes={this.state.tour.paquetes}/>
                                     )
                                 }
                                 {
@@ -325,7 +345,7 @@ class UltimaMilla extends Component {
                                             position={[this.state.lat, this.state.lng]}></Marker>
                                 }
                                 {
-                                    this.state.ultimaMilla && this.state.ultimaMilla.m_arrClsParadaUltimaMilla.map(t =>
+                                    this.state.ultimaMilla && this.state.mostrarRuta && this.state.ultimaMilla.m_arrClsParadaUltimaMilla.map(t =>
                                         <TourUltimaMilla data={t} sucursal={this.state}/>
                                     )
                                 }
@@ -341,29 +361,29 @@ class UltimaMilla extends Component {
                                 }
                                 {
                                     !this.state.modoEdicion && (this.state.fullScreen === false || this.state.resumenFullscreen) &&
-                                    <DetalleParadas refresh={this.refreshUltimaMilla} filtros={{zonasSeleccionada: this.state.zonasIds, tipoBusqueda: this.state.tipoBusqueda}} tour={this.state.ultimaMilla}/>
+                                    <DetalleParadas refresh={this.refreshUltimaMilla} fecha={this.state.fechaUltimaMilla} filtros={{zonasSeleccionada: this.state.zonasIds, tipoBusqueda: this.state.tipoBusqueda}} tour={this.state.ultimaMilla}/>
                                 }
-                                {
-                                    (this.state.tour || this.state.ultimaMilla) &&
-                                    <IconButton
-                                        onClick={() => this.state.fullScreen ? this.closeFullscreen() : this.openFullscreen()}
-                                        style={{
-                                            color: "white",
-                                            borderRadius: "10px",
-                                            width: "30px",
-                                            height: "30px",
-                                            backgroundColor: "white",
-                                            top: "110px",
-                                            right: "10px",
-                                            position: "fixed",
-                                            zIndex: 3000,
-                                            padding: "5px",
-                                            boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-                                        }}>
-                                        {this.state.fullScreen ? <FullscreenExitIcono style={{fill: "#F9A03E"}}/> :
-                                            <FullscreenIcono style={{fill: "#F9A03E"}}/>}
-                                    </IconButton>
-                                }
+                                {/*{*/}
+                                {/*    (this.state.tour || this.state.ultimaMilla) &&*/}
+                                {/*    <IconButton*/}
+                                {/*        onClick={() => this.state.fullScreen ? this.closeFullscreen() : this.openFullscreen()}*/}
+                                {/*        style={{*/}
+                                {/*            color: "white",*/}
+                                {/*            borderRadius: "10px",*/}
+                                {/*            width: "30px",*/}
+                                {/*            height: "30px",*/}
+                                {/*            backgroundColor: "white",*/}
+                                {/*            top: "110px",*/}
+                                {/*            right: "10px",*/}
+                                {/*            position: "fixed",*/}
+                                {/*            zIndex: 3000,*/}
+                                {/*            padding: "5px",*/}
+                                {/*            boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"*/}
+                                {/*        }}>*/}
+                                {/*        {this.state.fullScreen ? <FullscreenExitIcono style={{fill: "#F9A03E"}}/> :*/}
+                                {/*            <FullscreenIcono style={{fill: "#F9A03E"}}/>}*/}
+                                {/*    </IconButton>*/}
+                                {/*}*/}
 
 
                             </MapContainer>

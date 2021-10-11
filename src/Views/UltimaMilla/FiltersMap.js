@@ -7,7 +7,7 @@ import {
     IconButton,
     withStyles,
     InputBase,
-    ListItemText, InputAdornment, TextField, DialogTitle, DialogContent, DialogActions, Button, Dialog
+    ListItemText, InputAdornment, TextField, DialogTitle, DialogContent, DialogActions, Button, Dialog, Typography
 } from "@material-ui/core";
 import {fade, makeStyles} from '@material-ui/core/styles';
 
@@ -37,7 +37,9 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
-
+import MessageIcon from "@material-ui/icons/Message";
+import UpdateIcon from '@material-ui/icons/Update';
+import PaquetesPlaneacion from "./PaquetesPlaneacion";
 
 const useStyles = theme => ({
     search: {
@@ -129,6 +131,11 @@ class FiltersMap extends Component {
     }
 
     componentDidMount() {
+        if (this.props.data) {
+            this.setState({
+                ...this.props.data
+            })
+        }
         this.getAllSucursales()
 
 
@@ -148,11 +155,17 @@ class FiltersMap extends Component {
     }
 
 
-
     changeDateConsult(value) {
         this.setState({fecha: value})
 
-        this.props.getFechaUltimaMilla(value, this.state.sucursalSeleccionada.m_nIdSucursal, this.state.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.tipoBusqueda))
+        this.props.refreshFilterUltimaMilla(value, this.state.sucursalSeleccionada.m_nIdSucursal, this.state.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.tipoBusqueda))
+
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.fecha !== this.state.fecha || prevState.zonasSeleccionada.length !== this.state.zonasSeleccionada.length || prevState.unidadesSeleccionadas.length !== this.state.unidadesSeleccionadas.length || prevState.zonasSeleccionada.length !== this.state.zonasSeleccionada.length || prevState.sucursalSeleccionada !== this.state.sucursalSeleccionada) {
+            this.props.guardarFiltros(this.state)
+        }
     }
 
     getAllGuias() {
@@ -179,7 +192,13 @@ class FiltersMap extends Component {
     }
 
     selectCiudad(sucursal) {
-        this.setState({sucursalSeleccionada: sucursal, openSucursales: false, zonasSeleccionada:[], paquetesSeleccionadas:[], unidadesSeleccionadas:[]})
+        this.setState({
+            sucursalSeleccionada: sucursal,
+            openSucursales: false,
+            zonasSeleccionada: [],
+            paquetesSeleccionadas: [],
+            unidadesSeleccionadas: []
+        })
         this.props.changeMapLocation(sucursal)
     }
 
@@ -187,15 +206,20 @@ class FiltersMap extends Component {
     selectZona(zona) {
         this.setState({zonasSeleccionada: zona})
         if (zona.length !== 0) {
-            this.getAllGuias()
-            this.props.getFechaUltimaMilla(this.state.fecha, this.state.sucursalSeleccionada.m_nIdSucursal, zona.map(z => z.m_nIdZona))
+            //this.getAllGuias()
+            this.props.refreshFilterUltimaMilla(this.state.fecha, this.state.sucursalSeleccionada.m_nIdSucursal, zona.map(z => z.m_nIdZona), parseInt(this.state.tipoBusqueda))
 
         }
-
     }
-    reasignarOperador(unidad){
+
+    reasignarOperador(unidad) {
         obtenerOperadores().then(({data}) => {
-            this.setState({operadores: data, unidadSeleccionada: unidad.m_nIdUnidad, openOperadorDialog: true,openUnidades: false})
+            this.setState({
+                operadores: data,
+                unidadSeleccionada: unidad.m_nIdUnidad,
+                openOperadorDialog: true,
+                openUnidades: false
+            })
         })
     }
 
@@ -210,7 +234,7 @@ class FiltersMap extends Component {
 
     asignarOperadorUnidad(event) {
         event.preventDefault()
-        cambiarOperadorUnidad( this.state.unidadSeleccionada, this.state.operadorSeleccionada).then(({data}) => {
+        cambiarOperadorUnidad(this.state.unidadSeleccionada, this.state.operadorSeleccionada).then(({data}) => {
             this.setState({openUnidades: true, openOperadorDialog: false})
         })
 
@@ -231,7 +255,16 @@ class FiltersMap extends Component {
         const {classes} = this.props;
         return (
             <div className="leaflet-top leaflet-left" style={{paddingLeft: "40px"}}>
-                <Dialog open={this.state.openOperadorDialog} on onClose={() => this.setState({openOperadorDialog: false})}>
+
+                <PaquetesPlaneacion open={this.props.data.modoPlaneacion && this.state.openPaquetes}
+                                    close={() => this.setState({openPaquetes: false})}
+                                    zonasIds={this.state.zonasSeleccionada.map(z => z.m_nIdZona)}
+                                    tipoServicio={parseInt(this.state.tipoBusqueda)}
+                                    changeDate={this.changeDate} data={this.state}
+                                    paquetesSeleccionadas={this.state.paquetesSeleccionadas}
+                                    selectPaquetes={this.selectPaquetes}/>
+                <Dialog open={this.state.openOperadorDialog} fullWidth maxWidth={"md"}
+                        onClose={() => this.setState({openOperadorDialog: false})}>
                     <DialogTitle>Asignar Operador</DialogTitle>
 
                     <DialogContent>
@@ -275,6 +308,7 @@ class FiltersMap extends Component {
                     </DialogContent>
                 </Dialog>
                 <div className="leaflet-control leaflet-bar" style={{border: "none"}}>
+
                     <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: "center"}}>
                         <BootstrapTooltip
                             PopperProps={{
@@ -356,7 +390,7 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                label={this.state.zonasSeleccionada.length !== 0 ? this.state.zonasSeleccionada.map(z => z.m_sDescripcion).join(", ") : "Zona"}
+                                label={this.state.zonasSeleccionada.length !== 0 ? this.state.zonasSeleccionada.map(z => z.m_sCodigoZona).join(", ") : "Zona"}
                                 disabled={this.state.sucursalSeleccionada == null}
                                 onDelete={() => this.setState({
                                     openZona: !this.state.openZona, openSucursales: false,
@@ -385,6 +419,8 @@ class FiltersMap extends Component {
                                         openTo="date"
                                         format="dd/MMM/yyyy hh:mm a"
                                         value={this.state.fecha}
+                                        disableFuture={!this.props.data.modoPlaneacion}
+                                        disablePast={this.props.data.modoPlaneacion}
                                         onChange={this.changeDateConsult}
                                     />
                                 </MuiPickersUtilsProvider>
@@ -409,42 +445,67 @@ class FiltersMap extends Component {
                             />
                         </BootstrapTooltip>
 
-                        <BootstrapTooltip
-                            PopperProps={{
-                                disablePortal: false,
-                            }}
-                            onClose={() => this.setState({openPaquetes: false})}
-                            open={this.state.openPaquetes}
-                            disableFocusListener
-                            disableHoverListener
-                            disableTouchListener
-                            title={
-                                <PaquetesList zonasIds={this.state.zonasSeleccionada.map(z => z.m_nIdZona)}
-                                              tipoServicio={parseInt(this.state.tipoBusqueda)}
-                                              changeDate={this.changeDate} data={this.state}
-                                              paquetesSeleccionadas={this.state.paquetesSeleccionadas}
-                                              selectPaquetes={this.selectPaquetes}>
+                        {
+                            !this.props.data.modoPlaneacion &&
+                            <BootstrapTooltip
+                                PopperProps={{
+                                    disablePortal: false,
+                                }}
+                                onClose={() => this.setState({openPaquetes: false})}
+                                open={this.state.openPaquetes}
+                                disableFocusListener
+                                disableHoverListener
+                                disableTouchListener
+                                title={
+                                    <PaquetesList zonasIds={this.state.zonasSeleccionada.map(z => z.m_nIdZona)}
+                                                  tipoServicio={parseInt(this.state.tipoBusqueda)}
+                                                  changeDate={this.changeDate} data={this.state}
+                                                  paquetesSeleccionadas={this.state.paquetesSeleccionadas}
+                                                  selectPaquetes={this.selectPaquetes}>
 
-                                </PaquetesList>
-                            }>
+                                    </PaquetesList>
+                                }>
+                                <Chip
+                                    style={{
+                                        backgroundColor: "white",
+                                        margin: "1px",
+                                        boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+                                    }}
+                                    disabled={this.state.zonasSeleccionada.length === 0 }
+                                    icon={<EmbarqueIcon
+                                        style={{fill: "#F9A03E", paddingTop: "5px", paddingBottom: "5px"}}/>}
+                                    label={`Paquetes (${this.state.paquetesSeleccionadas.length})`}
+                                    onClick={() => this.setState({
+                                        openPaquetes: !this.state.openPaquetes, openSucursales: false,
+                                        openZona: false,
+                                        openDate: false,
+                                        openUnidades: false, openConfiguration: false
+                                    })}
+                                    variant="outlined"
+                                />
+                            </BootstrapTooltip>
+                        }
+                        {
+                            this.props.data.modoPlaneacion &&
                             <Chip
                                 style={{
                                     backgroundColor: "white",
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                disabled={this.state.sucursalSeleccionada == null}
+                                disabled={this.state.zonasSeleccionada.length === 0}
                                 icon={<EmbarqueIcon
                                     style={{fill: "#F9A03E", paddingTop: "5px", paddingBottom: "5px"}}/>}
                                 label={`Paquetes (${this.state.paquetesSeleccionadas.length})`}
                                 onClick={() => this.setState({
                                     openPaquetes: !this.state.openPaquetes, openSucursales: false,
                                     openZona: false,
+                                    openDate: false,
                                     openUnidades: false, openConfiguration: false
                                 })}
                                 variant="outlined"
                             />
-                        </BootstrapTooltip>
+                        }
 
                         <BootstrapTooltip
                             PopperProps={{
@@ -456,7 +517,8 @@ class FiltersMap extends Component {
                             disableHoverListener
                             disableTouchListener
                             title={
-                                <UnidadesList reasignarOperador={this.reasignarOperador} unidadesSeleccionadas={this.state.unidadesSeleccionadas}
+                                <UnidadesList reasignarOperador={this.reasignarOperador}
+                                              unidadesSeleccionadas={this.state.unidadesSeleccionadas}
                                               selectUnidades={this.selectUnidades}>
 
                                 </UnidadesList>
@@ -473,7 +535,7 @@ class FiltersMap extends Component {
                                     style={{fill: "#F9A03E", paddingTop: "10px", paddingBottom: "10px"}}/>}
                                 onClick={() => this.setState({
                                     openUnidades: !this.state.openUnidades, openSucursales: false,
-                                    openZona: false,
+                                    openZona: false, openDate: false,
                                     openPaquetes: false, openConfiguration: false
                                 })}
                                 variant="outlined"
@@ -506,7 +568,7 @@ class FiltersMap extends Component {
                                 }}
                                 onClick={() => this.setState({
                                     openConfiguration: !this.state.openConfiguration, openSucursales: false,
-                                    openZona: false,
+                                    openZona: false, openDate: false,
                                     openUnidades: false,
                                     openPaquetes: false,
                                 })}
@@ -530,7 +592,7 @@ class FiltersMap extends Component {
                             />
                         </Tooltip>
 
-                        <Tooltip title={"Enviar ruta a operadores"}>
+                        <Tooltip title={this.props.data.modoPlaneacion ? "Guardar ruta" : "Enviar ruta a operadores"}>
                             <IconButton
                                 onClick={() => this.props.guardarRuta()}
                                 style={{
@@ -565,8 +627,28 @@ class FiltersMap extends Component {
                                    }}
                         />
                     </div>
-
+                    <div>
+                        <Typography style={{paddingLeft: "10px", color: "black"}} variant={"h1"}>Modo: <strong style={{color: this.props.data.modoPlaneacion ? "red": "blue"}}>{this.props.data.modoPlaneacion ? `Planeación` : `Fecha Actual`} </strong></Typography>
+                    </div>
                 </div>
+
+                <IconButton
+                    onClick={(e) => {e.stopPropagation(); this.props.cambiarModo(!this.props.data.modoPlaneacion);}}
+                    style={{
+                        color: "white",
+                        borderRadius: "10px",
+                        width: "40px",
+                        height: "40px",
+                        backgroundColor: this.props.data.modoPlaneacion ? "red" : "#4F6AF3",
+                        top: "150px",
+                        pointerEvents: "auto",
+                        left: "10px",
+                        position: "fixed",
+                        zIndex: 30000,
+                        boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+                    }}>
+                    <UpdateIcon fontSize={"large"}/>
+                </IconButton>
 
             </div>
         );
@@ -584,7 +666,7 @@ const useStylesBootstrap = makeStyles((theme) => ({
     },
     tooltip: {
         heigth: "400px",
-        width:"1000px",
+        width: "1000px",
         backgroundColor: "white",
     },
 }));

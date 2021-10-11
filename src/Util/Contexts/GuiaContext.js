@@ -3,6 +3,7 @@ import { trackPromise } from "react-promise-tracker";
 
 const headers = {
     'Content-Type': 'application/json',
+    // 'TimeZone' : Intl.DateTimeFormat().resolvedOptions().timeZone
     //    'access-control-allow-origin': '*'
 }
 
@@ -12,6 +13,15 @@ function modificarGuia(id, params) {
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
         );
+    return result
+}
+
+function entregaOcurreGuia(id, params) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/EntregaOcurre/` + id;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+    );
     return result
 }
 
@@ -79,7 +89,14 @@ function obtenerGuiaPendientes(idOrigen, idDestino) {
         );
     return result
 }
-
+function obtenerGuiaReporte(id) {
+    const url = `http://190.9.53.4:8081/reportes/api/GenerarReporte/Guia/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 function ultimoFolioGuia() {
     const url = `${process.env.REACT_APP_API_URL}/Guia/GetUltimoFolio`;
     let result;
@@ -129,4 +146,22 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
     return result
 }
 
-export { modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId, obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia, obtenerGuiaUltimaMilla, reasignarGuia }
+function obtenerGuiasFiltroCorteCaja(fecha, destino, idMoneda, idTipoPago) {
+
+    const url =
+        `${process.env.REACT_APP_API_URL}/Guias/GetListadoFiltrosCorteCaja/` +
+        fecha +
+        "/" +
+        destino +
+        "/" +
+        idMoneda +
+        "/" +
+        idTipoPago
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export { obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId, obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia, obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte }

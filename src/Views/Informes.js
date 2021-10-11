@@ -20,7 +20,7 @@ import {
     Select,
     Step,
     StepLabel,
-    Stepper,
+    Stepper, Tooltip,
 } from "@material-ui/core";
 
 
@@ -50,7 +50,7 @@ import Noty from "noty";
 import {API_BASE_URL, dataGridLocaleText} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusInforme} from "../Util/Contexts/EstatusContext";
-import {obtenerGuia, obtenerGuiaPendientes, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
+import {obtenerGuia, obtenerGuiaPendientes, obtenerGuiaReporte, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
 import {obtenerOperadores} from "../Util/Contexts/OperadoresContext";
 import {obtenerUnidades, obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
 import {obtenerRutas} from "../Util/Contexts/RutasContext";
@@ -58,7 +58,7 @@ import {
     agregarInformes,
     cancelarInformes,
     eliminarInformes,
-    modificarInformes, obtenerInformeFiltro,
+    modificarInformes, obtenerInformeFiltro, obtenerInformeReporte,
     obtenerInformes,
     obtenerInformesId
 } from "../Util/Contexts/InformesContext";
@@ -149,6 +149,7 @@ function Informes({history}) {
             headerName: "Acciones",
             sortable: false, filterable: false,
             field: "",
+            width: 200,
             renderCell: (row) => {
                 return (
                     <div>
@@ -167,6 +168,12 @@ function Informes({history}) {
                         >
                             <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                         </a>
+                        <Tooltip title="Reporte">
+                            <a  className="btn btn-default btn-xs"
+                                onClick={() => generarReporte(row.row.m_nIdInforme, row.row.m_sFolioInforme)}><i className="zmdi zmdi-file"
+                                                                                                           style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
                         <a
                             href="#"
                             className="btn btn-default btn-xs"
@@ -209,14 +216,10 @@ function Informes({history}) {
             width: 250,
         },
         {
-            headerName: "Tipo de Unidad",
-            field: "m_sTipoUnidadIdentificador",
-            width: 125,
-        },
-        {
             headerName: "Remolque",
-            field: "m_sRemolque1",
-            width: 125,
+            field: "remolqueCompleto",
+            //valueFormatter: (params) => `Hola`,
+            width: 180,
         },
         {
             headerName: "Origen",
@@ -229,16 +232,20 @@ function Informes({history}) {
             width: 125,
         },
         {
-            headerName: "Ruta",
-            field: "m_sRuta",
-            width: 150,
-        },
-        {
             headerName: "Cancelado",
             field: "m_dtFechaCancelacion",
             width: 150,
         },
     ]);
+
+    function generarReporte(id, folio){
+        obtenerInformeReporte(id).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Informe " + folio;
+        })
+    }
 
     function getAllGuias() {
         obtenerGuia().then((respuesta) => {
@@ -320,9 +327,7 @@ function Informes({history}) {
         },
     ]);
 
-    function DefaultColumnFilter({
-                                     column: {filterValue, preFilteredRows, setFilter},
-                                 }) {
+    function DefaultColumnFilter({column: {filterValue, preFilteredRows, setFilter},}) {
         const count = preFilteredRows.length;
 
         return (
@@ -336,7 +341,6 @@ function Informes({history}) {
             />
         );
     }
-
 
     const [state, setState] = React.useState({
         showPopUp: false,
@@ -354,7 +358,7 @@ function Informes({history}) {
         tipoModal: 0,
         IdInforme: 0,
         FolioInforme: 0,
-        fechaHora: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+        fechaHora: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate() }`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
         DerechoBorrar: 151,
         EstatusInforme: 5,
         IdViaje: {},
@@ -406,15 +410,15 @@ function Informes({history}) {
             m_nIdCiudadDestino: state.IdCiudadDestino.m_nIdCiudad,
             m_nIdCiudadOrigen: state.IdCiudadOrigen.m_nIdCiudad,
             m_nIdEstatusInforme: state.EstatusInforme,
-            m_nIdOperador: state.IdOperador.m_nIdOperador,
+            //m_nIdOperador: state.IdOperador.m_nIdOperador,
             m_nIdRemolque1: state.IdRemolque1.m_nIdUnidad,
             m_nIdRemolque2: state.IdRemolque2 ? state.IdRemolque2.m_nIdUnidad : 0,
             m_sPlacasRemolque1: state.PlacasRemolque1,
             m_sPlacasRemolque2: state.PlacasRemolque2,
-            m_nIdRuta: state.IdRuta.m_nIdRuta,
+            m_nIdRuta: 0,
             m_nIdSucursalEmisora: state.sucursalEmisora,
             m_nIdSucursalReceptora: state.sucursalReceptora,
-            m_nIdDolly: state.IdTipoUnidad.m_nIdUnidad,
+            m_nIdDolly: state.IdTipoUnidad ? state.IdTipoUnidad.m_nIdUnidad : 0,
             m_sPlacasDolly: state.PlacasDolly,
 
             m_nIdViaje: state.IdViaje.m_nIdViaje,
@@ -427,7 +431,7 @@ function Informes({history}) {
             m_arrClsProInformeGuia: dataGuias.filter(g => g.select),
         };
 
-        if (state.IdInforme != 0) {
+        if (state.IdInforme !== 0) {
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -449,11 +453,7 @@ function Informes({history}) {
                         showAgregarFromCubicar(state.indexCubicar++)
                     } else {
                         getAllData();
-                        $('.nav-tabs li ').removeClass('active');
-                        $('.nav-tabs li').eq(0).addClass('active');
-                        $('.tab-content div ').removeClass('in show');
-                        $('#Listado').addClass('in show');
-                        setState({...state, cubicar: false})
+                        handleShowAgregar()
                     }
 
                 })
@@ -505,7 +505,6 @@ function Informes({history}) {
         });
 
     }
-
 
     function TableCiudades({columns, data, select}) {
         const defaultColumn = React.useMemo(
@@ -731,7 +730,6 @@ function Informes({history}) {
         );
     }
 
-
     function TableUnidad({columns, data, select}) {
         const defaultColumn = React.useMemo(
             () => ({
@@ -828,14 +826,12 @@ function Informes({history}) {
         getAllGuiasFrom(true);
     }
 
-
     const selectGuia = (index) => {
         const newGuia = [...dataGuias];
 
         newGuia[index]["select"] = newGuia[index].select ? false : true;
         setDataGuias(newGuia);
     };
-
 
     function handleShowCancelar(event) {
         event.stopPropagation()
@@ -890,9 +886,15 @@ function Informes({history}) {
         if (!cubicar) {
             obtenerGuiaPendientes(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad).then((respuesta) => {
                 if (respuesta.data !== "Vacio") {
-                    setDataGuias(respuesta.data);
-                }
+                    if (state.agregar ==="Modificar"){
+                        respuesta.data = respuesta.data.concat(state.guiasInforme)
+                        console.log(state.guiasInforme)
+                        setDataGuias(respuesta.data);
+                    }else {
+                        setDataGuias(respuesta.data);
 
+                    }
+                }
             })
         } else {
             obtenerGuiasFiltro(0, 0, 0, 4).then(async (respuesta) => {
@@ -914,7 +916,6 @@ function Informes({history}) {
 
 
     }
-
 
     const handleImprimir = () => {
         imprimirFormatosId(state.formatoSeleccionado).then((response) => {
@@ -943,7 +944,6 @@ function Informes({history}) {
         });
     }
 
-
     function getAllOperadores() {
         obtenerOperadores().then((respuesta) => {
             setDataOperadores(respuesta.data);
@@ -970,7 +970,7 @@ function Informes({history}) {
     }
 
     useEffect(value => {
-        if (state.IdCiudadOrigen && state.IdCiudadDestino && state.IdRuta != 0) {
+        if (state.IdCiudadOrigen && state.IdCiudadDestino && state.agregar !== "Consultar") {
             getAllGuiasFrom();
 
         }
@@ -982,13 +982,14 @@ function Informes({history}) {
                     .m_nIdCiudad
             );
         }
-    }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.IdRuta])
+    }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.IdRuta, state.agregar])
 
     function handleShowAgregar() {
         setState({
             ...state,
             agregar: "Agregar",
             showPopUp: true,
+            IdInforme: 0,
             IdGrupoUnidad: 0,
             Codigo: 0,
             GrupoUnidad: "",
@@ -1023,20 +1024,20 @@ function Informes({history}) {
         $('#Agregar').addClass('in show');
         obtenerInformesId(id).then(({data}) => {
             data.m_arrClsProGuia.forEach(g => g.select = true)
-            setDataGuias(data.m_arrClsProGuia)
             setState({
                 ...state,
-
-                fechaHora: data.m_sFechayHora,
+                IdInforme: id,
+                guiasInforme: data.m_arrClsProGuia,
+                fechaHora: data.m_dFecha + "T" + data.m_tHora,
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadOrigen),
-                IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
+                //IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
                 sucursalEmisora: data.m_nIdSucursalEmisora,
                 sucursalReceptora: data.m_nIdSucursalReceptora,
                 IdRemolque1: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
                 IdRemolque2: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque2),
                 IdTipoUnidad: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdDolly),
-                IdRuta: dataRutas.find(c => c.m_nIdRuta === data.m_nIdRuta),
+                IdRuta: null,
                 IdEstatusInforme: dataEstatusInformes.find(c => c.m_nIdEstatusInforme === data.m_nIdEstatusInforme),
                 PlacasRemolque1: data.m_sPlacasRemolque1,
                 PlacasRemolque2: data.m_sPlacasRemolque2,
@@ -1045,7 +1046,6 @@ function Informes({history}) {
                 EstatusInforme: data.m_nIdEstatusInforme,
                 agregar: "Modificar"
             });
-
         });
     }
 
@@ -1056,10 +1056,11 @@ function Informes({history}) {
         $('#Agregar').addClass('in show');
         obtenerInformesId(id).then(({data}) => {
             console.log(data.m_arrClsProGuia)
+            data.m_arrClsProGuia.forEach(g => g.select = true)
             setDataGuias(data.m_arrClsProGuia)
             setState({
                 ...state,
-                fechaHora: data.m_sFechayHora,
+                fechaHora: data.m_dFecha + "T" + data.m_tHora,
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
@@ -1129,6 +1130,7 @@ function Informes({history}) {
 
     function getAllData() {
         obtenerInformes().then((respuesta) => {
+            respuesta.data.forEach((i) => i.remolqueCompleto = i.m_nIdentificador + " - " +  i.m_sRemolque1)
             setData(respuesta.data);
         });
     }
@@ -1164,21 +1166,23 @@ function Informes({history}) {
 
     //Maneja filtrado de listado informe
     const handleFolioInformeFiltro = async (event) => {
-        let value = event.target.value
-        if (event.target.value == '') {
-            value = 0
-        }
-        setState({
-            ...state,
-            folioInformeListado: event.target.value,
-        })
-        obtenerInformeFiltro(value).then(respuesta => {
-            if (respuesta.data == "Vacio") {
-                setData([])
-            } else {
-                setData(respuesta.data)
+        if(event.keyCode == 13) {
+            let value = event.target.value
+            if (event.target.value == '') {
+                value = 0
             }
-        })
+            setState({
+                ...state,
+                folioInformeListado: event.target.value,
+            })
+            obtenerInformeFiltro(value).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
     }
 
 
@@ -1404,7 +1408,7 @@ function Informes({history}) {
                             </a>
                         </li>
 
-                        <li>
+                        <li className="hide">
                             <a onClick={(event) => {
                                 event.stopPropagation();
                                 setState({
@@ -1459,7 +1463,7 @@ function Informes({history}) {
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
                                                            onChange={handleChange}
-                                                           onBlur={handleFolioInformeFiltro}
+                                                           onKeyDown={handleFolioInformeFiltro}
                                                            className="form-control"
                                                            type="text"
 
@@ -2624,6 +2628,7 @@ function Informes({history}) {
                                                                                             width: "100%",
                                                                                             borderRadius: "10px",
                                                                                         }}
+                                                                                        disabled={state.agregar === "Consultar"}
                                                                                         onClick={() => selectGuia(index)}
                                                                                     >
                                                                                         <Grid container spacing={2}>

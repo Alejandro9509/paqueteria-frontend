@@ -3,6 +3,7 @@ import { trackPromise } from "react-promise-tracker";
 
 const headers = {
     'Content-Type': 'application/json',
+    // 'TimeZone' : Intl.DateTimeFormat().resolvedOptions().timeZone
     //    'access-control-allow-origin': '*'
 }
 
@@ -28,7 +29,7 @@ function cancelarRecoleccion(id, params) {
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Cancelar/${id}`;
     let result;
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers })
         );
     return result
 }

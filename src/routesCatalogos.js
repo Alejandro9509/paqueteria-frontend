@@ -61,11 +61,17 @@ import {ReactComponent as TViajeIcon} from './iconos/Catalogos/Icono Tipos Viaje
 import {ReactComponent as UnidadesIcon} from './iconos/Catalogos/Icono Unidades/icono_unidades.svg';
 import {ReactComponent as ViajesIcon} from './iconos/Catalogos/Icono Viajes/icono_viajes.svg';
 import {ReactComponent as TarifasIcon} from './iconos/Catalogos/Icono Tarifas/icono_tarifas.svg';
+import {ReactComponent as ConveniosIcon} from './iconos/Catalogos/Icono Convenios/icono_convenios.svg';
+import {ReactComponent as PCorreosIcon} from './iconos/Catalogos/Icono Plantilla Correo/IconoPlantillaCorreoNaranja.svg';
+import {ReactComponent as ProductosIcon} from './iconos/Catalogos/Icono Productos/IconoProductos.svg';
+import {ReactComponent as ZonaTarifaIcon} from './iconos/Catalogos/Icono Zonas Tarifas/IconoTarifaZona.svg';
 import TipoUnidad from "./Views/TipoUnidad/TipoUnidad";
+import ZonaOperativa from "./Views/ZonasOperativas/ZonaOperativa";
+import ZonaTarifas from "./Views/ZonasTarifas/ZonaTarifas";
 
 
 const catalogRoutes = [
-  {
+  /*{
     path: "/GrupoCliente",
     name: "Grupo Clientes",
     icon:  <GClienteIcon/>,
@@ -88,14 +94,14 @@ const catalogRoutes = [
     name: "Puesto",
     icon: <PuestoIcon/>,
     component: PuestoPage,
-  },
-  {
-    path: "/Departamento",
-    name: "Departamento",
-    icon: <DepartamentoIcon/>,
-    component: DepartamentoPage,
-  },
-  {
+  },*/
+  /*  {
+     path: "/Departamento",
+     name: "Departamento",
+     icon: <DepartamentoIcon/>,
+     component: DepartamentoPage,
+   }, */
+  /*{
     path: "/Operador",
     name: "Operadores",
     icon: <OperadorIcon/>,
@@ -106,27 +112,25 @@ const catalogRoutes = [
     name: "Tipo Unidad",
     icon: <TUnidadIcon/>,
     component: TipoUnidad,
-  },
-  {
-    path: "/GrupoUnidades",
-    name: "Grupo Unidades",
-    icon: <GUnidadesIcon/>,
-    component: GrupoUnidadPage,
-  },
-  {
+  },*/
+  /*  {
+     path: "/GrupoUnidades",
+     name: "Grupo Unidades",
+     icon: <GUnidadesIcon/>,
+     component: GrupoUnidadPage,
+   }, */
+  /*{
     path: "/Unidades",
     name: "Unidades",
     icon: <UnidadesIcon/>,
     component: UnidadesPage,
   },
-
-
   {
     path: "/EstatusUnidad",
     name: "Estatus Unidades",
     icon: <EUnidadIcon/>,
     component: EstatusUnidadPage,
-  },
+  },*/
   {
     path: "/Embalajes",
     name: "Embalajes",
@@ -188,7 +192,7 @@ const catalogRoutes = [
     icon: <ClasificacionIcon/>,
     component: ClasificacionViajePage,
   },
-  {
+  /*{
     path: "/Caseta",
     name: "Casetas",
     icon: <CasetaIcon/>,
@@ -205,13 +209,13 @@ const catalogRoutes = [
     name: "Conceptos Fact.",
     icon: <CFacturaIcon/>,
     component: ConceptosFacturacionPage,
-  },
-  {
+  },*/
+  /* {
     path: "/Rutas",
     name: "Rutas",
     icon: <ViajesIcon/>,
     component: RutasPage,
-  },
+  }, */
   {
     path: "/Tarifas",
     name: "Tarifas",
@@ -224,35 +228,47 @@ const catalogRoutes = [
     icon: <TCobreIcon/>,
     component: TipoCobroPage,
   },
-  {
+  /* {
     path: "/ParametrosConfiguracion",
     name: "Parámetros Configuración",
     icon: <PConfiguracionIcon/>,
     component: ParametrosConfiguracionPage,
-  },
+  }, */
   {
     path: "/PlantillaCorreo",
     name: "Plantilla de Correo",
-    icon: <PConfiguracionIcon/>,
+    icon: <PCorreosIcon/>,
     component: PlantillaCorreo,
   },
-  {
-    path: "/CondicionesRecepcionEntrega",
-    name: "Condiciones de recepcion y entrega",
-    icon: <PConfiguracionIcon/>,
-    component: CondicionesRecepcionEntrega,
-  },
+  /*  {
+     path: "/CondicionesRecepcionEntrega",
+     name: "Condiciones de recepcion y entrega",
+     icon: <PConfiguracionIcon/>,
+     component: CondicionesRecepcionEntrega,
+   }, */
   {
     path: "/Productos",
     name: "Productos",
-    icon: <PConfiguracionIcon/>,
+    icon: <ProductosIcon/>,
     component: Productos,
   },
   {
     path: "/Convenios",
     name: "Convenios",
-    icon: <PConfiguracionIcon/>,
+    icon: <ConveniosIcon/>,
     component: Convenios
+  },
+  {
+    path: "/ZonasOperativas",
+    name: "Zonas Operativas",
+    icon: <ZonaTarifaIcon/>,
+    component: ZonaOperativa
+  },
+  {
+    path: "/ZonasTarifas",
+    name: "Zonas Tarifas",
+    icon: <ZonaTarifaIcon/>,
+    component: ZonaTarifas
   }
 ];
 
