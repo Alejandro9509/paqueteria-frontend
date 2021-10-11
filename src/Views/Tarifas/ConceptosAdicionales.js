@@ -431,6 +431,7 @@ class ConceptosAdicionales extends Component {
                                                min="0"
                                                value={this.state.descuento}
                                                name="descuento"
+                                               helperText={"Presione enter una vez escrito el porcentaje para aplicar el cálculo."}
                                                onKeyDown={this.calcularDescuento}
                                     />
                                 </div>
