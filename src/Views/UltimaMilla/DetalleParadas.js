@@ -155,7 +155,8 @@ class DetalleParadas extends Component {
     }
 
     render() {
-
+        var d = new Date();
+        d.setHours(0,0,0,0);
         const totalPaquetes = this.props.tour.m_arrClsParadaUltimaMilla.map(a => a.m_arrClsProGuia.length).reduce((a, b) => a + b)
         const allGuias = [].concat(...this.props.tour.m_arrClsParadaUltimaMilla.map(a => a.m_arrClsProGuia))
         return (
@@ -375,11 +376,10 @@ class DetalleParadas extends Component {
                                                         height: "100%",
                                                         overflow: "auto"
                                                     }}>
+
                                                         {
-                                                            console.log(+this.props.fecha <= +(new Date()))
-                                                        }
-                                                        {
-                                                            +this.props.fecha <= +(new Date()) &&
+
+                                                            +this.props.fecha >= +(d) &&
                                                             <Button variant={"contained"} color={"primary"}
                                                                     onClick={() => this.setState({
                                                                         paquetes: tour.m_arrClsProGuia,
