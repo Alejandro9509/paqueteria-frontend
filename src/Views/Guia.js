@@ -358,13 +358,14 @@ function Guia(props) {
             "idTipoServicio": state.idTipoServicio,
 
             "arClsGuiaConceptos": state.conceptosAdicionales.map(c => ({
-                m_nIdConceptosFacturacion: c.concepto.m_nIdConceptosFacturacion,
+                m_nIdConceptosFacturacion: c.idConcepto,
                 m_cImporte: c.importe,
                 m_nIdImpuestoTraslada: c.traslada,
                 m_nIdImpuestoRetiene: c.retiene,
                 m_cImporteRetiene: c.importeRet,
                 m_cImporteIva: c.importeIVA,
                 m_bActivo: true,
+                m_cDescuento: c.descuento || 0
             })),
 
         }
@@ -584,7 +585,7 @@ function Guia(props) {
         m_arClsGuiaConceptos.forEach((element) => {
             conceptosAdicionales.push({
                 concepto: element,
-                idConcepto: element.m_nIdConceptosFacturacion,
+                idConcepto: element.m_nIdConceptoFacturacion,
                 importe: element.m_cImporte,
                 retiene: element.m_nIdImpuestoRetiene,
                 traslada: element.m_nIdImpuestoTraslada,
@@ -593,7 +594,8 @@ function Guia(props) {
                 rangoMinimo: element.m_xnRangoMinimo,
                 rangoMaximo: element.m_xnRangoMaximo,
                 nombreConcepto: element.m_sConcepto,
-                tipoCalculo: element.m_nIdTipoCalculo
+                tipoCalculo: element.m_nIdTipoCalculo,
+                descuento: element.m_cDescuento || 0
             })
         })
         var ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
@@ -1111,6 +1113,7 @@ function Guia(props) {
                                     console.log('index: ', i + 1)
                                     console.log(i + 1 + ' de ' + p.ctd)
                                     var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                                    console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
                                 }
                             }
                         },
@@ -1126,6 +1129,7 @@ function Guia(props) {
                     console.log('index: ', i + 1)
                     console.log(i + 1 + ' de ' + p.ctd)
                     var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                    console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
                 }
 
             }
@@ -1170,7 +1174,8 @@ function Guia(props) {
             rangoMaximo: data.rangoMaximo,
             tipoCalculo: data.tipoCalculo,
             nombreConcepto: data.concepto.m_sConcepto,
-            agregadoDesde: data.agregadoDesde
+            agregadoDesde: data.agregadoDesde,
+            descuento: data.descuento
 
         })
         ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
@@ -3672,7 +3677,8 @@ function Guia(props) {
                                                                                           mostrarRangos={false}
                                                                                           customConceptos={true}
                                                                                           listadoConceptosAlternativos={dataTodosConceptosByEmbarque}
-                                                                                          consult={state.agregar == "Consultar"}/>
+                                                                                          consult={state.agregar == "Consultar"}
+                                                                                          mostrarDescuento={true}/>
                                                                 </div>
 
                                                             }
