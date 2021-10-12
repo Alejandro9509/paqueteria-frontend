@@ -90,7 +90,7 @@ function obtenerGuiaPendientes(idOrigen, idDestino) {
     return result
 }
 function obtenerGuiaReporte(id) {
-    const url = `http://190.9.53.4:8081/reportes/api/GenerarReporte/Guia/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Guia/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
