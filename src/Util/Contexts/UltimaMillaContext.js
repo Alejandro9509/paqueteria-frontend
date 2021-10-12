@@ -406,7 +406,7 @@ function eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion) {
 }
 
 function obtenerUltimaMillaReporte(id) {
-    const url = `http://190.9.53.4:8081/reportes/api/GenerarReporte/UltimaMilla/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/UltimaMilla/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

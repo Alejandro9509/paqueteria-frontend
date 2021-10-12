@@ -61,7 +61,7 @@ function obtenerCortesByFiltros(fecha, idSucursal) {
     return result
 }
 function obtenerCorteReporte(id) {
-    const url = `http://190.9.53.4:8081/reportes/api/GenerarReporte/CorteCaja/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CorteCaja/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -69,7 +69,7 @@ function obtenerCorteReporte(id) {
     return result
 }
 function obtenerCortesResumenReporte(idDestino, fecha) {
-    const url = `http://190.9.53.4:8081/reportes/api/GenerarReporte/CorteCajaResumen/${idDestino}/${fecha}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CorteCajaResumen/${idDestino}/${fecha}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
