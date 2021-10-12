@@ -1422,9 +1422,9 @@ function Embarque(props) {
             m_sNoExtDestinatario: destinatario.numeroExtDestinatario,
             m_sColoniaDestinatario: destinatario.coloniaDestinatario,
             m_sLatitudD: coordenadas ? coordenadas.lat : destinatario.latitudD,
-            m_sLongitudD: coordenadas ? coordenadas.lng : destinatario.latitudD,
+            m_sLongitudD: coordenadas ? coordenadas.lng : destinatario.longitudD,
             m_sLatitudR: remitente.latitudR,
-            m_sLongitudR: remitente.latitudR,
+            m_sLongitudR: remitente.longitudR,
 
             m_nNoPaquetes: state.paquetes.length,
             m_nNoSobres: state.sobres.length,
