@@ -31,7 +31,7 @@ import {
     List,
     ListItem,
     Collapse,
-    ListItemText, Link
+    ListItemText, Link, Chip
 } from "@material-ui/core";
 import {obtenerEstatusDocumentos} from "../Util/Contexts/EstatusContext";
 import Historial from "./Viajes/Historial";
@@ -315,26 +315,44 @@ function Viajes() {
             }
         },
         {
+            headerName: "Fecha/Hora",
+            field: "m_sFechaHora",
+            width: 200,
+        },
+        {
             headerName: "Estatus de Viaje",
             field: "m_sEstatus",
             width: 200,
-        }, {
-            headerName: "Fecha/Hora Elaboración",
-            field: "m_sFechaHora",
-            width: 200,
-        }, {
-            headerName: "Viaje",
+        },  {
+            headerName: "Folio Viaje",
             field: "m_sFolioViaje",
             width: 150,
         },{
-            headerName: "Sucursal receptora",
-            field: "m_sSucursalReceptora",
+            headerName: "Origen",
+            field: "m_sOringen",
             width: 180,
-        }, {
-            headerName: "Sucursal",
-            field: "m_sSucursal",
-            width: 150,
+        },{
+            headerName: "Destino",
+            field: "m_sDestino",
+            width: 180,
         },
+        {
+            headerName: "Operador",
+            field: "m_sOperador",
+            width: 200,
+        },{
+            headerName: "Unidad",
+            field: "m_sUnidad",
+            width: 200,
+        },{
+            headerName: "Remolque1",
+            field: "m_sRemolque1",
+            width: 200,
+        },{
+            headerName: "Remolque2",
+            field: "m_sRemolque2",
+            width: 200,
+        }
         //   {
         //   headerName: "Origen",
         //   field: "m_sDescripcion",
@@ -409,7 +427,9 @@ function Viajes() {
         {
             headerName: "Unidad",
             field: "m_sCodigoUnidad",
-            width: 100,
+            width: 200,
+
+            valueFormatter: (params) => `${params.row.m_sCodigoUnidad}  ${params.row.m_sUnidad}`,
         },
         {
             headerName: "Tipo unidad",
@@ -419,11 +439,21 @@ function Viajes() {
             headerName: "Estado",
             field: "m_sEstatus",
             width: 150,
-        }, {
+            align: "center",
+            renderCell: (row) => {
+                return (
+                    <div align={"center"} style={{width: "100%"}}>
+                    <Chip size="small" style={{backgroundColor: `#${row.row.m_sColor}`, color: row.row.m_nIdEstatusUnidad === 1 ? "black" : "white", padding:"1px"}}  label={row.row.m_sEstatus}/>
+                    </div>
+                )
+            }
+        }
+        /*, {
             headerName: "Días",
             field: "m_nDias",
             width: 100,
-        }, {
+        }*/
+        , {
             headerName: "Ubicación",
             field: "m_sUbicacion",
             width: 200,

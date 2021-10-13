@@ -144,7 +144,8 @@ export const dataGridLocaleText = {
     columnMenuUnsort: 'Por defecto',
     columnMenuSortAsc: 'Ascendiente',
     columnMenuSortDesc: 'Descendiente',
-
+    footerTotalVisibleRows: (visibleCount, totalCount) =>
+        `${visibleCount.toLocaleString()} de ${totalCount.toLocaleString()}`,
     // Rows selected footer text
     footerRowSelected: (count) =>
         count !== 1
