@@ -299,6 +299,8 @@ function Recoleccion() {
         estatusListado:0,
         sucursalListado: 0,
         folio: '',
+        OrigenListado:0,
+        DestinoListado:0,
     })
 
     const resetFiltros = () => {
@@ -308,6 +310,8 @@ function Recoleccion() {
             estatusListado:0,
             sucursalListado: 0,
             folio: '',
+            OrigenListado:0,
+        DestinoListado:0,
         })
     }
     const [fileUploaded, setFileUploaded] = React.useState([]);
@@ -790,6 +794,7 @@ function Recoleccion() {
     }, []);
 
     const getDataParaListado = () => {
+        getAllCiudades();
         getAllData();
         getAllSucursales();
         getAllEstatusRecoleccion();
@@ -1440,8 +1445,8 @@ function Recoleccion() {
         setState(state => {
             return {
                 ...state,
-                fechaInicial: dataFechaInicial.data[0].m_dtFecha,
-                fechaFinal: dataFechaFinal.data[0].m_dtFecha,
+                fechaInicial: dataFechaInicial.data[0].Fecha,
+                fechaFinal: dataFechaFinal.data[0].Fecha,
                 sucursalListado: 0,
                 estatusListado: 0,
                 folioRecoleccion: '',
@@ -1635,7 +1640,7 @@ function Recoleccion() {
             }
         })
         if (target.name === "fechaInicial"){
-            obtenerRecoleccionFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerRecoleccionFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -1643,7 +1648,7 @@ function Recoleccion() {
                 }
             })
         }else if (target.name === "fechaFinal"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerRecoleccionFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -1652,7 +1657,7 @@ function Recoleccion() {
             })
         }
         else if (target.name === "sucursalListado"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -1661,7 +1666,25 @@ function Recoleccion() {
             })
         }
         else if (target.name === "estatusListado"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio).then(respuesta => {
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "OrigenListado"){
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "DestinoListado"){
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -3615,6 +3638,56 @@ function Recoleccion() {
                                                                     value={estatus.m_nIdEstatusRecoleccion}
                                                                 >
                                                                     {estatus.m_sEstatus}
+                                                                </option>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <InputLabel id="idSucusalLabel">Origen</InputLabel>
+                                                        <Select
+                                                            labelId="CiudadOrigenListadoLabel"
+                                                            label="Origen"
+                                                            className="form-control"
+                                                            required
+                                                            value={filtros.sucursalListado}
+                                                            onChange={handleChangeFiltros}
+                                                            id="OrigenListado"
+                                                            name="OrigenListado"
+                                                        >
+                                                            <option value="0">Todas</option>
+                                                            {dataCiudad.map((ciudad) => (
+                                                                <option
+                                                                    key={ciudad.m_nIdCiudad}
+                                                                    value={ciudad.m_nIdCiudad}
+                                                                >
+                                                                    {ciudad.m_sCiudad}
+                                                                </option>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <InputLabel id="idSucusalLabel">Destino</InputLabel>
+                                                        <Select
+                                                            labelId="CiudadDestinoListadoLabel"
+                                                            label="Destino"
+                                                            className="form-control"
+                                                            required
+                                                            value={filtros.sucursalListado}
+                                                            onChange={handleChangeFiltros}
+                                                            id="DestinoListado"
+                                                            name="DestinoListado"
+                                                        >
+                                                            <option value="0">Todas</option>
+                                                            {dataCiudad.map((ciudad) => (
+                                                                <option
+                                                                    key={ciudad.m_nIdCiudad}
+                                                                    value={ciudad.m_nIdCiudad}
+                                                                >
+                                                                    {ciudad.m_sCiudad}
                                                                 </option>
                                                             ))}
                                                         </Select>
