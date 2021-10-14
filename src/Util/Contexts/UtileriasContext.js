@@ -8,7 +8,7 @@ const headers = {
     //    'access-control-allow-origin': '*'
 }
 async function obtenerFechaInicio(){
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Utilerias/FechaInicial`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Utilerias/GetFechaInicio`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -19,7 +19,7 @@ async function obtenerFechaInicio(){
 }
 
 async function obtenerFechaFinal(){
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Utilerias/FechaFinal`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/Utilerias/GetFechaFinal`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

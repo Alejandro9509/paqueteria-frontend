@@ -999,13 +999,13 @@ function Recoleccion() {
     
     function getFechaInicial() {
         obtenerFechaInicio().then(respuesta => {
-            console.log(respuesta.data[0].m_dtFecha)
+            console.log(respuesta.data[0].Fecha)
             setDataFechaInicial(respuesta.data)
 
             setFiltros(filtros => {
                 return {
                     ...filtros,
-                   fechaInicial: respuesta.data[0].m_dtFecha
+                   fechaInicial: respuesta.data[0].Fecha
                 }
             })
            
@@ -1016,14 +1016,14 @@ function Recoleccion() {
     
     function getFechaFinal() {
         obtenerFechaFinal().then(respuesta => {
-            console.log(respuesta.data[0].m_dtFecha)
+            console.log(respuesta.data[0].Fecha)
 
             setDataFechaFinal(respuesta.data)
 
             setFiltros(filtros => {
                 return {
                     ...filtros,
-                   fechaFinal: respuesta.data[0].m_dtFecha
+                   fechaFinal: respuesta.data[0].Fecha
                 }
             })
 
