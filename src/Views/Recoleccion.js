@@ -1088,7 +1088,7 @@ function Recoleccion() {
 
         console.log(params)
         console.log(JSON.stringify(params))
-        /*if (state.idRecoleccion != 0) {
+        if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1119,7 +1119,7 @@ function Recoleccion() {
                     console.log(err);
                     showSuccess(err);
                 });
-        }*/
+        }
 
     };
 
@@ -1481,7 +1481,7 @@ function Recoleccion() {
                 }
             })
             obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifaEntrega).then(({data}) => {
-                if (!respuesta.data.m_bRecoleccionDiferenteDomicilio){
+                if (!respuesta.data.m_bEntregaDiferenteDomicilio){
                     setDestinatario(destinatario => {
                         return {
                             ...destinatario,
@@ -1500,39 +1500,69 @@ function Recoleccion() {
         })
 
         if (respuesta.data.m_bRecoleccionDiferenteDomicilio){
+            setRecoleccionDD(recoleccionDD => {
+                return {
+                    ...recoleccionDD,
+                    estadoRec: respuesta.data.m_nIdEstadoRecoleccion || 0,
+                    municipioRec: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
+                    domicilioRec: respuesta.data.m_sDomicilioDetalleRecoleccion,
+                    recogerEnRec: respuesta.data.m_sRecogerEnDetalleRecoleccion,
+                    datosAdicionalesRec: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+                }
+            })
+            let estado
+            if (respuesta.data.m_nIdEstadoRecoleccion < 10){
+                estado = `0${respuesta.data.m_nIdEstadoRecoleccion}`
+            }else{
+                estado = respuesta.data.m_nIdEstadoRecoleccion
+            }
+
+            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+                setDataMunicipiosRecoleccionDD(data)
+            })
             obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleRecoleccion).then((cp) => {
                 setRecoleccionDD(recoleccionDD => {
                     return {
                         ...recoleccionDD,
-                        estadoRec: respuesta.data.m_nIdEstadoRecoleccion || 0,
-                        municipioRec: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
                         codigoPostalRec: {
                             m_nIdCP: cp.data.m_nIdCP,
                             m_sCP: cp.data.m_sCP,
                             m_sColonia: cp.data.m_sColonia
                         },
-                        domicilioRec: respuesta.data.m_sDomicilioDetalleRecoleccion,
-                        recogerEnRec: respuesta.data.m_sRecogerEnDetalleRecoleccion,
-                        datosAdicionalesRec: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
                     }
                 })
             })
         }
         if (respuesta.data.m_bEntregaDiferenteDomicilio){
+            setEntregaDD(entregaDD =>{
+                return {
+                    ...entregaDD,
+                    estadoEnt: respuesta.data.m_nIdEstadoEntrega || 0,
+                    municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega || 0,
+                    domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
+                    entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
+                    datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                }
+            })
+            let estado
+            if (respuesta.data.m_nIdEstadoEntrega < 10){
+                estado = `0${respuesta.data.m_nIdEstadoEntrega}`
+            }else{
+                estado = respuesta.data.m_nIdEstadoEntrega
+            }
+
+            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+                setDataMunicipiosEntregaDD(data)
+            })
             obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
                 setEntregaDD(entregaDD =>{
                     return {
                         ...entregaDD,
-                        estadoEnt: respuesta.data.m_nIdEstadoEntrega || 0,
-                        municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega || 0,
                         codigoPostalEnt: {
-                        m_nIdCP: cp.data.m_nIdCP,
+                            m_nIdCP: cp.data.m_nIdCP,
                             m_sCP: cp.data.m_sCP,
                             m_sColonia: cp.data.m_sColonia
-                    },
-                        domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
-                        entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
-                        datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                        },
                     }
                 })
             })
@@ -1634,8 +1664,8 @@ function Recoleccion() {
         setState(state => {
             return {
                 ...state,
-                fechaInicial: dataFechaInicial.data[0].Fecha,
-                fechaFinal: dataFechaFinal.data[0].Fecha,
+                fechaInicial: dataFechaInicial.Fecha,
+                fechaFinal: dataFechaFinal.Fecha,
                 sucursalListado: 0,
                 estatusListado: 0,
                 folioRecoleccion: '',
