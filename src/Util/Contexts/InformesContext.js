@@ -16,7 +16,7 @@ function modificarInformes(id, params){
 }
 
 function obtenerInformeReporte(id) {
-    const url = `http://190.9.53.4:8081/reportes/api/GenerarReporte/Informe/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Informe/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
