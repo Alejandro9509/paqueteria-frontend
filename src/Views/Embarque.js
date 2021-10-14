@@ -1937,8 +1937,8 @@ function Embarque(props) {
                         correoRemitente: respuesta.data.m_sCorreoRemitente,
                         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                         contactoRemitente: respuesta.data.m_sContactoRemitente,
-                        latitudR: data.m_sLatitudR,
-                        longitudR: data.m_sLongitudR
+                        latitudR: data.m_sLatitudR || "",
+                        longitudR: data.m_sLongitudR || ""
                     }
                 })
             })
