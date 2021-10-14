@@ -778,7 +778,7 @@ function Embarque(props) {
         longitudR: 0
     })
 
-    const resetRemitente = () =>{
+    const resetRemitente = () => {
         setRemitente({
             idRemitente: '',
             aliasRemitente: '',
@@ -849,7 +849,7 @@ function Embarque(props) {
                 municipioRemitente: newValue.m_nIdMunicipio || '',
                 correoRemitente: newValue.m_sCorreoElectronico || "",
                 telefonoRemitente: newValue.m_sTelefono || 0,
-                contactoRemitente: newValue.m_sContacto || newValue.m_sNombreFiscal,
+                contactoRemitente: newValue.m_sContacto || newValue.m_sNombre,
                 calleRemitente: newValue.m_sCalle || "No especificado",
                 numeroExtRemitente: newValue.m_sNoExterior || 0,
                 numeroIntRemitente: newValue.m_sNoInterior || 0,
@@ -1038,9 +1038,9 @@ function Embarque(props) {
                 } : '',
                 estadoDestinatario: newValue.m_nIdEstado || '',
                 municipioDestinatario: newValue.m_nIdMunicipio || '',
-                correoDestinatario: newValue.m_sCorreoElectronico || '',
+                correoDestinatario: newValue.m_sCorreoElectronico || "",
                 telefonoDestinatario: newValue.m_sTelefono || 0,
-                contactoDestinatario: newValue.m_sContacto || newValue.m_sNombreFiscal,
+                contactoDestinatario: newValue.m_sContacto || newValue.m_sNombre,
                 calleDestinatario: newValue.m_sCalle || "No especificado",
                 numeroExtDestinatario: newValue.m_sNoExterior || 0,
                 numeroIntDestinatario: newValue.m_sNoInterior || 0,
@@ -1422,9 +1422,9 @@ function Embarque(props) {
             m_sNoExtDestinatario: destinatario.numeroExtDestinatario,
             m_sColoniaDestinatario: destinatario.coloniaDestinatario,
             m_sLatitudD: coordenadas ? coordenadas.lat : destinatario.latitudD,
-            m_sLongitudD: coordenadas ? coordenadas.lng : destinatario.latitudD,
+            m_sLongitudD: coordenadas ? coordenadas.lng : destinatario.longitudD,
             m_sLatitudR: remitente.latitudR,
-            m_sLongitudR: remitente.latitudR,
+            m_sLongitudR: remitente.longitudR,
 
             m_nNoPaquetes: state.paquetes.length,
             m_nNoSobres: state.sobres.length,
@@ -1892,6 +1892,18 @@ function Embarque(props) {
         getAllEstatusEmbarque()
         getAllTiposSeguro()
 
+        respuesta.data.m_parrPaquetes.forEach((p) => {
+            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+                p["producto"] = data
+                p.m_sProducto = data.m_sDescripcion
+            })
+            obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
+                p.m_sTipoEmbalaje = data.m_sNombre
+            })
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
+        })
+        setDataPaquetes(respuesta.data.m_parrPaquetes)
+
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
             setState(state => {
                 return {
@@ -1925,8 +1937,8 @@ function Embarque(props) {
                         correoRemitente: respuesta.data.m_sCorreoRemitente,
                         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                         contactoRemitente: respuesta.data.m_sContactoRemitente,
-                        latitudR: data.m_sLatitudR,
-                        longitudR: data.m_sLongitudR
+                        latitudR: data.m_sLatitudR || "",
+                        longitudR: data.m_sLongitudR || ""
                     }
                 })
             })
@@ -1938,6 +1950,24 @@ function Embarque(props) {
                     origenRemitente: data
                 }
             })
+            if (!respuesta.data.m_bRecoleccionDiferenteDomicilio){
+                obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+                    setRemitente(remitente => {
+                        return {
+                            ...remitente,
+                            zonaOperativaRemitente: data
+                        }
+                    })
+                })
+                obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
+                    setRemitente(remitente => {
+                        return {
+                            ...remitente,
+                            zonaTarifaRemitente: data
+                        }
+                    })
+                })
+            }
         })
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
@@ -1968,13 +1998,13 @@ function Embarque(props) {
                     }
                 })
             })
-        })
-        obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(({data}) => {
-            setDestinatario(destinatario => {
-                return {
-                    ...destinatario,
-                    destinoDestinatario: data
-                }
+            obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(({data}) => {
+                setDestinatario(destinatario => {
+                    return {
+                        ...destinatario,
+                        destinoDestinatario: data
+                    }
+                })
             })
         })
 
@@ -2026,17 +2056,7 @@ function Embarque(props) {
             sobre["m_nTipo"] = 1
         })*/
 
-        respuesta.data.m_parrPaquetes.forEach((p) => {
-            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
-                p["producto"] = data
-                p.m_sProducto = data.m_sDescripcion
-            })
-            obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
-                p.m_sTipoEmbalaje = data.m_sNombre
-            })
-            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
-        })
-        setDataPaquetes(respuesta.data.m_parrPaquetes)
+
 
         setState(state => {
             return {
