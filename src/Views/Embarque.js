@@ -1427,6 +1427,7 @@ function Embarque(props) {
             m_sNoExtRemitente: remitente.numeroExtRemitente,
             m_nIdEstadoRemitente: remitente.estadoRemitente,
             m_sColoniaRemitente: remitente.coloniaRemitente,
+            m_sMunicipioRemitente: remitente.municipioRemitente,
 
             m_sNombreDestinatario: destinatario.nombreDestinatario.m_sNombre,
             m_sRFCDestinatario: destinatario.RFCDestinatario,
@@ -1437,7 +1438,8 @@ function Embarque(props) {
             m_sTelefonoDestinatario: destinatario.telefonoDestinatario,
             m_sContactoDestinatario: destinatario.contactoDestinatario,
             m_nIdCiudadDestino: destinatario.destinoDestinatario.m_nIdCiudad,
-            // m_nIdZonaDestinatario: destinatario.zonaDestinatario.m_nIdZona,
+            // m_nIdZonaDestinatario: destinatario.zonaDestinatario.m_nIdZona
+            m_sMunicipioDestinatario: destinatario.municipioDestinatario,
             m_nIdDestinatario: destinatario.idDestinatario,
             m_sAliasDestinatario: destinatario.aliasDestinatario,
             m_nIdEstadoDestinatario: destinatario.estadoDestinatario,
@@ -1479,6 +1481,8 @@ function Embarque(props) {
             // params.IdZonaEntrega = entregaDD.zonaEntrega
             params.DomicilioEntrega = entregaDD.domicilioEnt
             params.EntregarEn = entregaDD.entregarEnEnt
+            params.m_nIdEstadoEntrega = entregaDD.estadoEnt
+            params.m_sCodigoMunicipioEntrega = entregaDD.municipioEnt
             params.DatosAdicionales = entregaDD.datosAdicionalesEnt
             params.m_nIdZonaOperativa = entregaDD.zonaOperativaEnt.m_nIdZona
             params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
@@ -1496,7 +1500,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        if (state.idEmbarque != 0) {
+        /*if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1525,7 +1529,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
     };
 
     function handleSelectCP(id, cp) {
@@ -2220,7 +2224,7 @@ function Embarque(props) {
                         numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
                         coloniaRemitente: respuesta.data.m_sColoniaRemitente,
                         estadoRemitente: respuesta.data.m_nIdEstadoRemitente || 0,
-                        municipioRemitente: respuesta.data.m_nIdCiudadRemitente,
+                        municipioRemitente: respuesta.data.m_sMunicipioRemitente,
                         latitudR: data.m_sLatitudR,
                         longitudR: data.m_sLongitudR
                     }
@@ -2255,7 +2259,7 @@ function Embarque(props) {
                         calleDestinatario: respuesta.data.m_sCalleDestinatario,
                         numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0,
                         numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
-
+                        municipioDestinatario: respuesta.data.m_sMunicipioDestinatario,
                         coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
                         codigoPostalDestinatario: {
                             m_nIdCP: cp.data.m_nIdCP,
@@ -2306,6 +2310,8 @@ function Embarque(props) {
                         domicilioEnt: respuesta.data.DomicilioEntrega,
                         entregarEnEnt: respuesta.data.EntregarEn,
                         datosAdicionalesEnt: respuesta.data.DatosAdicionalesis,
+                        estadoEnt: respuesta.data.m_nIdEstadoEntrega,
+                        municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega
                         }
                 })
             })
@@ -2501,8 +2507,8 @@ function Embarque(props) {
             return {
                 ...state,
                 agregar: "Agregar",
-                fechaInicial: dataFechaInicial[0].Fecha,
-                fechaFinal: dataFechaFinal[0].Fecha,
+                fechaInicial: dataFechaInicial.Fecha,
+                fechaFinal: dataFechaFinal.Fecha,
                 sucursalListado: 0,
                 estatusListado: 0,
                 folioRecoleccion: '',
