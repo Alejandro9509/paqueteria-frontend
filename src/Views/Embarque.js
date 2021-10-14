@@ -1472,8 +1472,7 @@ function Embarque(props) {
         if (state.entregaEnSucursal) {
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
             params.EntregarMismoDomicilio = false
-        }
-        if (state.diferenteEntrega) {
+        } else if (state.diferenteEntrega) {
             params.m_bEntregaEnSucursal = false
             // params.IdCiudadEntrega = state.ciudadEntrega
             params.CodigoPostalEntrega = entregaDD.codigoPostalEnt.m_nIdCP
@@ -2497,13 +2496,13 @@ function Embarque(props) {
     const handleShowListado = (event) => {
         event.stopPropagation();
         limpiarCamposAgregar()
-        
+
         setState(state => {
             return {
                 ...state,
                 agregar: "Agregar",
-                fechaInicial: dataFechaInicial.data[0].Fecha,
-                fechaFinal: dataFechaFinal.data[0].Fecha,
+                fechaInicial: dataFechaInicial[0].Fecha,
+                fechaFinal: dataFechaFinal[0].Fecha,
                 sucursalListado: 0,
                 estatusListado: 0,
                 folioRecoleccion: '',
@@ -5848,6 +5847,7 @@ function Embarque(props) {
                                                                                             variant="outlined"
                                                                                             label="Zona Operativa"
                                                                                             margin="dense"
+                                                                                            required={!state.diferenteEntrega && !state.entregaEnSucursal}
                                                                                             // onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />
@@ -5882,6 +5882,7 @@ function Embarque(props) {
                                                                                             variant="outlined"
                                                                                             label="Zona Tarifa"
                                                                                             margin="dense"
+                                                                                            required={!state.diferenteEntrega && !state.entregaEnSucursal}
                                                                                             // onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />

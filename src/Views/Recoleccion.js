@@ -1088,7 +1088,7 @@ function Recoleccion() {
 
         console.log(params)
         console.log(JSON.stringify(params))
-        if (state.idRecoleccion != 0) {
+        /*if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1119,7 +1119,7 @@ function Recoleccion() {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
 
     };
 
@@ -4698,6 +4698,7 @@ function Recoleccion() {
                                                                                             variant="outlined"
                                                                                             label="Zona Operativa"
                                                                                             margin="dense"
+                                                                                            required={!state.diferenteRecoleccion}
                                                                                             // onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />
@@ -4732,6 +4733,7 @@ function Recoleccion() {
                                                                                             variant="outlined"
                                                                                             label="Zona Tarifa"
                                                                                             margin="dense"
+                                                                                            required={!state.diferenteRecoleccion}
                                                                                             // onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />
@@ -5220,6 +5222,7 @@ function Recoleccion() {
                                                                                             variant="outlined"
                                                                                             label="Zona Operativa"
                                                                                             margin="dense"
+                                                                                            required={!state.diferenteEntrega}
                                                                                             // onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />
@@ -5254,6 +5257,7 @@ function Recoleccion() {
                                                                                             variant="outlined"
                                                                                             label="Zona Tarifa"
                                                                                             margin="dense"
+                                                                                            required={!state.diferenteEntrega}
                                                                                             // onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />
@@ -5721,7 +5725,7 @@ function Recoleccion() {
                                                                                     variant="outlined"
                                                                                     label="Zona Operativa"
                                                                                     margin="dense"
-                                                                                    required
+                                                                                    required={state.diferenteEntrega}
                                                                                     // onClick={handleClickZona}
                                                                                     {...params}
                                                                                 />
@@ -5754,7 +5758,7 @@ function Recoleccion() {
                                                                                     variant="outlined"
                                                                                     label="Zona Tarifa"
                                                                                     margin="dense"
-                                                                                    required
+                                                                                    required={state.diferenteEntrega}
                                                                                     // onClick={handleClickZona}
                                                                                     {...params}
                                                                                 />
