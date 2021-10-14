@@ -95,6 +95,7 @@ import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "..
 import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
 import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
 import Paquetes from "./Paquetes/Paquetes";
+import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -179,7 +180,8 @@ function Embarque(props) {
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
-
+    const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
+    const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
     const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
     const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
     // const [dataCodigosPostalesRecoleccionDD, setDataCodigosPostalesRecoleccionDD] = React.useState([]);
@@ -311,6 +313,8 @@ function Embarque(props) {
         estatusListado:0,
         sucursalListado: 0,
         folio: '',
+        OrigenListado:0,
+        DestinoListado:0,
     })
 
     const resetFiltros = () => {
@@ -320,6 +324,8 @@ function Embarque(props) {
             estatusListado:0,
             sucursalListado: 0,
             folio: '',
+            OrigenListado:0,
+            DestinoListado:0,
         })
     }
 
@@ -360,6 +366,24 @@ function Embarque(props) {
         }
         else if (target.name === "estatusListado"){
             obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "OrigenListado"){
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "DestinoListado"){
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -1614,7 +1638,8 @@ function Embarque(props) {
                     })
             }
         }
-
+        getFechaInicial()
+        getFechaFinal()
 
     }, [dataRemitenteDestinatario, dataCiudad, dataClientes]);
 
@@ -2431,13 +2456,57 @@ function Embarque(props) {
 
     }
 
+
+    function getFechaInicial() {
+        obtenerFechaInicio().then(respuesta => {
+            console.log(respuesta.data[0].Fecha)
+            setDataFechaInicial(respuesta.data)
+
+            setFiltros(filtros => {
+                return {
+                    ...filtros,
+                   fechaInicial: respuesta.data[0].Fecha
+                }
+            })
+           
+        });
+    };
+
+
+    
+    function getFechaFinal() {
+        obtenerFechaFinal().then(respuesta => {
+            console.log(respuesta.data[0].Fecha)
+
+            setDataFechaFinal(respuesta.data)
+
+            setFiltros(filtros => {
+                return {
+                    ...filtros,
+                   fechaFinal: respuesta.data[0].Fecha
+                }
+            })
+
+
+
+
+
+        });
+    };
+
     const handleShowListado = (event) => {
         event.stopPropagation();
         limpiarCamposAgregar()
+        
         setState(state => {
             return {
                 ...state,
                 agregar: "Agregar",
+                fechaInicial: dataFechaInicial.data[0].Fecha,
+                fechaFinal: dataFechaFinal.data[0].Fecha,
+                sucursalListado: 0,
+                estatusListado: 0,
+                folioRecoleccion: '',
             }
         });
         getAllEmbarque();
@@ -2707,6 +2776,8 @@ function Embarque(props) {
         getAllEmbarque();
         getAllSucursales();
         getAllEstatusEmbarque();
+        getAllCiudades();
+
     }
 
     const getDataParaEditar = () => {
@@ -4153,6 +4224,56 @@ function Embarque(props) {
                                                     </Select>
                                                 </FormControl>
                                             </Grid>
+                                            <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <InputLabel id="idSucusalLabel">Origen</InputLabel>
+                                                        <Select
+                                                            labelId="CiudadOrigenListadoLabel"
+                                                            label="Origen"
+                                                            className="form-control"
+                                                            required
+                                                            value={filtros.sucursalListado}
+                                                            onChange={handleChangeFiltros}
+                                                            id="OrigenListado"
+                                                            name="OrigenListado"
+                                                        >
+                                                            <option value="0">Todas</option>
+                                                            {dataCiudad.map((ciudad) => (
+                                                                <option
+                                                                    key={ciudad.m_nIdCiudad}
+                                                                    value={ciudad.m_nIdCiudad}
+                                                                >
+                                                                    {ciudad.m_sCiudad}
+                                                                </option>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <InputLabel id="idSucusalLabel">Destino</InputLabel>
+                                                        <Select
+                                                            labelId="CiudadDestinoListadoLabel"
+                                                            label="Destino"
+                                                            className="form-control"
+                                                            required
+                                                            value={filtros.sucursalListado}
+                                                            onChange={handleChangeFiltros}
+                                                            id="DestinoListado"
+                                                            name="DestinoListado"
+                                                        >
+                                                            <option value="0">Todas</option>
+                                                            {dataCiudad.map((ciudad) => (
+                                                                <option
+                                                                    key={ciudad.m_nIdCiudad}
+                                                                    value={ciudad.m_nIdCiudad}
+                                                                >
+                                                                    {ciudad.m_sCiudad}
+                                                                </option>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
                                             <Grid item container xs={2}>
                                                 <IconButton aria-label="delete" onClick={() => {
                                                     resetFiltros()
