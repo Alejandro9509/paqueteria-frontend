@@ -1500,7 +1500,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        /*if (state.idEmbarque != 0) {
+        if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1529,7 +1529,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }*/
+        }
     };
 
     function handleSelectCP(id, cp) {
@@ -2343,7 +2343,23 @@ function Embarque(props) {
 
         })
 
-        if (!respuesta.data.EntregarMismoDomicilio){
+        if(respuesta.data.m_bEntregaEnSucursal){
+            setState(state => {
+                return {
+                    ...state,
+                    entregaEnSucursal: respuesta.data.m_bEntregaEnSucursal,
+                    idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
+                    diferenteEntrega: false,
+                }
+            })
+        }else if (!respuesta.data.EntregarMismoDomicilio){
+            setState(state => {
+                return {
+                    ...state,
+                    entregaEnSucursal: false,
+                    diferenteEntrega: !respuesta.data.EntregarMismoDomicilio,
+                }
+            })
             let estado
             if (respuesta.data.m_nIdEstadoEntrega < 10){
                 estado = `0${respuesta.data.m_nIdEstadoEntrega}`
@@ -2375,17 +2391,7 @@ function Embarque(props) {
             respuesta.data.m_arrPaquetes.push(s)
         })
 
-        /*respuesta.data.m_arrPaquetes.forEach(p => {
-            obtenerProductoById(p.m_nIdProducto).then(({data}) => {
-                p.producto = data
-                totalPaquetes += parseInt(p.ctd)
-            })
-            obtenerEmbalajesId(p.m_nIdTIpoEmpaque).then(({data}) => {
-                p.m_sTipoEmbalaje = data.m_sNombre
-                p.m_sTipo = p.m_nTipo == 1 ? 'Sobre' : 'Paquete'
-            })
-        })*/
-        // setTotalPaquetes(totalPaquetes)
+        
         respuesta.data.m_arrPaquetes.forEach((p) => {
             p.m_nIdPaquete = p.m_nIdEmbarqueDetalle
             p.m_rPeso = p.m_xPeso
@@ -2436,51 +2442,8 @@ function Embarque(props) {
                 tipoCobro: respuesta.data.m_nIdTIpoCobro,
                 // clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
                 duplicar: duplicar,
-                //Remitente
-                // nombreRemitente: remitente,
-                /*RFCRemitente: respuesta.data.m_sRFCRemitente,
-                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                ciudadRemitente: respuesta.data.m_nCiudadRemitente,
-                correoRemitente: respuesta.data.m_sCorreoRemitente,
-                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                contactoRemitente: respuesta.data.m_sContactoRemitente,
-                // origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
-                // zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
-                idRemitente: respuesta.data.m_nIdRemitente,
-                aliasRemitente: respuesta.data.m_sAliasRemitente,
-                calleRemitente: respuesta.data.m_sCalleRemitente,
-                numeroIntRemitente: respuesta.data.m_sNoIntRemitente || 0,
-                numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
-                coloniaRemitente: respuesta.data.m_sColoniaRemitente,*/
-
-                //Destinatario
-                // nombreDestinatario: destinatario,
-                /*RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                ciudadDestinatario: respuesta.data.m_nIdCIudadDestinatario,
-                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                // destinoDestinatario: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
-                // zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
-                idDestinatario: respuesta.data.m_nIdDestinatario,
-                aliasDestinatario: respuesta.data.m_sAliasDestinatario,
-                calleDestinatario: respuesta.data.m_sCalleDestinatario,
-                numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0,
-                numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
-                coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,*/
-
                 //Entrega
-                entregaEnSucursal: respuesta.data.m_bEntregaEnSucursal,
-                idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
-                diferenteEntrega: !respuesta.data.EntregarMismoDomicilio,
-                /*ciudadEntrega: respuesta.data.IdCiudadEntrega,
-                zonaEntrega: respuesta.data.IdZonaEntrega,
-                domicilioEntrega: respuesta.data.DomicilioEntrega,
-                entregaEn: respuesta.data.EntregarEn,
-                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,*/
-
-                //Cita de recoleccion
+                
                 entregaConCita: respuesta.data.m_bEmbarqueConCita,
                 fechaCita: respuesta.data.m_sFechaCita,
                 horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
