@@ -738,7 +738,7 @@ function Recoleccion() {
             zonaOperativaEnt: '',
             zonaTarifaEnt: '',
             domicilioEnt: '',
-            recogerEnEnt: '',
+            entregarEnEnt: '',
             datosAdicionalesEnt: ''
         })
     }
