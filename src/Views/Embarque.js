@@ -34,6 +34,7 @@ import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";
 import Noty from "noty";
 import {
+    Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -566,6 +567,17 @@ function Embarque(props) {
             headerName: "Estatus de la Orden",
             field: "m_sEstatusEmbarque",
             width: 200,
+            renderCell: (row) => {
+                return (
+                    <div align={"center"} style={{width: "100%"}}>
+                        <Chip size="small" style={{
+                            backgroundColor: `${row.row.m_sColorEstatus}`,
+                            //color: row.row.m_nIdEstatusUnidad === 1 ? "black" : "white",
+                            padding: "1px"
+                        }} label={row.row.m_sEstatusEmbarque}/>
+                    </div>
+                )
+            }
         },
         {
             headerName: "Origen",

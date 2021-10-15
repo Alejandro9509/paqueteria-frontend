@@ -124,7 +124,7 @@ class UltimaMilla extends Component {
         obtenerUltimaMillaFecha(date, idSucursal, zonas).then(({data}) => {
             if (data.m_nIdUltimaMilla !== 0) {
                 if (actualizar && !this.state.modoPlaneacion) {
-                    this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 30000);
+                    this.interval = setInterval(() => this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda), 150000);
                 }
                 if (!this.state.ultimaMilla) {
                     data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
@@ -167,6 +167,7 @@ class UltimaMilla extends Component {
         this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda)
     }
     refreshUltimaMilla(){
+        this.setState({ultimaMilla: null})
         this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda)
     }
 
@@ -360,7 +361,7 @@ class UltimaMilla extends Component {
                                     <Mensajes tour={this.state.ultimaMilla}/>
                                 }
                                 {
-                                    !this.state.modoEdicion && (this.state.fullScreen === false || this.state.resumenFullscreen) &&
+                                    !this.state.modoEdicion && this.state.ultimaMilla && (this.state.fullScreen === false || this.state.resumenFullscreen) &&
                                     <DetalleParadas refresh={this.refreshUltimaMilla} fecha={this.state.fechaUltimaMilla} filtros={{zonasSeleccionada: this.state.zonasIds, tipoBusqueda: this.state.tipoBusqueda}} tour={this.state.ultimaMilla}/>
                                 }
                                 {/*{*/}
