@@ -180,6 +180,8 @@ function Embarque(props) {
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
+    const [dataCiudadF, setDataCiudadF] = React.useState([]);
+
     const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
     const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
     const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
@@ -1641,8 +1643,7 @@ function Embarque(props) {
                     })
             }
         }
-        getFechaInicial()
-        getFechaFinal()
+     
 
     }, [dataRemitenteDestinatario, dataCiudad, dataClientes]);
 
@@ -2777,10 +2778,14 @@ function Embarque(props) {
     }*/
 
     const getDataParaListado = () => {
+        getFechaInicial()
+        getFechaFinal()
         getAllEmbarque();
         getAllSucursales();
         getAllEstatusEmbarque();
-        getAllCiudades();
+        getAllCiudadesFiltro();
+       
+
 
     }
 
@@ -2793,7 +2798,7 @@ function Embarque(props) {
     }
 
     async function getAllEmbarque() {
-        obtenerEmbarques().then((respuesta) => {
+        obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then((respuesta) => {
             setData(respuesta.data);
         });
     }
@@ -2842,6 +2847,11 @@ function Embarque(props) {
     async function getAllCiudades() {
         obtenerCiudades().then((respuesta) => {
             setDataCiudad(respuesta.data);
+        });
+    }
+    async function getAllCiudadesFiltro() {
+        obtenerCiudades().then((respuesta) => {
+            setDataCiudadF(respuesta.data);
         });
     }
 
@@ -4144,40 +4154,40 @@ function Embarque(props) {
                                                 />
                                             </Grid>
                                             <Grid item xs={2}>
-                                                <FormControl className="input select" fullWidth variant="outlined">
-                                                    <TextField
-                                                        autoFocus
-                                                        type="date"
-                                                        margin="dense"
-                                                        label="Fecha Inicial"
-                                                        variant="outlined"
-                                                        className="form-control"
-                                                        InputLabelProps={{shrink: true,}}
-                                                        value={filtros.fechaInicial}
-                                                        onChange={handleChangeFiltros}
-                                                        id="fechaInicial"
-                                                        name="fechaInicial"
-                                                    />
-                                                </FormControl>
-                                            </Grid>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <TextField
+                                                            autoFocus
+                                                            type="date"
+                                                            margin="dense"
+                                                            label="Fecha Inicial"
+                                                            variant="outlined"
+                                                            className="form-control"
+                                                            InputLabelProps={{shrink: true,}}
+                                                            value={filtros.fechaInicial}
+                                                            onChange={handleChangeFiltros}
+                                                            id="fechaInicial"
+                                                            name="fechaInicial"
+                                                        />
+                                                    </FormControl>
+                                                </Grid>   
                                             <Grid item xs={2}>
-                                                <FormControl className="input select" fullWidth variant="outlined">
-                                                    <TextField variant="outlined" margin="dense"
-                                                               type="date"
-                                                               className="form-control"
-                                                               label="Fecha Final"
-                                                               InputLabelProps={{
-                                                                   shrink: true,
-                                                               }}
-                                                               value={filtros.fechaFinal}
-                                                               onChange={handleChangeFiltros}
-                                                               id="fechaFinal"
-                                                               name="fechaFinal"
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <TextField variant="outlined" margin="dense"
+                                                                   type="date"
+                                                                   className="form-control"
+                                                                   label="Fecha Final"
+                                                                   InputLabelProps={{
+                                                                       shrink: true,
+                                                                   }}
+                                                                   value={filtros.fechaFinal}
+                                                                   onChange={handleChangeFiltros}
+                                                                   id="fechaFinal"
+                                                                   name="fechaFinal"
 
-                                                    />
-                                                </FormControl>
+                                                        />
+                                                    </FormControl>
 
-                                            </Grid>
+                                                </Grid>
                                             <Grid item xs={2}>
                                                 <FormControl className="input select" fullWidth variant="outlined">
                                                     <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
@@ -4230,19 +4240,19 @@ function Embarque(props) {
                                             </Grid>
                                             <Grid item xs={2}>
                                                     <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="idSucusalLabel">Origen</InputLabel>
+                                                        <InputLabel id="OrigenListado">Origen</InputLabel>
                                                         <Select
-                                                            labelId="CiudadOrigenListadoLabel"
-                                                            label="Origen"
+                                                            labelId="OrigenListado"
                                                             className="form-control"
                                                             required
-                                                            value={filtros.sucursalListado}
+                                                            label="Origen"
+                                                            value={filtros.OrigenListado}
                                                             onChange={handleChangeFiltros}
                                                             id="OrigenListado"
                                                             name="OrigenListado"
                                                         >
-                                                            <option value="0">Todas</option>
-                                                            {dataCiudad.map((ciudad) => (
+                                                            <option value="0">Todos</option>
+                                                            {dataCiudadF.map((ciudad) => (
                                                                 <option
                                                                     key={ciudad.m_nIdCiudad}
                                                                     value={ciudad.m_nIdCiudad}
@@ -4255,19 +4265,19 @@ function Embarque(props) {
                                                 </Grid>
                                                 <Grid item xs={2}>
                                                     <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="idSucusalLabel">Destino</InputLabel>
+                                                        <InputLabel id="DestinoListado">Destino</InputLabel>
                                                         <Select
-                                                            labelId="CiudadDestinoListadoLabel"
-                                                            label="Destino"
+                                                            labelId="DestinoListado"
                                                             className="form-control"
                                                             required
-                                                            value={filtros.sucursalListado}
+                                                            label="Destino"
+                                                            value={filtros.DestinoListado}
                                                             onChange={handleChangeFiltros}
                                                             id="DestinoListado"
                                                             name="DestinoListado"
                                                         >
-                                                            <option value="0">Todas</option>
-                                                            {dataCiudad.map((ciudad) => (
+                                                            <option value="0">Todos</option>
+                                                            {dataCiudadF.map((ciudad) => (
                                                                 <option
                                                                     key={ciudad.m_nIdCiudad}
                                                                     value={ciudad.m_nIdCiudad}
