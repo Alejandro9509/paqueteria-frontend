@@ -19,6 +19,7 @@ import $ from 'jquery';
 import {getUniqueListBy, remove_array_element} from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
 import {DataGrid} from '@material-ui/data-grid';
+import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 
 import Noty from 'noty';
 import {SignalCellularNoSimOutlined} from "@material-ui/icons";
@@ -116,6 +117,9 @@ function Guia(props) {
 
     const [data, setData] = React.useState([])
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
+    const [dataCiudadF, setDataCiudadF] = React.useState([]);
+    const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
+    const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [state, setState] = React.useState({
         //VARIABLES PARA LISTADO DE GUIAS
@@ -233,9 +237,11 @@ function Guia(props) {
     const [filtros, setFiltros] = useState({
         fechaInicial: 0,
         fechaFinal: 0,
-        estatusListado: 0,
+        estatusListado:0,
         sucursalListado: 0,
         folio: '',
+        OrigenListado:0,
+        DestinoListado:0,
     })
 
     const handleChangeFiltros = (event) => {
@@ -248,7 +254,7 @@ function Guia(props) {
             }
         })
         if (target.name === "fechaInicial") {
-            obtenerGuiasFiltro(target.value, filtros.fechaFinal, filtros.sucursalListado, filtros.estatusListado, filtros.folio).then(respuesta => {
+            obtenerGuiasFiltro(target.value, filtros.fechaFinal, filtros.sucursalListado, filtros.estatusListado, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -256,7 +262,7 @@ function Guia(props) {
                 }
             })
         } else if (target.name === "fechaFinal") {
-            obtenerGuiasFiltro(filtros.fechaInicial, target.value, filtros.sucursalListado, filtros.estatusListado, filtros.folio).then(respuesta => {
+            obtenerGuiasFiltro(filtros.fechaInicial, target.value, filtros.sucursalListado, filtros.estatusListado, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -264,7 +270,7 @@ function Guia(props) {
                 }
             })
         } else if (target.name === "sucursalListado") {
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal, target.value, filtros.estatusListado, filtros.folio).then(respuesta => {
+            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal, target.value, filtros.estatusListado, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -272,7 +278,25 @@ function Guia(props) {
                 }
             })
         } else if (target.name === "estatusListado") {
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.sucursalListado, target.value, filtros.folio).then(respuesta => {
+            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.sucursalListado, target.value, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "OrigenListado"){
+            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "DestinoListado"){
+            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -339,8 +363,50 @@ function Guia(props) {
             estatusListado: 0,
             sucursalListado: 0,
             folio: '',
+            OrigenListado:0,
+            DestinoListado:0,
+
         })
     }
+
+
+    
+    function getFechaInicial() {
+        obtenerFechaInicio().then(respuesta => {
+            console.log(respuesta.data[0].Fecha)
+            setDataFechaInicial(respuesta.data)
+
+            setFiltros(filtros => {
+                return {
+                    ...filtros,
+                   fechaInicial: respuesta.data[0].Fecha
+                }
+            })
+           
+        });
+    };
+
+
+    
+    function getFechaFinal() {
+        obtenerFechaFinal().then(respuesta => {
+            console.log(respuesta.data[0].Fecha)
+
+            setDataFechaFinal(respuesta.data)
+
+            setFiltros(filtros => {
+                return {
+                    ...filtros,
+                   fechaFinal: respuesta.data[0].Fecha
+                }
+            })
+
+
+
+
+
+        });
+    };
 
     const handleAceptar = (e) => {
         e.preventDefault()
@@ -1014,6 +1080,9 @@ function Guia(props) {
             window.location.replace("login");
             return;
         }
+        getFechaFinal()
+        getFechaInicial()
+        getAllCiudadesFiltro()
         getAllData()
         getAllDataSucursal()
         getAllDataMoneda()
@@ -1155,6 +1224,11 @@ function Guia(props) {
     async function getAllData() {
         obtenerGuia().then(respuesta => {
             setData(respuesta.data)
+        });
+    }
+    async function getAllCiudadesFiltro() {
+        obtenerCiudades().then((respuesta) => {
+            setDataCiudadF(respuesta.data);
         });
     }
 
@@ -2663,6 +2737,56 @@ function Guia(props) {
                                                             </Select>
                                                         </FormControl>
                                                     </Grid>
+                                                    <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <InputLabel id="OrigenListado">Origen</InputLabel>
+                                                        <Select
+                                                            labelId="OrigenListado"
+                                                            className="form-control"
+                                                            required
+                                                            label="Origen"
+                                                            value={filtros.OrigenListado}
+                                                            onChange={handleChangeFiltros}
+                                                            id="OrigenListado"
+                                                            name="OrigenListado"
+                                                        >
+                                                            <option value="0">Todos</option>
+                                                            {dataCiudadF.map((ciudad) => (
+                                                                <option
+                                                                    key={ciudad.m_nIdCiudad}
+                                                                    value={ciudad.m_nIdCiudad}
+                                                                >
+                                                                    {ciudad.m_sCiudad}
+                                                                </option>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <InputLabel id="DestinoListado">Destino</InputLabel>
+                                                        <Select
+                                                            labelId="DestinoListado"
+                                                            className="form-control"
+                                                            required
+                                                            label="Destino"
+                                                            value={filtros.DestinoListado}
+                                                            onChange={handleChangeFiltros}
+                                                            id="DestinoListado"
+                                                            name="DestinoListado"
+                                                        >
+                                                            <option value="0">Todos</option>
+                                                            {dataCiudadF.map((ciudad) => (
+                                                                <option
+                                                                    key={ciudad.m_nIdCiudad}
+                                                                    value={ciudad.m_nIdCiudad}
+                                                                >
+                                                                    {ciudad.m_sCiudad}
+                                                                </option>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
                                                     <Grid item container xs={2}>
                                                         <IconButton aria-label="delete" onClick={() => {
                                                             resetFiltros()

@@ -148,6 +148,8 @@ function Recoleccion() {
 
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
+    const [dataCiudadF, setDataCiudadF] = React.useState([]);
+
     const [dataZona, setDataZona] = React.useState([]);
     const [dataFolioRecoleccion, SetDataFolioRecoleccion] = React.useState([]);
 
@@ -898,6 +900,7 @@ function Recoleccion() {
     }
 
     useEffect(value => {
+        
         if (state.tipoUnidad != 0 && state.tipoUnidad != '') {
             // console.log('tipo Unidad select: ', state.tipoUnidad)
             getAllUnidades(state.tipoUnidad.m_nIdTipoUnidad);
@@ -905,6 +908,7 @@ function Recoleccion() {
     }, [state.tipoUnidad])
 
     useEffect((value) => {
+       
         if (
             localStorage.getItem("UsuarioId") === null ||
             localStorage.getItem("UsuarioId") <= 0
@@ -913,16 +917,20 @@ function Recoleccion() {
             window.location.replace("login");
             return;
         }
-        getDataParaListado()
+
         getFechaInicial()
         getFechaFinal()
+        getDataParaListado()
+      
     }, []);
 
     const getDataParaListado = () => {
-        getAllCiudades();
+        
         getAllData();
         getAllSucursales();
         getAllEstatusRecoleccion();
+        getAllCiudadesFiltro();
+       
     }
 
     const getDataParaEditar = () => {
@@ -2265,7 +2273,7 @@ function Recoleccion() {
     ]);
 
     function getAllData() {
-        obtenerRecoleccion().then((respuesta) => {
+        obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
             setData(respuesta.data);
         });
     }
@@ -2315,7 +2323,11 @@ function Recoleccion() {
             setDataCiudad(respuesta.data);
         });
     }
-
+    function getAllCiudadesFiltro() {
+        obtenerCiudades().then((respuesta) => {
+            setDataCiudadF(respuesta.data);
+        });
+    }
     function getAllZonas() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
         axios.get(url, {headers}).then((respuesta) => {
@@ -3864,19 +3876,19 @@ function Recoleccion() {
                                                 </Grid>
                                                 <Grid item xs={2}>
                                                     <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="idSucusalLabel">Origen</InputLabel>
+                                                        <InputLabel id="OrigenListado">Origen</InputLabel>
                                                         <Select
-                                                            labelId="CiudadOrigenListadoLabel"
-                                                            label="Origen"
+                                                            labelId="OrigenListado"
                                                             className="form-control"
                                                             required
-                                                            value={filtros.sucursalListado}
+                                                            label="Origen"
+                                                            value={filtros.OrigenListado}
                                                             onChange={handleChangeFiltros}
                                                             id="OrigenListado"
                                                             name="OrigenListado"
                                                         >
-                                                            <option value="0">Todas</option>
-                                                            {dataCiudad.map((ciudad) => (
+                                                            <option value="0">Todos</option>
+                                                            {dataCiudadF.map((ciudad) => (
                                                                 <option
                                                                     key={ciudad.m_nIdCiudad}
                                                                     value={ciudad.m_nIdCiudad}
@@ -3889,19 +3901,19 @@ function Recoleccion() {
                                                 </Grid>
                                                 <Grid item xs={2}>
                                                     <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="idSucusalLabel">Destino</InputLabel>
+                                                        <InputLabel id="DestinoListado">Destino</InputLabel>
                                                         <Select
-                                                            labelId="CiudadDestinoListadoLabel"
-                                                            label="Destino"
+                                                            labelId="DestinoListado"
                                                             className="form-control"
                                                             required
-                                                            value={filtros.sucursalListado}
+                                                            label="Destino"
+                                                            value={filtros.DestinoListado}
                                                             onChange={handleChangeFiltros}
                                                             id="DestinoListado"
                                                             name="DestinoListado"
                                                         >
-                                                            <option value="0">Todas</option>
-                                                            {dataCiudad.map((ciudad) => (
+                                                            <option value="0">Todos</option>
+                                                            {dataCiudadF.map((ciudad) => (
                                                                 <option
                                                                     key={ciudad.m_nIdCiudad}
                                                                     value={ciudad.m_nIdCiudad}
