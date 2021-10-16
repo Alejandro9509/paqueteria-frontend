@@ -26,128 +26,68 @@ function not(a, b) {
     return a.filter((value) => value !== b);
 }
 
-function ProductosPrecios2({dataList = [], onChangeList, consult,mostrarRangos,ivaRetiene,ivaTraslada}) {
+export default function ProductosPrecios({dataList = [], onChangeList, consult,ivaRetiene,ivaTraslada}) {
     const [state, setState] = useState({
         conceptos: [],
-        impuestos: [],
-        importe: 0,
-        importeRet: "0",
-        retiene: 0,
-        traslada: 0,
-        importeIVA: "0",
-        idConcepto: 0,
-        concepto: null,
-        rangoMinimo: 0,
-        rangoMaximo: 0,
-        nombreConcepto: "",
-        columnsConceptos: [
-            {
-                Name: "Codigo",
-                accessor: "m_sCodigo",
-            },
-            {
-                Name: "Concepto",
-                accessor: "m_sConcepto",
-            }
-        ],
-        agregadoDesde: 0
+    })
+
+    const [dataProducto, setDataProducto] = useState({
+        producto: null,
+        m_cImporte: 0,
+        m_nIdProducto: 0,
+        m_sDescripcion: '',
     })
 
     useEffect(value => {
-        getAllImpuestos()
         getAllProductos()
     }, [])
 
-    const getAllImpuestos = () => {
-        const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
-        axios.get(url, {headers}).then(respuesta => {
-            setState(state => {
-                return {...state, impuestos: respuesta.data}
-            })
-        });
-    };
 
     const getAllProductos = () => {
         obtenerProductos().then(respuesta => {
             setState(state => {
                 return {...state, conceptos: respuesta.data}
             })
-            console.log('productos', respuesta.data)
         });
-    }
-
-    const calcularImpuestos = (traslada, retiene, importe) => {
-        setState(state => {
-            return {...state, retiene: retiene, importe: importe, traslada: traslada}
-        })
-        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) != null) {
-            const impuesto = state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada))
-            setState(state => {
-                return {
-                    ...state,
-                    importeIVA: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2),
-                    retiene: retiene,
-                    importe: importe,
-                    traslada: traslada
-                }
-            })
-        }
-        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene)) != null) {
-            const impuesto = state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene))
-            setState(state => {
-                return {
-                    ...state,
-                    importeRet: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2),
-                    retiene: retiene,
-                    importe: importe,
-                    traslada: traslada
-                }
-            })
-        }
     }
 
     const handleChange = (event) => {
         event.preventDefault()
-        setState(state => {
+        setDataProducto(dataProducto => {
             return {
-                ...state,
+                ...dataProducto,
                 [event.target.name]: event.target.value
             }
         })
-        /*if (event.target.name === "importe") {
-            calcularImpuestos(state.traslada, state.retiene, event.target.value)
-        } else if (event.target.name === "traslada") {
-            calcularImpuestos(event.target.value, state.retiene, state.importe)
-        } else if (event.target.name === "retiene") {
-            calcularImpuestos(state.traslada, event.target.value, state.importe)
-        }*/
+    }
+
+    const handleChangeAutocomplete = (input, value) => {
+        setDataProducto(dataProducto => {
+            return {
+                ...dataProducto,
+                [input]: value
+            }
+        })
     }
 
     const onSubmit = (event) => {
         event.preventDefault()
         // this.props.addConcepto(state)
-        let newItem = {
-            concepto: state.concepto,
-            importe: state.importe,
-            nombreConcepto: state.concepto.m_sDescripcion,
-            importeRet: state.importeRet,
-            retiene: state.retiene,
-            traslada: state.traslada,
-            importeIVA: state.importeIVA
+        if (dataProducto.producto === null){
+            return
         }
-        dataList.push(newItem)
+        if (dataProducto.m_cImporte < 0){
+            return
+        }
+        dataProducto.m_nIdProducto = dataProducto.producto.m_nIdProducto
+        dataProducto.m_sDescripcion = dataProducto.producto.m_sDescripcion
+        dataList.push(dataProducto)
         onChangeList([], dataList)
-        setState(state => {
-            return {
-                ...state,
-                concepto: null,
-                importe: 0,
-                nombreConcepto: "",
-                importeRet: "0",
-                retiene: 0,
-                traslada: 0,
-                importeIVA: "0"
-            }
+        setDataProducto({
+            producto: null,
+            m_cImporte: 0,
+            m_nIdProducto: 0,
+            m_sDescripcion: '',
         })
     }
 
@@ -161,18 +101,7 @@ function ProductosPrecios2({dataList = [], onChangeList, consult,mostrarRangos,i
     const handleRowClick = (event, index, concepto) => {
         if (!consult) {
             removeConcepto(undefined, concepto)
-            setState(state => {
-                return {
-                    ...state,
-                    concepto: concepto.concepto,
-                    importe: concepto.importe,
-                    nombreConcepto: concepto.m_sConcepto,
-                    importeRet: concepto.importeRet,
-                    retiene: concepto.retiene,
-                    traslada: concepto.traslada,
-                    importeIVA: concepto.importeIVA
-                }
-            })
+            setDataProducto(concepto)
         }
     }
     return (
@@ -184,23 +113,10 @@ function ProductosPrecios2({dataList = [], onChangeList, consult,mostrarRangos,i
 
                         <div className="input">
                             <Autocomplete
-                                value={state.concepto}
+                                value={dataProducto.producto}
                                 freeSolo
-                                onChange={(event, newValue) => {
-                                    setState(state => {
-                                        return {
-                                            ...state,
-                                            concepto: newValue,
-                                            nombreConcepto: newValue.m_sDescripcion,
-                                            /*importe: newValue.m_cImporte,
-                                            importeRet: newValue.m_cImporteRetiene,
-                                            retiene: newValue.m_nIdImpuestoRetiene,
-                                            traslada: newValue.m_nIdImpuestoTraslada,
-                                            importeIVA: newValue.m_cImporteIva*/
-                                        }
-                                    })
-                                }}
-                                id="concepto"
+                                onChange={(event, newValue) => { handleChangeAutocomplete("producto", newValue)}}
+                                id="producto"
                                 disableClearable
                                 forcePopupIcon={false}
                                 disabled={state.agregar == "Consultar"}
@@ -233,7 +149,7 @@ function ProductosPrecios2({dataList = [], onChangeList, consult,mostrarRangos,i
                             />
                         </div>
                     </div>
-                    <div className="col-md-1 col-sm-6" style={{padding: "5px"}}>
+                    <div className="col-md-3 col-sm-6" style={{padding: "5px"}}>
 
                         <div className="input">
                             <TextField variant="outlined" margin="dense"
@@ -244,8 +160,8 @@ function ProductosPrecios2({dataList = [], onChangeList, consult,mostrarRangos,i
                                        style={{textAlign: "right"}}
                                        step="1"
                                        min="0"
-                                       value={state.importe}
-                                       name="importe"
+                                       value={dataProducto.m_cImporte}
+                                       name="m_cImporte"
                             />
                         </div>
                     </div>
@@ -367,8 +283,8 @@ function ProductosPrecios2({dataList = [], onChangeList, consult,mostrarRangos,i
                         <table style={{width: "100%"}}>
                             <tr>
                                 <th style={{textAlign: "left"}}> Producto</th>
-                                {mostrarRangos && <th style={{textAlign: "left"}}> Min</th>}
-                                {mostrarRangos && <th style={{textAlign: "left"}}> Max</th>}
+                                {/*{mostrarRangos && <th style={{textAlign: "left"}}> Min</th>}
+                                {mostrarRangos && <th style={{textAlign: "left"}}> Max</th>}*/}
                                 <th style={{textAlign: "left"}}> Importe</th>
                                 {/*<th style={{textAlign: "left"}}> Traslada</th>
                                 <th style={{textAlign: "left"}}> Importe IVA</th>
@@ -378,8 +294,8 @@ function ProductosPrecios2({dataList = [], onChangeList, consult,mostrarRangos,i
                             {
                                 dataList.map((c, index) => (
                                     <tr onDoubleClick={(e) => handleRowClick(e, index, c)}>
-                                        <td style={{textAlign: "left"}}>{c.nombreConcepto}</td>
-                                        <td style={{textAlign: "left"}}>${parseFloat(c.importe).toFixed(2)}</td>
+                                        <td style={{textAlign: "left"}}>{c.m_sDescripcion}</td>
+                                        <td style={{textAlign: "left"}}>${parseFloat(c.m_cImporte).toFixed(2)}</td>
                                         {/*{mostrarRangos && <td style={{textAlign: "left"}}>{c.rangoMinimo} Kg</td>}
                                         {mostrarRangos && <td style={{textAlign: "left"}}>{c.rangoMaximo} Kg</td>}
                                         <td style={{textAlign: "left"}}>{state.impuestos.length !== 0 && (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)).m_sImpuesto : "No Aplica")}</td>
@@ -421,7 +337,7 @@ function ProductosPrecios2({dataList = [], onChangeList, consult,mostrarRangos,i
                             borderColor: "gray",
                             minWidth: "230px",
                             textAlign: "right"
-                        }}> ${parseFloat(dataList.reduce((total, arg) => total + parseFloat(arg.importe), 0)).toFixed(2)}</div>
+                        }}> ${parseFloat(dataList.reduce((total, arg) => total + parseFloat(arg.m_cImporte), 0)).toFixed(2)}</div>
                     </div>
                     <div className="col-md-12 col-sm-12"
                          style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
@@ -455,7 +371,7 @@ function ProductosPrecios2({dataList = [], onChangeList, consult,mostrarRangos,i
                             borderColor: "gray",
                             minWidth: "230px",
                             textAlign: "right"
-                        }}> ${parseFloat(dataList.reduce((total, arg) => total + parseFloat(arg.importe), 0) + dataList.filter(c => ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) - dataList.filter(c => ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
+                        }}> ${parseFloat(dataList.reduce((total, arg) => total + parseFloat(arg.m_cImporte), 0) + dataList.filter(c => ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) - dataList.filter(c => ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
                     </div>
                 </div>
             </div>
@@ -463,6 +379,9 @@ function ProductosPrecios2({dataList = [], onChangeList, consult,mostrarRangos,i
         </div>
     );
 }
+
+/** Borrar si ya lleva mucho comentado 16/10/2021*/
+/*
 
 class ProductosPrecios extends Component {
     constructor(props) {
@@ -537,12 +456,12 @@ class ProductosPrecios extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        /*const {customConceptos, listadoConceptosAlternativos} = this.props
+        /!*const {customConceptos, listadoConceptosAlternativos} = this.props
         if (listadoConceptosAlternativos != prevProps.listadoConceptosAlternativos){
             if (customConceptos){
                 this.setState({ conceptos: listadoConceptosAlternativos })
             }
-        }*/
+        }*!/
 
     }
 
@@ -634,11 +553,11 @@ class ProductosPrecios extends Component {
                                         this.setState({
                                             concepto: newValue,
                                             nombreConcepto: newValue.m_sDescripcion,
-                                            /*importe: newValue.m_cImporte,
+                                            /!*importe: newValue.m_cImporte,
                                             importeRet: newValue.m_cImporteRetiene,
                                             retiene: newValue.m_nIdImpuestoRetiene,
                                             traslada: newValue.m_nIdImpuestoTraslada,
-                                            importeIVA: newValue.m_cImporteIva*/
+                                            importeIVA: newValue.m_cImporteIva*!/
                                         })
                                     }}
                                     id="concepto"
@@ -865,14 +784,15 @@ class ProductosPrecios extends Component {
         );
     }
 }
+*/
 
-ProductosPrecios.propTypes = {
+/*ProductosPrecios.propTypes = {
 
-};
+};*/
 
 // export default ProductosPrecios;
-export default ProductosPrecios2;
 
+/*
 function DefaultColumnFilter({
     column: { filterValue, preFilteredRows, setFilter },
 }) {
@@ -900,9 +820,9 @@ function DefaultColumnFilter({
             </span>
         </div>
     );
-}
+}*/
 
-
+/*
 function TableConceptos({ columns, data, select, handleSelectCP }) {
     const defaultColumn = React.useMemo(
         () => ({
@@ -982,4 +902,4 @@ function TableConceptos({ columns, data, select, handleSelectCP }) {
             </table>
         </div>
     );
-}
+}*/
