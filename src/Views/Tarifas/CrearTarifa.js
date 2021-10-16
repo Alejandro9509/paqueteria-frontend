@@ -434,7 +434,7 @@ class CrearTarifa extends Component {
 
     render() {
         const { disabled, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, todosConceptos,
-            dataProductosTemp,dataProductosSeleccionados,dataDestinosTemp,dataDestinosSeleccionados } = this.state
+            dataProductosTemp,dataProductosSeleccionados,dataDestinosTemp,dataDestinosSeleccionados, porRegion, porPesoOVolumen } = this.state
         let { consult, edit } = this.props
 
         return (
@@ -502,7 +502,7 @@ class CrearTarifa extends Component {
                                         </div>
                                         <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <label className="input select" style={{ width: "100%" }}>
-                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                <FormControl fullWidth variant="outlined" margin="dense" required>
                                                     <InputLabel id="origenLabel">Origen</InputLabel>
                                                     <Select
                                                         native
@@ -511,8 +511,6 @@ class CrearTarifa extends Component {
                                                         disabled={this.props.consult}
                                                         labelId="origenLabel"
                                                         className="form-control"
-                                                        required
-
                                                         value={this.state.origen}
                                                         onChange={this.handleChange}
                                                         name="origen"
@@ -535,9 +533,10 @@ class CrearTarifa extends Component {
                                                 </FormControl>
                                             </label>
                                         </div>
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                        {!porRegion &&
+                                            <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <label className="input select" style={{ width: "100%" }}>
-                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                <FormControl fullWidth variant="outlined" margin="dense" required={!porRegion}>
                                                     <InputLabel id="destinoLabel">Destino</InputLabel>
                                                     <Select
                                                         native
@@ -546,8 +545,6 @@ class CrearTarifa extends Component {
                                                         disabled={this.props.consult}
                                                         labelId="destinoLabel"
                                                         className="form-control"
-                                                        required
-
                                                         value={this.state.destino}
                                                         onChange={this.handleChange}
                                                         name="destino"
@@ -570,6 +567,8 @@ class CrearTarifa extends Component {
                                                 </FormControl>
                                             </label>
                                         </div>
+                                        }
+
 
                                         <div className="col-md-4 col-sm-4" style={{ padding: "5px" }}>
                                             <label className="checkbox">
@@ -610,9 +609,8 @@ class CrearTarifa extends Component {
                                             </label>
                                         </div>
 
-                                        {/*{this.state.porRegion ?
+                                        {porPesoOVolumen &&
                                             <div>
-
                                                 <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                                     <label className="input select" style={{ width: "100%" }}>
                                                         <FormControl fullWidth variant="outlined" margin="dense">
@@ -704,40 +702,46 @@ class CrearTarifa extends Component {
                                                         />
                                                     </div>
                                                 </div>
-                                                <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
 
-                                                    <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
-                                                            onChange={this.handleChange}
-                                                            className="form-control"
-                                                            type="number"
-                                                            required={this.state.porPesoOVolumen}
-                                                            label="Flete Minimo"
-                                                            step="1"
-                                                                   disabled={this.props.consult}
-
-                                                                   value={this.state.precioFlete}
-                                                            name="precioFlete"
-                                                        />
-                                                    </div>
+                                            </div>
+                                        }
+                                        {(porPesoOVolumen || porRegion) &&
+                                        <div>
+                                            <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
+                                                <div className="input">
+                                                    <TextField variant="outlined" margin="dense"
+                                                               onChange={this.handleChange}
+                                                               className="form-control"
+                                                               type="number"
+                                                               required={porPesoOVolumen || porRegion}
+                                                               label="Flete Minimo"
+                                                               step="1"
+                                                               disabled={this.props.consult}
+                                                               value={this.state.precioFlete}
+                                                               name="precioFlete"
+                                                    />
                                                 </div>
-                                                <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
+                                            </div>
+                                            <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
 
-                                                    <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
-                                                            onChange={this.handleChange}
-                                                            className="form-control"
-                                                            type="number"
-                                                            label="Precio Minimo"
-                                                            required={this.state.porPesoOVolumen}
-                                                                   disabled={this.props.consult}
-
-                                                                   step="2"
-                                                            value={this.state.precioMinimo}
-                                                            name="precioMinimo"
-                                                        />
-                                                    </div>
+                                                <div className="input">
+                                                    <TextField variant="outlined" margin="dense"
+                                                               onChange={this.handleChange}
+                                                               className="form-control"
+                                                               type="number"
+                                                               label="Precio Minimo"
+                                                               required={porPesoOVolumen || porRegion}
+                                                               disabled={this.props.consult}
+                                                               step="2"
+                                                               value={this.state.precioMinimo}
+                                                               name="precioMinimo"
+                                                    />
                                                 </div>
+                                            </div>
+                                        </div>
+                                        }
+                                        {porPesoOVolumen &&
+                                            <div>
 
                                                 <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
                                                     <label className="input select" style={{ width: "100%" }}>
@@ -801,8 +805,8 @@ class CrearTarifa extends Component {
                                                         </FormControl>
                                                     </label>
                                                 </div>
-                                            </div> : <div></div>
-                                        }*/}
+                                            </div>
+                                        }
 
                                         <div className="col-md-12 col-sm-12" style={{ padding: "5px", display: "inline-flex" }}>
                                             <div className="form-footer " className="col-md-12" style={{ padding: "10px" }}>
