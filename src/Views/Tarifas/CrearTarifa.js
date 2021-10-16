@@ -956,9 +956,25 @@ class CrearTarifa extends Component {
                                         </TabPanel>
                                         <TabPanel value={this.state.tab} index={1}>
                                             {/*el filtrado por agregadoDesde está demas*/}
-                                            <ProductosPrecios consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosManiobra} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoManiobra} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
-
-                                            </ProductosPrecios>
+                                            {/*<ProductosPrecios consult={consult} edit={this.props.edit}
+                                                              select={this.props.select}
+                                                              conceptosAdicionales={conceptosManiobra}
+                                                              addConcepto={this.addConcepto}
+                                                              removeConcepto={this.removeConceptoManiobra}
+                                                              ivaRetiene={this.state.ivaRetiene}
+                                                              ivaTraslada={this.state.ivaTraslada}/>*/}
+                                            <ProductosPrecios
+                                                dataList={dataProductosSeleccionados}
+                                                onChangeList={this.actualizarProductos}
+                                                mostrarRangos={false}
+                                                consult={consult}
+                                                ivaRetiene={this.state.ivaRetiene}
+                                                ivaTraslada={this.state.ivaTraslada}
+                                                  /*select={this.props.select}
+                                                  conceptosAdicionales={conceptosManiobra}
+                                                  addConcepto={this.addConcepto}
+                                                  removeConcepto={this.removeConceptoManiobra}*/
+                                                  />
                                         </TabPanel>
 
                                     </div>
