@@ -2810,7 +2810,7 @@ function Embarque(props) {
     }
 
     async function getAllEmbarque() {
-        obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then((respuesta) => {
+        obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
             setData(respuesta.data);
         });
     }
