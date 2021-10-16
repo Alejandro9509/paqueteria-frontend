@@ -70,7 +70,7 @@ function obtenerRecoleccionId(id) {
     return result
 }
 
-function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioRecoleccion) {
+function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioRecoleccion,Origen,Destino) {
     if (folioRecoleccion == ''){
         folioRecoleccion = 0
     }
@@ -84,7 +84,11 @@ function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, est
         "/" +
         estatusListado +
         "/" +
-        folioRecoleccion;
+        folioRecoleccion+
+        "/" +
+        Origen+
+        "/" +
+        Destino;
     let result;
     console.log('url filtro: ', url)
     trackPromise(

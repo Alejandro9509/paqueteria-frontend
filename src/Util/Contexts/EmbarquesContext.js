@@ -44,7 +44,7 @@ function obtenerEmbarques(){
     return result
 }
 
-function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioEmbarque) {
+function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioEmbarque,Origen,Destino) {
     if (folioEmbarque == ''){
         folioEmbarque = 0
     }
@@ -58,7 +58,11 @@ function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estat
         "/" +
         estatusListado +
         "/" +
-        folioEmbarque;
+        folioEmbarque+
+        "/" +
+        Origen+
+        "/" +
+        Destino;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
