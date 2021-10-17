@@ -954,6 +954,7 @@ class CrearTarifa extends Component {
                                         <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
                                             <Tab label="Destinos" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
                                             <Tab label="Productos" {...this.a11yProps(1)}/>
+                                            <Tab label="Conceptos de Facturación" {...this.a11yProps(2)}/>
 
                                         </Tabs>
 
@@ -975,6 +976,19 @@ class CrearTarifa extends Component {
                                                 ivaRetiene={this.state.ivaRetiene}
                                                 ivaTraslada={this.state.ivaTraslada}
                                                   />
+                                        </TabPanel>
+                                        <TabPanel value={this.state.tab} index={2}>
+                                            <ConceptosAdicionales consult={consult} edit={this.props.edit}
+                                                                  select={this.props.select}
+                                                                  conceptosAdicionales={conceptosAdicionales}
+                                                                  addConcepto={this.addConcepto}
+                                                                  removeConcepto={this.removeConceptoAdicional}
+                                                                  ivaRetiene={this.state.ivaRetiene}
+                                                                  ivaTraslada={this.state.ivaTraslada}
+                                                                  mostrarRangos={false}
+                                                                  porRegion={true}
+                                            />
+
                                         </TabPanel>
 
                                     </div>

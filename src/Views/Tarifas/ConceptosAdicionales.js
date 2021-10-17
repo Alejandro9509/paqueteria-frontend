@@ -285,22 +285,26 @@ class ConceptosAdicionales extends Component {
                                 />
                             </div>
                         </div>
-                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
+                        {!this.props.porRegion &&
+                            <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
 
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
-                                    onChange={this.handleChange}
-                                    className="form-control"
-                                    type="number"
-                                    label="Importe"
-                                    style={{ textAlign: "right" }}
-                                    step="1"
-                                    min="0"
-                                    value={this.state.importe}
-                                    name="importe"
+                                           onChange={this.handleChange}
+                                           className="form-control"
+                                           type="number"
+                                           label="Importe"
+                                           style={{ textAlign: "right" }}
+                                           step="1"
+                                           min="0"
+                                           value={this.state.importe}
+                                           name="importe"
                                 />
                             </div>
                         </div>
+                        }
+
+
                         <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
                             <label className="input select" style={{ width: "100%" }}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
@@ -332,23 +336,25 @@ class ConceptosAdicionales extends Component {
                                 </FormControl>
                             </label>
                         </div>
-                        <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
+                        {!this.props.porRegion &&
+                            <div className="col-md-1 col-sm-6" style={{ padding: "5px" }}>
 
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
-                                    onChange={this.handleChange}
-                                    className="form-control"
-                                    type="number"
-                                    style={{ textAlign: "right" }}
-                                    disabled
-                                    label="Importe IVA"
-                                    step="1"
-                                    min="0"
-                                    value={this.state.importeIVA}
-                                    name="importeIVA"
+                                           onChange={this.handleChange}
+                                           className="form-control"
+                                           type="number"
+                                           style={{ textAlign: "right" }}
+                                           disabled
+                                           label="Importe IVA"
+                                           step="1"
+                                           min="0"
+                                           value={this.state.importeIVA}
+                                           name="importeIVA"
                                 />
                             </div>
                         </div>
+                        }
                         <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
                             <label className="input select" style={{ width: "100%" }}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
@@ -380,24 +386,25 @@ class ConceptosAdicionales extends Component {
                                 </FormControl>
                             </label>
                         </div>
-
+                        {!this.props.porRegion &&
                         <div className="col-md-2 col-sm-6" style={{ padding: "5px" }}>
 
                             <div className="input">
                                 <TextField variant="outlined" margin="dense"
-                                    onChange={this.handleChange}
-                                    className="form-control"
-                                    type="number"
-                                    style={{ textAlign: "right" }}
-                                    disabled
-                                    label="Importe Ret"
-                                    step="1"
-                                    min="0"
-                                    value={this.state.importeRet}
-                                    name="importeRet"
+                                           onChange={this.handleChange}
+                                           className="form-control"
+                                           type="number"
+                                           style={{ textAlign: "right" }}
+                                           disabled
+                                           label="Importe Ret"
+                                           step="1"
+                                           min="0"
+                                           value={this.state.importeRet}
+                                           name="importeRet"
                                 />
                             </div>
                         </div>
+                        }
                         <div className="col-md-1 col-sm-6" style={{ padding: "0px" }}>
                             <IconButton onClick={this.onSubmit} style={{ padding: "0px" }}>
                                 <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
@@ -415,23 +422,24 @@ class ConceptosAdicionales extends Component {
                                     <th style={{ textAlign: "left" }}> Concepto</th>
                                     {this.props.mostrarRangos ? <th style={{ textAlign: "left" }}> Min</th> : <th></th>}
                                     {this.props.mostrarRangos ? <th style={{ textAlign: "left" }}> Max</th> : <th></th>}
-                                    <th style={{ textAlign: "left" }}> Importe</th>
+                                    {!this.props.porRegion && <th style={{ textAlign: "left" }}> Importe</th>}
                                     <th style={{ textAlign: "left" }}> Traslada</th>
-                                    <th style={{ textAlign: "left" }}> Importe IVA</th>
+                                    {!this.props.porRegion && <th style={{ textAlign: "left" }}> Importe IVA</th>}
                                     <th style={{ textAlign: "left" }}> Retiene</th>
-                                    <th style={{ textAlign: "left" }}> Importe Ret</th>
+                                    {!this.props.porRegion && <th style={{ textAlign: "left" }}> Importe Ret</th>}
                                 </tr>
                                 {
                                     this.props.conceptosAdicionales.map((c, index) => (
-                                        <tr onClick={(e) => this.handleRowClick(e, index, c)}>
+                                        <tr onDoubleClick={(e) => this.handleRowClick(e, index, c)}>
                                             <td style={{ textAlign: "left" }}>{c.nombreConcepto}</td>
                                             {this.props.mostrarRangos ? <td style={{ textAlign: "left" }}>{c.rangoMinimo} Kg</td> : <td></td>}
                                             {this.props.mostrarRangos ? <td style={{ textAlign: "left" }}>{c.rangoMaximo} Kg</td> : <td></td>}
-                                            <td style={{ textAlign: "left" }}>${parseFloat(c.importe).toFixed(2)}</td>
+                                            {!this.props.porRegion && <td style={{ textAlign: "left" }}>${parseFloat(c.importe).toFixed(2)}</td>}
                                             <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)).m_sImpuesto : "No Aplica")}</td>
-                                            <td style={{ textAlign: "left" }}>${parseFloat(c.importeIVA).toFixed(2)}</td>
+                                            {!this.props.porRegion && <td style={{ textAlign: "left" }}>${parseFloat(c.importeIVA).toFixed(2)}</td>}
                                             <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)).m_sImpuesto : "No Aplica")}</td>
-                                            <td style={{ textAlign: "left" }}>${parseFloat(c.importeRet).toFixed(2)}</td>
+                                            {!this.props.porRegion && <td style={{ textAlign: "left" }}>${parseFloat(c.importeRet).toFixed(2)}</td>}
+
                                             {
                                                 !this.props.consult &&
                                                 <td>
@@ -451,7 +459,8 @@ class ConceptosAdicionales extends Component {
                         }
 
                     </div>
-                    <div className="col-md-12 col-sm-12" style={{ padding: "5px", backgroundColor: "white", backgroundClip: "content-box" }}>
+                    {!this.props.porRegion &&
+                        <div className="col-md-12 col-sm-12" style={{ padding: "5px", backgroundColor: "white", backgroundClip: "content-box" }}>
 
                         <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
                             <div style={{ margin: "5px", padding: "5px" }}>Subtotal</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0)).toFixed(2)}</div>
@@ -464,6 +473,8 @@ class ConceptosAdicionales extends Component {
                             <div style={{ margin: "5px", padding: "5px" }}>Total</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) - this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
                         </div>
                     </div>
+                    }
+
                 </div>
 
             </div>
