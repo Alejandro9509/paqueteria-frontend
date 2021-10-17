@@ -128,7 +128,7 @@ export default function DestinosTarifa({destinos = [], destinosSeleccionados = [
                                     inputProps={{ 'aria-labelledby': labelId }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={value.m_sDescripcion} />
+                            <ListItemText id={labelId} primary={value.m_sCiudad} />
                         </ListItem>
                     );
                 })}

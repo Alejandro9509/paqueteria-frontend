@@ -15,6 +15,7 @@ import { obtenerCiudades } from '../../Util/Contexts/CiudadesContext';
 import ProductosTarifa from "./ProductosTarifa";
 import DestinosTarifa from "./DestinosTarifa";
 import ProductosPrecios from "./ProductosPrecios";
+import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 
 const headers = {
     'Content-Type': 'application/json',
@@ -68,9 +69,7 @@ class CrearTarifa extends Component {
             dataProductosTemp: [],
             //Aqui pues el nombre de la variable ya es muy explicita
             dataProductosSeleccionados: [],
-            //Aqui se guardan todos los productos y no se modifican
-            dataDestinos: [],
-            //Aqui se guardan todos los productos que no estan seleccionados
+            //Aqui se guardan todos los destinos que no estan seleccionados
             dataDestinosTemp: [],
             //Aqui pues el nombre de la variable ya es muy explicita
             dataDestinosSeleccionados: []
@@ -311,7 +310,21 @@ class CrearTarifa extends Component {
 
     getAllCiudades() {
         obtenerCiudades().then((respuesta) => {
-            this.setState({ ciudades: respuesta.data });
+            this.setState({
+                ciudades: respuesta.data,
+                dataDestinosTemp: respuesta.data,
+            });
+            if (this.props.edit) {
+                const { select } = this.props
+                this.state.dataDestinosTemp = respuesta.data
+                select.m_arrArDestinos.forEach((p) => {
+                    this.state.dataDestinosTemp = this.state.dataDestinosTemp.filter((f) => f.m_nIdCiudad != p.m_nIdDestino)
+                })
+                this.setState({
+                    dataDestinosSeleccionados: select.m_arrArDestinos || [],
+                    dataDestinosTemp: this.state.dataDestinosTemp
+                })
+            }
         });
     }
 
@@ -376,8 +389,7 @@ class CrearTarifa extends Component {
     }
 
     getAllProductos(){
-        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerProductos().then(respuesta => {
             this.setState({ dataProductos: respuesta.data, dataProductosTemp: respuesta.data, agregar: "Agregar" })
             if (this.props.edit) {
                 const { select } = this.props
@@ -955,14 +967,6 @@ class CrearTarifa extends Component {
                                             />
                                         </TabPanel>
                                         <TabPanel value={this.state.tab} index={1}>
-                                            {/*el filtrado por agregadoDesde está demas*/}
-                                            {/*<ProductosPrecios consult={consult} edit={this.props.edit}
-                                                              select={this.props.select}
-                                                              conceptosAdicionales={conceptosManiobra}
-                                                              addConcepto={this.addConcepto}
-                                                              removeConcepto={this.removeConceptoManiobra}
-                                                              ivaRetiene={this.state.ivaRetiene}
-                                                              ivaTraslada={this.state.ivaTraslada}/>*/}
                                             <ProductosPrecios
                                                 dataList={dataProductosSeleccionados}
                                                 onChangeList={this.actualizarProductos}
@@ -970,10 +974,6 @@ class CrearTarifa extends Component {
                                                 consult={consult}
                                                 ivaRetiene={this.state.ivaRetiene}
                                                 ivaTraslada={this.state.ivaTraslada}
-                                                  /*select={this.props.select}
-                                                  conceptosAdicionales={conceptosManiobra}
-                                                  addConcepto={this.addConcepto}
-                                                  removeConcepto={this.removeConceptoManiobra}*/
                                                   />
                                         </TabPanel>
 
