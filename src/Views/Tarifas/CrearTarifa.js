@@ -318,7 +318,7 @@ class CrearTarifa extends Component {
                 const { select } = this.props
                 this.state.dataDestinosTemp = respuesta.data
                 select.m_arrArDestinos.forEach((p) => {
-                    this.state.dataDestinosTemp = this.state.dataDestinosTemp.filter((f) => f.m_nIdCiudad != p.m_nIdDestino)
+                    this.state.dataDestinosTemp = this.state.dataDestinosTemp.filter((f) => f.m_nIdCiudad != p.m_nIdCiudad)
                 })
                 this.setState({
                     dataDestinosSeleccionados: select.m_arrArDestinos || [],
@@ -589,7 +589,7 @@ class CrearTarifa extends Component {
                                                         checked={this.state.porPesoOVolumen}
                                                         onChange={this.handleChangeTipoTarifa}
                                                         name="porPesoOVolumen"
-                                                       disabled={this.props.consult}
+                                                       disabled={this.props.consult  || this.props.select.m_bPorRegion}
                                                 />
                                                 <i />
                                             </label>
@@ -602,7 +602,7 @@ class CrearTarifa extends Component {
                                                     checked={this.state.porRangos}
                                                     onChange={this.handleChangeTipoTarifa}
                                                     name="porRangos"
-                                                       disabled={this.props.consult}
+                                                       disabled={this.props.consult || this.props.select.m_bPorRegion}
                                                 />
                                                 <i />
                                             </label>
@@ -615,7 +615,7 @@ class CrearTarifa extends Component {
                                                        checked={this.state.porRegion}
                                                        onChange={this.handleChangeTipoTarifa}
                                                        name="porRegion"
-                                                       disabled={this.props.consult}
+                                                       disabled={this.props.consult || this.props.select.m_bPorRegion}
                                                 />
                                                 <i />
                                             </label>

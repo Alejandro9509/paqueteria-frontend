@@ -342,7 +342,7 @@ export default function ProductosPrecios({dataList = [], onChangeList, consult,i
                     <div className="col-md-12 col-sm-12"
                          style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
 
-                        <div style={{
+                        {/*<div style={{
                             margin: "4px",
                             padding: "4px",
                             marginRight: "15px",
@@ -356,7 +356,7 @@ export default function ProductosPrecios({dataList = [], onChangeList, consult,i
                             <div>{`${state.impuestos.length !== 0 ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : "" : ""} `} ${parseFloat(dataList.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br/>
                             </div>))} {ivaRetiene.map(t => (
                             <div>{`${state.impuestos.length !== 0 ? `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : ""}` : ""} `} ${parseFloat(dataList.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br/>
-                            </div>))} </div>
+                            </div>))} </div>*/}
                     </div>
                     <div className="col-md-12 col-sm-12"
                          style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>

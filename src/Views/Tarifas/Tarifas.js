@@ -220,6 +220,7 @@ class Tarifas extends Component {
             m_cPrecioM3: data.precioM3,
             m_bPorPesoVolumen: data.porPesoOVolumen,
             m_bPorRango: data.porRangos,
+            m_bPorRegion: data.porRegion,
             m_nFactorConversion: data.factorConversion,
             m_arrArCobros: data.tiposCobroSeleccionado.map(c => ({ m_nIdTipoCobro: c.m_nIdTipoCobro })),
             m_arrArServicios: data.tiposServicioSeleccionado.map(s => ({ m_nIdTipoServicio: s.m_nIdTipoServicio })),
@@ -378,7 +379,9 @@ class Tarifas extends Component {
                                         $('.nav-tabs li').eq(0).addClass('active');
                                         $('.tab-content div ').removeClass('in show');
                                         $('#Listado').addClass('in show');
-                                    }}></CrearTarifa>
+                                    }}
+                                                 listaCiudades={this.state.dataCiudades}
+                                    />
                                 }
 
                             </div>
