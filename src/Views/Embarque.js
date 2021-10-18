@@ -342,7 +342,7 @@ function Embarque(props) {
             }
         })
         if (target.name === "fechaInicial"){
-            obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -350,7 +350,7 @@ function Embarque(props) {
                 }
             })
         }else if (target.name === "fechaFinal"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerEmbarquesFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -359,7 +359,7 @@ function Embarque(props) {
             })
         }
         else if (target.name === "sucursalListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -368,7 +368,7 @@ function Embarque(props) {
             })
         }
         else if (target.name === "estatusListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio).then(respuesta => {
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -377,7 +377,7 @@ function Embarque(props) {
             })
         }
         else if (target.name === "OrigenListado"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -386,7 +386,7 @@ function Embarque(props) {
             })
         }
         else if (target.name === "DestinoListado"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -2790,8 +2790,7 @@ function Embarque(props) {
     }*/
 
     const getDataParaListado = () => {
-        getFechaInicial()
-        getFechaFinal()
+       
         getAllEmbarque();
         getAllSucursales();
         getAllEstatusEmbarque();
@@ -2810,9 +2809,37 @@ function Embarque(props) {
     }
 
     async function getAllEmbarque() {
-        obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
-            setData(respuesta.data);
-        });
+        obtenerFechaInicio().then((respuestaUno) => { 
+
+
+            
+            obtenerFechaFinal().then((respuestaDos) => { 
+
+                console.log(respuestaUno.data[0].Fecha)
+                console.log(respuestaDos.data[0].Fecha)
+
+
+                setDataFechaInicial(respuestaUno.data)
+setDataFechaFinal(respuestaDos.data)
+                setFiltros(filtros => {
+                    return {
+                        ...filtros,
+                       fechaInicial: respuestaUno.data[0].Fecha,
+                       fechaFinal: respuestaDos.data[0].Fecha
+
+                    }
+                })
+
+
+
+
+                obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                    setData(respuesta.data);
+        })
+      
+            })
+      
+    })
     }
 
     /*function getFormatosImpresion() {
