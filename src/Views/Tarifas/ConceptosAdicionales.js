@@ -309,22 +309,24 @@ class ConceptosAdicionales extends Component {
                                     />
                                 </div>
                             </Grid>
-                            <Grid item xs={2}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
-                                               onChange={this.handleChange}
-                                               className="form-control"
-                                               type="number"
-                                               label="Importe"
-                                               style={{ textAlign: "right" }}
-                                               step="1"
-                                               min="0"
-                                               value={this.state.importe}
-                                               name="importe"
-                                    />
-                                </div>
-                            </Grid>
-                            <Grid item xs={1}>
+                            {!this.props.porRegion &&
+                                <Grid item xs={2}>
+                                    <div className="input">
+                                        <TextField variant="outlined" margin="dense"
+                                                   onChange={this.handleChange}
+                                                   className="form-control"
+                                                   type="number"
+                                                   label="Importe"
+                                                   style={{textAlign: "right"}}
+                                                   step="1"
+                                                   min="0"
+                                                   value={this.state.importe}
+                                                   name="importe"
+                                        />
+                                    </div>
+                                </Grid>
+                            }
+                            <Grid item xs={this.props.porRegion ? 2:1}>
                                 <label className="input select" style={{ width: "100%" }}>
                                     <FormControl fullWidth variant="outlined" margin="dense">
                                         <InputLabel id="trasladaLabel">Traslada</InputLabel>
@@ -355,13 +357,14 @@ class ConceptosAdicionales extends Component {
                                     </FormControl>
                                 </label>
                             </Grid>
-                            <Grid item xs={2}>
+                            {!this.props.porRegion &&
+                                <Grid item xs={2}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
                                                onChange={this.handleChange}
                                                className="form-control"
                                                type="number"
-                                               style={{ textAlign: "right" }}
+                                               style={{textAlign: "right"}}
                                                disabled
                                                label="Importe IVA"
                                                step="1"
@@ -371,7 +374,8 @@ class ConceptosAdicionales extends Component {
                                     />
                                 </div>
                             </Grid>
-                            <Grid item xs={1}>
+                            }
+                            <Grid item xs={this.props.porRegion ? 2:1}>
                                 <label className="input select" style={{ width: "100%" }}>
                                     <FormControl fullWidth variant="outlined" margin="dense">
                                         <InputLabel id="retieneLabel">Retiene</InputLabel>
@@ -402,13 +406,14 @@ class ConceptosAdicionales extends Component {
                                     </FormControl>
                                 </label>
                             </Grid>
-                            <Grid item xs={1}>
+                            {!this.props.porRegion &&
+                                <Grid item xs={1}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
                                                onChange={this.handleChange}
                                                className="form-control"
                                                type="number"
-                                               style={{ textAlign: "right" }}
+                                               style={{textAlign: "right"}}
                                                disabled
                                                label="Importe Ret"
                                                step="1"
@@ -418,13 +423,15 @@ class ConceptosAdicionales extends Component {
                                     />
                                 </div>
                             </Grid>
-                            <Grid item xs={2}>
+                            }
+                            {!this.props.porRegion &&
+                                <Grid item xs={2}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
                                                onChange={this.handleChange}
                                                className="form-control"
                                                type="number"
-                                               style={{ textAlign: "right" }}
+                                               style={{textAlign: "right"}}
                                                disabled={!this.props.mostrarDescuento}
                                                label="Porcentaje Descuento"
                                                step="1"
@@ -436,6 +443,7 @@ class ConceptosAdicionales extends Component {
                                     />
                                 </div>
                             </Grid>
+                            }
                             <Grid item xs={1}>
                                 <IconButton onClick={this.onSubmit} style={{ padding: "0px" }}>
                                     <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
