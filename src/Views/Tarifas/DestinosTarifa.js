@@ -118,7 +118,7 @@ export default function DestinosTarifa({destinos = [], destinosSeleccionados = [
                 {items.map((value) => {
                     const labelId = `transfer-list-all-item-${value}-label`;
                     return (
-                        <ListItem key={value.m_nId} role="listitem" button onClick={handleToggle(value)} disabled={consult}>
+                        <ListItem key={value.m_nIdCiudad} role="listitem" button onClick={handleToggle(value)} disabled={consult}>
                             <ListItemIcon>
                                 <Checkbox
                                     checked={checked.indexOf(value) !== -1}
