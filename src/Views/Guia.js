@@ -1080,8 +1080,7 @@ function Guia(props) {
             window.location.replace("login");
             return;
         }
-        getFechaFinal()
-        getFechaInicial()
+       
         getAllCiudadesFiltro()
         getAllData()
         getAllDataSucursal()
@@ -1221,10 +1220,42 @@ function Guia(props) {
         alert("Error: " + errorMessage);
     }
 
+    
+    
+
+    
     async function getAllData() {
-        obtenerGuia().then(respuesta => {
-            setData(respuesta.data)
-        });
+        obtenerFechaInicio().then((respuestaUno) => { 
+
+
+            
+            obtenerFechaFinal().then((respuestaDos) => { 
+
+                console.log(respuestaUno.data[0].Fecha)
+                console.log(respuestaDos.data[0].Fecha)
+
+
+                setDataFechaInicial(respuestaUno.data)
+setDataFechaFinal(respuestaDos.data)
+                setFiltros(filtros => {
+                    return {
+                        ...filtros,
+                       fechaInicial: respuestaUno.data[0].Fecha,
+                       fechaFinal: respuestaDos.data[0].Fecha
+
+                    }
+                })
+
+
+
+
+                obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                    setData(respuesta.data);
+        })
+      
+            })
+      
+    })
     }
     async function getAllCiudadesFiltro() {
         obtenerCiudades().then((respuesta) => {

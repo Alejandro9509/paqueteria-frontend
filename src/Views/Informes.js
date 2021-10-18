@@ -22,6 +22,8 @@ import {
     StepLabel,
     Stepper, Tooltip,
 } from "@material-ui/core";
+import RestartAltIcon from '@material-ui/icons/Refresh';
+import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 
 
 import DataTable from "react-data-table-component";
@@ -111,7 +113,9 @@ function Informes({history}) {
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
     const [dataViajes, setDataViajes] = React.useState([]);
-
+    const [dataCiudadF, setDataCiudadF] = React.useState([]);
+    const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
+    const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
     function getAllDataRutas() {
         obtenerRutas().then((respuesta) => {
             setDataRutas(respuesta.data);
@@ -396,7 +400,6 @@ function Informes({history}) {
         sePuedeCancelar: false,
         Informes: [],
         indexCubicar: 0,
-        folioInformeListado: ''
     });
 
     const handleAceptar = (e) => {
@@ -961,6 +964,12 @@ function Informes({history}) {
             setDataSucursal(respuesta.data);
         });
     }
+    async function getAllCiudadesFiltro() {
+        obtenerCiudades().then((respuesta) => {
+            setDataCiudadF(respuesta.data);
+        });
+    }
+
 
     function getAllViajesOrigenDestino(origen, destino) {
         const url = `${API_BASE_URL}/Informes/GetViajes/` + origen + `/` + destino;
@@ -1128,12 +1137,52 @@ function Informes({history}) {
         getAllDataRutas();
     }, []);
 
-    function getAllData() {
-        obtenerInformes().then((respuesta) => {
-            respuesta.data.forEach((i) => i.remolqueCompleto = i.m_nIdentificador + " - " +  i.m_sRemolque1)
-            setData(respuesta.data);
-        });
+
+
+    
+    async function getAllData() {
+        obtenerFechaInicio().then((respuestaUno) => { 
+
+
+            
+            obtenerFechaFinal().then((respuestaDos) => { 
+
+                console.log(respuestaUno.data[0].Fecha)
+                console.log(respuestaDos.data[0].Fecha)
+
+
+                setDataFechaInicial(respuestaUno.data)
+setDataFechaFinal(respuestaDos.data)
+                setFiltros(filtros => {
+                    return {
+                        ...filtros,
+                       fechaInicial: respuestaUno.data[0].Fecha,
+                       fechaFinal: respuestaDos.data[0].Fecha
+
+                    }
+                })
+
+
+
+
+                obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folioInformeListado, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                    respuesta.data.forEach((i) => i.remolqueCompleto = i.m_nIdentificador + " - " +  i.m_sRemolque1)
+                     setData(respuesta.data);
+        })
+      
+            })
+      
+    })
     }
+
+
+
+    // function getAllData() {
+    //     obtenerInformes().then((respuesta) => {
+    //         respuesta.data.forEach((i) => i.remolqueCompleto = i.m_nIdentificador + " - " +  i.m_sRemolque1)
+    //         setData(respuesta.data);
+    //     });
+    // }
 
     function openSection(index) {
         // closeSeccions();
@@ -1176,6 +1225,92 @@ function Informes({history}) {
                 folioInformeListado: event.target.value,
             })
             obtenerInformeFiltro(value).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+    }
+
+    const [filtros, setFiltros] = useState({
+        fechaInicial: 0,
+        fechaFinal: 0,
+        estatusListado:0,
+        sucursalListado: 0,
+        folioInformeListado: '',
+        OrigenListado:0,
+        DestinoListado:0,
+    })
+
+    const resetFiltros = () => {
+        setFiltros({
+            fechaInicial: 0,
+            fechaFinal: 0,
+            estatusListado:0,
+            sucursalListado: 0,
+            folioInformeListado: '',
+            OrigenListado:0,
+            DestinoListado:0,
+        })
+    }
+
+    const handleChangeFiltros = (event) => {
+        event.preventDefault()
+        const {target} = event
+        setFiltros(filtros => {
+            return {
+                ...filtros,
+                [target.name]: target.value
+            }
+        })
+        if (target.name === "fechaInicial"){
+            obtenerInformeFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folioInformeListado,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }else if (target.name === "fechaFinal"){
+            obtenerInformeFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folioInformeListado,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "sucursalListado"){
+            obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folioInformeListado,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "estatusListado"){
+            obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folioInformeListado,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "OrigenListado"){
+            obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folioInformeListado,target.value,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "DestinoListado"){
+            obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folioInformeListado,filtros.OrigenListado,target.value).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -1457,22 +1592,167 @@ function Informes({history}) {
                             <div className="widget-wrap">
                                 <div className="widget-content">
 
-                                    <div className="row " style={{display: "flex"}}>
-                                        <div className="col-sm-6 col-md-3 unit" style={{paddingLeft: "0px"}}>
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <Grid container spacing={2} alignItems="center">
 
-                                            <div className="input">
+                                        <Grid item xs={2}>
                                                 <TextField variant="outlined" margin="dense"
-                                                           onChange={handleChange}
+                                                           onChange={handleChangeFiltros}
                                                            onKeyDown={handleFolioInformeFiltro}
                                                            className="form-control"
                                                            type="text"
-
                                                            label="Folio Informe"
-                                                           placeholder={state.folioInformeListado}
                                                            id="folioInformeListado"
                                                            name="folioInformeListado"
+                                                           value={filtros.folioInformeListado}
                                                 />
-                                            </div>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <TextField
+                                                            autoFocus
+                                                            type="date"
+                                                            margin="dense"
+                                                            label="Fecha Inicial"
+                                                            variant="outlined"
+                                                            className="form-control"
+                                                            InputLabelProps={{shrink: true,}}
+                                                            value={filtros.fechaInicial}
+                                                            onChange={handleChangeFiltros}
+                                                            id="fechaInicial"
+                                                            name="fechaInicial"
+                                                        />
+                                                    </FormControl>
+                                                </Grid>   
+                                            <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <TextField variant="outlined" margin="dense"
+                                                                   type="date"
+                                                                   className="form-control"
+                                                                   label="Fecha Final"
+                                                                   InputLabelProps={{
+                                                                       shrink: true,
+                                                                   }}
+                                                                   value={filtros.fechaFinal}
+                                                                   onChange={handleChangeFiltros}
+                                                                   id="fechaFinal"
+                                                                   name="fechaFinal"
+
+                                                        />
+                                                    </FormControl>
+
+                                                </Grid>
+                                            <Grid item xs={2}>
+                                                <FormControl className="input select" fullWidth variant="outlined">
+                                                    <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
+                                                    <Select
+                                                        labelId="sucursalListadoLabel"
+                                                        label="Sucursal"
+                                                        className="form-control"
+                                                        required
+                                                        value={filtros.sucursalListado}
+                                                        onChange={handleChangeFiltros}
+                                                        id="sucursalListado"
+                                                        name="sucursalListado"
+                                                    >
+                                                        <option value="0">Todas</option>
+                                                        {dataSucursal.map((sucursal) => (
+                                                            <option
+                                                                key={sucursal.m_nIdSucursal}
+                                                                value={sucursal.m_nIdSucursal}
+                                                            >
+                                                                {sucursal.m_sSucursal}
+                                                            </option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <FormControl className="input select" fullWidth variant="outlined">
+                                                    <InputLabel id="idEstatusLabel">Estatus</InputLabel>
+                                                    <Select
+                                                        labelId="estatusListadoLabel"
+                                                        className="form-control"
+                                                        required
+                                                        label="Estatus"
+                                                        value={filtros.estatusListado}
+                                                        onChange={handleChangeFiltros}
+                                                        id="estatusListado"
+                                                        name="estatusListado"
+                                                    >
+                                                        <option value="0">Todos</option>
+                                                        {dataEstatusInformes.map((estatus) => (
+                                                            <option
+                                                                key={estatus.m_nIdEstatusInforme}
+                                                                value={estatus.m_nIdEstatusInforme}
+                                                            >
+                                                                {estatus.m_sEstatus}
+                                                            </option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <InputLabel id="OrigenListado">Origen</InputLabel>
+                                                        <Select
+                                                            labelId="OrigenListado"
+                                                            className="form-control"
+                                                            required
+                                                            label="Origen"
+                                                            value={filtros.OrigenListado}
+                                                            onChange={handleChangeFiltros}
+                                                            id="OrigenListado"
+                                                            name="OrigenListado"
+                                                        >
+                                                            <option value="0">Todos</option>
+                                                            {dataCiudadF.map((ciudad) => (
+                                                                <option
+                                                                    key={ciudad.m_nIdCiudad}
+                                                                    value={ciudad.m_nIdCiudad}
+                                                                >
+                                                                    {ciudad.m_sCiudad}
+                                                                </option>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <InputLabel id="DestinoListado">Destino</InputLabel>
+                                                        <Select
+                                                            labelId="DestinoListado"
+                                                            className="form-control"
+                                                            required
+                                                            label="Destino"
+                                                            value={filtros.DestinoListado}
+                                                            onChange={handleChangeFiltros}
+                                                            id="DestinoListado"
+                                                            name="DestinoListado"
+                                                        >
+                                                            <option value="0">Todos</option>
+                                                            {dataCiudadF.map((ciudad) => (
+                                                                <option
+                                                                    key={ciudad.m_nIdCiudad}
+                                                                    value={ciudad.m_nIdCiudad}
+                                                                >
+                                                                    {ciudad.m_sCiudad}
+                                                                </option>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                            <Grid item container xs={2}>
+                                                <IconButton aria-label="delete" onClick={() => {
+                                                    resetFiltros()
+                                                    getAllData()
+                                                }}>
+                                                    <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
+                                                    Limpiar filtros
+                                                </IconButton>
+                                            </Grid>
+                                            </Grid>
                                         </div>
                                     </div>
 

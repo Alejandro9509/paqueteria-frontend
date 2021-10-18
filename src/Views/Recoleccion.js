@@ -918,8 +918,7 @@ function Recoleccion() {
             return;
         }
 
-        getFechaInicial()
-        getFechaFinal()
+        
         getDataParaListado()
       
     }, []);
@@ -2283,11 +2282,38 @@ function Recoleccion() {
         },
     ]);
 
-    function getAllData() {
-        obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
-            setData(respuesta.data);
-        });
+    async function getAllData() {
+        obtenerFechaInicio().then((respuestaUno) => { 
+
+
+            
+            obtenerFechaFinal().then((respuestaDos) => { 
+
+                setDataFechaInicial(respuestaUno.data)
+setDataFechaFinal(respuestaDos.data)
+                setFiltros(filtros => {
+                    return {
+                        ...filtros,
+                       fechaInicial: respuestaUno.data[0].Fecha,
+                       fechaFinal: respuestaDos.data[0].Fecha
+
+                    }
+                })
+
+
+
+
+                obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                    setData(respuesta.data);
+        })
+      
+            })
+      
+    })
     }
+
+
+   
 
     function confirmarUbicacion(coordenadas, e) {
         handleAceptar(e, coordenadas)
