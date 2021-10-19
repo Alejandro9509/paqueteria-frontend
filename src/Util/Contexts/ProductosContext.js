@@ -70,6 +70,15 @@ function obtenerProductoById(id){
     return result
 }
 
+function obtenerProductos(){
+    const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 /*function obtenerCodigosPostalesPorCiudad(id){
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/${id}`;
     let result;
@@ -78,4 +87,4 @@ function obtenerProductoById(id){
     );
     return result
 }*/
-export {obtenerProductoById}
+export {obtenerProductoById,obtenerProductos}
