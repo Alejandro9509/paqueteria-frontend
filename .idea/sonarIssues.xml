@@ -8,6 +8,11 @@
             <set />
           </value>
         </entry>
+        <entry key="/GridCellEditorTextField">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$USER_HOME$/Desktop/honeywell-mobility-web-sdk-v1.20.00.0800/samples/BarcodeReaderDemo/BarcodeReaderDemo.html">
           <value>
             <set />
@@ -989,6 +994,41 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/src/assets/constants/index.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatTarifaModificarPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProGuiaCancelarPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProViajeAgregarPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProViajeSalidaAgregarPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/dummy.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatTarifaAgregarPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatTarifaCobroAgregarPQ.sql">
           <value>
             <set />
           </value>
