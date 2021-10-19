@@ -2303,7 +2303,7 @@ setDataFechaFinal(respuestaDos.data)
 
 
 
-                obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
                     setData(respuesta.data);
         })
       

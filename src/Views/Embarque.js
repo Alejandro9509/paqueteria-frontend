@@ -97,6 +97,7 @@ import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/
 import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
 import Paquetes from "./Paquetes/Paquetes";
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
+import ZonaOperativa from "./ZonasOperativas/ZonaOperativa";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -2568,7 +2569,7 @@ function Embarque(props) {
             ...state,
             entregaEnSucursal: !state.entregaEnSucursal,
             diferenteEntrega: !state.entregaEnSucursal && false,
-            entregaConCita: !state.entregaEnSucursal && false
+            entregaConCita: !state.entregaEnSucursal && false,
         });
     };
 
@@ -2820,7 +2821,7 @@ function Embarque(props) {
 
 
                 setDataFechaInicial(respuestaUno.data)
-setDataFechaFinal(respuestaDos.data)
+                setDataFechaFinal(respuestaDos.data)
                 setFiltros(filtros => {
                     return {
                         ...filtros,
@@ -2830,10 +2831,7 @@ setDataFechaFinal(respuestaDos.data)
                     }
                 })
 
-
-
-
-                obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
                     setData(respuesta.data);
         })
       
@@ -2959,7 +2957,7 @@ setDataFechaFinal(respuestaDos.data)
                 data,
                 defaultColumn,
             },
-            useFilters,
+             useFilters,
             useSortBy
         );
 

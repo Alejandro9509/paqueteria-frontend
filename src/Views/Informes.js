@@ -1152,7 +1152,7 @@ function Informes({history}) {
 
 
                 setDataFechaInicial(respuestaUno.data)
-setDataFechaFinal(respuestaDos.data)
+                    setDataFechaFinal(respuestaDos.data)
                 setFiltros(filtros => {
                     return {
                         ...filtros,
@@ -1165,7 +1165,7 @@ setDataFechaFinal(respuestaDos.data)
 
 
 
-                obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folioInformeListado, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                obtenerInformeFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,filtros.sucursalListado,filtros.estatusListado,filtros.folioInformeListado, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
                     respuesta.data.forEach((i) => i.remolqueCompleto = i.m_nIdentificador + " - " +  i.m_sRemolque1)
                      setData(respuesta.data);
         })

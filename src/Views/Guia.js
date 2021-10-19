@@ -1249,7 +1249,7 @@ setDataFechaFinal(respuestaDos.data)
 
 
 
-                obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
                     setData(respuesta.data);
         })
       
