@@ -99,6 +99,7 @@ import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
 import Paquetes from "./Paquetes/Paquetes";
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 import ReplayIcon from "@material-ui/icons/Replay";
+import ZonaOperativa from "./ZonasOperativas/ZonaOperativa";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -183,6 +184,8 @@ function Embarque(props) {
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
+    const [dataCiudadF, setDataCiudadF] = React.useState([]);
+
     const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
     const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
     const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
@@ -342,7 +345,7 @@ function Embarque(props) {
             }
         })
         if (target.name === "fechaInicial"){
-            obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -350,7 +353,7 @@ function Embarque(props) {
                 }
             })
         }else if (target.name === "fechaFinal"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerEmbarquesFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -359,7 +362,7 @@ function Embarque(props) {
             })
         }
         else if (target.name === "sucursalListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -368,7 +371,7 @@ function Embarque(props) {
             })
         }
         else if (target.name === "estatusListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio).then(respuesta => {
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -377,7 +380,7 @@ function Embarque(props) {
             })
         }
         else if (target.name === "OrigenListado"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -386,7 +389,7 @@ function Embarque(props) {
             })
         }
         else if (target.name === "DestinoListado"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -1655,8 +1658,7 @@ function Embarque(props) {
                     })
             }
         }
-        getFechaInicial()
-        getFechaFinal()
+
 
     }, [dataRemitenteDestinatario, dataCiudad, dataClientes]);
 
@@ -2569,7 +2571,7 @@ function Embarque(props) {
             ...state,
             entregaEnSucursal: !state.entregaEnSucursal,
             diferenteEntrega: !state.entregaEnSucursal && false,
-            entregaConCita: !state.entregaEnSucursal && false
+            entregaConCita: !state.entregaEnSucursal && false,
         });
     };
 
@@ -2791,10 +2793,13 @@ function Embarque(props) {
     }*/
 
     const getDataParaListado = () => {
+
         getAllEmbarque();
         getAllSucursales();
         getAllEstatusEmbarque();
-        getAllCiudades();
+        getAllCiudadesFiltro();
+
+
 
     }
 
@@ -2807,9 +2812,34 @@ function Embarque(props) {
     }
 
     async function getAllEmbarque() {
-        obtenerEmbarques().then((respuesta) => {
-            setData(respuesta.data);
-        });
+        obtenerFechaInicio().then((respuestaUno) => {
+
+
+
+            obtenerFechaFinal().then((respuestaDos) => {
+
+                console.log(respuestaUno.data[0].Fecha)
+                console.log(respuestaDos.data[0].Fecha)
+
+
+                setDataFechaInicial(respuestaUno.data)
+                setDataFechaFinal(respuestaDos.data)
+                setFiltros(filtros => {
+                    return {
+                        ...filtros,
+                       fechaInicial: respuestaUno.data[0].Fecha,
+                       fechaFinal: respuestaDos.data[0].Fecha
+
+                    }
+                })
+
+                obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                    setData(respuesta.data);
+        })
+
+            })
+
+    })
     }
 
     /*function getFormatosImpresion() {
@@ -2856,6 +2886,11 @@ function Embarque(props) {
     async function getAllCiudades() {
         obtenerCiudades().then((respuesta) => {
             setDataCiudad(respuesta.data);
+        });
+    }
+    async function getAllCiudadesFiltro() {
+        obtenerCiudades().then((respuesta) => {
+            setDataCiudadF(respuesta.data);
         });
     }
 
@@ -2924,7 +2959,7 @@ function Embarque(props) {
                 data,
                 defaultColumn,
             },
-            useFilters,
+             useFilters,
             useSortBy
         );
 
@@ -4158,40 +4193,40 @@ function Embarque(props) {
                                                 />
                                             </Grid>
                                             <Grid item xs={2}>
-                                                <FormControl className="input select" fullWidth variant="outlined">
-                                                    <TextField
-                                                        autoFocus
-                                                        type="date"
-                                                        margin="dense"
-                                                        label="Fecha Inicial"
-                                                        variant="outlined"
-                                                        className="form-control"
-                                                        InputLabelProps={{shrink: true,}}
-                                                        value={filtros.fechaInicial}
-                                                        onChange={handleChangeFiltros}
-                                                        id="fechaInicial"
-                                                        name="fechaInicial"
-                                                    />
-                                                </FormControl>
-                                            </Grid>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <TextField
+                                                            autoFocus
+                                                            type="date"
+                                                            margin="dense"
+                                                            label="Fecha Inicial"
+                                                            variant="outlined"
+                                                            className="form-control"
+                                                            InputLabelProps={{shrink: true,}}
+                                                            value={filtros.fechaInicial}
+                                                            onChange={handleChangeFiltros}
+                                                            id="fechaInicial"
+                                                            name="fechaInicial"
+                                                        />
+                                                    </FormControl>
+                                                </Grid>
                                             <Grid item xs={2}>
-                                                <FormControl className="input select" fullWidth variant="outlined">
-                                                    <TextField variant="outlined" margin="dense"
-                                                               type="date"
-                                                               className="form-control"
-                                                               label="Fecha Final"
-                                                               InputLabelProps={{
-                                                                   shrink: true,
-                                                               }}
-                                                               value={filtros.fechaFinal}
-                                                               onChange={handleChangeFiltros}
-                                                               id="fechaFinal"
-                                                               name="fechaFinal"
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <TextField variant="outlined" margin="dense"
+                                                                   type="date"
+                                                                   className="form-control"
+                                                                   label="Fecha Final"
+                                                                   InputLabelProps={{
+                                                                       shrink: true,
+                                                                   }}
+                                                                   value={filtros.fechaFinal}
+                                                                   onChange={handleChangeFiltros}
+                                                                   id="fechaFinal"
+                                                                   name="fechaFinal"
 
-                                                    />
-                                                </FormControl>
+                                                        />
+                                                    </FormControl>
 
-                                            </Grid>
+                                                </Grid>
                                             <Grid item xs={2}>
                                                 <FormControl className="input select" fullWidth variant="outlined">
                                                     <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
@@ -4244,19 +4279,19 @@ function Embarque(props) {
                                             </Grid>
                                             <Grid item xs={2}>
                                                     <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="idSucusalLabel">Origen</InputLabel>
+                                                        <InputLabel id="OrigenListado">Origen</InputLabel>
                                                         <Select
-                                                            labelId="CiudadOrigenListadoLabel"
-                                                            label="Origen"
+                                                            labelId="OrigenListado"
                                                             className="form-control"
                                                             required
-                                                            value={filtros.sucursalListado}
+                                                            label="Origen"
+                                                            value={filtros.OrigenListado}
                                                             onChange={handleChangeFiltros}
                                                             id="OrigenListado"
                                                             name="OrigenListado"
                                                         >
-                                                            <option value="0">Todas</option>
-                                                            {dataCiudad.map((ciudad) => (
+                                                            <option value="0">Todos</option>
+                                                            {dataCiudadF.map((ciudad) => (
                                                                 <option
                                                                     key={ciudad.m_nIdCiudad}
                                                                     value={ciudad.m_nIdCiudad}
@@ -4269,19 +4304,19 @@ function Embarque(props) {
                                                 </Grid>
                                                 <Grid item xs={2}>
                                                     <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="idSucusalLabel">Destino</InputLabel>
+                                                        <InputLabel id="DestinoListado">Destino</InputLabel>
                                                         <Select
-                                                            labelId="CiudadDestinoListadoLabel"
-                                                            label="Destino"
+                                                            labelId="DestinoListado"
                                                             className="form-control"
                                                             required
-                                                            value={filtros.sucursalListado}
+                                                            label="Destino"
+                                                            value={filtros.DestinoListado}
                                                             onChange={handleChangeFiltros}
                                                             id="DestinoListado"
                                                             name="DestinoListado"
                                                         >
-                                                            <option value="0">Todas</option>
-                                                            {dataCiudad.map((ciudad) => (
+                                                            <option value="0">Todos</option>
+                                                            {dataCiudadF.map((ciudad) => (
                                                                 <option
                                                                     key={ciudad.m_nIdCiudad}
                                                                     value={ciudad.m_nIdCiudad}
