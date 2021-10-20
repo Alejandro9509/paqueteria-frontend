@@ -59,6 +59,7 @@ import {
     obtenerCodigosPostalesPorCiudad, obtenerCodigosPostalesPorEstadoMunicipio
 } from "../Util/Contexts/CodigoPostalContext";
 import {
+    actualizarRemitentesDestinatarios,
     obtenerRemitentesDestinatarios,
     obtenerRemitentesDestinatariosId
 } from "../Util/Contexts/RemitenteDestinatarioContext";
@@ -97,6 +98,7 @@ import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/
 import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
 import Paquetes from "./Paquetes/Paquetes";
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
+import ReplayIcon from "@material-ui/icons/Replay";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -5014,16 +5016,12 @@ function Embarque(props) {
                                                                                                             }}
                                                                                                             disabled={state.agregar === "Consultar"}
                                                                                                             onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "nombreRemitente",
-                                                                                                                    tipoModal: 5,
-                                                                                                                    openDialog: true
-                                                                                                                });
+                                                                                                                actualizarRemitentesDestinatarios().then(({data}) => {
+                                                                                                                    setDataRemitenteDestinatario(data)
+                                                                                                                })
                                                                                                             }}
                                                                                                         >
-                                                                                                            <PageviewIcon
+                                                                                                            <ReplayIcon
                                                                                                                 style={{
                                                                                                                     color: "#F9A03E",
                                                                                                                     fontSize: 32,
@@ -5483,16 +5481,12 @@ function Embarque(props) {
                                                                                                             }}
                                                                                                             disabled={state.agregar === "Consultar"}
                                                                                                             onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "nombreDestinatario",
-                                                                                                                    tipoModal: 5,
-                                                                                                                    openDialog: true
-                                                                                                                });
+                                                                                                                actualizarRemitentesDestinatarios().then(({data}) => {
+                                                                                                                    setDataRemitenteDestinatario(data)
+                                                                                                                })
                                                                                                             }}
                                                                                                         >
-                                                                                                            <PageviewIcon
+                                                                                                            <ReplayIcon
                                                                                                                 style={{
                                                                                                                     color: "#F9A03E",
                                                                                                                     fontSize: 32,
@@ -5501,15 +5495,6 @@ function Embarque(props) {
                                                                                                                     paddingBlockEnd: 0,
                                                                                                                     paddingLeft: 0,
                                                                                                                     paddingBlock: 0,
-                                                                                                                }}
-                                                                                                                onClick={() => {
-                                                                                                                    setState({
-                                                                                                                        ...state,
-                                                                                                                        identificadorModal:
-                                                                                                                            "nombreDestinatario",
-                                                                                                                        tipoModal: 5,
-                                                                                                                        openDialog: true
-                                                                                                                    });
                                                                                                                 }}
                                                                                                             />
                                                                                                         </IconButton>

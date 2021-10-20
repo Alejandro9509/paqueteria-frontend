@@ -77,6 +77,14 @@ function obtenerRemitentesDestinatarios(){
         );
     return result
 }
+function actualizarRemitentesDestinatarios(){
+    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/ActualizarListado`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 function validarNumeroRemitente(state){
     const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/ValidaNumeroRemDes/` + state.numero;
     let result;
@@ -95,4 +103,5 @@ function obtenerRemitentesDestinatariosId(id){
     return result
 }
 
-export {modificarRemitentesDestinatarios, agregarRemitentesDestinatarios, eliminarRemitentesDestinatarios, obtenerRemitentesDestinatarios, obtenerRemitentesDestinatariosId, validarNumeroRemitente, obtenerUbicacion}
+export {modificarRemitentesDestinatarios, agregarRemitentesDestinatarios, eliminarRemitentesDestinatarios, obtenerRemitentesDestinatarios,
+    obtenerRemitentesDestinatariosId, validarNumeroRemitente, obtenerUbicacion, actualizarRemitentesDestinatarios}

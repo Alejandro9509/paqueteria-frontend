@@ -13,7 +13,7 @@ import * as XLSX from "xlsx";
 import useModal from "react-hooks-use-modal";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
-import PageviewIcon from "@material-ui/icons/Pageview";
+import ReplayIcon from '@material-ui/icons/Replay';
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import {GridOverlay, DataGrid} from '@material-ui/data-grid';
@@ -59,6 +59,7 @@ import {
     obtenerCodigoPostalId, obtenerCodigosPostalesPorCiudad, obtenerCodigosPostalesPorEstadoMunicipio
 } from "../Util/Contexts/CodigoPostalContext";
 import {
+    actualizarRemitentesDestinatarios,
     obtenerRemitentesDestinatarios,
     obtenerRemitentesDestinatariosId
 } from "../Util/Contexts/RemitenteDestinatarioContext";
@@ -4369,16 +4370,12 @@ function Recoleccion() {
                                                                                                             }}
                                                                                                             disabled={state.agregar === "Consultar"}
                                                                                                             onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "nombreRemitente",
-                                                                                                                    tipoModal: 5,
-                                                                                                                    openDialog: true
-                                                                                                                });
+                                                                                                                actualizarRemitentesDestinatarios().then(({data}) => {
+                                                                                                                    setDataRemitenteDestinatario(data)
+                                                                                                                })
                                                                                                             }}
                                                                                                         >
-                                                                                                            <PageviewIcon
+                                                                                                            <ReplayIcon
                                                                                                                 style={{
                                                                                                                     color: "#F9A03E",
                                                                                                                     fontSize: 32,
@@ -4896,7 +4893,7 @@ function Recoleccion() {
                                                                                                                 });
                                                                                                             }}
                                                                                                         >
-                                                                                                            <PageviewIcon
+                                                                                                            <ReplayIcon
                                                                                                                 style={{
                                                                                                                     color: "#F9A03E",
                                                                                                                     fontSize: 32,
