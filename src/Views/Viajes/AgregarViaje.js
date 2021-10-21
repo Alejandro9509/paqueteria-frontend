@@ -344,6 +344,7 @@ class AgregarViaje extends Component {
             this.setState({
                 IdRemolque1: newValue,
                 placasRemolque1: newValue.m_sPlacas,
+                colorRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sColor,
                 estatusRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
             })
         })
@@ -360,6 +361,7 @@ class AgregarViaje extends Component {
             this.setState({
                 IdRemolque2: newValue,
                 placasRemolque2: newValue.m_sPlacas,
+                colorRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sColor,
                 estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
             })
         })
@@ -1022,6 +1024,7 @@ class AgregarViaje extends Component {
                                                            type="text"
                                                            label="Estatus"
                                                            disabled
+                                                           style={{backgroundColor: this.state.colorRemolque1 ?  `#${this.state.colorRemolque1}` : "white" }}
                                                            InputLabelProps={{
                                                                shrink: true,
                                                            }}
@@ -1131,6 +1134,7 @@ class AgregarViaje extends Component {
                                                            className="form-control"
                                                            type="text"
                                                            label="Estatus"
+                                                           style={{backgroundColor: this.state.colorRemolque2 ?  `#${this.state.colorRemolque2}` : "white" }}
                                                            InputLabelProps={{
                                                                shrink: true,
                                                            }}

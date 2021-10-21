@@ -75,7 +75,7 @@ class DetalleParadas extends Component {
 
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla) {
+        if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a,b) => +a + b.m_arrClsProGuia.reduce((c,d) => +c + d.m_nEstatusUlimaMilla, 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a,b) => +a + b.m_arrClsProGuia.reduce((c,d) => +c + d.m_nEstatusUlimaMilla, 0), 0)) {
             this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla})
         }
     }
@@ -377,9 +377,7 @@ class DetalleParadas extends Component {
                                                         overflow: "auto"
                                                     }}>
 
-                                                        {
 
-                                                            +this.props.fecha >= +(d) &&
                                                             <Button variant={"contained"} color={"primary"}
                                                                     onClick={() => this.setState({
                                                                         paquetes: tour.m_arrClsProGuia,
@@ -387,7 +385,7 @@ class DetalleParadas extends Component {
                                                                         openAgregar: true
                                                                     })}>Ordenar
                                                                 Paradas</Button>
-                                                        }
+
 
 
                                                         <List component="div" disablePadding style={{

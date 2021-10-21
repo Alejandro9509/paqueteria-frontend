@@ -533,12 +533,12 @@ function Viajes() {
         {
             headerName: "Camión",
             field: "m_sCamion",
-            width: 150,
+            width: 200,
         },
         {
             headerName: "Operador",
-            field: "m_sNombreCompleto",
-            width: 150
+            field: "m_sOperador",
+            width: 200
         },
         // {
         //     headerName: "Liq",

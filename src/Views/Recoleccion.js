@@ -13,7 +13,7 @@ import * as XLSX from "xlsx";
 import useModal from "react-hooks-use-modal";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
-import PageviewIcon from "@material-ui/icons/Pageview";
+import ReplayIcon from '@material-ui/icons/Replay';
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import {GridOverlay, DataGrid} from '@material-ui/data-grid';
@@ -37,7 +37,7 @@ import RestartAltIcon from '@material-ui/icons/Refresh';
 
 import Noty from 'noty';
 import {
-    Button,
+    Button, Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -59,6 +59,7 @@ import {
     obtenerCodigoPostalId, obtenerCodigosPostalesPorCiudad, obtenerCodigosPostalesPorEstadoMunicipio
 } from "../Util/Contexts/CodigoPostalContext";
 import {
+    actualizarRemitentesDestinatarios,
     obtenerRemitentesDestinatarios,
     obtenerRemitentesDestinatariosId
 } from "../Util/Contexts/RemitenteDestinatarioContext";
@@ -95,6 +96,7 @@ import {obtenerMunicipiosByIdEstado} from "../Util/Contexts/MunicipiosContext";
 import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
 import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
 import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
+import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 
 let timer;
 
@@ -142,8 +144,13 @@ function Recoleccion() {
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataTipoMoneda, setDataTipoMoneda] = React.useState([]);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
+    const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
+    const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
+
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
+    const [dataCiudadF, setDataCiudadF] = React.useState([]);
+
     const [dataZona, setDataZona] = React.useState([]);
     const [dataFolioRecoleccion, SetDataFolioRecoleccion] = React.useState([]);
 
@@ -161,7 +168,7 @@ function Recoleccion() {
     const [state, setState] = React.useState({
         // ===VARIABLES DE LISTADO===
         idRecoleccion: 0,
-       
+
 
         // ===VARIABLES DE CANCELAR===
         // folioRecoleccion: '', Se usa en agregar tambien
@@ -292,18 +299,22 @@ function Recoleccion() {
     const [filtros, setFiltros] = useState({
         fechaInicial: 0,
         fechaFinal: 0,
-        estatusListado:0,
+        estatusListado: 0,
         sucursalListado: 0,
         folio: '',
+        OrigenListado:0,
+        DestinoListado:0,
     })
 
     const resetFiltros = () => {
         setFiltros({
             fechaInicial: 0,
             fechaFinal: 0,
-            estatusListado:0,
+            estatusListado: 0,
             sucursalListado: 0,
             folio: '',
+            OrigenListado:0,
+        DestinoListado:0,
         })
     }
     const [fileUploaded, setFileUploaded] = React.useState([]);
@@ -380,17 +391,17 @@ function Recoleccion() {
     const handleChangeRemitente = (event) => {
         event.preventDefault();
         setRemitente(remitente => {
-            return{
+            return {
                 ...remitente,
                 [event.target.name]: event.target.value,
             }
         });
-        if (event.target.name === "estadoRemitente"){
-            obtenerMunicipiosByIdEstado(event.target.value).then(({data}) =>{
+        if (event.target.name === "estadoRemitente") {
+            obtenerMunicipiosByIdEstado(event.target.value).then(({data}) => {
                 setDataMunicipiosRemitente(data)
             })
         }
-        if (event.target.name === "municipioRemitente"){
+        if (event.target.name === "municipioRemitente") {
             obtenerCodigosPostalesPorEstadoMunicipio(remitente.estadoRemitente, event.target.value).then(({data}) => {
                 setDataCodigosPostalesRemitente(data)
             })
@@ -404,8 +415,8 @@ function Recoleccion() {
                 [input]: newValue
             }
         })
-        if (input === "Remitente"){
-            if (newValue.m_nIdCP == 0){
+        if (input === "Remitente") {
+            if (newValue.m_nIdCP == 0) {
                 showSuccess("El remitente o destinatario seleccionado no cuenta con Código Postal registrado. Contacte a un Administrador.")
             }
             setRemitente({
@@ -418,7 +429,7 @@ function Recoleccion() {
                     m_nIdCP: newValue.m_nIdCP,
                     m_sCP: newValue.m_sCodigoPostal,
                     m_sColonia: newValue.m_sColonia
-                }: '',
+                } : '',
                 estadoRemitente: newValue.m_nIdEstado || 0,
                 municipioRemitente: newValue.m_nIdMunicipio || '',
                 correoRemitente: newValue.m_sCorreoElectronico || "",
@@ -433,16 +444,16 @@ function Recoleccion() {
                 longitudR: newValue.m_sLongitud || ''
             })
             let estado
-            if (newValue.m_nIdEstado < 10){
+            if (newValue.m_nIdEstado < 10) {
                 estado = `0${newValue.m_nIdEstado}`
-            }else{
+            } else {
                 estado = newValue.m_nIdEstado
             }
-            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+            obtenerMunicipiosByIdEstado(estado).then(({data}) => {
                 setDataMunicipiosRemitente(data)
             })
 
-            obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado,newValue.m_nIdMunicipio).then(({data}) => {
+            obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado, newValue.m_nIdMunicipio).then(({data}) => {
                 setDataCodigosPostalesRemitente(data)
             })
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
@@ -482,7 +493,7 @@ function Recoleccion() {
                 setDataZonasTarifaRemitente(data)
             })
         }
-        if (input === "codigoPostalRemitente"){
+        if (input === "codigoPostalRemitente") {
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
                 /*if (data.length > 0){
                     setRemitente(remitente => {
@@ -573,17 +584,17 @@ function Recoleccion() {
     const handleChangeDestinatario = (event) => {
         event.preventDefault();
         setDestinatario(destinatario => {
-            return{
+            return {
                 ...destinatario,
                 [event.target.name]: event.target.value,
             }
         });
-        if (event.target.name === "estadoDestinatario"){
-            obtenerMunicipiosByIdEstado(event.target.value).then(({data}) =>{
+        if (event.target.name === "estadoDestinatario") {
+            obtenerMunicipiosByIdEstado(event.target.value).then(({data}) => {
                 setDataMunicipiosDestinatario(data)
             })
         }
-        if (event.target.name === "municipioDestinatario"){
+        if (event.target.name === "municipioDestinatario") {
             obtenerCodigosPostalesPorEstadoMunicipio(destinatario.estadoDestinatario, event.target.value).then(({data}) => {
                 setDataCodigosPostalesDestinatario(data)
             })
@@ -595,8 +606,8 @@ function Recoleccion() {
             ...destinatario,
             [input]: newValue
         })
-        if (input === "Destinatario"){
-            if (newValue.m_nIdCP == 0){
+        if (input === "Destinatario") {
+            if (newValue.m_nIdCP == 0) {
                 showSuccess("El remitente o destinatario seleccionado no cuenta con Código Postal registrado. Contacte a un Administrador.")
             }
             setDestinatario({
@@ -623,15 +634,15 @@ function Recoleccion() {
                 longitudD: newValue.m_sLongitud || ''
             })
             let estado
-            if (newValue.m_nIdEstado < 10){
+            if (newValue.m_nIdEstado < 10) {
                 estado = `0${newValue.m_nIdEstado}`
-            }else{
+            } else {
                 estado = newValue.m_nIdEstado
             }
-            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+            obtenerMunicipiosByIdEstado(estado).then(({data}) => {
                 setDataMunicipiosDestinatario(data)
             })
-            obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado,newValue.m_nIdMunicipio).then(({data}) => {
+            obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado, newValue.m_nIdMunicipio).then(({data}) => {
                 setDataCodigosPostalesDestinatario(data)
             })
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
@@ -671,7 +682,7 @@ function Recoleccion() {
                 setDataZonasTarifaDestinatario(data)
             })
         }
-        if (input === "codigoPostalDestinatario"){
+        if (input === "codigoPostalDestinatario") {
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
                 /*if (data.length > 0){
                     setDestinatario(destinatario => {
@@ -722,7 +733,7 @@ function Recoleccion() {
         datosAdicionalesEnt: ''
     })
 
-    const resetEntregaDD = () =>{
+    const resetEntregaDD = () => {
         setEntregaDD({
             estadoEnt: '',
             municipioEnt: '',
@@ -730,7 +741,7 @@ function Recoleccion() {
             zonaOperativaEnt: '',
             zonaTarifaEnt: '',
             domicilioEnt: '',
-            recogerEnEnt: '',
+            entregarEnEnt: '',
             datosAdicionalesEnt: ''
         })
     }
@@ -738,17 +749,17 @@ function Recoleccion() {
     const handleChangeEntregaDD = (event) => {
         event.preventDefault();
         setEntregaDD(entregaDD => {
-            return{
+            return {
                 ...entregaDD,
                 [event.target.name]: event.target.value,
             }
         });
-        if (event.target.name === "estadoEnt"){
-            obtenerMunicipiosByIdEstado(event.target.value).then(({data}) =>{
+        if (event.target.name === "estadoEnt") {
+            obtenerMunicipiosByIdEstado(event.target.value).then(({data}) => {
                 setDataMunicipiosEntregaDD(data)
             })
         }
-        if (event.target.name === "municipioEnt"){
+        if (event.target.name === "municipioEnt") {
             obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoEnt, event.target.value).then(({data}) => {
                 setDataCodigosPostalesEntregaDD(data)
             })
@@ -760,7 +771,7 @@ function Recoleccion() {
             ...entregaDD,
             [input]: newValue
         })
-        if (input === "codigoPostalEnt"){
+        if (input === "codigoPostalEnt") {
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
                 /*if (data.length > 0){
                     setEntregaDD(entregaDD => {
@@ -827,17 +838,17 @@ function Recoleccion() {
     const handleChangeRecoleccionDD = (event) => {
         event.preventDefault();
         setRecoleccionDD(recoleccionDD => {
-            return{
+            return {
                 ...recoleccionDD,
                 [event.target.name]: event.target.value,
             }
         });
-        if (event.target.name === "estadoRec"){
-            obtenerMunicipiosByIdEstado(event.target.value).then(({data}) =>{
+        if (event.target.name === "estadoRec") {
+            obtenerMunicipiosByIdEstado(event.target.value).then(({data}) => {
                 setDataMunicipiosRecoleccionDD(data)
             })
         }
-        if (event.target.name === "municipioRec"){
+        if (event.target.name === "municipioRec") {
             obtenerCodigosPostalesPorEstadoMunicipio(recoleccionDD.estadoRec, event.target.value).then(({data}) => {
                 setDataCodigosPostalesRecoleccionDD(data)
             })
@@ -849,7 +860,7 @@ function Recoleccion() {
             ...recoleccionDD,
             [input]: newValue
         })
-        if (input === "codigoPostalRec"){
+        if (input === "codigoPostalRec") {
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
                 /*setRecoleccionDD(recoleccionDD => {
                     return{
@@ -890,6 +901,7 @@ function Recoleccion() {
     }
 
     useEffect(value => {
+        
         if (state.tipoUnidad != 0 && state.tipoUnidad != '') {
             // console.log('tipo Unidad select: ', state.tipoUnidad)
             getAllUnidades(state.tipoUnidad.m_nIdTipoUnidad);
@@ -897,6 +909,7 @@ function Recoleccion() {
     }, [state.tipoUnidad])
 
     useEffect((value) => {
+       
         if (
             localStorage.getItem("UsuarioId") === null ||
             localStorage.getItem("UsuarioId") <= 0
@@ -905,14 +918,19 @@ function Recoleccion() {
             window.location.replace("login");
             return;
         }
-        getDataParaListado()
 
+        
+        getDataParaListado()
+      
     }, []);
 
     const getDataParaListado = () => {
+        
         getAllData();
         getAllSucursales();
         getAllEstatusRecoleccion();
+        getAllCiudadesFiltro();
+       
     }
 
     const getDataParaEditar = () => {
@@ -941,7 +959,7 @@ function Recoleccion() {
             }
         })
 
-        if (dataPaquetes.length === 0){
+        if (dataPaquetes.length === 0) {
             showSuccess("Debe agregar al menos 1 paquete o sobre.")
             return
         }
@@ -990,7 +1008,7 @@ function Recoleccion() {
             m_sNoExtRemitente: remitente.numeroExtRemitente,
             m_sColoniaRemitente: remitente.coloniaRemitente,
             m_nIdEstadoRemitente: remitente.estadoRemitente,
-            m_sLatitudR: coordenadas ? coordenadas.lat : remitente.latitudR ,
+            m_sLatitudR: coordenadas ? coordenadas.lat : remitente.latitudR,
             m_sLongitudR: coordenadas ? coordenadas.lng : remitente.longitudR,
 
             //Destinatario
@@ -1050,9 +1068,9 @@ function Recoleccion() {
             params.m_nIdZonaTarifa = recoleccionDD.zonaTarifaRec.m_nIdZona
             params.m_nIdEstadoRecoleccion = recoleccionDD.estadoRec
             params.m_sCodigoMunicipioRecoleccion = recoleccionDD.municipioRec
-        }else{
-                params.m_nIdZonaOperativa = remitente.zonaOperativaRemitente.m_nIdZona
-                params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente.m_nIdZona
+        } else {
+            params.m_nIdZonaOperativa = remitente.zonaOperativaRemitente.m_nIdZona
+            params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente.m_nIdZona
         }
 
         if (state.diferenteEntrega) {
@@ -1064,7 +1082,7 @@ function Recoleccion() {
             params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt.m_nIdZona
             params.m_nIdEstadoEntrega = entregaDD.estadoEnt
             params.m_sCodigoMunicipioEntrega = entregaDD.municipioEnt
-        }else{
+        } else {
             params.m_nIdZonaOperativaEntrega = destinatario.zonaOperativaDestinatario.m_nIdZona
             params.m_nIdZonaTarifaEntrega = destinatario.zonaTarifaDestinatario.m_nIdZona
         }
@@ -1116,6 +1134,44 @@ function Recoleccion() {
     function getTipoCambio() {
         obtenerTipoCambio().then(respuesta => {
             setDataTipoCambio(respuesta.data)
+        });
+    };
+
+
+    function getFechaInicial() {
+        obtenerFechaInicio().then(respuesta => {
+            console.log(respuesta.data[0].Fecha)
+            setDataFechaInicial(respuesta.data)
+
+            setFiltros(filtros => {
+                return {
+                    ...filtros,
+                   fechaInicial: respuesta.data[0].Fecha
+                }
+            })
+
+        });
+    };
+
+
+
+    function getFechaFinal() {
+        obtenerFechaFinal().then(respuesta => {
+            console.log(respuesta.data[0].Fecha)
+
+            setDataFechaFinal(respuesta.data)
+
+            setFiltros(filtros => {
+                return {
+                    ...filtros,
+                   fechaFinal: respuesta.data[0].Fecha
+                }
+            })
+
+
+
+
+
         });
     };
 
@@ -1265,14 +1321,14 @@ function Recoleccion() {
         getAllEmbalajes()
 
         respuesta.data.m_parrPaquetes.forEach((p) => {
-            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+            obtenerProductoById(p.m_nIdProducto).then(({data}) => {
                 p["producto"] = data
                 p.m_sProducto = data.m_sDescripcion
             })
             obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
                 p.m_sTipoEmbalaje = data.m_sNombre
             })
-            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_parrPaquetes)
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
@@ -1298,13 +1354,13 @@ function Recoleccion() {
                 }
             })
             let estado
-            if (respuesta.data.m_nIdEstadoRemitente < 10){
+            if (respuesta.data.m_nIdEstadoRemitente < 10) {
                 estado = `0${respuesta.data.m_nIdEstadoRemitente}`
-            }else{
+            } else {
                 estado = respuesta.data.m_nIdEstadoRemitente
             }
 
-            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+            obtenerMunicipiosByIdEstado(estado).then(({data}) => {
                 setDataMunicipiosRemitente(data)
             })
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
@@ -1328,14 +1384,14 @@ function Recoleccion() {
                 })
             })
             obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
-                if (!respuesta.data.m_bRecoleccionDiferenteDomicilio){
+                if (!respuesta.data.m_bRecoleccionDiferenteDomicilio) {
                     setRemitente(remitente => {
                         return {
                             ...remitente,
                             zonaOperativaRemitente: data
                         }
                     })
-                }else{
+                } else {
                     setRecoleccionDD(recoleccionDD => {
                         return {
                             ...recoleccionDD,
@@ -1345,14 +1401,14 @@ function Recoleccion() {
                 }
             })
             obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
-                if (!respuesta.data.m_bRecoleccionDiferenteDomicilio){
+                if (!respuesta.data.m_bRecoleccionDiferenteDomicilio) {
                     setRemitente(remitente => {
                         return {
                             ...remitente,
                             zonaTarifaRemitente: data
                         }
                     })
-                }else{
+                } else {
                     setRecoleccionDD(recoleccionDD => {
                         return {
                             ...recoleccionDD,
@@ -1386,13 +1442,13 @@ function Recoleccion() {
                 }
             })
             let estado
-            if (respuesta.data.m_nIdEstadoDestinatario < 10){
+            if (respuesta.data.m_nIdEstadoDestinatario < 10) {
                 estado = `0${respuesta.data.m_nIdEstadoDestinatario}`
-            }else{
+            } else {
                 estado = respuesta.data.m_nIdEstadoDestinatario
             }
 
-            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+            obtenerMunicipiosByIdEstado(estado).then(({data}) => {
                 setDataMunicipiosDestinatario(data)
             })
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
@@ -1416,14 +1472,14 @@ function Recoleccion() {
                 })
             })
             obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
-                if (!respuesta.data.m_bEntregaDiferenteDomicilio){
+                if (!respuesta.data.m_bEntregaDiferenteDomicilio) {
                     setDestinatario(destinatario => {
                         return {
                             ...destinatario,
                             zonaOperativaDestinatario: data
                         }
                     })
-                }else{
+                } else {
                     setEntregaDD(entregaDD => {
                         return {
                             ...entregaDD,
@@ -1433,14 +1489,14 @@ function Recoleccion() {
                 }
             })
             obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifaEntrega).then(({data}) => {
-                if (!respuesta.data.m_bRecoleccionDiferenteDomicilio){
+                if (!respuesta.data.m_bEntregaDiferenteDomicilio) {
                     setDestinatario(destinatario => {
                         return {
                             ...destinatario,
                             zonaTarifaDestinatario: data
                         }
                     })
-                }else{
+                } else {
                     setEntregaDD(entregaDD => {
                         return {
                             ...entregaDD,
@@ -1452,39 +1508,69 @@ function Recoleccion() {
         })
 
         if (respuesta.data.m_bRecoleccionDiferenteDomicilio){
+            setRecoleccionDD(recoleccionDD => {
+                return {
+                    ...recoleccionDD,
+                    estadoRec: respuesta.data.m_nIdEstadoRecoleccion || 0,
+                    municipioRec: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
+                    domicilioRec: respuesta.data.m_sDomicilioDetalleRecoleccion,
+                    recogerEnRec: respuesta.data.m_sRecogerEnDetalleRecoleccion,
+                    datosAdicionalesRec: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+                }
+            })
+            let estado
+            if (respuesta.data.m_nIdEstadoRecoleccion < 10){
+                estado = `0${respuesta.data.m_nIdEstadoRecoleccion}`
+            }else{
+                estado = respuesta.data.m_nIdEstadoRecoleccion
+            }
+
+            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+                setDataMunicipiosRecoleccionDD(data)
+            })
             obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleRecoleccion).then((cp) => {
                 setRecoleccionDD(recoleccionDD => {
                     return {
                         ...recoleccionDD,
-                        estadoRec: respuesta.data.m_nIdEstadoRecoleccion || 0,
-                        municipioRec: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
                         codigoPostalRec: {
                             m_nIdCP: cp.data.m_nIdCP,
                             m_sCP: cp.data.m_sCP,
                             m_sColonia: cp.data.m_sColonia
                         },
-                        domicilioRec: respuesta.data.m_sDomicilioDetalleRecoleccion,
-                        recogerEnRec: respuesta.data.m_sRecogerEnDetalleRecoleccion,
-                        datosAdicionalesRec: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
                     }
                 })
             })
         }
         if (respuesta.data.m_bEntregaDiferenteDomicilio){
+            setEntregaDD(entregaDD =>{
+                return {
+                    ...entregaDD,
+                    estadoEnt: respuesta.data.m_nIdEstadoEntrega || 0,
+                    municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega || 0,
+                    domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
+                    entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
+                    datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                }
+            })
+            let estado
+            if (respuesta.data.m_nIdEstadoEntrega < 10){
+                estado = `0${respuesta.data.m_nIdEstadoEntrega}`
+            }else{
+                estado = respuesta.data.m_nIdEstadoEntrega
+            }
+
+            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+                setDataMunicipiosEntregaDD(data)
+            })
             obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
                 setEntregaDD(entregaDD =>{
                     return {
                         ...entregaDD,
-                        estadoEnt: respuesta.data.m_nIdEstadoEntrega || 0,
-                        municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega || 0,
                         codigoPostalEnt: {
-                        m_nIdCP: cp.data.m_nIdCP,
+                            m_nIdCP: cp.data.m_nIdCP,
                             m_sCP: cp.data.m_sCP,
                             m_sColonia: cp.data.m_sColonia
-                    },
-                        domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
-                        entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
-                        datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                        },
                     }
                 })
             })
@@ -1586,8 +1672,8 @@ function Recoleccion() {
         setState(state => {
             return {
                 ...state,
-                fechaInicial: 0,
-                fechaFinal: 0,
+                fechaInicial: dataFechaInicial.Fecha,
+                fechaFinal: dataFechaFinal.Fecha,
                 sucursalListado: 0,
                 estatusListado: 0,
                 folioRecoleccion: '',
@@ -1781,7 +1867,7 @@ function Recoleccion() {
             }
         })
         if (target.name === "fechaInicial"){
-            obtenerRecoleccionFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerRecoleccionFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -1789,7 +1875,7 @@ function Recoleccion() {
                 }
             })
         }else if (target.name === "fechaFinal"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerRecoleccionFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -1798,7 +1884,7 @@ function Recoleccion() {
             })
         }
         else if (target.name === "sucursalListado"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -1807,7 +1893,25 @@ function Recoleccion() {
             })
         }
         else if (target.name === "estatusListado"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio).then(respuesta => {
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "OrigenListado"){
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "DestinoListado"){
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -2001,20 +2105,31 @@ function Recoleccion() {
             headerName: "Estatus",
             field: "m_sEstatusRecoleccion",
             width: 125,
+            renderCell: (row) => {
+                return (
+                    <div align={"center"} style={{width: "100%"}}>
+                        <Chip size="small" style={{
+                            backgroundColor: `${row.row.m_sColorEstatus}`,
+                            //color: row.row.m_nIdEstatusUnidad === 1 ? "black" : "white",
+                            padding: "1px"
+                        }} label={row.row.m_sEstatusRecoleccion}/>
+                    </div>
+                )
+            }
         },
         {
             headerName: "Origen",
             field: "m_sCiudadOrigen",
-            width: 125,
+            width: 150,
         }, {
             headerName: "Destino",
             field: "m_sCiudadDestino",
-            width: 125,
+            width: 150,
         },
         {
             headerName: "Folio",
             field: "m_sFolioRecoleccion",
-            width: 125,
+            width: 150,
         },
         {
             headerName: "Cliente",
@@ -2168,11 +2283,38 @@ function Recoleccion() {
         },
     ]);
 
-    function getAllData() {
-        obtenerRecoleccion().then((respuesta) => {
-            setData(respuesta.data);
-        });
+    async function getAllData() {
+        obtenerFechaInicio().then((respuestaUno) => { 
+
+
+            
+            obtenerFechaFinal().then((respuestaDos) => { 
+
+                setDataFechaInicial(respuestaUno.data)
+setDataFechaFinal(respuestaDos.data)
+                setFiltros(filtros => {
+                    return {
+                        ...filtros,
+                       fechaInicial: respuestaUno.data[0].Fecha,
+                       fechaFinal: respuestaDos.data[0].Fecha
+
+                    }
+                })
+
+
+
+
+                obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                    setData(respuesta.data);
+        })
+      
+            })
+      
+    })
     }
+
+
+   
 
     function confirmarUbicacion(coordenadas, e) {
         handleAceptar(e, coordenadas)
@@ -2219,7 +2361,11 @@ function Recoleccion() {
             setDataCiudad(respuesta.data);
         });
     }
-
+    function getAllCiudadesFiltro() {
+        obtenerCiudades().then((respuesta) => {
+            setDataCiudadF(respuesta.data);
+        });
+    }
     function getAllZonas() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
         axios.get(url, {headers}).then((respuesta) => {
@@ -2227,7 +2373,7 @@ function Recoleccion() {
         });
     }
 
-    async function getAllTiposSeguro(){
+    async function getAllTiposSeguro() {
         axios.get(`${process.env.REACT_APP_API_URL}/TipoSeguros/GetListado`, {headers}).then(({data}) => {
             setDataTiposSeguro(data)
         })
@@ -3344,10 +3490,10 @@ function Recoleccion() {
                         </div>
 
                         {dataCodigosPostalesRecoleccionDD.length !== 0 ? <TableCodigoPostal object={state}
-                                                                                          select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
-                                                                                          columns={columnsCP}
-                                                                                          data={dataCodigosPostalesRecoleccionDD.filter((cp) => cp.m_nIdCiudad == state.ciudadRecoleccion)}
-                                                                                          identificadorModal={state.identificadorModal}/> :
+                                                                                            select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
+                                                                                            columns={columnsCP}
+                                                                                            data={dataCodigosPostalesRecoleccionDD.filter((cp) => cp.m_nIdCiudad == state.ciudadRecoleccion)}
+                                                                                            identificadorModal={state.identificadorModal}/> :
                             <div>No se encontró ningún registro</div>}
 
                         <DialogActions style={{justifyContent: "left"}}>
@@ -3373,10 +3519,10 @@ function Recoleccion() {
                         </div>
 
                         {dataCodigosPostalesEntregaDD.length !== 0 ? <TableCodigoPostal object={state}
-                                                                                      select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
-                                                                                      columns={columnsCP}
-                                                                                      data={dataCodigosPostalesEntregaDD.filter((cp) => cp.m_nIdCiudad == state.ciudadEntrega)}
-                                                                                      identificadorModal={state.identificadorModal}/> :
+                                                                                        select={state[state.identificadorModal] && state[state.identificadorModal].m_nIdCP}
+                                                                                        columns={columnsCP}
+                                                                                        data={dataCodigosPostalesEntregaDD.filter((cp) => cp.m_nIdCiudad == state.ciudadEntrega)}
+                                                                                        identificadorModal={state.identificadorModal}/> :
                             <div>No se encontró ningún registro</div>}
 
                         <DialogActions style={{justifyContent: "left"}}>
@@ -3766,6 +3912,56 @@ function Recoleccion() {
                                                         </Select>
                                                     </FormControl>
                                                 </Grid>
+                                                <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <InputLabel id="OrigenListado">Origen</InputLabel>
+                                                        <Select
+                                                            labelId="OrigenListado"
+                                                            className="form-control"
+                                                            required
+                                                            label="Origen"
+                                                            value={filtros.OrigenListado}
+                                                            onChange={handleChangeFiltros}
+                                                            id="OrigenListado"
+                                                            name="OrigenListado"
+                                                        >
+                                                            <option value="0">Todos</option>
+                                                            {dataCiudadF.map((ciudad) => (
+                                                                <option
+                                                                    key={ciudad.m_nIdCiudad}
+                                                                    value={ciudad.m_nIdCiudad}
+                                                                >
+                                                                    {ciudad.m_sCiudad}
+                                                                </option>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <InputLabel id="DestinoListado">Destino</InputLabel>
+                                                        <Select
+                                                            labelId="DestinoListado"
+                                                            className="form-control"
+                                                            required
+                                                            label="Destino"
+                                                            value={filtros.DestinoListado}
+                                                            onChange={handleChangeFiltros}
+                                                            id="DestinoListado"
+                                                            name="DestinoListado"
+                                                        >
+                                                            <option value="0">Todos</option>
+                                                            {dataCiudadF.map((ciudad) => (
+                                                                <option
+                                                                    key={ciudad.m_nIdCiudad}
+                                                                    value={ciudad.m_nIdCiudad}
+                                                                >
+                                                                    {ciudad.m_sCiudad}
+                                                                </option>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
                                                 <Grid item container xs={2}>
                                                     <IconButton aria-label="delete" onClick={() => {
                                                         resetFiltros()
@@ -4130,7 +4326,7 @@ function Recoleccion() {
                                                             <div className="col-md-6">
                                                                 {
                                                                     state.clientePaga.m_nIdTipoSeguro === undefined ? ``
-                                                                        : state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}`: `NO tiene seguro`
+                                                                        : state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}` : `NO tiene seguro`
 
                                                                 }
                                                             </div>
@@ -4212,16 +4408,12 @@ function Recoleccion() {
                                                                                                             }}
                                                                                                             disabled={state.agregar === "Consultar"}
                                                                                                             onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "nombreRemitente",
-                                                                                                                    tipoModal: 5,
-                                                                                                                    openDialog: true
-                                                                                                                });
+                                                                                                                actualizarRemitentesDestinatarios().then(({data}) => {
+                                                                                                                    setDataRemitenteDestinatario(data)
+                                                                                                                })
                                                                                                             }}
                                                                                                         >
-                                                                                                            <PageviewIcon
+                                                                                                            <ReplayIcon
                                                                                                                 style={{
                                                                                                                     color: "#F9A03E",
                                                                                                                     fontSize: 32,
@@ -4340,7 +4532,9 @@ function Recoleccion() {
                                                                     </div>
 
                                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                                        <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
+                                                                        <FormControl className="input select" fullWidth
+                                                                                     variant="outlined" margin="dense"
+                                                                                     required>
                                                                             <InputLabel
                                                                                 id="idEstadoLabel">Estado</InputLabel>
                                                                             <Select
@@ -4368,8 +4562,11 @@ function Recoleccion() {
                                                                 </div>
                                                                 <div className="col-md-6">
                                                                     <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                                        <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
-                                                                            <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
+                                                                        <FormControl className="input select" fullWidth
+                                                                                     variant="outlined" margin="dense"
+                                                                                     required>
+                                                                            <InputLabel
+                                                                                id="idMunicipioLabel">Municipio</InputLabel>
                                                                             <Select
                                                                                 fullWidth
                                                                                 labelId={"idMunicipioLabel"}
@@ -4563,7 +4760,7 @@ function Recoleccion() {
                                                                                 <Autocomplete
                                                                                     value={remitente.zonaOperativaRemitente}
                                                                                     freeSolo
-                                                                                    onChange={(event, newValue) => handleChangeAutocompleteRemitente("zonaOperativaRemitente",newValue)}
+                                                                                    onChange={(event, newValue) => handleChangeAutocompleteRemitente("zonaOperativaRemitente", newValue)}
                                                                                     id="zonaOperativaRemitente"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
@@ -4582,6 +4779,7 @@ function Recoleccion() {
                                                                                             variant="outlined"
                                                                                             label="Zona Operativa"
                                                                                             margin="dense"
+                                                                                            required={!state.diferenteRecoleccion}
                                                                                             // onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />
@@ -4597,7 +4795,7 @@ function Recoleccion() {
                                                                                 <Autocomplete
                                                                                     value={remitente.zonaTarifaRemitente}
                                                                                     freeSolo
-                                                                                    onChange={(event, newValue) => handleChangeAutocompleteRemitente("zonaTarifaRemitente",newValue)}
+                                                                                    onChange={(event, newValue) => handleChangeAutocompleteRemitente("zonaTarifaRemitente", newValue)}
                                                                                     id="zonaTarifaRemitente"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
@@ -4616,6 +4814,7 @@ function Recoleccion() {
                                                                                             variant="outlined"
                                                                                             label="Zona Tarifa"
                                                                                             margin="dense"
+                                                                                            required={!state.diferenteRecoleccion}
                                                                                             // onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />
@@ -4685,7 +4884,7 @@ function Recoleccion() {
                                                                                 disableClearable
                                                                                 forcePopupIcon={false}
                                                                                 options={dataRemitenteDestinatario}
-                                                                                getOptionLabel={(option) =>(
+                                                                                getOptionLabel={(option) => (
                                                                                     option ?
                                                                                         option.m_sAlias + " (" + option.m_sNombre + ")"
                                                                                         : ''
@@ -4732,7 +4931,7 @@ function Recoleccion() {
                                                                                                                 });
                                                                                                             }}
                                                                                                         >
-                                                                                                            <PageviewIcon
+                                                                                                            <ReplayIcon
                                                                                                                 style={{
                                                                                                                     color: "#F9A03E",
                                                                                                                     fontSize: 32,
@@ -4856,7 +5055,8 @@ function Recoleccion() {
 
                                                                     <div className="col-sm-12 col-md-12  unit">
                                                                         <label className="input select">
-                                                                            <FormControl fullWidth variant="outlined" margin="dense" required>
+                                                                            <FormControl fullWidth variant="outlined"
+                                                                                         margin="dense" required>
                                                                                 <InputLabel
                                                                                     id="idEstadoLabel">Estado</InputLabel>
                                                                                 <Select
@@ -4885,8 +5085,11 @@ function Recoleccion() {
                                                                 </div>
                                                                 <div className="col-md-6">
                                                                     <div className="col-sm-12 col-md-12 unit">
-                                                                        <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
-                                                                            <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
+                                                                        <FormControl className="input select" fullWidth
+                                                                                     variant="outlined" margin="dense"
+                                                                                     required>
+                                                                            <InputLabel
+                                                                                id="idMunicipioLabel">Municipio</InputLabel>
                                                                             <Select
                                                                                 fullWidth
                                                                                 labelId={"idMunicipioLabel"}
@@ -5085,7 +5288,7 @@ function Recoleccion() {
                                                                                 <Autocomplete
                                                                                     value={destinatario.zonaOperativaDestinatario}
                                                                                     freeSolo
-                                                                                    onChange={(event, newValue) => handleChangeAutocompleteDestinatario("zonaOperativaDestinatario",newValue)}
+                                                                                    onChange={(event, newValue) => handleChangeAutocompleteDestinatario("zonaOperativaDestinatario", newValue)}
                                                                                     id="zonaOperativaDestinatario"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
@@ -5104,6 +5307,7 @@ function Recoleccion() {
                                                                                             variant="outlined"
                                                                                             label="Zona Operativa"
                                                                                             margin="dense"
+                                                                                            required={!state.diferenteEntrega}
                                                                                             // onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />
@@ -5119,7 +5323,7 @@ function Recoleccion() {
                                                                                 <Autocomplete
                                                                                     value={destinatario.zonaTarifaDestinatario}
                                                                                     freeSolo
-                                                                                    onChange={(event, newValue) => handleChangeAutocompleteDestinatario("zonaTarifaDestinatario",newValue)}
+                                                                                    onChange={(event, newValue) => handleChangeAutocompleteDestinatario("zonaTarifaDestinatario", newValue)}
                                                                                     id="zonaTarifaDestinatario"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
@@ -5138,6 +5342,7 @@ function Recoleccion() {
                                                                                             variant="outlined"
                                                                                             label="Zona Tarifa"
                                                                                             margin="dense"
+                                                                                            required={!state.diferenteEntrega}
                                                                                             // onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />
@@ -5293,7 +5498,8 @@ function Recoleccion() {
                                                                         variant="outlined"
                                                                         margin="dense"
                                                                         required={state.diferenteRecoleccion}>
-                                                                        <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
+                                                                        <InputLabel
+                                                                            id="idMunicipioLabel">Municipio</InputLabel>
                                                                         <Select
                                                                             fullWidth
                                                                             labelId={"idMunicipioLabel"}
@@ -5358,7 +5564,7 @@ function Recoleccion() {
                                                                         <Autocomplete
                                                                             value={recoleccionDD.zonaOperativaRec}
                                                                             freeSolo
-                                                                            onChange={(event, newValue) => handleChangeAutocompleteRecoleccionDD("zonaOperativaRec",newValue)}
+                                                                            onChange={(event, newValue) => handleChangeAutocompleteRecoleccionDD("zonaOperativaRec", newValue)}
                                                                             id="zonaOperativaRec"
                                                                             disableClearable
                                                                             forcePopupIcon={false}
@@ -5394,7 +5600,7 @@ function Recoleccion() {
                                                                             id="zonaTarifaRec"
                                                                             disableClearable
                                                                             forcePopupIcon={false}
-                                                                            onChange={(event, newValue) => handleChangeAutocompleteRecoleccionDD("zonaTarifaRec",newValue)}
+                                                                            onChange={(event, newValue) => handleChangeAutocompleteRecoleccionDD("zonaTarifaRec", newValue)}
                                                                             disabled={state.agregar === "Consultar"}
                                                                             options={dataZonasTarifaRecoleccionDD}
                                                                             getOptionLabel={(option) => (
@@ -5521,7 +5727,8 @@ function Recoleccion() {
                                                                         variant="outlined"
                                                                         margin="dense"
                                                                         required={state.diferenteEntrega}>
-                                                                        <InputLabel id="idMunicipioLabel">Municipio</InputLabel>
+                                                                        <InputLabel
+                                                                            id="idMunicipioLabel">Municipio</InputLabel>
                                                                         <Select
                                                                             fullWidth
                                                                             labelId={"idMunicipioLabel"}
@@ -5586,7 +5793,7 @@ function Recoleccion() {
                                                                         <Autocomplete
                                                                             value={entregaDD.zonaOperativaEnt}
                                                                             freeSolo
-                                                                            onChange={(event, newValue) => handleChangeAutocompleteEntregaDD("zonaOperativaEnt",newValue)}
+                                                                            onChange={(event, newValue) => handleChangeAutocompleteEntregaDD("zonaOperativaEnt", newValue)}
                                                                             id="zonaOperativaEnt"
                                                                             disableClearable
                                                                             forcePopupIcon={false}
@@ -5605,7 +5812,7 @@ function Recoleccion() {
                                                                                     variant="outlined"
                                                                                     label="Zona Operativa"
                                                                                     margin="dense"
-                                                                                    required
+                                                                                    required={state.diferenteEntrega}
                                                                                     // onClick={handleClickZona}
                                                                                     {...params}
                                                                                 />
@@ -5621,7 +5828,7 @@ function Recoleccion() {
                                                                             freeSolo
                                                                             id="zonaTarifaEnt"
                                                                             disableClearable
-                                                                            onChange={(event, newValue) => handleChangeAutocompleteEntregaDD("zonaTarifaEnt",newValue)}
+                                                                            onChange={(event, newValue) => handleChangeAutocompleteEntregaDD("zonaTarifaEnt", newValue)}
                                                                             forcePopupIcon={false}
                                                                             options={dataZonasTarifaEntregaDD}
                                                                             disabled={state.agregar === "Consultar"}
@@ -5638,7 +5845,7 @@ function Recoleccion() {
                                                                                     variant="outlined"
                                                                                     label="Zona Tarifa"
                                                                                     margin="dense"
-                                                                                    required
+                                                                                    required={state.diferenteEntrega}
                                                                                     // onClick={handleClickZona}
                                                                                     {...params}
                                                                                 />
@@ -5696,8 +5903,6 @@ function Recoleccion() {
                                                                         />
                                                                     </div>
                                                                 </div>
-
-
 
 
                                                                 {/*<div className="col-sm-6 col-md-4  unit">
