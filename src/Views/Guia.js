@@ -146,6 +146,7 @@ function Guia(props) {
         fecha: "",
         idEstatusGuia: '',
         idMoneda: 0,
+        idTipoTarifa: 2,
         tipoCambio: 0,
         //Remitente
         nombreRemitente: "",
@@ -857,6 +858,10 @@ function Guia(props) {
             ...state,
             [event.target.name]: event.target.value
         });
+
+        if (event.target.name === "idTipoTarifa" && state.idEmbarque > 0 && state.paquetes !== undefined){
+            obtenerTarifasPorEmbarque(state.idEmbarque, state.paquetes)
+        }
     };
 
     //Hace filtrado de guias por fechas. Se usa en listado de guias
@@ -1428,7 +1433,7 @@ setDataFechaFinal(respuestaDos.data)
         const conceptosTemp = []
         let ivaTraslada = []
         let ivaRetiene = []
-        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque.m_nIdEmbarque}`, {headers}).then(tarifa => {
+        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque.m_nIdEmbarque}/${state.idTipoTarifa}`, {headers}).then(tarifa => {
             console.log('tarifas by embarque ', tarifa.data)
             // debugger
             if (tarifa.data.length != 0) {
@@ -2896,9 +2901,8 @@ setDataFechaFinal(respuestaDos.data)
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row">
-                                                    <div className="col-md-12">
-
-                                                        <div className="col-sm-4 col-md-2-5 unit">
+                                                    <Grid container spacing={2}>
+                                                        <Grid item xs>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
@@ -2931,9 +2935,8 @@ setDataFechaFinal(respuestaDos.data)
                                                                     </Select>
                                                                 </FormControl>
                                                             </label>
-                                                        </div>
-                                                        <div className="col-sm-4 col-md-2-5 unit">
-
+                                                        </Grid>
+                                                        <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
                                                                            onChange={handleChange}
@@ -2950,8 +2953,8 @@ setDataFechaFinal(respuestaDos.data)
                                                                            }}
                                                                 />
                                                             </div>
-                                                        </div>
-                                                        <div className="col-sm-4 col-md-2-5 unit">
+                                                        </Grid>
+                                                        <Grid item xs>
                                                             <label className="label">
                                                                 <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
@@ -2986,9 +2989,8 @@ setDataFechaFinal(respuestaDos.data)
                                                                     </Select>
                                                                 </FormControl>
                                                             </label>
-                                                        </div>
-                                                        <div className="col-sm-4 col-md-2-5 unit">
-
+                                                        </Grid>
+                                                        <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
                                                                            className="form-control"
@@ -3003,9 +3005,8 @@ setDataFechaFinal(respuestaDos.data)
                                                                            disabled
                                                                 />
                                                             </div>
-                                                        </div>
-                                                        <div className="col-sm-4 col-md-2-5 unit">
-
+                                                        </Grid>
+                                                        <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
                                                                            onChange={handleChange}
@@ -3019,11 +3020,10 @@ setDataFechaFinal(respuestaDos.data)
                                                                            disabled="disabled"
                                                                 />
                                                             </div>
-                                                        </div>
-
-
-                                                        <div className="col-sm-4 col-md-2-5 unit">
-
+                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid container spacing={2} style={{marginBottom:'15px'}}>
+                                                        <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
                                                                            onChange={handleChange}
@@ -3040,18 +3040,14 @@ setDataFechaFinal(respuestaDos.data)
                                                                            }}
                                                                 />
                                                             </div>
-                                                        </div>
-
-                                                        <div className="col-sm-4 col-md-2-5 unit">
-
+                                                        </Grid>
+                                                        <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
                                                                            onChange={handleChange}
                                                                            className="form-control"
                                                                            type="text"
-                                                                           InputLabelProps={{
-                                                                               shrink: true,
-                                                                           }}
+                                                                           InputLabelProps={{shrink: true,}}
                                                                            label="Fecha / Hora"
                                                                            placeholder={state.fecha}
                                                                            readOnly={state.agregar == "Consultar"}
@@ -3060,13 +3056,12 @@ setDataFechaFinal(respuestaDos.data)
                                                                            disabled="disabled"
                                                                 />
                                                             </div>
-                                                        </div>
-                                                        <div className="col-sm-4 col-md-2-5 unit">
+                                                        </Grid>
+                                                        <Grid item xs>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
-                                                                    <InputLabel id="idEstatusGuiaLabel"> Estatus de la
-                                                                        Guia</InputLabel>
+                                                                    <InputLabel id="idEstatusGuiaLabel"> Estatus de la Guia</InputLabel>
                                                                     <Select
                                                                         native
                                                                         labelId="idEstatusGuiaLabel"
@@ -3089,19 +3084,15 @@ setDataFechaFinal(respuestaDos.data)
                                                                                 <option
                                                                                     key={estatusGuia.m_nIdEstatusGuia}
                                                                                     value={estatusGuia.m_nIdEstatusGuia}>
-                                                                                    {
-                                                                                        estatusGuia.m_sEstatus
-                                                                                    }
+                                                                                    {estatusGuia.m_sEstatus}
                                                                                 </option>
                                                                             )
                                                                         )}
                                                                     </Select>
                                                                 </FormControl>
                                                             </label>
-                                                        </div>
-
-                                                        <div className="col-sm-4 col-md-2-5 unit">
-
+                                                        </Grid>
+                                                        <Grid item xs>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
@@ -3135,15 +3126,12 @@ setDataFechaFinal(respuestaDos.data)
                                                                     </Select>
                                                                 </FormControl>
                                                             </label>
-                                                        </div>
-
-                                                        <div className="col-sm-4 col-md-2-5 unit">
-
+                                                        </Grid>
+                                                        <Grid item xs>
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
-                                                                    <InputLabel id="tipoCambioLabel">Tipo de
-                                                                        Cambio</InputLabel>
+                                                                    <InputLabel id="tipoCambioLabel">Tipo de Cambio</InputLabel>
                                                                     <Select
                                                                         native
                                                                         labelId="tipoCambioLabel"
@@ -3170,9 +3158,30 @@ setDataFechaFinal(respuestaDos.data)
                                                                 </FormControl>
                                                                 <i className="fa fa-arrow-down"/>
                                                             </label>
-                                                        </div>
-
-                                                    </div>
+                                                        </Grid>
+                                                        <Grid item xs>
+                                                            <label className="input select">
+                                                                <FormControl fullWidth variant="outlined"
+                                                                             margin="dense" required>
+                                                                    <InputLabel> Tipo de Tarifa</InputLabel>
+                                                                    <Select
+                                                                        native
+                                                                        label="Tipo de Tarifa"
+                                                                        className="form-control"
+                                                                        onChange={handleChange}
+                                                                        name="idTipoTarifa"
+                                                                        read="true"
+                                                                        value={state.idTipoTarifa}
+                                                                        disabled={state.agregar == "Consultar"}
+                                                                    >
+                                                                        <option value="1">Por peso o volumen</option>
+                                                                        <option value="2">Por rango</option>
+                                                                        <option value="3">Por región</option>
+                                                                    </Select>
+                                                                </FormControl>
+                                                            </label>
+                                                        </Grid>
+                                                    </Grid>
                                                 </div>
                                             </div>
                                         </div>
