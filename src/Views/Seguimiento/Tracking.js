@@ -4,7 +4,7 @@ import logo from '../../iconos/LogoGM.png';
 import axios from "axios";
 
 import { makeStyles } from '@material-ui/core/styles';
-import { List,ListItem, ListItemText, Collapse, Button } from '@material-ui/core';
+import {List, ListItem, ListItemText, Collapse, Button, Paper} from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import InformacionPaquete from './InformacionPaquete';
@@ -124,9 +124,9 @@ export default function Tracking(...props){
                 destinatario: direccionDestino,
                 folio: data.m_sFolio,
                 fechaEnvio: data.m_dFechaRegistro,
-                tipoServicio: 'No disponible',
+                tipoServicio: data.m_sTipoServicio,
                 paquetes: data.m_bEsRecoleccion? data.m_parrPaquetes : data.m_arrPaquetes,
-                estatusGuia: 'No disponible'
+                estatusGuia: data.m_nIdEstatusGuia
             })
         }).catch(function (err) {
             console.log(err.data)
@@ -154,53 +154,49 @@ export default function Tracking(...props){
                 <img className={classes.image} src={logo}/>
             </header>
             <div className="widget-wrap" style={{margin:10}}>
-                <div className="widget-container">
-                    <div className="widget-content">
-                        <div className="row">
-                            <InformacionEntrega entrega={guiaData}/>
-                            <List component="nav">
-                                <ListItem
-                                    button
-                                    onClick={handleGuiaClick}
-                                    className={classes.listItem}>
-                                    <ListItemText
-                                        primary="Descripción Guía"/>
-                                    {openGuia ? <ExpandLess className={classes.collapseArrow} /> : <ExpandMore className={classes.collapseArrow} />}
-                                </ListItem>
-                                <Collapse
-                                    in={openGuia}
-                                    timeout="auto"
-                                    unmountOnExit>
-                                    <List component="div">
-                                        {
-                                            guiaData.paquetes.map(
-                                            p => (
-                                                <ListItem key={p.m_nIdEmbarqueDetalle}>
-                                                    <InformacionPaquete package = {p}/>
-                                                </ListItem>
-                                                )
-                                            )
-                                        }
-                                    </List>
-                                </Collapse>
-                                <ListItem
-                                    button
-                                    onClick={handleRastreoClick}
-                                    className={classes.listItem}>
-                        <ListItemText 
-                            primary="Rastreo Envio" />
-                        {openRastreo ? <ExpandLess className={classes.collapseArrow} /> : <ExpandMore className={classes.collapseArrow} />}
-                    </ListItem>
-                                <Collapse
-                                    in={openRastreo}
-                                    timeout="auto"
-                                    unmountOnExit>
-                                    <DetallesSeguimiento estatusGuia = {guiaData.estatusGuia}/>
-                                </Collapse>
+                <Paper elevation={3} >
+                    <InformacionEntrega entrega={guiaData}/>
+                    <List component="nav">
+                        <ListItem
+                            button
+                            onClick={handleGuiaClick}
+                            className={classes.listItem}>
+                            <ListItemText
+                                primary="Descripción Guía"/>
+                            {openGuia ? <ExpandLess className={classes.collapseArrow} /> : <ExpandMore className={classes.collapseArrow} />}
+                        </ListItem>
+                        <Collapse
+                            in={openGuia}
+                            timeout="auto"
+                            unmountOnExit>
+                            <List component="div">
+                                {
+                                    guiaData.paquetes.map(
+                                        p => (
+                                            <ListItem key={p.m_nIdEmbarqueDetalle}>
+                                                <InformacionPaquete package = {p}/>
+                                            </ListItem>
+                                        )
+                                    )
+                                }
                             </List>
-                        </div>
-                    </div>
-                </div>
+                        </Collapse>
+                        <ListItem
+                            button
+                            onClick={handleRastreoClick}
+                            className={classes.listItem}>
+                            <ListItemText
+                                primary="Rastreo Envio" />
+                            {openRastreo ? <ExpandLess className={classes.collapseArrow} /> : <ExpandMore className={classes.collapseArrow} />}
+                        </ListItem>
+                        <Collapse
+                            in={openRastreo}
+                            timeout="auto"
+                            unmountOnExit>
+                            <DetallesSeguimiento estatusGuia = {guiaData.estatusGuia}/>
+                        </Collapse>
+                    </List>
+                </Paper>
             </div>
         </div>
     )
