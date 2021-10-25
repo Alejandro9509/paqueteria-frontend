@@ -998,6 +998,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$APPLICATION_CONFIG_DIR$/consoles/db/f5746bf4-8842-4f3d-889c-20fece67adfe/console.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_CONFIG_DIR$/consoles/db/f5746bf4-8842-4f3d-889c-20fece67adfe/console_1.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatCodigosPostalesGetMunicipiosByIdEstadoPQ.sql">
           <value>
             <set />
@@ -1013,12 +1023,27 @@
             <set />
           </value>
         </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProGuiaTerminarParadaPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProViajeAgregarPQ.sql">
           <value>
             <set />
           </value>
         </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProViajeLlegadaAgregarPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProViajeSalidaAgregarPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_UltimaMillaTerminarParadaPQ.sql">
           <value>
             <set />
           </value>
@@ -1034,6 +1059,11 @@
           </value>
         </entry>
         <entry key="f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatTarifaCobroAgregarPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/table/ProEmbarquePQ.sql">
           <value>
             <set />
           </value>

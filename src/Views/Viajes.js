@@ -74,6 +74,7 @@ function Viajes() {
     const [indexOpen, setIndexOpen] = React.useState(-1);
     const [dataEstatusViaje, setEstatusViaje] = React.useState([]);
     const [informeSeleccionado, setInformeSeleccionado] = React.useState(null);
+    const [viajeSeleccionado, setViajeSeleccionado] = React.useState(null);
     const [dataEstatusDocumento, setEstatusDocumento] = React.useState([]);
     const [state, setState] = React.useState({
         showPopUp: false,
@@ -551,13 +552,13 @@ function Viajes() {
     const [paradaData, setParadaData] = React.useState();
 
     function getParadasListado(row) {
-        obtenerDetalleParadasIdViaje(row).then(respuesta => {
+        obtenerDetalleParadasIdViaje(row.m_nIdViaje).then(respuesta => {
             var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdOrigen")
             arrayInformes.forEach(a => {
                 a["informes"] = respuesta.data.filter(r => r.m_nIdOrigen === a.m_nIdOrigen)
                 a.origenDestino = `${a.m_sOrigen} - ${a.m_sDestino}`
             })
-            console.log(arrayInformes)
+            setViajeSeleccionado(row)
             setParadasListado(arrayInformes);
         });
     }
@@ -779,7 +780,7 @@ function Viajes() {
                         maxWidth={'xl'}>
                     <DialogTitle><h2>Llegada de Paradas</h2></DialogTitle>
                     <DialogContent>
-                        <LlegadaParadas onSubmit={updateLlegada} data={paradaData.m_clsInforme}>
+                        <LlegadaParadas onSubmit={updateLlegada} data={paradaData.m_clsInforme} viaje={viajeSeleccionado}>
                             <DialogActions>
                                 <Button
                                     variant={'contained'} color={'primary'}
@@ -1021,7 +1022,7 @@ function Viajes() {
                                                      ...state,
                                                      idViaje: row.data.m_nIdViaje
                                                  }) */
-                                                getParadasListado(row.data.m_nIdViaje)
+                                                getParadasListado(row.data)
                                             }}
                                         />
 
