@@ -153,6 +153,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../paqueteria-portal-clientes/src/Components/SAT/ClavesCFDI.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../paqueteria-portal-clientes/src/Views/Paquetes/Paquetes.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/.env">
           <value>
             <set />
@@ -609,6 +619,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/Zonas/ZonasAgregar.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/ZonasOperativas/CodigosPostalesZonas.js">
           <value>
             <set />
           </value>

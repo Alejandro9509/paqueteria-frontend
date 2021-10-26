@@ -189,6 +189,40 @@ function calcularRuta(points, sucursal) {
     return result
 
 }
+function calcularRutaUltimaMilla(points, sucursal, camion) {
+    var array = []
+    array.push(apiPoint(camion.lng, camion.lat))
+    console.log(points)
+    array = array.concat(points.map(p => apiPoint(parseFloat(p.lng), parseFloat(p.lat))))
+    array.push(apiPoint(sucursal.lng, sucursal.lat))
+    var result;
+    trackPromise(
+        result = new Promise((resolve, reject) => {
+            xroute.calculateRoute({
+                "waypoints": array,
+                "resultFields": {
+                    "polyline": true,
+                    "eventTypes": [
+                        "MANEUVER_EVENT"
+                    ],
+                    "encodedPath": true,
+                    "guidedNavigationRoute": false
+                },
+                "routeOptions": {
+                    "polylineOptions": {
+                        "elevations": true
+                    }
+                },
+                "requestProfile": {
+                    "userLanguage": "es"
+                }
+
+            }, (r, e) => resolve(r))
+        })
+    )
+    return result
+
+}
 
 async function searchLocationAddress(address) {
     var location = await xlocate.searchLocations({
@@ -430,7 +464,8 @@ export {
     eliminarPaqueteUltimaMilla,
     obtenerPaquetesInforme,
     obtenerPaquetesViaje,
-    obtenerPaquetesUnidadOperador
+    obtenerPaquetesUnidadOperador,
+    calcularRutaUltimaMilla
 }
 
 
