@@ -912,8 +912,8 @@ function Embarque(props) {
             obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado,newValue.m_nIdMunicipio).then(({data}) => {
                 setDataCodigosPostalesRemitente(data)
             })
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                /*if (data.length > 0){
+            /*obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
+                /!*if (data.length > 0){
                     setRemitente(remitente => {
                         return{
                             ...remitente,
@@ -927,11 +927,11 @@ function Embarque(props) {
                             zonaOperativaRemitente: {}
                         }
                     })
-                }*/
+                }*!/
                 setDataZonasOperativasRemitente(data)
             })
             obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                /*if (data.length > 0){
+                /!*if (data.length > 0){
                     setRemitente(remitente => {
                         return{
                             ...remitente,
@@ -945,13 +945,13 @@ function Embarque(props) {
                             zonaTarifaRemitente: {}
                         }
                     })
-                }*/
+                }*!/
                 setDataZonasTarifaRemitente(data)
-            })
+            })*/
         }
-        if (input === "codigoPostalRemitente"){
+        /*if (input === "codigoPostalRemitente"){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
+                /!*if (data.length > 0){
                     setRemitente(remitente => {
                         return{
                             ...remitente,
@@ -965,11 +965,11 @@ function Embarque(props) {
                             zonaOperativaRemitente: {}
                         }
                     })
-                }*/
+                }*!/
                 setDataZonasOperativasRemitente(data)
             })
             obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
+                /!*if (data.length > 0){
                     setRemitente(remitente => {
                         return{
                             ...remitente,
@@ -983,10 +983,10 @@ function Embarque(props) {
                             zonaTarifaRemitente: {}
                         }
                     })
-                }*/
+                }*!/
                 setDataZonasTarifaRemitente(data)
             })
-        }
+        }*/
     }
 
     const [destinatario, setDestinatario] = useState({
@@ -5264,7 +5264,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    {/* --------------------------------------- Correo ------------------------------------------------- */}
+
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
@@ -5280,7 +5280,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    {/* --------------------------------------- Telefono ------------------------------------------------- */}
+
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
@@ -5298,7 +5298,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    {/* --------------------------------------- Contacto ------------------------------------------------- */}
+
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
@@ -5314,7 +5314,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    {/* --------------------------------------- Origen ------------------------------------------------- */}
+
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <Autocomplete
@@ -5390,7 +5390,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-
+                                                                    {/*
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <Autocomplete
@@ -5454,6 +5454,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
+                                                                    */}
                                                                 </div>
                                                             </div>
                                                         </div>
