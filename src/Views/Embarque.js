@@ -1387,7 +1387,7 @@ function Embarque(props) {
         }
         let packs = []
         dataPaquetes.forEach((p) => {
-            p.m_xPeso = p.m_rPeso
+            p.m_xPeso = p.m_rPesom_nIdEstadoRemitente
             p.m_xLargo = p.m_rLargo
             p.m_xAncho = p.m_rAncho
             p.m_xAlto = p.m_rAlto
