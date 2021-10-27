@@ -180,12 +180,15 @@ function Viajes() {
         $('#Agregar').addClass('in show');
 
         obetenerViajeId(id).then(respuesta => {
+            console.log(respuesta.data)
             setState({
                 ...state,
                 agregar: "Viaje",
                 edit: true,
                 idViaje: id,
-                selectViaje: respuesta.data
+                consult: false,
+                selectViaje: respuesta.data,
+                open: true
             })
         });
     }
@@ -199,6 +202,11 @@ function Viajes() {
             setState({
                 ...state,
                 agregar: "Viaje",
+                edit: true,
+                consult: true,
+                idViaje: id,
+                selectViaje: respuesta.data,
+                open: true
             })
         });
     }
@@ -208,7 +216,9 @@ function Viajes() {
             ...state,
             agregar: "Viaje",
             showPopUp: false,
-            edit: false
+            edit: false,
+            consult: false,
+            open: true,
         })
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
@@ -845,7 +855,7 @@ function Viajes() {
                         <li className="active">
                             <a onClick={(event) => {
                                 event.stopPropagation();
-                                setState({...state, agregar: "Viaje"});
+                                setState({...state, agregar: "Viaje", open: true});
                                 $('.nav-tabs li ').removeClass('active');
                                 $('.nav-tabs li').eq(0).addClass('active');
                                 $('.tab-content div ').removeClass('in show');
@@ -1150,7 +1160,11 @@ function Viajes() {
 
                         <div className="widget-wrap" id="Agregar" className="tab-pane fade">
 
-                            <AgregarViaje reload={getAllData} edit={state.edit} select={state.selectViaje} id={state.idViaje}/>
+                            {
+                                state.open &&
+                                <AgregarViaje reload={getAllData} consult={state.consult} edit={state.edit} select={state.selectViaje} id={state.idViaje}/>
+
+                            }
 
                         </div>
 

@@ -130,7 +130,7 @@ class UltimaMilla extends Component {
                     data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
                 } else {
                     if (data.m_nIdUltimaMilla === this.state.ultimaMilla.m_nIdUltimaMilla) {
-                        data.m_arrClsParadaUltimaMilla.forEach(t => t.color = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla).color)
+                        data.m_arrClsParadaUltimaMilla.forEach(t => t.color = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla)  ? this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla).color : randomColor(10))
                     } else {
                         data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
                     }
