@@ -192,7 +192,7 @@ class UnidadesList extends Component {
                                             <TableCell align="left"> {u.m_sCodigo} - {u.m_sDescripcion}</TableCell>
                                             <TableCell align="left">{u.m_nCapacidad}</TableCell>
                                             <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
-                                            <TableCell align="left">{u.m_nIdOperador === 0 ? (
+                                            <TableCell align="left">{u.m_nIdOperador === null ? (
                                                 <Link onClick={() => this.props.reasignarOperador(u)}>Asignar</Link>) : u.m_sNombreOperador}</TableCell>
                                             <TableCell align="left">{u.m_sPlacas}</TableCell>
                                         </TableRow>

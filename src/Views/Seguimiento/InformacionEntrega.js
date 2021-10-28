@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Paper} from "@material-ui/core";
+import {Grid, Paper} from "@material-ui/core";
 
 
 const useStyles = makeStyles((theme) =>({
@@ -8,7 +8,12 @@ const useStyles = makeStyles((theme) =>({
         margin: 5
     },
     label:{
+        fontSize: '25px',
         color: theme.palette.primary.main
+    },
+    subtitle:{
+        // color: theme.palette.primary.main,
+        fontSize: '35px'
     },
     detailsContainer: {
         display: 'flex',
@@ -25,27 +30,27 @@ export default function InformacionEntrega(props){
     const tipoServicio = props.entrega.tipoServicio;
 
     return(
-        <Paper style={{margin:'20px', paddingLeft:'30px',paddingTop:'20px',paddingBottom:'30px'}}>
-            <h3 className={classes.label}>Dirección de entrega</h3>
+        // <Paper style={{margin:'20px', paddingLeft:'30px',paddingTop:'20px',paddingBottom:'30px'}}>
+        <div style={{margin:'20px', paddingLeft:'30px',paddingTop:'20px'}}>
+            <h3 className={classes.subtitle} style={{}}>Dirección de destino</h3>
             <span className={classes.labelContainer}>{destinatario}</span>
-            <h3 className={classes.label}>Detalle de Envío</h3>
-            <div className={classes.detailsContainer}>
-                <div className={classes.labelContainer}>
-                    <span className={classes.label}>Folio: </span><br/><br/>
-                    {folio}
-                </div>
-                <div className={classes.labelContainer}>
-                    <span className={classes.label}>Fecha: </span><br/><br/>
-                    {fecha}
-                </div>
-                <div className={classes.labelContainer}>
-                    <span className={classes.label}>Tipo de servicio: </span><br/><br/>
-                    <span>{tipoServicio}</span>
-                </div>
+            <h3 className={classes.subtitle}>Detalle de Envío</h3>
 
-            </div>
+            <Grid container spacing={2}>
+                <Grid item xs={2}>
+                    <p style={{fontSize: '20px'}}><span className={classes.label}>Folio: </span>{folio}</p>
+                </Grid>
+                <Grid item xs={2}>
+                    <p style={{fontSize: '20px'}}> <span className={classes.label}>Fecha: </span>{fecha}</p>
+                </Grid>
+                <Grid item xs={3}>
+                    <p style={{fontSize: '20px'}}><span className={classes.label}>Tipo de servicio: </span>{tipoServicio}</p>
+                </Grid>
+            </Grid>
+
             
-        </Paper>
+        </div>
+
     )
 }
 
