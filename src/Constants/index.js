@@ -1,7 +1,6 @@
 import {encode_utf8} from "../Util/Util";
 
 export const API_BASE_URL = `${process.env.REACT_APP_API_URL}`;
-
 export const ACCESS_TOKEN = 'accessToken';
 export const USER_ROLES = 'roles';
 export const DEVICE_ID = 'deviceId';
@@ -11,8 +10,9 @@ export const API_VERSION = 'v1.0.0';
 export const APP_TITLE = "Sistemas Sierra";
 export const OAUTH2_REDIRECT_URI = 'http://192.168.1.185:8080/sierra/oauth2/redirect';
 export const API_HEADERS = {
-    'Accept': 'application/vnd.certuit-' + API_VERSION + '+json',
+    //'Accept': 'application/vnd.certuit-' + API_VERSION + '+json',
     'Content-Type': 'application/json',
+    'RFC': `${localStorage.getItem("RFC")}`
 };
 
 export const API_AUTENTICATION_HEADERS = {

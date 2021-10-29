@@ -8,7 +8,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
-import {obtenerProductoById} from "../../Util/Contexts/ProductosContext";
+import {obtenerProductoById, obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import {obtenerEmbalajes} from "../../Util/Contexts/EmbalajesContext";
 import axios from "axios";
 import Recoleccion from "../Recoleccion";
@@ -274,14 +274,10 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
         }
     }
 
-    const headers = {
-        "Content-Type": "application/json",
-        //    'access-control-allow-origin': '*'
-    };
+    
 
     const getAllProductos = () => {
-        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
-        axios.get(url, {headers}).then(respuesta => {
+       obtenerProductos().then(respuesta => {
             setDataProductos(respuesta.data)
         });
     }

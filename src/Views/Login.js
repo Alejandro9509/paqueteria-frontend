@@ -50,6 +50,7 @@ function Login() {
           console.log(respuesta.data)
           localStorage.setItem("accessToken", true);
           localStorage.setItem("UsuarioId", respuesta.data.m_nIdUsuario);
+          localStorage.setItem("RFC",rfc);
           localStorage.setItem("Sucursal", respuesta.data.m_nIdSucursal);
           localStorage.setItem("TipoUsuario", respuesta.data.m_nTipoUsuario);
           localStorage.setItem("Email", respuesta.data.m_sCorreoElectronico);
