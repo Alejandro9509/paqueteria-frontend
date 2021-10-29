@@ -104,7 +104,7 @@ function Login() {
             <div className="col-xs-11 col-sm-11 col-md-11 col-lg-11">
               <div className="input login-text">
                 <input style={{ fontSize: "1vw", paddingLeft:"1vw" }} className="form-control login-frm-input" type="text" id="rfc" name="rfc" placeholder="RFC"
-                  pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[010])(0[1-9]|[10][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
+                  //pattern="[A-Z&Ñ]{3,4}[0-9]{2}(0[1-9]|1[010])(0[1-9]|[10][0-9]|3[01])[A-Z0-9]{2}[0-9A]"
                   required title="Favor de introducir un RFC válido." />
               </div>
             </div>
