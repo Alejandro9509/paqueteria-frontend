@@ -13,7 +13,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TableUnidadViajes from "./TablaUnidadViajes";
 import {DataGrid} from "@material-ui/data-grid";
-import {dataGridLocaleText} from "../../Constants";
+import {API_HEADERS, dataGridLocaleText} from "../../Constants";
 import Historial from "./Historial";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import {obtenerCodigoPostal} from "../../Util/Contexts/CodigoPostalContext";
@@ -37,10 +37,7 @@ import Noty from "noty";
 import {obtenerEstatusUnidadeId, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 import {obtenerOperadoresId} from "../../Util/Contexts/OperadoresContext";
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
 
 function showSuccess(mensaje) {
     new Noty({

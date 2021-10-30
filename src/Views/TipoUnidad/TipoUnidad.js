@@ -16,10 +16,7 @@ import AgregarTipoUnidad from "./AgregarTipoUnidad";
 import { agregarTipoUnidades, eliminarTipoUnidades, obtenerTipoUnidades, modificarTipoUnidades } from '../../Util/Contexts/TipoUnidadContext';
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 window.jQuery = window.$ = $;
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",

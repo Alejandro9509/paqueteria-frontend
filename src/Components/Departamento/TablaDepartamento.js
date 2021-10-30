@@ -4,9 +4,7 @@ import axios from "axios";
 import { obtenerDepartamentos } from "../../Util/Contexts/DepartamentoContext";
 
 function TablaDepartamento() {
-  const headers = {
-    'Content-Type': 'application/json'
-  }
+
   
   const modificar = () => {
     alert("Hello World")

@@ -2,7 +2,7 @@ import React, {Component, useEffect, useMemo, useState} from 'react'
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
 import {DataGrid, GridToolbar } from "@material-ui/data-grid";
-import {dataGridLocaleText} from "../../Constants";
+import {API_HEADERS, dataGridLocaleText} from "../../Constants";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
@@ -16,10 +16,7 @@ import Noty from "noty";
 
 window.jQuery = window.$ = $;
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
 function showSuccess(mensaje) {
     new Noty({
         type: "information",

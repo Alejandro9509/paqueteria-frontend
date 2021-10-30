@@ -63,9 +63,7 @@ function showSuccess(mensaje) {
 }
 
 window.jQuery = window.$ = $;
-const headers = {
-    "Content-Type": "application/json",
-};
+
 
 const styles = {
     stepper: {
@@ -79,9 +77,6 @@ const styles = {
 }
 
 function Clientes(props) {
-    const headers = {
-        "Content-Type": "application/json",
-    };
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",

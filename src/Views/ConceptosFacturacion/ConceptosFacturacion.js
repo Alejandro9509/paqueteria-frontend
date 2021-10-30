@@ -14,10 +14,7 @@ import { dataGridLocaleText } from '../../Constants';
 import { agregarConceptosFacturacion, eliminarConceptosFacturacion, modificarConceptosFacturacion, obtenerConceptosFacturacionId, obtenerConceptosFacturacion } from '../../Util/Contexts/ConceptosFacturacionContext';
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",

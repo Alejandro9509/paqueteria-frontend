@@ -38,7 +38,7 @@ import {
     TextField,
     Tooltip
 } from "@material-ui/core";
-import {dataGridLocaleText, TICKET_ZABRA_TAMPLATE} from "../Constants";
+import {API_HEADERS, dataGridLocaleText, TICKET_ZABRA_TAMPLATE} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusGuia} from "../Util/Contexts/EstatusContext";
 import {obtenerEmbarquesId, obtenerEmbarqueMoneda, obtenerEmbarquesFiltro} from "../Util/Contexts/EmbarquesContext";
@@ -1781,9 +1781,7 @@ setDataFechaFinal(respuestaDos.data)
         });
     };
 
-    const headers = {
-        'Content-Type': 'application/json'
-    }
+    const headers = API_HEADERS
 
     const handleImprimir = () => {
         imprimirFormatosId(state.formatoSeleccionado).then((response) => {

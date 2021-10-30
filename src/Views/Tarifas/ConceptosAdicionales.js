@@ -24,11 +24,9 @@ import {
     useSortBy,
 } from "react-table";
 import { obtenerConceptosFacturacion } from '../../Util/Contexts/ConceptosFacturacionContext';
+import {API_HEADERS} from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
 
 let timer;
 

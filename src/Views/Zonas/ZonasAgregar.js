@@ -6,11 +6,9 @@ import PropTypes from 'prop-types';
 import axios from "axios";
 import {AppBar, Box, FormControl, InputLabel, Select, Tab, Tabs, TextField, Typography} from '@material-ui/core';
 import {obtenerCodigoPostalCiudad} from "../../Util/Contexts/CodigoPostalContext";
+import {API_HEADERS} from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
 
 function a11yProps(index) {
     return {
