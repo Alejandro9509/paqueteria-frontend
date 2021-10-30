@@ -1,10 +1,9 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
+import { API_HEADERS } from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
+
 
 function modificarTipoViaje(id, params) {
     const url = `${process.env.REACT_APP_API_URL}/TipoViaje/Modificar/` + id;

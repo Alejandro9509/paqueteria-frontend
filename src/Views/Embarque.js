@@ -49,7 +49,7 @@ import {ToggleButtonGroup} from "@material-ui/lab";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import {dataGridLocaleText} from "../Constants";
+import {API_HEADERS, dataGridLocaleText} from "../Constants";
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import {obtenerCiudades, obtenerCiudadId} from "../Util/Contexts/CiudadesContext";
@@ -1413,7 +1413,7 @@ function Embarque(props) {
         }
         let packs = []
         dataPaquetes.forEach((p) => {
-            p.m_xPeso = p.m_rPesom_nIdEstadoRemitente
+            p.m_xPeso = p.m_rPeso
             p.m_xLargo = p.m_rLargo
             p.m_xAncho = p.m_rAncho
             p.m_xAlto = p.m_rAlto
@@ -3053,9 +3053,7 @@ function Embarque(props) {
         });
     }
 
-    const headers = {
-        "Content-Type": "application/json",
-    };
+    const headers = API_HEADERS
 
     function conDatos() {
         return data.length != 0;

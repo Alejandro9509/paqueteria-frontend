@@ -16,10 +16,7 @@ import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import { obtenerTipoUnidadesId } from '../../Util/Contexts/TipoUnidadContext';
 window.jQuery = window.$ = $;
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+
 
 class AgregarTipoUnidad extends Component {
 

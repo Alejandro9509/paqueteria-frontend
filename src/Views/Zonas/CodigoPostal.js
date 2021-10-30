@@ -3,10 +3,6 @@ import PropTypes from 'prop-types';
 import axios from "axios";
 import { obtenerCodigoPostalCiudad } from '../../Util/Contexts/CodigoPostalContext';
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
 
 class CodigoPostal extends Component {
     constructor(props) {

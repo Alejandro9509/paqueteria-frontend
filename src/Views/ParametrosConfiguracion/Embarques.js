@@ -4,10 +4,7 @@ import axios from "axios";
 import { FormControl, InputLabel, List, ListItem, Select } from '@material-ui/core';
 import "../../App.css";
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+
 
 class Embarques extends Component {
     constructor(props) {

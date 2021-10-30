@@ -14,10 +14,7 @@ import AgregarFolio from "./AgregarFolios";
 import { agregarFolios, eliminarFolios, obtenerFolios } from '../../Util/Contexts/FoliosContext';
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 window.jQuery = window.$ = $;
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",

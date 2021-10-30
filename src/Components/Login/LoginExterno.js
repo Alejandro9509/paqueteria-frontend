@@ -12,9 +12,6 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-const headers = {
-    'Content-Type': 'application/json'
-}
 class MyComponent extends Component {
     constructor(props) {
         super(props);
@@ -37,7 +34,7 @@ class MyComponent extends Component {
         const contraseña = this.getUrlParameter('pass');
         if(rfc) {
             const url = `${process.env.REACT_APP_API_URL}/Usuarios/ValidarLogin/` + usuario + "/" + contraseña + "/" + rfc;
-            axios.get(url, { headers }).then(respuesta => {
+            axios.get(url, { headers: {'Content-Type': 'application/json', 'RFC': rfc} }).then(respuesta => {
                 try {
                     if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
                         console.log(respuesta.data)

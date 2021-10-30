@@ -15,10 +15,7 @@ import {
 import { obtenerConceptosFacturacion } from '../../Util/Contexts/ConceptosFacturacionContext';
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+
 
 let timer;
 

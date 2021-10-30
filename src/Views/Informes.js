@@ -49,7 +49,7 @@ import {render} from "react-dom";
 import SearchIcon from "@material-ui/icons/Search";
 import {DataGrid} from "@material-ui/data-grid";
 import Noty from "noty";
-import {API_BASE_URL, dataGridLocaleText} from "../Constants";
+import {API_BASE_URL, API_HEADERS, dataGridLocaleText} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusInforme} from "../Util/Contexts/EstatusContext";
 import {obtenerGuia, obtenerGuiaPendientes, obtenerGuiaReporte, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
@@ -93,9 +93,7 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 window.jQuery = window.$ = $;
-const headers = {
-    "Content-Type": "application/json",
-};
+
 let timer;
 
 function Informes({history}) {
@@ -820,9 +818,7 @@ function Informes({history}) {
         );
     }
 
-    const headers = {
-        "Content-Type": "application/json",
-    };
+    const headers = API_HEADERS
 
     function cubicarAccion(e) {
         e.preventDefault();

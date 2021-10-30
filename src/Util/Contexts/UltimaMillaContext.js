@@ -3,12 +3,10 @@ import {trackPromise} from "react-promise-tracker";
 import axios from "axios";
 import Tour from "../../Views/UltimaMilla/Tour";
 import moment from "moment";
+import { API_HEADERS } from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    // 'TimeZone' : Intl.DateTimeFormat().resolvedOptions().timeZone
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
+
 
 const XTourClient = window.XTourClient;
 const XLocateClient = window.XLocateClient;

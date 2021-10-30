@@ -18,7 +18,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
-import {dataGridLocaleText} from "../Constants";
+import {API_HEADERS, dataGridLocaleText} from "../Constants";
 import $ from "jquery";
 import {
     Button,
@@ -406,10 +406,7 @@ function Viajes() {
     };
 
 
-    const headers = {
-        'Content-Type': 'application/json',
-        //    'access-control-allow-origin': '*'
-    }
+    const headers = API_HEADERS
 
 
     /**DISPONIBILIDAD DE EQUIPO*/

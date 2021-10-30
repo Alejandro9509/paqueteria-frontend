@@ -12,6 +12,7 @@ import { Chip, List, ListItem, ListSubheader, makeStyles, withStyles } from '@ma
 import L from 'leaflet';
 import { arrayPonts } from '../Util/Data';
 import MarkerImage from '../iconos/Mapa/marker.png';
+import {API_HEADERS} from "../Constants";
 
 const XTourClient = window.XTourClient;
 
@@ -26,10 +27,7 @@ const MarkerIcon = new L.Icon({
     iconSize: new L.Point(30, 30),
 });
 
-const headers = {
-    "Content-Type": "application/json",
-    //'access-control-allow-origin': '*'
-};
+const headers = API_HEADERS
 
 var DepotA = {
     "$type": "DepotSite",

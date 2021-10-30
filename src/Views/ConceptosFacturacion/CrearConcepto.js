@@ -7,10 +7,7 @@ import ClavesCFDI from './ClavesCFDI';
 import { obtenerImpuestos } from '../../Util/Contexts/ImpuestosContext';
 import { obtenerSAT } from '../../Util/Contexts/ConceptosFacturacionContext';
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+
 
 class CrearConcepto extends Component {
     constructor(props) {

@@ -17,10 +17,7 @@ import TextField from "@material-ui/core/TextField";
 import { agregarCuentasCorreo, modificarCuentasCorreo, obtenerCuentasCorreoUsuarioId } from '../../Util/Contexts/CuentasCorreoContext';
 window.jQuery = window.$ = $;
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+
 
 function showSuccess(mensaje){
     new Noty({
