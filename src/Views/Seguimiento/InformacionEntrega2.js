@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -7,6 +7,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import {Button, Dialog, DialogTitle, List, ListItem} from "@material-ui/core";
+import InformacionPaquete from "./InformacionPaquete";
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -37,8 +39,19 @@ const useStyles = makeStyles({
     },
 });
 
-export default function InformacionEntrega2({entrega, guia}) {
+export default function InformacionEntrega2(props) {
     const classes = useStyles();
+    const {guia} = props
+    console.log(guia)
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     const rows = [
         createData('Folio', guia.m_sFolio),
         createData('Remitente', guia.m_sNombreRemitente),
@@ -106,7 +119,40 @@ export default function InformacionEntrega2({entrega, guia}) {
                     ))}
                 </TableBody>
             </Table>
+            <div style={{marginTop: '50px'}}>
+                <Button variant="outlined" color="primary"
+                        onClick={handleClickOpen}
+                        style={{textTransform: 'none',boxShadow: 'none'}}>
+                    Ver paquetes
+                </Button>
+                <SimpleDialog guia={guia} open={open} onClose={handleClose}/>
+            </div>
+
         </div>
 
+    );
+}
+
+function SimpleDialog(props) {
+    const classes = useStyles();
+    const { onClose, open, guia } = props;
+
+    return (
+        <Dialog onClose={onClose} aria-labelledby="simple-dialog-title" open={open}
+                fullWidth={true}
+                maxWidth={"md"}>
+            <DialogTitle id="simple-dialog-title" style={{}}>Paquetes</DialogTitle>
+            <List component="div">
+                {
+                    guia.m_parrPaquetes && guia.m_arrPaquetes.map(
+                        p => (
+                            <ListItem key={p.m_nIdEmbarqueDetalle}>
+                                <InformacionPaquete package = {p}/>
+                            </ListItem>
+                        )
+                    )
+                }
+            </List>
+        </Dialog>
     );
 }

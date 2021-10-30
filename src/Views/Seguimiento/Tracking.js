@@ -59,7 +59,8 @@ export default function Tracking(...props){
     const [guia, setGuia] = useState({})
 
     const headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'RFC': 'ADI880815DA7'
     }
     
     useEffect(value =>{
