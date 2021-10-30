@@ -10,14 +10,11 @@ import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
-import { dataGridLocaleText } from '../../Constants';
+import {API_HEADERS, dataGridLocaleText} from '../../Constants';
 import { Tooltip } from '@material-ui/core';
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 window.jQuery = window.$ = $;
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
