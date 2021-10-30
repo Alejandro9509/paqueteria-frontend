@@ -10,7 +10,8 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import InformacionPaquete from './InformacionPaquete';
 import DetallesSeguimiento from './DetallesSeguimiento';
 import InformacionEntrega2 from "./InformacionEntrega2";
-
+import {API_HEADERS} from "../../Constants";
+const headers = API_HEADERS
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,10 +59,10 @@ export default function Tracking(...props){
     });
     const [guia, setGuia] = useState({})
 
-    const headers = {
+    /*const headers = {
         'Content-Type': 'application/json',
         'RFC': 'ADI880815DA7'
-    }
+    }*/
     
     useEffect(value =>{
         const { match: { params } } = props[0];
