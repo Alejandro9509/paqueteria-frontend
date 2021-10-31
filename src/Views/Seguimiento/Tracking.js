@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import InformacionEntrega from './InformacionEntrega';
 import logo from '../../iconos/LogoGM.png';
 import axios from "axios";
 
@@ -9,7 +8,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import InformacionPaquete from './InformacionPaquete';
 import DetallesSeguimiento from './DetallesSeguimiento';
-import InformacionEntrega2 from "./InformacionEntrega2";
+import InformacionEntrega from "./InformacionEntrega";
 import {API_HEADERS} from "../../Constants";
 const headers = API_HEADERS
 
@@ -124,7 +123,7 @@ export default function Tracking(...props){
                         <DetallesSeguimiento guia={guia} estatusGuia={guiaData.estatusGuia}
                                           idEstatusGuia={guiaData.idEstatusGuia}/>}
                     {guia !== undefined &&
-                        <InformacionEntrega2 entrega={guiaData} guia={guia}/>
+                        <InformacionEntrega entrega={guiaData} guia={guia}/>
                     }
 
                     {/*<List component="nav">
