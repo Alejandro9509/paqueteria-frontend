@@ -1,56 +1,179 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import {Grid, Paper} from "@material-ui/core";
+import React, {useState} from 'react';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import {Button, Dialog, DialogTitle, List, ListItem} from "@material-ui/core";
+import InformacionPaquete from "./InformacionPaquete";
 
-
-const useStyles = makeStyles((theme) =>({
-    labelContainer:{
-        margin: 5
+const StyledTableCell = withStyles((theme) => ({
+    head: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
     },
-    label:{
-        fontSize: '25px',
-        color: theme.palette.primary.main
+    body: {
+        fontSize: 14,
     },
-    subtitle:{
-        // color: theme.palette.primary.main,
-        fontSize: '35px'
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+    root: {
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.action.hover,
+        },
     },
-    detailsContainer: {
-        display: 'flex',
-        flexDirection: 'row'
-    }
-}));
+}))(TableRow);
 
-export default function InformacionEntrega(props){
-    console.log(props.entrega);
-    const classes = useStyles();
-    const destinatario = props.entrega.destinatario;
-    const folio = props.entrega.folio;
-    const fecha = props.entrega.fechaEnvio;
-    const tipoServicio = props.entrega.tipoServicio;
-
-    return(
-        // <Paper style={{margin:'20px', paddingLeft:'30px',paddingTop:'20px',paddingBottom:'30px'}}>
-        <div style={{margin:'20px', paddingLeft:'30px',paddingTop:'20px'}}>
-            <h3 className={classes.subtitle} style={{}}>Dirección de destino</h3>
-            <span className={classes.labelContainer}>{destinatario}</span>
-            <h3 className={classes.subtitle}>Detalle de Envío</h3>
-
-            <Grid container spacing={2}>
-                <Grid item xs={2}>
-                    <p style={{fontSize: '20px'}}><span className={classes.label}>Folio: </span>{folio}</p>
-                </Grid>
-                <Grid item xs={2}>
-                    <p style={{fontSize: '20px'}}> <span className={classes.label}>Fecha: </span>{fecha}</p>
-                </Grid>
-                <Grid item xs={3}>
-                    <p style={{fontSize: '20px'}}><span className={classes.label}>Tipo de servicio: </span>{tipoServicio}</p>
-                </Grid>
-            </Grid>
-
-            
-        </div>
-
-    )
+function createData(title, value) {
+    return { title, value};
 }
 
+const useStyles = makeStyles({
+    table: {
+        /*paddingLeft:100,
+        marginRight:100*/
+    },
+});
+
+export default function InformacionEntrega(props) {
+    const classes = useStyles();
+    const {guia} = props
+    console.log(guia)
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const rows = [
+        createData('Folio', guia.m_sFolio),
+        createData('Remitente', guia.m_sNombreRemitente),
+        createData('Destinatario', guia.m_sNombreDestinatario),
+        createData('Dirección de origen', guia.m_bRecoleccionDiferenteDomicilio ? guia.m_sDomicilioDetalleRecoleccion : guia.m_sDomicilioRemitente),
+        createData('Dirección de destino', guia.m_bEntregaDiferenteDomicilio ? guia.m_sDomicilioDetalleEntrega : guia.m_sDomicilioDestinatario),
+        createData('Ciudad de origen', guia.m_sCiudadOrigen),
+        createData('Ciudad de destino', guia.m_sCiudadDestino),
+        createData('Tipo de servicio', guia.m_sTipoServicio)
+    ];
+    const rowsBitacora =[]
+    if (guia.m_dFechaRegistro)
+        rowsBitacora.push(createData(guia.m_dFechaRegistro,'Se registró la carga' ))
+    if (guia.m_dFechaRegistroInforme)
+        rowsBitacora.push(createData(guia.m_dFechaRegistroInforme,'Se agregó la guia a un informe' ))
+    if (guia.m_dFechaRegistroViaje)
+        rowsBitacora.push(createData(guia.m_dFechaRegistroViaje,'Viaje generado' ))
+    if (guia.m_dFechaSalidaViaje)
+        rowsBitacora.push(createData(guia.m_dFechaSalidaViaje,'La carga salió de la surcursal de origen' ))
+    if (guia.m_dFechaLlegadaViaje)
+        rowsBitacora.push(createData(guia.m_dFechaLlegadaViaje,'La carga llegó de la surcursal de destino' ))
+    if (guia.m_dFechaUltimaMilla){
+        rowsBitacora.push(createData(guia.m_dFechaUltimaMilla,'Entró en proceso de última milla' ))
+        if (guia.m_nEstatusUlimaMilla == 3){
+            if (guia.m_bEsRecoleccion)
+                rowsBitacora.push(createData(guia.m_dFechaUltimaMilla,"La carga fue recogida por un operador."))
+            else
+                rowsBitacora.push(createData(guia.m_dFechaUltimaMilla,"La carga fue entregada al destinatario." ))
+        }else{
+            rowsBitacora.push(createData(guia.m_dFechaUltimaMilla,"En ruta de última milla" ))
+        }
+
+    }
+    if (guia.m_dFechaCancelacion)
+        rowsBitacora.push(createData(guia.m_dFechaCancelacion,'El transporte de la carga fue cancelado.' ))
+    if (guia.m_dFechaCancelacionInforme)
+        rowsBitacora.push(createData(guia.m_dFechaCancelacionInforme,'El informe de la carga fue cancelado.' ))
+    if (guia.m_dtFechaEntrega)
+        rowsBitacora.push(createData(guia.m_dFechaEntrega,'Carga entregada.' ))
+    if (guia.m_dFechaOcurre)
+        rowsBitacora.push(createData(guia.m_dFechaOcurre,'Carga entregada en sucursal.' ))
+    return (
+        <div style={{paddingLeft: '100px', paddingRight: '100px'}}>
+            <Table className={classes.table} aria-label="customized table">
+                {/*<TableHead>
+                    <TableRow>
+                        <StyledTableCell style={{ width: 100 }}>title</StyledTableCell>
+                        <StyledTableCell style={{ width: 100 }}>value</StyledTableCell>
+                    </TableRow>
+                </TableHead>*/}
+                <TableBody>
+                    {rows.map((row) => (
+                        <StyledTableRow key={row.title}>
+                            <StyledTableCell component="th" scope="row">{row.title}</StyledTableCell>
+                            <StyledTableCell >{row.value}</StyledTableCell>
+                        </StyledTableRow>
+                    ))}
+                </TableBody>
+            </Table>
+            <div style={{marginTop: '50px'}}>
+                <h2>Bitácora de avance</h2>
+            </div>
+
+            <Table className={classes.table} aria-label="customized table">
+                {/*<TableHead>
+                    <TableRow>
+                        <StyledTableCell style={{ width: 100 }}>title</StyledTableCell>
+                        <StyledTableCell style={{ width: 100 }}>value</StyledTableCell>
+                    </TableRow>
+                </TableHead>*/}
+                <TableBody>
+                    {rowsBitacora.map((row) => (
+                        <StyledTableRow key={row.title}>
+                            <StyledTableCell component="th" scope="row">{row.title}</StyledTableCell>
+                            <StyledTableCell >{row.value}</StyledTableCell>
+                        </StyledTableRow>
+                    ))}
+                </TableBody>
+            </Table>
+            <div style={{marginTop: '50px'}}>
+                <Button variant="outlined" color="primary"
+                        onClick={handleClickOpen}
+                        style={{textTransform: 'none',boxShadow: 'none'}}>
+                    Ver paquetes
+                </Button>
+                <SimpleDialog guia={guia} open={open} onClose={handleClose}/>
+            </div>
+
+        </div>
+
+    );
+}
+
+function SimpleDialog(props) {
+    const classes = useStyles();
+    const { onClose, open, guia } = props;
+
+    return (
+        <Dialog onClose={onClose} aria-labelledby="simple-dialog-title" open={open}
+                fullWidth={true}
+                maxWidth={"md"}>
+            <DialogTitle id="simple-dialog-title" style={{}}>Paquetes</DialogTitle>
+            <List component="div">
+                {
+                    guia.m_bEsRecoleccion ?
+                        guia.m_parrPaquetes && guia.m_parrPaquetes.map(
+                            p => (
+                                <ListItem key={p.m_nIdEmbarqueDetalle}>
+                                    <InformacionPaquete package = {p}/>
+                                </ListItem>
+                            )
+                        )
+                        :
+                    guia.m_arrPaquetes && guia.m_arrPaquetes.map(
+                        p => (
+                            <ListItem key={p.m_nIdEmbarqueDetalle}>
+                                <InformacionPaquete package = {p}/>
+                            </ListItem>
+                        )
+                    )
+                }
+            </List>
+        </Dialog>
+    );
+}
