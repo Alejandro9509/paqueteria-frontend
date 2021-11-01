@@ -1436,7 +1436,7 @@ setDataFechaFinal(respuestaDos.data)
         axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque.m_nIdEmbarque}/${state.idTipoTarifa}`, {headers}).then(tarifa => {
             console.log('tarifas by embarque ', tarifa.data)
             // debugger
-            if (tarifa.data.length != 0) {
+            /*if (tarifa.data.length != 0) {
                 let pesoTotal = 0
                 let pesoKg = 0
                 let pesoVolumetrico = 0
@@ -1481,7 +1481,7 @@ setDataFechaFinal(respuestaDos.data)
                 obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal, paquetesTemp)
             } else {
                 showSuccess("No se encontró tarifa con las caracteristicas especificadas")
-            }
+            }*/
         })
     }
 
