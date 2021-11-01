@@ -139,7 +139,7 @@ class Cronograma extends Component {
                                                 <TableBody>
                                                     {
                                                         this.props.tour.m_arrClsParadaUltimaMilla.map((u, index) => {
-                                                            var tour = this.props.tour.m_arrClsParadaUltimaMilla.find(t => t.m_nIdUnidad ===  u.m_nIdUnidad)
+                                                            var tour = u
                                                             var filterEstatus = tour.m_arrClsProGuia.filter(g =>g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3)
                                                             var color = tour.color
                                                             var min = 20, sec = 10;

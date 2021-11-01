@@ -40,10 +40,7 @@ import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
 
 window.jQuery = window.$ = $;
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",

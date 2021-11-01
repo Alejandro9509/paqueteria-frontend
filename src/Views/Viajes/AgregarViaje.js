@@ -13,7 +13,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TableUnidadViajes from "./TablaUnidadViajes";
 import {DataGrid} from "@material-ui/data-grid";
-import {dataGridLocaleText} from "../../Constants";
+import {API_HEADERS, dataGridLocaleText} from "../../Constants";
 import Historial from "./Historial";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import {obtenerCodigoPostal} from "../../Util/Contexts/CodigoPostalContext";
@@ -35,11 +35,9 @@ import {obtenerInformesDisponiblesViajes} from "../../Util/Contexts/InformesCont
 import InformesPorAsignar from "./InformesPorAsignar";
 import Noty from "noty";
 import {obtenerEstatusUnidadeId, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
+import {obtenerOperadoresId} from "../../Util/Contexts/OperadoresContext";
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
 
 function showSuccess(mensaje) {
     new Noty({
@@ -62,6 +60,7 @@ class AgregarViaje extends Component {
         const today = new Date();
 
         this.state = {
+            id: 0,
             origen: "",
             destino: "",
             IdRemolque1: null,
@@ -132,7 +131,9 @@ class AgregarViaje extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.id !== this.props.id ){
+            console.log(this.props.select.m_sNumViajeCliente)
             this.setState({
+                id: this.props.id,
                 fechaHoraRegistro: this.props.select.m_dFecha + "T"+ this.props.select.m_tHora,
                 estatusListado:this.props.select.m_nIdEstatusViaje,
                 idSucursalAgregar:this.props.select.m_nIdSucursal,
@@ -141,26 +142,16 @@ class AgregarViaje extends Component {
                 identificadorViaje: this.props.select.m_sIdentificador,
                 viajeCliente:this.props.select.m_sNumViajeCliente,
                 CreadoPor: this.props.select.CreadoPor,
-
                dataInformesAsignados:this.props.select.m_arrInformes,
-                idCiudadOrigen: this.state.dataCiudad.find(c => c.m_nIdCiudad === this.props.select.m_nIdOrigen),
-                idCiudadDestino: this.state.dataCiudad.find(c => c.m_nIdCiudad === this.props.select.m_nDestino),
-                asignacionUnidad: {
-                    idUnidad: this.state.dataUnidades.find(u => u.m_nIdUnidad === this.props.select.m_nIdUnidad),
-                    // idOperador: this.state.asignacionEquipo.operador.m_nIdOperador,
-                    // CRV1: this.state.asignacionEquipo.cargadoVacioRemolqueUno,
-                    // CRV2: this.state.asignacionEquipo.cargadoVacioRemolqueDos,
-                    // referencia: this.state.asignacionEquipo.referencia,
-                    // kilometro: this.state.asignacionEquipo.kms,
-                    // fechaCarga: this.state.asignacionEquipo.fechaCarga,
-                    // horas: this.state.asignacionEquipo.horas,
-                    // fechaEntrega: this.state.asignacionEquipo.fechaEntregaGeneral,
-                    // horaCarga: this.state.asignacionEquipo.horaCarga,
-                    // fechaInforme: this.state.asignacionEquipo.fechaInforme,
-                    // horaInforme: this.state.asignacionEquipo.horaInforme,
-                    // estatus: this.state.asignacionEquipo.estatusInforme,
-                    // horaEntrega: this.state.asignacionEquipo.horaEntregaGeneral,
-                }
+
+            })
+            obtenerOperadoresId(this.props.select.m_nIdOperador).then(({data}) => {
+                this.setState({
+                    asignacionEquipo: {
+                        ...this.state.asignacionEquipo,
+                        operador: data
+                    }
+                })
             })
         }
     }
@@ -264,7 +255,7 @@ class AgregarViaje extends Component {
 
     getAllCiudades() {
         obtenerCiudades().then((respuesta) => {
-            this.setState({dataCiudad: respuesta.data})
+            this.setState({dataCiudad: respuesta.data, idCiudadOrigen: this.props.select ? respuesta.data.find(c => c.m_nIdCiudad === this.props.select.m_nIdOrigen) : null, idCiudadDestino: this.props.select ? respuesta.data.find(c => c.m_nIdCiudad === this.props.select.m_nIdDestino) : null})
             /*  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
              axios.get(url, { headers }).then((respuesta) => {
                  this.setState({ dataCiudad: respuesta.data }) */
@@ -296,7 +287,9 @@ class AgregarViaje extends Component {
 
     getAllUnidades() {
         obtenerUnidades().then((respuesta) => {
-            this.setState({dataUnidades: respuesta.data})
+            this.setState({dataUnidades: respuesta.data, asignacionEquipo: this.props.select ? {...this.state.asignacionEquipo,unidad: respuesta.data.find(u => u.m_nIdUnidad === this.props.select.m_nIdUnidad) } : {}, IdRemolque1: this.props.select ? respuesta.data.find(c => c.m_nIdUnidad === this.props.select.m_nIdRemolque1) : null,
+                IdRemolque2: this.props.select ? respuesta.data.find(c => c.m_nIdUnidad === this.props.select.m_nIdRemolque2): null,
+                IdDolly: this.props.select ? respuesta.data.find(c => c.m_nIdUnidad === this.props.select.m_nIdDolly) : null})
         });
     }
 
@@ -651,6 +644,7 @@ class AgregarViaje extends Component {
                                                     onChange={this.handleChange}
                                                     id="idSucursalAgregar"
                                                     label="Sucursal"
+                                                    disabled={this.props.consult}
                                                     name="idSucursalAgregar"
                                                 >
                                                     {this.state.dataSucursal.map((sucursal) => (
@@ -687,6 +681,7 @@ class AgregarViaje extends Component {
                                                        onChange={this.handleChange}
                                                        className="form-control"
                                                        type="text"
+                                                       disabled={this.props.consult}
                                                        required
                                                        label="Núm. Viaje Cliente"
                                                        value={this.state.viajeCliente}
@@ -707,12 +702,12 @@ class AgregarViaje extends Component {
                                                        InputLabelProps={{
                                                            shrink: true,
                                                        }}
+                                                       disabled={this.props.consult}
                                                        value={this.state.fechaHoraRegistro}
                                                        className="form-control"
                                                        id="fechaHoraRegistro"
                                                        type="datetime-local"
                                                        name="fechaHoraRegistro"
-                                                       disabled={this.state.agregar === "Consultar" || this.state.agregar === "Modificar"}
 
                                             />
                                         </div>
@@ -730,6 +725,7 @@ class AgregarViaje extends Component {
                                                     id="estatusListado"
                                                     label="Estatus Viaje"
                                                     name={"estatusListado"}
+                                                    disabled={this.props.consult}
                                                     InputProps={{
                                                         id: "estatusListado",
                                                         name: "estatusListado"
@@ -754,6 +750,7 @@ class AgregarViaje extends Component {
                                                        onChange={this.handleChange}
                                                        className="form-control"
                                                        type="text"
+                                                       disabled={this.props.consult}
                                                        label="Candado Oficial"
                                                        value={this.state.candadoOficial}
                                                        name="candadoOficial"
@@ -767,6 +764,7 @@ class AgregarViaje extends Component {
                                                        onChange={this.handleChange}
                                                        className="form-control"
                                                        type="text"
+                                                       disabled={this.props.consult}
                                                        label="Identificador"
                                                        value={this.state.identificadorViaje}
                                                        name="identificadorViaje"
@@ -788,6 +786,7 @@ class AgregarViaje extends Component {
                                                 id="idCiudadOrigen"
                                                 disableClearable
                                                 forcePopupIcon={false}
+                                                disabled={this.props.consult}
                                                 options={this.state.dataCiudad}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCiudad
@@ -858,6 +857,7 @@ class AgregarViaje extends Component {
                                                 id="idCiudadDestino"
                                                 disableClearable
                                                 forcePopupIcon={false}
+                                                disabled={this.props.consult}
                                                 options={this.state.dataCiudad}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCiudad
@@ -939,6 +939,7 @@ class AgregarViaje extends Component {
                                                     //disabled={state.agregar == "Consultar"}
                                                     id="IdRemolque1"
                                                     disableClearable
+                                                    disabled={this.props.consult}
                                                     forcePopupIcon={false}
                                                     options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
                                                     getOptionLabel={(option) =>
@@ -1010,6 +1011,7 @@ class AgregarViaje extends Component {
                                                            type="text"
                                                            disabled
                                                            label="Placas Int"
+
                                                            value={this.state.placasRemolque1}
                                                            name="placasRemolque1"
                                                 />
@@ -1050,6 +1052,7 @@ class AgregarViaje extends Component {
                                                     //disabled={state.agregar == "Consultar"}
                                                     id="IdRemolque2"
                                                     disableClearable
+                                                    disabled={this.props.consult}
                                                     forcePopupIcon={false}
                                                     options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
                                                     getOptionLabel={(option) =>
@@ -1162,6 +1165,7 @@ class AgregarViaje extends Component {
                                                 //disabled={state.agregar == "Consultar"}
                                                 id="IdDolly"
                                                 disableClearable
+                                                disabled={this.props.consult}
                                                 forcePopupIcon={false}
                                                 options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 28)}
                                                 getOptionLabel={(option) =>
@@ -1237,7 +1241,7 @@ class AgregarViaje extends Component {
                                             />
                                         </div>
                                     </div>
-                                    {this.state.dataInformesAsignados.length != 0 ? (
+                                    {(this.state.dataInformesAsignados.length !== 0 && !this.props.consult) ? (
                                         <div className="col-sm-6 col-md-4 unit">
                                             <Button
                                                 variant={"contained"}
@@ -1260,7 +1264,7 @@ class AgregarViaje extends Component {
                                                                type="text"
                                                                disabled
                                                                label="Operador"
-                                                               value={this.state.asignacionEquipo.operador.m_sNombreCompleto}
+                                                               value={this.state.asignacionEquipo.operador ? this.state.asignacionEquipo.operador.m_sNombreCompleto :""}
                                                                name="placasDolly"
                                                     />
                                                 </div>
@@ -1272,7 +1276,7 @@ class AgregarViaje extends Component {
                                                                type="text"
                                                                disabled
                                                                label="Unidad"
-                                                               value={`${this.state.asignacionEquipo.unidad.m_sCodigo} - ${this.state.asignacionEquipo.unidad.m_sDescripcion}`}
+                                                               value={`${this.state.asignacionEquipo.unidad ? this.state.asignacionEquipo.unidad.m_sCodigo : ""} - ${this.state.asignacionEquipo.unidad ? this.state.asignacionEquipo.unidad.m_sDescripcion : ""}`}
                                                                name="placasDolly"
                                                     />
                                                 </div>
@@ -1311,15 +1315,17 @@ class AgregarViaje extends Component {
                     </div>
                 </div>
 
-                <div className="row">
-                    <div className="col-md-12">
-                        <div className="widget-wrap">
-                            <div className="widget-header">
-                                <h2 color={'#717171'}>Informes para asignación</h2>
-                                <br/>
-                                <div className="row" style={{display: "flex"}}>
-                                    {/* Ruta */}
-                                    {/*<div className="col-sm-12 col-md-12 unit">
+                {
+                    !this.props.consult &&
+                    <div className="row">
+                        <div className="col-md-12">
+                            <div className="widget-wrap">
+                                <div className="widget-header">
+                                    <h2 color={'#717171'}>Informes para asignación</h2>
+                                    <br/>
+                                    <div className="row" style={{display: "flex"}}>
+                                        {/* Ruta */}
+                                        {/*<div className="col-sm-12 col-md-12 unit">
                                         <div className="input">
                                             <Autocomplete
                                                 freeSolo
@@ -1389,174 +1395,176 @@ class AgregarViaje extends Component {
                                             />
                                         </div>
                                     </div>*/}
-                                    {/* Origen */}
-                                    <div className="col-sm-12 col-md-12 unit">
-                                        <div className="input">
-                                            <Autocomplete
-                                                freeSolo
-                                                onChange={this.handleOrigenFiltro}
-                                                value={this.state.origen}
-                                                //disabled={state.agregar == "Consultar"}
-                                                id="origenRemitente"
-                                                disableClearable
-                                                forcePopupIcon={false}
-                                                options={this.state.dataCiudad}
-                                                getOptionLabel={(option) =>
-                                                    option.m_sCiudad
-                                                }
-                                                style={{
-                                                    transform: "translate(14px, 10px) scale(1) !important"
-                                                }}
-                                                renderInput={(params) => (
-                                                    <div>
-                                                        <TextField
-                                                            label="Origen"
-                                                            margin="dense"
-                                                            variant="outlined"
-                                                            {...params}
-                                                            InputProps={{
-                                                                ...params.InputProps,
-                                                                style: {height: "33px", fontSize: "14px"},
-                                                                type: "search",
-                                                                value: this.state.origen,
-                                                                //disabled: state.agregar == "Consultar",
-                                                                disableUnderline: true,
-                                                                endAdornment: (
-                                                                    <InputAdornment position="end">
-                                                                        <IconButton
-                                                                            padding="0px"
-                                                                            style={{
-                                                                                paddingRight: "0px",
-                                                                            }}
-                                                                            //disabled={state.agregar == "Consultar"}
-                                                                            onClick={() => {
-                                                                                this.setState({
-                                                                                    identificadorModal:
-                                                                                        "origen",
-                                                                                    tipoModal: 1,
-                                                                                    openDialog: true
-                                                                                })
-                                                                            }}
-                                                                        >
-                                                                            <PageviewIcon
+                                        {/* Origen */}
+                                        <div className="col-sm-12 col-md-12 unit">
+                                            <div className="input">
+                                                <Autocomplete
+                                                    freeSolo
+                                                    onChange={this.handleOrigenFiltro}
+                                                    value={this.state.origen}
+                                                    //disabled={state.agregar == "Consultar"}
+                                                    id="origenRemitente"
+                                                    disableClearable
+                                                    forcePopupIcon={false}
+                                                    options={this.state.dataCiudad}
+                                                    getOptionLabel={(option) =>
+                                                        option.m_sCiudad
+                                                    }
+                                                    style={{
+                                                        transform: "translate(14px, 10px) scale(1) !important"
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <div>
+                                                            <TextField
+                                                                label="Origen"
+                                                                margin="dense"
+                                                                variant="outlined"
+                                                                {...params}
+                                                                InputProps={{
+                                                                    ...params.InputProps,
+                                                                    style: {height: "33px", fontSize: "14px"},
+                                                                    type: "search",
+                                                                    value: this.state.origen,
+                                                                    //disabled: state.agregar == "Consultar",
+                                                                    disableUnderline: true,
+                                                                    endAdornment: (
+                                                                        <InputAdornment position="end">
+                                                                            <IconButton
+                                                                                padding="0px"
                                                                                 style={{
-                                                                                    color: "#F9A03E",
-                                                                                    fontSize: 32,
-                                                                                    paddingInlineEnd: 0,
-                                                                                    paddingRight: 0,
-                                                                                    paddingBlockEnd: 0,
-                                                                                    paddingLeft: 0,
-                                                                                    paddingBlock: 0,
+                                                                                    paddingRight: "0px",
                                                                                 }}
-                                                                            />
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                ),
-                                                            }}
-                                                        />
-                                                    </div>
-                                                )}
-                                            />
+                                                                                //disabled={state.agregar == "Consultar"}
+                                                                                onClick={() => {
+                                                                                    this.setState({
+                                                                                        identificadorModal:
+                                                                                            "origen",
+                                                                                        tipoModal: 1,
+                                                                                        openDialog: true
+                                                                                    })
+                                                                                }}
+                                                                            >
+                                                                                <PageviewIcon
+                                                                                    style={{
+                                                                                        color: "#F9A03E",
+                                                                                        fontSize: 32,
+                                                                                        paddingInlineEnd: 0,
+                                                                                        paddingRight: 0,
+                                                                                        paddingBlockEnd: 0,
+                                                                                        paddingLeft: 0,
+                                                                                        paddingBlock: 0,
+                                                                                    }}
+                                                                                />
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    ),
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                    {/* Destino */}
-                                    <div className="col-sm-12 col-md-12 unit">
-                                        <div className="input">
-                                            <Autocomplete
-                                                freeSolo
-                                                onChange={this.handleDestinoFiltro}
+                                        {/* Destino */}
+                                        <div className="col-sm-12 col-md-12 unit">
+                                            <div className="input">
+                                                <Autocomplete
+                                                    freeSolo
+                                                    onChange={this.handleDestinoFiltro}
 
-                                                value={this.state.destino}
-                                                //disabled={state.agregar == "Consultar"}
-                                                id="destino"
-                                                disableClearable
-                                                forcePopupIcon={false}
-                                                options={this.state.dataCiudad}
-                                                getOptionLabel={(option) =>
-                                                    option.m_sCiudad
-                                                }
-                                                style={{
-                                                    transform: "translate(14px, 10px) scale(1) !important"
-                                                }}
-                                                renderInput={(params) => (
-                                                    <div>
-                                                        <TextField
-                                                            label="Destino"
-                                                            margin="dense"
-                                                            variant="outlined"
-                                                            {...params}
-                                                            InputProps={{
-                                                                ...params.InputProps,
-                                                                style: {height: "33px", fontSize: "14px"},
-                                                                type: "search",
-                                                                value: this.state.destino,
-                                                                //disabled: state.agregar == "Consultar",
-                                                                disableUnderline: true,
-                                                                endAdornment: (
-                                                                    <InputAdornment position="end">
-                                                                        <IconButton
-                                                                            padding="0px"
-                                                                            style={{
-                                                                                paddingRight: "0px",
-                                                                            }}
-                                                                            //disabled={state.agregar == "Consultar"}
-                                                                            onClick={() => {
-                                                                                this.setState({
-                                                                                    identificadorModal:
-                                                                                        "destino",
-                                                                                    tipoModal: 1,
-                                                                                    openDialog: true
-                                                                                })
-                                                                            }}
-                                                                        >
-                                                                            <PageviewIcon
+                                                    value={this.state.destino}
+                                                    //disabled={state.agregar == "Consultar"}
+                                                    id="destino"
+                                                    disableClearable
+                                                    forcePopupIcon={false}
+                                                    options={this.state.dataCiudad}
+                                                    getOptionLabel={(option) =>
+                                                        option.m_sCiudad
+                                                    }
+                                                    style={{
+                                                        transform: "translate(14px, 10px) scale(1) !important"
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <div>
+                                                            <TextField
+                                                                label="Destino"
+                                                                margin="dense"
+                                                                variant="outlined"
+                                                                {...params}
+                                                                InputProps={{
+                                                                    ...params.InputProps,
+                                                                    style: {height: "33px", fontSize: "14px"},
+                                                                    type: "search",
+                                                                    value: this.state.destino,
+                                                                    //disabled: state.agregar == "Consultar",
+                                                                    disableUnderline: true,
+                                                                    endAdornment: (
+                                                                        <InputAdornment position="end">
+                                                                            <IconButton
+                                                                                padding="0px"
                                                                                 style={{
-                                                                                    color: "#F9A03E",
-                                                                                    fontSize: 32,
-                                                                                    paddingInlineEnd: 0,
-                                                                                    paddingRight: 0,
-                                                                                    paddingBlockEnd: 0,
-                                                                                    paddingLeft: 0,
-                                                                                    paddingBlock: 0,
+                                                                                    paddingRight: "0px",
                                                                                 }}
-                                                                            />
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                ),
-                                                            }}
-                                                        />
-                                                    </div>
-                                                )}
-                                            />
+                                                                                //disabled={state.agregar == "Consultar"}
+                                                                                onClick={() => {
+                                                                                    this.setState({
+                                                                                        identificadorModal:
+                                                                                            "destino",
+                                                                                        tipoModal: 1,
+                                                                                        openDialog: true
+                                                                                    })
+                                                                                }}
+                                                                            >
+                                                                                <PageviewIcon
+                                                                                    style={{
+                                                                                        color: "#F9A03E",
+                                                                                        fontSize: 32,
+                                                                                        paddingInlineEnd: 0,
+                                                                                        paddingRight: 0,
+                                                                                        paddingBlockEnd: 0,
+                                                                                        paddingLeft: 0,
+                                                                                        paddingBlock: 0,
+                                                                                    }}
+                                                                                />
+                                                                            </IconButton>
+                                                                        </InputAdornment>
+                                                                    ),
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                />
+                                            </div>
                                         </div>
+
                                     </div>
+                                </div>
+
+                                <div className="row" style={{height: "200px", width: '100%'}}>
+                                    <DataGrid
+                                        localeText={dataGridLocaleText}
+                                        rows={this.state.dataInformesPorAsignar}
+                                        columns={columnspRorAsignar}
+                                        density="compact"
+                                        pageSize={Math.floor((this.state.height - 310) / 30)}
+                                        getRowId={(row) => row.m_nIdInforme}
+                                        onRowSelected={(row) => {
+                                            this.setState({
+                                                idInforme: row.data.m_nIdInforme
+
+                                            })
+
+                                        }}
+                                    />
 
                                 </div>
-                            </div>
 
-                            <div className="row" style={{height: "200px", width: '100%'}}>
-                                <DataGrid
-                                    localeText={dataGridLocaleText}
-                                    rows={this.state.dataInformesPorAsignar}
-                                    columns={columnspRorAsignar}
-                                    density="compact"
-                                    pageSize={Math.floor((this.state.height - 310) / 30)}
-                                    getRowId={(row) => row.m_nIdInforme}
-                                    onRowSelected={(row) => {
-                                        this.setState({
-                                            idInforme: row.data.m_nIdInforme
-
-                                        })
-
-                                    }}
-                                />
 
                             </div>
-
-
                         </div>
                     </div>
-                </div>
+                }
+
                 <div className="row">
                     <div className="col-md-12">
                         <div className="widget-wrap">

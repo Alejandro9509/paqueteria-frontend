@@ -62,10 +62,7 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 window.jQuery = window.$ = $;
-const headers = {
-    "Content-Type": "application/json",
-    //'access-control-allow-origin': '*'
-};
+
 
 function Rutas(props) {
 

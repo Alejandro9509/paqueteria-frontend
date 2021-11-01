@@ -42,7 +42,7 @@ export default function InformacionPaquete(props){
 
     return(
         <Paper elevation={0}>
-            <Grid container style={{margin:'30px'}}>
+            <Grid container style={{marginLeft:'30px', marginRight:'30px', marginBottom:'30px'}}>
                 <Grid item xs={12} >
                     <span className={classes.label}>Producto:</span><br/><br/>
                     <span>{producto}</span>

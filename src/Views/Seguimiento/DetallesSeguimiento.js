@@ -1,7 +1,13 @@
 import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {Stepper, Step, StepLabel, StepContent, Button, Paper} from '@material-ui/core/';
-
+import { withStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
+import Check from '@material-ui/icons/Check';
+import SettingsIcon from '@material-ui/icons/Settings';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import VideoLabelIcon from '@material-ui/icons/VideoLabel';
+import StepConnector from '@material-ui/core/StepConnector';
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -20,6 +26,79 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '16em'
   }
 }));
+
+
+const ColorlibConnector = withStyles({
+  alternativeLabel: {
+    top: 22,
+  },
+  active: {
+    '& $line': {
+      borderColor: '#F9A03E',
+    },
+  },
+  completed: {
+    '& $line': {
+      borderColor: '#F9A03E',
+    },
+  },
+  line: {
+    height: 3,
+    border: 0,
+    backgroundColor: '#eaeaf0',
+    borderRadius: 1,
+  },
+})(StepConnector);
+
+const useColorlibStepIconStyles = makeStyles({
+  root: {
+    backgroundColor: '#ccc',
+    zIndex: 1,
+    color: '#fff',
+    width: 70,
+    height: 70,
+    display: 'flex',
+    borderRadius: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  active: {
+    backgroundColor: '#F9A03E',
+    boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+  },
+  completed: {
+    backgroundColor: '#F9A03E',
+    boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+  },
+});
+
+function ColorlibStepIcon(props) {
+  const classes = useColorlibStepIconStyles();
+  const { active, completed } = props;
+
+  const icons = {
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 6,
+    7: 7,
+    8: 8,
+    9: 9,
+  };
+
+  return (
+      <div
+          className={clsx(classes.root, {
+            [classes.active]: active,
+            [classes.completed]: completed,
+          })}
+      >
+        {icons[String(props.icon)]}
+      </div>
+  );
+}
 
 // function getSteps() {
 //   return ['Pendiente', 'Documentado', 'En Ruta', 'Completado', 'Cancelado'];
@@ -92,6 +171,53 @@ function getSteps() {
     }
   ];
 }
+function getStepsRecoleccion() {
+  return [
+
+    {
+      m_nIdEstatusGuia:1,
+      m_sAbreviacion:"Pen",
+      m_sEstatus:"Pendiente",
+      m_sDescripcion:"No cuenta con embarque asignado",
+      m_sColor:"#FDBC0547"
+    },
+    {
+      m_nIdEstatusGuia:2,
+      m_sAbreviacion:"Docu",
+      m_sEstatus:"Documentado",
+      m_sDescripcion:"Recolección asignada a un embarque",
+      m_sColor:"#0ABF1047"
+    },
+    {
+      m_nIdEstatusGuia:3,
+      m_sAbreviacion:"E\/R",
+      m_sEstatus:"En Ruta",
+      m_sDescripcion:"Recolección con salida registrada",
+      m_sColor:"#F9A03E47"
+    },
+    {
+      m_nIdEstatusGuia:4,
+      m_sAbreviacion:"Com",
+      m_sEstatus:"Completado",
+      m_sDescripcion:"Recolección terminada, se le dio llegada a siguiente punto de registro",
+      m_sColor:"#0982AD47"
+    },
+    {
+      m_nIdEstatusGuia:5,
+      m_sAbreviacion:"Cance",
+      m_sEstatus:"Cancelado",
+      m_sDescripcion:"Recolección cancelada                                                           ",
+      m_sColor:"#F70F2647"
+    },
+    {
+      m_nIdEstatusGuia:6,
+      m_sAbreviacion:"Pen A",
+      m_sEstatus:"Pendiente Aprobar",
+      m_sDescripcion:"La recolección se encuentra pendiente de aprobar",
+      m_sColor:"#F70F2647"
+    }
+  ];
+}
 
 function castStatus(status){
   switch(status){
@@ -106,18 +232,23 @@ function castStatus(status){
     case 19: return 6;
   }
 }
+function castStatusRecoleccion(status){
+  return status-1
+}
 
-export default function DetallesSeguimiento(props) {
+export default function DetallesSeguimiento({guia}) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
-  const steps = getSteps();
+  const steps = guia.m_bEsRecoleccion ? getStepsRecoleccion() :getSteps();
 
   useEffect(value =>{
-    const estatusGuia = props.estatusGuia;
-    const status = castStatus(estatusGuia);
-    console.log(status);
-    setActiveStep(status)
-  }, [props.estatusGuia])
+    if (guia !== undefined){
+      const status = guia.m_bEsRecoleccion ? castStatusRecoleccion(guia.m_nIdEstatusRecoleccion) : castStatus(guia.m_nIdEstatusGuia);
+      console.log(status);
+      setActiveStep(status)
+    }
+
+  }, [guia])
 
   const handleReset = () => {
     setActiveStep(0);
@@ -125,13 +256,18 @@ export default function DetallesSeguimiento(props) {
 
   return (
     <div className={classes.root}>
-      <Stepper activeStep={activeStep} orientation="vertical">
+      {/*<Stepper activeStep={activeStep} alternativeLabel connector={<ColorlibConnector />} >
         {steps.map((value, index) => (
           <Step key={index}>
-            <StepLabel>{value.m_sEstatus}</StepLabel>
+            <StepLabel StepIconComponent={ColorlibStepIcon}>{value.m_sEstatus}</StepLabel>
           </Step>
         ))}
-      </Stepper>
+      </Stepper>*/}
+
+      <div style={{marginLeft:100, marginRight:100, paddingBottom:10}}>
+        <h4>ESTATUS DE LA CARGA:</h4>
+        <h1>{guia.m_bEsRecoleccion ? guia.m_sEstatusRecoleccion : guia.m_sEstatusGuia}</h1>
+      </div>
     </div>
   );
 }

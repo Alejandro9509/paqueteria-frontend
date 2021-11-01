@@ -1,10 +1,8 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
+import { API_HEADERS } from "../../Constants";
+const headers = API_HEADERS
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
 
 function modificarTipoCobro(id, params) {
     const url = `${process.env.REACT_APP_API_URL}/TipoCobro/Modificar/` + id;

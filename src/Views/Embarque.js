@@ -49,7 +49,7 @@ import {ToggleButtonGroup} from "@material-ui/lab";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import {dataGridLocaleText} from "../Constants";
+import {API_HEADERS, dataGridLocaleText} from "../Constants";
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import {obtenerCiudades, obtenerCiudadId} from "../Util/Contexts/CiudadesContext";
@@ -912,8 +912,8 @@ function Embarque(props) {
             obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado,newValue.m_nIdMunicipio).then(({data}) => {
                 setDataCodigosPostalesRemitente(data)
             })
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                /*if (data.length > 0){
+            /*obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
+                /!*if (data.length > 0){
                     setRemitente(remitente => {
                         return{
                             ...remitente,
@@ -927,11 +927,11 @@ function Embarque(props) {
                             zonaOperativaRemitente: {}
                         }
                     })
-                }*/
+                }*!/
                 setDataZonasOperativasRemitente(data)
             })
             obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                /*if (data.length > 0){
+                /!*if (data.length > 0){
                     setRemitente(remitente => {
                         return{
                             ...remitente,
@@ -945,13 +945,13 @@ function Embarque(props) {
                             zonaTarifaRemitente: {}
                         }
                     })
-                }*/
+                }*!/
                 setDataZonasTarifaRemitente(data)
-            })
+            })*/
         }
-        if (input === "codigoPostalRemitente"){
+        /*if (input === "codigoPostalRemitente"){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
+                /!*if (data.length > 0){
                     setRemitente(remitente => {
                         return{
                             ...remitente,
@@ -965,11 +965,11 @@ function Embarque(props) {
                             zonaOperativaRemitente: {}
                         }
                     })
-                }*/
+                }*!/
                 setDataZonasOperativasRemitente(data)
             })
             obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
+                /!*if (data.length > 0){
                     setRemitente(remitente => {
                         return{
                             ...remitente,
@@ -983,11 +983,37 @@ function Embarque(props) {
                             zonaTarifaRemitente: {}
                         }
                     })
-                }*/
+                }*!/
                 setDataZonasTarifaRemitente(data)
             })
-        }
+        }*/
     }
+
+    
+    const [recoleccionDD, setRecoleccionDD] = useState({
+        estadoRec: '',
+        municipioRec: '',
+        codigoPostalRec: '',
+        zonaOperativaRec: '',
+        zonaTarifaRec: '',
+        domicilioRec: '',
+        recogerEnRec: '',
+        datosAdicionalesRec: ''
+    })
+
+    const resetRecoleccionDD = () => {
+        setRecoleccionDD({
+            estadoRec: '',
+            municipioRec: '',
+            codigoPostalRec: '',
+            zonaOperativaRec: '',
+            zonaTarifaRec: '',
+            domicilioRec: '',
+            recogerEnRec: '',
+            datosAdicionalesRec: ''
+        })
+    }
+
 
     const [destinatario, setDestinatario] = useState({
         idDestinatario: '',
@@ -1973,11 +1999,7 @@ function Embarque(props) {
                         coloniaRemitente: respuesta.data.m_sColoniaRemitente,
                         estadoRemitente: respuesta.data.m_nIdEstadoRemitente || 0,
                         municipioRemitente: respuesta.data.m_nIdCiudadRemitente,
-                        codigoPostalRemitente: {
-                            m_nIdCP: cp.data.m_nIdCP,
-                            m_sCP: cp.data.m_sCP,
-                            m_sColonia: respuesta.data.m_sColoniaRemitente
-                        },
+                      
                         correoRemitente: respuesta.data.m_sCorreoRemitente,
                         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                         contactoRemitente: respuesta.data.m_sContactoRemitente,
@@ -1985,9 +2007,76 @@ function Embarque(props) {
                         longitudR: data.m_sLongitudR || ""
                     }
                 })
+
+                let estado
+                if (respuesta.data.m_nIdEstadoRemitente < 10) {
+                    estado = `0${respuesta.data.m_nIdEstadoRemitente}`
+                } else {
+                    estado = respuesta.data.m_nIdEstadoRemitente
+                }
+    
+                obtenerMunicipiosByIdEstado(estado).then(({data}) => {
+                    setDataMunicipiosRemitente(data)
+                })
+                obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
+                    setRemitente(remitente => {
+                        return {
+                            ...remitente,
+                            codigoPostalRemitente: {
+                                m_nIdCP: cp.data.m_nIdCP,
+                                m_sCP: cp.data.m_sCP,
+                                m_sColonia: respuesta.data.m_sColoniaRemitente
+                            },
+                        }
+                    })
+                })
+                obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
+                    setRemitente(remitente => {
+                        return {
+                            ...remitente,
+                            origenRemitente: data
+                        }
+                    })
+                })
+                obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+                    if (!respuesta.data.m_bRecoleccionDiferenteDomicilio) {
+                        setRemitente(remitente => {
+                            return {
+                                ...remitente,
+                                zonaOperativaRemitente: data
+                            }
+                        })
+                    } else {
+                        setRecoleccionDD(recoleccionDD => {
+                            return {
+                                ...recoleccionDD,
+                                zonaOperativaRec: data
+                            }
+                        })
+                    }
+                })
+                obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
+                    if (!respuesta.data.m_bRecoleccionDiferenteDomicilio) {
+                        setRemitente(remitente => {
+                            return {
+                                ...remitente,
+                                zonaTarifaRemitente: data
+                            }
+                        })
+                    } else {
+                        setRecoleccionDD(recoleccionDD => {
+                            return {
+                                ...recoleccionDD,
+                                zonaTarifaRec: data
+                            }
+                        })
+                    }
+                })
+
+
             })
         })
-        obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
+   /*      obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
             setRemitente(remitente => {
                 return {
                     ...remitente,
@@ -2012,7 +2101,7 @@ function Embarque(props) {
                     })
                 })
             }
-        })
+        }) */
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
                 setDestinatario(destinatario => {
@@ -2042,6 +2131,30 @@ function Embarque(props) {
                     }
                 })
             })
+          
+
+            let estado
+            if (respuesta.data.m_nIdEstadoDestinatario < 10) {
+                estado = `0${respuesta.data.m_nIdEstadoDestinatario}`
+            } else {
+                estado = respuesta.data.m_nIdEstadoDestinatario
+            }
+
+            obtenerMunicipiosByIdEstado(estado).then(({data}) => {
+                setDataMunicipiosDestinatario(data)
+            })
+            obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
+                setDestinatario(destinatario => {
+                    return {
+                        ...destinatario,
+                        codigoPostalDestinatario: {
+                            m_nIdCP: cp.data.m_nIdCP,
+                            m_sCP: cp.data.m_sCP,
+                            m_sColonia: respuesta.data.m_sColoniaDestinatario
+                        },
+                    }
+                })
+            })
             obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(({data}) => {
                 setDestinatario(destinatario => {
                     return {
@@ -2049,6 +2162,40 @@ function Embarque(props) {
                         destinoDestinatario: data
                     }
                 })
+            })
+            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
+                if (!respuesta.data.m_bEntregaDiferenteDomicilio) {
+                    setDestinatario(destinatario => {
+                        return {
+                            ...destinatario,
+                            zonaOperativaDestinatario: data
+                        }
+                    })
+                } else {
+                    setEntregaDD(entregaDD => {
+                        return {
+                            ...entregaDD,
+                            zonaOperativaEnt: data
+                        }
+                    })
+                }
+            })
+            obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifaEntrega).then(({data}) => {
+                if (!respuesta.data.m_bEntregaDiferenteDomicilio) {
+                    setDestinatario(destinatario => {
+                        return {
+                            ...destinatario,
+                            zonaTarifaDestinatario: data
+                        }
+                    })
+                } else {
+                    setEntregaDD(entregaDD => {
+                        return {
+                            ...entregaDD,
+                            zonaTarifaEnt: data
+                        }
+                    })
+                }
             })
         })
 
@@ -2906,9 +3053,7 @@ function Embarque(props) {
         });
     }
 
-    const headers = {
-        "Content-Type": "application/json",
-    };
+    const headers = API_HEADERS
 
     function conDatos() {
         return data.length != 0;
@@ -5264,7 +5409,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    {/* --------------------------------------- Correo ------------------------------------------------- */}
+
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
@@ -5280,7 +5425,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    {/* --------------------------------------- Telefono ------------------------------------------------- */}
+
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
@@ -5298,7 +5443,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    {/* --------------------------------------- Contacto ------------------------------------------------- */}
+
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
@@ -5314,7 +5459,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    {/* --------------------------------------- Origen ------------------------------------------------- */}
+
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <Autocomplete
@@ -5390,7 +5535,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-
+                                                                    {/*
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <Autocomplete
@@ -5454,6 +5599,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
+                                                                    */}
                                                                 </div>
                                                             </div>
                                                         </div>

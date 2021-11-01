@@ -16,11 +16,10 @@ import ProductosTarifa from "./ProductosTarifa";
 import DestinosTarifa from "./DestinosTarifa";
 import ProductosPrecios from "./ProductosPrecios";
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
+import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
+import {API_HEADERS} from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
 
 function a11yProps(index) {
     return {
@@ -153,8 +152,7 @@ class CrearTarifa extends Component {
     }
 
     getAllImpuestos() {
-        const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerImpuestos().then(respuesta => {
             this.setState({ impuestos: respuesta.data })
         });
     };

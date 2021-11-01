@@ -1,6 +1,7 @@
 import {useEffect, useRef} from "react";
 import axios from "axios";
 import {trackPromise} from "react-promise-tracker";
+import {API_HEADERS} from "../Constants";
 
 const XLocateClient = window.XLocateClient;
 const XRouteClient = window.XRouteClient;
@@ -13,9 +14,7 @@ var xload = new XLoadClient();
 xload.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 
 
-const headers = {
-    "Content-Type": "application/json",
-};
+const headers = API_HEADERS
 
 export function useInterval(callback, delay) {
     const savedCallback = useRef();

@@ -6,7 +6,7 @@ import BarraLateralDerecha from "../Components/Template/BarraLateralDerecha";
 import { useTable, useFilters, useSortBy } from 'react-table'
 import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
-
+import {confirmAlert} from 'react-confirm-alert'; // Import
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
@@ -52,9 +52,9 @@ function TipoCambio() {
         e.preventDefault()
         var params = {
 
-            "m_nIdTipoCambio": state.idTipoCambio,
-            "m_dtFecha": state.fecha,
-            "m_cTipoCambio": state.tipoCambio,
+            "IdTipoCambio": state.idTipoCambio,
+            "Fecha": state.fecha,
+            "TipoCambio": state.tipoCambio,
             "CreadoPor": state.CreadoPor,
             "ModificadoPor": state.ModificadoPor
         }
@@ -156,8 +156,21 @@ function TipoCambio() {
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoCambio))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-
+                            <a href="#" className="btn btn-default btn-xs"
+                               onClick={() => confirmAlert({
+                                   title: 'Confirmar Eliminar',
+                                   message: '¿Está seguro de eliminar Tipo de cambio?',
+                                   buttons: [
+                                       {
+                                           label: 'Si',
+                                           onClick: () => handleEliminar(row.row.m_nIdRecoleccion)
+                                       },
+                                       {
+                                           label: 'No',
+                                       }
+                                   ]
+                               })}><i className="zmdi zmdi-delete"
+                                      style={{color: "#F30B0B"}}/></a>
                         </Tooltip>
                     </div>
                 )
@@ -190,10 +203,7 @@ function TipoCambio() {
         });
     };
 
-    const headers = {
-        'Content-Type': 'application/json',
-        //    'access-control-allow-origin': '*'
-    }
+
 
     function DefaultColumnFilter({
         column: { filterValue, preFilteredRows, setFilter },

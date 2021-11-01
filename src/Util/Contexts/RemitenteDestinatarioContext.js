@@ -1,13 +1,12 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
+import { API_HEADERS } from "../../Constants";
 const XLocateClient = window.XLocateClient;
 var xlocate = new XLocateClient();
 xlocate.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
+
 
 function modificarRemitentesDestinatarios(id, params){
     const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/Modificar/` + id;

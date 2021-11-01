@@ -261,7 +261,7 @@ const catalogRoutes = [
   {
     path: "/ZonasOperativas",
     name: "Zonas Operativas",
-    icon: <ZonaTarifaIcon/>,
+    icon: <GeocercaIcon/>,
     component: ZonaOperativa
   },
   {

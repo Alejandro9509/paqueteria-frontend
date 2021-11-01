@@ -250,11 +250,6 @@ function EstatusViaje() {
         });
     };
 
-    const headers = {
-        'Content-Type': 'application/json',
-        //    'access-control-allow-origin': '*'
-    }
-
     function DefaultColumnFilter({
         column: { filterValue, preFilteredRows, setFilter },
     }) {

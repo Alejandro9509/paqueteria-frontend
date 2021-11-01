@@ -51,7 +51,7 @@ import {
     Stepper,
     Tooltip
 } from "@material-ui/core";
-import {dataGridLocaleText} from "../Constants";
+import {API_HEADERS, dataGridLocaleText} from "../Constants";
 import {obtenerCiudades, obtenerCiudadId} from "../Util/Contexts/CiudadesContext";
 import {
     obtenerCodigoPostal,
@@ -2498,10 +2498,7 @@ setDataFechaFinal(respuestaDos.data)
         reader.readAsBinaryString(f);
     };
 
-    const headers = {
-        "Content-Type": "application/json",
-        //    'access-control-allow-origin': '*'
-    };
+    const headers = API_HEADERS
 
     function DefaultColumnFilter({
                                      column: {filterValue, preFilteredRows, setFilter},

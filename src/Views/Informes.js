@@ -49,7 +49,7 @@ import {render} from "react-dom";
 import SearchIcon from "@material-ui/icons/Search";
 import {DataGrid} from "@material-ui/data-grid";
 import Noty from "noty";
-import {API_BASE_URL, dataGridLocaleText} from "../Constants";
+import {API_BASE_URL, API_HEADERS, dataGridLocaleText} from "../Constants";
 import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusInforme} from "../Util/Contexts/EstatusContext";
 import {obtenerGuia, obtenerGuiaPendientes, obtenerGuiaReporte, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
@@ -93,9 +93,7 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 window.jQuery = window.$ = $;
-const headers = {
-    "Content-Type": "application/json",
-};
+
 let timer;
 
 function Informes({history}) {
@@ -820,9 +818,7 @@ function Informes({history}) {
         );
     }
 
-    const headers = {
-        "Content-Type": "application/json",
-    };
+    const headers = API_HEADERS
 
     function cubicarAccion(e) {
         e.preventDefault();
@@ -2985,7 +2981,7 @@ function Informes({history}) {
                                                                                                                 variant="outlined"
                                                                                                                 margin="dense"
                                                                                                                 label="Total"
-                                                                                                                value={dataGuias[index].m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0)}
+                                                                                                                value={`$${parseFloat(dataGuias[index].m_arClsGuiaConceptos.reduce((a, b) => +a + +(b.m_nIdConceptoFacturacion === 1 ?  b.m_cImporte : 0), 0)).toFixed(2)}` }
                                                                                                                 disabled="true"
                                                                                                                 className="form-control"
                                                                                                                 type="text"
@@ -3202,10 +3198,28 @@ function Informes({history}) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    ${dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0) : 0), 0)}
+                                                                                    ${dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +(b.m_nIdConceptoFacturacion === 1 ?  b.m_cImporte : 0) , 0) : 0), 0)).toFixed(2)}` }
                                                                                 </Grid>
+
                                                                             </Grid>
+
                                                                         </Grid>
+                                                                        <Grid
+                                                                            item
+                                                                            sm={4}
+                                                                            justify="center"
+                                                                            alignItems="center"
+                                                                            style={{
+                                                                                display: "flex",
+                                                                                justifyContent: "center",
+                                                                                alignItems: "center",
+                                                                                textAlign: "center",
+                                                                            }}
+                                                                        >
+                                                                            Peso total :{" "}
+                                                                            {dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_arrClsDetalle.length !== 0 ? curr.m_arrClsDetalle.reduce((a, b) => +a + +b.m_xPeso , 0) : 0), 0))/100)}` } t
+                                                                        </Grid>
+
                                                                     </Grid>
                                                                 </div>
                                                             </form>
