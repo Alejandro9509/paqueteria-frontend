@@ -862,7 +862,7 @@ function Guia(props) {
         });
 
         if (event.target.name === "idTipoTarifa" && state.idEmbarque > 0 && state.idEmbarque !== undefined && state.paquetes !== undefined){
-            obtenerTarifasPorEmbarque(state.idEmbarque, state.paquetes)
+            obtenerTarifasPorEmbarque(state.idEmbarque, event.target.value)
         }
     };
 
@@ -1426,16 +1426,17 @@ setDataFechaFinal(respuestaDos.data)
 
             }
         })
-        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, paquetes)
+        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, state.idTipoTarifa)
     }
 
     const [dataTodosConceptosByEmbarque, setDataTodosConceptosByEmbarque] = useState([])
 
-    const obtenerTarifasPorEmbarque = (idEmbarque, paquetesTemp) => {
+    const obtenerTarifasPorEmbarque = (idEmbarque, idTipoTarifa) => {
         const conceptosTemp = []
         let ivaTraslada = []
         let ivaRetiene = []
-        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${idEmbarque}/${state.idTipoTarifa}`, {headers}).then(respuesta => {
+        debugger
+        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${idEmbarque}/${idTipoTarifa}`, {headers}).then(respuesta => {
             console.log('tarifas by embarque ', respuesta.data)
             let conceptosCast = []
             respuesta.data.forEach((element) => {
