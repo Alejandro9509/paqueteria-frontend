@@ -854,12 +854,14 @@ function Guia(props) {
 
     const handleChange = event => {
         console.log(event.target.name + " : " + event.target.value)
-        setState({
-            ...state,
-            [event.target.name]: event.target.value
+        setState(state => {
+            return {
+                ...state,
+                [event.target.name]: event.target.value
+            }
         });
 
-        if (event.target.name === "idTipoTarifa" && state.idEmbarque > 0 && state.paquetes !== undefined){
+        if (event.target.name === "idTipoTarifa" && state.idEmbarque > 0 && state.idEmbarque !== undefined && state.paquetes !== undefined){
             obtenerTarifasPorEmbarque(state.idEmbarque, state.paquetes)
         }
     };
@@ -1429,11 +1431,11 @@ setDataFechaFinal(respuestaDos.data)
 
     const [dataTodosConceptosByEmbarque, setDataTodosConceptosByEmbarque] = useState([])
 
-    const obtenerTarifasPorEmbarque = (embarque, paquetesTemp) => {
+    const obtenerTarifasPorEmbarque = (idEmbarque, paquetesTemp) => {
         const conceptosTemp = []
         let ivaTraslada = []
         let ivaRetiene = []
-        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque.m_nIdEmbarque}/${state.idTipoTarifa}`, {headers}).then(respuesta => {
+        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${idEmbarque}/${state.idTipoTarifa}`, {headers}).then(respuesta => {
             console.log('tarifas by embarque ', respuesta.data)
             let conceptosCast = []
             respuesta.data.forEach((element) => {
