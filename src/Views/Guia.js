@@ -1426,7 +1426,7 @@ setDataFechaFinal(respuestaDos.data)
 
             }
         })
-        obtenerTarifasPorEmbarque(respuesta.data, paquetes)
+        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, paquetes)
     }
 
     const [dataTodosConceptosByEmbarque, setDataTodosConceptosByEmbarque] = useState([])
