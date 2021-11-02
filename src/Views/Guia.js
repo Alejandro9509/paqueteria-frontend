@@ -1433,8 +1433,29 @@ setDataFechaFinal(respuestaDos.data)
         const conceptosTemp = []
         let ivaTraslada = []
         let ivaRetiene = []
-        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque.m_nIdEmbarque}/${state.idTipoTarifa}`, {headers}).then(tarifa => {
-            console.log('tarifas by embarque ', tarifa.data)
+        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${embarque.m_nIdEmbarque}/${state.idTipoTarifa}`, {headers}).then(respuesta => {
+            console.log('tarifas by embarque ', respuesta.data)
+            let conceptosCast = []
+            respuesta.data.forEach((element) => {
+                conceptosCast.push({
+                    concepto: element,
+                    idConcepto: element.m_nIdConceptosFacturacion,
+                    importe: element.m_cImporte,
+                    retiene: element.m_nIdImpuestoRetiene,
+                    traslada: element.m_nIdImpuestoTraslada,
+                    importeIVA: element.m_cImporteIva,
+                    importeRet: element.m_cImporteRetiene,
+                    nombreConcepto: element.m_sConcepto
+                })
+            })
+            setState(state => {
+                return {
+                    ...state,
+                    conceptosAdicionales: conceptosCast,
+                    ivaRetiene: ivaRetiene,
+                    ivaTraslada: ivaTraslada
+                }
+            })
             // debugger
             /*if (tarifa.data.length != 0) {
                 let pesoTotal = 0
