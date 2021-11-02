@@ -1,11 +1,9 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
+import { API_HEADERS } from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    // 'TimeZone' : Intl.DateTimeFormat().resolvedOptions().timeZone
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
+
 
 function modificarRecoleccion(id, params) {
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${id}`;
@@ -70,7 +68,7 @@ function obtenerRecoleccionId(id) {
     return result
 }
 
-function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioRecoleccion) {
+function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioRecoleccion,Origen,Destino) {
     if (folioRecoleccion == ''){
         folioRecoleccion = 0
     }
@@ -84,7 +82,11 @@ function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, est
         "/" +
         estatusListado +
         "/" +
-        folioRecoleccion;
+        folioRecoleccion+
+        "/" +
+        Origen+
+        "/" +
+        Destino;
     let result;
     console.log('url filtro: ', url)
     trackPromise(

@@ -1,11 +1,9 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
+import { API_HEADERS } from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    // 'TimeZone' : Intl.DateTimeFormat().resolvedOptions().timeZone
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
+
 
 function modificarGuia(id, params) {
     const url = `${process.env.REACT_APP_API_URL}/Guia/Modificar/` + id;
@@ -124,7 +122,7 @@ function imprimirGuia(id) {
     return result
 }
 
-function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado,folioGuia) {
+function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado,folioGuia,Origen,Destino) {
     if (folioGuia == ''){
         folioGuia = 0
     }
@@ -138,7 +136,11 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
         "/" +
         estatusListado +
         "/" +
-        folioGuia;
+        folioGuia+
+        "/" +
+        Origen+
+        "/" +
+        Destino;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

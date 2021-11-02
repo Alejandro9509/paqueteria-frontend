@@ -6,10 +6,6 @@ import { List, ListItem, Popover, TextField } from '@material-ui/core';
 import { TrafficOutlined } from '@material-ui/icons';
 import { agregarTipoServicio, obtenerTipoServicio } from '../../Util/Contexts/TipoServiciosContext';
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
 function showSuccess(mensaje) {
     new Noty({
         type: "information",

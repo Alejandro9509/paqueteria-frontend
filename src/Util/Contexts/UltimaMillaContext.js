@@ -3,12 +3,10 @@ import {trackPromise} from "react-promise-tracker";
 import axios from "axios";
 import Tour from "../../Views/UltimaMilla/Tour";
 import moment from "moment";
+import { API_HEADERS } from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    // 'TimeZone' : Intl.DateTimeFormat().resolvedOptions().timeZone
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
+
 
 const XTourClient = window.XTourClient;
 const XLocateClient = window.XLocateClient;
@@ -158,6 +156,40 @@ function apiPoint(x, y) {
 function calcularRuta(points, sucursal) {
     var array = []
     array.push(apiPoint(sucursal.lng, sucursal.lat))
+    console.log(points)
+    array = array.concat(points.map(p => apiPoint(parseFloat(p.lng), parseFloat(p.lat))))
+    array.push(apiPoint(sucursal.lng, sucursal.lat))
+    var result;
+    trackPromise(
+        result = new Promise((resolve, reject) => {
+            xroute.calculateRoute({
+                "waypoints": array,
+                "resultFields": {
+                    "polyline": true,
+                    "eventTypes": [
+                        "MANEUVER_EVENT"
+                    ],
+                    "encodedPath": true,
+                    "guidedNavigationRoute": false
+                },
+                "routeOptions": {
+                    "polylineOptions": {
+                        "elevations": true
+                    }
+                },
+                "requestProfile": {
+                    "userLanguage": "es"
+                }
+
+            }, (r, e) => resolve(r))
+        })
+    )
+    return result
+
+}
+function calcularRutaUltimaMilla(points, sucursal, camion) {
+    var array = []
+    array.push(apiPoint(camion.lng, camion.lat))
     console.log(points)
     array = array.concat(points.map(p => apiPoint(parseFloat(p.lng), parseFloat(p.lat))))
     array.push(apiPoint(sucursal.lng, sucursal.lat))
@@ -430,7 +462,8 @@ export {
     eliminarPaqueteUltimaMilla,
     obtenerPaquetesInforme,
     obtenerPaquetesViaje,
-    obtenerPaquetesUnidadOperador
+    obtenerPaquetesUnidadOperador,
+    calcularRutaUltimaMilla
 }
 
 

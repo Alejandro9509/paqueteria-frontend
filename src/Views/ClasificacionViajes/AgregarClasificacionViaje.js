@@ -16,10 +16,7 @@ import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import { obtenerClasificacionViajeId } from '../../Util/Contexts/ClasificacionViajeContext';
 window.jQuery = window.$ = $;
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+
 
 class AgregarClasificacionViaje extends Component {
 

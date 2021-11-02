@@ -1,10 +1,8 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
+import { API_HEADERS } from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
 
 function modificarInformes(id, params){
     const url = `${process.env.REACT_APP_API_URL}/Informes/Modificar`;
@@ -95,16 +93,32 @@ function obtenerInformesId(id){
     return result
 }
 
-function obtenerInformeFiltro(folioInforme) {
+function obtenerInformeFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioInforme,Origen,Destino) {
     if (folioInforme == ''){
         folioInforme = 0
     }
-    const url = `${process.env.REACT_APP_API_URL}/Informes/GetByFiltros/` + folioInforme;
+    const url =
+        `${process.env.REACT_APP_API_URL}/Informes/GetByFiltros/` +
+        fechaInicial +
+        "/" +
+        fechaFinal +
+        "/" +
+        sucursalListado +
+        "/" +
+        estatusListado +
+        "/" +
+        folioInforme+
+        "/" +
+        Origen+
+        "/" +
+        Destino;
     let result;
-    console.log(url)
-    trackPromise(result =  axios.get(url, { headers }));
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
     return result
 }
+
 
 export {modificarInformes, agregarInformes, eliminarInformes, obtenerInformes, obtenerInformesId, cancelarInformes, obtenerInformesDisponiblesViajes, obtenerInformesPorViaje,obtenerInformeFiltro,
     obtenerInformeReporte, obtenerInformesEstatus}

@@ -35,14 +35,14 @@ export default function LlegadaParadas(props){
         sucursal: props.data.m_sSucursalEmisora,
         viaje: props.data.m_sFolioViaje,
         documento: "",
-        numViajeCliente: "",
+        numViajeCliente: props.viaje.m_sNumViajeCliente,
         fecha: props.data.m_dFecha,
         hora: props.data.m_tHora,
         cliente: "",
         ruta: props.data.m_sRuta,
-        origen: props.data.m_sCiudadOrigen,
+        origen: props.viaje.m_sOringen,
         tipoDeCambioOrigen: "",
-        destino: props.data.m_sCiudadDestino,
+        destino: props.viaje.m_sDestino,
         kms: "",
         millas: "",
         operador: props.data.m_sNombreCompleto,
@@ -60,7 +60,7 @@ export default function LlegadaParadas(props){
         millasRemolqueDos: "",
         placasremolqueDos: props.data.m_sPlacasRemolque2,
         dolly: props.data.m_sDolly,
-        fechaSalida: "02:30",
+        fechaSalida: props.data.m_sFechaSalida,
         horaSalida: props.data.m_tHoraSalida,
         fechaLlegada: props.data.m_dFechaLlegada,
         horaLlegada: props.data.m_tHoraLlegada,
@@ -284,17 +284,17 @@ export default function LlegadaParadas(props){
                 </Grid>
                 <Grid item xs={5}/> */}
 
-                <Grid item xs={7}>
-                    <TextField
-                        id={"ruta"}
-                        margin={"dense"}
-                        label={"Ruta"}
-                        InputProps={{readOnly: true}}
-                        disabled
-                        variant={"outlined"}
-                        value={data.ruta}/>
-                </Grid>
-                <Grid item xs={5}/>
+                {/*<Grid item xs={7}>*/}
+                {/*    <TextField*/}
+                {/*        id={"ruta"}*/}
+                {/*        margin={"dense"}*/}
+                {/*        label={"Ruta"}*/}
+                {/*        InputProps={{readOnly: true}}*/}
+                {/*        disabled*/}
+                {/*        variant={"outlined"}*/}
+                {/*        value={data.ruta}/>*/}
+                {/*</Grid>*/}
+                {/*<Grid item xs={5}/>*/}
 
                 <Grid item xs={5}>
                     <TextField

@@ -5,10 +5,6 @@ import { FormControl, InputLabel, List, ListItem, Select } from '@material-ui/co
 import "../../App.css";
 import { obtenerConceptosFacturacion } from '../../Util/Contexts/ConceptosFacturacionContext';
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
 
 class Guias extends Component {
     constructor(props) {

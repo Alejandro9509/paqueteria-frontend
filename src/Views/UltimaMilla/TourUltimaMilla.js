@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Marker from "react-leaflet-enhanced-marker";
 import {Polyline, Popup} from "react-leaflet";
-import {calcularRuta, obtenerUltimaMillaReporte} from "../../Util/Contexts/UltimaMillaContext";
+import {calcularRuta, calcularRutaUltimaMilla, obtenerUltimaMillaReporte} from "../../Util/Contexts/UltimaMillaContext";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
@@ -47,7 +47,7 @@ class TourUltimaMilla extends Component {
         })
         if (guias.length !== 0) {
             if (this.props.data.m_xlat !== 0 && this.props.data.m_xlng !== 0) {
-                calcularRuta(guias, {lat: this.props.data.m_xlat, lng: this.props.data.m_xlng}).then((result) => {
+                calcularRutaUltimaMilla(guias, this.props.sucursal, {lat: this.props.data.m_xlat, lng: this.props.data.m_xlng}).then((result) => {
                     if (result) {
                         result.polyline.plain.polyline.map(c => {
                             polygon.push([c.y, c.x])

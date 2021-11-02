@@ -1,10 +1,9 @@
 import {trackPromise} from "react-promise-tracker";
 import axios from "axios";
+import { API_HEADERS } from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
+
 function obtenerMunicipiosByIdEstado(id) {
     const url = `${process.env.REACT_APP_API_URL}/Municipios/GetByIdEstado/` + id;
     let result;

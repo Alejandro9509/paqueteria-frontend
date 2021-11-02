@@ -1,10 +1,9 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
+import { API_HEADERS } from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
+
 
 /*function modificarCodigoPostal(id, params){
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/Modificar/` + id;
@@ -70,6 +69,15 @@ function obtenerProductoById(id){
     return result
 }
 
+function obtenerProductos(){
+    const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 /*function obtenerCodigosPostalesPorCiudad(id){
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/${id}`;
     let result;
@@ -78,4 +86,4 @@ function obtenerProductoById(id){
     );
     return result
 }*/
-export {obtenerProductoById}
+export {obtenerProductoById,obtenerProductos}

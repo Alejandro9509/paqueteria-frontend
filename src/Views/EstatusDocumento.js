@@ -67,10 +67,6 @@ function EstatusDocumento() {
         });
     };
 
-    const headers = {
-        'Content-Type': 'application/json',
-        //    'access-control-allow-origin': '*'
-    }
 
     return (
         <div >

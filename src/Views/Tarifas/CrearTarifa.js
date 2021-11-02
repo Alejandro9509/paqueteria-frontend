@@ -13,11 +13,13 @@ import { getUniqueListBy } from '../../Util/Util';
 import { PowerInputSharp } from '@material-ui/icons';
 import { obtenerCiudades } from '../../Util/Contexts/CiudadesContext';
 import ProductosTarifa from "./ProductosTarifa";
+import DestinosTarifa from "./DestinosTarifa";
+import ProductosPrecios from "./ProductosPrecios";
+import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
+import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
+import {API_HEADERS} from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
 
 function a11yProps(index) {
     return {
@@ -45,6 +47,7 @@ class CrearTarifa extends Component {
             activo: true,
             porPesoOVolumen: props.edit ? props.select.m_bPorPesoVolumen : true,
             porRangos: props.edit ? props.select.m_bPorRango : false,
+            porRegion: props.edit ? props.select.m_bPorRegion : false,
             unidadPeso: props.edit ? props.select.m_sUnidadPeso : "Kg",
             factorConversion: props.edit ? props.select.m_nFactorConversion : 1,
             ivaTraslada: [],
@@ -64,7 +67,11 @@ class CrearTarifa extends Component {
             //Aqui se guardan todos los productos que no estan seleccionados
             dataProductosTemp: [],
             //Aqui pues el nombre de la variable ya es muy explicita
-            dataProductosSeleccionados: []
+            dataProductosSeleccionados: [],
+            //Aqui se guardan todos los destinos que no estan seleccionados
+            dataDestinosTemp: [],
+            //Aqui pues el nombre de la variable ya es muy explicita
+            dataDestinosSeleccionados: []
         }
         this.getAllSucursales = this.getAllSucursales.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -81,6 +88,7 @@ class CrearTarifa extends Component {
         this.castConceptos = this.castConceptos.bind(this)
         this.filtrarConceptoAdicional = this.filtrarConceptoAdicional.bind(this)
         this.getAllProductos = this.getAllProductos.bind(this)
+        this.handleChangeTipoTarifa = this.handleChangeTipoTarifa.bind(this)
     }
 
     castConceptos(){
@@ -144,8 +152,7 @@ class CrearTarifa extends Component {
     }
 
     getAllImpuestos() {
-        const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerImpuestos().then(respuesta => {
             this.setState({ impuestos: respuesta.data })
         });
     };
@@ -180,6 +187,31 @@ class CrearTarifa extends Component {
             }else{
                 this.setState({disabled: false})
             }
+        }
+
+    }
+
+    handleChangeTipoTarifa({target}){
+        if (target.name === "porPesoOVolumen"){
+            this.setState({
+                porPesoOVolumen: !this.state.porPesoOVolumen,
+                porRangos: !this.state.porPesoOVolumen && false,
+                porRegion: !this.state.porPesoOVolumen && false
+            })
+        }
+        if (target.name === "porRangos"){
+            this.setState({
+                porPesoOVolumen: !this.state.porRangos && false,
+                porRangos: !this.state.porRangos,
+                porRegion: !this.state.porRangos && false
+            })
+        }
+        if (target.name === "porRegion"){
+            this.setState({
+                porPesoOVolumen: !this.state.porRegion && false,
+                porRangos: !this.state.porRegion && false,
+                porRegion: !this.state.porRegion
+            })
         }
 
     }
@@ -276,7 +308,21 @@ class CrearTarifa extends Component {
 
     getAllCiudades() {
         obtenerCiudades().then((respuesta) => {
-            this.setState({ ciudades: respuesta.data });
+            this.setState({
+                ciudades: respuesta.data,
+                dataDestinosTemp: respuesta.data,
+            });
+            if (this.props.edit) {
+                const { select } = this.props
+                this.state.dataDestinosTemp = respuesta.data
+                select.m_arrArDestinos.forEach((p) => {
+                    this.state.dataDestinosTemp = this.state.dataDestinosTemp.filter((f) => f.m_nIdCiudad != p.m_nIdCiudad)
+                })
+                this.setState({
+                    dataDestinosSeleccionados: select.m_arrArDestinos || [],
+                    dataDestinosTemp: this.state.dataDestinosTemp
+                })
+            }
         });
     }
 
@@ -341,8 +387,7 @@ class CrearTarifa extends Component {
     }
 
     getAllProductos(){
-        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerProductos().then(respuesta => {
             this.setState({ dataProductos: respuesta.data, dataProductosTemp: respuesta.data, agregar: "Agregar" })
             if (this.props.edit) {
                 const { select } = this.props
@@ -366,6 +411,32 @@ class CrearTarifa extends Component {
         })
     }
 
+    getAllDestinos(){
+        /*const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
+        axios.get(url, { headers }).then(respuesta => {
+            this.setState({ dataDestinos: respuesta.data, dataDestinosTemp: respuesta.data, agregar: "Agregar" })
+            if (this.props.edit) {
+                const { select } = this.props
+                this.state.dataDestinosTemp = respuesta.data
+                select.m_arrArDestinos.forEach((p) => {
+                    this.state.dataDestinosTemp = this.state.dataDestinosTemp.filter((f) => f.m_nId != p.m_nId)
+                })
+                this.setState({
+                    dataDestinosSeleccionados: select.m_arrArDestinos,
+                    dataDestinosTemp: this.state.dataDestinosTemp
+                })
+            }
+
+        });*/
+    }
+
+    actualizarDestinos = (todosDestinos, destinosSeleccionados) => {
+        this.setState({
+            dataDestinosTemp: todosDestinos,
+            dataDestinosSeleccionados: destinosSeleccionados
+        })
+    }
+
     onSubmit(event) {
         event.preventDefault()
         this.props.onSubmit(this.state)
@@ -373,7 +444,7 @@ class CrearTarifa extends Component {
 
     render() {
         const { disabled, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, todosConceptos,
-            dataProductosTemp,dataProductosSeleccionados} = this.state
+            dataProductosTemp,dataProductosSeleccionados,dataDestinosTemp,dataDestinosSeleccionados, porRegion, porPesoOVolumen } = this.state
         let { consult, edit } = this.props
 
         return (
@@ -441,7 +512,7 @@ class CrearTarifa extends Component {
                                         </div>
                                         <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <label className="input select" style={{ width: "100%" }}>
-                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                <FormControl fullWidth variant="outlined" margin="dense" required>
                                                     <InputLabel id="origenLabel">Origen</InputLabel>
                                                     <Select
                                                         native
@@ -450,8 +521,6 @@ class CrearTarifa extends Component {
                                                         disabled={this.props.consult}
                                                         labelId="origenLabel"
                                                         className="form-control"
-                                                        required
-
                                                         value={this.state.origen}
                                                         onChange={this.handleChange}
                                                         name="origen"
@@ -474,9 +543,10 @@ class CrearTarifa extends Component {
                                                 </FormControl>
                                             </label>
                                         </div>
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                        {!porRegion &&
+                                            <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <label className="input select" style={{ width: "100%" }}>
-                                                <FormControl fullWidth variant="outlined" margin="dense">
+                                                <FormControl fullWidth variant="outlined" margin="dense" required={!porRegion}>
                                                     <InputLabel id="destinoLabel">Destino</InputLabel>
                                                     <Select
                                                         native
@@ -485,8 +555,6 @@ class CrearTarifa extends Component {
                                                         disabled={this.props.consult}
                                                         labelId="destinoLabel"
                                                         className="form-control"
-                                                        required
-
                                                         value={this.state.destino}
                                                         onChange={this.handleChange}
                                                         name="destino"
@@ -509,36 +577,50 @@ class CrearTarifa extends Component {
                                                 </FormControl>
                                             </label>
                                         </div>
+                                        }
 
-                                        <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
+
+                                        <div className="col-md-4 col-sm-4" style={{ padding: "5px" }}>
                                             <label className="checkbox">
                                                 Peso o Volumen
                                                 <input type="checkbox"
                                                         checked={this.state.porPesoOVolumen}
-                                                        onChange={(e) => { this.setState({ porPesoOVolumen: !this.state.porPesoOVolumen, porRangos: !this.state.porRangos }) }}
+                                                        onChange={this.handleChangeTipoTarifa}
                                                         name="porPesoOVolumen"
-                                                       disabled={this.props.consult}
+                                                       disabled={this.props.consult  || this.props.select.m_bPorRegion}
                                                 />
                                                 <i />
                                             </label>
                                         </div>
 
-                                        <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
+                                        <div className="col-md-4 col-sm-4" style={{ padding: "5px" }}>
                                             <label className="checkbox">
                                                 Rangos
                                                 <input type="checkbox"
                                                     checked={this.state.porRangos}
-                                                    onChange={(e) => { this.setState({ porRangos: !this.state.porRangos, porPesoOVolumen: !this.state.porPesoOVolumen }) }}
+                                                    onChange={this.handleChangeTipoTarifa}
                                                     name="porRangos"
-                                                       disabled={this.props.consult}
+                                                       disabled={this.props.consult || this.props.select.m_bPorRegion}
                                                 />
                                                 <i />
                                             </label>
                                         </div>
 
-                                        {this.state.porPesoOVolumen ?
-                                            <div>
+                                        <div className="col-md-4 col-sm-4" style={{ padding: "5px" }}>
+                                            <label className="checkbox">
+                                                Region
+                                                <input type="checkbox"
+                                                       checked={this.state.porRegion}
+                                                       onChange={this.handleChangeTipoTarifa}
+                                                       name="porRegion"
+                                                       disabled={this.props.consult || this.props.select.m_bPorRegion}
+                                                />
+                                                <i />
+                                            </label>
+                                        </div>
 
+                                        {porPesoOVolumen &&
+                                            <div>
                                                 <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                                     <label className="input select" style={{ width: "100%" }}>
                                                         <FormControl fullWidth variant="outlined" margin="dense">
@@ -630,40 +712,46 @@ class CrearTarifa extends Component {
                                                         />
                                                     </div>
                                                 </div>
-                                                <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
 
-                                                    <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
-                                                            onChange={this.handleChange}
-                                                            className="form-control"
-                                                            type="number"
-                                                            required={this.state.porPesoOVolumen}
-                                                            label="Flete Minimo"
-                                                            step="1"
-                                                                   disabled={this.props.consult}
-
-                                                                   value={this.state.precioFlete}
-                                                            name="precioFlete"
-                                                        />
-                                                    </div>
+                                            </div>
+                                        }
+                                        {(porPesoOVolumen || porRegion) &&
+                                        <div>
+                                            <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
+                                                <div className="input">
+                                                    <TextField variant="outlined" margin="dense"
+                                                               onChange={this.handleChange}
+                                                               className="form-control"
+                                                               type="number"
+                                                               required={porPesoOVolumen || porRegion}
+                                                               label="Flete Minimo"
+                                                               step="1"
+                                                               disabled={this.props.consult}
+                                                               value={this.state.precioFlete}
+                                                               name="precioFlete"
+                                                    />
                                                 </div>
-                                                <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
+                                            </div>
+                                            <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
 
-                                                    <div className="input">
-                                                        <TextField variant="outlined" margin="dense"
-                                                            onChange={this.handleChange}
-                                                            className="form-control"
-                                                            type="number"
-                                                            label="Precio Minimo"
-                                                            required={this.state.porPesoOVolumen}
-                                                                   disabled={this.props.consult}
-
-                                                                   step="2"
-                                                            value={this.state.precioMinimo}
-                                                            name="precioMinimo"
-                                                        />
-                                                    </div>
+                                                <div className="input">
+                                                    <TextField variant="outlined" margin="dense"
+                                                               onChange={this.handleChange}
+                                                               className="form-control"
+                                                               type="number"
+                                                               label="Precio Minimo"
+                                                               required={porPesoOVolumen || porRegion}
+                                                               disabled={this.props.consult}
+                                                               step="2"
+                                                               value={this.state.precioMinimo}
+                                                               name="precioMinimo"
+                                                    />
                                                 </div>
+                                            </div>
+                                        </div>
+                                        }
+                                        {porPesoOVolumen &&
+                                            <div>
 
                                                 <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
                                                     <label className="input select" style={{ width: "100%" }}>
@@ -727,7 +815,7 @@ class CrearTarifa extends Component {
                                                         </FormControl>
                                                     </label>
                                                 </div>
-                                            </div> : <div></div>
+                                            </div>
                                         }
 
                                         <div className="col-md-12 col-sm-12" style={{ padding: "5px", display: "inline-flex" }}>
@@ -759,8 +847,7 @@ class CrearTarifa extends Component {
                         <div className="col-md-9 col-sm-12" >
                             <div className="widget-wrap" style={{ margin: "0px", padding: "0px" }}>
                                 <div className="widget-content">
-
-                                    {this.state.porRangos ?
+                                    {this.state.porRangos &&
                                         <div>
                                             <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
                                                 <Tab label="Concetos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
@@ -817,29 +904,92 @@ class CrearTarifa extends Component {
                                                 </TipoServicio>
                                             </TabPanel>
                                         </div>
-                                        :
+                                    }
+                                    {this.state.porPesoOVolumen &&
                                         <div>
-                                            <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
-                                                <Tab label="Conceptos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
-                                                <Tab label="Condiciones de Precios por Tipo de Cobro" {...this.a11yProps(1)} />
-                                                <Tab label="Condiciones de Precio por Tipo de Servicio" {...this.a11yProps(2)} />
+                                            <Tabs value={this.state.tab} onChange={this.handleTabChange}
+                                                  aria-label="simple tabs example" variant="scrollable"
+                                                  scrollButtons="auto">
+                                                <Tab label="Conceptos Adicionales por Destino" {...this.a11yProps(0)}
+                                                     className={{backgroundColor: "white !important"}}/>
+                                                <Tab
+                                                    label="Condiciones de Precios por Tipo de Cobro" {...this.a11yProps(1)} />
+                                                <Tab
+                                                    label="Condiciones de Precio por Tipo de Servicio" {...this.a11yProps(2)} />
                                             </Tabs>
                                             <TabPanel value={this.state.tab} index={0}>
-                                                <ConceptosAdicionales consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosAdicionales} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoAdicional} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada} mostrarRangos={false}>
+                                                <ConceptosAdicionales consult={consult} edit={this.props.edit}
+                                                                      select={this.props.select}
+                                                                      conceptosAdicionales={conceptosAdicionales}
+                                                                      addConcepto={this.addConcepto}
+                                                                      removeConcepto={this.removeConceptoAdicional}
+                                                                      ivaRetiene={this.state.ivaRetiene}
+                                                                      ivaTraslada={this.state.ivaTraslada}
+                                                                      mostrarRangos={false}>
 
                                                 </ConceptosAdicionales>
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={1}>
-                                                <TipoCobro consult={consult} tiposCobroSeleccionado={this.state.tiposCobroSeleccionado} handleChange={this.handleChangeChecboxTiposCobro} all={this.state.tiposCobroAll}>
+                                                <TipoCobro consult={consult}
+                                                           tiposCobroSeleccionado={this.state.tiposCobroSeleccionado}
+                                                           handleChange={this.handleChangeChecboxTiposCobro}
+                                                           all={this.state.tiposCobroAll}>
 
                                                 </TipoCobro>
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={2}>
-                                                <TipoServicio consult={consult} tiposServicioSeleccionado={this.state.tiposServicioSeleccionado} handleChange={this.handleChangeChecboxTiposServicio} all={this.state.tiposServicioAll}>
+                                                <TipoServicio consult={consult}
+                                                              tiposServicioSeleccionado={this.state.tiposServicioSeleccionado}
+                                                              handleChange={this.handleChangeChecboxTiposServicio}
+                                                              all={this.state.tiposServicioAll}>
 
                                                 </TipoServicio>
                                             </TabPanel>
                                         </div>
+                                    }
+                                    {this.state.porRegion &&
+                                    <div>
+                                        <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
+                                            <Tab label="Destinos" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
+                                            <Tab label="Productos" {...this.a11yProps(1)}/>
+                                            <Tab label="Conceptos de Facturación" {...this.a11yProps(2)}/>
+
+                                        </Tabs>
+
+                                        <TabPanel value={this.state.tab} index={0}>
+                                            {/*el filtrado por agregadoDesde está demas*/}
+                                            <DestinosTarifa
+                                                destinos={dataDestinosTemp}
+                                                destinosSeleccionados={dataDestinosSeleccionados}
+                                                actualizarDestinos={this.actualizarDestinos}
+                                                consult={consult}
+                                            />
+                                        </TabPanel>
+                                        <TabPanel value={this.state.tab} index={1}>
+                                            <ProductosPrecios
+                                                dataList={dataProductosSeleccionados}
+                                                onChangeList={this.actualizarProductos}
+                                                mostrarRangos={false}
+                                                consult={consult}
+                                                ivaRetiene={this.state.ivaRetiene}
+                                                ivaTraslada={this.state.ivaTraslada}
+                                                  />
+                                        </TabPanel>
+                                        <TabPanel value={this.state.tab} index={2}>
+                                            <ConceptosAdicionales consult={consult} edit={this.props.edit}
+                                                                  select={this.props.select}
+                                                                  conceptosAdicionales={conceptosAdicionales}
+                                                                  addConcepto={this.addConcepto}
+                                                                  removeConcepto={this.removeConceptoAdicional}
+                                                                  ivaRetiene={this.state.ivaRetiene}
+                                                                  ivaTraslada={this.state.ivaTraslada}
+                                                                  mostrarRangos={false}
+                                                                  porRegion={true}
+                                            />
+
+                                        </TabPanel>
+
+                                    </div>
                                     }
                                 </div>
                             </div>

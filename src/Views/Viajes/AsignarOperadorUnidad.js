@@ -261,8 +261,9 @@ export default function AsignarOperadorUnidad(props) {
                 ...data,
                 unidad: value,
                 placaIntUnidad: value.m_sPlacas,
-                estatusUnidad: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus
-
+                estatusUnidad: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus,
+                kms: value.m_nOdometro,
+                horas: value.m_nHorasTrabajadasMotorNoGPS
             });
         })
 
@@ -875,6 +876,7 @@ export default function AsignarOperadorUnidad(props) {
                                 margin={"dense"}
                                 variant={"outlined"}
                                 label={"Kilómetros"}
+                                disabled
                                 onChange={(e) => setData({...data, kms: e.target.value})}
                                 value={data.kms}/>
                         </Grid>
@@ -883,6 +885,7 @@ export default function AsignarOperadorUnidad(props) {
                                 margin={"dense"}
                                 variant={"outlined"}
                                 label={"Horas"}
+                                disabled
                                 onChange={(e) => setData({...data, horas: e.target.value})}
                                 value={data.horas}/>
                         </Grid>

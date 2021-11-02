@@ -1,11 +1,8 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
+import { API_HEADERS } from "../../Constants";
+const headers = API_HEADERS
 
-const headers = {
-    'Content-Type': 'application/json',
-    //'TimeZone' : Intl.DateTimeFormat().resolvedOptions().timeZone
-    //    'access-control-allow-origin': '*'
-}
 
 function modificarUsuarios(id, params){
     const url = `${process.env.REACT_APP_API_URL}/Usuarios/Modificar/` + id;

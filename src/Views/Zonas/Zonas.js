@@ -8,13 +8,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import $ from "jquery";
+import {API_HEADERS} from "../../Constants";
 
 window.jQuery = window.$ = $;
 
-const headers = {
-  'Content-Type': 'application/json',
-  //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
 
 function showSuccess(mensaje) {
   new Noty({

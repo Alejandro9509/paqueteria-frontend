@@ -18,7 +18,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
-import {dataGridLocaleText} from "../Constants";
+import {API_HEADERS, dataGridLocaleText} from "../Constants";
 import $ from "jquery";
 import {
     Button,
@@ -74,6 +74,7 @@ function Viajes() {
     const [indexOpen, setIndexOpen] = React.useState(-1);
     const [dataEstatusViaje, setEstatusViaje] = React.useState([]);
     const [informeSeleccionado, setInformeSeleccionado] = React.useState(null);
+    const [viajeSeleccionado, setViajeSeleccionado] = React.useState(null);
     const [dataEstatusDocumento, setEstatusDocumento] = React.useState([]);
     const [state, setState] = React.useState({
         showPopUp: false,
@@ -179,12 +180,15 @@ function Viajes() {
         $('#Agregar').addClass('in show');
 
         obetenerViajeId(id).then(respuesta => {
+            console.log(respuesta.data)
             setState({
                 ...state,
                 agregar: "Viaje",
                 edit: true,
                 idViaje: id,
-                selectViaje: respuesta.data
+                consult: false,
+                selectViaje: respuesta.data,
+                open: true
             })
         });
     }
@@ -198,6 +202,11 @@ function Viajes() {
             setState({
                 ...state,
                 agregar: "Viaje",
+                edit: true,
+                consult: true,
+                idViaje: id,
+                selectViaje: respuesta.data,
+                open: true
             })
         });
     }
@@ -207,7 +216,9 @@ function Viajes() {
             ...state,
             agregar: "Viaje",
             showPopUp: false,
-            edit: false
+            edit: false,
+            consult: false,
+            open: true,
         })
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
@@ -395,10 +406,7 @@ function Viajes() {
     };
 
 
-    const headers = {
-        'Content-Type': 'application/json',
-        //    'access-control-allow-origin': '*'
-    }
+    const headers = API_HEADERS
 
 
     /**DISPONIBILIDAD DE EQUIPO*/
@@ -533,12 +541,12 @@ function Viajes() {
         {
             headerName: "Camión",
             field: "m_sCamion",
-            width: 150,
+            width: 200,
         },
         {
             headerName: "Operador",
-            field: "m_sNombreCompleto",
-            width: 150
+            field: "m_sOperador",
+            width: 200
         },
         // {
         //     headerName: "Liq",
@@ -551,13 +559,13 @@ function Viajes() {
     const [paradaData, setParadaData] = React.useState();
 
     function getParadasListado(row) {
-        obtenerDetalleParadasIdViaje(row).then(respuesta => {
+        obtenerDetalleParadasIdViaje(row.m_nIdViaje).then(respuesta => {
             var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdOrigen")
             arrayInformes.forEach(a => {
                 a["informes"] = respuesta.data.filter(r => r.m_nIdOrigen === a.m_nIdOrigen)
                 a.origenDestino = `${a.m_sOrigen} - ${a.m_sDestino}`
             })
-            console.log(arrayInformes)
+            setViajeSeleccionado(row)
             setParadasListado(arrayInformes);
         });
     }
@@ -779,7 +787,7 @@ function Viajes() {
                         maxWidth={'xl'}>
                     <DialogTitle><h2>Llegada de Paradas</h2></DialogTitle>
                     <DialogContent>
-                        <LlegadaParadas onSubmit={updateLlegada} data={paradaData.m_clsInforme}>
+                        <LlegadaParadas onSubmit={updateLlegada} data={paradaData.m_clsInforme} viaje={viajeSeleccionado}>
                             <DialogActions>
                                 <Button
                                     variant={'contained'} color={'primary'}
@@ -844,7 +852,7 @@ function Viajes() {
                         <li className="active">
                             <a onClick={(event) => {
                                 event.stopPropagation();
-                                setState({...state, agregar: "Viaje"});
+                                setState({...state, agregar: "Viaje", open: true});
                                 $('.nav-tabs li ').removeClass('active');
                                 $('.nav-tabs li').eq(0).addClass('active');
                                 $('.tab-content div ').removeClass('in show');
@@ -1021,7 +1029,7 @@ function Viajes() {
                                                      ...state,
                                                      idViaje: row.data.m_nIdViaje
                                                  }) */
-                                                getParadasListado(row.data.m_nIdViaje)
+                                                getParadasListado(row.data)
                                             }}
                                         />
 
@@ -1149,7 +1157,11 @@ function Viajes() {
 
                         <div className="widget-wrap" id="Agregar" className="tab-pane fade">
 
-                            <AgregarViaje reload={getAllData} edit={state.edit} select={state.selectViaje} id={state.idViaje}/>
+                            {
+                                state.open &&
+                                <AgregarViaje reload={getAllData} consult={state.consult} edit={state.edit} select={state.selectViaje} id={state.idViaje}/>
+
+                            }
 
                         </div>
 

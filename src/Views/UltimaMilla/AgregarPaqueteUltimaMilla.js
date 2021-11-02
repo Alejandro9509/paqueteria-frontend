@@ -110,20 +110,10 @@ class AgregarPaqueteUltimaMilla extends Component {
                         </div>
 
                         <SortableContainer onSortEnd={this.onSortEnd} useDragHandle>
-                            {
-                                items.filter(g => g.m_nEstatusUlimaMilla === 4 || g.m_nEstatusUlimaMilla === 3).map((value, index) => {
-                                    return (
-                                    <ListItem key={`item-${value.m_sFolio}`} style={{zIndex: 3000000000}}>
-                                        <ListItemIcon>
-                                            <DragHandle/>
-                                        </ListItemIcon>
-                                        <ListItemText primary={`${value.m_sFolio}`} secondary={value.m_bEsRecoleccion ? value.m_sDomicilioRemitente : value.m_sDomicilioDestinatario}/>
-                                    </ListItem>
-                                )})
-                            }
-                            {items.filter(g => g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3).map((value, index) => {
+
+                            {items.map((value, index) => {
                                 return (
-                                <SortableItem quitarPaquete={this.quitarPaquete} key={`item-${value.m_sFolio}`} index={index} position={index} primary={value.m_sFolio}
+                                <SortableItem  disabled={value.m_nEstatusUlimaMilla === 4 || value.m_nEstatusUlimaMilla === 3} quitarPaquete={this.quitarPaquete} key={`item-${value.m_sFolio}`} index={index} position={index} primary={value.m_sFolio}
                                               secundary={value.m_bEsRecoleccion ? value.m_sDomicilioRemitente : value.m_sDomicilioDestinatario}/>
                                 )})}
                         </SortableContainer>
@@ -147,13 +137,13 @@ AgregarPaqueteUltimaMilla.propTypes = {};
 
 export default AgregarPaqueteUltimaMilla;
 
-const DragHandle = sortableHandle(() => <DragHandleIcon/>);
+const DragHandle = sortableHandle(() => <DragHandleIcon fontSize={"large"}/>);
 
 const SortableItem = sortableElement(({primary, secundary, quitarPaquete, position}) => {
     return (
     <ListItem style={{zIndex: 3000000000}}>
         <ListItemIcon>
-            <DragHandle/>
+            <DragHandle />
         </ListItemIcon>
         <ListItemText primary={`${primary}`} secondary={secundary}/>
         <DeleteIcon onClick={() => quitarPaquete(position)}/>

@@ -10,14 +10,11 @@ import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
-import { dataGridLocaleText } from '../../Constants';
+import {API_HEADERS, dataGridLocaleText} from '../../Constants';
 import { Tooltip } from '@material-ui/core';
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 window.jQuery = window.$ = $;
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -220,6 +217,7 @@ class Tarifas extends Component {
             m_cPrecioM3: data.precioM3,
             m_bPorPesoVolumen: data.porPesoOVolumen,
             m_bPorRango: data.porRangos,
+            m_bPorRegion: data.porRegion,
             m_nFactorConversion: data.factorConversion,
             m_arrArCobros: data.tiposCobroSeleccionado.map(c => ({ m_nIdTipoCobro: c.m_nIdTipoCobro })),
             m_arrArServicios: data.tiposServicioSeleccionado.map(s => ({ m_nIdTipoServicio: s.m_nIdTipoServicio })),
@@ -237,6 +235,7 @@ class Tarifas extends Component {
                 m_nIdTipoMedida: c.tipoMedida
             })),
             m_arrArProductos: data.dataProductosSeleccionados,
+            m_arrArDestinos: data.dataDestinosSeleccionados,
             m_nCreadoPOr: localStorage.getItem("UsuarioId"),
             m_nModificadoPor: localStorage.getItem("UsuarioId"),
             m_sCodigo: data.codigoTarifa
@@ -377,7 +376,9 @@ class Tarifas extends Component {
                                         $('.nav-tabs li').eq(0).addClass('active');
                                         $('.tab-content div ').removeClass('in show');
                                         $('#Listado').addClass('in show');
-                                    }}></CrearTarifa>
+                                    }}
+                                                 listaCiudades={this.state.dataCiudades}
+                                    />
                                 }
 
                             </div>

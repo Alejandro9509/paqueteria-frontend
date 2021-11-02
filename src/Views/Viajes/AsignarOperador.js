@@ -2,14 +2,12 @@ import React, {useEffect} from 'react';
 import Grid from '@material-ui/core/Grid';
 import {DataGrid} from "@material-ui/data-grid";
 import axios from "axios";
+import {API_HEADERS} from "../../Constants";
 
 
 export default function AsignarOperador(props){
 
-    const headers = {
-        'Content-Type': 'application/json',
-        //    'access-control-allow-origin': '*'
-    }
+    const headers = API_HEADERS
     const [unidadesListado, setUnidadesListado] = React.useState([]);
 
     function getUnidadesListado(){

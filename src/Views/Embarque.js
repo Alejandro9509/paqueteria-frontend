@@ -34,6 +34,7 @@ import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";
 import Noty from "noty";
 import {
+    Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -48,7 +49,7 @@ import {ToggleButtonGroup} from "@material-ui/lab";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import {dataGridLocaleText} from "../Constants";
+import {API_HEADERS, dataGridLocaleText} from "../Constants";
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import {obtenerCiudades, obtenerCiudadId} from "../Util/Contexts/CiudadesContext";
@@ -58,6 +59,7 @@ import {
     obtenerCodigosPostalesPorCiudad, obtenerCodigosPostalesPorEstadoMunicipio
 } from "../Util/Contexts/CodigoPostalContext";
 import {
+    actualizarRemitentesDestinatarios,
     obtenerRemitentesDestinatarios,
     obtenerRemitentesDestinatariosId
 } from "../Util/Contexts/RemitenteDestinatarioContext";
@@ -95,6 +97,9 @@ import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "..
 import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
 import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
 import Paquetes from "./Paquetes/Paquetes";
+import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
+import ReplayIcon from "@material-ui/icons/Replay";
+import ZonaOperativa from "./ZonasOperativas/ZonaOperativa";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -179,7 +184,10 @@ function Embarque(props) {
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
+    const [dataCiudadF, setDataCiudadF] = React.useState([]);
 
+    const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
+    const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
     const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
     const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
     // const [dataCodigosPostalesRecoleccionDD, setDataCodigosPostalesRecoleccionDD] = React.useState([]);
@@ -311,6 +319,8 @@ function Embarque(props) {
         estatusListado:0,
         sucursalListado: 0,
         folio: '',
+        OrigenListado:0,
+        DestinoListado:0,
     })
 
     const resetFiltros = () => {
@@ -320,6 +330,8 @@ function Embarque(props) {
             estatusListado:0,
             sucursalListado: 0,
             folio: '',
+            OrigenListado:0,
+            DestinoListado:0,
         })
     }
 
@@ -333,7 +345,7 @@ function Embarque(props) {
             }
         })
         if (target.name === "fechaInicial"){
-            obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -341,7 +353,7 @@ function Embarque(props) {
                 }
             })
         }else if (target.name === "fechaFinal"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerEmbarquesFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -350,7 +362,7 @@ function Embarque(props) {
             })
         }
         else if (target.name === "sucursalListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio).then(respuesta => {
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -359,7 +371,25 @@ function Embarque(props) {
             })
         }
         else if (target.name === "estatusListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio).then(respuesta => {
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "OrigenListado"){
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
+        else if (target.name === "DestinoListado"){
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -566,6 +596,17 @@ function Embarque(props) {
             headerName: "Estatus de la Orden",
             field: "m_sEstatusEmbarque",
             width: 200,
+            renderCell: (row) => {
+                return (
+                    <div align={"center"} style={{width: "100%"}}>
+                        <Chip size="small" style={{
+                            backgroundColor: `${row.row.m_sColorEstatus}`,
+                            //color: row.row.m_nIdEstatusUnidad === 1 ? "black" : "white",
+                            padding: "1px"
+                        }} label={row.row.m_sEstatusEmbarque}/>
+                    </div>
+                )
+            }
         },
         {
             headerName: "Origen",
@@ -871,8 +912,8 @@ function Embarque(props) {
             obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado,newValue.m_nIdMunicipio).then(({data}) => {
                 setDataCodigosPostalesRemitente(data)
             })
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                /*if (data.length > 0){
+            /*obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
+                /!*if (data.length > 0){
                     setRemitente(remitente => {
                         return{
                             ...remitente,
@@ -886,11 +927,11 @@ function Embarque(props) {
                             zonaOperativaRemitente: {}
                         }
                     })
-                }*/
+                }*!/
                 setDataZonasOperativasRemitente(data)
             })
             obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                /*if (data.length > 0){
+                /!*if (data.length > 0){
                     setRemitente(remitente => {
                         return{
                             ...remitente,
@@ -904,13 +945,13 @@ function Embarque(props) {
                             zonaTarifaRemitente: {}
                         }
                     })
-                }*/
+                }*!/
                 setDataZonasTarifaRemitente(data)
-            })
+            })*/
         }
-        if (input === "codigoPostalRemitente"){
+        /*if (input === "codigoPostalRemitente"){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
+                /!*if (data.length > 0){
                     setRemitente(remitente => {
                         return{
                             ...remitente,
@@ -924,11 +965,11 @@ function Embarque(props) {
                             zonaOperativaRemitente: {}
                         }
                     })
-                }*/
+                }*!/
                 setDataZonasOperativasRemitente(data)
             })
             obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
+                /!*if (data.length > 0){
                     setRemitente(remitente => {
                         return{
                             ...remitente,
@@ -942,11 +983,37 @@ function Embarque(props) {
                             zonaTarifaRemitente: {}
                         }
                     })
-                }*/
+                }*!/
                 setDataZonasTarifaRemitente(data)
             })
-        }
+        }*/
     }
+
+    
+    const [recoleccionDD, setRecoleccionDD] = useState({
+        estadoRec: '',
+        municipioRec: '',
+        codigoPostalRec: '',
+        zonaOperativaRec: '',
+        zonaTarifaRec: '',
+        domicilioRec: '',
+        recogerEnRec: '',
+        datosAdicionalesRec: ''
+    })
+
+    const resetRecoleccionDD = () => {
+        setRecoleccionDD({
+            estadoRec: '',
+            municipioRec: '',
+            codigoPostalRec: '',
+            zonaOperativaRec: '',
+            zonaTarifaRec: '',
+            domicilioRec: '',
+            recogerEnRec: '',
+            datosAdicionalesRec: ''
+        })
+    }
+
 
     const [destinatario, setDestinatario] = useState({
         idDestinatario: '',
@@ -1156,8 +1223,8 @@ function Embarque(props) {
             zonaOperativaEnt: '',
             zonaTarifaEnt: '',
             domicilioEnt: '',
-            recogerEnEnt: '',
-            datosAdicionalesEnt: ''
+            datosAdicionalesEnt: '',
+            entregarEnEnt: ''
         })
     }
 
@@ -1403,6 +1470,7 @@ function Embarque(props) {
             m_sNoExtRemitente: remitente.numeroExtRemitente,
             m_nIdEstadoRemitente: remitente.estadoRemitente,
             m_sColoniaRemitente: remitente.coloniaRemitente,
+            m_sMunicipioRemitente: remitente.municipioRemitente,
 
             m_sNombreDestinatario: destinatario.nombreDestinatario.m_sNombre,
             m_sRFCDestinatario: destinatario.RFCDestinatario,
@@ -1413,7 +1481,8 @@ function Embarque(props) {
             m_sTelefonoDestinatario: destinatario.telefonoDestinatario,
             m_sContactoDestinatario: destinatario.contactoDestinatario,
             m_nIdCiudadDestino: destinatario.destinoDestinatario.m_nIdCiudad,
-            // m_nIdZonaDestinatario: destinatario.zonaDestinatario.m_nIdZona,
+            // m_nIdZonaDestinatario: destinatario.zonaDestinatario.m_nIdZona
+            m_sMunicipioDestinatario: destinatario.municipioDestinatario,
             m_nIdDestinatario: destinatario.idDestinatario,
             m_sAliasDestinatario: destinatario.aliasDestinatario,
             m_nIdEstadoDestinatario: destinatario.estadoDestinatario,
@@ -1448,14 +1517,15 @@ function Embarque(props) {
         if (state.entregaEnSucursal) {
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
             params.EntregarMismoDomicilio = false
-        }
-        if (state.diferenteEntrega) {
+        } else if (state.diferenteEntrega) {
             params.m_bEntregaEnSucursal = false
             // params.IdCiudadEntrega = state.ciudadEntrega
             params.CodigoPostalEntrega = entregaDD.codigoPostalEnt.m_nIdCP
             // params.IdZonaEntrega = entregaDD.zonaEntrega
             params.DomicilioEntrega = entregaDD.domicilioEnt
             params.EntregarEn = entregaDD.entregarEnEnt
+            params.m_nIdEstadoEntrega = entregaDD.estadoEnt
+            params.m_sCodigoMunicipioEntrega = entregaDD.municipioEnt
             params.DatosAdicionales = entregaDD.datosAdicionalesEnt
             params.m_nIdZonaOperativa = entregaDD.zonaOperativaEnt.m_nIdZona
             params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
@@ -1929,11 +1999,7 @@ function Embarque(props) {
                         coloniaRemitente: respuesta.data.m_sColoniaRemitente,
                         estadoRemitente: respuesta.data.m_nIdEstadoRemitente || 0,
                         municipioRemitente: respuesta.data.m_nIdCiudadRemitente,
-                        codigoPostalRemitente: {
-                            m_nIdCP: cp.data.m_nIdCP,
-                            m_sCP: cp.data.m_sCP,
-                            m_sColonia: respuesta.data.m_sColoniaRemitente
-                        },
+                      
                         correoRemitente: respuesta.data.m_sCorreoRemitente,
                         telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
                         contactoRemitente: respuesta.data.m_sContactoRemitente,
@@ -1941,9 +2007,76 @@ function Embarque(props) {
                         longitudR: data.m_sLongitudR || ""
                     }
                 })
+
+                let estado
+                if (respuesta.data.m_nIdEstadoRemitente < 10) {
+                    estado = `0${respuesta.data.m_nIdEstadoRemitente}`
+                } else {
+                    estado = respuesta.data.m_nIdEstadoRemitente
+                }
+    
+                obtenerMunicipiosByIdEstado(estado).then(({data}) => {
+                    setDataMunicipiosRemitente(data)
+                })
+                obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
+                    setRemitente(remitente => {
+                        return {
+                            ...remitente,
+                            codigoPostalRemitente: {
+                                m_nIdCP: cp.data.m_nIdCP,
+                                m_sCP: cp.data.m_sCP,
+                                m_sColonia: respuesta.data.m_sColoniaRemitente
+                            },
+                        }
+                    })
+                })
+                obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
+                    setRemitente(remitente => {
+                        return {
+                            ...remitente,
+                            origenRemitente: data
+                        }
+                    })
+                })
+                obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+                    if (!respuesta.data.m_bRecoleccionDiferenteDomicilio) {
+                        setRemitente(remitente => {
+                            return {
+                                ...remitente,
+                                zonaOperativaRemitente: data
+                            }
+                        })
+                    } else {
+                        setRecoleccionDD(recoleccionDD => {
+                            return {
+                                ...recoleccionDD,
+                                zonaOperativaRec: data
+                            }
+                        })
+                    }
+                })
+                obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
+                    if (!respuesta.data.m_bRecoleccionDiferenteDomicilio) {
+                        setRemitente(remitente => {
+                            return {
+                                ...remitente,
+                                zonaTarifaRemitente: data
+                            }
+                        })
+                    } else {
+                        setRecoleccionDD(recoleccionDD => {
+                            return {
+                                ...recoleccionDD,
+                                zonaTarifaRec: data
+                            }
+                        })
+                    }
+                })
+
+
             })
         })
-        obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
+   /*      obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
             setRemitente(remitente => {
                 return {
                     ...remitente,
@@ -1968,7 +2101,7 @@ function Embarque(props) {
                     })
                 })
             }
-        })
+        }) */
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
                 setDestinatario(destinatario => {
@@ -1998,6 +2131,30 @@ function Embarque(props) {
                     }
                 })
             })
+          
+
+            let estado
+            if (respuesta.data.m_nIdEstadoDestinatario < 10) {
+                estado = `0${respuesta.data.m_nIdEstadoDestinatario}`
+            } else {
+                estado = respuesta.data.m_nIdEstadoDestinatario
+            }
+
+            obtenerMunicipiosByIdEstado(estado).then(({data}) => {
+                setDataMunicipiosDestinatario(data)
+            })
+            obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
+                setDestinatario(destinatario => {
+                    return {
+                        ...destinatario,
+                        codigoPostalDestinatario: {
+                            m_nIdCP: cp.data.m_nIdCP,
+                            m_sCP: cp.data.m_sCP,
+                            m_sColonia: respuesta.data.m_sColoniaDestinatario
+                        },
+                    }
+                })
+            })
             obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(({data}) => {
                 setDestinatario(destinatario => {
                     return {
@@ -2005,6 +2162,40 @@ function Embarque(props) {
                         destinoDestinatario: data
                     }
                 })
+            })
+            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
+                if (!respuesta.data.m_bEntregaDiferenteDomicilio) {
+                    setDestinatario(destinatario => {
+                        return {
+                            ...destinatario,
+                            zonaOperativaDestinatario: data
+                        }
+                    })
+                } else {
+                    setEntregaDD(entregaDD => {
+                        return {
+                            ...entregaDD,
+                            zonaOperativaEnt: data
+                        }
+                    })
+                }
+            })
+            obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifaEntrega).then(({data}) => {
+                if (!respuesta.data.m_bEntregaDiferenteDomicilio) {
+                    setDestinatario(destinatario => {
+                        return {
+                            ...destinatario,
+                            zonaTarifaDestinatario: data
+                        }
+                    })
+                } else {
+                    setEntregaDD(entregaDD => {
+                        return {
+                            ...entregaDD,
+                            zonaTarifaEnt: data
+                        }
+                    })
+                }
             })
         })
 
@@ -2170,35 +2361,49 @@ function Embarque(props) {
         getAllCiudades()
 
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
+            setRemitente(remitente => {
+                return {
+                    ...remitente,
+                    nombreRemitente: data,
+                    RFCRemitente: respuesta.data.m_sRFCRemitente,
+                    domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
+                    ciudadRemitente: respuesta.data.m_nCiudadRemitente,
+                    correoRemitente: respuesta.data.m_sCorreoRemitente,
+                    telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
+                    contactoRemitente: respuesta.data.m_sContactoRemitente,
+                    // origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
+                    // zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
+                    idRemitente: respuesta.data.m_nIdRemitente,
+                    aliasRemitente: respuesta.data.m_sAliasRemitente,
+                    calleRemitente: respuesta.data.m_sCalleRemitente,
+                    numeroIntRemitente: respuesta.data.m_sNoIntRemitente || 0,
+                    numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
+                    coloniaRemitente: respuesta.data.m_sColoniaRemitente,
+                    estadoRemitente: respuesta.data.m_nIdEstadoRemitente || 0,
+                    municipioRemitente: respuesta.data.m_sMunicipioRemitente,
+                    latitudR: data.m_sLatitudR,
+                    longitudR: data.m_sLongitudR
+                }
+            })
+            let estado
+            if (respuesta.data.m_nIdEstadoRemitente < 10){
+                estado = `0${respuesta.data.m_nIdEstadoRemitente}`
+            }else{
+                estado = respuesta.data.m_nIdEstadoRemitente
+            }
 
+            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+                setDataMunicipiosRemitente(data)
+            })
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
                 setRemitente(remitente => {
                     return {
                         ...remitente,
-                        nombreRemitente: data,
                         codigoPostalRemitente: {
                             m_nIdCP: cp.data.m_nIdCP,
                             m_sCP: cp.data.m_sCP,
                             m_sColonia: respuesta.data.m_sColoniaRemitente
                         },
-                        RFCRemitente: respuesta.data.m_sRFCRemitente,
-                        domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                        ciudadRemitente: respuesta.data.m_nCiudadRemitente,
-                        correoRemitente: respuesta.data.m_sCorreoRemitente,
-                        telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                        contactoRemitente: respuesta.data.m_sContactoRemitente,
-                        // origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
-                        // zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
-                        idRemitente: respuesta.data.m_nIdRemitente,
-                        aliasRemitente: respuesta.data.m_sAliasRemitente,
-                        calleRemitente: respuesta.data.m_sCalleRemitente,
-                        numeroIntRemitente: respuesta.data.m_sNoIntRemitente || 0,
-                        numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
-                        coloniaRemitente: respuesta.data.m_sColoniaRemitente,
-                        estadoRemitente: respuesta.data.m_nIdEstadoRemitente || 0,
-                        municipioRemitente: respuesta.data.m_nIdCiudadRemitente,
-                        latitudR: data.m_sLatitudR,
-                        longitudR: data.m_sLongitudR
                     }
                 })
             })
@@ -2212,34 +2417,46 @@ function Embarque(props) {
             })
         })
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
+            setDestinatario(destinatario => {
+                return {
+                    ...destinatario,
+                    nombreDestinatario: data,
+                    RFCDestinatario: respuesta.data.m_sRFCDestinatario,
+                    domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
+                    ciudadDestinatario: respuesta.data.m_nIdCIudadDestinatario,
+                    correoDestinatario: respuesta.data.m_sCorreoDestinatario,
+                    telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
+                    contactoDestinatario: respuesta.data.m_sContactoDestinatario,
+                    idDestinatario: respuesta.data.m_nIdDestinatario,
+                    aliasDestinatario: respuesta.data.m_sAliasDestinatario,
+                    estadoDestinatario: respuesta.data.m_nIdEstadoDestinatario || 0,
+                    calleDestinatario: respuesta.data.m_sCalleDestinatario,
+                    numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0,
+                    numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
+                    municipioDestinatario: respuesta.data.m_sMunicipioDestinatario,
+                    coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
+                    latitudD: data.m_sLatitudD || '',
+                    longitudD: data.m_sLongitudD || ''
+                }
+            })
+            let estado
+            if (respuesta.data.m_nIdEstadoDestinatario < 10){
+                estado = `0${respuesta.data.m_nIdEstadoDestinatario}`
+            }else{
+                estado = respuesta.data.m_nIdEstadoDestinatario
+            }
+            obtenerMunicipiosByIdEstado(estado).then(({data}) =>    {
+                setDataMunicipiosDestinatario(data)
+            })
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
                 setDestinatario(destinatario => {
                     return {
                         ...destinatario,
-                        nombreDestinatario: data,
-                        RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                        domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                        ciudadDestinatario: respuesta.data.m_nIdCIudadDestinatario,
-                        correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                        telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                        contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                        // destinoDestinatario: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
-                        // zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
-                        idDestinatario: respuesta.data.m_nIdDestinatario,
-                        aliasDestinatario: respuesta.data.m_sAliasDestinatario,
-                        estadoDestinatario: respuesta.data.m_nIdEstadoDestinatario || 0,
-                        calleDestinatario: respuesta.data.m_sCalleDestinatario,
-                        numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0,
-                        numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
-
-                        coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
                         codigoPostalDestinatario: {
                             m_nIdCP: cp.data.m_nIdCP,
                             m_sCP: cp.data.m_sCP,
                             m_sColonia: respuesta.data.m_sColoniaDestinatario
                         },
-                        latitudD: data.m_sLatitudD || '',
-                        longitudD: data.m_sLongitudD || ''
                     }
                 })
             })
@@ -2251,54 +2468,82 @@ function Embarque(props) {
                     }
                 })
             })
-            if (respuesta.data.EntregarMismoDomicilio){
-                obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+
+            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+                if (respuesta.data.EntregarMismoDomicilio){
                     setDestinatario(destinatario => {
                         return{
                             ...destinatario,
                             zonaOperativaDestinatario: data
                         }
                     })
-                })
-                obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
+                }else {
+                    setEntregaDD(entregaDD => {
+                        return{
+                            ...entregaDD,
+                            zonaOperativaEnt: data
+                        }
+                    })
+                }
+            })
+            obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
+                if (respuesta.data.EntregarMismoDomicilio){
                     setDestinatario(destinatario => {
                         return{
                             ...destinatario,
                             zonaTarifaDestinatario: data
                         }
                     })
-                })
-            }
+                }else{
+                    setEntregaDD(entregaDD => {
+                        return{
+                            ...entregaDD,
+                            zonaTarifaEnt: data
+                        }
+                    })
+                }
+            })
+
         })
 
-        if (!respuesta.data.EntregarMismoDomicilio){
+        if(respuesta.data.m_bEntregaEnSucursal){
+            setState(state => {
+                return {
+                    ...state,
+                    entregaEnSucursal: respuesta.data.m_bEntregaEnSucursal,
+                    idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
+                    diferenteEntrega: false,
+                }
+            })
+        }else if (!respuesta.data.EntregarMismoDomicilio){
+            setState(state => {
+                return {
+                    ...state,
+                    entregaEnSucursal: false,
+                    diferenteEntrega: !respuesta.data.EntregarMismoDomicilio,
+                }
+            })
+            let estado
+            if (respuesta.data.m_nIdEstadoEntrega < 10){
+                estado = `0${respuesta.data.m_nIdEstadoEntrega}`
+            }else{
+                estado = respuesta.data.m_nIdEstadoEntrega
+            }
+
+            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+                setDataMunicipiosEntregaDD(data)
+            })
             obtenerCodigoPostalId(respuesta.data.CodigoPostalEntrega).then((cp) => {
                 setEntregaDD(entregaDD => {
                     return {
                         ...entregaDD,
                         codigoPostalEnt: cp.data,
-                        // ciudadEntrega: respuesta.data.IdCiudadEntrega,
-                        // zonaEntrega: respuesta.data.IdZonaEntrega,
                         domicilioEnt: respuesta.data.DomicilioEntrega,
                         entregarEnEnt: respuesta.data.EntregarEn,
                         datosAdicionalesEnt: respuesta.data.DatosAdicionalesis,
+                        estadoEnt: respuesta.data.m_nIdEstadoEntrega,
+                        municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega
                         }
-                })
-            })
-            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
-                setEntregaDD(entregaDD => {
-                    return{
-                        ...entregaDD,
-                        zonaOperativaEnt: data
-                    }
-                })
-            })
-            obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
-                setEntregaDD(entregaDD => {
-                    return{
-                        ...entregaDD,
-                        zonaTarifaEnt: data
-                    }
                 })
             })
         }
@@ -2309,17 +2554,7 @@ function Embarque(props) {
             respuesta.data.m_arrPaquetes.push(s)
         })
 
-        /*respuesta.data.m_arrPaquetes.forEach(p => {
-            obtenerProductoById(p.m_nIdProducto).then(({data}) => {
-                p.producto = data
-                totalPaquetes += parseInt(p.ctd)
-            })
-            obtenerEmbalajesId(p.m_nIdTIpoEmpaque).then(({data}) => {
-                p.m_sTipoEmbalaje = data.m_sNombre
-                p.m_sTipo = p.m_nTipo == 1 ? 'Sobre' : 'Paquete'
-            })
-        })*/
-        // setTotalPaquetes(totalPaquetes)
+        
         respuesta.data.m_arrPaquetes.forEach((p) => {
             p.m_nIdPaquete = p.m_nIdEmbarqueDetalle
             p.m_rPeso = p.m_xPeso
@@ -2370,51 +2605,8 @@ function Embarque(props) {
                 tipoCobro: respuesta.data.m_nIdTIpoCobro,
                 // clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
                 duplicar: duplicar,
-                //Remitente
-                // nombreRemitente: remitente,
-                /*RFCRemitente: respuesta.data.m_sRFCRemitente,
-                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                ciudadRemitente: respuesta.data.m_nCiudadRemitente,
-                correoRemitente: respuesta.data.m_sCorreoRemitente,
-                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                contactoRemitente: respuesta.data.m_sContactoRemitente,
-                // origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
-                // zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
-                idRemitente: respuesta.data.m_nIdRemitente,
-                aliasRemitente: respuesta.data.m_sAliasRemitente,
-                calleRemitente: respuesta.data.m_sCalleRemitente,
-                numeroIntRemitente: respuesta.data.m_sNoIntRemitente || 0,
-                numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
-                coloniaRemitente: respuesta.data.m_sColoniaRemitente,*/
-
-                //Destinatario
-                // nombreDestinatario: destinatario,
-                /*RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                ciudadDestinatario: respuesta.data.m_nIdCIudadDestinatario,
-                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                // destinoDestinatario: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
-                // zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
-                idDestinatario: respuesta.data.m_nIdDestinatario,
-                aliasDestinatario: respuesta.data.m_sAliasDestinatario,
-                calleDestinatario: respuesta.data.m_sCalleDestinatario,
-                numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0,
-                numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
-                coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,*/
-
                 //Entrega
-                entregaEnSucursal: respuesta.data.m_bEntregaEnSucursal,
-                idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
-                diferenteEntrega: !respuesta.data.EntregarMismoDomicilio,
-                /*ciudadEntrega: respuesta.data.IdCiudadEntrega,
-                zonaEntrega: respuesta.data.IdZonaEntrega,
-                domicilioEntrega: respuesta.data.DomicilioEntrega,
-                entregaEn: respuesta.data.EntregarEn,
-                datosAdicionalesEntrega: respuesta.data.DatosAdicionalesis,*/
-
-                //Cita de recoleccion
+                
                 entregaConCita: respuesta.data.m_bEmbarqueConCita,
                 fechaCita: respuesta.data.m_sFechaCita,
                 horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
@@ -2431,13 +2623,57 @@ function Embarque(props) {
 
     }
 
+
+    function getFechaInicial() {
+        obtenerFechaInicio().then(respuesta => {
+            console.log(respuesta.data[0].Fecha)
+            setDataFechaInicial(respuesta.data)
+
+            setFiltros(filtros => {
+                return {
+                    ...filtros,
+                   fechaInicial: respuesta.data[0].Fecha
+                }
+            })
+           
+        });
+    };
+
+
+    
+    function getFechaFinal() {
+        obtenerFechaFinal().then(respuesta => {
+            console.log(respuesta.data[0].Fecha)
+
+            setDataFechaFinal(respuesta.data)
+
+            setFiltros(filtros => {
+                return {
+                    ...filtros,
+                   fechaFinal: respuesta.data[0].Fecha
+                }
+            })
+
+
+
+
+
+        });
+    };
+
     const handleShowListado = (event) => {
         event.stopPropagation();
         limpiarCamposAgregar()
+
         setState(state => {
             return {
                 ...state,
                 agregar: "Agregar",
+                fechaInicial: dataFechaInicial.Fecha,
+                fechaFinal: dataFechaFinal.Fecha,
+                sucursalListado: 0,
+                estatusListado: 0,
+                folioRecoleccion: '',
             }
         });
         getAllEmbarque();
@@ -2482,7 +2718,7 @@ function Embarque(props) {
             ...state,
             entregaEnSucursal: !state.entregaEnSucursal,
             diferenteEntrega: !state.entregaEnSucursal && false,
-            entregaConCita: !state.entregaEnSucursal && false
+            entregaConCita: !state.entregaEnSucursal && false,
         });
     };
 
@@ -2704,9 +2940,14 @@ function Embarque(props) {
     }*/
 
     const getDataParaListado = () => {
+
         getAllEmbarque();
         getAllSucursales();
         getAllEstatusEmbarque();
+        getAllCiudadesFiltro();
+
+
+
     }
 
     const getDataParaEditar = () => {
@@ -2718,9 +2959,34 @@ function Embarque(props) {
     }
 
     async function getAllEmbarque() {
-        obtenerEmbarques().then((respuesta) => {
-            setData(respuesta.data);
-        });
+        obtenerFechaInicio().then((respuestaUno) => {
+
+
+
+            obtenerFechaFinal().then((respuestaDos) => {
+
+                console.log(respuestaUno.data[0].Fecha)
+                console.log(respuestaDos.data[0].Fecha)
+
+
+                setDataFechaInicial(respuestaUno.data)
+                setDataFechaFinal(respuestaDos.data)
+                setFiltros(filtros => {
+                    return {
+                        ...filtros,
+                       fechaInicial: respuestaUno.data[0].Fecha,
+                       fechaFinal: respuestaDos.data[0].Fecha
+
+                    }
+                })
+
+                obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                    setData(respuesta.data);
+        })
+
+            })
+
+    })
     }
 
     /*function getFormatosImpresion() {
@@ -2769,6 +3035,11 @@ function Embarque(props) {
             setDataCiudad(respuesta.data);
         });
     }
+    async function getAllCiudadesFiltro() {
+        obtenerCiudades().then((respuesta) => {
+            setDataCiudadF(respuesta.data);
+        });
+    }
 
     async function getAllTiposSeguro(){
         axios.get(`${process.env.REACT_APP_API_URL}/TipoSeguros/GetListado`, {headers}).then(({data}) => {
@@ -2782,9 +3053,7 @@ function Embarque(props) {
         });
     }
 
-    const headers = {
-        "Content-Type": "application/json",
-    };
+    const headers = API_HEADERS
 
     function conDatos() {
         return data.length != 0;
@@ -2835,7 +3104,7 @@ function Embarque(props) {
                 data,
                 defaultColumn,
             },
-            useFilters,
+             useFilters,
             useSortBy
         );
 
@@ -4069,40 +4338,40 @@ function Embarque(props) {
                                                 />
                                             </Grid>
                                             <Grid item xs={2}>
-                                                <FormControl className="input select" fullWidth variant="outlined">
-                                                    <TextField
-                                                        autoFocus
-                                                        type="date"
-                                                        margin="dense"
-                                                        label="Fecha Inicial"
-                                                        variant="outlined"
-                                                        className="form-control"
-                                                        InputLabelProps={{shrink: true,}}
-                                                        value={filtros.fechaInicial}
-                                                        onChange={handleChangeFiltros}
-                                                        id="fechaInicial"
-                                                        name="fechaInicial"
-                                                    />
-                                                </FormControl>
-                                            </Grid>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <TextField
+                                                            autoFocus
+                                                            type="date"
+                                                            margin="dense"
+                                                            label="Fecha Inicial"
+                                                            variant="outlined"
+                                                            className="form-control"
+                                                            InputLabelProps={{shrink: true,}}
+                                                            value={filtros.fechaInicial}
+                                                            onChange={handleChangeFiltros}
+                                                            id="fechaInicial"
+                                                            name="fechaInicial"
+                                                        />
+                                                    </FormControl>
+                                                </Grid>
                                             <Grid item xs={2}>
-                                                <FormControl className="input select" fullWidth variant="outlined">
-                                                    <TextField variant="outlined" margin="dense"
-                                                               type="date"
-                                                               className="form-control"
-                                                               label="Fecha Final"
-                                                               InputLabelProps={{
-                                                                   shrink: true,
-                                                               }}
-                                                               value={filtros.fechaFinal}
-                                                               onChange={handleChangeFiltros}
-                                                               id="fechaFinal"
-                                                               name="fechaFinal"
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <TextField variant="outlined" margin="dense"
+                                                                   type="date"
+                                                                   className="form-control"
+                                                                   label="Fecha Final"
+                                                                   InputLabelProps={{
+                                                                       shrink: true,
+                                                                   }}
+                                                                   value={filtros.fechaFinal}
+                                                                   onChange={handleChangeFiltros}
+                                                                   id="fechaFinal"
+                                                                   name="fechaFinal"
 
-                                                    />
-                                                </FormControl>
+                                                        />
+                                                    </FormControl>
 
-                                            </Grid>
+                                                </Grid>
                                             <Grid item xs={2}>
                                                 <FormControl className="input select" fullWidth variant="outlined">
                                                     <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
@@ -4153,6 +4422,56 @@ function Embarque(props) {
                                                     </Select>
                                                 </FormControl>
                                             </Grid>
+                                            <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <InputLabel id="OrigenListado">Origen</InputLabel>
+                                                        <Select
+                                                            labelId="OrigenListado"
+                                                            className="form-control"
+                                                            required
+                                                            label="Origen"
+                                                            value={filtros.OrigenListado}
+                                                            onChange={handleChangeFiltros}
+                                                            id="OrigenListado"
+                                                            name="OrigenListado"
+                                                        >
+                                                            <option value="0">Todos</option>
+                                                            {dataCiudadF.map((ciudad) => (
+                                                                <option
+                                                                    key={ciudad.m_nIdCiudad}
+                                                                    value={ciudad.m_nIdCiudad}
+                                                                >
+                                                                    {ciudad.m_sCiudad}
+                                                                </option>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={2}>
+                                                    <FormControl className="input select" fullWidth variant="outlined">
+                                                        <InputLabel id="DestinoListado">Destino</InputLabel>
+                                                        <Select
+                                                            labelId="DestinoListado"
+                                                            className="form-control"
+                                                            required
+                                                            label="Destino"
+                                                            value={filtros.DestinoListado}
+                                                            onChange={handleChangeFiltros}
+                                                            id="DestinoListado"
+                                                            name="DestinoListado"
+                                                        >
+                                                            <option value="0">Todos</option>
+                                                            {dataCiudadF.map((ciudad) => (
+                                                                <option
+                                                                    key={ciudad.m_nIdCiudad}
+                                                                    value={ciudad.m_nIdCiudad}
+                                                                >
+                                                                    {ciudad.m_sCiudad}
+                                                                </option>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
                                             <Grid item container xs={2}>
                                                 <IconButton aria-label="delete" onClick={() => {
                                                     resetFiltros()
@@ -4877,16 +5196,12 @@ function Embarque(props) {
                                                                                                             }}
                                                                                                             disabled={state.agregar === "Consultar"}
                                                                                                             onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "nombreRemitente",
-                                                                                                                    tipoModal: 5,
-                                                                                                                    openDialog: true
-                                                                                                                });
+                                                                                                                actualizarRemitentesDestinatarios().then(({data}) => {
+                                                                                                                    setDataRemitenteDestinatario(data)
+                                                                                                                })
                                                                                                             }}
                                                                                                         >
-                                                                                                            <PageviewIcon
+                                                                                                            <ReplayIcon
                                                                                                                 style={{
                                                                                                                     color: "#F9A03E",
                                                                                                                     fontSize: 32,
@@ -5094,7 +5409,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    {/* --------------------------------------- Correo ------------------------------------------------- */}
+
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
@@ -5110,7 +5425,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    {/* --------------------------------------- Telefono ------------------------------------------------- */}
+
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
@@ -5128,7 +5443,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    {/* --------------------------------------- Contacto ------------------------------------------------- */}
+
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <TextField variant="outlined" margin="dense"
@@ -5144,7 +5459,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    {/* --------------------------------------- Origen ------------------------------------------------- */}
+
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <Autocomplete
@@ -5220,7 +5535,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
-
+                                                                    {/*
                                                                     <div className="col-sm-12 col-md-12 unit">
                                                                         <div className="input">
                                                                             <Autocomplete
@@ -5284,6 +5599,7 @@ function Embarque(props) {
                                                                             />
                                                                         </div>
                                                                     </div>
+                                                                    */}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -5346,16 +5662,12 @@ function Embarque(props) {
                                                                                                             }}
                                                                                                             disabled={state.agregar === "Consultar"}
                                                                                                             onClick={() => {
-                                                                                                                setState({
-                                                                                                                    ...state,
-                                                                                                                    identificadorModal:
-                                                                                                                        "nombreDestinatario",
-                                                                                                                    tipoModal: 5,
-                                                                                                                    openDialog: true
-                                                                                                                });
+                                                                                                                actualizarRemitentesDestinatarios().then(({data}) => {
+                                                                                                                    setDataRemitenteDestinatario(data)
+                                                                                                                })
                                                                                                             }}
                                                                                                         >
-                                                                                                            <PageviewIcon
+                                                                                                            <ReplayIcon
                                                                                                                 style={{
                                                                                                                     color: "#F9A03E",
                                                                                                                     fontSize: 32,
@@ -5364,15 +5676,6 @@ function Embarque(props) {
                                                                                                                     paddingBlockEnd: 0,
                                                                                                                     paddingLeft: 0,
                                                                                                                     paddingBlock: 0,
-                                                                                                                }}
-                                                                                                                onClick={() => {
-                                                                                                                    setState({
-                                                                                                                        ...state,
-                                                                                                                        identificadorModal:
-                                                                                                                            "nombreDestinatario",
-                                                                                                                        tipoModal: 5,
-                                                                                                                        openDialog: true
-                                                                                                                    });
                                                                                                                 }}
                                                                                                             />
                                                                                                         </IconButton>
@@ -5727,6 +6030,7 @@ function Embarque(props) {
                                                                                             variant="outlined"
                                                                                             label="Zona Operativa"
                                                                                             margin="dense"
+                                                                                            required={!state.diferenteEntrega && !state.entregaEnSucursal}
                                                                                             // onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />
@@ -5761,6 +6065,7 @@ function Embarque(props) {
                                                                                             variant="outlined"
                                                                                             label="Zona Tarifa"
                                                                                             margin="dense"
+                                                                                            required={!state.diferenteEntrega && !state.entregaEnSucursal}
                                                                                             // onClick={handleClickZona}
                                                                                             {...params}
                                                                                         />

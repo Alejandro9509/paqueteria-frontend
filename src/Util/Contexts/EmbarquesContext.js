@@ -1,11 +1,9 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
+import { API_HEADERS } from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    // 'TimeZone' : Intl.DateTimeFormat().resolvedOptions().timeZone
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
+
 
 function modificarEmbarques(id, params){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/` + id;
@@ -44,7 +42,7 @@ function obtenerEmbarques(){
     return result
 }
 
-function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioEmbarque) {
+function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioEmbarque,Origen,Destino) {
     if (folioEmbarque == ''){
         folioEmbarque = 0
     }
@@ -58,7 +56,11 @@ function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estat
         "/" +
         estatusListado +
         "/" +
-        folioEmbarque;
+        folioEmbarque+
+        "/" +
+        Origen+
+        "/" +
+        Destino;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

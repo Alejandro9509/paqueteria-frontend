@@ -24,11 +24,9 @@ import {
     useSortBy,
 } from "react-table";
 import { obtenerConceptosFacturacion } from '../../Util/Contexts/ConceptosFacturacionContext';
+import {API_HEADERS} from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
 
 let timer;
 
@@ -309,22 +307,24 @@ class ConceptosAdicionales extends Component {
                                     />
                                 </div>
                             </Grid>
-                            <Grid item xs={2}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
-                                               onChange={this.handleChange}
-                                               className="form-control"
-                                               type="number"
-                                               label="Importe"
-                                               style={{ textAlign: "right" }}
-                                               step="1"
-                                               min="0"
-                                               value={this.state.importe}
-                                               name="importe"
-                                    />
-                                </div>
-                            </Grid>
-                            <Grid item xs={1}>
+                            {!this.props.porRegion &&
+                                <Grid item xs={2}>
+                                    <div className="input">
+                                        <TextField variant="outlined" margin="dense"
+                                                   onChange={this.handleChange}
+                                                   className="form-control"
+                                                   type="number"
+                                                   label="Importe"
+                                                   style={{textAlign: "right"}}
+                                                   step="1"
+                                                   min="0"
+                                                   value={this.state.importe}
+                                                   name="importe"
+                                        />
+                                    </div>
+                                </Grid>
+                            }
+                            <Grid item xs={this.props.porRegion ? 2:1}>
                                 <label className="input select" style={{ width: "100%" }}>
                                     <FormControl fullWidth variant="outlined" margin="dense">
                                         <InputLabel id="trasladaLabel">Traslada</InputLabel>
@@ -355,13 +355,14 @@ class ConceptosAdicionales extends Component {
                                     </FormControl>
                                 </label>
                             </Grid>
-                            <Grid item xs={2}>
+                            {!this.props.porRegion &&
+                                <Grid item xs={2}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
                                                onChange={this.handleChange}
                                                className="form-control"
                                                type="number"
-                                               style={{ textAlign: "right" }}
+                                               style={{textAlign: "right"}}
                                                disabled
                                                label="Importe IVA"
                                                step="1"
@@ -371,7 +372,8 @@ class ConceptosAdicionales extends Component {
                                     />
                                 </div>
                             </Grid>
-                            <Grid item xs={1}>
+                            }
+                            <Grid item xs={this.props.porRegion ? 2:1}>
                                 <label className="input select" style={{ width: "100%" }}>
                                     <FormControl fullWidth variant="outlined" margin="dense">
                                         <InputLabel id="retieneLabel">Retiene</InputLabel>
@@ -402,13 +404,14 @@ class ConceptosAdicionales extends Component {
                                     </FormControl>
                                 </label>
                             </Grid>
-                            <Grid item xs={1}>
+                            {!this.props.porRegion &&
+                                <Grid item xs={1}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
                                                onChange={this.handleChange}
                                                className="form-control"
                                                type="number"
-                                               style={{ textAlign: "right" }}
+                                               style={{textAlign: "right"}}
                                                disabled
                                                label="Importe Ret"
                                                step="1"
@@ -418,13 +421,15 @@ class ConceptosAdicionales extends Component {
                                     />
                                 </div>
                             </Grid>
-                            <Grid item xs={2}>
+                            }
+                            {!this.props.porRegion &&
+                                <Grid item xs={2}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
                                                onChange={this.handleChange}
                                                className="form-control"
                                                type="number"
-                                               style={{ textAlign: "right" }}
+                                               style={{textAlign: "right"}}
                                                disabled={!this.props.mostrarDescuento}
                                                label="Porcentaje Descuento"
                                                step="1"
@@ -436,6 +441,7 @@ class ConceptosAdicionales extends Component {
                                     />
                                 </div>
                             </Grid>
+                            }
                             <Grid item xs={1}>
                                 <IconButton onClick={this.onSubmit} style={{ padding: "0px" }}>
                                     <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
@@ -480,24 +486,24 @@ class ConceptosAdicionales extends Component {
                                     <th style={{ textAlign: "left" }}> Concepto</th>
                                     {this.props.mostrarRangos ? <th style={{ textAlign: "left" }}> Min</th> : <th></th>}
                                     {this.props.mostrarRangos ? <th style={{ textAlign: "left" }}> Max</th> : <th></th>}
-                                    <th style={{ textAlign: "left" }}> Importe</th>
+                                    {!this.props.porRegion && <th style={{ textAlign: "left" }}> Importe</th>}
                                     <th style={{ textAlign: "left" }}> Traslada</th>
-                                    <th style={{ textAlign: "left" }}> Importe IVA</th>
+                                    {!this.props.porRegion && <th style={{ textAlign: "left" }}> Importe IVA</th>}
                                     <th style={{ textAlign: "left" }}> Retiene</th>
-                                    <th style={{ textAlign: "left" }}> Importe Ret</th>
+                                    {!this.props.porRegion && <th style={{ textAlign: "left" }}> Importe Ret</th>}
                                     {this.props.mostrarDescuento && <th style={{ textAlign: "left" }}> % Descuento</th>}
                                 </tr>
                                 {
                                     this.props.conceptosAdicionales.map((c, index) => (
-                                        <tr onClick={(e) => this.handleRowClick(e, index, c)}>
+                                        <tr onDoubleClick={(e) => this.handleRowClick(e, index, c)}>
                                             <td style={{ textAlign: "left" }}>{c.nombreConcepto}</td>
                                             {this.props.mostrarRangos ? <td style={{ textAlign: "left" }}>{c.rangoMinimo} Kg</td> : <td></td>}
                                             {this.props.mostrarRangos ? <td style={{ textAlign: "left" }}>{c.rangoMaximo} Kg</td> : <td></td>}
-                                            <td style={{ textAlign: "left" }}>${parseFloat(c.importe).toFixed(2)}</td>
+                                            {!this.props.porRegion && <td style={{ textAlign: "left" }}>${parseFloat(c.importe).toFixed(2)}</td>}
                                             <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.traslada)).m_sImpuesto : "No Aplica")}</td>
-                                            <td style={{ textAlign: "left" }}>${parseFloat(c.importeIVA).toFixed(2)}</td>
+                                            {!this.props.porRegion && <td style={{ textAlign: "left" }}>${parseFloat(c.importeIVA).toFixed(2)}</td>}
                                             <td style={{ textAlign: "left" }}>{this.state.impuestos.length !== 0 && (this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)) ? this.state.impuestos.find(i => i.m_nIdImpuesto === parseInt(c.retiene)).m_sImpuesto : "No Aplica")}</td>
-                                            <td style={{ textAlign: "left" }}>${parseFloat(c.importeRet).toFixed(2)}</td>
+                                            {!this.props.porRegion && <td style={{ textAlign: "left" }}>${parseFloat(c.importeRet).toFixed(2)}</td>}
                                             {this.props.mostrarDescuento && <td style={{textAlign: "left"}}>{parseFloat(c.descuento || "0").toFixed(2)}%</td>}
                                             {
                                                 !this.props.consult &&
@@ -518,7 +524,8 @@ class ConceptosAdicionales extends Component {
                         }
 
                     </div>
-                    <div className="col-md-12 col-sm-12" style={{ padding: "5px", backgroundColor: "white", backgroundClip: "content-box" }}>
+                    {!this.props.porRegion &&
+                        <div className="col-md-12 col-sm-12" style={{ padding: "5px", backgroundColor: "white", backgroundClip: "content-box" }}>
 
                         <div className="col-md-12 col-sm-12" style={{ alignItems: "right", display: "inline-flex", justifyContent: "flex-end" }}>
                             <div style={{ margin: "5px", padding: "5px" }}>Subtotal</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0)).toFixed(2)}</div>
@@ -531,6 +538,8 @@ class ConceptosAdicionales extends Component {
                             <div style={{ margin: "5px", padding: "5px" }}>Total</div> <div style={{ margin: "4px", padding: "4px", marginRight: "15px", backgroundColor: "white", backgroundClip: "border-box", borderStyle: "solid", borderColor: "gray", minWidth: "230px", textAlign: "right" }}> ${parseFloat(this.props.conceptosAdicionales.reduce((total, arg) => total + parseFloat(arg.importe), 0) + this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) - this.props.conceptosAdicionales.filter(c => this.props.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
                         </div>
                     </div>
+                    }
+
                 </div>
 
             </div>

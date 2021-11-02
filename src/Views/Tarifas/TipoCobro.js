@@ -5,11 +5,9 @@ import Noty from 'noty';
 import { List, ListItem, Popover, TextField, Typography } from '@material-ui/core';
 import { TrafficOutlined } from '@material-ui/icons';
 import { agregarTipoCobro, obtenerTipoCobro } from '../../Util/Contexts/TipoCobroContext';
+import {API_HEADERS} from "../../Constants";
 
-const headers = {
-    'Content-Type': 'application/json',
-    //    'access-control-allow-origin': '*'
-}
+const headers = API_HEADERS
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
