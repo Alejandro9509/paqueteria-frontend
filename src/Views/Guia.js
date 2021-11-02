@@ -1450,6 +1450,8 @@ setDataFechaFinal(respuestaDos.data)
                     nombreConcepto: element.m_sConcepto
                 })
             })
+            ivaTraslada = getUniqueListBy(conceptosCast, "traslada").map(i => i.traslada);
+            ivaRetiene = getUniqueListBy(conceptosCast, "retiene").map(i => i.retiene);
             setState(state => {
                 return {
                     ...state,
