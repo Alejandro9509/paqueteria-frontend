@@ -33,13 +33,13 @@ const configurationRoutes = [
       component: ParametrosPage,
       isDialog: false
     }, */
-  {
+  /*{
     path: "/Usuarios",
     name: "Usuarios",
     icon:  <GUsuarioIcon/>,
     component: UsuariosPage,
     isDialog: false
-  },
+  },*/
   /* {
     path: "/Paises",
     name: "Países",
@@ -54,13 +54,13 @@ const configurationRoutes = [
     component: CiudadesCodigoPostalPage,
     isDialog: false
   }, */
-  {
+  /*{
     path: "/Sucursales",
     name: "Sucursales",
     icon:  <GSucursalIcon/>,
     component: SucursalesPage,
     isDialog: false
-  },
+  },*/
   /*  {
      path: "/Zonas",
      name: "Zonas",
@@ -68,13 +68,13 @@ const configurationRoutes = [
      component: ZonasPage,
      isDialog: false
    }, */
-  {
+  /*{
     path: "/FormatosImpresion",
     name: "Formatos Impresión",
     icon:  <GFormatosIcon/>,
     component: FormatoImpresionPage,
     isDialog: false
-  },
+  },*/
   {
     path: "/Folios",
     name: "Folios",

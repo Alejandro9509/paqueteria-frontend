@@ -228,12 +228,12 @@ const catalogRoutes = [
     icon: <TCobreIcon/>,
     component: TipoCobroPage,
   },
-  /* {
+   {
     path: "/ParametrosConfiguracion",
     name: "Parámetros Configuración",
     icon: <PConfiguracionIcon/>,
     component: ParametrosConfiguracionPage,
-  }, */
+  },
   {
     path: "/PlantillaCorreo",
     name: "Plantilla de Correo",

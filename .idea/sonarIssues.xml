@@ -498,7 +498,17 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/ParametrosConfiguracion/Etiqueta.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/ParametrosConfiguracion/Guias.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/ParametrosConfiguracion/ParametrosConfiguracion.js">
           <value>
             <set />
           </value>
@@ -888,6 +898,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/routesConfiguraciones.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../Web/CFP/sw-uabc-cfp-frontend/ROOT/WEB-INF/web.xml">
           <value>
             <set />
@@ -1263,7 +1278,17 @@
             <set />
           </value>
         </entry>
+        <entry key="f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProEmbarqueGetListadoFiltroPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/table/ProEmbarquePQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_EMG910926HN6/schema/dbo/routine/usp_ProEmbarqueGetListadoFiltroPQ.sql">
           <value>
             <set />
           </value>
