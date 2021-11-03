@@ -10,8 +10,10 @@ import InformacionPaquete from './InformacionPaquete';
 import DetallesSeguimiento from './DetallesSeguimiento';
 import InformacionEntrega from "./InformacionEntrega";
 import {API_HEADERS} from "../../Constants";
-const headers = API_HEADERS
-
+const headers = {
+    //'Accept': 'application/vnd.certuit-' + API_VERSION + '+json',
+    'Content-Type': 'application/json',
+};
 const useStyles = makeStyles((theme) => ({
     root: {
       width: '100%',
@@ -46,8 +48,6 @@ const useStyles = makeStyles((theme) => ({
 export default function Tracking(...props){
     // console.log(entrega);
     const classes = useStyles();
-    const [openGuia, setOpenGuia] = React.useState(true);
-    const [openRastreo, setOpenRastreo] = React.useState(true);
     const [guiaData, setGuiaData] = React.useState({
         destinatario: "",
         folio: "",
@@ -58,17 +58,13 @@ export default function Tracking(...props){
     });
     const [guia, setGuia] = useState({})
 
-    /*const headers = {
-        'Content-Type': 'application/json',
-        'RFC': 'ADI880815DA7'
-    }*/
-    
     useEffect(value =>{
         const { match: { params } } = props[0];
-        handleShowConsultar(params.esRecoleccion, params.id)
+        handleShowConsultar(params.esRecoleccion, params.id, params.rfc)
     }, []);
 
-    function handleShowConsultar(esRecoleccion,id) {
+    function handleShowConsultar(esRecoleccion,id,rfc) {
+        headers.RFC = rfc
         const url = `${process.env.REACT_APP_API_URL}/GetParadasEsRecoleccion/${esRecoleccion}/${id}`;
         axios.get(url, { headers }).then(({data}) => {
             console.log(data)
@@ -95,22 +91,8 @@ export default function Tracking(...props){
             console.log(err.data)
         });
 
-        /*datos faltantes en servicio
-        * fecha (actualmente se muestra la de registro)
-        * tipo de servicio
-        * Tipo de embalaje por paquete
-        * estatus guia
-        * */
-
     }
 
-    const handleGuiaClick = () => {
-        setOpenGuia(!openGuia);
-      };
-
-    const handleRastreoClick = () => {
-        setOpenRastreo(!openRastreo);
-    };
     return(
         <div>
             <header className={classes.heading}>

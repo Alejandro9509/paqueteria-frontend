@@ -35,7 +35,7 @@ render(){
             <Route path="/loginERP" component={LoginExterno} />
             <Route path="/Indicadores" component={Indicadores} />
             <Route path="/Configuracion" component={Configuracion} />
-            <Route exact path="/app/applications/:esRecoleccion/:id/tracking" component={Tracking} />
+            <Route exact path="/app/applications/:rfc/:esRecoleccion/:id/tracking" component={Tracking} />
             {dashboardRoutes.map((r, key) => {
                   return (<Route exact key={key} path={r.path} component={r.component} />)
               })}
@@ -57,9 +57,9 @@ render(){
             {/*</div>*/}
               <div className="app-body">
                 <Switch>
-                  <Route exact path="/" component={Login} ></Route>
-                  <Route path="/login" component={Login} ></Route>
-                  <Route exact path="/app/applications/:id/tracking" component={Tracking} />
+                  <Route exact path="/" component={Login} />
+                  <Route path="/login" component={Login} />
+                  <Route exact path="/app/applications/:rfc/:esRecoleccion/:id/tracking" component={Tracking} />
                   <Redirect from="/**" to="/login"/>
 
                 </Switch>
