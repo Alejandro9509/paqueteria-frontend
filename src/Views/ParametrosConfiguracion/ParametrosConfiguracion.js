@@ -14,6 +14,7 @@ import { Tooltip } from '@material-ui/core';
 import Viajes from './Viajes';
 import Guias from './Guias';
 import Embarques from './Embarques';
+import Etiqueta from "./Etiqueta";
 
 window.jQuery = window.$ = $;
 
@@ -126,22 +127,26 @@ class ParametrosConfiguracion extends Component {
 
                         <ul className="nav navStatica nav-tabs">
                             <li >
-                                <a data-toggle="tab" data_id="1" href="#Embarque" onClick={(event) => { event.stopPropagation(); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Embarque').addClass('in show'); }}>
+                                <a onClick={(event) => { event.stopPropagation(); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Embarque').addClass('in show'); }}>
                                     Orden de Embarque
                                 </a>
                             </li>
                             <li >
-                                <a data-toggle="tab" data_id="2" href="#Guia" onClick={(event) => { event.stopPropagation(); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Guia').addClass('in show'); }}>
+                                <a onClick={(event) => { event.stopPropagation(); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Guia').addClass('in show'); }}>
                                     Guía
                                 </a>
                             </li>
 
                             <li className="active">
-                                <a data_id="3" href="#Viaje" onClick={(event) => { event.stopPropagation(); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(2).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Viaje').addClass('in show'); }}>
+                                <a onClick={(event) => { event.stopPropagation(); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(2).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Viaje').addClass('in show'); }}>
                                     Viajes
                                 </a>
                             </li>
-
+                            <li >
+                                <a  onClick={(event) => { event.stopPropagation(); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(3).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Etiqueta').addClass('in show'); }}>
+                                    Etiqueta
+                                </a>
+                            </li>
 
 
                             {/**<button className="topbar-right pull-right">Boton</button>*/}
@@ -162,6 +167,9 @@ class ParametrosConfiguracion extends Component {
                             </div>
                             <div id="Viaje" className="tab-pane fade in show">
                                 <Viajes/>
+                            </div>
+                            <div id="Etiqueta" className="tab-pane fade">
+                                <Etiqueta/>
                             </div>
 
                         </div>
