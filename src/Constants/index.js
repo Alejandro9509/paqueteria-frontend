@@ -163,62 +163,8 @@ export const dataGridLocaleText = {
 }
 
 export const TICKET_ZABRA_TAMPLATE = (guia, paquete, index) => (
+
     /*`^XA
-    ^CI28
-    ^MMT
-    ^PW1200
-    ^LL1800
-    ^LS0
-    ^FT25,50^AAN,32,14^FH\\^FDFecha:^FS
-    ^FT160,50^AAN,32,14^FH\\^FD${guia.m_dFecha}^FS
-    ^FT25,120^AAN,32,14^FH\\^FD#Guia:^FS
-    ^FT160,135^A0N,55,55^FH\\^FD${guia.m_nFolioGuia}^FS
-    ^FT25,202^AAN,28,16^FH\\^FDServicio:^FS
-    ^FT200,208^A0N,45,45^FH\\^FD${guia.m_sTipoServicio}^FS
-    ^FO560,15
-    ^BQN,2,10
-    ^FDQA,${guia.m_nIdGuia}^FS
-    ^FO40,260^GB1115,0,3^FS
-    ^FT25,310^AAN,28,16^FH\\^FDDestinatario^FS
-    ^FT480,310^AAN,28,16^FH\\^FDRemitente^FS
-    ^FT25,350^A0N,30,30^FH\\^FD${guia.m_bEntregarMismoDomicilio ? guia.m_sDomicilioDestinatario : guia.m_sDomicilioEntrega}^FS
-    ^FT25,390^A0N,30,30^FH\\^FD${guia.m_bEntregarMismoDomicilio ? guia.m_sColonia : guia.m_sColonia} ^FS
-    ^FT25,430^A0N,30,30^FH\\^FDC.P. ${guia.m_bEntregarMismoDomicilio ? guia.m_nIdCodigoPostalDestinatario : guia.m_nIdCodigoPostalDestinatario}^FS
-    ^FT25,470^A0N,30,30^FH\\^FD${guia.m_bEntregarMismoDomicilio ? guia.m_sCiudadDestinatario : guia.m_sCiudadDestino}, ${guia.m_bEntregarMismoDomicilio ? guia.m_sEstadoDestinatario : guia.m_sEstadoEntregaGuia}, ${guia.m_bEntregarMismoDomicilio ? guia.m_sPaisDestinatario : guia.m_sPaisEntregaGuia}^FS
-    ^FT480,350^A0N,30,30^FH\\^FD${guia.m_sDomicilioRemitente}^FS
-    ^FT480,390^A0N,30,30^FH\\^FD${guia.m_sColonia} ^FS
-    ^FT480,430^A0N,30,30^FH\\^FDC.P. ${guia.m_sCodigoPostalEntrega}^FS
-    ^FT480,470^A0N,30,30^FH\\^FD${guia.m_sCiudadOrigen}, ${guia.m_sEstadoRemitente}, ${guia.m_sPaisRemitente}^FS
-    ^FO40,500^GB1115,0,3^FS
-    ^FT25,540^AAN,28,16^FH\\^FD${guia.m_sNombreDestinatario}^FS
-    ^FT25,580^AAN,28,16^FH\\^FD${guia.m_sRFCDestinatario}^FS
-    ^FT25,620^AAN,28,16^FH\\^FD${guia.m_sDomicilioDestinatario}^FS
-    ^FT25,660^AAN,28,16^FH\\^FD${guia.m_sEstadoDestinatario}^FS
-    ^FT25,700^AAN,28,16^FH\\^FD${guia.m_sPaisRemitente}^FS
-    ^FO32,730^GB1115,0,3^FS
-    ^FT25,780^AAN,28,16^FH\\^FDOrigen^FS
-    ^FT25,820^A0N,30,30^FH\\^FD${guia.m_sCiudadOrigen}^FS
-    ^FT480,780^AAN,28,16^FH\\^FDDestino^FS
-    ^FT480,820^A0N,30,30^FH\\^FD${guia.m_sCiudadDestino}^FS
-    ^FO21,850^GB1115,0,3^FS
-    ^FT21,890^AAN,28,16^FH\\^FD#Paquetes:^FS
-   ^FT210,910^A0N,67,67^FH\\^FD${index + 1}^FS
-    ^FT250,910^A0N,40,40^FH\\^FDde^FS
-    ^FT310,910^A0N,67,67^FH\\^FD${paquete.ctd}^FS
-    ^FT440,910^AAN,28,16^FH\\^FDPeso:^FS
-    ^FT550,910^A0N,67,67^FH\\^FD${paquete.m_xPeso} kg^FS
-    ^FT25,980^AAN,28,16^FH\\^FDAltura(cm):^FS
-    ^FT250,980^A0N,67,67^FH\\^FD${paquete.m_xAlto}^FS
-    ^FT440,980^AAN,28,16^FH\\^FDLargo(cm):^FS
-    ^FT630,980^A0N,67,67^FH\\^FD${paquete.m_xLargo}^FS
-    ^FT25,1050^AAN,28,16^FH\\^FDAncho(cm):^FS
-    ^FT250,1050^A0N,67,67^FH\\^FD${paquete.m_xAncho}^FS
-    ^FO21,1080^GB1115,0,3^FS
-    ^FO650,1077
-    ^BQN,2,3
-    ^FDQA,http://190.9.53.4:8081/app/applications/${guia.m_nIdGuia}/tracking^FS
-    ^PQ1,0,1,Y^XZ`*/
-    `^XA
 ^CI28
 ^MUm
 ^LL150,^PW100^LH0,0
@@ -243,55 +189,35 @@ export const TICKET_ZABRA_TAMPLATE = (guia, paquete, index) => (
 ^FS^CI28^A0,5,5^FT96,17^FWB^FD ${paquete.ctd} ^FS
 ^FS^CI28^AC,1,1^FT100,49^FWB^FD ${paquete.m_sDescripcion} ^FS
 ^MUd
+^XZ`*/
+
+`^XA
+^FO100,240^GFA,1190,1190,7,,::::::::01I01,03E003F8,03FC03IF,03FE03JFC,03FE03KF,03FE03KF8,07FE03KF8,07FC03KF8,07FC03KFC,::::07FC03F80FFC,07FC03F807FC,07FC03F803FE,07FC01F803FE,07FC003803FE,07FCK03FE,07FEK07FE,03FEK07FE,:03FFK07FC,03FF8J0FFC,01FF8J0FFC,01FFCI01FFC,01FFEI01FFC,00IF8007FFC,00IFE00IF8,007NF8,:003NF,073NF,07NFE,07NFC,07NF8,:07OF8,07OFC,::::07FFBLFC,07FF80KF8,07IF003IF8,07IFCI0FF8,03JFJ038,007IFC,001IFE,I07IF8,I01IFE,J03IF8,K0IFE,K03IFC,L0JF,L03IFC,M0JF,M07IF8,L07JF8,03OF8,07OF8,::::07NF,07JFC,07FF8,07FFE,07IFE,07JFE,07KFE,07MF,07NF,03OF8,003NFC,I03MFC,I01IF1IFC,I01F9E07FFC,I01F1C07FFC,I01F3CE3FFC,I01F3CF3FFC,I01F39F3BFC,I01F01F381C,I01F83E38,I01FC3E78,I01IF0F8,I01F9E078,I01F1C078,I01F3CF38,:I01F39F38,I01F01F38,I01F83E38,I01FC7E78,I01F3FF38,I01F3DF38,::::I01FI038,:I01KF8,I01JF38,I01FC3838,I01F80078,I01F1C3F8,I01F3CFF8,:I01F34E78,I01FI038,:I01KF8,I01FE3FF8,I01F81FF8,I01F00FF8,I01F1CFF8,I01F3C7F8,:I01FI038,:I01F800F8,I01KF8,I01F3FE38,I01F0F838,I01F820F8,I01FE03F8,I01FF87F8,I01FE03F8,I01F830F8,I01F0FC38,I01F3FF38,I01KF8,I01F3FF38,I01F3DF38,:::I01FI038,:I01FI078,I01KF8,:::I01FF9FF8,I01FF07F8,I01FC01F8,I01FI078,I01CI038,I01K08,,:::::::^FS
+
+^CI28
+^MUm
+^FO2,0
+^BQN,2,7
+^FH^FDLA,${guia.m_nIdGuia}-${paquete.m_nIdEmbarqueDetalle}-${index}^FS
+^FS^CI28^A0,4,4^FT30,49^FWB^FDGuía:^FS
+^FS^CI28^A0,8,8^FT42,49^FWB^FH^FD${guia.m_nFolioGuia}^FS
+^FS^CI28^AC,3,3^FT49,49^FWB^FDDestinatario:^FS
+^FS^CI28^A0,4,4^FT54,49,0^FWB^FH^FD${guia.m_sNombreDestinatario}^FS
+^FS^CI28^AC,3,3^FT59,49^FWB^FDCliente:^FS
+^FS^CI28^A0,4,4^FT64,49,0^FWB^FD${guia.m_sCliente} ^FS
+^FS^CI28^AC,3,3^FT69,49^FWB^FDOrigen:^FS
+^FS^CI28^A0,5,5^FT74,50^FWB^FD ${guia.m_sCiudadOrigen}^FS
+^FS^CI28^AC,3,3^FT79,49^FWB^FDDestino:^FS
+^FS^CI28^A0,5,5^FT84,50^FWB^FD ${guia.m_sCiudadDestino}^FS
+^FS^CI28^A0,4,4^FT90,49^FWB^FDPaquete ID:^FS
+^FS^CI28^A0,5,5^FT90,31^FWB^FD ${paquete.m_nIdEmbarqueDetalle}^FS
+^FS^CI28^A0,4,4^FT96,49^FWB^FDCantidad:^FS
+^FS^CI28^A0,5,5^FT96,31^FWB^FD ${index + 1} ^FS
+^FS^CI28^A0,4,4^FT96,23^FWB^FDde^FS
+^FS^CI28^A0,5,5^FT96,17^FWB^FD ${paquete.ctd} ^FS
+^FS^CI28^AC,1,1^FT100,49^FWB^FD ${paquete.m_sDescripcion} ^FS
+
+^MUd
 ^XZ`)
 
-
-/*    (`^XA
-^CI28
-^MMT
-^PW1200
-^LL1800
-^LS0
-^FO40,289^GB1115,0,3^FS
-^FT25,92^AAN,36,20^FH\\^FD#Guia:^FS
-^FT178,109^A0N,67,67^FH\\^FD${guia.m_nFolioGuia}^FS
-^FT25,340^AAN,36,20^FH\\^FDDestinatario^FS
-^FT674,340^AAN,36,20^FH\\^FDRemitente^FS
-^FT25,412^A0N,50,50^FH\\^FD${guia.m_bEntregarMismoDomicilio ? guia.m_sDomicilioDestinatario : guia.m_sDomicilioEntrega}^FS
-^FT25,475^A0N,50,50^FH\\^FD${guia.m_bEntregarMismoDomicilio ? guia.m_sColonia : guia.m_sColonia}^FS
-^FT25,538^A0N,50,50^FH\\^FDC.P. ${guia.m_bEntregarMismoDomicilio ? guia.m_nIdCodigoPostalDestinatario : guia.m_nIdCodigoPostalDestinatario}^FS
-^FT25,601^A0N,50,50^FH\\^FD${guia.m_bEntregarMismoDomicilio ? guia.m_sCiudadDestinatario : guia.m_sCiudadDestino}, ${guia.m_bEntregarMismoDomicilio ? guia.m_sEstadoDestinatario : guia.m_sEstadoEntregaGuia}, ${guia.m_bEntregarMismoDomicilio ? guia.m_sPaisDestinatario : guia.m_sPaisEntregaGuia}^FS
-^FT674,412^A0N,50,50^FH\\^FD${guia.m_sDomicilioRemitente}^FS
-^FT674,475^A0N,50,50^FH\\^FD${guia.m_sColonia}^FS
-^FT674,538^A0N,50,50^FH\\^FDC.P. ${guia.m_sCodigoPostalEntrega}^FS
-^FT674,601^A0N,50,50^FH\\^FD${guia.m_sCiudadOrigen}, ${guia.m_sEstadoRemitente}, ${guia.m_sPaisRemitente}^FS
-^FO40,638^GB1115,0,3^FS
-^FO32,899^GB1115,0,3^FS
-^FT900,295
-^BQN,2,10
-^FDQA,${guia.m_nIdGuia}^FS
-^FT25,694^AAN,36,20^FH\\^FD${guia.m_sNombreDestinatario}^FS
-^FT25,730^AAN,36,20^FH\\^FD${guia.m_sRFCDestinatario}^FS
-^FT25,766^AAN,36,20^FH\\^FD${guia.m_sDomicilioDestinatario}^FS
-^FT25,802^AAN,36,20^FH\\^FD${guia.m_sEstadoDestinatario}^FS
-^FT25,838^AAN,36,20^FH\\^FD${guia.m_sPaisRemitente}^FS
-^FT25,957^AAN,36,20^FB145,1,0,R^FH\\^FDOrigen^FS
-^FT25,1029^A0N,50,50^FH\\^FD${guia.m_sCiudadOrigen} ^FS
-^FT674,1029^A0N,50,50^FH\\^FD${guia.m_sCiudadDestino}^FS
-^FT674,957^AAN,36,20^FB169,1,0,R^FH\\^FDDestino^FS
-^FO21,1086^GB1115,0,3^FS
-^FT21,1165^AAN,36,20^FH\\^FD#Paquetes:^FS
-^FT265,1182^A0N,67,67^FH\\^FD${paquete.ctd}^FS
-^FT25,202^AAN,36,20^FH\\^FDServicio:^FS
-^FT244,208^A0N,45,45^FH\\^FD${guia.m_sTipoServicio}^FS
-^FT562,1165^AAN,36,20^FH\\^FDPeso:^FS
-^FT25,1259^AAN,36,20^FH\\^FDAltura(mts):^FS
-^FT562,1259^AAN,36,20^FH\\^FDLargo(mts):^FS
-^FT25,1345^AAN,36,20^FH\\^FDAncho(mts):^FS
-^FT701,1182^A0N,67,67^FH\\^FD${paquete.m_xPeso} kg^FS
-^FT320,1276^A0N,67,67^FH\\^FD${paquete.m_xAlto}^FS
-^FT838,1276^A0N,67,67^FH\\^FD${paquete.m_xAncho}^FS
-^FT320,1367^A0N,67,67^FH\\^FD${paquete.m_xLargo}^FS
-^FO21,1396^GB1115,0,3^FS
-^PQ1,0,1,Y^XZ`)*/
 

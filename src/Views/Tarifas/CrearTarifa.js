@@ -53,7 +53,7 @@ class CrearTarifa extends Component {
             ivaTraslada: [],
             ivaRetiene: [],
             sucursal: props.edit ? props.select.m_nIdSucursal : "0",
-            destino: props.edit ? props.select.m_nIdDestino : "0",
+            destino: props.edit && !props.select.m_bPorRegion ? props.select.m_arrArDestinos[0].m_nIdCiudad : "0",
             origen: props.edit ? props.select.m_nIdOrigen : "0",
             codigoTarifa: props.edit ? props.select.m_sCodigo: "",
 
@@ -169,6 +169,13 @@ class CrearTarifa extends Component {
         this.setState({
             [event.target.name]: event.target.value,
         });
+        if (event.target.name == "destino"){
+            let destino = []
+            destino.push(this.state.ciudades.find((i) => i.m_nIdCiudad == event.target.value))
+            this.setState({
+                dataDestinosSeleccionados: destino
+            })
+        }
         if (event.target.name == "sucursal"){
             if (event.target.name == 0 || this.state.destino == 0 || this.origen == 0){
                 this.setState({disabled: true})
@@ -196,21 +203,27 @@ class CrearTarifa extends Component {
             this.setState({
                 porPesoOVolumen: !this.state.porPesoOVolumen,
                 porRangos: !this.state.porPesoOVolumen && false,
-                porRegion: !this.state.porPesoOVolumen && false
+                porRegion: !this.state.porPesoOVolumen && false,
+                destino: 0,
+                dataDestinosSeleccionados: []
             })
         }
         if (target.name === "porRangos"){
             this.setState({
                 porPesoOVolumen: !this.state.porRangos && false,
                 porRangos: !this.state.porRangos,
-                porRegion: !this.state.porRangos && false
+                porRegion: !this.state.porRangos && false,
+                destino: 0,
+                dataDestinosSeleccionados: []
             })
         }
         if (target.name === "porRegion"){
             this.setState({
                 porPesoOVolumen: !this.state.porRegion && false,
                 porRangos: !this.state.porRegion && false,
-                porRegion: !this.state.porRegion
+                porRegion: !this.state.porRegion,
+                destino: 0,
+                dataDestinosSeleccionados: []
             })
         }
 

@@ -2395,7 +2395,7 @@ function Embarque(props) {
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipiosRemitente(data)
             })
-            obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
+            obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then((cp) => {
                 setRemitente(remitente => {
                     return {
                         ...remitente,
@@ -2448,7 +2448,7 @@ function Embarque(props) {
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>    {
                 setDataMunicipiosDestinatario(data)
             })
-            obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
+            obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalDestinatario).then((cp) => {
                 setDestinatario(destinatario => {
                     return {
                         ...destinatario,
