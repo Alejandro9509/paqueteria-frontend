@@ -401,11 +401,6 @@ function Recoleccion() {
                 setDataMunicipiosRemitente(data)
             })
         }
-        if (event.target.name === "municipioRemitente") {
-            obtenerCodigosPostalesPorEstadoMunicipio(remitente.estadoRemitente, event.target.value).then(({data}) => {
-                setDataCodigosPostalesRemitente(data)
-            })
-        }
     };
 
     const handleChangeAutocompleteRemitente = (input, newValue) => {
@@ -451,10 +446,6 @@ function Recoleccion() {
             }
             obtenerMunicipiosByIdEstado(estado).then(({data}) => {
                 setDataMunicipiosRemitente(data)
-            })
-
-            obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado, newValue.m_nIdMunicipio).then(({data}) => {
-                setDataCodigosPostalesRemitente(data)
             })
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
                 /*if (data.length > 0){
@@ -533,6 +524,29 @@ function Recoleccion() {
         }
     }
 
+    const handleClickCodigosPostalesInput = (input) => {
+        if (input === "codigoPostalRemitente"){
+            obtenerCodigosPostalesPorEstadoMunicipio(remitente.estadoRemitente, remitente.municipioRemitente).then(({data}) => {
+                setDataCodigosPostalesRemitente(data)
+            })
+        }
+        if (input === "codigoPostalDestinatario"){
+            obtenerCodigosPostalesPorEstadoMunicipio(destinatario.estadoDestinatario, destinatario.municipioDestinatario).then(({data}) => {
+                setDataCodigosPostalesDestinatario(data)
+            })
+        }
+        if (input === "codigoPostalEnt"){
+            obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoEnt, entregaDD.municipioEnt).then(({data}) => {
+                setDataCodigosPostalesEntregaDD(data)
+            })
+        }
+        if (input === "codigoPostalRec"){
+            obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoEnt, entregaDD.municipioEnt).then(({data}) => {
+                setDataCodigosPostalesEntregaDD(data)
+            })
+        }
+    }
+
     const [destinatario, setDestinatario] = useState({
         idDestinatario: '',
         aliasDestinatario: '',
@@ -594,11 +608,6 @@ function Recoleccion() {
                 setDataMunicipiosDestinatario(data)
             })
         }
-        if (event.target.name === "municipioDestinatario") {
-            obtenerCodigosPostalesPorEstadoMunicipio(destinatario.estadoDestinatario, event.target.value).then(({data}) => {
-                setDataCodigosPostalesDestinatario(data)
-            })
-        }
     };
 
     const handleChangeAutocompleteDestinatario = (input, newValue) => {
@@ -641,9 +650,6 @@ function Recoleccion() {
             }
             obtenerMunicipiosByIdEstado(estado).then(({data}) => {
                 setDataMunicipiosDestinatario(data)
-            })
-            obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado, newValue.m_nIdMunicipio).then(({data}) => {
-                setDataCodigosPostalesDestinatario(data)
             })
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
                 /*if (data.length > 0){
@@ -757,11 +763,6 @@ function Recoleccion() {
         if (event.target.name === "estadoEnt") {
             obtenerMunicipiosByIdEstado(event.target.value).then(({data}) => {
                 setDataMunicipiosEntregaDD(data)
-            })
-        }
-        if (event.target.name === "municipioEnt") {
-            obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoEnt, event.target.value).then(({data}) => {
-                setDataCodigosPostalesEntregaDD(data)
             })
         }
     };
@@ -4615,6 +4616,7 @@ setDataFechaFinal(respuestaDos.data)
                                                                                             label="Código Postal"
                                                                                             margin="dense"
                                                                                             variant="outlined"
+                                                                                            onClick={(e) => handleClickCodigosPostalesInput("codigoPostalRemitente")}
                                                                                             required
                                                                                             {...params}
                                                                                         />
@@ -5140,6 +5142,7 @@ setDataFechaFinal(respuestaDos.data)
                                                                                             label="Código Postal"
                                                                                             margin="dense"
                                                                                             variant="outlined"
+                                                                                            onClick={(e) => handleClickCodigosPostalesInput("codigoPostalDestinatario")}
                                                                                             required
                                                                                             {...params}
                                                                                         />
@@ -5547,6 +5550,7 @@ setDataFechaFinal(respuestaDos.data)
                                                                                         label="Código Postal"
                                                                                         margin="dense"
                                                                                         variant="outlined"
+                                                                                        onClick={(e) => handleClickCodigosPostalesInput("codigoPostalRec")}
                                                                                         required={state.diferenteRecoleccion}
                                                                                         {...params}
                                                                                     />
@@ -5776,6 +5780,7 @@ setDataFechaFinal(respuestaDos.data)
                                                                                         label="Código Postal"
                                                                                         margin="dense"
                                                                                         variant="outlined"
+                                                                                        onClick={(e) => handleClickCodigosPostalesInput("codigoPostalEnt")}
                                                                                         required={state.diferenteEntrega}
                                                                                         {...params}
                                                                                     />
