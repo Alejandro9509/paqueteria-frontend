@@ -197,9 +197,6 @@ function Embarque(props) {
     const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
     const [dataUnidad, setDataUnidad] = React.useState([]);*/
 
-    // const [dataZona, setDataZona] = React.useState([]);
-
-    const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
     // const [dataFolioEmbarque, SetDataFolioEmbarque] = React.useState([]);
     // const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario,] = React.useState([]);
@@ -308,11 +305,6 @@ function Embarque(props) {
 
     });
 
-    // function getAllData() {
-    //     obtenerEmbarques().then((respuesta) => {
-    //         setData(respuesta.data);
-    //     });
-    // }
     const [filtros, setFiltros] = useState({
         fechaInicial: 0,
         fechaFinal: 0,
@@ -695,102 +687,12 @@ function Embarque(props) {
             }
         },
     ]);
-    /*const columnsPaquetes = React.useMemo(() => [
-        {
-            headerName: "Tipo",
-            field: "m_sTipo",
-            minWidth: 100,
-            width: 100,
-        },
-        {
-            headerName: "Producto",
-            field: "m_sProducto",
-            flex: 1,
-        },
-        {
-            headerName: "Largo",
-            field: "m_xLargo",
-            type:'number',
-            width: 100,
-        },
-        {
-            headerName: "Ancho",
-            field: "m_xAncho",
-            type:'number',
-            width: 100,
-        },
-        {
-            headerName: "Alto",
-            field: "m_xAlto",
-            type:'number',
-            width: 100,
-        },
-        {
-            headerName: "Peso",
-            field: "m_xPeso",
-            type:'number',
-            width: 100,
-        },
-        {
-            headerName: "Volumen",
-            field: "m_xVolumen",
-            type:'number',
-            width: 100,
-        },
-        {
-            headerName: "Embalaje",
-            field: "m_sTipoEmbalaje",
-            flex: 1,
-        },
-        {
-            headerName: "Valor",
-            field: "m_cValorDeclarado",
-            type:'number',
-            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
-            width: 100,
-        },
-        {
-            headerName: "Descripcion",
-            field: "m_sDescripcion",
-            flex: 1,
-        },
-        {
-            headerName: "Cantidad",
-            field: "ctd",
-            type:'number',
-            width: 100,
-        },
-        {
-            headerName: "Observaciones",
-            field: "m_sObservaciones",
-            flex: 1,
-        }
-    ]);
-    const [dataProductos, setDataProductos] = useState([])*/
-    // const [totalPaquetes, setTotalPaquetes] = useState(0)
-    /*const [paquete, setPaquete] = useState({
-        m_xPeso: "",
-        m_xLargo: "",
-        m_xAncho: "",
-        m_xAlto: "",
-        m_xVolumen: "",
-        m_nIdTIpoEmpaque: "",
-        m_cValorDeclarado: "",
-        m_sDescripcion: "",
-        ctd: "",
-        m_nTipo: 2,
-        m_sTipo: "Paquete",
-        m_sObservaciones: "",
-        m_nIdProducto: '',
-    })*/
     const [dataPaquetes, setDataPaquetes] = useState([])
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
     const [dataEstados, setDataEstados] = useState([])
     const [dataMunicipiosRemitente, setDataMunicipiosRemitente] = useState([])
     const [dataMunicipiosDestinatario, setDataMunicipiosDestinatario] = useState([])
     const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
-    const [dataZonasOperativasRemitente, setDataZonasOperativasRemitente] = useState([])
-    const [dataZonasTarifaRemitente, setDataZonasTarifaRemitente] = useState([])
     const [dataZonasOperativasDestinatario, setDataZonasOperativasDestinatario] = useState([])
     const [dataZonasTarifaDestinatario, setDataZonasTarifaDestinatario] = useState([])
     const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
@@ -988,32 +890,6 @@ function Embarque(props) {
             })
         }*/
     }
-
-    
-    const [recoleccionDD, setRecoleccionDD] = useState({
-        estadoRec: '',
-        municipioRec: '',
-        codigoPostalRec: '',
-        zonaOperativaRec: '',
-        zonaTarifaRec: '',
-        domicilioRec: '',
-        recogerEnRec: '',
-        datosAdicionalesRec: ''
-    })
-
-    const resetRecoleccionDD = () => {
-        setRecoleccionDD({
-            estadoRec: '',
-            municipioRec: '',
-            codigoPostalRec: '',
-            zonaOperativaRec: '',
-            zonaTarifaRec: '',
-            domicilioRec: '',
-            recogerEnRec: '',
-            datosAdicionalesRec: ''
-        })
-    }
-
 
     const [destinatario, setDestinatario] = useState({
         idDestinatario: '',
@@ -1301,99 +1177,12 @@ function Embarque(props) {
 
     const history = useHistory();
 
-    const currencyFormatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-    });
-
-    /*function handleSelectRemitente(newValue) {
-        console.log(newValue)
-        let user = newValue
-        obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
-            setState(state => {
-                return {
-                    ...state,
-                    idRemitente: newValue.m_nIdRemitenteDestinatario,
-                    aliasRemitente: newValue.m_sAlias,
-                    nombreRemitente: user,
-                    RFCRemitente: user.m_sRFC,
-                    domicilioRemitente: user.m_sDomicilio,
-                    codigoPostalRemitente: respuesta.data,
-                    ciudadRemitente: respuesta.data.m_nIdCiudad,
-                    correoRemitente: user.m_sCorreoElectronico,
-                    telefonoRemitente: user.m_sTelefono,
-                    contactoRemitente: user.m_sContacto,
-                    calleRemitente: newValue.m_sCalle,
-                    numeroExtRemitente: newValue.m_sNoExterior,
-                    numeroIntRemitente: newValue.m_sNoInterior || 0,
-                    coloniaRemitente: newValue.m_sColonia,
-                    remitente: newValue,
-                    latitudR: newValue.m_sLatitud,
-                    longitudR: newValue.m_sLongitud
-
-                }
-            });
-        })
-
-    }
-
-    function handleSelectDestinatario(newValue) {
-        obtenerCodigoPostalId(newValue.m_nIdCP).then(respuesta => {
-            setState(state => {
-                return {
-                    ...state,
-                    idDestinatario: newValue.m_nIdRemitenteDestinatario,
-                    aliasDestinatario: newValue.m_sAlias,
-                    nombreDestinatario: newValue,
-                    RFCDestinatario: newValue.m_sRFC,
-                    domicilioDestinatario: newValue.m_sDomicilio,
-                    codigoPostalDestinatario: respuesta.data,
-                    ciudadDestinatario: respuesta.data.m_nIdCiudad,
-                    correoDestinatario: newValue.m_sCorreoElectronico,
-                    telefonoDestinatario: newValue.m_sTelefono,
-                    contactoDestinatario: newValue.m_sContacto,
-                    calleDestinatario: newValue.m_sCalle,
-                    numeroExtDestinatario: newValue.m_sNoExterior,
-                    numeroIntDestinatario: newValue.m_sNoInterior || 0,
-                    coloniaDestinatario: newValue.m_sColonia,
-                    destinatario: newValue,
-                    latitudD: newValue.m_sLatitud,
-                    longitudD: newValue.m_sLongitud
-                }
-            });
-        })
-
-    }*/
-
     const handleClickRemitenteDestinatario = (event) => {
         event.preventDefault()
         if (dataRemitenteDestinatario.length === 0) {
             getAllRemitentesDestinatarios()
         }
     }
-
-    const validarPaquetes = (paquete) => {
-        if (paquete.m_nTipo == 1) {
-            return !!(paquete.m_sDescripcion != '');
-        } else {
-            return !!(paquete.m_xPeso != ''
-                && paquete.m_xLargo != ''
-                && paquete.m_xAncho != ''
-                && paquete.m_xAlto != ''
-                && paquete.m_sDescripcion != ''
-                && paquete.ctd != ''
-                && paquete.producto
-                && paquete.m_nIdTIpoEmpaque);
-        }
-    }
-
-    /*const validarSobre = (sobre) => {
-        if (sobre.m_sDescripcion != '') {
-            return true
-        } else {
-            return false
-        }
-    }*/
 
     function confirmarUbicacion(coordenadas, e) {
         handleAceptar(e, coordenadas)
@@ -1883,8 +1672,6 @@ function Embarque(props) {
         resetEntregaDD()
     }
 
-    //===TABS NAVEGACION===
-
     function handleShowConsultar(id) {
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
@@ -1955,8 +1742,6 @@ function Embarque(props) {
     function setDataRecoleccionOnState(respuesta) {
 
         getDataParaEditar()
-        // getAllZonas()
-        getAllEmbalajes()
         getAllCiudades()
         getAllSucursales()
         getAllEstatusEmbarque()
@@ -2038,70 +1823,9 @@ function Embarque(props) {
                         }
                     })
                 })
-                obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
-                    if (!respuesta.data.m_bRecoleccionDiferenteDomicilio) {
-                        setRemitente(remitente => {
-                            return {
-                                ...remitente,
-                                zonaOperativaRemitente: data
-                            }
-                        })
-                    } else {
-                        setRecoleccionDD(recoleccionDD => {
-                            return {
-                                ...recoleccionDD,
-                                zonaOperativaRec: data
-                            }
-                        })
-                    }
-                })
-                obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
-                    if (!respuesta.data.m_bRecoleccionDiferenteDomicilio) {
-                        setRemitente(remitente => {
-                            return {
-                                ...remitente,
-                                zonaTarifaRemitente: data
-                            }
-                        })
-                    } else {
-                        setRecoleccionDD(recoleccionDD => {
-                            return {
-                                ...recoleccionDD,
-                                zonaTarifaRec: data
-                            }
-                        })
-                    }
-                })
-
 
             })
         })
-   /*      obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
-            setRemitente(remitente => {
-                return {
-                    ...remitente,
-                    origenRemitente: data
-                }
-            })
-            if (!respuesta.data.m_bRecoleccionDiferenteDomicilio){
-                obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
-                    setRemitente(remitente => {
-                        return {
-                            ...remitente,
-                            zonaOperativaRemitente: data
-                        }
-                    })
-                })
-                obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
-                    setRemitente(remitente => {
-                        return {
-                            ...remitente,
-                            zonaTarifaRemitente: data
-                        }
-                    })
-                })
-            }
-        }) */
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
                 setDestinatario(destinatario => {
@@ -2131,7 +1855,6 @@ function Embarque(props) {
                     }
                 })
             })
-          
 
             let estado
             if (respuesta.data.m_nIdEstadoDestinatario < 10) {
@@ -2198,56 +1921,6 @@ function Embarque(props) {
                 }
             })
         })
-
-        /*obtenerZonasById(respuesta.data.m_nIdZonaRemitente).then(({data}) => {
-            setState(state => {
-                return {
-                    ...state,
-                    zonaRemitente: data
-                }
-            })
-        })
-
-        obtenerZonasById(respuesta.data.m_nIdZonaDestinatario).then(({data}) => {
-            setState(state => {
-                return {
-                    ...state,
-                    zonaDestinatario: data
-                }
-            })
-        })*/
-
-        /*const {m_parrPaquetes, m_parrSobres} = respuesta.data;
-        let totalPaquetes = 0
-        m_parrSobres.forEach(sobre => {
-            m_parrPaquetes.push(sobre)
-        })
-        m_parrPaquetes.forEach(paq => {
-            paq.m_nIdEmbarqueDetalle = paq.m_nIdPaquete
-            paq["m_nTipo"] = paq.m_nIdTipo;
-            paq["m_xPeso"] = paq.m_rPeso;
-            paq["m_xLargo"] = paq.m_rLargo;
-            paq["m_xAncho"] = paq.m_rAncho;
-            paq["m_xAlto"] = paq.m_rAlto;
-            paq["m_xVolumen"] = paq.m_rVolumen;
-            paq["m_nIdTIpoEmpaque"] = paq.m_nIdTipoEmbalaje;
-            paq["m_cValorDeclarado"] = paq.m_cyValorDeclarado;
-            paq.ctd = paq.m_nCantidad
-            obtenerProductoById(paq.m_nIdProducto).then(({data}) => {
-                paq.producto = data
-                paq.m_sProducto = data.m_sDescripcion
-                totalPaquetes += parseInt(paq.ctd)
-            })
-            obtenerEmbalajesId(paq.m_nIdTipoEmbalaje).then(({data}) => {
-                paq.m_sTipoEmbalaje = data.m_sNombre
-            })
-            paq.m_sTipo = paq.m_nTipo == 1 ? 'Sobre' : 'Paquete'
-        })
-        m_parrSobres.forEach(sobre => {
-            sobre["m_nTipo"] = 1
-        })*/
-
-
 
         setState(state => {
             return {
@@ -2317,21 +1990,7 @@ function Embarque(props) {
         });
 
         if (respuesta.data.m_bEntregaDiferenteDomicilio) {
-            /*obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then(cp => {
-                setState(state => {
-                    return {
-                        ...state,
-                        diferenteEntrega: true,
-                        zonaEntrega: respuesta.data.m_nIdZonaDetalleEntrega,
-                        domicilioEntrega: respuesta.data.m_sDomicilioDetalleEntrega,
-                        entregaEn: respuesta.data.m_sEntregarEnDetalleEntrega,
-                        datosAdicionalesEntrega: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-                        // fechaEntrega: respuesta.data.m_dFechaEntrega + "T" + respuesta.data.m_tHoraEntrega,
-                        codigoPostalEntrega: cp.data,
-                        ciudadEntrega: respuesta.data.m_nIdCiudadDetalleEntrega,
-                    }
-                })
-            })*/
+
             obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
                 setEntregaDD({
                     estadoEnt: respuesta.data.m_nIdEstadoRecoleccion || 0,
@@ -2341,8 +2000,6 @@ function Embarque(props) {
                         m_sCP: cp.data.m_sCP,
                         m_sColonia: cp.data.m_sColonia
                     },
-                    zonaOperativaEnt: {},
-                    zonaTarifaEnt: {},
                     domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
                     entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
                     datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
@@ -2356,8 +2013,6 @@ function Embarque(props) {
     const setDataParaConsultarModificar = (respuesta, duplicar) => {
 
         getDataParaEditar()
-        // getAllZonas()
-        getAllEmbalajes()
         getAllCiudades()
 
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
@@ -2548,7 +2203,6 @@ function Embarque(props) {
             })
         }
 
-
         let totalPaquetes = 0
         respuesta.data.m_arrSobres.forEach((s) => {
             respuesta.data.m_arrPaquetes.push(s)
@@ -2623,44 +2277,6 @@ function Embarque(props) {
 
     }
 
-
-    function getFechaInicial() {
-        obtenerFechaInicio().then(respuesta => {
-            console.log(respuesta.data[0].Fecha)
-            setDataFechaInicial(respuesta.data)
-
-            setFiltros(filtros => {
-                return {
-                    ...filtros,
-                   fechaInicial: respuesta.data[0].Fecha
-                }
-            })
-           
-        });
-    };
-
-
-    
-    function getFechaFinal() {
-        obtenerFechaFinal().then(respuesta => {
-            console.log(respuesta.data[0].Fecha)
-
-            setDataFechaFinal(respuesta.data)
-
-            setFiltros(filtros => {
-                return {
-                    ...filtros,
-                   fechaFinal: respuesta.data[0].Fecha
-                }
-            })
-
-
-
-
-
-        });
-    };
-
     const handleShowListado = (event) => {
         event.stopPropagation();
         limpiarCamposAgregar()
@@ -2730,104 +2346,12 @@ function Embarque(props) {
         });
     };
 
-    /*const handleCodigoPostalRemitenteClick = (event) => {
-        event.preventDefault();
-        if (dataCodigosPostalesRemitente.length > 0) {
-            if (dataCodigosPostalesRemitente[0].m_nIdCiudad != state.ciudadRemitente) {
-                obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
-                    setDataCodigosPostalesRemitente(respuesta.data);
-                });
-            }
-        } else {
-            obtenerCodigosPostalesPorCiudad(state.ciudadRemitente).then((respuesta) => {
-                setDataCodigosPostalesRemitente(respuesta.data);
-            });
-        }
-
-    }
-
-    const handleCodigoPostalDestinatarioClick = (event) => {
-        event.preventDefault();
-        if (dataCodigosPostalesDestinatario.length > 0) {
-            if (dataCodigosPostalesDestinatario[0].m_nIdCiudad != state.ciudadDestinatario) {
-                obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
-                    setDataCodigosPostalesDestinatario(respuesta.data);
-                });
-            }
-        } else {
-            obtenerCodigosPostalesPorCiudad(state.ciudadDestinatario).then((respuesta) => {
-                setDataCodigosPostalesDestinatario(respuesta.data);
-            });
-        }
-    }*/
-
-    /*const handleCodigoPostalEntregaClick = (event) => {
-        event.preventDefault();
-        if (dataCodigosPostalesEntrega.length > 0) {
-            if (dataCodigosPostalesEntrega[0].m_nIdCiudad != state.ciudadEntrega) {
-                obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
-                    setDataCodigosPostalesEntrega(respuesta.data);
-                });
-            }
-        } else {
-            obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
-                setDataCodigosPostalesEntrega(respuesta.data);
-            });
-        }
-    }*/
-
-    /*const handleChangeCiudadRemitente = (event) => {
-        event.preventDefault();
-        setState({
-            ...state,
-            ciudadRemitente: event.target.value,
-        });
-    }*/
-
     const handleClickCiudad = (event) => {
         event.preventDefault()
         if (dataCiudad.length === 0) {
             getAllCiudades()
         }
     }
-
-    /*const handleChangeCiudadDestinatario = (event) => {
-        event.preventDefault();
-        setState({
-            ...state,
-            ciudadDestinatario: event.target.value,
-        });
-    }
-
-    const handleChangeCiudadEntrega = (event) => {
-        event.preventDefault();
-        setState({
-            ...state,
-            ciudadEntrega: event.target.value,
-        });
-    }
-
-    const handleFechaInicialFiltro = async (event) => {
-        setState({
-            ...state,
-            fechaInicial: event.target.value,
-        });
-        const {fechaFinal, sucursalListado, estatusListado, folioEmbarque} = state
-        obtenerEmbarquesFiltro(event.target.value, fechaFinal, sucursalListado, estatusListado, folioEmbarque).then((respuesta) => {
-            setData(respuesta.data);
-        });
-    };
-
-    const handleFechaFinalFiltro = async (event) => {
-        setState({
-            ...state,
-            fechaFinal: event.target.value,
-        });
-        const {fechaInicial, sucursalListado, estatusListado, folioEmbarque} = state
-        obtenerEmbarquesFiltro(fechaInicial, event.target.value, sucursalListado, estatusListado, folioEmbarque).then((respuesta) => {
-            setData(respuesta.data);
-        });
-    };*/
 
     const handleSucursalFiltro = async (event) => {
         setState({
@@ -2839,17 +2363,6 @@ function Embarque(props) {
             setData(respuesta.data);
         });
     };
-
-    /*const handleEstatusFiltro = async (event) => {
-        setState({
-            ...state,
-            estatusListado: event.target.value,
-        });
-        const {fechaInicial, fechaFinal, sucursalListado, folioEmbarque} = state
-        obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, event.target.value, folioEmbarque).then((respuesta) => {
-            setData(respuesta.data);
-        });
-    };*/
 
     //Maneja filtrado de listado embarque
     const handleFolioEmbarqueFiltro = async (event) => {
@@ -2882,28 +2395,6 @@ function Embarque(props) {
         console.log(state.identificadorModal);
     }
 
-    /*const handleZonaRemitenteSelected = (newValue) => {
-        setState({
-            ...state,
-            zonaRemitente: newValue,
-        })
-    }
-
-    const handleClickZona = (event) => {
-        event.preventDefault()
-        if (dataZona.length === 0) {
-            getAllZonas()
-        }
-
-    }
-
-    const handleZonaDestinatarioSelected = (newValue) => {
-        setState({
-            ...state,
-            zonaDestinatario: newValue
-        })
-    }*/
-
     const handlePatrocinadorSelected = (newValue) => {
         setState({
             ...state,
@@ -2918,26 +2409,11 @@ function Embarque(props) {
         }
     }
 
-    /*function getAllZonas() {
-        const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
-        axios.get(url, {headers}).then((respuesta) => {
-            setDataZona(respuesta.data);
-        });
-    }*/
-
     const getAllClientes = () => {
         obtenerCliente().then((respuesta) => {
             setDataClientes(respuesta.data)
         })
     }
-
-    /*const handleChangeZonaEntrega = (event) => {
-        event.preventDefault();
-        setState({
-            ...state,
-            zonaEntrega: event.target.value,
-        });
-    }*/
 
     const getDataParaListado = () => {
 
@@ -3045,12 +2521,6 @@ function Embarque(props) {
         axios.get(`${process.env.REACT_APP_API_URL}/TipoSeguros/GetListado`, {headers}).then(({data}) => {
             setDataTiposSeguro(data)
         })
-    }
-
-    async function getAllEmbalajes() {
-        obtenerEmbalajes().then((respuesta) => {
-            setDataEmbalaje(respuesta.data);
-        });
     }
 
     const headers = API_HEADERS
@@ -3665,146 +3135,6 @@ function Embarque(props) {
             );
         }
     }
-
-    /*const addPaquetev2 = (event) => {
-        const {paquetes} = state;
-        let paq = paquete
-        if (validarPaquetes(paq)) {
-            paq.m_nIdEmbarqueDetalle = paq.m_nIdEmbarqueDetalle ? paq.m_nIdEmbarqueDetalle : paquetes.length + 1
-            paq.m_cValorDeclarado = paq.m_cValorDeclarado ? paq.m_cValorDeclarado : 0
-            if (paq.m_cValorDeclarado === 0 && (state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4)){
-                showSuccess("El campo de valor declarado es necesario para el seguro.")
-                return
-            }
-            paquetes.push(paq);
-            resetProducto()
-            console.log(paquetes);
-            setState({...state, paquetes: paquetes, countPaquetes: state.countPaquetes + 1});
-            let aux = []
-            dataProductos.forEach((i) =>{
-                aux.push(i)
-            })
-            setDataProductos(aux)
-        } else {
-            showSuccess("Rellene los campos obligatorios.")
-        }
-    }*/
-
-    /*const resetProducto = () => {
-        setPaquete({
-            m_xPeso: "",
-            m_xLargo: "",
-            m_xAncho: "",
-            m_xAlto: "",
-            m_xVolumen: "",
-            m_nIdTIpoEmpaque: "",
-            m_sTipoEmbalaje: "",
-            m_cValorDeclarado: "",
-            m_sDescripcion: "",
-            ctd: "",
-            producto: null,
-            m_nTipo: 2,
-            m_sObservaciones: "",
-            m_nIdProducto: "",
-            m_sTipo: "Paquete",
-        })
-    }*/
-    /*const removePaquetev2 = (event) => {
-        event.preventDefault()
-        resetProducto()
-    }*/
-
-    /*const handleChangePaquetev2 = (event) => {
-        let {paquetes} = state;
-        setPaquete(paquete => {
-            return {
-                ...paquete,
-                [event.target.name]: event.target.value,
-                m_xVolumen: paquete.m_xLargo * paquete.m_xAlto * paquete.m_xAncho,
-            }
-        })
-        if (event.target.name == "m_nIdTIpoEmpaque") {
-            setPaquete(paquete => {
-                return {
-                    ...paquete,
-                    m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == event.target.value).m_sNombre,
-                }
-            })
-        }
-        if (event.target.name == "m_nTipo") {
-            setPaquete(paquete => {
-                return {
-                    ...paquete,
-                    m_sTipo: event.target.value == 1 ? "Sobre" : "Paquete",
-                }
-            })
-        }
-        let totalCantidad = 0
-        paquetes.forEach((p) => {
-            totalCantidad += parseInt(p.ctd)
-        })
-        // setTotalPaquetes(totalCantidad)
-    };
-
-    const handleChangePaqueteProductov2 = (event, newValue) => {
-        if (!newValue){
-            return
-        }
-        setPaquete(paquete => {
-            return {
-                ...paquete,
-                producto: newValue,
-                m_nIdProducto: newValue.m_nIdProducto,
-                m_xLargo: newValue.m_xLargo,
-                m_xAlto: newValue.m_xAlto,
-                m_xAncho: newValue.m_xAncho,
-                m_xPeso: newValue.m_xPeso,
-                m_nIdTIpoEmpaque: newValue.m_nIdEmbalaje,
-                m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == newValue.m_nIdEmbalaje).m_sNombre,
-                m_sDescripcion: newValue.m_nIdProducto == 1 ? "" : newValue.m_sDescripcion,
-                m_sProducto: newValue.m_sDescripcion,
-                m_xVolumen: newValue.m_xLargo * newValue.m_xAlto * newValue.m_xAncho
-            }
-        })
-
-    };
-
-    const handlePaqueteClick = (data) => {
-        if (state.agregar != "Consultar") {
-            setState({
-                ...state,
-                paquetes: state.paquetes.filter((i) => i.m_nIdEmbarqueDetalle != data.m_nIdEmbarqueDetalle)
-            })
-
-            if (dataProductos.length === 0) {
-                obtenerProductoById(data.m_nIdProducto).then((respuesta) => {
-                    data.producto = respuesta.data
-                    data.m_sProducto = respuesta.data.m_sDescripcion
-                })
-            } else {
-                data.producto = dataProductos.find((i) => i.m_nIdProducto == data.m_nIdProducto)
-                data.m_sProducto = data.producto.m_sDescripcion
-            }
-            setPaquete(data)
-        }
-
-    }
-
-    const handleClickProducto = () => {
-        if (dataProductos.length === 0) {
-            getAllProductos()
-        }
-        if (dataEmbalaje.length === 0) {
-            getAllEmbalajes()
-        }
-    }*/
-
-    /*const getAllProductos = () => {
-        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
-        axios.get(url, {headers}).then(respuesta => {
-            setDataProductos(respuesta.data)
-        });
-    }*/
 
     const handleFechaCita = (event) => {
         setState({
