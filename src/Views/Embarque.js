@@ -759,11 +759,6 @@ function Embarque(props) {
                 setDataMunicipiosRemitente(data)
             })
         }
-        if (event.target.name === "municipioRemitente"){
-            obtenerCodigosPostalesPorEstadoMunicipio(remitente.estadoRemitente, event.target.value).then(({data}) => {
-                setDataCodigosPostalesRemitente(data)
-            })
-        }
     };
 
     const handleChangeAutocompleteRemitente = (input, newValue) => {
@@ -810,85 +805,26 @@ function Embarque(props) {
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipiosRemitente(data)
             })
+        }
 
-            obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado,newValue.m_nIdMunicipio).then(({data}) => {
+    }
+
+    const handleClickCodigosPostalesInput = (input) => {
+        if (input === "codigoPostalRemitente"){
+            obtenerCodigosPostalesPorEstadoMunicipio(remitente.estadoRemitente, remitente.municipioRemitente).then(({data}) => {
                 setDataCodigosPostalesRemitente(data)
             })
-            /*obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                /!*if (data.length > 0){
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaOperativaRemitente: data[0]
-                        }
-                    })
-                }else{
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaOperativaRemitente: {}
-                        }
-                    })
-                }*!/
-                setDataZonasOperativasRemitente(data)
-            })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                /!*if (data.length > 0){
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaTarifaRemitente: data[0]
-                        }
-                    })
-                }else{
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaTarifaRemitente: {}
-                        }
-                    })
-                }*!/
-                setDataZonasTarifaRemitente(data)
-            })*/
         }
-        /*if (input === "codigoPostalRemitente"){
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /!*if (data.length > 0){
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaOperativaRemitente: data[0]
-                        }
-                    })
-                }else{
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaOperativaRemitente: {}
-                        }
-                    })
-                }*!/
-                setDataZonasOperativasRemitente(data)
+        if (input === "codigoPostalDestinatario"){
+            obtenerCodigosPostalesPorEstadoMunicipio(destinatario.estadoDestinatario, destinatario.municipioDestinatario).then(({data}) => {
+                setDataCodigosPostalesDestinatario(data)
             })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /!*if (data.length > 0){
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaTarifaRemitente: data[0]
-                        }
-                    })
-                }else{
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaTarifaRemitente: {}
-                        }
-                    })
-                }*!/
-                setDataZonasTarifaRemitente(data)
+        }
+        if (input === "codigoPostalEnt"){
+            obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoEnt, entregaDD.municipioEnt).then(({data}) => {
+                setDataCodigosPostalesEntregaDD(data)
             })
-        }*/
+        }
     }
 
     const [destinatario, setDestinatario] = useState({
@@ -952,11 +888,6 @@ function Embarque(props) {
                 setDataMunicipiosDestinatario(data)
             })
         }
-        if (event.target.name === "municipioDestinatario"){
-            obtenerCodigosPostalesPorEstadoMunicipio(destinatario.estadoDestinatario, event.target.value).then(({data}) => {
-                setDataCodigosPostalesDestinatario(data)
-            })
-        }
     };
 
     const handleChangeAutocompleteDestinatario = (input, newValue) => {
@@ -999,9 +930,6 @@ function Embarque(props) {
             }
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipiosDestinatario(data)
-            })
-            obtenerCodigosPostalesPorEstadoMunicipio(newValue.m_nIdEstado,newValue.m_nIdMunicipio).then(({data}) => {
-                setDataCodigosPostalesDestinatario(data)
             })
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
                 /*if (data.length > 0){
@@ -1115,11 +1043,6 @@ function Embarque(props) {
         if (event.target.name === "estadoEnt"){
             obtenerMunicipiosByIdEstado(event.target.value).then(({data}) =>{
                 setDataMunicipiosEntregaDD(data)
-            })
-        }
-        if (event.target.name === "municipioEnt"){
-            obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoEnt, event.target.value).then(({data}) => {
-                setDataCodigosPostalesEntregaDD(data)
             })
         }
     };
@@ -4731,6 +4654,7 @@ function Embarque(props) {
                                                                                             label="Código Postal"
                                                                                             margin="dense"
                                                                                             variant="outlined"
+                                                                                            onClick={(e) => handleClickCodigosPostalesInput("codigoPostalRemitente")}
                                                                                             required
                                                                                             {...params}
                                                                                         />
@@ -5196,6 +5120,7 @@ function Embarque(props) {
                                                                                             label="Código Postal"
                                                                                             margin="dense"
                                                                                             variant="outlined"
+                                                                                            onClick={(e) => handleClickCodigosPostalesInput("codigoPostalDestinatario")}
                                                                                             required
                                                                                             {...params}
                                                                                         />
@@ -5706,6 +5631,7 @@ function Embarque(props) {
                                                                                             label="Código Postal"
                                                                                             margin="dense"
                                                                                             variant="outlined"
+                                                                                            onClick={(e) => handleClickCodigosPostalesInput("codigoPostalEnt")}
                                                                                             required={state.diferenteEntrega}
                                                                                             {...params}
                                                                                         />
