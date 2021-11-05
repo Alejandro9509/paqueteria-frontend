@@ -192,24 +192,27 @@ class ConceptosAdicionales extends Component {
     }
 
     handleRowClick(event, index, concepto) {
-        if (!this.props.consult) {
-            const {removeConcepto} = this.props
-            removeConcepto(concepto)
-            const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
-            this.setState({
-                concepto: conceptoSelect,
-                importe: concepto.importe,
-                nombreConcepto: concepto.m_sConcepto,
-                importeRet: concepto.importeRet,
-                retiene: concepto.retiene,
-                traslada: concepto.traslada,
-                importeIVA: concepto.importeIVA,
-                rangoMinimo: concepto.rangoMinimo,
-                rangoMaximo: concepto.rangoMaximo,
-                tipoCalculo: concepto.tipoCalculo,
-                tipoMedida: concepto.tipoMedida,
-            })
-        }
+        obtenerImpuestosByConceptosFacturacion(concepto.idConcepto).then(respuesta => {
+            if (!this.props.consult) {
+                const {removeConcepto} = this.props
+                removeConcepto(concepto)
+                const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
+                conceptoSelect.arClsDetalle = respuesta.data
+                this.setState({
+                    concepto: conceptoSelect,
+                    importe: concepto.importe,
+                    nombreConcepto: concepto.m_sConcepto,
+                    importeRet: concepto.importeRet,
+                    retiene: concepto.retiene,
+                    traslada: concepto.traslada,
+                    importeIVA: concepto.importeIVA,
+                    rangoMinimo: concepto.rangoMinimo,
+                    rangoMaximo: concepto.rangoMaximo,
+                    tipoCalculo: concepto.tipoCalculo,
+                    tipoMedida: concepto.tipoMedida,
+                })
+            }
+        })
     }
 
     handleConceptoClick(event, newValue){
