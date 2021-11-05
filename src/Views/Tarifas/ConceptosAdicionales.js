@@ -23,7 +23,10 @@ import {
     useAsyncDebounce,
     useSortBy,
 } from "react-table";
-import { obtenerConceptosFacturacion } from '../../Util/Contexts/ConceptosFacturacionContext';
+import {
+    obtenerConceptosFacturacion,
+    obtenerImpuestosByConceptosFacturacion
+} from '../../Util/Contexts/ConceptosFacturacionContext';
 import {API_HEADERS} from "../../Constants";
 
 const headers = API_HEADERS
@@ -68,6 +71,7 @@ class ConceptosAdicionales extends Component {
         this.handleSelectCP = this.handleSelectCP.bind(this)
         this.handleRowClick = this.handleRowClick.bind(this)
         this.calcularDescuento = this.calcularDescuento.bind(this)
+        this.handleConceptoClick = this.handleConceptoClick.bind(this)
     }
 
     componentWillMount() {
@@ -197,6 +201,22 @@ class ConceptosAdicionales extends Component {
 
     }
 
+    handleConceptoClick(event, newValue){
+        obtenerImpuestosByConceptosFacturacion(newValue.m_nIdConceptosFacturacion).then(respuesta => {
+            newValue.m_arrClsDetalle = respuesta.data
+            this.setState({
+                concepto: newValue,
+                importe: newValue.m_cImporte,
+                nombreConcepto: newValue.m_sConcepto,
+                importeRet: newValue.m_cImporteRetiene,
+                retiene: newValue.m_nIdImpuestoRetiene,
+                traslada: newValue.m_nIdImpuestoTraslada,
+                importeIVA: newValue.m_cImporteIva
+            })
+        });
+
+    }
+
     render() {
         return (
             <div>
@@ -232,17 +252,7 @@ class ConceptosAdicionales extends Component {
                                     <Autocomplete
                                         value={this.state.concepto}
                                         freeSolo
-                                        onChange={(event, newValue) => {
-                                            this.setState({
-                                                concepto: newValue,
-                                                importe: newValue.m_cImporte,
-                                                nombreConcepto: newValue.m_sConcepto,
-                                                importeRet: newValue.m_cImporteRetiene,
-                                                retiene: newValue.m_nIdImpuestoRetiene,
-                                                traslada: newValue.m_nIdImpuestoTraslada,
-                                                importeIVA: newValue.m_cImporteIva
-                                            })
-                                        }
+                                        onChange={(event, newValue) => this.handleConceptoClick(event, newValue)
                                         }
                                         id="concepto"
                                         disableClearable
