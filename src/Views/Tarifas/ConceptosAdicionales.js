@@ -252,8 +252,7 @@ class ConceptosAdicionales extends Component {
                                     <Autocomplete
                                         value={this.state.concepto}
                                         freeSolo
-                                        onChange={(event, newValue) => this.handleConceptoClick(event, newValue)
-                                        }
+                                        onChange={(event, newValue) => this.handleConceptoClick(event, newValue)}
                                         id="concepto"
                                         disableClearable
                                         forcePopupIcon={false}
