@@ -41,6 +41,15 @@ function obtenerConceptosFacturacion(){
     return result
 }
 
+function obtenerImpuestosByConceptosFacturacion(id){
+    const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetImpuestosByIdConcepto/`+id;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 function obtenerConceptosFacturacionManiobra(){
     const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListado/Maniobra`;
     let result;
@@ -95,4 +104,4 @@ function obtenerConceptosDefectoListado(){
     return result
 }
 
-export {modificarConceptosFacturacion, agregarConceptosFacturacion, eliminarConceptosFacturacion, obtenerConceptosFacturacion, obtenerConceptosFacturacionId, obtenerSAT, obtenerConceptosFacturacionManiobra, obtenerConceptosFacturacionEntrega, obtenerConceptosFacturacionRecoleccion, obtenerConceptosDefectoListado}
+export {obtenerImpuestosByConceptosFacturacion,modificarConceptosFacturacion, agregarConceptosFacturacion, eliminarConceptosFacturacion, obtenerConceptosFacturacion, obtenerConceptosFacturacionId, obtenerSAT, obtenerConceptosFacturacionManiobra, obtenerConceptosFacturacionEntrega, obtenerConceptosFacturacionRecoleccion, obtenerConceptosDefectoListado}

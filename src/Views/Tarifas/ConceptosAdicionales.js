@@ -23,7 +23,10 @@ import {
     useAsyncDebounce,
     useSortBy,
 } from "react-table";
-import { obtenerConceptosFacturacion } from '../../Util/Contexts/ConceptosFacturacionContext';
+import {
+    obtenerConceptosFacturacion,
+    obtenerImpuestosByConceptosFacturacion
+} from '../../Util/Contexts/ConceptosFacturacionContext';
 import {API_HEADERS} from "../../Constants";
 
 const headers = API_HEADERS
@@ -68,6 +71,7 @@ class ConceptosAdicionales extends Component {
         this.handleSelectCP = this.handleSelectCP.bind(this)
         this.handleRowClick = this.handleRowClick.bind(this)
         this.calcularDescuento = this.calcularDescuento.bind(this)
+        this.handleConceptoClick = this.handleConceptoClick.bind(this)
     }
 
     componentWillMount() {
@@ -179,21 +183,40 @@ class ConceptosAdicionales extends Component {
     }
 
     handleRowClick(event, index, concepto) {
-        if (!this.props.consult){
-            const {removeConcepto} = this.props
-            removeConcepto(concepto)
-            const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
+        obtenerImpuestosByConceptosFacturacion(concepto.idConcepto).then(respuesta => {
+            if (!this.props.consult) {
+                const {removeConcepto} = this.props
+                removeConcepto(concepto)
+                const conceptoSelect = this.state.conceptos.find((c) => c.m_nIdConceptosFacturacion == concepto.idConcepto)
+                conceptoSelect.arClsDetalle = respuesta.data
+                this.setState({
+                    concepto: conceptoSelect,
+                    importe: concepto.importe,
+                    nombreConcepto: concepto.m_sConcepto,
+                    importeRet: concepto.importeRet,
+                    retiene: concepto.retiene,
+                    traslada: concepto.traslada,
+                    importeIVA: concepto.importeIVA,
+                    descuento: concepto.descuento
+                })
+            }
+        })
+
+    }
+
+    handleConceptoClick(event, newValue){
+        obtenerImpuestosByConceptosFacturacion(newValue.m_nIdConceptosFacturacion).then(respuesta => {
+            newValue.arClsDetalle = respuesta.data
             this.setState({
-                concepto: conceptoSelect,
-                importe: concepto.importe,
-                nombreConcepto: concepto.m_sConcepto,
-                importeRet: concepto.importeRet,
-                retiene: concepto.retiene,
-                traslada: concepto.traslada,
-                importeIVA: concepto.importeIVA,
-                descuento: concepto.descuento
+                concepto: newValue,
+                importe: newValue.m_cImporte,
+                nombreConcepto: newValue.m_sConcepto,
+                importeRet: newValue.m_cImporteRetiene,
+                retiene: newValue.m_nIdImpuestoRetiene,
+                traslada: newValue.m_nIdImpuestoTraslada,
+                importeIVA: newValue.m_cImporteIva
             })
-        }
+        });
 
     }
 
@@ -232,18 +255,7 @@ class ConceptosAdicionales extends Component {
                                     <Autocomplete
                                         value={this.state.concepto}
                                         freeSolo
-                                        onChange={(event, newValue) => {
-                                            this.setState({
-                                                concepto: newValue,
-                                                importe: newValue.m_cImporte,
-                                                nombreConcepto: newValue.m_sConcepto,
-                                                importeRet: newValue.m_cImporteRetiene,
-                                                retiene: newValue.m_nIdImpuestoRetiene,
-                                                traslada: newValue.m_nIdImpuestoTraslada,
-                                                importeIVA: newValue.m_cImporteIva
-                                            })
-                                        }
-                                        }
+                                        onChange={(event, newValue) => this.handleConceptoClick(event, newValue)}
                                         id="concepto"
                                         disableClearable
                                         forcePopupIcon={false}
