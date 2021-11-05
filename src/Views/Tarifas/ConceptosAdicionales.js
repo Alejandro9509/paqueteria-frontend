@@ -203,7 +203,7 @@ class ConceptosAdicionales extends Component {
 
     handleConceptoClick(event, newValue){
         obtenerImpuestosByConceptosFacturacion(newValue.m_nIdConceptosFacturacion).then(respuesta => {
-            newValue.m_arrClsDetalle = respuesta.data
+            newValue.arClsDetalle = respuesta.data
             this.setState({
                 concepto: newValue,
                 importe: newValue.m_cImporte,
