@@ -234,6 +234,7 @@ class CuentasCorreo extends Component {
                                        className="form-control"
                                        required
                                        type="password"
+                                       autoComplete="current-password"
                                        label="Contraseña"
                                        value={this.state.pass}
                                        name="pass"
