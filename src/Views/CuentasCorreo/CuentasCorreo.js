@@ -233,7 +233,7 @@ class CuentasCorreo extends Component {
                                        onChange={this.handleChange}
                                        className="form-control"
                                        required
-                                       type="text"
+                                       type="password"
                                        label="Contraseña"
                                        value={this.state.pass}
                                        name="pass"
