@@ -1939,6 +1939,12 @@ function Embarque(props) {
         getAllCiudades()
 
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
+            let estado
+            if (respuesta.data.m_nIdEstadoRemitente < 10){
+                estado = `0${respuesta.data.m_nIdEstadoRemitente}`
+            }else{
+                estado = respuesta.data.m_nIdEstadoRemitente
+            }
             setRemitente(remitente => {
                 return {
                     ...remitente,
@@ -1957,18 +1963,12 @@ function Embarque(props) {
                     numeroIntRemitente: respuesta.data.m_sNoIntRemitente || 0,
                     numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
                     coloniaRemitente: respuesta.data.m_sColoniaRemitente,
-                    estadoRemitente: respuesta.data.m_nIdEstadoRemitente || 0,
+                    estadoRemitente: estado || 0,
                     municipioRemitente: respuesta.data.m_sMunicipioRemitente,
                     latitudR: data.m_sLatitudR,
                     longitudR: data.m_sLongitudR
                 }
             })
-            let estado
-            if (respuesta.data.m_nIdEstadoRemitente < 10){
-                estado = `0${respuesta.data.m_nIdEstadoRemitente}`
-            }else{
-                estado = respuesta.data.m_nIdEstadoRemitente
-            }
 
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipiosRemitente(data)
@@ -1995,6 +1995,12 @@ function Embarque(props) {
             })
         })
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
+            let estado
+            if (respuesta.data.m_nIdEstadoDestinatario < 10){
+                estado = `0${respuesta.data.m_nIdEstadoDestinatario}`
+            }else{
+                estado = respuesta.data.m_nIdEstadoDestinatario
+            }
             setDestinatario(destinatario => {
                 return {
                     ...destinatario,
@@ -2007,7 +2013,7 @@ function Embarque(props) {
                     contactoDestinatario: respuesta.data.m_sContactoDestinatario,
                     idDestinatario: respuesta.data.m_nIdDestinatario,
                     aliasDestinatario: respuesta.data.m_sAliasDestinatario,
-                    estadoDestinatario: respuesta.data.m_nIdEstadoDestinatario || 0,
+                    estadoDestinatario: estado || 0,
                     calleDestinatario: respuesta.data.m_sCalleDestinatario,
                     numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0,
                     numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
@@ -2017,12 +2023,6 @@ function Embarque(props) {
                     longitudD: data.m_sLongitudD || ''
                 }
             })
-            let estado
-            if (respuesta.data.m_nIdEstadoDestinatario < 10){
-                estado = `0${respuesta.data.m_nIdEstadoDestinatario}`
-            }else{
-                estado = respuesta.data.m_nIdEstadoDestinatario
-            }
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>    {
                 setDataMunicipiosDestinatario(data)
             })
@@ -2119,7 +2119,7 @@ function Embarque(props) {
                         domicilioEnt: respuesta.data.DomicilioEntrega,
                         entregarEnEnt: respuesta.data.EntregarEn,
                         datosAdicionalesEnt: respuesta.data.DatosAdicionalesis,
-                        estadoEnt: respuesta.data.m_nIdEstadoEntrega,
+                        estadoEnt: estado,
                         municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega
                         }
                 })
