@@ -14,7 +14,12 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
-import { agregarCuentasCorreo, modificarCuentasCorreo, obtenerCuentasCorreoUsuarioId } from '../../Util/Contexts/CuentasCorreoContext';
+import {
+    agregarCuentasCorreo,
+    modificarCuentasCorreo,
+    obtenerCuentasCorreo,
+    obtenerCuentasCorreoUsuarioId
+} from '../../Util/Contexts/CuentasCorreoContext';
 window.jQuery = window.$ = $;
 
 
@@ -134,7 +139,7 @@ class CuentasCorreo extends Component {
     }
 
     consultarPorUsuario () {
-        obtenerCuentasCorreoUsuarioId(this.state.idUsuario).then(respuesta => {
+        obtenerCuentasCorreo().then(respuesta => {
             console.log(respuesta.data)
             let info = respuesta.data
             let cuentaEnviarViajes = info && info.length > 0 ? info.filter(cuenta => cuenta.m_nTipoCuenta === 1) : []
