@@ -2098,6 +2098,27 @@ function Embarque(props) {
                         },
                     }
                 })
+                obtenerZonaOperativaByIdCodigoPostal(cp.data.m_sCP).then(({data}) => {
+                    setDataZonasOperativasDestinatario(data)
+                })
+                obtenerZonaTarifaByIdCodigoPostal(cp.data.m_sCP).then(({data}) => {
+                    /*if (data.length > 0){
+                        setDestinatario(destinatario => {
+                            return{
+                                ...destinatario,
+                                zonaTarifaDestinatario: data[0]
+                            }
+                        })
+                    }else{
+                        setDestinatario(destinatario => {
+                            return{
+                                ...destinatario,
+                                zonaTarifaDestinatario: {}
+                            }
+                        })
+                    }*/
+                    setDataZonasTarifaDestinatario(data)
+                })
             })
             obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(({data}) => {
                 setDestinatario(destinatario => {
@@ -2194,6 +2215,12 @@ function Embarque(props) {
                         ...entregaDD,
                         codigoPostalEnt: cp.data,
                     }
+                })
+                obtenerZonaOperativaByIdCodigoPostal(cp.data.m_sCP).then(({data}) => {
+                    setDataZonasOperativasEntregaDD(data)
+                })
+                obtenerZonaTarifaByIdCodigoPostal(cp.data.m_sCP).then(({data}) => {
+                    setDataZonasTarifaEntregaDD(data)
                 })
             })
         }
