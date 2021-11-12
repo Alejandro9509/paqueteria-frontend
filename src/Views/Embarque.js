@@ -1122,55 +1122,45 @@ function Embarque(props) {
     const validarCoordenadas = (coordenadas) => {
         /**Si es modificacion*/
         if (state.idEmbarque != 0){
-            /**Si es entrega en diferente domicilio y no hay coordenadas guardadas*/
-            debugger
+            /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
             if(state.diferenteEntrega
-                && !state.entregaEnSucursal
                 && !isValidText(entregaDD.latitudEnt)
                 && !isValidText(entregaDD.longitudEnt)
                 && !coordenadas){
-                setState({
-                    ...state,
-                    showConfirmarUbicacion: true,
-                    titulo: "entrega"
-                })
+                mostrarDialogoMapa()
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas guardadas*/
             }else if (!state.diferenteEntrega
-                && !state.entregaEnSucursal
                 && !isValidText(destinatario.latitudD)
                 && !isValidText(destinatario.longitudD)
                 && !coordenadas) {
-                setState({
-                    ...state,
-                    showConfirmarUbicacion: true,
-                    titulo: "entrega"
-                })
+                mostrarDialogoMapa()
                 return false
             }
             /**Si es agregar*/
         }else{
-            /**Si es entrega en diferente domicilio y no hay coordenadas*/
-            if(state.diferenteEntrega && !coordenadas){
-                setState({
-                    ...state,
-                    showConfirmarUbicacion: true,
-                    titulo: "entrega"
-                })
+            /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
+            if (state.diferenteEntrega  && !coordenadas){
+                mostrarDialogoMapa()
                 return false
-                /**Si es entrega en el domicilio del destinatario y no hay coodernadas guardadas*/
-            }else if (!state.entregaEnSucursal
+                /**Si es entrega en el domicilio del destinatario y no hay coordenadas*/
+            }else if (!state.diferenteEntrega
                 && !isValidText(destinatario.latitudD)
-                && !isValidText(destinatario.longitudD)){
-                setState({
-                    ...state,
-                    showConfirmarUbicacion: true,
-                    titulo: "entrega"
-                })
+                && !isValidText(destinatario.longitudD)
+                && !coordenadas){
+                mostrarDialogoMapa()
                 return false
             }
         }
         return true
+    }
+
+    const mostrarDialogoMapa = () => {
+        setState({
+            ...state,
+            showConfirmarUbicacion: true,
+            titulo: "entrega"
+        })
     }
 
     const handleAceptar = (e, coordenadas) => {
@@ -1200,8 +1190,11 @@ function Embarque(props) {
             packs.push(p)
         })
 
-        if (!validarCoordenadas(coordenadas)){
-            return
+        /**Si no es entrega en sucursal se validan las coordenadas*/
+        if (!state.entregaEnSucursal){
+            if (!validarCoordenadas(coordenadas)){
+                return
+            }
         }
 
         const params = {
@@ -1320,6 +1313,9 @@ function Embarque(props) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
+                    if (respuesta.data != "Modificado Exitosamente"){
+                        return
+                    }
                     getAllEmbarque();
                     $('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(0).addClass('active');
@@ -1334,6 +1330,9 @@ function Embarque(props) {
             agregarEmbarques(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
+                    if (respuesta.data != "Agregado Exitosamente"){
+                        return
+                    }
                     console.log(respuesta.data);
                     getAllEmbarque();
                     $('.nav-tabs li ').removeClass('active');
