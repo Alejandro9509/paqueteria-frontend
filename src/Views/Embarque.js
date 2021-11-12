@@ -1186,6 +1186,8 @@ function Embarque(props) {
             p.ctd = p.m_nCantidad
             p.m_cValorDeclarado = p.m_cyValorDeclarado
             p.m_nTipo = p.m_nIdTipo
+            p.ClaveSATProducto = p.m_sClaveSATProducto
+            p.ClaveSATUnidad = p.m_sClaveSATUnidad
 
             packs.push(p)
         })
@@ -2078,9 +2080,7 @@ function Embarque(props) {
                     numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0,
                     numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
                     municipioDestinatario: respuesta.data.m_sMunicipioDestinatario,
-                    coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
-                    latitudD: data.m_sLatitudD || '',
-                    longitudD: data.m_sLongitudD || ''
+                    coloniaDestinatario: respuesta.data.m_sColoniaDestinatario
                 }
             })
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>    {
@@ -2165,6 +2165,7 @@ function Embarque(props) {
 
         })
 
+        /**Si es entrega en sucursal*/
         if(respuesta.data.m_bEntregaEnSucursal){
             setState(state => {
                 return {
@@ -2229,7 +2230,12 @@ function Embarque(props) {
             respuesta.data.m_arrPaquetes.push(s)
         })
 
-        
+        /**m_sClaveSATProducto = Clave producto SAT
+         * m_nProducto = Producto del SAT
+         * m_nIdProducto = id Producto
+         * m_sProducto = descripcion producto*/
+
+        /**Se castean porque el componente <Paquetes/> usa otros nombres para los datos */
         respuesta.data.m_arrPaquetes.forEach((p) => {
             p.m_nIdPaquete = p.m_nIdEmbarqueDetalle
             p.m_rPeso = p.m_xPeso
@@ -2241,6 +2247,10 @@ function Embarque(props) {
             p.m_nCantidad = p.ctd
             p.m_cyValorDeclarado = p.m_cValorDeclarado
             p.m_nIdTipo = p.m_nTipo
+            p.m_sClaveSATProducto = p.m_nClaveSATProducto
+            p.m_sClaveSATUnidad = p.m_nClaveSATUnidad
+            p.m_sUnidad = p.m_sUnidadSAT
+            p.m_nProducto = p.m_sProductoSAT
 
             obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
                 p["producto"] = data
@@ -4036,7 +4046,7 @@ function Embarque(props) {
                                                                             name: "estatusEmbarque"
                                                                         }}
                                                                     >
-                                                                        {dataEstatusEmbarque.filter(e => e.m_nIdEstatusEmbarque < 17).map((estatus) => (
+                                                                        {dataEstatusEmbarque.filter(e => e.m_nIdEstatusEmbarque < 17 || e.m_nIdEstatusEmbarque == 22).map((estatus) => (
                                                                             <option
                                                                                 key={estatus.m_nIdEstatusEmbarque}
                                                                                 value={estatus.m_nIdEstatusEmbarque}

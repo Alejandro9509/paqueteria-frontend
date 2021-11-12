@@ -95,6 +95,24 @@ function obtenerSAT(){
     return result
 }
 
+function obtenerSATUnidades(){
+    const url = `${process.env.REACT_APP_API_URL}/SAT/GetListadoUnidades`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+function obtenerSATServicios(){
+    const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListadoSAT`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 function obtenerConceptosDefectoListado(){
     const url = `${process.env.REACT_APP_API_URL}/ConceptosDefecto/GetListado`;
     let result;
@@ -104,4 +122,4 @@ function obtenerConceptosDefectoListado(){
     return result
 }
 
-export {obtenerImpuestosByConceptosFacturacion,modificarConceptosFacturacion, agregarConceptosFacturacion, eliminarConceptosFacturacion, obtenerConceptosFacturacion, obtenerConceptosFacturacionId, obtenerSAT, obtenerConceptosFacturacionManiobra, obtenerConceptosFacturacionEntrega, obtenerConceptosFacturacionRecoleccion, obtenerConceptosDefectoListado}
+export {obtenerSATServicios,obtenerSATUnidades,obtenerImpuestosByConceptosFacturacion,modificarConceptosFacturacion, agregarConceptosFacturacion, eliminarConceptosFacturacion, obtenerConceptosFacturacion, obtenerConceptosFacturacionId, obtenerSAT, obtenerConceptosFacturacionManiobra, obtenerConceptosFacturacionEntrega, obtenerConceptosFacturacionRecoleccion, obtenerConceptosDefectoListado}
