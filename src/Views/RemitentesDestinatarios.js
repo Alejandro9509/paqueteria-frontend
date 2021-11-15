@@ -101,8 +101,8 @@ function RemitenteDestinatario(props) {
         const {dataPadreConsulta: respuesta} = props
 
         /**Se ocupa hacer la distincion de si es de recoleccion o embarque porque el nombre de las variables cambia*/
-        /**Si es recoleccion*/
-        if (props.componentePadre === "Recolección" && props.dataPadreConsulta.data.m_nIdRecoleccion > 0){
+        /**Si es recoleccion o embarque y se es una respuesta de RecoleccionById*/
+        if ((props.componentePadre === "Recolección" || props.componentePadre === "Embarque") && props.dataPadreConsulta.data.m_nIdRecoleccion > 0){
             if (props.remitente){
                 let estado = respuesta.data.m_nIdEstadoRemitente < 10 ? `0${respuesta.data.m_nIdEstadoRemitente}` : respuesta.data.m_nIdEstadoRemitente
                 obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
