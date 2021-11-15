@@ -1022,18 +1022,12 @@ function Recoleccion() {
         setState({
             ...state,
             showConfirmarUbicacion: true,
-            titulo: "entrega"
+            titulo: "recolección"
         })
     }
 
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
-        setState(state => {
-            return {
-                ...state,
-                showConfirmarUbicacion: false
-            }
-        })
 
         if (dataPaquetes.length === 0) {
             showSuccess("Debe agregar al menos 1 paquete o sobre.")
