@@ -26,7 +26,7 @@ function showSuccess(mensaje) {
 }
 
 
-class Tarifas extends Component {
+class Tarifa extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -392,7 +392,7 @@ class Tarifas extends Component {
     }
 }
 
-function Tarifa(props){
+function Tarifas(props){
     const [state, setState] = useState({
         data: [],
         agregar: "Agregar",
@@ -403,107 +403,18 @@ function Tarifa(props){
         selected: {},
         DerechoBorrar: 1, //TODO: Definir id
         dataSucursal: [],
-        columns: [
-            {
-                headerName: "Acciones",
-                sortable: false, filterable: false,
-                field: "",
-                minWidth: 250,
-                renderCell: (row) => {
-                    return (
-                        <div>
-                            <Tooltip title="Modificar">
-                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-
-                            </Tooltip>
-                            <Tooltip title="Consultar">
-                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdTarifa))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-
-                            </Tooltip>
-                            <Tooltip title="Eliminar">
-                                <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                            </Tooltip>
-
-                        </div>
-                    )
-                }
-            },
-            {
-                headerName: "Código",
-                field: "m_sCodigo",
-                flex: 1,
-                minWidth: 300,
-            }, {
-                headerName: "Origen",
-                field: "m_sOrigen",
-                flex: 1,
-                minWidth: 300,
-            },{
-                headerName: "Destino",
-                field: "m_sDestino",
-                flex: 1,
-                minWidth: 300,
-            }, {
-                headerName: "Precio m³",
-                field: "m_cPrecioM3",
-                flex: 1,
-                valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                minWidth: 200,
-            }, {
-                headerName: "Precio Kilo",
-                field: "m_cPrecioKilo",
-                flex: 1,
-                valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                minWidth: 125,
-            },
-            {
-                headerName: "Flete mínimo",
-                field: "m_cFleteMinimo",
-                flex: 1,
-                valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                minWidth: 125,
-            },
-            {
-                headerName: "Monto mínimo",
-                field: "m_cMontoMinimo",
-                flex: 1,
-                valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                minWidth: 125,
-            },
-            {
-                headerName: "Activo",
-                field: "m_bActivo",
-                minWidth: 200,
-                flex: 1,
-                renderCell: (row) => {
-                    return (
-                        <div
-                            style={{
-                                width: "100%",
-                                textAlign: "center",
-                                color: row.row.m_bActivo == 'true' ? "green" : "red",
-                            }}
-                        >
-                            {row.row.m_bActivo ? (
-                                <SvgIcon component={Activo} />
-                            ) : (
-                                <SvgIcon component={NoActivo} />
-                            )}
-                        </div>
-                    );
-                },
-            },
-
-        ]
+        columns: []
     })
 
     useEffect(value => {
+        definirColumnas()
         getAllData()
     }, [])
 
     const handleShowModificar = (id) => {
         obtenerTarifaBy(id).then(respuesta => {
             setState({
+                ...state,
                 pantalla: 2,
                 openDialog: true,
                 agregar: "Modificar",
@@ -522,6 +433,7 @@ function Tarifa(props){
         obtenerTarifaBy(id).then(respuesta => {
             console.log(respuesta.data)
             setState({
+                ...state,
                 pantalla: 2,
                 agregar: "Consultar",
                 openDialog: true,
@@ -598,7 +510,8 @@ function Tarifa(props){
             axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
-                setState({ openDialog: false, pantalla: 1, agregar: "Agregar" })
+                setState({
+                ...state, openDialog: false, pantalla: 1, agregar: "Agregar" })
                 $('.nav-tabs li ').removeClass('active');
                 $('.nav-tabs li').eq(0).addClass('active');
                 $('.tab-content div ').removeClass('in show');
@@ -612,7 +525,8 @@ function Tarifa(props){
             axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
-                setState({ openDialog: false, pantalla: 1, agregar: "Agregar" })
+                setState({
+                ...state, openDialog: false, pantalla: 1, agregar: "Agregar" })
                 $('.nav-tabs li ').removeClass('active');
                 $('.nav-tabs li').eq(0).addClass('active');
                 $('.tab-content div ').removeClass('in show');
@@ -625,15 +539,132 @@ function Tarifa(props){
 
     }
 
-    const cambiarPantalla = (id) => {
-        setState({ pantalla: id })
+    const handleShowListado = (event) => {
+        event.stopPropagation();
+        setState({
+            ...state,
+            pantalla: 1,
+            edit: false,
+            consult: false,
+            agregar: "Agregar"
+        });
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
+        getAllData()
     }
 
     const getAllData = () => {
         const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
-            setState({ data: respuesta.data, agregar: "Agregar" })
+            /**Se agrega el tipo de tarifa manualmente de la forma que se ocupa porque no viene de los servicios*/
+            respuesta.data.forEach(i => {
+                if (i.m_bPorPesoVolumen){
+                    i.tipoTarifa = "Por peso volumen"
+                }else if (i.m_bPorRango){
+                    i.tipoTarifa = "Por rango"
+                }else if (i.m_bPorRegion){
+                    i.tipoTarifa = "Por región"
+                }
+            })
+
+            setState(state =>{
+                return {
+                ...state,
+                    data: respuesta.data,
+                    agregar: "Agregar"
+                }
+            })
         });
+    }
+
+    /**Se definen las columnas que se van a mostrar en el listado de tarifas*/
+    const definirColumnas = () => {
+        let columnas = [
+            {
+                headerName: "Acciones",
+                sortable: false, filterable: false,
+                field: "",
+                minWidth: 250,
+                renderCell: (row) => {
+                    return (
+                        <div>
+                            <Tooltip title="Modificar">
+                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                            </Tooltip>
+                            <Tooltip title="Consultar">
+                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdTarifa))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                            </Tooltip>
+                            <Tooltip title="Eliminar">
+                                <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            </Tooltip>
+
+                        </div>
+                    )
+                }
+            },
+            {
+                headerName: "Código",
+                field: "m_sCodigo",
+                flex: 1,
+                minWidth: 300,
+            }, {
+                headerName: "Origen",
+                field: "m_sOrigen",
+                flex: 1,
+                minWidth: 300,
+            },{
+                headerName: "Destino",
+                field: "m_sDestino",
+                flex: 1,
+                minWidth: 300,
+            },{
+                headerName: "Tipo Tarifa",
+                field: "tipoTarifa",
+                minWidth: 200,
+                flex: 1,
+            },{
+                headerName: "Activo",
+                field: "m_bActivo",
+                minWidth: 200,
+                flex: 1,
+                renderCell: (row) => {
+                    return (
+                        <div
+                            style={{
+                                width: "100%",
+                                textAlign: "center",
+                                color: row.row.m_bActivo == 'true' ? "green" : "red",
+                            }}
+                        >
+                            {row.row.m_bActivo ? (
+                                <SvgIcon component={Activo} />
+                            ) : (
+                                <SvgIcon component={NoActivo} />
+                            )}
+                        </div>
+                    );
+                },
+            },/* {
+                headerName: "Precio m³",
+                field: "m_cPrecioM3",
+                flex: 1,
+                valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
+                minWidth: 200,
+            },*/
+
+
+        ]
+
+        setState(state => {
+            return{
+                ...state,
+                columns: columnas
+            }
+        })
     }
 
     return(
@@ -664,21 +695,15 @@ function Tarifa(props){
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a onClick={(event) => {
-                                event.stopPropagation();
-                                setState({pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
-                                $('.nav-tabs li ').removeClass('active');
-                                $('.nav-tabs li').eq(0).addClass('active');
-                                $('.tab-content div ').removeClass('in show');
-                                $('#Listado').addClass('in show');
-                            }}>
+                            <a onClick={(event) => handleShowListado}>
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
                         <li >
                             <a onClick={(event) => {
                                 event.stopPropagation();
-                                setState({pantalla: 2, edit: false, consult: false, agregar: "Agregar"});
+                                setState({
+                ...state,pantalla: 2, edit: false, consult: false, agregar: "Agregar"});
                                 $('.nav-tabs li ').removeClass('active');
                                 $('.nav-tabs li').eq(1).addClass('active');
                                 $('.tab-content div ').removeClass('in show');
@@ -718,6 +743,7 @@ function Tarifa(props){
                                             getRowId={(row) => row.m_nIdTarifa}
                                             onRowSelected={(row) => {
                                                 setState({
+                ...state,
                                                     idTarifa: row.data.m_nIdTarifa
                                                 })
                                             }}
@@ -733,7 +759,8 @@ function Tarifa(props){
                                 <CrearTarifa edit={state.edit} consult={state.consult} select={state.selected}
                                              onSubmit={handleAceptar} onCancel={(event) => {
                                     event.stopPropagation();
-                                    setState({pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
+                                    setState({
+                ...state,pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
                                     $('.nav-tabs li ').removeClass('active');
                                     $('.nav-tabs li').eq(0).addClass('active');
                                     $('.tab-content div ').removeClass('in show');
