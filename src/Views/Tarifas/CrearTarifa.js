@@ -488,7 +488,7 @@ class CrearTarifa extends Component {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                        {/*<div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <label className="input select" style={{ width: "100%" }}>
                                                 <FormControl fullWidth variant="outlined" margin="dense">
                                                     <InputLabel id="sucursalLabel">Sucursal</InputLabel>
@@ -522,18 +522,17 @@ class CrearTarifa extends Component {
                                                     </Select>
                                                 </FormControl>
                                             </label>
-                                        </div>
+                                        </div>*/}
                                         <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <label className="input select" style={{ width: "100%" }}>
                                                 <FormControl fullWidth variant="outlined" margin="dense" required>
-                                                    <InputLabel id="origenLabel">Origen</InputLabel>
+                                                    <InputLabel id="origenLabel">Origen (Bodega)</InputLabel>
                                                     <Select
                                                         native
                                                         className="form-control"
-                                                        label="Origen"
+                                                        label="Origen (Bodega)"
                                                         disabled={this.props.consult}
                                                         labelId="origenLabel"
-                                                        className="form-control"
                                                         value={this.state.origen}
                                                         onChange={this.handleChange}
                                                         name="origen"
@@ -560,14 +559,13 @@ class CrearTarifa extends Component {
                                             <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <label className="input select" style={{ width: "100%" }}>
                                                 <FormControl fullWidth variant="outlined" margin="dense" required={!porRegion}>
-                                                    <InputLabel id="destinoLabel">Destino</InputLabel>
+                                                    <InputLabel id="destinoLabel">Destino (Bodega)</InputLabel>
                                                     <Select
                                                         native
                                                         className="form-control"
-                                                        label="Destino"
+                                                        label="Destino (Bodega)"
                                                         disabled={this.props.consult}
                                                         labelId="destinoLabel"
-                                                        className="form-control"
                                                         value={this.state.destino}
                                                         onChange={this.handleChange}
                                                         name="destino"
