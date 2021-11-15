@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import Cabecera from '../../Components/Template/Cabecera';
 import BarraLateralIzquierda from '../../Components/Template/BarraLateralIzquierda';
@@ -13,6 +13,7 @@ import $ from "jquery";
 import {API_HEADERS, dataGridLocaleText} from '../../Constants';
 import { Tooltip } from '@material-ui/core';
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
+import {obtenerTarifaBy} from "../../Util/Contexts/TarifasContext";
 window.jQuery = window.$ = $;
 const headers = API_HEADERS
 function showSuccess(mensaje) {
@@ -389,6 +390,366 @@ class Tarifas extends Component {
             </div >
         );
     }
+}
+
+function Tarifa(props){
+    const [state, setState] = useState({
+        data: [],
+        agregar: "Agregar",
+        height: window.innerHeight,
+        CreadoPor: localStorage.getItem("UsuarioId"),
+        ModificadoPor: localStorage.getItem("UsuarioId"),
+        pantalla: 1,
+        selected: {},
+        DerechoBorrar: 1, //TODO: Definir id
+        dataSucursal: [],
+        columns: [
+            {
+                headerName: "Acciones",
+                sortable: false, filterable: false,
+                field: "",
+                minWidth: 250,
+                renderCell: (row) => {
+                    return (
+                        <div>
+                            <Tooltip title="Modificar">
+                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                            </Tooltip>
+                            <Tooltip title="Consultar">
+                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdTarifa))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                            </Tooltip>
+                            <Tooltip title="Eliminar">
+                                <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            </Tooltip>
+
+                        </div>
+                    )
+                }
+            },
+            {
+                headerName: "Código",
+                field: "m_sCodigo",
+                flex: 1,
+                minWidth: 300,
+            }, {
+                headerName: "Origen",
+                field: "m_sOrigen",
+                flex: 1,
+                minWidth: 300,
+            },{
+                headerName: "Destino",
+                field: "m_sDestino",
+                flex: 1,
+                minWidth: 300,
+            }, {
+                headerName: "Precio m³",
+                field: "m_cPrecioM3",
+                flex: 1,
+                valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
+                minWidth: 200,
+            }, {
+                headerName: "Precio Kilo",
+                field: "m_cPrecioKilo",
+                flex: 1,
+                valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
+                minWidth: 125,
+            },
+            {
+                headerName: "Flete mínimo",
+                field: "m_cFleteMinimo",
+                flex: 1,
+                valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
+                minWidth: 125,
+            },
+            {
+                headerName: "Monto mínimo",
+                field: "m_cMontoMinimo",
+                flex: 1,
+                valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
+                minWidth: 125,
+            },
+            {
+                headerName: "Activo",
+                field: "m_bActivo",
+                minWidth: 200,
+                flex: 1,
+                renderCell: (row) => {
+                    return (
+                        <div
+                            style={{
+                                width: "100%",
+                                textAlign: "center",
+                                color: row.row.m_bActivo == 'true' ? "green" : "red",
+                            }}
+                        >
+                            {row.row.m_bActivo ? (
+                                <SvgIcon component={Activo} />
+                            ) : (
+                                <SvgIcon component={NoActivo} />
+                            )}
+                        </div>
+                    );
+                },
+            },
+
+        ]
+    })
+
+    useEffect(value => {
+        getAllData()
+    }, [])
+
+    const handleShowModificar = (id) => {
+        obtenerTarifaBy(id).then(respuesta => {
+            setState({
+                pantalla: 2,
+                openDialog: true,
+                agregar: "Modificar",
+                edit: true,
+                consult: false,
+                selected: respuesta.data,
+            })
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(1).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Agregar').addClass('in show');
+        });
+    }
+
+    const handleShowConsultar = (id) => {
+        obtenerTarifaBy(id).then(respuesta => {
+            console.log(respuesta.data)
+            setState({
+                pantalla: 2,
+                agregar: "Consultar",
+                openDialog: true,
+                edit: true,
+                consult: true,
+                selected: respuesta.data,
+            })
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(1).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Agregar').addClass('in show');
+        });
+    }
+
+    const handleEliminar = (id) => {
+        var derecho;
+        validarPermisos(state).then(respuesta => {
+            derecho = respuesta.data;
+            if (derecho == false) {
+                showSuccess("El usuario no tiene derechos para realizar el proceso");
+                return;
+            }
+
+            const url = `${process.env.REACT_APP_API_URL}/Tarifas/Eliminar/` + id + `/${state.ModificadoPor}`;
+            axios.delete(url, { headers }).then(respuesta => {
+                console.log(respuesta);
+                getAllData();
+            }).catch(err => {
+                showSuccess(err)
+            });
+        }).catch(err => {
+            showSuccess(err)
+        });
+    }
+
+    const handleAceptar = (data) => {
+        var params = {
+            m_nIdSucursal: data.sucursal,
+            m_nIdOrigen: data.origen,
+            m_nIdDestino: data.destino,
+            m_cFleteMinimo: data.precioFlete,
+            m_bActivo: data.activo ? 1 : 0,
+            m_cMontoMinimo: data.precioMinimo,
+            m_cPrecioKilo: data.precioKilo,
+            m_cPrecioM3: data.precioM3,
+            m_bPorPesoVolumen: data.porPesoOVolumen,
+            m_bPorRango: data.porRangos,
+            m_bPorRegion: data.porRegion,
+            m_nFactorConversion: data.factorConversion,
+            m_arrArCobros: data.tiposCobroSeleccionado.map(c => ({ m_nIdTipoCobro: c.m_nIdTipoCobro })),
+            m_arrArServicios: data.tiposServicioSeleccionado.map(s => ({ m_nIdTipoServicio: s.m_nIdTipoServicio })),
+            m_arrArConceptos: data.todosConceptos.map(c => ({
+                m_nIdConceptosFacturacion: c.idConcepto,
+                m_cImporte: c.importe,
+                m_nIdImpuestoTraslada: c.traslada,
+                m_nIdImpuestoRetiene: c.retiene,
+                m_cImporteRetiene: c.importeRet,
+                m_cImporteIva: c.importeIVA,
+                m_nIdTipoCalculo: c.tipoCalculo,
+                m_xnRangoMinimo: c.rangoMinimo,
+                m_xnRangoMaximo: c.rangoMaximo,
+                m_nIdAgregadoDesde: c.agregadoDesde,
+                m_nIdTipoMedida: c.tipoMedida
+            })),
+            m_arrArProductos: data.dataProductosSeleccionados,
+            m_arrArDestinos: data.dataDestinosSeleccionados,
+            m_nCreadoPOr: localStorage.getItem("UsuarioId"),
+            m_nModificadoPor: localStorage.getItem("UsuarioId"),
+            m_sCodigo: data.codigoTarifa
+        }
+        console.log(JSON.stringify(params))
+        if (state.edit) {
+            const url = `${process.env.REACT_APP_API_URL}/Tarifas/Modificar/` + state.selected.m_nIdTarifa;
+            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
+                showSuccess(respuesta.data)
+                getAllData()
+                setState({ openDialog: false, pantalla: 1, agregar: "Agregar" })
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
+            }).catch(err => {
+                console.log(err)
+                showSuccess("err")
+            });
+        } else {
+            const url = `${process.env.REACT_APP_API_URL}/Tarifas/Agregar`;
+            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
+                showSuccess(respuesta.data)
+                getAllData()
+                setState({ openDialog: false, pantalla: 1, agregar: "Agregar" })
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
+            }).catch(err => {
+                console.log(err)
+                showSuccess(err)
+            });
+        }
+
+    }
+
+    const cambiarPantalla = (id) => {
+        setState({ pantalla: id })
+    }
+
+    const getAllData = () => {
+        const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetListado`;
+        axios.get(url, { headers }).then(respuesta => {
+            setState({ data: respuesta.data, agregar: "Agregar" })
+        });
+    }
+
+    return(
+        <div >
+            <header className="topbar clearfix">
+                <Cabecera titulo="Tarifas" >
+                    <div className="page-header">
+                        <ul className="list-page-breadcrumb">
+                            <li>
+                                <a href="/Catalogos" className="color-mapeo">
+                                    Catálogos <i className="zmdi zmdi-chevron-right" />
+                                </a>
+                            </li>
+                            <li className="active-page">Tarifas</li>
+                        </ul>
+                    </div>
+                </Cabecera>
+            </header>
+
+            {/*Leftbar Start Here*/}
+            <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
+                <BarraLateralIzquierda />
+            </aside>
+
+            <section className="main-container">
+                <div className="container-fluid">
+
+
+                    <ul className="nav navStatica nav-tabs">
+                        <li className="active">
+                            <a onClick={(event) => {
+                                event.stopPropagation();
+                                setState({pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
+                                $('.nav-tabs li ').removeClass('active');
+                                $('.nav-tabs li').eq(0).addClass('active');
+                                $('.tab-content div ').removeClass('in show');
+                                $('#Listado').addClass('in show');
+                            }}>
+                                <i className="fa fa-list"/> Listado
+                            </a>
+                        </li>
+                        <li >
+                            <a onClick={(event) => {
+                                event.stopPropagation();
+                                setState({pantalla: 2, edit: false, consult: false, agregar: "Agregar"});
+                                $('.nav-tabs li ').removeClass('active');
+                                $('.nav-tabs li').eq(1).addClass('active');
+                                $('.tab-content div ').removeClass('in show');
+                                $('#Agregar').addClass('in show');
+                            }}>
+                                <i className="fa fa-plus-circle"/> {state.agregar}
+                            </a>
+                        </li>
+
+                        <li>
+                            <a data_id="3">
+                                <i className="fa fa-times-circle"/> Imprimir
+                            </a>
+                        </li>
+
+
+
+                        {/**<button className="topbar-right pull-right">Boton</button>*/}
+                    </ul>
+
+
+                    <div
+                        className="row"
+                        className="tab-content"
+                        style={{ paddingLeft: "-15px" }}
+                    >
+                        <div id="Listado" className="tab-pane fade in show">
+                            <div className="widget-wrap">
+                                <div className="widget-content">
+                                    <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                                        <DataGrid
+                                            localeText={dataGridLocaleText}
+                                            rows={state.data}
+                                            columns={state.columns}
+                                            density="compact"
+                                            pageSize={Math.floor((state.height - 310) / 30)}
+                                            getRowId={(row) => row.m_nIdTarifa}
+                                            onRowSelected={(row) => {
+                                                setState({
+                                                    idTarifa: row.data.m_nIdTarifa
+                                                })
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="Agregar" className="tab-pane fade">
+                            {
+                                state.pantalla == 2 &&
+                                <CrearTarifa edit={state.edit} consult={state.consult} select={state.selected}
+                                             onSubmit={handleAceptar} onCancel={(event) => {
+                                    event.stopPropagation();
+                                    setState({pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
+                                    $('.nav-tabs li ').removeClass('active');
+                                    $('.nav-tabs li').eq(0).addClass('active');
+                                    $('.tab-content div ').removeClass('in show');
+                                    $('#Listado').addClass('in show');
+                                }}
+                                             listaCiudades={state.dataCiudades}
+                                />
+                            }
+
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </div >
+    )
 }
 
 Tarifas.propTypes = {
