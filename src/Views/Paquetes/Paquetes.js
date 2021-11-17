@@ -1,17 +1,27 @@
 import React, {useEffect, useState} from "react";
 import {FormControl, Grid, InputLabel, Select} from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@material-ui/core';
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from '@material-ui/icons/Edit';
+import SaveIcon from "@material-ui/icons/Save";
 import {DataGrid} from "@material-ui/data-grid";
+import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
-import {obtenerProductoById, obtenerProductos} from "../../Util/Contexts/ProductosContext";
+import {obtenerProductoById} from "../../Util/Contexts/ProductosContext";
 import {obtenerEmbalajes} from "../../Util/Contexts/EmbalajesContext";
 import axios from "axios";
 import Recoleccion from "../Recoleccion";
+import {API_HEADERS} from "../../Constants"
+import {
+    obtenerSATServicios,
+    obtenerSATUnidades,
+} from "../../Util/Contexts/ConceptosFacturacionContext";
+const headers = API_HEADERS
 
 function showSuccess(mensaje) {
     new Noty({
@@ -21,8 +31,80 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro}) {
+function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
+    const [openDialog, setOpenDialog] = useState(false)
+    const [row, setRow] = useState(0)
+    const [dataComplemento, setDataComplemento] = useState({})
+    const [dataSAT, setDataSAT] = useState([])
+    const [dataSATUnidades, setDataSATUnidades] = useState([])
 
+    function RowMenuCell(props) {
+        const { api, id } = props;
+        setRow(id)
+
+
+        const handleDeleteClick = (event) => {
+            event.stopPropagation();
+            console.log("id==>",id)
+            let row =  dataPaquetes.filter((p)=> p.m_nIdPaquete==id)[0]
+            console.log(row)
+            handlePaqueteClick(row)
+            // api.updateRows([{ id, _action: 'delete' }]);
+
+        };
+
+        const handleOpenClick = (event)=>{
+            event.stopPropagation();
+            let row =  dataPaquetes.filter((p)=> p.m_nIdPaquete==id)[0]
+            setDataComplemento({
+                claveProducto: row.m_sClaveSATProducto,
+                claveUnidad: row.m_sClaveSATUnidad,
+                UnidadSAT:row.m_sUnidad,
+                ProductoSAT:row.m_nProducto
+            })
+            console.log(row)
+            setOpenDialog(true)
+
+        }
+
+
+        return (
+            <div>
+                <IconButton color="primary" size="small" aria-label="save" onClick={handleOpenClick}>
+                    <SaveIcon fontSize="large" />
+                </IconButton>
+                <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
+                    <EditIcon fontSize="large" />
+                </IconButton>
+            </div>
+        );
+    }
+
+    function RowMenuCellConsulta(props) {
+        const { api, id } = props;
+        setRow(id)
+
+        const handleOpenClick = (event)=>{
+            event.stopPropagation();
+            let row =  dataPaquetes.filter((p)=> p.m_nIdPaquete==id)[0]
+            console.log(row)
+            setDataComplemento({
+                claveProducto: row.m_nClaveSATProducto,
+                claveUnidad: row.m_nClaveSATUnidad,
+                UnidadSAT:row.m_sUnidadSAT,
+                ProductoSAT:row.m_sProductoSAT
+            })
+            setOpenDialog(true)
+
+        }
+        return (
+            <div>
+                <IconButton color="primary" size="small" aria-label="save" onClick={handleOpenClick}>
+                    <SaveIcon fontSize="large" />
+                </IconButton>
+            </div>
+        );
+    }
     const columnsPaquetes = React.useMemo(() => [
         {
             headerName: "Tipo",
@@ -40,47 +122,47 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
             field: "m_rLargo",
             type:'number',
             valueFormatter: ({ value }) => `${value}cm`,
-            width: 100,
+            width: 90,
         },
         {
             headerName: "Ancho",
             field: "m_rAncho",
             type:'number',
             valueFormatter: ({ value }) => `${value}cm`,
-            width: 100,
+            width: 90,
         },
         {
             headerName: "Alto",
             field: "m_rAlto",
             type:'number',
             valueFormatter: ({ value }) => `${value}cm`,
-            width: 100,
+            width: 90,
         },
         {
             headerName: "Peso",
             field: "m_rPeso",
             type:'number',
             valueFormatter: ({ value }) => `${value}kg`,
-            width: 100,
+            width: 90,
         },
         {
             headerName: "Volumen",
             field: "m_rVolumen",
             type:'number',
             valueFormatter: ({ value }) => `${value}cm3`,
-            width: 150,
+            width: 120,
         },
         {
             headerName: "Embalaje",
             field: "m_sTipoEmbalaje",
-            width: 150,
+            width: 130,
         },
         {
             headerName: "Valor",
             field: "m_cyValorDeclarado",
             type:'number',
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
-            width: 100,
+            width: 90,
         },
         {
             headerName: "Descripcion",
@@ -92,12 +174,114 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
             field: "m_nCantidad",
             type:'number',
             valueFormatter: ({ value }) => `${value}pz`,
-            width: 100,
+            width: 90,
         },
         {
             headerName: "Observaciones",
             field: "m_sObservaciones",
             flex: 1,
+        },
+        {
+            field: 'complementos',
+            headerName: 'Complementos',
+            renderCell: RowMenuCell,
+            sortable: false,
+            width: 90,
+            headerAlign: 'center',
+            filterable: false,
+            align: 'center',
+            disableColumnMenu: true,
+            disableReorder: true,
+        }
+    ]);
+
+    const columnsPaquetesConsulta = React.useMemo(() => [
+        {
+            headerName: "Tipo",
+            field: "m_sTipo",
+            minWidth: 100,
+            width: 100,
+        },
+        {
+            headerName: "Producto",
+            field: "m_sProducto",
+            flex: 1,
+        },
+        {
+            headerName: "Largo",
+            field: "m_rLargo",
+            type:'number',
+            valueFormatter: ({ value }) => `${value}cm`,
+            width: 90,
+        },
+        {
+            headerName: "Ancho",
+            field: "m_rAncho",
+            type:'number',
+            valueFormatter: ({ value }) => `${value}cm`,
+            width: 90,
+        },
+        {
+            headerName: "Alto",
+            field: "m_rAlto",
+            type:'number',
+            valueFormatter: ({ value }) => `${value}cm`,
+            width: 90,
+        },
+        {
+            headerName: "Peso",
+            field: "m_rPeso",
+            type:'number',
+            valueFormatter: ({ value }) => `${value}kg`,
+            width: 90,
+        },
+        {
+            headerName: "Volumen",
+            field: "m_rVolumen",
+            type:'number',
+            valueFormatter: ({ value }) => `${value}cm3`,
+            width: 120,
+        },
+        {
+            headerName: "Embalaje",
+            field: "m_sTipoEmbalaje",
+            width: 130,
+        },
+        {
+            headerName: "Valor",
+            field: "m_cyValorDeclarado",
+            type:'number',
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
+            width: 90,
+        },
+        {
+            headerName: "Descripcion",
+            field: "m_sDescripcion",
+            flex: 1,
+        },
+        {
+            headerName: "Cantidad",
+            field: "m_nCantidad",
+            type:'number',
+            valueFormatter: ({ value }) => `${value}pz`,
+            width: 90,
+        },
+        {
+            headerName: "Observaciones",
+            field: "m_sObservaciones",
+            flex: 1,
+        },
+        {
+            field: 'complementos',
+            headerName: 'Complementos',
+            renderCell: RowMenuCellConsulta,
+            sortable: false,
+            width: 90,
+            headerAlign: 'center',
+            filterable: false,
+            align: 'center',
+            disableColumnMenu: true,
+            disableReorder: true,
         }
     ]);
     const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -120,11 +304,15 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
         m_cyValorDeclarado: "",
         m_nIdTipo: 2,
         m_nIdProducto:'',
-        m_sTipo: "Paquete"
+        m_sTipo: "Paquete",
+        m_sClaveSATProducto:'',
+        m_sClaveSATUnidad:'',
     })
 
     useEffect(value => {
         getAllEmbalajes()
+        getAllSATServicios()
+        getAllSATUnidades()
     }, [])
 
     const validarPaquetes = (paquete) => {
@@ -143,6 +331,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
     }
 
     const addPaquetev2 = (event) => {
+        console.log(paquete)
         let paq = paquete
         if (validarPaquetes(paq)){
             paq.m_nIdPaquete = paq.m_nIdPaquete != 0 ? paq.m_nIdPaquete : dataPaquetes.length + 1
@@ -153,7 +342,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
             }
             dataPaquetes.push(paq);
             resetPaquete()
-            console.log(dataPaquetes);
+
             onChangeList(dataPaquetes)
         }else{
             showSuccess("Rellene los campos obligatorios.")
@@ -163,6 +352,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
     const removePaquetev2 = (event) => {
         event.preventDefault()
         resetPaquete()
+
     }
 
     const handlePaqueteClick = (data) =>{
@@ -177,6 +367,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
                 data.producto = dataProductos.find((i) => i.m_nIdProducto == data.m_nIdProducto)
                 data.m_sProducto = data.producto.m_sDescripcion
             }
+            console.log(data)
             setPaquete(data)
         }
 
@@ -261,6 +452,8 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
                 m_nIdTipo: 2,
                 m_sObservaciones: "",
                 m_sTipo: "Paquete",
+                m_sClaveSATProducto:"",
+                m_sClaveSATUnidad:"",
             }
         })
     }
@@ -274,12 +467,31 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
         }
     }
 
-    
-
     const getAllProductos = () => {
-       obtenerProductos().then(respuesta => {
+        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
+        axios.get(url, {headers}).then(respuesta => {
             setDataProductos(respuesta.data)
         });
+    }
+
+    const handleAceptar = (data)=>{
+        var index = dataPaquetes.findIndex(d=> d.m_nIdPaquete == row)
+        if(index !=-1){
+            dataPaquetes[index].m_sClaveSATProducto = String(data?.claseSeleccionado?.id);
+            dataPaquetes[index].m_sClaveSATUnidad = data?.claveSATUnidad;
+            dataPaquetes[index].m_nProducto = data.productoOServicio;
+            dataPaquetes[index].m_sUnidad = data.descripcionUnidad;
+
+            showSuccess("Complemento Agregado!")
+            dialogVisible(false)
+        }
+
+
+    }
+
+    function dialogVisible(isVisible){
+        setOpenDialog(isVisible)
+
     }
 
     function getAllEmbalajes() {
@@ -287,9 +499,27 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
             setDataEmbalaje(respuesta.data);
         });
     }
+    function getAllSATServicios() {
+        obtenerSATServicios().then((respuesta) => {
+            setDataSAT(respuesta.data);
+        });
+    }
 
+    function  getAllSATUnidades() {
+        obtenerSATUnidades().then((respuesta) => {
+            setDataSATUnidades(respuesta.data );
+        });
+    }
     return(
+
+
         <div>
+            <Dialog open={openDialog} fullWidth maxWidth="lg" >
+                <DialogTitle>Agregando Concepto de Facturación</DialogTitle>
+                <DialogContent>
+                    <CrearConcepto handleAceptar={handleAceptar} dialogVisible={dialogVisible} consulta={disabled} dataComplemento={dataComplemento} dataSAT={dataSAT} dataSATUnidades={dataSATUnidades}/>
+                </DialogContent>
+            </Dialog>
             <Grid container>
                 <Grid item xs={6}>
                     <div className="widget-header">
@@ -533,7 +763,9 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
                             </Grid>
                         </Grid>
                     </div>
-                    <div className="row" style={{ height: 200}}>
+
+
+                    {!disabled?  <div className="row" style={{ height: 200}}>
                         <DataGrid
                             localeText={dataGridLocaleText}
                             density="compact"
@@ -541,8 +773,21 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled = false, tieneSeguro
                             columns={columnsPaquetes}
                             rows={dataPaquetes}
                             getRowId={(row) => row.m_nIdPaquete}
-                            onRowSelected={(row) => handlePaqueteClick(row.data)}/>
-                    </div>
+                        />
+                    </div> : <div className="row" style={{ height: 200}}>
+                        <DataGrid
+                            localeText={dataGridLocaleText}
+                            density="compact"
+                            pageSize={10}
+                            columns={columnsPaquetesConsulta}
+                            rows={dataPaquetes}
+                            getRowId={(row) => row.m_nIdPaquete}
+                        />
+                    </div>}
+
+
+
+
                 </div>
             </div>
         </div>

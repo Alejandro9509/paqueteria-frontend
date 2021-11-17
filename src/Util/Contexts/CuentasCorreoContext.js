@@ -9,7 +9,7 @@ function modificarCuentasCorreo(id, params){
     const url = `${process.env.REACT_APP_API_URL}/CuentasCorreo/Modificar/` + id;
     let result;
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers })
         );
     return result
 }

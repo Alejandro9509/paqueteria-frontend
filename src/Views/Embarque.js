@@ -717,8 +717,8 @@ function Embarque(props) {
         origenRemitente: '',
         zonaOperativaRemitente: '',
         zonaTarifaRemitente: '',
-        latitudR: 0,
-        longitudR: 0
+        latitudR: '',
+        longitudR: ''
     })
 
     const resetRemitente = () => {
@@ -741,8 +741,8 @@ function Embarque(props) {
             origenRemitente: '',
             zonaOperativaRemitente: '',
             zonaTarifaRemitente: '',
-            latitudR: 0,
-            longitudR: 0
+            latitudR: '',
+            longitudR: ''
         })
     }
 
@@ -846,8 +846,8 @@ function Embarque(props) {
         destinoDestinatario: '',
         zonaOperativaDestinatario: '',
         zonaTarifaDestinatario: '',
-        latitudD: 0,
-        longitudD: 0
+        latitudD: '',
+        longitudD: ''
     })
 
     const resetDestinatario = () => {
@@ -870,8 +870,8 @@ function Embarque(props) {
             destinoDestinatario: '',
             zonaOperativaDestinatario: '',
             zonaTarifaDestinatario: '',
-            latitudD: 0,
-            longitudD: 0
+            latitudD: '',
+            longitudD: ''
         })
     }
 
@@ -1016,7 +1016,9 @@ function Embarque(props) {
         zonaTarifaEnt: '',
         domicilioEnt: '',
         entregarEnEnt: '',
-        datosAdicionalesEnt: ''
+        datosAdicionalesEnt: '',
+        latitudEnt: '',
+        longitudEnt: ''
     })
 
     const resetEntregaDD = () =>{
@@ -1028,7 +1030,9 @@ function Embarque(props) {
             zonaTarifaEnt: '',
             domicilioEnt: '',
             datosAdicionalesEnt: '',
-            entregarEnEnt: ''
+            entregarEnEnt: '',
+            latitudEnt: '',
+            longitudEnt: ''
         })
     }
 
@@ -1111,6 +1115,54 @@ function Embarque(props) {
         handleAceptar(e, coordenadas)
     }
 
+    const isValidText = (data) => {
+        return !(data.length === 0 || data == '0')
+    }
+
+    const validarCoordenadas = (coordenadas) => {
+        /**Si es modificacion*/
+        if (state.idEmbarque != 0){
+            /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
+            if(state.diferenteEntrega
+                && !isValidText(entregaDD.latitudEnt)
+                && !isValidText(entregaDD.longitudEnt)
+                && !coordenadas){
+                mostrarDialogoMapa()
+                return false
+                /**Si es entrega en el domicilio del destinatario y no hay coordenadas guardadas*/
+            }else if (!state.diferenteEntrega
+                && !isValidText(destinatario.latitudD)
+                && !isValidText(destinatario.longitudD)
+                && !coordenadas) {
+                mostrarDialogoMapa()
+                return false
+            }
+            /**Si es agregar*/
+        }else{
+            /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
+            if (state.diferenteEntrega  && !coordenadas){
+                mostrarDialogoMapa()
+                return false
+                /**Si es entrega en el domicilio del destinatario y no hay coordenadas*/
+            }else if (!state.diferenteEntrega
+                && !isValidText(destinatario.latitudD)
+                && !isValidText(destinatario.longitudD)
+                && !coordenadas){
+                mostrarDialogoMapa()
+                return false
+            }
+        }
+        return true
+    }
+
+    const mostrarDialogoMapa = () => {
+        setState({
+            ...state,
+            showConfirmarUbicacion: true,
+            titulo: "entrega"
+        })
+    }
+
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
         setState({
@@ -1134,19 +1186,19 @@ function Embarque(props) {
             p.ctd = p.m_nCantidad
             p.m_cValorDeclarado = p.m_cyValorDeclarado
             p.m_nTipo = p.m_nIdTipo
+            p.ClaveSATProducto = p.m_sClaveSATProducto
+            p.ClaveSATUnidad = p.m_sClaveSATUnidad
 
             packs.push(p)
         })
-        if (!state.entregaEnSucursal) {
-            if (destinatario.latitudD.length === 0 && destinatario.longitudD.length === 0 && !coordenadas) {
-                setState({
-                    ...state,
-                    showConfirmarUbicacion: true,
-                    titulo: "entrega"
-                })
+
+        /**Si no es entrega en sucursal se validan las coordenadas*/
+        if (!state.entregaEnSucursal){
+            if (!validarCoordenadas(coordenadas)){
                 return
             }
         }
+
         const params = {
             m_nIdEmbarque: state.idEmbarque,
             m_nIdRecoleccion: props.location.idRecoleccion,
@@ -1226,14 +1278,14 @@ function Embarque(props) {
             m_bEmbarqueConCita: state.entregaConCita,
         }
 
+        /**Si es entrega en sucursal*/
         if (state.entregaEnSucursal) {
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
             params.EntregarMismoDomicilio = false
-        } else if (state.diferenteEntrega) {
+            /**Si es entrega en direfente domicilio*/
+        }else if (state.diferenteEntrega) {
             params.m_bEntregaEnSucursal = false
-            // params.IdCiudadEntrega = state.ciudadEntrega
             params.CodigoPostalEntrega = entregaDD.codigoPostalEnt.m_nIdCP
-            // params.IdZonaEntrega = entregaDD.zonaEntrega
             params.DomicilioEntrega = entregaDD.domicilioEnt
             params.EntregarEn = entregaDD.entregarEnEnt
             params.m_nIdEstadoEntrega = entregaDD.estadoEnt
@@ -1241,12 +1293,16 @@ function Embarque(props) {
             params.DatosAdicionales = entregaDD.datosAdicionalesEnt
             params.m_nIdZonaOperativa = entregaDD.zonaOperativaEnt.m_nIdZona
             params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
+            params.m_sLatitudD = coordenadas ? coordenadas.lat : entregaDD.latitudEnt
+            params.m_sLongitudD = coordenadas ? coordenadas.lng : entregaDD.longitudEnt
         }else{
-            params.m_nIdZonaOperativa = destinatario.zonaOperativaDestinatario.m_nIdZona
-            params.m_nIdZonaTarifa = destinatario.zonaTarifaDestinatario.m_nIdZona
+            /**Si es entrega en domicilio de destinatario*/
+            params.m_nIdZonaOperativa = destinatario.zonaOperativaDestinatario ? destinatario.zonaOperativaDestinatario.m_nIdZona : 0
+            params.m_nIdZonaTarifa = destinatario.zonaTarifaDestinatario ? destinatario.zonaTarifaDestinatario.m_nIdZona : 0
+            params.m_sLatitudD = coordenadas ? coordenadas.lat : destinatario.latitudD
+            params.m_sLongitudD = coordenadas ? coordenadas.lng : destinatario.longitudD
         }
         if (state.entregaConCita) {
-
             params.m_sFechaCita = state.fechaCita
             params.m_sHoraCitaMinima = state.horaCitaMinima
             params.m_sHoraCitaMaxima = state.horaCitaMaxima
@@ -1259,6 +1315,9 @@ function Embarque(props) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
+                    if (respuesta.data != "Modificado Exitosamente"){
+                        return
+                    }
                     getAllEmbarque();
                     $('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(0).addClass('active');
@@ -1273,6 +1332,9 @@ function Embarque(props) {
             agregarEmbarques(params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
+                    if (respuesta.data != "Agregado Exitosamente"){
+                        return
+                    }
                     console.log(respuesta.data);
                     getAllEmbarque();
                     $('.nav-tabs li ').removeClass('active');
@@ -1939,6 +2001,12 @@ function Embarque(props) {
         getAllCiudades()
 
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
+            let estado
+            if (respuesta.data.m_nIdEstadoRemitente < 10){
+                estado = `0${respuesta.data.m_nIdEstadoRemitente}`
+            }else{
+                estado = respuesta.data.m_nIdEstadoRemitente
+            }
             setRemitente(remitente => {
                 return {
                     ...remitente,
@@ -1957,18 +2025,12 @@ function Embarque(props) {
                     numeroIntRemitente: respuesta.data.m_sNoIntRemitente || 0,
                     numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
                     coloniaRemitente: respuesta.data.m_sColoniaRemitente,
-                    estadoRemitente: respuesta.data.m_nIdEstadoRemitente || 0,
+                    estadoRemitente: estado || 0,
                     municipioRemitente: respuesta.data.m_sMunicipioRemitente,
                     latitudR: data.m_sLatitudR,
                     longitudR: data.m_sLongitudR
                 }
             })
-            let estado
-            if (respuesta.data.m_nIdEstadoRemitente < 10){
-                estado = `0${respuesta.data.m_nIdEstadoRemitente}`
-            }else{
-                estado = respuesta.data.m_nIdEstadoRemitente
-            }
 
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipiosRemitente(data)
@@ -1995,6 +2057,12 @@ function Embarque(props) {
             })
         })
         obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
+            let estado
+            if (respuesta.data.m_nIdEstadoDestinatario < 10){
+                estado = `0${respuesta.data.m_nIdEstadoDestinatario}`
+            }else{
+                estado = respuesta.data.m_nIdEstadoDestinatario
+            }
             setDestinatario(destinatario => {
                 return {
                     ...destinatario,
@@ -2007,22 +2075,14 @@ function Embarque(props) {
                     contactoDestinatario: respuesta.data.m_sContactoDestinatario,
                     idDestinatario: respuesta.data.m_nIdDestinatario,
                     aliasDestinatario: respuesta.data.m_sAliasDestinatario,
-                    estadoDestinatario: respuesta.data.m_nIdEstadoDestinatario || 0,
+                    estadoDestinatario: estado || 0,
                     calleDestinatario: respuesta.data.m_sCalleDestinatario,
                     numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0,
                     numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
                     municipioDestinatario: respuesta.data.m_sMunicipioDestinatario,
-                    coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
-                    latitudD: data.m_sLatitudD || '',
-                    longitudD: data.m_sLongitudD || ''
+                    coloniaDestinatario: respuesta.data.m_sColoniaDestinatario
                 }
             })
-            let estado
-            if (respuesta.data.m_nIdEstadoDestinatario < 10){
-                estado = `0${respuesta.data.m_nIdEstadoDestinatario}`
-            }else{
-                estado = respuesta.data.m_nIdEstadoDestinatario
-            }
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>    {
                 setDataMunicipiosDestinatario(data)
             })
@@ -2036,6 +2096,27 @@ function Embarque(props) {
                             m_sColonia: respuesta.data.m_sColoniaDestinatario
                         },
                     }
+                })
+                obtenerZonaOperativaByIdCodigoPostal(cp.data.m_sCP).then(({data}) => {
+                    setDataZonasOperativasDestinatario(data)
+                })
+                obtenerZonaTarifaByIdCodigoPostal(cp.data.m_sCP).then(({data}) => {
+                    /*if (data.length > 0){
+                        setDestinatario(destinatario => {
+                            return{
+                                ...destinatario,
+                                zonaTarifaDestinatario: data[0]
+                            }
+                        })
+                    }else{
+                        setDestinatario(destinatario => {
+                            return{
+                                ...destinatario,
+                                zonaTarifaDestinatario: {}
+                            }
+                        })
+                    }*/
+                    setDataZonasTarifaDestinatario(data)
                 })
             })
             obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(({data}) => {
@@ -2084,6 +2165,7 @@ function Embarque(props) {
 
         })
 
+        /**Si es entrega en sucursal*/
         if(respuesta.data.m_bEntregaEnSucursal){
             setState(state => {
                 return {
@@ -2093,21 +2175,37 @@ function Embarque(props) {
                     diferenteEntrega: false,
                 }
             })
-        }else if (!respuesta.data.EntregarMismoDomicilio){
+            /**Si es entrega en el domicilio del destinatario*/
+        }else if (respuesta.data.EntregarMismoDomicilio){
+            setDestinatario(destinatario => {
+                return {
+                    ...destinatario,
+                    latitudD: respuesta.data.m_sLatitud || '',
+                    longitudD: respuesta.data.m_sLongitud || ''
+                }
+            })
+            /**Si es entrega en diferente domicilio*/
+        }else{
+            let estado = respuesta.data.m_nIdEstadoEntrega < 10 ? `0${respuesta.data.m_nIdEstadoEntrega}` : respuesta.data.m_nIdEstadoEntrega
+            setEntregaDD(entregaDD => {
+                return {
+                    ...entregaDD,
+                    domicilioEnt: respuesta.data.DomicilioEntrega,
+                    entregarEnEnt: respuesta.data.EntregarEn,
+                    datosAdicionalesEnt: respuesta.data.DatosAdicionalesis,
+                    estadoEnt: estado,
+                    municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega,
+                    latitudEnt: respuesta.data.m_sLatitud,
+                    longitudEnt: respuesta.data.m_sLongitud
+                }
+            })
             setState(state => {
                 return {
                     ...state,
                     entregaEnSucursal: false,
                     diferenteEntrega: !respuesta.data.EntregarMismoDomicilio,
                 }
-            })
-            let estado
-            if (respuesta.data.m_nIdEstadoEntrega < 10){
-                estado = `0${respuesta.data.m_nIdEstadoEntrega}`
-            }else{
-                estado = respuesta.data.m_nIdEstadoEntrega
-            }
-
+            });
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipiosEntregaDD(data)
             })
@@ -2116,12 +2214,13 @@ function Embarque(props) {
                     return {
                         ...entregaDD,
                         codigoPostalEnt: cp.data,
-                        domicilioEnt: respuesta.data.DomicilioEntrega,
-                        entregarEnEnt: respuesta.data.EntregarEn,
-                        datosAdicionalesEnt: respuesta.data.DatosAdicionalesis,
-                        estadoEnt: respuesta.data.m_nIdEstadoEntrega,
-                        municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega
-                        }
+                    }
+                })
+                obtenerZonaOperativaByIdCodigoPostal(cp.data.m_sCP).then(({data}) => {
+                    setDataZonasOperativasEntregaDD(data)
+                })
+                obtenerZonaTarifaByIdCodigoPostal(cp.data.m_sCP).then(({data}) => {
+                    setDataZonasTarifaEntregaDD(data)
                 })
             })
         }
@@ -2131,7 +2230,12 @@ function Embarque(props) {
             respuesta.data.m_arrPaquetes.push(s)
         })
 
-        
+        /**m_sClaveSATProducto = Clave producto SAT
+         * m_nProducto = Producto del SAT
+         * m_nIdProducto = id Producto
+         * m_sProducto = descripcion producto*/
+
+        /**Se castean porque el componente <Paquetes/> usa otros nombres para los datos */
         respuesta.data.m_arrPaquetes.forEach((p) => {
             p.m_nIdPaquete = p.m_nIdEmbarqueDetalle
             p.m_rPeso = p.m_xPeso
@@ -2143,6 +2247,10 @@ function Embarque(props) {
             p.m_nCantidad = p.ctd
             p.m_cyValorDeclarado = p.m_cValorDeclarado
             p.m_nIdTipo = p.m_nTipo
+            p.m_sClaveSATProducto = p.m_nClaveSATProducto
+            p.m_sClaveSATUnidad = p.m_nClaveSATUnidad
+            p.m_sUnidad = p.m_sUnidadSAT
+            p.m_nProducto = p.m_sProductoSAT
 
             obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
                 p["producto"] = data
@@ -3938,7 +4046,7 @@ function Embarque(props) {
                                                                             name: "estatusEmbarque"
                                                                         }}
                                                                     >
-                                                                        {dataEstatusEmbarque.filter(e => e.m_nIdEstatusEmbarque < 17).map((estatus) => (
+                                                                        {dataEstatusEmbarque.filter(e => e.m_nIdEstatusEmbarque < 17 || e.m_nIdEstatusEmbarque == 22).map((estatus) => (
                                                                             <option
                                                                                 key={estatus.m_nIdEstatusEmbarque}
                                                                                 value={estatus.m_nIdEstatusEmbarque}
