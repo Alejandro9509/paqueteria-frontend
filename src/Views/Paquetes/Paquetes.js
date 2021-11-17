@@ -6,6 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from "@material-ui/icons/Save";
 import {DataGrid} from "@material-ui/data-grid";
 import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
@@ -73,7 +74,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
                     <SaveIcon fontSize="large" />
                 </IconButton>
                 <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
-                    <DeleteIcon fontSize="large" />
+                    <EditIcon fontSize="large" />
                 </IconButton>
             </div>
         );
