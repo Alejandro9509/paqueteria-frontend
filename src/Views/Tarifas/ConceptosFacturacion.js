@@ -35,20 +35,16 @@ import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
 const headers = API_HEADERS
 
-let timer;
-
-function not(a, b) {
-    return a.filter((value) => value !== b);
-}
-
 /**Props usadas:
  * conceptosBase={listado} : listado de conceptos de los que se puede elegir para agregar.
- * onChangeList={funcion} : funcion que regresa el listado de conceptos actualizados.
+ * onChangeList={funcion} : funcion que regresa el listado de conceptos actualizados (no funciona).
  * dataList={listado} : recibe el listado de conceptos que se estará modificando.
  * consulta={booleano} : indica si es consulta para inhabilitar los inputs.
  * mostrarRangos={booleano} : indica si se van a mostrar los inputs de rangos y la información en listados
  * mostrarImpuestos={booleano} : indica si se van a mostrar los inputs de impuestos y la información en listados
  * key={any} : clave que se le agregará a cada concepto para temas de filtrado.
+ * agregarConcepto={funcion} : funcion a la que se le pasará el concepto que se va agregar al listado
+ * eliminarConcepto={funcion} : funcion a la que se le pasará el concepto que se va eliminar del listado
  * */
 export default function ConceptosFacturacion(props) {
     const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -56,12 +52,6 @@ export default function ConceptosFacturacion(props) {
         currency: 'USD',
     });
 
-
-    let idConcepto = 0;
-    const generarId = () => {
-        idConcepto = idConcepto + 1;
-        return idConcepto
-    }
     const [state, setState] = useState({
         impuestos: [],
         ivaTraslada: [],
@@ -91,11 +81,12 @@ export default function ConceptosFacturacion(props) {
         setConcepto({
             id:Math.floor(Math.random() * 10000),
             concepto: props.conceptoFijo || null,
+            idConcepto: props.conceptoFijo? props.conceptoFijo.m_nIdConceptosFacturacion : 0,
             importe: 0,
-            nombreConcepto: props.conceptoFijo.m_sConcepto || '',
+            nombreConcepto: props.conceptoFijo? props.conceptoFijo.m_sConcepto : '',
             importeRet: 0,
-            retiene: props.conceptoFijo.arClsDetalle.find(i => i.m_bPredeterminado && !i.m_bTrasladado).m_nIdImpuesto || 0,
-            traslada: props.conceptoFijo.arClsDetalle.find(i => i.m_bPredeterminado && i.m_bTrasladado).m_nIdImpuesto || 0,
+            retiene:  props.conceptoFijo? props.conceptoFijo.arClsDetalle.find(i => i.m_bPredeterminado && !i.m_bTrasladado).m_nIdImpuesto : 0,
+            traslada:  props.conceptoFijo? props.conceptoFijo.arClsDetalle.find(i => i.m_bPredeterminado && i.m_bTrasladado).m_nIdImpuesto : 0,
             importeIVA: 0,
             rangoMinimo: 0,
             rangoMaximo: 0,
@@ -175,6 +166,7 @@ export default function ConceptosFacturacion(props) {
                     return {
                         ...concepto,
                         concepto: props.conceptoFijo,
+                        idConcepto: props.conceptoFijo.m_nIdConceptosFacturacion,
                         importe: props.conceptoFijo.m_cImporte || 0,
                         nombreConcepto: props.conceptoFijo.m_sConcepto || '',
                         importeRet: props.conceptoFijo.m_cImporteRetiene || 0,
@@ -186,17 +178,6 @@ export default function ConceptosFacturacion(props) {
             })
         }
     },[])
-
-    /*useEffect(value => {
-        setState(state => {
-            return{
-                ...state,
-                ivaTraslada: getUniqueListBy(props.dataList, "traslada").map(i => i.traslada),
-                ivaRetiene: getUniqueListBy(props.dataList, "retiene").map(i => i.retiene)
-            }
-        })
-
-    },[props.dataList])*/
 
     const getAllImpuestos = () => {
         const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
@@ -216,6 +197,7 @@ export default function ConceptosFacturacion(props) {
         });
     }
 
+    /**Al seleccionar un concepto del listado del autocomplete*/
     const handleConceptoClick = (event, newValue) => {
         obtenerImpuestosByConceptosFacturacion(newValue.m_nIdConceptosFacturacion).then(respuesta => {
             newValue.arClsDetalle = respuesta.data
@@ -225,6 +207,7 @@ export default function ConceptosFacturacion(props) {
                     return {
                         ...concepto,
                         concepto: newValue,
+                        idConcepto: newValue.m_nIdConceptosFacturacion,
                         importe: newValue.m_cImporte || 0,
                         nombreConcepto: newValue.m_sConcepto,
                         importeRet: newValue.m_cImporteRetiene || 0,
@@ -240,50 +223,35 @@ export default function ConceptosFacturacion(props) {
 
     const onSubmit = (event) => {
         event.preventDefault()
-        console.log(concepto)
-        let newList = []
-
-        console.log(props.dataList)
-        props.dataList.forEach(i => {newList.push(i)})
-        newList.push(concepto)
-        props.onChangeList(newList)
+        debugger
+        props.agregarConcepto(concepto)
         resetConcepto()
     }
 
     const removeConcepto = (item) => {
-        let newList = []
-        debugger
-        console.log(props.dataList)
-        debugger
-        props.dataList.forEach(i => {
-            debugger
-            if (i.id != item.id){
-                debugger
-                newList.push(i)
-            }
-        })
-
-        console.log(newList)
-        props.onChangeList(newList)
+        props.eliminarConcepto(item)
     }
 
+    /** Cuando se le pica al editar de algun concepto*/
     const handleRowClick = (item) => {
         if (!props.consult) {
+            item.concepto = props.conceptoFijo || props.conceptosBase.find(i => i.m_nIdConceptosFacturacion == item.idConcepto)
             setConcepto(item)
             removeConcepto(item)
         }
     }
 
+    /**Se definen las columnas que se van a mostrar*/
     const definirColumnas = () => {
-        const {mostrarImpuestos, mostrarDescuento, mostrarRangos, mostrarConcepto} = props
+        const {mostrarImpuestos, mostrarDescuento, mostrarRangos, mostrarConcepto, mostrarTipoMedida, mostrarTipoCalculo} = props
         let columns = []
-        if (mostrarConcepto){
+        if (!(mostrarConcepto === false)){
             columns.push(
                 {
                     headerName: "Concepto",
                     field: "nombreConcepto",
-                    minWidth: 100,
-                    width: 100,
+                    minWidth: 300,
+                    width: 300,
                 },
             )
         }
@@ -310,21 +278,29 @@ export default function ConceptosFacturacion(props) {
                 valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
 
             },
-            {
-                headerName: "Cálculo",
-                field: "tipoCalculo",
-                flex: 1,
-                valueFormatter: ({value}) =>
-                    `${value == 1 ? "Fijo" : value == 2 ? "Factor" : value == 3 ? "Producto" : ""} `,
-
-            },
-            {
-                headerName: "Medida",
-                field: "tipoMedida",
-                flex: 1,
-                valueFormatter: ({ value }) => `${value == 1 ? "Kg" : value == 2 ? "Tons" : value == 3 ? "Piezas" : ""}`,
-            },
         )
+        if (!(mostrarTipoCalculo === false)){
+            columns.push(
+                {
+                    headerName: "Cálculo",
+                    field: "tipoCalculo",
+                    flex: 1,
+                    valueFormatter: ({value}) =>
+                        `${value == 1 ? "Fijo" : value == 2 ? "Factor" : value == 3 ? "Producto" : ""} `,
+
+                },
+            )
+        }
+        if (!(mostrarTipoMedida  === false)){
+            columns.push(
+                {
+                    headerName: "Medida",
+                    field: "tipoMedida",
+                    flex: 1,
+                    valueFormatter: ({ value }) => `${value == 1 ? "Kg" : value == 2 ? "Tons" : value == 3 ? "Piezas" : ""}`,
+                },
+            )
+        }
         if (mostrarRangos){
             columns.push(
                 {
@@ -425,43 +401,6 @@ export default function ConceptosFacturacion(props) {
                                             label="Concepto"
                                             className="form-control"
                                             margin="dense"
-                                            /*InputProps={{
-                                                ...params.InputProps,
-                                                style: { height: "33px", fontSize: "14px" },
-                                                type: "search",
-                                                disableUnderline: true,
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        <IconButton
-                                                            padding="0px"
-                                                            style={{
-                                                                paddingRight: "0px",
-                                                            }}
-                                                            disabled={state.agregar == "Consultar"}
-                                                            onClick={() => {
-                                                                setState({
-                                                                    identificadorModal:
-                                                                        "concepto",
-                                                                    tipoModal: 1,
-                                                                    openDialog: true
-                                                                });
-                                                            }}
-                                                        >
-                                                            <PageviewIcon
-                                                                style={{
-                                                                    color: "#F9A03E",
-                                                                    fontSize: 32,
-                                                                    paddingInlineEnd: 0,
-                                                                    paddingRight: 0,
-                                                                    paddingBlockEnd: 0,
-                                                                    paddingLeft: 0,
-                                                                    paddingBlock: 0,
-                                                                }}
-                                                            />
-                                                        </IconButton>
-                                                    </InputAdornment>
-                                                ),
-                                            }}*/
                                         />
                                     </div>
                                 )}
@@ -483,13 +422,14 @@ export default function ConceptosFacturacion(props) {
                             />
                         </div>
                     </Grid>
-                    <Grid item xs >
-                        <label className="input select" style={{ width: "100%" }}>
+                    {!(props.mostrarTipoCalculo === false) &&
+                        <Grid item xs={2}>
+                            <label className="input select" style={{width: "100%"}}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="tipoLabel">Tipo Cálculo</InputLabel>
                                 <Select
                                     labelId="tipoLabel"
-                                    label="Tipo"
+                                    label="Tipo Cálculo"
                                     className="form-control"
                                     onChange={handleChange}
                                     name="tipoCalculo"
@@ -498,20 +438,24 @@ export default function ConceptosFacturacion(props) {
                                     <option key={0} value={0}>Selecciona</option>
                                     {state.tiposCalculo.map((t) =>
                                         (t.m_nIdTarifaTipoCalculo == 3 ? concepto.tipoMedida == 3 &&
-                                            <option key={t.m_nIdTarifaTipoCalculo} value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>
-                                            : <option key={t.m_nIdTarifaTipoCalculo} value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>))
+                                            <option key={t.m_nIdTarifaTipoCalculo}
+                                                    value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>
+                                            : <option key={t.m_nIdTarifaTipoCalculo}
+                                                      value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>))
                                     }
                                 </Select>
                             </FormControl>
                         </label>
-                    </Grid>
-                    <Grid item xs >
-                        <label className="input select" style={{ width: "100%" }}>
+                        </Grid>
+                    }
+                    {!(props.mostrarTipoMedida === false) &&
+                        <Grid item xs={2}>
+                            <label className="input select" style={{ width: "100%" }}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="tipoLabel">Medida</InputLabel>
                                 <Select
                                     labelId="tipoMedidaLabel"
-                                    label="Tipo Medida"
+                                    label="Medida"
                                     className="form-control"
                                     onChange={handleChange}
                                     name="tipoMedida"
@@ -525,7 +469,9 @@ export default function ConceptosFacturacion(props) {
                                 </Select>
                             </FormControl>
                         </label>
-                    </Grid>
+                        </Grid>
+                    }
+
                     {props.mostrarRangos &&
                         <Grid item xs={2}>
                             <div className="input">

@@ -19,7 +19,10 @@ import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
 import {API_HEADERS} from "../../Constants";
 import ConceptosFacturacion from "./ConceptosFacturacion";
-import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
+import {
+    obtenerConceptosFacturacion,
+    obtenerConceptosFacturacionManiobra
+} from "../../Util/Contexts/ConceptosFacturacionContext";
 
 const headers = API_HEADERS
 
@@ -76,7 +79,8 @@ class CrearTarifa extends Component {
             dataDestinosSeleccionados: [],
 
             dataConceptos: [],
-            dataConceptosBase: []
+            dataConceptosBase: [],
+            dataConceptosBaseManiobra: []
         }
         this.getAllSucursales = this.getAllSucursales.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -96,6 +100,7 @@ class CrearTarifa extends Component {
         this.handleChangeTipoTarifa = this.handleChangeTipoTarifa.bind(this)
         this.handleChangeListConceptos = this.handleChangeListConceptos.bind(this)
         this.getAllConceptos = this.getAllConceptos.bind(this)
+        this.getAllConceptosManiobra = this.getAllConceptosManiobra.bind(this)
     }
 
     handleChangeListConceptos(data){
@@ -169,12 +174,15 @@ class CrearTarifa extends Component {
         this.getAllImpuestos()
         this.castConceptos()
         this.getAllConceptos()
+        this.getAllConceptosManiobra()
     }
+
     getAllConceptos() {
-        obtenerConceptosFacturacion().then(respuesta => {
-            this.setState({ dataConceptosBase: respuesta.data })
-            console.log('conceptos facturacion', respuesta.data)
-        });
+        obtenerConceptosFacturacion().then(respuesta => {this.setState({ dataConceptosBase: respuesta.data })});
+    }
+
+    getAllConceptosManiobra() {
+        obtenerConceptosFacturacionManiobra().then(respuesta => {this.setState({ dataConceptosBaseManiobra: respuesta.data })});
     }
 
     getAllImpuestos() {
@@ -262,6 +270,7 @@ class CrearTarifa extends Component {
         let ivaRetiene = [];
         const concept = {
             idConcepto : data.concepto.m_nIdConceptosFacturacion,
+            id:data.id,
             concepto: data.concepto,
             importe: data.importe,
             retiene: data.retiene,
@@ -899,15 +908,57 @@ class CrearTarifa extends Component {
 
                                             <TabPanel value={this.state.tab} index={0}>
                                                 {/*el filtrado por agregadoDesde está demas*/}
-                                                <ConceptosAdicionales consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosAdicionales} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoAdicional} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada} mostrarRangos={false}>
+                                                {/*<ConceptosAdicionales consult={consult} edit={this.props.edit}
+                                                                      select={this.props.select}
+                                                                      conceptosAdicionales={conceptosAdicionales}
+                                                                      addConcepto={this.addConcepto}
+                                                                      removeConcepto={this.removeConceptoAdicional}
+                                                                      ivaRetiene={this.state.ivaRetiene}
+                                                                      ivaTraslada={this.state.ivaTraslada}
+                                                                      mostrarRangos={false}>
 
-                                                </ConceptosAdicionales>
+                                                </ConceptosAdicionales>*/}
+                                                <ConceptosFacturacion
+                                                    consulta={consult}
+                                                    dataList={conceptosAdicionales}
+                                                    onChangeList={this.handleChangeListConceptos}
+                                                    mostrarRangos={false}
+                                                    mostrarImpuestos={false}
+                                                    mostrarDescuento={false}
+                                                    mostrarTipoMedida={false}
+                                                    mostrarTipoCalculo={false}
+                                                    conceptosBase={this.state.dataConceptosBase}
+                                                    keys={0}
+                                                    agregarConcepto={this.addConcepto}
+                                                    eliminarConcepto={this.removeConceptoAdicional}
+                                                />
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={1}>
                                                 {/*el filtrado por agregadoDesde está demas*/}
-                                                <ConceptosAdicionalesManiobra consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosManiobra} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoManiobra} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
+                                                {/*<ConceptosAdicionalesManiobra consult={consult} edit={this.props.edit}
+                                                                              select={this.props.select}
+                                                                              conceptosAdicionales={conceptosManiobra}
+                                                                              addConcepto={this.addConcepto}
+                                                                              removeConcepto={this.removeConceptoManiobra}
+                                                                              ivaRetiene={this.state.ivaRetiene}
+                                                                              ivaTraslada={this.state.ivaTraslada}>
 
-                                                </ConceptosAdicionalesManiobra>
+                                                </ConceptosAdicionalesManiobra>*/}
+                                                <ConceptosFacturacion
+                                                    consulta={consult}
+                                                    dataList={conceptosManiobra}
+                                                    onChangeList={this.handleChangeListConceptos}
+                                                    mostrarRangos={true}
+                                                    mostrarImpuestos={false}
+                                                    mostrarDescuento={false}
+                                                    // mostrarConcepto={false}
+                                                    conceptosBase={this.state.dataConceptosBaseManiobra}
+                                                    keys={1}
+                                                    agregarConcepto={this.addConcepto}
+                                                    eliminarConcepto={this.removeConceptoManiobra}
+                                                    // conceptoFijo={this.state.dataConceptosBase.find(i => i.m_nIdConceptosFacturacion == 1)}
+                                                />
+
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={2}>
                                                 {/*el filtrado por agregadoDesde está demas*/}
@@ -917,16 +968,14 @@ class CrearTarifa extends Component {
 
                                                 <ConceptosFacturacion
                                                     consulta={consult}
-                                                    dataList={this.state.dataConceptos}
-                                                    onChangeList={this.handleChangeListConceptos}
+                                                    dataList={conceptosEntrega}
                                                     mostrarRangos={true}
                                                     mostrarImpuestos={false}
                                                     mostrarDescuento={false}
                                                     mostrarConcepto={false}
-                                                    // conceptosBase={this.state.dataConceptosBase}
                                                     keys={2}
-                                                    ivaRetiene={[]}
-                                                    ivaTraslada={[]}
+                                                    agregarConcepto={this.addConcepto}
+                                                    eliminarConcepto={this.removeConceptoEntrega}
                                                     conceptoFijo={this.state.dataConceptosBase.find(i => i.m_nIdConceptosFacturacion == 1)}
                                                 />
                                             </TabPanel>

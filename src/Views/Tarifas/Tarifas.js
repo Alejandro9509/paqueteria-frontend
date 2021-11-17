@@ -26,7 +26,7 @@ function showSuccess(mensaje) {
 }
 
 
-class Tarifa extends Component {
+class Tarifas extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -392,7 +392,7 @@ class Tarifa extends Component {
     }
 }
 
-function Tarifas(props){
+function Tarifa(props){
     const [state, setState] = useState({
         data: [],
         agregar: "Agregar",
@@ -509,28 +509,16 @@ function Tarifas(props){
             const url = `${process.env.REACT_APP_API_URL}/Tarifas/Modificar/` + state.selected.m_nIdTarifa;
             axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
                 showSuccess(respuesta.data)
-                getAllData()
-                setState({
-                ...state, openDialog: false, pantalla: 1, agregar: "Agregar" })
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(0).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Listado').addClass('in show');
+                handleShowListado()
             }).catch(err => {
                 console.log(err)
-                showSuccess("err")
+                showSuccess(err)
             });
         } else {
             const url = `${process.env.REACT_APP_API_URL}/Tarifas/Agregar`;
             axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
                 showSuccess(respuesta.data)
-                getAllData()
-                setState({
-                ...state, openDialog: false, pantalla: 1, agregar: "Agregar" })
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(0).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Listado').addClass('in show');
+                handleShowListado()
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
@@ -540,12 +528,15 @@ function Tarifas(props){
     }
 
     const handleShowListado = (event) => {
-        event.stopPropagation();
+        if (event !== undefined){
+            event.stopPropagation();
+        }
         setState({
             ...state,
             pantalla: 1,
             edit: false,
             consult: false,
+            openDialog:false,
             agregar: "Agregar"
         });
         $('.nav-tabs li ').removeClass('active');
@@ -743,7 +734,7 @@ function Tarifas(props){
                                             getRowId={(row) => row.m_nIdTarifa}
                                             onRowSelected={(row) => {
                                                 setState({
-                ...state,
+                                                    ...state,
                                                     idTarifa: row.data.m_nIdTarifa
                                                 })
                                             }}
@@ -758,14 +749,15 @@ function Tarifas(props){
                                 state.pantalla == 2 &&
                                 <CrearTarifa edit={state.edit} consult={state.consult} select={state.selected}
                                              onSubmit={handleAceptar} onCancel={(event) => {
-                                    event.stopPropagation();
-                                    setState({
-                ...state,pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
-                                    $('.nav-tabs li ').removeClass('active');
-                                    $('.nav-tabs li').eq(0).addClass('active');
-                                    $('.tab-content div ').removeClass('in show');
-                                    $('#Listado').addClass('in show');
-                                }}
+                                                event.stopPropagation();
+                                                setState({
+                                                    ...state, pantalla: 1, edit: false, consult: false, agregar: "Agregar"
+                                                });
+                                                $('.nav-tabs li ').removeClass('active');
+                                                $('.nav-tabs li').eq(0).addClass('active');
+                                                $('.tab-content div ').removeClass('in show');
+                                                $('#Listado').addClass('in show');
+                                            }}
                                              listaCiudades={state.dataCiudades}
                                 />
                             }
