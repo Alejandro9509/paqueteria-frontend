@@ -13,6 +13,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$USER_HOME$/Desktop/email_61846b9f99fca (1).html">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$USER_HOME$/Desktop/honeywell-mobility-web-sdk-v1.20.00.0800/samples/BarcodeReaderDemo/BarcodeReaderDemo.html">
           <value>
             <set />
@@ -153,6 +158,21 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../paqueteria-portal-clientes/package.json">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../paqueteria-portal-clientes/public/index.html">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../paqueteria-portal-clientes/src/App.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../paqueteria-portal-clientes/src/Components/SAT/ClavesCFDI.js">
           <value>
             <set />
@@ -163,7 +183,32 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../paqueteria-portal-clientes/src/Views/Login.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../paqueteria-portal-clientes/src/Views/Paquetes/Paquetes.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../paqueteria-portal-clientes/src/Views/PropuestaLogin.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../paqueteria-portal-clientes/src/Views/Seguimiento/Tracking.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../paqueteria-portal-clientes/src/index.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../paqueteria-portal-clientes/src/routes.js">
           <value>
             <set />
           </value>
@@ -1158,6 +1203,51 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../../Web/TIBU/sw-tibu-frontend/package.json">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/TIBU/sw-tibu-frontend/src/Context/ProviderContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/TIBU/sw-tibu-frontend/src/views/AdminsList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/TIBU/sw-tibu-frontend/src/views/CategoryList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/TIBU/sw-tibu-frontend/src/views/ClientList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/TIBU/sw-tibu-frontend/src/views/ContractList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/TIBU/sw-tibu-frontend/src/views/Provider/CreateProvider.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/TIBU/sw-tibu-frontend/src/views/ProviderList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../../Web/TIBU/sw-tibu-frontend/src/views/TypeServiceList.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../../Web/sw-sierra-servicio-web/package-lock.json">
           <value>
             <set />
@@ -1218,6 +1308,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$APPLICATION_CONFIG_DIR$/consoles/db/f5746bf4-8842-4f3d-889c-20fece67adfe/console_3.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/a.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatCodigosPostalesGetMunicipiosByIdEstadoPQ.sql">
           <value>
             <set />
@@ -1229,6 +1329,11 @@
           </value>
         </entry>
         <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatTarifasGetByOrigenDestinoTipoPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProGuiaAgregarPQ.sql">
           <value>
             <set />
           </value>
@@ -1264,6 +1369,16 @@
           </value>
         </entry>
         <entry key="/dummy.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/dumpDataPreview">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/generated.sql">
           <value>
             <set />
           </value>

@@ -28,9 +28,9 @@ class Etiqueta extends Component {
     convertirEtiqueta(){
         var bodyFormData = new FormData();
         bodyFormData.append("file", this.state.formato);
-       axios.post("http://api.labelary.com/v1/printers/8dpmm/labels/4x6/0/", bodyFormData , {headers:{"Accept": "image/png"}}).then((data) => {
+       axios.post("http://api.labelary.com/v1/printers/8dpmm/labels/4x6/0/", bodyFormData , {headers:{"Accept": "image/png" }, responseType: 'arraybuffer'}).then((data) => {
 
-           this.setState({imagenEtiqueta: data.data})
+           this.setState({imagenEtiqueta: Buffer.from(data.data, 'binary').toString('base64') })
        })
     }
     render() {
@@ -49,7 +49,7 @@ class Etiqueta extends Component {
                             <div className="col-md-6 col-sm-6 col-xs-12" >
                                 {
                                     this.state.imagenEtiqueta &&
-                                        <img src={this.state.imagenEtiqueta}/>
+                                        <img src={"data:image/png;base64, " +this.state.imagenEtiqueta}/>
                                 }
                             </div>
                         </div>
