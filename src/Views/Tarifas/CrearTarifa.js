@@ -18,6 +18,8 @@ import ProductosPrecios from "./ProductosPrecios";
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
 import {API_HEADERS} from "../../Constants";
+import ConceptosFacturacion from "./ConceptosFacturacion";
+import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 
 const headers = API_HEADERS
 
@@ -71,7 +73,10 @@ class CrearTarifa extends Component {
             //Aqui se guardan todos los destinos que no estan seleccionados
             dataDestinosTemp: [],
             //Aqui pues el nombre de la variable ya es muy explicita
-            dataDestinosSeleccionados: []
+            dataDestinosSeleccionados: [],
+
+            dataConceptos: [],
+            dataConceptosBase: []
         }
         this.getAllSucursales = this.getAllSucursales.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -89,6 +94,19 @@ class CrearTarifa extends Component {
         this.filtrarConceptoAdicional = this.filtrarConceptoAdicional.bind(this)
         this.getAllProductos = this.getAllProductos.bind(this)
         this.handleChangeTipoTarifa = this.handleChangeTipoTarifa.bind(this)
+        this.handleChangeListConceptos = this.handleChangeListConceptos.bind(this)
+        this.getAllConceptos = this.getAllConceptos.bind(this)
+    }
+
+    handleChangeListConceptos(data){
+        /*const { conceptosEntrega, todosConceptos } = this.state
+        const newArrayConceptos = conceptosEntrega.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
+        let newArrayTodosConceptos = todosConceptos.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))*/
+
+
+        // this.setState({ conceptosEntrega: data })
+
+        this.setState({dataConceptos: data})
     }
 
     castConceptos(){
@@ -100,6 +118,7 @@ class CrearTarifa extends Component {
                 let ivaTraslada = []
                 let ivaRetiene = []
                 const concept = {
+                    id: Math.floor(Math.random() * 10000),
                     idConcepto : element.m_nIdConceptosFacturacion,
                     importe: element.m_cImporte,
                     retiene: element.m_nIdImpuestoRetiene,
@@ -149,6 +168,13 @@ class CrearTarifa extends Component {
         this.getAllCiudades()
         this.getAllImpuestos()
         this.castConceptos()
+        this.getAllConceptos()
+    }
+    getAllConceptos() {
+        obtenerConceptosFacturacion().then(respuesta => {
+            this.setState({ dataConceptosBase: respuesta.data })
+            console.log('conceptos facturacion', respuesta.data)
+        });
     }
 
     getAllImpuestos() {
@@ -863,7 +889,7 @@ class CrearTarifa extends Component {
                                             <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
                                                 <Tab label="Concetos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
                                                 <Tab label="Maniobras" {...this.a11yProps(1)} disabled={!this.state.porRangos} />
-                                                <Tab label="Entrega" {...this.a11yProps(2)} disabled={!this.state.porRangos} />
+                                                <Tab label="Flete" {...this.a11yProps(2)} disabled={!this.state.porRangos} />
                                                 {/*<Tab label="Recolección" {...this.a11yProps(3)} disabled={!this.state.porRangos} />*/}
                                                 <Tab label="Productos" {...this.a11yProps(6)}/>
                                                 <Tab label="Condiciones de Precios por Tipo de Cobro" {...this.a11yProps(4)} />
@@ -885,9 +911,24 @@ class CrearTarifa extends Component {
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={2}>
                                                 {/*el filtrado por agregadoDesde está demas*/}
-                                                <ConceptosAdicionalesEntrega consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosEntrega} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoEntrega} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
+                                                {/*<ConceptosAdicionalesEntrega consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosEntrega} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoEntrega} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>*/}
 
-                                                </ConceptosAdicionalesEntrega>
+                                                {/*</ConceptosAdicionalesEntrega>*/}
+
+                                                <ConceptosFacturacion
+                                                    consulta={consult}
+                                                    dataList={this.state.dataConceptos}
+                                                    onChangeList={this.handleChangeListConceptos}
+                                                    mostrarRangos={true}
+                                                    mostrarImpuestos={false}
+                                                    mostrarDescuento={false}
+                                                    mostrarConcepto={false}
+                                                    // conceptosBase={this.state.dataConceptosBase}
+                                                    keys={2}
+                                                    ivaRetiene={[]}
+                                                    ivaTraslada={[]}
+                                                    conceptoFijo={this.state.dataConceptosBase.find(i => i.m_nIdConceptosFacturacion == 1)}
+                                                />
                                             </TabPanel>
                                             {/*<TabPanel value={this.state.tab} index={3}>
                                                 el filtrado por agregadoDesde está demas

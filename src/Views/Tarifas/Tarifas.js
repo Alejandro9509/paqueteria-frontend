@@ -695,7 +695,7 @@ function Tarifas(props){
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a onClick={(event) => handleShowListado}>
+                            <a onClick={(event) => handleShowListado(event)}>
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
