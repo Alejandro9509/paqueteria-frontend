@@ -53,6 +53,15 @@ function obtenerViajes(){
     return result
 }
 
+function obtenerXML(id){
+    const url = `${process.env.REACT_APP_API_URL}/Guia/GetXMLPermisionario/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
+
 function obtenerViajesEstatus(idEstatus){
     const url = `${process.env.REACT_APP_API_URL}/Viajes/GetListadoEstatus/${idEstatus}`;
     let result;
@@ -75,4 +84,5 @@ function obetenerViajeId( id){
 
 
 
-export {agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje, obtenerViajes, obtenerViajesEstatus}
+export {agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje,
+    obtenerViajes, obtenerViajesEstatus, obtenerXML}

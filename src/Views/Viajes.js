@@ -40,7 +40,13 @@ import ActualizarDiponibilidadEquipo from "./Viajes/ActualizarDiponibilidadEquip
 import SalidaParadas from "./Viajes/SalidaParadas";
 import LlegadaParadas from "./Viajes/LlegadaParadas";
 import AsignarOperador from "./Viajes/AsignarOperador";
-import {agregarViajeSalida, agregarViajeLlegada, obetenerViajeId, obtenerViajes} from "../Util/Contexts/ViajesContext";
+import {
+    agregarViajeSalida,
+    agregarViajeLlegada,
+    obetenerViajeId,
+    obtenerViajes,
+    obtenerXML
+} from "../Util/Contexts/ViajesContext";
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import {obtenerInformesPorViaje} from "../Util/Contexts/InformesContext";
@@ -315,6 +321,12 @@ function Viajes() {
                                                                                             style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
+                        <Tooltip title="Descargar XML">
+                            <a href="#" className="btn btn-default btn-xs"
+                               onClick={() => (descargarXML(row.row.m_nIdViaje, row.row.m_sFolioViaje))}><i className="zmdi zmdi-download"
+                                                                                       style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
                         <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => (handleEliminar(row.row.m_nIdViaje))}><i className="zmdi zmdi-delete"
@@ -404,6 +416,23 @@ function Viajes() {
             setData(respuesta.data)
         });
     };
+
+    function descargarXML(id, folio) {
+        obtenerXML(id).then(({data}) => {
+            var filename = folio+".xml";
+            var pom = document.createElement('a');
+            var bb = new Blob([data], {type: 'text/plain'});
+            pom.setAttribute('href', window.URL.createObjectURL(bb));
+            pom.setAttribute('download', filename);
+
+            pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
+            pom.draggable = true;
+            pom.classList.add('dragout');
+
+            pom.click();
+        })
+
+    }
 
 
     const headers = API_HEADERS
