@@ -1753,7 +1753,7 @@ function Embarque(props) {
 
     //Funcion para mostrar datos de recoleccion para crear embarque
     function setDataRecoleccionOnState(respuesta) {
-
+        setDataEmbaqueConsulta(respuesta)
         getDataParaEditar()
         getAllCiudades()
         getAllSucursales()
@@ -1781,7 +1781,7 @@ function Embarque(props) {
             })
         })
 
-        obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
+        /*obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
             obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
                 setRemitente(remitente => {
                     return {
@@ -1933,7 +1933,7 @@ function Embarque(props) {
                     })
                 }
             })
-        })
+        })*/
 
         setState(state => {
             return {
