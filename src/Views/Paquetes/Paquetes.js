@@ -157,13 +157,13 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
             field: "m_sTipoEmbalaje",
             width: 130,
         },
-        {
+        /*{
             headerName: "Valor",
             field: "m_cyValorDeclarado",
             type:'number',
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             width: 90,
-        },
+        },*/
         {
             headerName: "Descripcion",
             field: "m_sDescripcion",
@@ -247,13 +247,13 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
             field: "m_sTipoEmbalaje",
             width: 130,
         },
-        {
+        /*{
             headerName: "Valor",
             field: "m_cyValorDeclarado",
             type:'number',
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             width: 90,
-        },
+        },*/
         {
             headerName: "Descripcion",
             field: "m_sDescripcion",
@@ -301,7 +301,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
         m_sDescripcion: "",
         m_nCantidad: "",
         m_sObservaciones: "",
-        m_cyValorDeclarado: "",
+        m_cyValorDeclarado: "0",
         m_nIdTipo: 2,
         m_nIdProducto:'',
         m_sTipo: "Paquete",
@@ -335,11 +335,11 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
         let paq = paquete
         if (validarPaquetes(paq)){
             paq.m_nIdPaquete = paq.m_nIdPaquete != 0 ? paq.m_nIdPaquete : dataPaquetes.length + 1
-            paq.m_cyValorDeclarado = paq.m_cyValorDeclarado ? paq.m_cyValorDeclarado : 0
+            /*paq.m_cyValorDeclarado = paq.m_cyValorDeclarado ? paq.m_cyValorDeclarado : 0
             if (paq.m_cyValorDeclarado === 0 && tieneSeguro){
                 showSuccess("El campo de valor declarado es necesario para el seguro.")
                 return
-            }
+            }*/
             dataPaquetes.push(paq);
             resetPaquete()
 
@@ -446,7 +446,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
                 m_rVolumen: "",
                 m_nIdTipoEmbalaje: "",
                 m_sTipoEmbalaje: "",
-                m_cyValorDeclarado: "",
+                m_cyValorDeclarado: "0",
                 m_sDescripcion: "",
                 m_nCantidad: "",
                 m_nIdTipo: 2,
@@ -691,7 +691,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
                                 </label>
                             </Grid>
                             }
-                            {paquete.m_nIdTipo != 1 &&
+                            {/*{paquete.m_nIdTipo != 1 &&
                             <Grid item xs={2}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
@@ -706,7 +706,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
                                     />
                                 </div>
                             </Grid>
-                            }
+                            }*/}
                             <Grid item xs={5}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
