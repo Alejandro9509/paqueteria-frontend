@@ -1611,159 +1611,50 @@ function Embarque(props) {
             })
         })
 
-        /*obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
-            obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
-                setRemitente(remitente => {
-                    return {
-                        ...remitente,
-                        idRemitente: respuesta.data.m_nIdRemitente,
-                        aliasRemitente: respuesta.data.m_sAliasRemitente,
-                        nombreRemitente: data,
-                        RFCRemitente: respuesta.data.m_sRFCRemitente,
-                        domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                        calleRemitente: respuesta.data.m_sCalleRemitente,
-                        numeroIntRemitente: respuesta.data.m_sNoIntRemitente || 0,
-                        numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
-                        coloniaRemitente: respuesta.data.m_sColoniaRemitente,
-                        estadoRemitente: respuesta.data.m_nIdEstadoRemitente || 0,
-                        municipioRemitente: respuesta.data.m_nIdCiudadRemitente,
-                      
-                        correoRemitente: respuesta.data.m_sCorreoRemitente,
-                        telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                        contactoRemitente: respuesta.data.m_sContactoRemitente,
-                        latitudR: data.m_sLatitudR || "",
-                        longitudR: data.m_sLongitudR || ""
-                    }
-                })
-
-                let estado
-                if (respuesta.data.m_nIdEstadoRemitente < 10) {
-                    estado = `0${respuesta.data.m_nIdEstadoRemitente}`
-                } else {
-                    estado = respuesta.data.m_nIdEstadoRemitente
+        if (respuesta.data.m_bEntregaDiferenteDomicilio) {
+            setEntregaDD(entregaDD =>{
+                return {
+                    ...entregaDD,
+                    estadoEnt: respuesta.data.m_nIdEstadoEntrega || 0,
+                    municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega || 0,
+                    domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
+                    entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
+                    datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
                 }
-    
-                obtenerMunicipiosByIdEstado(estado).then(({data}) => {
-                    setDataMunicipiosRemitente(data)
-                })
-                obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
-                    setRemitente(remitente => {
-                        return {
-                            ...remitente,
-                            codigoPostalRemitente: {
-                                m_nIdCP: cp.data.m_nIdCP,
-                                m_sCP: cp.data.m_sCP,
-                                m_sColonia: respuesta.data.m_sColoniaRemitente
-                            },
-                        }
-                    })
-                })
-                obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
-                    setRemitente(remitente => {
-                        return {
-                            ...remitente,
-                            origenRemitente: data
-                        }
-                    })
-                })
-
             })
-        })
-        obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
-            obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
-                setDestinatario(destinatario => {
+            let estado = respuesta.data.m_nIdEstadoEntrega < 10 ? `0${respuesta.data.m_nIdEstadoEntrega}` : respuesta.data.m_nIdEstadoEntrega
+            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+                setDataMunicipiosEntregaDD(data)
+            })
+            obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
+                setEntregaDD(entregaDD =>{
                     return {
-                        ...destinatario,
-                        idDestinatario: respuesta.data.m_nIdDestinatario,
-                        aliasDestinatario: respuesta.data.m_sAliasDestinatario,
-                        nombreDestinatario: data,
-                        RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                        domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                        calleDestinatario: respuesta.data.m_sCalleDestinatario,
-                        numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0,
-                        numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
-                        coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
-                        estadoDestinatario: respuesta.data.m_nIdEstadoDestinatario || 0,
-                        municipioDestinatario: respuesta.data.m_nIdCiudadDestinatario,
-                        codigoPostalDestinatario: {
+                        ...entregaDD,
+                        codigoPostalEnt: {
                             m_nIdCP: cp.data.m_nIdCP,
                             m_sCP: cp.data.m_sCP,
-                            m_sColonia: respuesta.data.m_sColoniaDestinatario
+                            m_sColonia: cp.data.m_sColonia
                         },
-                        correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                        telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                        contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                        latitudD: data.m_sLatitudD,
-                        longitudD: data.m_sLongitudD
-                    }
-                })
-            })
-
-            let estado
-            if (respuesta.data.m_nIdEstadoDestinatario < 10) {
-                estado = `0${respuesta.data.m_nIdEstadoDestinatario}`
-            } else {
-                estado = respuesta.data.m_nIdEstadoDestinatario
-            }
-
-            obtenerMunicipiosByIdEstado(estado).then(({data}) => {
-                setDataMunicipiosDestinatario(data)
-            })
-            obtenerCodigoPostalId(data.m_nIdCP).then((cp) => {
-                setDestinatario(destinatario => {
-                    return {
-                        ...destinatario,
-                        codigoPostalDestinatario: {
-                            m_nIdCP: cp.data.m_nIdCP,
-                            m_sCP: cp.data.m_sCP,
-                            m_sColonia: respuesta.data.m_sColoniaDestinatario
-                        },
-                    }
-                })
-            })
-            obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(({data}) => {
-                setDestinatario(destinatario => {
-                    return {
-                        ...destinatario,
-                        destinoDestinatario: data
                     }
                 })
             })
             obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
-                if (!respuesta.data.m_bEntregaDiferenteDomicilio) {
-                    setDestinatario(destinatario => {
-                        return {
-                            ...destinatario,
-                            zonaOperativaDestinatario: data
-                        }
-                    })
-                } else {
-                    setEntregaDD(entregaDD => {
-                        return {
-                            ...entregaDD,
-                            zonaOperativaEnt: data
-                        }
-                    })
-                }
+                setEntregaDD(entregaDD => {
+                    return {
+                        ...entregaDD,
+                        zonaOperativaEnt: data
+                    }
+                })
             })
             obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifaEntrega).then(({data}) => {
-                if (!respuesta.data.m_bEntregaDiferenteDomicilio) {
-                    setDestinatario(destinatario => {
-                        return {
-                            ...destinatario,
-                            zonaTarifaDestinatario: data
-                        }
-                    })
-                } else {
-                    setEntregaDD(entregaDD => {
-                        return {
-                            ...entregaDD,
-                            zonaTarifaEnt: data
-                        }
-                    })
-                }
+                setEntregaDD(entregaDD => {
+                    return {
+                        ...entregaDD,
+                        zonaTarifaEnt: data
+                    }
+                })
             })
-        })*/
+        }
 
         setState(state => {
             return {
@@ -1783,73 +1674,11 @@ function Embarque(props) {
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-                // clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
-
-                // nombreRemitente: remitente,
-                /*RFCRemitente: respuesta.data.m_sRFCRemitente,
-                domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                ciudadRemitente: respuesta.data.m_nIdCiudadRemitente,
-                correoRemitente: respuesta.data.m_sCorreoRemitente,
-                telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                contactoRemitente: respuesta.data.m_sContactoRemitente,
-                */// origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
-                /*idRemitente: respuesta.data.m_nIdRemitente,
-                aliasRemitente: respuesta.data.m_sAliasRemitente,
-                calleRemitente: respuesta.data.m_sCalleRemitente,
-                numeroIntRemitente: respuesta.data.m_sNoIntRemitente || 0,
-                numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
-                coloniaRemitente: respuesta.data.m_sColoniaRemitente,
-*/
-                // nombreDestinatario: destinatario,
-                /*RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                ciudadDestinatario: respuesta.data.m_nIdCiudadDestinatario,
-                correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                idDestinatario: respuesta.data.m_nIdDestinatario,
-                aliasDestinatario: respuesta.data.m_sAliasDestinatario,
-                calleDestinatario: respuesta.data.m_sCalleDestinatario,
-                numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0,
-                numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
-                coloniaDestinatario: respuesta.data.m_sColoniaDestinatario,
-*/
-                // destinoDestinatario: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadDestino),
-                // zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
-                // zonaDestinatario: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaDestinatario),
-
-                // paquetes: m_parrPaquetes,
-                // sobres: m_parrSobres,
 
                 //Datos entrega
-                diferenteEntrega: false,
-                /*zonaEntrega: '',
-                domicilioEntrega: '',
-                entregaEn: '',
-                datosAdicionalesEntrega: '',
-                codigoPostalEntrega: '',
-                ciudadEntrega: '',*/
+                diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
             }
         });
-
-        if (respuesta.data.m_bEntregaDiferenteDomicilio) {
-
-            obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
-                setEntregaDD({
-                    estadoEnt: respuesta.data.m_nIdEstadoRecoleccion || 0,
-                    municipioEnt: respuesta.data.m_nIdMunicipioRecoleccion || 0,
-                    codigoPostalEnt: {
-                        m_nIdCP: cp.data.m_nIdCP,
-                        m_sCP: cp.data.m_sCP,
-                        m_sColonia: cp.data.m_sColonia
-                    },
-                    domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
-                    entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
-                    datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-
-                })
-            })
-        }
     }
 
     //Funcion para mostrar datos de embarque para consultar o modificar
