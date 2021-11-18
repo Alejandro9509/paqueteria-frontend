@@ -1003,7 +1003,7 @@ function Guia(props) {
                         </Tooltip>
                         <Tooltip title="Ocurre">
                             <a className="btn btn-default btn-xs"
-                               onClick={(event) => mostrarDialogoOcurre(event, row.row)}><i
+                               onClick={(event) => mostrarDialogoOcurre(event, row.row.m_nIdGuia)}><i
                                 className="zmdi zmdi-sign-in" style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
@@ -2374,29 +2374,34 @@ setDataFechaFinal(respuestaDos.data)
         setState({...state, tab: newValue});
     }
 
-    const mostrarDialogoOcurre = (event, guia) => {
+    const mostrarDialogoOcurre = (event, id) => {
         event.stopPropagation();
-        if (guia.m_nIdEstatusGuia == 7) {
-            if (!guia.m_nClienteBloqueado) {
-                let importeTotal = 0
-                guia.m_arClsGuiaConceptos.forEach((c) => importeTotal += parseFloat(c.m_cTotal))
-                setDataOcurre({
-                    idGuia: guia.m_nIdGuia,
-                    tipoCobroOcurre: guia.m_nIdTIpoCobro,
-                    importeTotal: importeTotal,
-                    tipoPago: guia.m_nIdTIpoCobro == 11 && 7
-                })
-                setState({
-                    ...state,
-                    openDialog: true
-                })
-                setShowDialogOcurre(true)
+        obtenerGuiaId(id).then (({data}) => {
+            var guia = data
+            if (guia.m_nIdEstatusGuia == 7) {
+                if (!guia.m_nClienteBloqueado) {
+                    
+                    let importeTotal = 0
+                    guia.m_arClsGuiaConceptos.forEach((c) => importeTotal += parseFloat(c.m_cTotal))
+                    setDataOcurre({
+                        idGuia: guia.m_nIdGuia,
+                        tipoCobroOcurre: guia.m_nIdTIpoCobro,
+                        importeTotal: importeTotal,
+                        tipoPago: guia.m_nIdTIpoCobro == 11 && 7
+                    })
+                    setState({
+                        ...state,
+                        openDialog: true
+                    })
+                    setShowDialogOcurre(true)
+                } else {
+                    showSuccess("El cliente responsable de pago está bloqueado. No se puede realizar entrega.")
+                }
             } else {
-                showSuccess("El cliente responsable de pago está bloqueado. No se puede realizar entrega.")
+                showSuccess("La guia debe tener estado completado para poder entregar.")
             }
-        } else {
-            showSuccess("La guia debe tener estado completado para poder entregar.")
-        }
+        })
+
 
     }
 
