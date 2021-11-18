@@ -1122,11 +1122,11 @@ function Informes({history}) {
             return;
         }
         getAllData();
-        getAllGuias();
+        //getAllGuias();
         getAllEstatusInformes();
         getAllSucursales();
         getAllOperadores();
-        getFormatosImpresion();
+        //getFormatosImpresion();
         getAllCiudades();
         getAllUnidades();
         //getAllTipoUnidad();
@@ -2981,7 +2981,7 @@ function Informes({history}) {
                                                                                                                 variant="outlined"
                                                                                                                 margin="dense"
                                                                                                                 label="Total"
-                                                                                                                value={`$${parseFloat(dataGuias[index].m_arClsGuiaConceptos.reduce((a, b) => +a + +(b.m_nIdConceptoFacturacion === 1 ?  b.m_cImporte : 0), 0)).toFixed(2)}` }
+                                                                                                                value={`$${value.m_xTotal}` }
                                                                                                                 disabled="true"
                                                                                                                 className="form-control"
                                                                                                                 type="text"
