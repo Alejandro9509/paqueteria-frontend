@@ -540,7 +540,7 @@ function Embarque(props) {
                         <Tooltip title="Consultar">
                             <a
                                 className="btn btn-default btn-xs"
-                                onClick={() => handlear(row.row.m_nIdEmbarque)}
+                                onClick={() => handleShowConsultar(row.row.m_nIdEmbarque)}
                             >
                                 <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                             </a>
@@ -1658,7 +1658,7 @@ function Embarque(props) {
         resetEntregaDD()
     }
 
-    function handleShowConsultar(id) {ShowConsult
+    function handleShowConsultar(id) {
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
