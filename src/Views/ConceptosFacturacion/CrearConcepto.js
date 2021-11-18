@@ -124,8 +124,8 @@ class CrearConcepto extends Component {
         if (this.state.isProducto) {
             this.setState({
                 claseSeleccionado: row.data,
-                claveSAT: row.data.m_nClaveClase,
-                productoOServicio: row.data.m_sClase,
+                claveSAT: row.data.m_sClaveSAT,
+                productoOServicio: row.data.m_sDescripcion,
             });
         }
         else{
