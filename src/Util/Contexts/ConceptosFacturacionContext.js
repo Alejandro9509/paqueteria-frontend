@@ -105,7 +105,7 @@ function obtenerSATUnidades(){
 }
 
 function obtenerSATServicios(){
-    const url = `${process.env.REACT_APP_API_URL}/ConceptosFacturacion/GetListadoSAT`;
+    const url = `${process.env.REACT_APP_API_URL}/SAT/GetListadoProductosServicios`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

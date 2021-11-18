@@ -515,7 +515,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
 
         <div>
             <Dialog open={openDialog} fullWidth maxWidth="lg" >
-                <DialogTitle>Agregando Concepto de Facturación</DialogTitle>
+                <DialogTitle>Complemeto Carta Porte</DialogTitle>
                 <DialogContent>
                     <CrearConcepto handleAceptar={handleAceptar} dialogVisible={dialogVisible} consulta={disabled} dataComplemento={dataComplemento} dataSAT={dataSAT} dataSATUnidades={dataSATUnidades}/>
                 </DialogContent>

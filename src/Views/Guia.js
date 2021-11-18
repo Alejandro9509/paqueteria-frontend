@@ -1087,18 +1087,20 @@ function Guia(props) {
             window.location.replace("login");
             return;
         }
-       
         getAllCiudadesFiltro()
-        getAllData()
         getAllDataSucursal()
-        getAllDataMoneda()
-        getAllDataTipoCobro()
         getAllDataTipoServicio()
-        getAllDataEstatusGuia()
-        getUltimoFolioGuia()
-        getTipoCambio()
-        cargaEmbarqueMoneda(1)
-        getAllDataTipoPago()
+        if (props.location.idEmbarque == undefined) {
+            getAllData()
+        }
+            getAllDataMoneda()
+            getAllDataTipoCobro()
+
+            getAllDataEstatusGuia()
+            getUltimoFolioGuia()
+            getTipoCambio()
+            cargaEmbarqueMoneda(1)
+            getAllDataTipoPago()
         // getFormatosImpresion()
     }, []);
 

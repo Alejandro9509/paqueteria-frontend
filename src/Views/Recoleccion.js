@@ -981,6 +981,7 @@ function Recoleccion() {
             m_nIdEmbarque: state.folioEmbarque,
             m_nIdGuia: state.folioGuia,
             m_nIdInforme: state.folioInforme,
+            ValorDeclarado: state.valorDeclarado,
             m_dFecha: state.fechaHoraCreacion.split("T")[0],
             m_tHora: state.fechaHoraCreacion.split("T")[1],
             m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
@@ -1592,6 +1593,7 @@ function Recoleccion() {
                 idSucursalAgregar: respuesta.data.m_nIdSucursal,
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
                 folioEmbarque: respuesta.data.m_nIdEmbarque,
+                valorDeclarado: respuesta.data.m_xValorDeclarado,
                 folioGuia: respuesta.data.m_nIdGuia,
                 folioInforme: respuesta.data.m_nIdInforme,
                 fechaHoraRegistro: respuesta.data.m_dFechaRegistro + "T" + respuesta.data.m_tHoraRegistro.slice(0, 5),
@@ -4289,7 +4291,27 @@ setDataFechaFinal(respuestaDos.data)
                                                         </div>
 
                                                         <div className="col-md-12">
-                                                            <div className="col-md-6">
+                                                            <div className="col-md-4">
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               className="form-control"
+                                                                               type="text"
+                                                                               disabled={state.agregar === "Consultar"}
+                                                                               label="Valor Declarado"
+                                                                               onChange={(event) => {
+                                                                                   event.preventDefault();
+                                                                                   setState({
+                                                                                       ...state,
+                                                                                       valorDeclarado: event.target.value,
+                                                                                   });
+                                                                               }}
+                                                                               value={state.valorDeclarado}
+                                                                               placeholder="$"
+                                                                               name="valorDeclarado"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-md-4">
                                                                 <div className="input">
                                                                     <Autocomplete
                                                                         value={state.clientePaga}
@@ -4321,7 +4343,7 @@ setDataFechaFinal(respuestaDos.data)
                                                                     />
                                                                 </div>
                                                             </div>
-                                                            <div className="col-md-6">
+                                                            <div className="col-md-4">
                                                                 {
                                                                     state.clientePaga.m_nIdTipoSeguro === undefined ? ``
                                                                         : state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}` : `NO tiene seguro`

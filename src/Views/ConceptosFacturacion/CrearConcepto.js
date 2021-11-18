@@ -277,8 +277,10 @@ class CrearConcepto extends Component {
     render() {
         const { openDialog } = this.state;
         return (
-            <>
-                {!this.props.consulta? (<><form className="j-forms">
+            <div>
+                {!this.props.consulta? (
+                    <div>
+                    <form className="j-forms">
                     <Dialog
                         open={openDialog}
                         fullWidth
@@ -465,10 +467,10 @@ class CrearConcepto extends Component {
                             Aceptar
                         </button>
                     </div>
-                </DialogActions></>):(<this.Consulta/>)}
+                </DialogActions></div>):(<this.Consulta/>)}
 
 
-            </>
+            </div>
         );
     }
 }
