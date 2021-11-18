@@ -193,7 +193,7 @@ function Embarque(props) {
     const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
     // const [dataCodigosPostalesRecoleccionDD, setDataCodigosPostalesRecoleccionDD] = React.useState([]);
     const [dataCodigosPostalesEntregaDD, setDataCodigosPostalesEntregaDD] = React.useState([]);
-    const [dataEmbarqueConsulta, setDataEmbaqueConsulta] = useState();
+    const [dataEmbarqueConsulta, setDataEmbarqueConsulta] = useState();
     const [dataRecoleccionConsulta, setDataRecoleccionConsulta] = useState();
 
     /*const [dataOperador, setDataOperador] = React.useState([]);
@@ -693,11 +693,7 @@ function Embarque(props) {
     const [dataPaquetes, setDataPaquetes] = useState([])
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
     const [dataEstados, setDataEstados] = useState([])
-    const [dataMunicipiosRemitente, setDataMunicipiosRemitente] = useState([])
-    const [dataMunicipiosDestinatario, setDataMunicipiosDestinatario] = useState([])
     const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
-    const [dataZonasOperativasDestinatario, setDataZonasOperativasDestinatario] = useState([])
-    const [dataZonasTarifaDestinatario, setDataZonasTarifaDestinatario] = useState([])
     const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
     const [dataZonasTarifaEntregaDD, setDataZonasTarifaEntregaDD] = useState([])
 
@@ -773,54 +769,6 @@ function Embarque(props) {
             longitudR: data.longitud
         })
     };
-
-    const handleChangeAutocompleteRemitente = (input, newValue) => {
-        setRemitente(remitente => {
-            return {
-                ...remitente,
-                [input]: newValue
-            }
-        })
-        if (input === "Remitente"){
-            if (newValue.m_nIdCP == 0){
-                showSuccess("El remitente o destinatario seleccionado no cuenta con Código Postal registrado. Contacte a un Administrador.")
-            }
-            setRemitente({
-                idRemitente: newValue.m_nIdRemitenteDestinatario,
-                aliasRemitente: newValue.m_sAlias,
-                nombreRemitente: newValue,
-                RFCRemitente: newValue.m_sRFC,
-                domicilioRemitente: newValue.m_sDomicilio || "No especificado",
-                codigoPostalRemitente: newValue.m_nIdCP != 0 ? {
-                    m_nIdCP: newValue.m_nIdCP,
-                    m_sCP: newValue.m_sCodigoPostal,
-                    m_sColonia: newValue.m_sColonia
-                }: '',
-                estadoRemitente: newValue.m_nIdEstado || 0,
-                municipioRemitente: newValue.m_nIdMunicipio || '',
-                correoRemitente: newValue.m_sCorreoElectronico || "",
-                telefonoRemitente: newValue.m_sTelefono || 0,
-                contactoRemitente: newValue.m_sContacto || newValue.m_sNombre,
-                calleRemitente: newValue.m_sCalle || "No especificado",
-                numeroExtRemitente: newValue.m_sNoExterior || 0,
-                numeroIntRemitente: newValue.m_sNoInterior || 0,
-                coloniaRemitente: newValue.m_sColonia || "No especificado",
-                remitente: newValue,
-                latitudR: newValue.m_sLatitud,
-                longitudR: newValue.m_sLongitud
-            })
-            let estado
-            if (newValue.m_nIdEstado < 10){
-                estado = `0${newValue.m_nIdEstado}`
-            }else{
-                estado = newValue.m_nIdEstado
-            }
-            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
-                setDataMunicipiosRemitente(data)
-            })
-        }
-
-    }
 
     const handleClickCodigosPostalesInput = (input) => {
         if (input === "codigoPostalRemitente"){
@@ -912,124 +860,6 @@ function Embarque(props) {
             longitudD: data.longitud
         })
     };
-
-    const handleChangeAutocompleteDestinatario = (input, newValue) => {
-        setDestinatario({
-            ...destinatario,
-            [input]: newValue
-        })
-        if (input === "Destinatario"){
-            if (newValue.m_nIdCP == 0){
-                showSuccess("El remitente o destinatario seleccionado no cuenta con Código Postal registrado. Contacte a un Administrador.")
-            }
-            setDestinatario({
-                idDestinatario: newValue.m_nIdRemitenteDestinatario,
-                aliasDestinatario: newValue.m_sAlias,
-                nombreDestinatario: newValue,
-                RFCDestinatario: newValue.m_sRFC,
-                domicilioDestinatario: newValue.m_sDomicilio || "No especificado",
-                codigoPostalDestinatario: newValue.m_nIdCP != 0 ? {
-                    m_nIdCP: newValue.m_nIdCP,
-                    m_sCP: newValue.m_sCodigoPostal,
-                    m_sColonia: newValue.m_sColonia
-                } : '',
-                estadoDestinatario: newValue.m_nIdEstado || '',
-                municipioDestinatario: newValue.m_nIdMunicipio || '',
-                correoDestinatario: newValue.m_sCorreoElectronico || "",
-                telefonoDestinatario: newValue.m_sTelefono || 0,
-                contactoDestinatario: newValue.m_sContacto || newValue.m_sNombre,
-                calleDestinatario: newValue.m_sCalle || "No especificado",
-                numeroExtDestinatario: newValue.m_sNoExterior || 0,
-                numeroIntDestinatario: newValue.m_sNoInterior || 0,
-                coloniaDestinatario: newValue.m_sColonia || "No especificado",
-                latitudD: newValue.m_sLatitud,
-                longitudD: newValue.m_sLongitud
-            })
-            let estado
-            if (newValue.m_nIdEstado < 10){
-                estado = `0${newValue.m_nIdEstado}`
-            }else{
-                estado = newValue.m_nIdEstado
-            }
-            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
-                setDataMunicipiosDestinatario(data)
-            })
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                /*if (data.length > 0){
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaOperativaDestinatario: data[0]
-                        }
-                    })
-                }else{
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaOperativaDestinatario: {}
-                        }
-                    })
-                }*/
-                setDataZonasOperativasDestinatario(data)
-            })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                /*if (data.length > 0){
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaTarifaDestinatario: data[0]
-                        }
-                    })
-                }else{
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaTarifaDestinatario: {}
-                        }
-                    })
-                }*/
-                setDataZonasTarifaDestinatario(data)
-            })
-        }
-        if (input === "codigoPostalDestinatario"){
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaOperativaDestinatario: data[0]
-                        }
-                    })
-                }else{
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaOperativaDestinatario: {}
-                        }
-                    })
-                }*/
-                setDataZonasOperativasDestinatario(data)
-            })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaTarifaDestinatario: data[0]
-                        }
-                    })
-                }else{
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaTarifaDestinatario: {}
-                        }
-                    })
-                }*/
-                setDataZonasTarifaDestinatario(data)
-            })
-        }
-    }
 
     const [entregaDD, setEntregaDD] = useState({
         estadoEnt: '',
@@ -1675,9 +1505,9 @@ function Embarque(props) {
                 height: window.innerHeight,
             }
         })
-        resetRemitente()
-        resetDestinatario()
-        setDataEmbaqueConsulta(undefined)
+        // resetRemitente()
+        // resetDestinatario()
+        setDataEmbarqueConsulta(undefined)
         setDataPaquetes([])
         resetEntregaDD()
     }
@@ -1753,7 +1583,7 @@ function Embarque(props) {
 
     //Funcion para mostrar datos de recoleccion para crear embarque
     function setDataRecoleccionOnState(respuesta) {
-        setDataEmbaqueConsulta(respuesta)
+        setDataEmbarqueConsulta(respuesta)
         getDataParaEditar()
         getAllCiudades()
         getAllSucursales()
@@ -2024,7 +1854,7 @@ function Embarque(props) {
 
     //Funcion para mostrar datos de embarque para consultar o modificar
     const setDataParaConsultarModificar = (respuesta, duplicar) => {
-        setDataEmbaqueConsulta(respuesta)
+        setDataEmbarqueConsulta(respuesta)
         getDataParaEditar()
         getAllCiudades()
 

@@ -328,14 +328,8 @@ function Recoleccion() {
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
     const [dataPaquetes, setDataPaquetes] = useState([])
     const [dataEstados, setDataEstados] = useState([])
-    const [dataMunicipiosRemitente, setDataMunicipiosRemitente] = useState([])
-    const [dataMunicipiosDestinatario, setDataMunicipiosDestinatario] = useState([])
     const [dataMunicipiosRecoleccionDD, setDataMunicipiosRecoleccionDD] = useState([])
     const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
-    const [dataZonasOperativasRemitente, setDataZonasOperativasRemitente] = useState([])
-    const [dataZonasTarifaRemitente, setDataZonasTarifaRemitente] = useState([])
-    const [dataZonasOperativasDestinatario, setDataZonasOperativasDestinatario] = useState([])
-    const [dataZonasTarifaDestinatario, setDataZonasTarifaDestinatario] = useState([])
     const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
     const [dataZonasTarifaEntregaDD, setDataZonasTarifaEntregaDD] = useState([])
     const [dataZonasOperativasRecoleccionDD, setDataZonasOperativasRecoleccionDD] = useState([])
@@ -366,31 +360,6 @@ function Recoleccion() {
         longitudR: 0
     })
 
-    const resetRemitente = () => {
-        setRemitente({
-            idRemitente: '',
-            aliasRemitente: '',
-            nombreRemitente: '',
-            RFCRemitente: '',
-            domicilioRemitente: '',
-            calleRemitente: '',
-            numeroIntRemitente: '0',
-            numeroExtRemitente: '',
-            coloniaRemitente: '',
-            estadoRemitente: '',
-            municipioRemitente: '',
-            codigoPostalRemitente: '',
-            correoRemitente: '',
-            telefonoRemitente: '',
-            contactoRemitente: '',
-            origenRemitente: '',
-            zonaOperativaRemitente: '',
-            zonaTarifaRemitente: '',
-            latitudR: 0,
-            longitudR: 0
-        })
-    }
-
     const handleChangeRemitente = (data) => {
         setRemitente({
             idRemitente: data.id,
@@ -415,127 +384,6 @@ function Recoleccion() {
             longitudR: data.longitud
         })
     };
-
-    const handleChangeAutocompleteRemitente = (input, newValue) => {
-        setRemitente(remitente => {
-            return {
-                ...remitente,
-                [input]: newValue
-            }
-        })
-        if (input === "Remitente") {
-            if (newValue.m_nIdCP == 0) {
-                showSuccess("El remitente o destinatario seleccionado no cuenta con Código Postal registrado. Contacte a un Administrador.")
-            }
-            setRemitente({
-                idRemitente: newValue.m_nIdRemitenteDestinatario,
-                aliasRemitente: newValue.m_sAlias,
-                nombreRemitente: newValue,
-                RFCRemitente: newValue.m_sRFC,
-                domicilioRemitente: newValue.m_sDomicilio || "No especificado",
-                codigoPostalRemitente: newValue.m_nIdCP != 0 ? {
-                    m_nIdCP: newValue.m_nIdCP,
-                    m_sCP: newValue.m_sCodigoPostal,
-                    m_sColonia: newValue.m_sColonia
-                } : '',
-                estadoRemitente: newValue.m_nIdEstado || 0,
-                municipioRemitente: newValue.m_nIdMunicipio || '',
-                correoRemitente: newValue.m_sCorreoElectronico || "",
-                telefonoRemitente: newValue.m_sTelefono || 0,
-                contactoRemitente: newValue.m_sContacto || newValue.m_sNombre,
-                calleRemitente: newValue.m_sCalle || "No especificado",
-                numeroExtRemitente: newValue.m_sNoExterior || 0,
-                numeroIntRemitente: newValue.m_sNoInterior || 0,
-                coloniaRemitente: newValue.m_sColonia || "No especificado",
-                remitente: newValue,
-                latitudR: newValue.m_sLatitud || '',
-                longitudR: newValue.m_sLongitud || ''
-            })
-            let estado
-            if (newValue.m_nIdEstado < 10) {
-                estado = `0${newValue.m_nIdEstado}`
-            } else {
-                estado = newValue.m_nIdEstado
-            }
-            obtenerMunicipiosByIdEstado(estado).then(({data}) => {
-                setDataMunicipiosRemitente(data)
-            })
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                /*if (data.length > 0){
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaOperativaRemitente: data[0]
-                        }
-                    })
-                }else{
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaOperativaRemitente: {}
-                        }
-                    })
-                }*/
-                setDataZonasOperativasRemitente(data)
-            })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                /*if (data.length > 0){
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaTarifaRemitente: data[0]
-                        }
-                    })
-                }else{
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaTarifaRemitente: {}
-                        }
-                    })
-                }*/
-                setDataZonasTarifaRemitente(data)
-            })
-        }
-        if (input === "codigoPostalRemitente") {
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaOperativaRemitente: data[0]
-                        }
-                    })
-                }else{
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaOperativaRemitente: {}
-                        }
-                    })
-                }*/
-                setDataZonasOperativasRemitente(data)
-            })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaTarifaRemitente: data[0]
-                        }
-                    })
-                }else{
-                    setRemitente(remitente => {
-                        return{
-                            ...remitente,
-                            zonaTarifaRemitente: {}
-                        }
-                    })
-                }*/
-                setDataZonasTarifaRemitente(data)
-            })
-        }
-    }
 
     const handleClickCodigosPostalesInput = (input) => {
         if (input === "codigoPostalRemitente"){
@@ -583,31 +431,6 @@ function Recoleccion() {
         longitudD: 0
     })
 
-    const resetDestinatario = () => {
-        setDestinatario({
-            idDestinatario: '',
-            aliasDestinatario: '',
-            nombreDestinatario: '',
-            RFCDestinatario: '',
-            domicilioDestinatario: '',
-            calleDestinatario: '',
-            numeroIntDestinatario: '0',
-            numeroExtDestinatario: '',
-            coloniaDestinatario: '',
-            estadoDestinatario: '',
-            municipioDestinatario: '',
-            codigoPostalDestinatario: '',
-            correoDestinatario: '',
-            telefonoDestinatario: '',
-            contactoDestinatario: '',
-            destinoDestinatario: '',
-            zonaOperativaDestinatario: '',
-            zonaTarifaDestinatario: '',
-            latitudD: 0,
-            longitudD: 0
-        })
-    }
-
     const handleChangeDestinatario = (data) => {
         setDestinatario({
             idDestinatario: data.id,
@@ -632,124 +455,6 @@ function Recoleccion() {
             longitudD: data.longitud
         })
     };
-
-    const handleChangeAutocompleteDestinatario = (input, newValue) => {
-        setDestinatario({
-            ...destinatario,
-            [input]: newValue
-        })
-        if (input === "Destinatario") {
-            if (newValue.m_nIdCP == 0) {
-                showSuccess("El remitente o destinatario seleccionado no cuenta con Código Postal registrado. Contacte a un Administrador.")
-            }
-            setDestinatario({
-                idDestinatario: newValue.m_nIdRemitenteDestinatario,
-                aliasDestinatario: newValue.m_sAlias,
-                nombreDestinatario: newValue,
-                RFCDestinatario: newValue.m_sRFC,
-                domicilioDestinatario: newValue.m_sDomicilio || "No especificado",
-                codigoPostalDestinatario: newValue.m_nIdCP != 0 ? {
-                    m_nIdCP: newValue.m_nIdCP,
-                    m_sCP: newValue.m_sCodigoPostal,
-                    m_sColonia: newValue.m_sColonia
-                } : '',
-                estadoDestinatario: newValue.m_nIdEstado || '',
-                municipioDestinatario: newValue.m_nIdMunicipio || '',
-                correoDestinatario: newValue.m_sCorreoElectronico || "",
-                telefonoDestinatario: newValue.m_sTelefono || 0,
-                contactoDestinatario: newValue.m_sContacto || newValue.m_sNombre,
-                calleDestinatario: newValue.m_sCalle || "No especificado",
-                numeroExtDestinatario: newValue.m_sNoExterior || 0,
-                numeroIntDestinatario: newValue.m_sNoInterior || 0,
-                coloniaDestinatario: newValue.m_sColonia || "No especificado",
-                latitudD: newValue.m_sLatitud || '',
-                longitudD: newValue.m_sLongitud || ''
-            })
-            let estado
-            if (newValue.m_nIdEstado < 10) {
-                estado = `0${newValue.m_nIdEstado}`
-            } else {
-                estado = newValue.m_nIdEstado
-            }
-            obtenerMunicipiosByIdEstado(estado).then(({data}) => {
-                setDataMunicipiosDestinatario(data)
-            })
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                /*if (data.length > 0){
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaOperativaDestinatario: data[0]
-                        }
-                    })
-                }else{
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaOperativaDestinatario: {}
-                        }
-                    })
-                }*/
-                setDataZonasOperativasDestinatario(data)
-            })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                /*if (data.length > 0){
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaTarifaDestinatario: data[0]
-                        }
-                    })
-                }else{
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaTarifaDestinatario: {}
-                        }
-                    })
-                }*/
-                setDataZonasTarifaDestinatario(data)
-            })
-        }
-        if (input === "codigoPostalDestinatario") {
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaOperativaDestinatario: data[0]
-                        }
-                    })
-                }else{
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaOperativaDestinatario: {}
-                        }
-                    })
-                }*/
-                setDataZonasOperativasDestinatario(data)
-            })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaTarifaDestinatario: data[0]
-                        }
-                    })
-                }else{
-                    setDestinatario(destinatario => {
-                        return{
-                            ...destinatario,
-                            zonaTarifaDestinatario: {}
-                        }
-                    })
-                }*/
-                setDataZonasTarifaDestinatario(data)
-            })
-        }
-    }
 
     const [entregaDD, setEntregaDD] = useState({
         estadoEnt: '',
@@ -1727,8 +1432,6 @@ function Recoleccion() {
             }
         });
         setDataPaquetes([])
-        resetRemitente()
-        resetDestinatario()
         resetRecoleccionDD()
         resetEntregaDD()
         setDataRecoleccionConsulta(undefined)
@@ -2161,11 +1864,13 @@ function Recoleccion() {
             setDataCiudad(respuesta.data);
         });
     }
+
     function getAllCiudadesFiltro() {
         obtenerCiudades().then((respuesta) => {
             setDataCiudadF(respuesta.data);
         });
     }
+
     function getAllZonas() {
         const url = `${process.env.REACT_APP_API_URL}/Zonas/GetListado`;
         axios.get(url, {headers}).then((respuesta) => {
@@ -2807,254 +2512,6 @@ function Recoleccion() {
 
     }
 
-    function closeSeccions() {
-        //Cerrar todas las seciones
-        var $section = $(".widget-toggle");
-        $section.each(function () {
-            var $welem = $(this)
-                .parentsUntil(".widget-action-bar")
-                .parentsUntil(".w-action")
-                .parents(".widget-header")
-                .next(".widget-container");
-            $welem.slideUp();
-            $(this).children("a").children("i").removeClass("zmdi-chevron-down");
-            $(this).children("a").children("i").addClass("zmdi-chevron-up");
-        });
-    }
-
-    /*const framesPaquete = state.paquetes.map((p, index) => {
-        return (
-            <div key={`paquete${index}`}>
-                <h4><strong>{`Paquete #${index + 1}`}</strong></h4>
-
-                <div className="col-sm-4 col-md-12 unit">
-                    <div className="input">
-                        <Autocomplete
-                            value={state.paquetes[index].producto}
-                            freeSolo
-                            onChange={(event, newValue) => handleChangePaqueteProducto(event, index, newValue)}
-                            disableClearable
-                            forcePopupIcon={false}
-                            options={dataProductos}
-                            disabled={state.agregar === "Consultar"}
-                            getOptionLabel={(option) => `${option.m_sDescripcion}`}
-                            variant="outlined"
-                            name={"producto"}
-                            style={{
-                                transform: "translate(14px, 10px) scale(1) !important"
-                            }}
-                            renderInput={(params) =>
-                                <TextField
-                                    variant="outlined"
-                                    label="Producto"
-                                    margin="dense"
-                                    required
-                                    onClick={handleClickProducto}
-                                    {...params}
-                                />
-                            }
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Peso"
-                                   value={state.paquetes[index].m_rPeso}
-                                   required
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="kg"
-                                   name="m_rPeso"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_rLargo}
-                                   required
-                                   label="Largo"
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="cms"
-                                   name="m_rLargo"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Ancho"
-                                   value={state.paquetes[index].m_rAncho}
-                                   required
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="cms"
-                                   name="m_rAncho"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_rAlto}
-                                   required
-                                   label="Alto"
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="cms"
-                                   name="m_rAlto"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-2-5 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                            // onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].m_rVolumen}
-                                   required
-                                   label="Volumen"
-                                   disabled
-                                   placeholder="cm3"
-                                   name="m_rVolumen"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-6 unit">
-                    <label className="input select">
-                        <FormControl fullWidth variant="outlined" margin="dense">
-                            <InputLabel id="m_nIdTipoEmbalajeLabel">Tipo de Embalaje</InputLabel>
-                            <Select
-                                label="Tipo de Embalaje"
-                                labelId="m_nIdTipoEmbalajeLabel"
-                                className="form-control"
-                                value={state.paquetes[index].m_nIdTipoEmbalaje}
-                                disabled={state.agregar === "Consultar"}
-                                onChange={(event) => handleChangePaquete(event, index)}
-                                id="m_nIdTipoEmbalaje"
-                                name="m_nIdTipoEmbalaje"
-                                required
-                            >
-                                {dataEmbalaje.map((embalaje) => (
-                                    <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
-                                        {embalaje.m_sNombre}
-                                    </option>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <i className="fa fa-arrow-down"/>
-                    </label>
-                </div>
-
-                <div className="col-sm-4 col-md-6 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Valor Declarado"
-                                   value={state.paquetes[index].m_cyValorDeclarado}
-                                   required
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="$"
-                                   name="m_cyValorDeclarado"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-8 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Descripción"
-                                   value={state.paquetes[index].m_sDescripcion}
-                                   required
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="Descripción"
-                                   name="m_sDescripcion"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Ctd"
-                                   value={state.paquetes[index].m_nCantidad}
-                                   required
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="Ctd"
-                                   name="m_nCantidad"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-sm-4 col-md-12 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Observaciones"
-                                   value={state.paquetes[index].m_sObservaciones}
-                                   required
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="Observaciones"
-                                   name="m_sObservaciones"
-                        />
-                    </div>
-                </div>
-            </div>
-        );
-    });
-
-    const framesSobre = state.sobres.map((p, index) => {
-        return (
-            <div key={`sobre${index}`}>
-                <h4><strong>{`Sobre #${index + 1}`}</strong></h4>
-
-
-                <div className="col-md-12 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangeSobre(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Descripcion"
-                                   value={state.sobres[index].m_sDescripcion}
-                                   required
-                                   disabled={state.agregar === "Consultar"}
-                                   placeholder="Descripción"
-                                   name="m_sDescripcion"
-                        />
-                    </div>
-                </div>
-            </div>
-        );
-    });*/
-
     if (redirect) {
         if (data.find((o) => o.m_nIdRecoleccion == state.idRecoleccion).m_nIdEmbarque != 0) {
             showSuccess("Recolección ya tiene Embarque")
@@ -3067,21 +2524,6 @@ function Recoleccion() {
                 />
             )
         }
-    }
-
-    const handleClickZona = (event) => {
-        event.preventDefault()
-        if (dataZona.length === 0) {
-            getAllZonas()
-        }
-
-    }
-
-    const handleZonaDestinatarioSelected = (newValue) => {
-        setState({
-            ...state,
-            zonaDestinatario: newValue
-        })
     }
 
     const handleFechaCita = (event) => {
@@ -3109,36 +2551,6 @@ function Recoleccion() {
         event.preventDefault()
         if (dataCiudad.length === 0) {
             getAllCiudades()
-        }
-    }
-
-    const handleCodigoPostalEntregaClick = (event) => {
-        event.preventDefault();
-        if (dataCodigosPostalesEntregaDD.length > 0) {
-            if (dataCodigosPostalesEntregaDD[0].m_nIdCiudad != state.ciudadEntrega) {
-                obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
-                    setDataCodigosPostalesEntregaDD(respuesta.data);
-                });
-            }
-        } else {
-            obtenerCodigosPostalesPorCiudad(state.ciudadEntrega).then((respuesta) => {
-                setDataCodigosPostalesEntregaDD(respuesta.data);
-            });
-        }
-    }
-
-    const handleCodigoPostalRecoleccionClick = (event) => {
-        event.preventDefault();
-        if (dataCodigosPostalesEntregaDD.length > 0) {
-            if (dataCodigosPostalesEntregaDD[0].m_nIdCiudad != state.ciudadRecoleccion) {
-                obtenerCodigosPostalesPorCiudad(state.ciudadRecoleccion).then((respuesta) => {
-                    setDataCodigosPostalesRecoleccionDD(respuesta.data);
-                });
-            }
-        } else {
-            obtenerCodigosPostalesPorCiudad(state.ciudadRecoleccion).then((respuesta) => {
-                setDataCodigosPostalesRecoleccionDD(respuesta.data);
-            });
         }
     }
 

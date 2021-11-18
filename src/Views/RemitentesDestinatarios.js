@@ -137,7 +137,7 @@ function RemitenteDestinatario(props) {
                             codigoPostal: {
                                 m_nIdCP: cp.data.m_nIdCP,
                                 m_sCP: cp.data.m_sCP,
-                                m_sColonia: respuesta.data.m_sColoniaRemitente
+                                m_sColonia: cp.data.m_sColonia
                             },
                         }
                     })
@@ -212,7 +212,7 @@ function RemitenteDestinatario(props) {
                             codigoPostal: {
                                 m_nIdCP: cp.data.m_nIdCP,
                                 m_sCP: cp.data.m_sCP,
-                                m_sColonia: respuesta.data.m_sColoniaDestinatario
+                                m_sColonia: cp.data.m_sColonia
                             },
                         }
                     })
@@ -285,7 +285,7 @@ function RemitenteDestinatario(props) {
                             codigoPostal: {
                                 m_nIdCP: cp.data.m_nIdCP,
                                 m_sCP: cp.data.m_sCP,
-                                m_sColonia: respuesta.data.m_sColoniaRemitente
+                                m_sColonia: cp.data.m_sColonia
                             },
                         }
                     })
@@ -334,7 +334,7 @@ function RemitenteDestinatario(props) {
                             codigoPostal: {
                                 m_nIdCP: cp.data.m_nIdCP,
                                 m_sCP: cp.data.m_sCP,
-                                m_sColonia: respuesta.data.m_sColoniaDestinatario
+                                m_sColonia: cp.data.m_sColonia
                             },
                         }
                     })
