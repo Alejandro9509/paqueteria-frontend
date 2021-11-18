@@ -18,6 +18,11 @@ import ProductosPrecios from "./ProductosPrecios";
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
 import {API_HEADERS} from "../../Constants";
+import ConceptosFacturacion from "./ConceptosFacturacion";
+import {
+    obtenerConceptosFacturacion,
+    obtenerConceptosFacturacionManiobra
+} from "../../Util/Contexts/ConceptosFacturacionContext";
 
 const headers = API_HEADERS
 
@@ -71,7 +76,11 @@ class CrearTarifa extends Component {
             //Aqui se guardan todos los destinos que no estan seleccionados
             dataDestinosTemp: [],
             //Aqui pues el nombre de la variable ya es muy explicita
-            dataDestinosSeleccionados: []
+            dataDestinosSeleccionados: [],
+
+            dataConceptos: [],
+            dataConceptosBase: [],
+            dataConceptosBaseManiobra: []
         }
         this.getAllSucursales = this.getAllSucursales.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -89,6 +98,20 @@ class CrearTarifa extends Component {
         this.filtrarConceptoAdicional = this.filtrarConceptoAdicional.bind(this)
         this.getAllProductos = this.getAllProductos.bind(this)
         this.handleChangeTipoTarifa = this.handleChangeTipoTarifa.bind(this)
+        this.handleChangeListConceptos = this.handleChangeListConceptos.bind(this)
+        this.getAllConceptos = this.getAllConceptos.bind(this)
+        this.getAllConceptosManiobra = this.getAllConceptosManiobra.bind(this)
+    }
+
+    handleChangeListConceptos(data){
+        /*const { conceptosEntrega, todosConceptos } = this.state
+        const newArrayConceptos = conceptosEntrega.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
+        let newArrayTodosConceptos = todosConceptos.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))*/
+
+
+        // this.setState({ conceptosEntrega: data })
+
+        this.setState({dataConceptos: data})
     }
 
     castConceptos(){
@@ -100,6 +123,7 @@ class CrearTarifa extends Component {
                 let ivaTraslada = []
                 let ivaRetiene = []
                 const concept = {
+                    id: Math.floor(Math.random() * 10000),
                     idConcepto : element.m_nIdConceptosFacturacion,
                     importe: element.m_cImporte,
                     retiene: element.m_nIdImpuestoRetiene,
@@ -149,6 +173,16 @@ class CrearTarifa extends Component {
         this.getAllCiudades()
         this.getAllImpuestos()
         this.castConceptos()
+        this.getAllConceptos()
+        this.getAllConceptosManiobra()
+    }
+
+    getAllConceptos() {
+        obtenerConceptosFacturacion().then(respuesta => {this.setState({ dataConceptosBase: respuesta.data })});
+    }
+
+    getAllConceptosManiobra() {
+        obtenerConceptosFacturacionManiobra().then(respuesta => {this.setState({ dataConceptosBaseManiobra: respuesta.data })});
     }
 
     getAllImpuestos() {
@@ -236,6 +270,7 @@ class CrearTarifa extends Component {
         let ivaRetiene = [];
         const concept = {
             idConcepto : data.concepto.m_nIdConceptosFacturacion,
+            id:data.id,
             concepto: data.concepto,
             importe: data.importe,
             retiene: data.retiene,
@@ -488,7 +523,7 @@ class CrearTarifa extends Component {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                        {/*<div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <label className="input select" style={{ width: "100%" }}>
                                                 <FormControl fullWidth variant="outlined" margin="dense">
                                                     <InputLabel id="sucursalLabel">Sucursal</InputLabel>
@@ -522,18 +557,17 @@ class CrearTarifa extends Component {
                                                     </Select>
                                                 </FormControl>
                                             </label>
-                                        </div>
+                                        </div>*/}
                                         <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <label className="input select" style={{ width: "100%" }}>
                                                 <FormControl fullWidth variant="outlined" margin="dense" required>
-                                                    <InputLabel id="origenLabel">Origen</InputLabel>
+                                                    <InputLabel id="origenLabel">Origen (Bodega)</InputLabel>
                                                     <Select
                                                         native
                                                         className="form-control"
-                                                        label="Origen"
+                                                        label="Origen (Bodega)"
                                                         disabled={this.props.consult}
                                                         labelId="origenLabel"
-                                                        className="form-control"
                                                         value={this.state.origen}
                                                         onChange={this.handleChange}
                                                         name="origen"
@@ -560,14 +594,13 @@ class CrearTarifa extends Component {
                                             <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <label className="input select" style={{ width: "100%" }}>
                                                 <FormControl fullWidth variant="outlined" margin="dense" required={!porRegion}>
-                                                    <InputLabel id="destinoLabel">Destino</InputLabel>
+                                                    <InputLabel id="destinoLabel">Destino (Bodega)</InputLabel>
                                                     <Select
                                                         native
                                                         className="form-control"
-                                                        label="Destino"
+                                                        label="Destino (Bodega)"
                                                         disabled={this.props.consult}
                                                         labelId="destinoLabel"
-                                                        className="form-control"
                                                         value={this.state.destino}
                                                         onChange={this.handleChange}
                                                         name="destino"
@@ -865,7 +898,7 @@ class CrearTarifa extends Component {
                                             <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
                                                 <Tab label="Concetos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
                                                 <Tab label="Maniobras" {...this.a11yProps(1)} disabled={!this.state.porRangos} />
-                                                <Tab label="Entrega" {...this.a11yProps(2)} disabled={!this.state.porRangos} />
+                                                <Tab label="Flete" {...this.a11yProps(2)} disabled={!this.state.porRangos} />
                                                 {/*<Tab label="Recolección" {...this.a11yProps(3)} disabled={!this.state.porRangos} />*/}
                                                 <Tab label="Productos" {...this.a11yProps(6)}/>
                                                 <Tab label="Condiciones de Precios por Tipo de Cobro" {...this.a11yProps(4)} />
@@ -875,21 +908,76 @@ class CrearTarifa extends Component {
 
                                             <TabPanel value={this.state.tab} index={0}>
                                                 {/*el filtrado por agregadoDesde está demas*/}
-                                                <ConceptosAdicionales consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosAdicionales} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoAdicional} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada} mostrarRangos={false}>
+                                                {/*<ConceptosAdicionales consult={consult} edit={this.props.edit}
+                                                                      select={this.props.select}
+                                                                      conceptosAdicionales={conceptosAdicionales}
+                                                                      addConcepto={this.addConcepto}
+                                                                      removeConcepto={this.removeConceptoAdicional}
+                                                                      ivaRetiene={this.state.ivaRetiene}
+                                                                      ivaTraslada={this.state.ivaTraslada}
+                                                                      mostrarRangos={false}>
 
-                                                </ConceptosAdicionales>
+                                                </ConceptosAdicionales>*/}
+                                                <ConceptosFacturacion
+                                                    consulta={consult}
+                                                    dataList={conceptosAdicionales}
+                                                    onChangeList={this.handleChangeListConceptos}
+                                                    mostrarRangos={false}
+                                                    mostrarImpuestos={false}
+                                                    mostrarDescuento={false}
+                                                    mostrarTipoMedida={false}
+                                                    mostrarTipoCalculo={false}
+                                                    conceptosBase={this.state.dataConceptosBase}
+                                                    keys={0}
+                                                    agregarConcepto={this.addConcepto}
+                                                    eliminarConcepto={this.removeConceptoAdicional}
+                                                />
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={1}>
                                                 {/*el filtrado por agregadoDesde está demas*/}
-                                                <ConceptosAdicionalesManiobra consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosManiobra} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoManiobra} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
+                                                {/*<ConceptosAdicionalesManiobra consult={consult} edit={this.props.edit}
+                                                                              select={this.props.select}
+                                                                              conceptosAdicionales={conceptosManiobra}
+                                                                              addConcepto={this.addConcepto}
+                                                                              removeConcepto={this.removeConceptoManiobra}
+                                                                              ivaRetiene={this.state.ivaRetiene}
+                                                                              ivaTraslada={this.state.ivaTraslada}>
 
-                                                </ConceptosAdicionalesManiobra>
+                                                </ConceptosAdicionalesManiobra>*/}
+                                                <ConceptosFacturacion
+                                                    consulta={consult}
+                                                    dataList={conceptosManiobra}
+                                                    onChangeList={this.handleChangeListConceptos}
+                                                    mostrarRangos={true}
+                                                    mostrarImpuestos={false}
+                                                    mostrarDescuento={false}
+                                                    // mostrarConcepto={false}
+                                                    conceptosBase={this.state.dataConceptosBaseManiobra}
+                                                    keys={1}
+                                                    agregarConcepto={this.addConcepto}
+                                                    eliminarConcepto={this.removeConceptoManiobra}
+                                                    // conceptoFijo={this.state.dataConceptosBase.find(i => i.m_nIdConceptosFacturacion == 1)}
+                                                />
+
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={2}>
                                                 {/*el filtrado por agregadoDesde está demas*/}
-                                                <ConceptosAdicionalesEntrega consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosEntrega} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoEntrega} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>
+                                                {/*<ConceptosAdicionalesEntrega consult={consult} edit={this.props.edit} select={this.props.select} conceptosAdicionales={conceptosEntrega} addConcepto={this.addConcepto} removeConcepto={this.removeConceptoEntrega} ivaRetiene={this.state.ivaRetiene} ivaTraslada={this.state.ivaTraslada}>*/}
 
-                                                </ConceptosAdicionalesEntrega>
+                                                {/*</ConceptosAdicionalesEntrega>*/}
+
+                                                <ConceptosFacturacion
+                                                    consulta={consult}
+                                                    dataList={conceptosEntrega}
+                                                    mostrarRangos={true}
+                                                    mostrarImpuestos={false}
+                                                    mostrarDescuento={false}
+                                                    mostrarConcepto={false}
+                                                    keys={2}
+                                                    agregarConcepto={this.addConcepto}
+                                                    eliminarConcepto={this.removeConceptoEntrega}
+                                                    conceptoFijo={this.state.dataConceptosBase.find(i => i.m_nIdConceptosFacturacion == 1)}
+                                                />
                                             </TabPanel>
                                             {/*<TabPanel value={this.state.tab} index={3}>
                                                 el filtrado por agregadoDesde está demas
