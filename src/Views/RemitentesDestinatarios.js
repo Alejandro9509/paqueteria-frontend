@@ -435,21 +435,8 @@ function RemitenteDestinatario(props) {
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipios(data)
             })
-            /*obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                setDataZonasOperativas(data)
-            })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
-                setDataZonasTarifa(data)
-            })*/
         }
-        if (input === "codigoPostal"){
-            /*obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                setDataZonasOperativas(data)
-            })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                setDataZonasTarifa(data)
-            })*/
-        }
+
     }
 
     const handleClickCodigosPostalesInput = (input) => {
