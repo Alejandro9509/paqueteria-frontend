@@ -1028,17 +1028,15 @@ function Recoleccion() {
 
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
-
-        if (dataPaquetes.length === 0) {
-            showSuccess("Debe agregar al menos 1 paquete o sobre.")
+        setState({
+            ...state,
+            showConfirmarUbicacion: false
+        })
+        if (!validarCoordenadas(coordenadas)){
             return
         }
-        if (remitente.latitudR.length === 0 && remitente.longitudR.length === 0 && !coordenadas) {
-            setState({
-                ...state,
-                showConfirmarUbicacion: true,
-                titulo: "recolección"
-            })
+        if (dataPaquetes.length === 0) {
+            showSuccess("Debe agregar al menos 1 paquete o sobre.")
             return
         }
 
@@ -1078,8 +1076,6 @@ function Recoleccion() {
             m_sNoExtRemitente: remitente.numeroExtRemitente,
             m_sColoniaRemitente: remitente.coloniaRemitente,
             m_nIdEstadoRemitente: remitente.estadoRemitente,
-            m_sLatitudR: coordenadas ? coordenadas.lat : remitente.latitudR,
-            m_sLongitudR: coordenadas ? coordenadas.lng : remitente.longitudR,
 
             //Destinatario
             m_sNombreDestinatario: destinatario.nombreDestinatario.m_sNombre,
@@ -1138,9 +1134,13 @@ function Recoleccion() {
             params.m_nIdZonaTarifa = recoleccionDD.zonaTarifaRec.m_nIdZona
             params.m_nIdEstadoRecoleccion = recoleccionDD.estadoRec
             params.m_sCodigoMunicipioRecoleccion = recoleccionDD.municipioRec
+            params.m_sLatitudR = coordenadas ? coordenadas.lat : recoleccionDD.latitudRec
+            params.m_sLongitudR = coordenadas ? coordenadas.lng : recoleccionDD.longitudRec
         } else {
             params.m_nIdZonaOperativa = remitente.zonaOperativaRemitente.m_nIdZona
             params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente.m_nIdZona
+            params.m_sLatitudR = coordenadas ? coordenadas.lat : remitente.latitudR
+            params.m_sLongitudR = coordenadas ? coordenadas.lng : remitente.longitudR
         }
 
         if (state.diferenteEntrega) {
@@ -1157,12 +1157,7 @@ function Recoleccion() {
             params.m_nIdZonaTarifaEntrega = destinatario.zonaTarifaDestinatario.m_nIdZona
         }
 
-        /**Si no es entrega en sucursal se validan las coordenadas*/
-        if (!state.entregaEnSucursal){
-            if (!validarCoordenadas(coordenadas)){
-                return
-            }
-        }
+
 
         if (state.recoleccionConCita) {
             params.m_bRecoleccionConCita = state.recoleccionConCita
@@ -1177,27 +1172,19 @@ function Recoleccion() {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
-                    getAllData();
-                    $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(0).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');
+                    handleShowListado();
                     limpiarInputsAgregar()
                 })
                 .catch((err) => {
                     console.log(err);
-                    showSuccess("err");
+                    showSuccess(err);
                 });
         } else {
             agregarRecoleccion(params)
                 .then((respuesta) => {
                     console.log(respuesta.data);
                     showSuccess(respuesta.data);
-                    getAllData();
-                    $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(0).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');
+                    handleShowListado();
                     limpiarInputsAgregar()
                 })
                 .catch((err) => {
@@ -1211,50 +1198,6 @@ function Recoleccion() {
     function getTipoCambio() {
         obtenerTipoCambio().then(respuesta => {
             setDataTipoCambio(respuesta.data)
-        });
-    };
-
-
-    function getFechaInicial() {
-        obtenerFechaInicio().then(respuesta => {
-            console.log(respuesta.data[0].Fecha)
-            setDataFechaInicial(respuesta.data)
-
-            setFiltros(filtros => {
-                return {
-                    ...filtros,
-                   fechaInicial: respuesta.data[0].Fecha
-                }
-            })
-
-        });
-    };
-
-
-
-    function getFechaFinal() {
-        obtenerFechaFinal().then(respuesta => {
-            console.log(respuesta.data[0].Fecha)
-
-            setDataFechaFinal(respuesta.data)
-
-            setFiltros(filtros => {
-                return {
-                    ...filtros,
-                   fechaFinal: respuesta.data[0].Fecha
-                }
-            })
-
-
-
-
-
-        });
-    };
-
-    function getFormatosImpresion() {
-        obtenerFormatosImpresion().then(respuesta => {
-            setFormatosImpresion(respuesta.data)
         });
     };
 
@@ -1595,7 +1538,9 @@ function Recoleccion() {
     }
 
     const handleShowListado = (event) => {
-        event.stopPropagation();
+        if (event !== undefined){
+            event.stopPropagation();
+        }
         limpiarInputsAgregar()
         setState(state => {
             return {
@@ -1609,6 +1554,7 @@ function Recoleccion() {
                 agregar: "Agregar",
             }
         });
+        getAllData();
         getAllSucursales()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
@@ -1892,70 +1838,6 @@ function Recoleccion() {
     };
 
     //Maneja filtrado de listado embarque
-    const handleFechaInicialFiltro = async (event) => {
-        setState({
-            ...state,
-            fechaInicial: event.target.value,
-        })
-        const {fechaFinal, sucursalListado, estatusListado, folioRecoleccion} = state
-        obtenerRecoleccionFiltro(event.target.value, fechaFinal, sucursalListado, estatusListado, folioRecoleccion).then(respuesta => {
-            if (respuesta.data == "Vacio") {
-                setData([])
-            } else {
-                setData(respuesta.data)
-            }
-        })
-    }
-
-    //Maneja filtrado de listado embarque
-    const handleFechaFinalFiltro = async (event) => {
-        setState({
-            ...state,
-            fechaFinal: event.target.value,
-        })
-        const {fechaInicial, sucursalListado, estatusListado, folioRecoleccion} = state
-        obtenerRecoleccionFiltro(fechaInicial, event.target.value, sucursalListado, estatusListado, folioRecoleccion).then(respuesta => {
-            if (respuesta.data == "Vacio") {
-                setData([])
-            } else {
-                setData(respuesta.data)
-            }
-        })
-    }
-
-    //Maneja filtrado de listado embarque
-    const handleSucursalFiltro = async (event) => {
-        setState({
-            ...state,
-            sucursalListado: event.target.value,
-        })
-        const {fechaInicial, fechaFinal, estatusListado, folioRecoleccion} = state
-        obtenerRecoleccionFiltro(fechaInicial, fechaFinal, event.target.value, estatusListado, folioRecoleccion).then(respuesta => {
-            if (respuesta.data == "Vacio") {
-                setData([])
-            } else {
-                setData(respuesta.data)
-            }
-        })
-    }
-
-    //Maneja filtrado de listado embarque
-    const handleEstatusFiltro = async (event) => {
-        setState({
-            ...state,
-            estatusListado: event.target.value,
-        })
-        const {fechaInicial, fechaFinal, sucursalListado, folioRecoleccion} = state
-        obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, event.target.value, folioRecoleccion).then(respuesta => {
-            if (respuesta.data == "Vacio") {
-                setData([])
-            } else {
-                setData(respuesta.data)
-            }
-        })
-    }
-
-    //Maneja filtrado de listado embarque
     const handleFolioRecoleccionFiltro = async (event) => {
         if (event.keyCode == 13) {
             const {target} = event
@@ -2214,37 +2096,25 @@ function Recoleccion() {
     ]);
 
     async function getAllData() {
-        obtenerFechaInicio().then((respuestaUno) => { 
-
-
-            
-            obtenerFechaFinal().then((respuestaDos) => { 
-
+        obtenerFechaInicio().then((respuestaUno) => {
+            obtenerFechaFinal().then((respuestaDos) => {
                 setDataFechaInicial(respuestaUno.data)
-setDataFechaFinal(respuestaDos.data)
+                setDataFechaFinal(respuestaDos.data)
                 setFiltros(filtros => {
                     return {
                         ...filtros,
-                       fechaInicial: respuestaUno.data[0].Fecha,
-                       fechaFinal: respuestaDos.data[0].Fecha
-
+                        fechaInicial: respuestaUno.data[0].Fecha,
+                        fechaFinal: respuestaDos.data[0].Fecha
                     }
                 })
-
-
-
-
-                obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, filtros.sucursalListado, filtros.estatusListado, filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
                     setData(respuesta.data);
-        })
-      
+                })
+
             })
-      
-    })
+
+        })
     }
-
-
-   
 
     function confirmarUbicacion(coordenadas, e) {
         handleAceptar(e, coordenadas)
@@ -2313,64 +2183,6 @@ setDataFechaFinal(respuestaDos.data)
         const url = `${process.env.REACT_APP_API_URL}/Recoleccion/GetUltimoFolio`;
         axios.get(url, {headers}).then((respuesta) => {
             SetDataFolioRecoleccion(respuesta.data);
-        });
-    }
-
-    async function getAllCodigosPostales() {
-        /*obtenerCodigoPostal().then((respuesta) => {
-            console.log(respuesta.data)
-            setDataCodigoPostal(respuesta.data);
-        });*/
-    }
-
-    //setea la ciudad seleccionada para el remitente
-    const handleChangeCiudadRemitente = (event) => {
-        event.preventDefault();
-        setState({
-            ...state,
-            ciudadRemitente: event.target.value
-        });
-    }
-    //setea la ciudad seleccionada para el destinatario
-    const handleChangeCiudadDestinatario = (event) => {
-        event.preventDefault();
-        setState({
-            ...state,
-            ciudadDestinatario: event.target.value
-        });
-    }
-    //setea la ciudad seleccionada para recoleccion
-    const handleChangeCiudadRecoleccion = (event) => {
-        event.preventDefault();
-        setState({
-            ...state,
-            ciudadRecoleccion: event.target.value,
-            codigoPostalRecoleccion: null
-        });
-    }
-    //setea la ciudad seleccionada para entrega
-    const handleChangeCiudadEntrega = (event) => {
-        event.preventDefault();
-        setState({
-            ...state,
-            ciudadEntrega: event.target.value,
-            codigoPostalEntrega: null
-        });
-    }
-    //setea la zona seleccionada para recoleccion
-    const handleChangeZonaRecoleccion = (event) => {
-        event.preventDefault();
-        setState({
-            ...state,
-            zonaRecoleccion: event.target.value,
-        });
-    }
-    //setea la zona seleccionada para entrega
-    const handleChangeZonaEntrega = (event) => {
-        event.preventDefault();
-        setState({
-            ...state,
-            zonaEntrega: event.target.value,
         });
     }
 

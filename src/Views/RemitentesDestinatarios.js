@@ -123,8 +123,6 @@ function RemitenteDestinatario(props) {
                             correo: respuesta.data.m_sCorreoRemitente,
                             telefono: respuesta.data.m_sTelefonoRemitente,
                             contacto: respuesta.data.m_sContactoRemitente,
-                            latitudR: respuesta.data.m_sLatitudR || '',
-                            longitudR: respuesta.data.m_sLongitudR || ''
                         }
                     })
 
@@ -132,7 +130,7 @@ function RemitenteDestinatario(props) {
                 obtenerMunicipiosByIdEstado(estado).then(({data}) => {
                     setDataMunicipios(data)
                 })
-                obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then((cp) => {
+                obtenerCodigoPostalId(respuesta.data.m_sIdCodigoPostalRemitente).then((cp) => {
                     setState(state => {
                         return {
                             ...state,
@@ -207,7 +205,7 @@ function RemitenteDestinatario(props) {
                 obtenerMunicipiosByIdEstado(estado).then(({data}) => {
                     setDataMunicipios(data)
                 })
-                obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalDestinatario).then((cp) => {
+                obtenerCodigoPostalId(respuesta.data.m_sIdCodigoPostalDestinatario).then((cp) => {
                     setState(state => {
                         return {
                             ...state,
@@ -437,20 +435,20 @@ function RemitenteDestinatario(props) {
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipios(data)
             })
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
+            /*obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
                 setDataZonasOperativas(data)
             })
             obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCodigoPostal).then(({data}) => {
                 setDataZonasTarifa(data)
-            })
+            })*/
         }
         if (input === "codigoPostal"){
-            obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
+            /*obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
                 setDataZonasOperativas(data)
             })
             obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
                 setDataZonasTarifa(data)
-            })
+            })*/
         }
     }
 
@@ -458,6 +456,18 @@ function RemitenteDestinatario(props) {
         obtenerCodigosPostalesPorEstadoMunicipio(state.estado, state.municipio).then(({data}) => {
             setDataCodigosPostales(data)
         })
+    }
+
+    const handleClickZona = () => {
+        if (state.codigoPostal){
+            obtenerZonaOperativaByIdCodigoPostal(state.codigoPostal.m_sCP).then(({data}) => {
+                setDataZonasOperativas(data)
+            })
+            obtenerZonaTarifaByIdCodigoPostal(state.codigoPostal.m_sCP).then(({data}) => {
+                setDataZonasTarifa(data)
+            })
+        }
+
     }
 
     return (
@@ -869,7 +879,7 @@ function RemitenteDestinatario(props) {
                                         label="Zona Operativa"
                                         margin="dense"
                                         required={!state.diferenteEntrega && !state.entregaEnSucursal}
-                                        // onClick={handleClickZona}
+                                        onClick={handleClickZona}
                                         {...params}
                                     />
                                 }
@@ -904,7 +914,7 @@ function RemitenteDestinatario(props) {
                                         label="Zona Tarifa"
                                         margin="dense"
                                         required={!state.diferenteEntrega && !state.entregaEnSucursal}
-                                        // onClick={handleClickZona}
+                                        onClick={handleClickZona}
                                         {...params}
                                     />
                                 }
