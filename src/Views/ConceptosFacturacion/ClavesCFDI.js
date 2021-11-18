@@ -13,13 +13,13 @@ import {
 } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../../Constants";
-import { obtenerSAT } from "../../Util/Contexts/ConceptosFacturacionContext";
 import SearchIcon from "@material-ui/icons/Search";
 class ClavesCFDI extends Component {
     constructor(props) {
         super(props);
         this.state = {
             row:[],
+            rowFilter: [],
             searchText:"",
             height: window.innerHeight,
             codigo: props.edit ? props.select.m_sCodigo : "",
@@ -42,18 +42,7 @@ class ClavesCFDI extends Component {
                 ? props.select.m_bCalculoFlete
                 : false,
             unidadMedia: props.edit ? props.select.m_sUnidadMedida : "",
-            columns: [
-                {
-                    headerName: "Clave SAT",
-                    field: "m_nClaveClase",
-                    width: 125,
-                },
-                {
-                    headerName: "Producto o Servicio",
-                    field: "m_sClase",
-                    flex: 1,
-                },
-            ],
+
             columnsUnidades: [
                 {
                     headerName: "Clave SAT",
@@ -77,32 +66,15 @@ class ClavesCFDI extends Component {
             this.handleChangeChecboxRetencion.bind(this);
         this.handleChangeChecboxRetencionPredeterminado =
             this.handleChangeChecboxRetencionPredeterminado.bind(this);
+        this.requestSearch = this.requestSearch.bind(this);
     }
 
     componentDidMount() {
-        if(this.props.isProducto)
-        {
-            // console.log("Es Producto")
+
             this.setState({
-                row:this.props.dataSAT.filter((SAT) => {
-                    if (this.state.claveGrupo != 0) {
-                        return SAT.m_nClaveGrupo == this.state.claveGrupo;
-                    } else if (this.state.claveDivision != 0) {
-                        return SAT.m_nClaveDivision == this.state.claveDivision;
-                    } else if (this.state.tipoSAT != "") {
-                        return SAT.m_sTipo == this.state.tipoSAT;
-                    } else {
-                        return SAT;
-                    }
-                })})
-        }
-        else
-        {
-            // console.log("Es unidad")
-            this.setState({
-                row:this.props.dataSAT
+                row:this.props.dataSAT,
+                rowFilter: this.props.dataSAT
             })
-        }
 
     }
 
@@ -174,42 +146,42 @@ class ClavesCFDI extends Component {
         this.props.onSubmit(this.state);
     }
 
+    requestSearch = (searchValue) => {
+        if(searchValue === "") {
+            this.setState({
+                rowFilter:this.state.row,
+                searchText:searchValue
+            })
+            return
+        }
+        const filteredRows = this.state.row.filter((row) => {
 
+                if (row.m_sClaveSAT.includes(searchValue) || row.m_sDescripcion.includes(searchValue)) {
+                    return true
+                }else {
+                    return false
+                }
+        });
+
+        this.setState({
+            rowFilter:filteredRows,
+            searchText:searchValue
+        })
+    };
 
     render() {
-        const { impuestos, impuestosRetencion } = this.state;
-        const  escapeRegExp = (value) =>{
-            return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-        }
-
-        const requestSearch = (searchValue) => {
-            this.setState({
-                searchText:searchValue
-            });
-            const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
-            const filteredRows = this.state.row.filter((row) => {
-                return Object.keys(row).some((field) => {
-                    return searchRegex.test(row[field].toString());
-                });
-            });
-
-            this.setState({
-                row:filteredRows
-            })
-        };
-
 
         return (
             <div>
                 <div
                     className="row"
-                    style={{ height: this.state.height - 250, width: "100%" }}
+                    style={{ height: "400px", width: "100%" }}
                 >
                     <div style={{display:"flex",justifyContent:"space-between"}}>
                         <TextField
                             variant="standard"
-                            value
-                            onChange
+                            value={this.state.searchText}
+                            onChange={(e) => this.requestSearch(e.target.value)}
                             placeholder
                             InputProps={{
                                 startAdornment: <SearchIcon fontSize="small" />,
@@ -224,28 +196,24 @@ class ClavesCFDI extends Component {
                             Seleccionar
                         </Button>
                     </div>
-                    {this.props.dataSAT.length != 0 ? (
-                        <DataGrid
-                            localeText={dataGridLocaleText}
-                            rows={this.state.row}
-                            columns={this.props.isProducto? this.state.columns: this.state.columnsUnidades}
-                            componentsProps={{
-                                toolbar:{
-                                    value:this.searchText,
-                                    onChange:(event)=> requestSearch(event.target.value)
-                                }
+                    <div style={{height:"300px", padding:"5px"}}>
+                        {this.props.dataSAT.length != 0 ? (
+                            <DataGrid
+                                localeText={dataGridLocaleText}
+                                rows={this.state.rowFilter}
+                                columns={this.state.columnsUnidades}
 
-                            }}
-                            density="compact"
-                            pageSize={Math.floor((this.state.height - 310) / 30)}
-                            getRowId={this.props.isProducto ?((row) => row.m_nClaveClase ) : ((row)=> row.m_sClaveSAT)}//aqui esta el problema
-                            onRowSelected={(row) => {
-                                this.props.selectClase(row);
-                            }}
-                        />
-                    ) : (
-                        <div>No se encontró ningún registro</div>
-                    )}
+                                density="compact"
+                                getRowId={ ((row)=> row.m_sClaveSAT)}
+                                onRowSelected={(row) => {
+                                    this.props.selectClase(row);
+                                }}
+                            />
+                        ) : (
+                            <div>No se encontró ningún registro</div>
+                        )}
+                    </div>
+
                 </div>
             </div>
         );

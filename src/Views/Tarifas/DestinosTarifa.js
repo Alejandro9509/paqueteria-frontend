@@ -145,7 +145,7 @@ export default function DestinosTarifa({destinos = [], destinosSeleccionados = [
             alignItems="center"
             className={classes.root}
         >
-            <Grid item>{customList('Destinos', left)}</Grid>
+            <Grid item>{customList('Destinos (Bodegas)', left)}</Grid>
             <Grid item>
                 <Grid container direction="column" alignItems="center">
                     <Button

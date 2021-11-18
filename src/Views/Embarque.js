@@ -1203,6 +1203,7 @@ function Embarque(props) {
             m_nIdEmbarque: state.idEmbarque,
             m_nIdRecoleccion: props.location.idRecoleccion,
             IdSucursal: state.idSucursalAgregar,
+            ValorDeclarado: state.valorDeclarado,
             m_nFolioEmbarque: state.folioEmbarque,
             m_nFolioGuia: state.folioGuia,
             m_nIdEmbarqueRelacionado: state.idEmbarqueRelacionado,
@@ -2276,6 +2277,7 @@ function Embarque(props) {
             return {
                 ...state,
                 idEmbarque: duplicar ? 0 : respuesta.data.m_nIdEmbarque,
+                valorDeclarado: respuesta.data.m_xValorDeclarado,
                 idEmbarqueRelacionado: duplicar ? respuesta.data.m_nIdEmbarque : 0,
                 idRecoleccion: duplicar ? 0 : respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.IdSucursal,
@@ -4166,8 +4168,29 @@ function Embarque(props) {
                                                             </label>
                                                         </div>
 
+
                                                         <div className="col-md-12">
-                                                            <div className="col-md-6">
+                                                            <div className="col-md-4">
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               className="form-control"
+                                                                               type="text"
+                                                                               disabled={state.agregar === "Consultar"}
+                                                                               label="Valor Declarado"
+                                                                               onChange={(event) => {
+                                                                                   event.preventDefault();
+                                                                                   setState({
+                                                                                       ...state,
+                                                                                       valorDeclarado: event.target.value,
+                                                                                   });
+                                                                               }}
+                                                                               value={state.valorDeclarado}
+                                                                               placeholder="$"
+                                                                               name="valorDeclarado"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-md-4">
                                                                 <div className="input">
                                                                     <Autocomplete
                                                                         value={state.clientePaga}
@@ -4202,7 +4225,7 @@ function Embarque(props) {
                                                                     />
                                                                 </div>
                                                             </div>
-                                                            <div className="col-md-6">
+                                                            <div className="col-md-4">
                                                                 {
                                                                     state.clientePaga ? state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}`: `NO tiene seguro`
                                                                         : ''
@@ -4489,7 +4512,7 @@ function Embarque(props) {
                                             <Paquetes
                                                 dataPaquetes={dataPaquetes}
                                                 onChangeList={handleListPaquetesChange}
-                                                disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
+                                                disabled={state.agregar === "Consultar" }
                                             />
                                         }
                                     </div>
