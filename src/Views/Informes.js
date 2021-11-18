@@ -3198,7 +3198,7 @@ function Informes({history}) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    ${dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_arClsGuiaConceptos.length !== 0 ? curr.m_arClsGuiaConceptos.reduce((a, b) => +a + +(b.m_nIdConceptoFacturacion === 1 ?  b.m_cImporte : 0) , 0) : 0), 0)).toFixed(2)}` }
+                                                                                    ${dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(  curr.m_xTotal), 0)).toFixed(2)}` }
                                                                                 </Grid>
 
                                                                             </Grid>
@@ -3217,7 +3217,7 @@ function Informes({history}) {
                                                                             }}
                                                                         >
                                                                             Peso total :{" "}
-                                                                            {dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_arrClsDetalle.length !== 0 ? curr.m_arrClsDetalle.reduce((a, b) => +a + +b.m_xPeso , 0) : 0), 0))/100)}` } t
+                                                                            {dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xTotal), 0))/100)}` } t
                                                                         </Grid>
 
                                                                     </Grid>
