@@ -1009,7 +1009,7 @@ function Guia(props) {
                         </Tooltip>
                         <Tooltip title="Imprimir">
                             <a className="btn btn-default btn-xs"
-                               onClick={() => printTicket(row.row)}><i className="zmdi zmdi-print"
+                               onClick={() => printTicket(row.row.m_nIdGuia)}><i className="zmdi zmdi-print"
                                                                        style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
@@ -1157,7 +1157,7 @@ function Guia(props) {
         })
     }, [])
 
-    async function printTicket(guia) {
+    async function printTicket(id) {
         /* EB = window.EB
          EB.PrinterZebra.searchPrinters({
              "deviceAddress": "192.148.1.143",
@@ -1173,55 +1173,59 @@ function Guia(props) {
                  })
              })
          })*/
-
-        guia.m_arrClsDetalle.forEach(async (p, index) => {
-            const contadorPaquetesTotales = parseInt(p.ctd);
-            if (p.ctd >= 10) {
-                confirmAlert({
-                    title: 'Confirmación',
-                    message: '¿Está segura(o) que desea imprimir ' + p.ctd + ' etiqueta(s)?',
-                    buttons: [
-                        {
-                            label: 'Yes',
-                            onClick: async () => {
-                                for (let i = 0; i < p.ctd; i++) {
-                                    console.log('guia: ', guia)
-                                    console.log('paquete: ', p)
-                                    console.log('index: ', i + 1)
-                                    console.log(i + 1 + ' de ' + p.ctd)
-                                    var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                                    console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
-                                }
+obtenerGuiaId(id).then(({data}) => {
+    var guia = data
+    guia.m_arrClsDetalle.forEach(async (p, index) => {
+        const contadorPaquetesTotales = parseInt(p.ctd);
+        if (p.ctd >= 10) {
+            confirmAlert({
+                title: 'Confirmación',
+                message: '¿Está segura(o) que desea imprimir ' + p.ctd + ' etiqueta(s)?',
+                buttons: [
+                    {
+                        label: 'Yes',
+                        onClick: async () => {
+                            for (let i = 0; i < p.ctd; i++) {
+                                console.log('guia: ', guia)
+                                console.log('paquete: ', p)
+                                console.log('index: ', i + 1)
+                                console.log(i + 1 + ' de ' + p.ctd)
+                                var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
                             }
-                        },
-                        {
-                            label: 'No'
                         }
-                    ]
-                });
-            }else {
-                for (let i = 0; i < p.ctd; i++) {
-                    console.log('guia: ', guia)
-                    console.log('paquete: ', p)
-                    console.log('index: ', i + 1)
-                    console.log(i + 1 + ' de ' + p.ctd)
-                    var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                    console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
-                }
-
-            }
-            // console.log(contadorPaquetesTotales)
-            // console.log([Array(contadorPaquetesTotales).keys()])
-
-
-            /*[Array(contadorPaquetesTotales).keys()].forEach((i, count) => {
+                    },
+                    {
+                        label: 'No'
+                    }
+                ]
+            });
+        }else {
+            for (let i = 0; i < p.ctd; i++) {
                 console.log('guia: ', guia)
                 console.log('paquete: ', p)
-                console.log('index: ', count+1)
-                selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, count), undefined, errorCallback);
-            })*/
+                console.log('index: ', i + 1)
+                console.log(i + 1 + ' de ' + p.ctd)
+                var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+            }
 
-        })
+        }
+        // console.log(contadorPaquetesTotales)
+        // console.log([Array(contadorPaquetesTotales).keys()])
+
+
+        /*[Array(contadorPaquetesTotales).keys()].forEach((i, count) => {
+            console.log('guia: ', guia)
+            console.log('paquete: ', p)
+            console.log('index: ', count+1)
+            selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, count), undefined, errorCallback);
+        })*/
+
+    })
+
+})
+
 
     }
 
