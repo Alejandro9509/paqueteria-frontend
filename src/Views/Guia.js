@@ -2387,7 +2387,7 @@ setDataFechaFinal(respuestaDos.data)
                         idGuia: guia.m_nIdGuia,
                         tipoCobroOcurre: guia.m_nIdTIpoCobro,
                         importeTotal: importeTotal,
-                        tipoPago: guia.m_nIdTIpoCobro == 11 && 7
+                        tipoPago: guia.m_nIdTIpoCobro == 11 ? 5 : 0
                     })
                     setState({
                         ...state,
