@@ -69,6 +69,7 @@ import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/For
 import {obtenerCodigoPostalId} from "../Util/Contexts/CodigoPostalContext";
 import {obtenerRecoleccionFiltro} from "../Util/Contexts/RecoleccionContext";
 import {confirmAlert} from "react-confirm-alert";
+import ConceptosFacturacion from "./Tarifas/ConceptosFacturacion";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -356,6 +357,7 @@ function Guia(props) {
     const [totalPaquetes, setTotalPaquetes] = useState(0)
     const [showDialogOcurre, setShowDialogOcurre] = useState(false)
     const [dataOcurre, setDataOcurre] = useState()
+    const [dataConceptosBase, setDataConceptosBase] = useState([])
 
     const resetFiltros = () => {
         setFiltros({
@@ -651,6 +653,7 @@ function Guia(props) {
 
         m_arClsGuiaConceptos.forEach((element) => {
             conceptosAdicionales.push({
+                id: Math.floor(Math.random() * 10000),
                 concepto: element,
                 idConcepto: element.m_nIdConceptoFacturacion,
                 importe: element.m_cImporte,
@@ -662,7 +665,7 @@ function Guia(props) {
                 rangoMaximo: element.m_xnRangoMaximo,
                 nombreConcepto: element.m_sConcepto,
                 tipoCalculo: element.m_nIdTipoCalculo,
-                descuento: element.m_cDescuento || 0
+                descuento: element.m_c_Descuento || 0
             })
         })
         var ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
@@ -1101,6 +1104,7 @@ function Guia(props) {
             getTipoCambio()
             cargaEmbarqueMoneda(1)
             getAllDataTipoPago()
+        getAllConceptos()
         // getFormatosImpresion()
     }, []);
 
@@ -1276,11 +1280,18 @@ setDataFechaFinal(respuestaDos.data)
         });
     }
 
+    const getAllConceptos = () => {
+        obtenerConceptosFacturacion().then(respuesta => {
+            setDataConceptosBase(respuesta.data);
+        });
+    }
+
     function addConcepto(data) {
         const {conceptosAdicionales} = state
         var ivaTraslada = []
         var ivaRetiene = []
         conceptosAdicionales.push({
+            id: Math.floor(Math.random() * 10000),
             idConcepto: data.concepto.m_nIdConceptosFacturacion,
             concepto: data.concepto,
             importe: data.importe,
@@ -1441,12 +1452,12 @@ setDataFechaFinal(respuestaDos.data)
         const conceptosTemp = []
         let ivaTraslada = []
         let ivaRetiene = []
-        debugger
         axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetByEmbarque/${idEmbarque}/${idTipoTarifa}`, {headers}).then(respuesta => {
             console.log('tarifas by embarque ', respuesta.data)
             let conceptosCast = []
             respuesta.data.forEach((element) => {
                 conceptosCast.push({
+                    id: Math.floor(Math.random() * 10000),
                     concepto: element,
                     idConcepto: element.m_nIdConceptosFacturacion,
                     importe: element.m_cImporte,
@@ -1454,7 +1465,8 @@ setDataFechaFinal(respuestaDos.data)
                     traslada: element.m_nIdImpuestoTraslada,
                     importeIVA: element.m_cImporteIva,
                     importeRet: element.m_cImporteRetiene,
-                    nombreConcepto: element.m_sConcepto
+                    nombreConcepto: element.m_sConcepto,
+                    descuento: element.m_c_Descuento
                 })
             })
             ivaTraslada = getUniqueListBy(conceptosCast, "traslada").map(i => i.traslada);
@@ -3867,7 +3879,7 @@ setDataFechaFinal(respuestaDos.data)
                                                                             label="Concetos Adicionales por Destino" {...a11yProps(0)}
                                                                             className={{backgroundColor: "white !important"}}/>
                                                                     </Tabs>
-                                                                    <ConceptosAdicionales guias={true}
+                                                                    {/*<ConceptosAdicionales guias={true}
                                                                                           conceptosAdicionales={state.conceptosAdicionales}
                                                                                           addConcepto={addConcepto}
                                                                                           removeConcepto={removeConcepto}
@@ -3877,7 +3889,21 @@ setDataFechaFinal(respuestaDos.data)
                                                                                           customConceptos={true}
                                                                                           listadoConceptosAlternativos={dataTodosConceptosByEmbarque}
                                                                                           consult={state.agregar == "Consultar"}
-                                                                                          mostrarDescuento={true}/>
+                                                                                          mostrarDescuento={true}/>*/}
+                                                                    <ConceptosFacturacion
+                                                                        // consulta={consult}
+                                                                        dataList={state.conceptosAdicionales}
+                                                                        // onChangeList={this.handleChangeListConceptos}
+                                                                        mostrarRangos={false}
+                                                                        mostrarImpuestos={false}
+                                                                        mostrarDescuento={true}
+                                                                        mostrarTipoMedida={false}
+                                                                        mostrarTipoCalculo={false}
+                                                                        conceptosBase={dataConceptosBase}
+                                                                        keys={0}
+                                                                        agregarConcepto={addConcepto}
+                                                                        eliminarConcepto={removeConcepto}
+                                                                    />
                                                                 </div>
 
                                                             }
