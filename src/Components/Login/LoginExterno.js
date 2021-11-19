@@ -41,6 +41,7 @@ class MyComponent extends Component {
                         localStorage.setItem("accessToken", true);
                         localStorage.setItem("UsuarioId", respuesta.data.m_nIdUsuario);
                         localStorage.setItem("Sucursal", respuesta.data.m_nIdSucursal);
+                        localStorage.setItem("RFC", rfc);
                         localStorage.setItem("TipoUsuario", respuesta.data.m_nTipoUsuario);
                         localStorage.setItem("Email", respuesta.data.m_sCorreoElectronico);
                         localStorage.setItem("Usuario", respuesta.data.m_sUsuario);
