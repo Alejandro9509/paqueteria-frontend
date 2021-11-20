@@ -45,6 +45,7 @@ const headers = API_HEADERS
  * key={any} : clave que se le agregará a cada concepto para temas de filtrado.
  * agregarConcepto={funcion} : funcion a la que se le pasará el concepto que se va agregar al listado
  * eliminarConcepto={funcion} : funcion a la que se le pasará el concepto que se va eliminar del listado
+ *
  * */
 export default function ConceptosFacturacion(props) {
     const currencyFormatter = new Intl.NumberFormat('en-US', {
