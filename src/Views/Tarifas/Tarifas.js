@@ -39,53 +39,38 @@ class Tarifas extends Component {
             selected: {},
             DerechoBorrar: 1, //TODO: Definir id
             dataSucursal: [],
-            columns: [
+            columns: [],
+            mostrarColumnasPesoVolumen: false
+        }
+        this.cambiarPantalla = this.cambiarPantalla.bind(this)
+        this.getAllData = this.getAllData.bind(this)
+        this.handleShowModificar = this.handleShowModificar.bind(this)
+        this.handleShowConsultar = this.handleShowConsultar.bind(this)
+        this.handleEliminar = this.handleEliminar.bind(this)
+        this.handleAceptar = this.handleAceptar.bind(this)
+        this.handleDefinirTarifas = this.handleDefinirTarifas.bind(this)
+    }
+
+
+    componentDidMount() {
+        this.getAllData()
+        this.handleDefinirTarifas()
+
+
+    }
+
+    handleDefinirTarifas(){
+        let columns = []
+        if (this.state.mostrarColumnasPesoVolumen){
+            columns.push(
                 {
-                    headerName: "Acciones",
-                    sortable: false, filterable: false,
-                    field: "",
-                    minWidth: 250,
-                    renderCell: (row) => {
-                        return (
-                            <div>
-                                <Tooltip title="Modificar">
-                                    <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (this.handleShowModificar(row.row.m_nIdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-
-                                </Tooltip>
-                                <Tooltip title="Consultar">
-                                    <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (this.handleShowConsultar(row.row.m_nIdTarifa))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-
-                                </Tooltip>
-                                <Tooltip title="Eliminar">
-                                    <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-                                </Tooltip>
-
-                            </div>
-                        )
-                    }
-                },
-                {
-                    headerName: "Código",
-                    field: "m_sCodigo",
-                    flex: 1,
-                    minWidth: 300,
-                }, {
-                    headerName: "Origen",
-                    field: "m_sOrigen",
-                    flex: 1,
-                    minWidth: 300,
-                },{
-                    headerName: "Destino",
-                    field: "m_sDestino",
-                    flex: 1,
-                    minWidth: 300,
-                }, {
                     headerName: "Precio m³",
                     field: "m_cPrecioM3",
                     flex: 1,
                     valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
                     minWidth: 200,
-                }, {
+                },
+                {
                     headerName: "Precio Kilo",
                     field: "m_cPrecioKilo",
                     flex: 1,
@@ -106,45 +91,80 @@ class Tarifas extends Component {
                     valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
                     minWidth: 125,
                 },
-                {
-                    headerName: "Activo",
-                    field: "m_bActivo",
-                    minWidth: 200,
-                    flex: 1,
-                    renderCell: (row) => {
-                        return (
-                            <div
-                                style={{
-                                    width: "100%",
-                                    textAlign: "center",
-                                    color: row.row.m_bActivo == 'true' ? "green" : "red",
-                                }}
-                            >
-                                {row.row.m_bActivo ? (
-                                    <SvgIcon component={Activo} />
-                                ) : (
-                                    <SvgIcon component={NoActivo} />
-                                )}
-                            </div>
-                        );
-                    },
-                },
-
-            ]
+            )
         }
-        this.cambiarPantalla = this.cambiarPantalla.bind(this)
-        this.getAllData = this.getAllData.bind(this)
-        this.handleShowModificar = this.handleShowModificar.bind(this)
-        this.handleShowConsultar = this.handleShowConsultar.bind(this)
-        this.handleEliminar = this.handleEliminar.bind(this)
-        this.handleAceptar = this.handleAceptar.bind(this)
+        columns.push(
+            {
+                headerName: "Acciones",
+                sortable: false, filterable: false,
+                field: "",
+                minWidth: 250,
+                renderCell: (row) => {
+                    return (
+                        <div>
+                            <Tooltip title="Modificar">
+                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (this.handleShowModificar(row.row.m_nIdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                            </Tooltip>
+                            <Tooltip title="Consultar">
+                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (this.handleShowConsultar(row.row.m_nIdTarifa))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                            </Tooltip>
+                            <Tooltip title="Eliminar">
+                                <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            </Tooltip>
+
+                        </div>
+                    )
+                }
+            },
+            {
+                headerName: "Código",
+                field: "m_sCodigo",
+                width: 300,
+            },
+            {
+                headerName: "Origen",
+                field: "m_sOrigen",
+                flex: 1,
+                minWidth: 300,
+            },
+            {
+                headerName: "Destino",
+                field: "m_sDestino",
+                flex: 1,
+                minWidth: 300,
+            },
+
+            {
+                headerName: "Activo",
+                field: "m_bActivo",
+                width: 100,
+                renderCell: (row) => {
+                    return (
+                        <div
+                            style={{
+                                width: "100%",
+                                textAlign: "center",
+                                color: row.row.m_bActivo == 'true' ? "green" : "red",
+                            }}
+                        >
+                            {row.row.m_bActivo ? (
+                                <SvgIcon component={Activo} />
+                            ) : (
+                                <SvgIcon component={NoActivo} />
+                            )}
+                        </div>
+                    );
+                },
+            },
+        )
+
+
+        this.setState({
+            columns: columns
+        })
     }
-
-
-    componentDidMount() {
-        this.getAllData()
-    }
-
 
     handleShowModificar(id) {
 
