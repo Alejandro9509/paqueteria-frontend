@@ -45,6 +45,7 @@ const headers = API_HEADERS
  * key={any} : clave que se le agregará a cada concepto para temas de filtrado.
  * agregarConcepto={funcion} : funcion a la que se le pasará el concepto que se va agregar al listado
  * eliminarConcepto={funcion} : funcion a la que se le pasará el concepto que se va eliminar del listado
+ *
  * */
 export default function ConceptosFacturacion(props) {
     const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -250,44 +251,7 @@ export default function ConceptosFacturacion(props) {
                 {
                     headerName: "Concepto",
                     field: "nombreConcepto",
-                    minWidth: 300,
-                    width: 300,
-                },
-            )
-        }
-        columns.push(
-            {
-                headerName: "Importe",
-                field: "importe",
-                type:'number',
-                flex: 1,
-                valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
-            },
-            {
-                headerName: "IVA",
-                field: "importeIVA",
-                type:'number',
-                flex: 1,
-                valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
-            },
-            {
-                headerName: "Retiene",
-                field: "importeRet",
-                type:'number',
-                flex: 1,
-                valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
-
-            },
-        )
-        if (!(mostrarTipoCalculo === false)){
-            columns.push(
-                {
-                    headerName: "Cálculo",
-                    field: "tipoCalculo",
-                    flex: 1,
-                    valueFormatter: ({value}) =>
-                        `${value == 1 ? "Fijo" : value == 2 ? "Factor" : value == 3 ? "Producto" : ""} `,
-
+                    width: 250,
                 },
             )
         }
@@ -296,7 +260,7 @@ export default function ConceptosFacturacion(props) {
                 {
                     headerName: "Medida",
                     field: "tipoMedida",
-                    flex: 1,
+                    width: 100,
                     valueFormatter: ({ value }) => `${value == 1 ? "Kg" : value == 2 ? "Tons" : value == 3 ? "Piezas" : ""}`,
                 },
             )
@@ -306,28 +270,67 @@ export default function ConceptosFacturacion(props) {
                 {
                     headerName: "Mínimo",
                     field: "rangoMinimo",
-                    flex: 1,
+                    width: 100,
                 },
                 {
                     headerName: "Máximo",
                     field: "rangoMaximo",
-                    flex: 1,
+                    width: 100,
                 },
             )
         }
+        columns.push(
+            {
+                headerName: "Importe",
+                field: "importe",
+                type:'number',
+                width: 150,
+                valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
+            },
+            {
+                headerName: "IVA",
+                field: "importeIVA",
+                type:'number',
+                width: 150,
+                valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
+            },
+            {
+                headerName: "Retiene",
+                field: "importeRet",
+                type:'number',
+                width: 150,
+                valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
+
+            },
+        )
+        if (!(mostrarTipoCalculo === false)){
+            columns.push(
+                {
+                    headerName: "Cálculo",
+                    field: "tipoCalculo",
+                    width: 100,
+                    valueFormatter: ({value}) =>
+                        `${value == 1 ? "Fijo" : value == 2 ? "Factor" : value == 3 ? "Producto" : ""} `,
+
+                },
+            )
+        }
+
         if (mostrarImpuestos){
             columns.push(
                 {
                     headerName: "Traslada",
                     field: "traslada",
                     type:'number',
-                    flex: 1,
+
+                    width: 150,
                     valueFormatter: ({value}) => `${state.impuestos.length !== 0 && (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)).m_sImpuesto : "No Aplica")} `,
                 },
                 {
                     headerName: "Retiene",
                     field: "retiene",
-                    flex: 1,
+
+                    width: 150,
                     valueFormatter: ({value}) =>
                         `${state.impuestos.length !== 0 && (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)).m_sImpuesto : "No Aplica")} `,
 
@@ -340,8 +343,9 @@ export default function ConceptosFacturacion(props) {
                     headerName: "Descuento",
                     field: "descuento",
                     type:'number',
+                    width: 150,
                     valueFormatter: ({ value }) => `${value}%`,
-                    flex: 1,
+
                 },
             )
         }
@@ -407,50 +411,9 @@ export default function ConceptosFacturacion(props) {
                             />
                         </div>
                     </Grid>
-                    <Grid item xs={2}>
-                        <div className="input">
-                            <TextField variant="outlined" margin="dense"
-                                       onChange={handleChange}
-                                       className="form-control"
-                                       type="number"
-                                       label="Importe"
-                                       style={{textAlign: "right"}}
-                                       step="1"
-                                       min="0"
-                                       value={concepto.importe}
-                                       name="importe"
-                            />
-                        </div>
-                    </Grid>
-                    {!(props.mostrarTipoCalculo === false) &&
-                        <Grid item xs={2}>
-                            <label className="input select" style={{width: "100%"}}>
-                            <FormControl fullWidth variant="outlined" margin="dense">
-                                <InputLabel id="tipoLabel">Tipo Cálculo</InputLabel>
-                                <Select
-                                    labelId="tipoLabel"
-                                    label="Tipo Cálculo"
-                                    className="form-control"
-                                    onChange={handleChange}
-                                    name="tipoCalculo"
-                                    value={concepto.tipoCalculo}
-                                >
-                                    <option key={0} value={0}>Selecciona</option>
-                                    {state.tiposCalculo.map((t) =>
-                                        (t.m_nIdTarifaTipoCalculo == 3 ? concepto.tipoMedida == 3 &&
-                                            <option key={t.m_nIdTarifaTipoCalculo}
-                                                    value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>
-                                            : <option key={t.m_nIdTarifaTipoCalculo}
-                                                      value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>))
-                                    }
-                                </Select>
-                            </FormControl>
-                        </label>
-                        </Grid>
-                    }
                     {!(props.mostrarTipoMedida === false) &&
-                        <Grid item xs={2}>
-                            <label className="input select" style={{ width: "100%" }}>
+                    <Grid item xs={2}>
+                        <label className="input select" style={{ width: "100%" }}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="tipoLabel">Medida</InputLabel>
                                 <Select
@@ -469,12 +432,11 @@ export default function ConceptosFacturacion(props) {
                                 </Select>
                             </FormControl>
                         </label>
-                        </Grid>
+                    </Grid>
                     }
-
                     {props.mostrarRangos &&
-                        <Grid item xs={2}>
-                            <div className="input">
+                    <Grid item xs={2}>
+                        <div className="input">
                             <TextField variant="outlined" margin="dense"
                                        onChange={handleChange}
                                        className="form-control"
@@ -485,11 +447,11 @@ export default function ConceptosFacturacion(props) {
                                        name="rangoMinimo"
                             />
                         </div>
-                        </Grid>
+                    </Grid>
                     }
                     {props.mostrarRangos &&
-                        <Grid item xs={2}>
-                            <div className="input">
+                    <Grid item xs={2}>
+                        <div className="input">
                             <TextField variant="outlined" margin="dense"
                                        onChange={handleChange}
                                        className="form-control"
@@ -500,12 +462,26 @@ export default function ConceptosFacturacion(props) {
                                        name="rangoMaximo"
                             />
                         </div>
-                        </Grid>
+                    </Grid>
                     }
-
+                    <Grid item xs={2}>
+                        <div className="input">
+                            <TextField variant="outlined" margin="dense"
+                                       onChange={handleChange}
+                                       className="form-control"
+                                       type="number"
+                                       label="Importe"
+                                       style={{textAlign: "right"}}
+                                       step="1"
+                                       min="0"
+                                       value={concepto.importe}
+                                       name="importe"
+                            />
+                        </div>
+                    </Grid>
                     {props.mostrarImpuestos &&
-                        <Grid item xs={2}>
-                            <label className="input select" style={{width: "100%"}}>
+                    <Grid item xs={2}>
+                        <label className="input select" style={{width: "100%"}}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="trasladaLabel">Traslada</InputLabel>
                                 <Select
@@ -534,11 +510,11 @@ export default function ConceptosFacturacion(props) {
                                 </Select>
                             </FormControl>
                         </label>
-                        </Grid>
+                    </Grid>
                     }
                     {props.mostrarImpuestos &&
-                        <Grid item xs={2}>
-                            <div className="input">
+                    <Grid item xs={2}>
+                        <div className="input">
                             <TextField variant="outlined" margin="dense"
                                        onChange={handleChange}
                                        className="form-control"
@@ -552,11 +528,11 @@ export default function ConceptosFacturacion(props) {
                                        name="importeIVA"
                             />
                         </div>
-                        </Grid>
+                    </Grid>
                     }
                     {props.mostrarImpuestos &&
-                        <Grid item xs={2}>
-                            <label className="input select" style={{width: "100%"}}>
+                    <Grid item xs={2}>
+                        <label className="input select" style={{width: "100%"}}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="retieneLabel">Retiene</InputLabel>
                                 <Select
@@ -585,11 +561,11 @@ export default function ConceptosFacturacion(props) {
                                 </Select>
                             </FormControl>
                         </label>
-                        </Grid>
+                    </Grid>
                     }
                     {props.mostrarImpuestos &&
-                        <Grid item xs={2}>
-                            <div className="input">
+                    <Grid item xs={2}>
+                        <div className="input">
                             <TextField variant="outlined" margin="dense"
                                        onChange={handleChange}
                                        className="form-control"
@@ -603,8 +579,36 @@ export default function ConceptosFacturacion(props) {
                                        name="importeRet"
                             />
                         </div>
+                    </Grid>
+                    }
+
+                    {!(props.mostrarTipoCalculo === false) &&
+                        <Grid item xs={2}>
+                            <label className="input select" style={{width: "100%"}}>
+                            <FormControl fullWidth variant="outlined" margin="dense">
+                                <InputLabel id="tipoLabel">Tipo Cálculo</InputLabel>
+                                <Select
+                                    labelId="tipoLabel"
+                                    label="Tipo Cálculo"
+                                    className="form-control"
+                                    onChange={handleChange}
+                                    name="tipoCalculo"
+                                    value={concepto.tipoCalculo}
+                                >
+                                    <option key={0} value={0}>Selecciona</option>
+                                    {state.tiposCalculo.map((t) =>
+                                        (t.m_nIdTarifaTipoCalculo == 3 ? concepto.tipoMedida == 3 &&
+                                            <option key={t.m_nIdTarifaTipoCalculo}
+                                                    value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>
+                                            : <option key={t.m_nIdTarifaTipoCalculo}
+                                                      value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>))
+                                    }
+                                </Select>
+                            </FormControl>
+                        </label>
                         </Grid>
                     }
+
                     {props.mostrarDescuento &&
                         <Grid item xs={2}>
                             <div className="input">

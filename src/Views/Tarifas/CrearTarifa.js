@@ -921,7 +921,7 @@ class CrearTarifa extends Component {
                                                 <ConceptosFacturacion
                                                     consulta={consult}
                                                     dataList={conceptosAdicionales}
-                                                    onChangeList={this.handleChangeListConceptos}
+                                                    // onChangeList={this.handleChangeListConceptos}
                                                     mostrarRangos={false}
                                                     mostrarImpuestos={false}
                                                     mostrarDescuento={false}
@@ -947,7 +947,7 @@ class CrearTarifa extends Component {
                                                 <ConceptosFacturacion
                                                     consulta={consult}
                                                     dataList={conceptosManiobra}
-                                                    onChangeList={this.handleChangeListConceptos}
+                                                    // onChangeList={this.handleChangeListConceptos}
                                                     mostrarRangos={true}
                                                     mostrarImpuestos={false}
                                                     mostrarDescuento={false}
