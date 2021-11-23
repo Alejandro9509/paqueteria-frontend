@@ -55,8 +55,14 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
 
         const handleOpenClick = (event)=>{
             event.stopPropagation();
-            getAllSATServicios()
-            getAllSATUnidades()
+            if (dataSAT.length === 0){
+                getAllSATServicios()
+            }
+            if (dataSATUnidades.length === 0){
+                getAllSATUnidades()
+            }
+
+
             let row =  dataPaquetes.filter((p)=> p.m_nIdPaquete==id)[0]
             setDataComplemento({
                 claveProducto: row.m_sClaveSATProducto,
