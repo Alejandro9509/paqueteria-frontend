@@ -55,12 +55,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
 
         const handleOpenClick = (event)=>{
             event.stopPropagation();
-            if (dataSAT.length === 0){
-                getAllSATServicios()
-            }
-            if (dataSATUnidades.length === 0){
-                getAllSATUnidades()
-            }
 
 
             let row =  dataPaquetes.filter((p)=> p.m_nIdPaquete==id)[0]
@@ -472,6 +466,12 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
         if (dataEmbalaje.length === 0 ) {
             getAllEmbalajes()
         }
+        if (dataSAT.length === 0 ) {
+            getAllSATServicios()
+        }
+        if (dataSATUnidades.length === 0 ) {
+            getAllSATUnidades()
+        }
     }
 
     const getAllProductos = () => {
@@ -524,7 +524,11 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
             <Dialog open={openDialog} fullWidth maxWidth="lg" >
                 <DialogTitle>Complemeto Carta Porte</DialogTitle>
                 <DialogContent>
-                    <CrearConcepto handleAceptar={handleAceptar} dialogVisible={dialogVisible} consulta={disabled} dataComplemento={dataComplemento} dataSAT={dataSAT} dataSATUnidades={dataSATUnidades}/>
+                    {
+                        openDialog &&
+                        <CrearConcepto handleAceptar={handleAceptar} dialogVisible={dialogVisible} consulta={disabled} dataComplemento={dataComplemento} dataSAT={dataSAT} dataSATUnidades={dataSATUnidades}/>
+
+                    }
                 </DialogContent>
             </Dialog>
             <Grid container>
