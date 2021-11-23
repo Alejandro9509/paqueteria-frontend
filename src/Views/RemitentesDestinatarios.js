@@ -404,7 +404,7 @@ function RemitenteDestinatario(props) {
             [input]: newValue
         })
         if (input === "Nombre"){
-            let estado = newValue.m_nIdEstado < 10 ? `0${newValue.m_nIdEstado}` : newValue.m_nIdEstado
+            let estado =  newValue.m_nIdEstado
             if (newValue.m_nIdCP == 0){
                 showSuccess("El remitente o destinatario seleccionado no cuenta con Código Postal registrado. Contacte a un Administrador.")
             }
