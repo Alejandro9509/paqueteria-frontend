@@ -744,8 +744,10 @@ function Guia(props) {
                 estatusGuia: respuesta.data.m_sEstatusGuia,
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion
             })
-            if (respuesta.data.m_nFolioInforme != 0)
-                showSuccess("Guía no se puede cancelar ya que no pertenece a ningun informe.")
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(3).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Cancelar').addClass('in show');
         })
     }
 
