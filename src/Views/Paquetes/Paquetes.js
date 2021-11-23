@@ -55,6 +55,8 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
 
         const handleOpenClick = (event)=>{
             event.stopPropagation();
+            getAllSATServicios()
+            getAllSATUnidades()
             let row =  dataPaquetes.filter((p)=> p.m_nIdPaquete==id)[0]
             setDataComplemento({
                 claveProducto: row.m_sClaveSATProducto,
@@ -62,7 +64,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
                 UnidadSAT:row.m_sUnidad,
                 ProductoSAT:row.m_nProducto
             })
-            console.log(row)
             setOpenDialog(true)
 
         }
@@ -311,8 +312,8 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
 
     useEffect(value => {
         getAllEmbalajes()
-        getAllSATServicios()
-        getAllSATUnidades()
+        //getAllSATServicios()
+        //getAllSATUnidades()
     }, [])
 
     const validarPaquetes = (paquete) => {
