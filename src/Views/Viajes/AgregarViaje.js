@@ -122,8 +122,8 @@ class AgregarViaje extends Component {
 
     componentWillMount() {
         this.getAllCiudades()
-        this.getAllRutas()
-        this.getAllCodigosPostales()
+        //this.getAllRutas()
+        //this.getAllCodigosPostales()
         this.getAllSucursales()
         this.getAllEstatusViaje();
         this.getAllUnidades();
