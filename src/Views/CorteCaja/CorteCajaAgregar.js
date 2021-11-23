@@ -570,10 +570,9 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                                                             id="fechaRegistro"
                                                             label="Fecha de registro"
                                                             type="date"
-                                                            // onChange={handleFechaCita}
+                                                            onChange={(e) => setInfoGeneral({...infoGeneral,fechaRegistro: e.target.value}) }
                                                             value={infoGeneral.fechaRegistro}
                                                             className={"form-control"}
-                                                            disabled
                                                             InputLabelProps={{shrink: true,}}
                                                             // required={state.recoleccionConCita}
                                                         />

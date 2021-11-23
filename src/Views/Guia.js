@@ -1182,7 +1182,6 @@ function Guia(props) {
 obtenerGuiaId(id).then(({data}) => {
     var guia = data
     guia.m_arrClsDetalle.forEach(async (p, index) => {
-        const contadorPaquetesTotales = parseInt(p.ctd);
         if (p.ctd >= 10) {
             confirmAlert({
                 title: 'Confirmación',
