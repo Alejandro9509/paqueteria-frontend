@@ -885,12 +885,12 @@ function Guia(props) {
             field: "m_sTracking",
             width: 150,
         },
-        {
+        /*{
             headerName: "Folio Relacionado",
             field: "m_sFolioGuiaRelacionada",
             width: 125,
 
-        },
+        },*/
         {
             headerName: "Cliente",
             field: "m_sCliente",
