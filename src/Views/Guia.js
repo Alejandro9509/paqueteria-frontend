@@ -861,12 +861,12 @@ function Guia(props) {
         {
             headerName: "Origen",
             field: "m_sCiudadOrigen",
-            width: 125,
+            width: 150,
         },
         {
             headerName: "Destino",
             field: "m_sCiudadDestino",
-            width: 125,
+            width: 150,
         },
         {
             headerName: "Folio Guia",
