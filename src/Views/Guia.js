@@ -119,9 +119,33 @@ function Guia(props) {
     const [data, setData] = React.useState([])
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataCiudadF, setDataCiudadF] = React.useState([]);
-    const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
-    const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
+
+    const [dataFolioGuia, SetDataFolioGuia] = React.useState([]);
+    const [fileUploaded, setFileUploaded] = React.useState([])
+    const [stepActive, setStepActive] = React.useState(1);
+    //Listado de sucursales. Se usa en listado y agregar.
+    const [dataSucursal, setDataSucursal] = React.useState([])
+    const [dataMoneda, setDataMoneda] = React.useState([])
+    const [dataTipoCobro, setDataTipoCobro] = React.useState([])
+    const [dataTipoPago, setDataTipoPago] = React.useState([])
+    const [dataEstatusGuia, setDataEstatusGuia] = React.useState([])
+    const [dataEmbarque, setDataEmbarque] = React.useState([])
+
+    const [dataTipoServicio, setDataTipoServicio] = React.useState([])
+    const [totalPaquetes, setTotalPaquetes] = useState(0)
+    const [showDialogOcurre, setShowDialogOcurre] = useState(false)
+    const [dataOcurre, setDataOcurre] = useState()
+    const [dataConceptosBase, setDataConceptosBase] = useState([])
+    const [filtros, setFiltros] = useState({
+        fechaInicial: 0,
+        fechaFinal: 0,
+        estatusListado:0,
+        sucursalListado: 0,
+        folio: '',
+        OrigenListado:0,
+        DestinoListado:0,
+    })
     const [state, setState] = React.useState({
         //VARIABLES PARA LISTADO DE GUIAS
         sucursalListado: 0,
@@ -236,16 +260,6 @@ function Guia(props) {
 
     })
 
-    const [filtros, setFiltros] = useState({
-        fechaInicial: 0,
-        fechaFinal: 0,
-        estatusListado:0,
-        sucursalListado: 0,
-        folio: '',
-        OrigenListado:0,
-        DestinoListado:0,
-    })
-
     const handleChangeFiltros = (event) => {
         event.preventDefault()
         const {target} = event
@@ -341,24 +355,6 @@ function Guia(props) {
         $("#idBarra" + indice).barcode(valor, "code128");
     }
 
-    const [dataFolioGuia, SetDataFolioGuia] = React.useState([]);
-    const [fileUploaded, setFileUploaded] = React.useState([])
-    const [stepActive, setStepActive] = React.useState(1);
-    //Listado de sucursales. Se usa en listado y agregar.
-    const [dataSucursal, setDataSucursal] = React.useState([])
-    const [dataMoneda, setDataMoneda] = React.useState([])
-    const [dataTipoCobro, setDataTipoCobro] = React.useState([])
-    const [dataTipoPago, setDataTipoPago] = React.useState([])
-    const [dataEstatusGuia, setDataEstatusGuia] = React.useState([])
-    const [dataEmbarque, setDataEmbarque] = React.useState([])
-    const [dataConceptosDefecto, setDataConceptosDefecto] = useState([])
-
-    const [dataTipoServicio, setDataTipoServicio] = React.useState([])
-    const [totalPaquetes, setTotalPaquetes] = useState(0)
-    const [showDialogOcurre, setShowDialogOcurre] = useState(false)
-    const [dataOcurre, setDataOcurre] = useState()
-    const [dataConceptosBase, setDataConceptosBase] = useState([])
-
     const resetFiltros = () => {
         setFiltros({
             fechaInicial: 0,
@@ -371,45 +367,6 @@ function Guia(props) {
 
         })
     }
-
-
-    
-    function getFechaInicial() {
-        obtenerFechaInicio().then(respuesta => {
-            console.log(respuesta.data[0].Fecha)
-            setDataFechaInicial(respuesta.data)
-
-            setFiltros(filtros => {
-                return {
-                    ...filtros,
-                   fechaInicial: respuesta.data[0].Fecha
-                }
-            })
-           
-        });
-    };
-
-
-    
-    function getFechaFinal() {
-        obtenerFechaFinal().then(respuesta => {
-            console.log(respuesta.data[0].Fecha)
-
-            setDataFechaFinal(respuesta.data)
-
-            setFiltros(filtros => {
-                return {
-                    ...filtros,
-                   fechaFinal: respuesta.data[0].Fecha
-                }
-            })
-
-
-
-
-
-        });
-    };
 
     const handleAceptar = (e) => {
         e.preventDefault()
@@ -425,6 +382,8 @@ function Guia(props) {
             "IdSucursal": state.idSucursalAgregar,
             "ValorDeclarado": state.ValorDeclarado,
             "idTipoServicio": state.idTipoServicio,
+            "m_dFecha": state.fecha.substr(0, 10),
+            "m_sHora": state.fecha.substr(state.fecha.length - 5),
 
             "arClsGuiaConceptos": state.conceptosAdicionales.map(c => ({
                 m_nIdConceptosFacturacion: c.idConcepto,
@@ -690,7 +649,7 @@ function Guia(props) {
                 idGuia: respuesta.data.m_nIdGuia,
                 IdEmbarque: respuesta.data.m_nIdEmbarque,
                 idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
-                fecha: respuesta.data.m_dFecha,
+                fecha: getCurrentDateTime(),
                 creadoEl: respuesta.data.m_dCreadoEl,
 
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
@@ -766,59 +725,6 @@ function Guia(props) {
         })
     }
 
-    /*function handleImprmir()
-    {
-      
-    var printWindow = window.open('', '', 'height=700,width=900');
-  
-    printWindow.document.write('<html><head><title></title>');
-    printWindow.document.write('<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" >');//external styles
-    printWindow.document.write('</head><body>');
-    printWindow.document.write($('#impresionDiv').html());
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
-  
-    printWindow.onload=function(){
-    printWindow.focus();                                         
-    printWindow.print();
-    printWindow.close();
-    }
-  }
-  function handleImprmir2()
-  {
-    var pdf = new jspdf('p', 'pt', 'letter');
-          var source = $('#impresionDiv')[0];
-  
-          var specialElementHandlers = {
-              '#bypassme': function (element, renderer) {
-                  return true
-              }
-          };
-          var margins = {
-              top: 80,
-              bottom: 60,
-              left: 40,
-              width: 522
-          };
-  
-          pdf.fromHTML(
-              source, 
-              margins.left, // x coord
-              margins.top, { // y coord
-                  'width': margins.width, 
-                  'elementHandlers': specialElementHandlers
-              },
-  
-              function (dispose) {
-                  pdf.save('Prueba.pdf');
-              }, margins
-          );
-    }*/
-
-    /*function handleShowImprimir() {
-        //getImpresion(38);
-    }*/
-
     //Prepara campos para agregar guia
     function handleShowAgregar() {
         limpiarCamposAgregar()
@@ -870,92 +776,6 @@ function Guia(props) {
             obtenerTarifasPorEmbarque(state.idEmbarque, event.target.value)
         }
     };
-
-    //Hace filtrado de guias por fechas. Se usa en listado de guias
-    const handleFechaInicialFiltro = async (event) => {
-        setState({
-            ...state,
-            fechaInicial: event.target.value,
-        })
-        const {fechaFinal, sucursalListado, estatusListado, folioGuia} = state
-        obtenerGuiasFiltro(event.target.value, fechaFinal, sucursalListado, estatusListado).then(respuesta => {
-            if (respuesta.data == "Vacio") {
-                setData([])
-            } else {
-                setData(respuesta.data)
-            }
-        })
-    }
-
-    //Hace filtrado de guias por fechas. Se usa en listado de guias
-    const handleFechaFinalFiltro = async (event) => {
-        setState({
-            ...state,
-            fechaFinal: event.target.value,
-        })
-        const {fechaInicial, sucursalListado, estatusListado, folioGuia} = state
-        obtenerGuiasFiltro(fechaInicial, event.target.value, sucursalListado, estatusListado, folioGuia).then(respuesta => {
-            if (respuesta.data == "Vacio") {
-                setData([])
-            } else {
-                setData(respuesta.data)
-            }
-        })
-    }
-
-    //Hace filtrado de guias por sucursal. Se usa en listado de guias
-    const handleSucursalFiltro = async (event) => {
-        setState({
-            ...state,
-            sucursalListado: event.target.value,
-        })
-        const {fechaInicial, fechaFinal, estatusListado, folioGuia} = state
-        obtenerGuiasFiltro(fechaInicial, fechaFinal, event.target.value, estatusListado, folioGuia).then(respuesta => {
-            if (respuesta.data == "Vacio") {
-                setData([])
-            } else {
-                setData(respuesta.data)
-            }
-        })
-    }
-
-    //Hace filtrado de guias por estatus. Se usa en listado de guias
-    const handleEstatusFiltro = async (event) => {
-        setState({
-            ...state,
-            estatusListado: event.target.value,
-        })
-        const {fechaInicial, fechaFinal, sucursalListado, folioGuia} = state
-        obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, event.target.value, folioGuia).then(respuesta => {
-            if (respuesta.data == "Vacio") {
-                setData([])
-            } else {
-                setData(respuesta.data)
-            }
-        })
-    }
-
-    //Maneja filtrado de listado guia
-    const handleFolioGuiaFiltro = async (event) => {
-        if (event.keyCode == 13) {
-            let value = event.target.value
-            if (event.target.value == '') {
-                value = 0
-            }
-            setState({
-                ...state,
-                folioGuia: event.target.value,
-            })
-            const {fechaInicial, fechaFinal, sucursalListado, estatusListado} = state
-            obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-    }
 
     const handleChangePaquete = (event, index) => {
 
@@ -1015,7 +835,7 @@ function Guia(props) {
                         <Tooltip title="Imprimir">
                             <a className="btn btn-default btn-xs"
                                onClick={() => printTicket(row.row.m_nIdGuia)}><i className="zmdi zmdi-print"
-                                                                       style={{color: "#F9A03E"}}/></a>
+                                                                                 style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
@@ -1034,41 +854,59 @@ function Guia(props) {
             headerName: "Fecha/Hora Elaboración",
             field: "m_sFechaHora",
             width: 200,
-        }, {
+        },
+        {
             headerName: "Estatus Guia",
             field: "m_sEstatusGuia",
-            width: 125,
-        }, {
+            width: 200,
+        },
+        {
             headerName: "Origen",
             field: "m_sCiudadOrigen",
-            width: 125,
-        }, {
+            width: 150,
+        },
+        {
             headerName: "Destino",
             field: "m_sCiudadDestino",
-            width: 125,
-        }, {
+            width: 150,
+        },
+        {
             headerName: "Folio Guia",
             field: "m_nFolioGuia",
             width: 125,
-        }, {
+        },
+        {
+            headerName: "Tipo cobro",
+            field: "m_sTipoCobro",
+            width: 200,
+        },
+        {
+            headerName: "Tracking",
+            field: "m_sTracking",
+            width: 150,
+        },
+        /*{
             headerName: "Folio Relacionado",
             field: "m_sFolioGuiaRelacionada",
             width: 125,
 
-        },
+        },*/
         {
             headerName: "Cliente",
             field: "m_sCliente",
             width: 300,
-        }, {
+        },
+        {
             headerName: "Sucursal",
             field: "m_sSucursal",
             width: 125,
-        }, {
+        },
+        {
             headerName: "Folio Informe",
             field: "m_sFolioInforme",
             width: 125,
-        }, {
+        },
+        {
             headerName: "Folio Embarque",
             field: "m_sFolioEmbarque",
             width: 150,
@@ -1086,30 +924,6 @@ function Guia(props) {
 
     ]);
 
-    useEffect(value => {
-        if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
-            showSuccess("Es necesario iniciar sesion para acceder a este proceso");
-            window.location.replace("login");
-            return;
-        }
-        getAllCiudadesFiltro()
-        getAllDataSucursal()
-        getAllDataTipoServicio()
-        if (props.location.idEmbarque == undefined) {
-            getAllData()
-        }
-            getAllDataMoneda()
-            getAllDataTipoCobro()
-
-            getAllDataEstatusGuia()
-            getUltimoFolioGuia()
-            getTipoCambio()
-            cargaEmbarqueMoneda(1)
-            getAllDataTipoPago()
-        getAllConceptos()
-        // getFormatosImpresion()
-    }, []);
-
     function generarReporte(id, folio) {
         obtenerGuiaReporte(id).then(({data}) => {
             let pdfWindow = window.open("");
@@ -1119,7 +933,13 @@ function Guia(props) {
         })
     }
 
+    /**Entreando a guias por primera vez*/
     useEffect(value => {
+        if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
+            showSuccess("Es necesario iniciar sesion para acceder a este proceso");
+            window.location.replace("login");
+            return;
+        }
         if (props.location.idEmbarque != undefined) {
             obtenerEmbarquesId(props.location.idEmbarque).then(respuesta => {
                 console.log('Embarque datos:')
@@ -1134,9 +954,24 @@ function Guia(props) {
                 $('.tab-content div ').removeClass('in show');
                 $('#Agregar').addClass('in show');
             });
+        }else{
+            getAllData()
         }
+        getAllCiudadesFiltro()
+        getAllDataSucursal()
+        getAllDataTipoServicio()
+        getAllDataMoneda()
+        getAllDataTipoCobro()
+
+        getAllDataEstatusGuia()
+        getUltimoFolioGuia()
+        getTipoCambio()
+        cargaEmbarqueMoneda(1)
+        getAllDataTipoPago()
+        getAllConceptos()
     }, []);
 
+    /**Configuracion de Impresora*/
     useEffect(value => {
         BrowserPrint.getDefaultDevice("printer", function (device) {
 
@@ -1238,43 +1073,26 @@ obtenerGuiaId(id).then(({data}) => {
         alert("Error: " + errorMessage);
     }
 
-    
-    
-
-    
     async function getAllData() {
-        obtenerFechaInicio().then((respuestaUno) => { 
-
-
-            
-            obtenerFechaFinal().then((respuestaDos) => { 
-
-                console.log(respuestaUno.data[0].Fecha)
-                console.log(respuestaDos.data[0].Fecha)
-
-
-                setDataFechaInicial(respuestaUno.data)
-setDataFechaFinal(respuestaDos.data)
+        obtenerFechaInicio().then((respuestaUno) => {
+            obtenerFechaFinal().then((respuestaDos) => {
                 setFiltros(filtros => {
                     return {
                         ...filtros,
-                       fechaInicial: respuestaUno.data[0].Fecha,
-                       fechaFinal: respuestaDos.data[0].Fecha
+                        fechaInicial: respuestaUno.data[0].Fecha,
+                        fechaFinal: respuestaDos.data[0].Fecha
 
                     }
                 })
-
-
-
-
-                obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, filtros.sucursalListado, filtros.estatusListado, filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
                     setData(respuesta.data);
-        })
-      
+                })
+
             })
-      
-    })
+
+        })
     }
+
     async function getAllCiudadesFiltro() {
         obtenerCiudades().then((respuesta) => {
             setDataCiudadF(respuesta.data);
@@ -1361,11 +1179,16 @@ setDataFechaFinal(respuestaDos.data)
         });
     }
 
-    //Recibe el id de embarque para obtener sus datos del servidor y mostrarlos en pantalla
+    /**Recibe el id de embarque para obtener sus datos del servidor y mostrarlos en pantalla*/
     function handleEmbarque(embarque) {
         obtenerEmbarquesId(embarque).then(respuesta => {
             setDataFromEmbarque(respuesta)
         });
+    }
+
+    const getCurrentDateTime = () => {
+        return `${new Date().getFullYear()}-${`${new Date().getMonth() +
+        1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
     }
 
     const setDataFromEmbarque = (respuesta) => {
@@ -1408,6 +1231,7 @@ setDataFechaFinal(respuestaDos.data)
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
                 folioInforme: respuesta.data.m_nFolioInforme,
                 folioRelacionado: respuesta.m_sFolioEmbarqueRelacionado,
+                fecha: getCurrentDateTime(),
                 idEmbarqueRelacionado: respuesta.m_nIdEmbarqueRelacionado,
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
@@ -1446,8 +1270,6 @@ setDataFechaFinal(respuestaDos.data)
         })
         obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, state.idTipoTarifa)
     }
-
-    const [dataTodosConceptosByEmbarque, setDataTodosConceptosByEmbarque] = useState([])
 
     const obtenerTarifasPorEmbarque = (idEmbarque, idTipoTarifa) => {
         const conceptosTemp = []
@@ -1530,187 +1352,13 @@ setDataFechaFinal(respuestaDos.data)
         })
     }
 
-    //contiene la logica de fos formas de filtrar los conceptos de una tarifa para dejar solo los que son por defecto...
-    // y el peso de paquetes esté dentro del rango. Esta logica fue la base para hacer la que está en los servicios web
-    const filtrarConceptosPorDefecto = (todosConceptos, conceptosDefecto, pesoTotal, embarque) => {
-        const conceptosTemp = []
-        let ivaTraslada = []
-        let ivaRetiene = []
-        //Logica para filtrar guias y solo dejar las que son por defecto y el peso está dentro del rango
-        todosConceptos.forEach(element => {
-            conceptosDefecto.forEach(concepto => {
-                if (concepto.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion) {
-                    //Si el embarque implica recolecta y el concepto por defecto es el de recolecta se calcula el rango maximo y minimo
-                    if (concepto.m_nIdConcepto == 2 && (embarque.m_bEsRecolecta == 1 || embarque.m_bEsRecolecta == true)) {
-                        //Si el peso total de los paquetes es menor mayor al rango minimo  y menor al rango maximo se va mostrar en la lista
-                        if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
-                            conceptosTemp.push({
-                                concepto: element,
-                                importe: element.m_cImporte,
-                                retiene: element.m_nIdImpuestoRetiene,
-                                traslada: element.m_nIdImpuestoTraslada,
-                                importeRet: element.m_cImporteRetiene,
-                                importeIVA: element.m_cImporteIva,
-                                rangoMinimo: element.m_xnRangoMinimo,
-                                rangoMaximo: element.m_xnRangoMaximo,
-                                nombreConcepto: element.m_sConcepto,
-                                tipoCalculo: element.m_nIdTipoCalculo
-                            })
-                        }
-                    }
-                    //Si el concepto es de entrega pasa directo a comparar el peso porque eso siempre se cobra
-                    if (concepto.m_nIdConcepto == 1) {
-                        if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
-                            conceptosTemp.push({
-                                concepto: element,
-                                importe: element.m_cImporte,
-                                retiene: element.m_nIdImpuestoRetiene,
-                                traslada: element.m_nIdImpuestoTraslada,
-                                importeRet: element.m_cImporteRetiene,
-                                importeIVA: element.m_cImporteIva,
-                                rangoMinimo: element.m_xnRangoMinimo,
-                                rangoMaximo: element.m_xnRangoMaximo,
-                                nombreConcepto: element.m_sConcepto,
-                                tipoCalculo: element.m_nIdTipoCalculo
-                            })
-                        }
-                    }
-                    //Si el embarque implica envio a domicilio y el concepto es el de envio a domicilio se calcula el peso
-                    if (concepto.m_nIdConcepto == 3 && !embarque.m_bEntregaEnSucursal) {
-                        if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
-                            conceptosTemp.push({
-                                concepto: element,
-                                importe: element.m_cImporte,
-                                retiene: element.m_nIdImpuestoRetiene,
-                                traslada: element.m_nIdImpuestoTraslada,
-                                importeRet: element.m_cImporteRetiene,
-                                importeIVA: element.m_cImporteIva,
-                                rangoMinimo: element.m_xnRangoMinimo,
-                                rangoMaximo: element.m_xnRangoMaximo,
-                                nombreConcepto: element.m_sConcepto,
-                                tipoCalculo: element.m_nIdTipoCalculo
-                            })
-                        }
-                    }
-                }
-            })
-        })
-
-        //Esta de aqui es otra forma de hacerlo donde no se usa un for each anidadado. funcionan los dos.
-        //Se busca si el concepto en curso es uno por defecto
-
-        //Si es uno por defecto se checa los diferentes estados del embarque
-        todosConceptos.forEach(element => {
-            let concepto = conceptosDefecto.find(c => c.m_nIdConceptosFacturacion == element.m_nIdConceptosFacturacion)
-            if (concepto != undefined) {
-                console.log('concepto defecto: ', concepto)
-                //Si el embarque implica recolecta y el concepto por defecto es el de recolecta se calcula el rango maximo y minimo
-                if (concepto.m_nIdConcepto == 2 && (embarque.m_bEsRecolecta == 1 || embarque.m_bEsRecolecta == true)) {
-                    //Si el peso total de los paquetes es menor mayor al rango minimo  y menor al rango maximo se va mostrar en la lista
-                    if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
-                        conceptosTemp.push({
-                            concepto: element,
-                            importe: element.m_cImporte,
-                            retiene: element.m_nIdImpuestoRetiene,
-                            traslada: element.m_nIdImpuestoTraslada,
-                            importeRet: element.m_cImporteRetiene,
-                            importeIVA: element.m_cImporteIva,
-                            rangoMinimo: element.m_xnRangoMinimo,
-                            rangoMaximo: element.m_xnRangoMaximo,
-                            nombreConcepto: element.m_sConcepto,
-                            tipoCalculo: element.m_nIdTipoCalculo
-                        })
-                    }
-                }
-                //Si el concepto es de entrega pasa directo a comparar el peso porque eso siempre se cobra
-                if (concepto.m_nIdConcepto == 1) {
-                    if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
-                        conceptosTemp.push({
-                            concepto: element,
-                            importe: element.m_cImporte,
-                            retiene: element.m_nIdImpuestoRetiene,
-                            traslada: element.m_nIdImpuestoTraslada,
-                            importeRet: element.m_cImporteRetiene,
-                            importeIVA: element.m_cImporteIva,
-                            rangoMinimo: element.m_xnRangoMinimo,
-                            rangoMaximo: element.m_xnRangoMaximo,
-                            nombreConcepto: element.m_sConcepto,
-                            tipoCalculo: element.m_nIdTipoCalculo
-                        })
-                    }
-                }
-                //Si el embarque implica envio a domicilio y el concepto es el de envio a domicilio se calcula el peso
-                if (concepto.m_nIdConcepto == 3 && !embarque.m_bEntregaEnSucursal) {
-                    if (element.m_xnRangoMinimo < pesoTotal && element.m_xnRangoMaximo > pesoTotal) {
-                        conceptosTemp.push({
-                            concepto: element,
-                            importe: element.m_cImporte,
-                            retiene: element.m_nIdImpuestoRetiene,
-                            traslada: element.m_nIdImpuestoTraslada,
-                            importeRet: element.m_cImporteRetiene,
-                            importeIVA: element.m_cImporteIva,
-                            rangoMinimo: element.m_xnRangoMinimo,
-                            rangoMaximo: element.m_xnRangoMaximo,
-                            nombreConcepto: element.m_sConcepto,
-                            tipoCalculo: element.m_nIdTipoCalculo
-                        })
-                    }
-                }
-                console.log('Embarque es recoleccion: ', (embarque.m_bEsRecolecta == 1 || embarque.m_bEsRecolecta == true) && concepto.m_nIdConcepto == 1)
-                console.log('Embarque es entrega: ', concepto.m_nIdConcepto == 2)
-                console.log('Embarque es envio a domicilio', concepto.m_nIdConcepto == 3 && !embarque.m_bEntregaEnSucursal)
-            }
-        })
-        ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
-        ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
-    }
-
-    //Aqui se filtran los conceptos de la tarifa para que en el listado de conceptos que se pueden agregar solo salgan los que estan dentro del rango
-    const obtenerConceptosByTarifa = (idTarifa, pesoTotal, paquetesEmbarque) => {
-        console.log('pesoTotal: ', pesoTotal)
-        const conceptosDentroRango = []
-        axios.get(`${process.env.REACT_APP_API_URL}/Tarifas/GetById/${idTarifa}`, {headers}).then(tarifa => {
-            console.log("Tarifas/GetById ", tarifa)
-
-            paquetesEmbarque.forEach((p) => {
-                tarifa.data.m_arrArConceptos.forEach(element => {
-                    if (element.m_nIdAgregadoDesde == 0) {
-                        conceptosDentroRango.push(element)
-                    } else {
-                        if (element.m_nIdTipoCalculo == 3) {
-                            if (element.m_xnRangoMinimo <= p.ctd && element.m_xnRangoMaximo >= p.ctd) {
-                                conceptosDentroRango.push(element)
-                            }
-                        } else {
-                            if (element.m_xnRangoMinimo <= pesoTotal && element.m_xnRangoMaximo >= pesoTotal) {
-                                if (element.m_nIdTipoCalculo == 2) {
-                                    if ((pesoTotal / 1000) * element.m_cImporte < 51.5) {
-                                        element.m_cImporte = 51.5
-                                    } else {
-                                        element.m_cImporte = (pesoTotal / 1000) * element.m_cImporte
-                                    }
-                                    element.m_cImporteRetiene = (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoRetiene).m_xPorcentaje / 100) * element.m_cImporte
-                                    element.m_cImporteIva = (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoTraslada).m_xPorcentaje / 100) * element.m_cImporte
-                                }
-                                conceptosDentroRango.push(element)
-                            }
-                        }
-                    }
-                })
-            })
-            setDataTodosConceptosByEmbarque(conceptosDentroRango)
-
-        })
-    }
-
     const limpiarCamposAgregar = () => {
         setState(state => {
             return {
                 ...state,
                 //Informacion General
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
-                fecha: `${new Date().getFullYear()}-${`${new Date().getMonth() +
-                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+                fecha: getCurrentDateTime(),
                 folioGuia: "",
                 idEmbarque: 0,
                 folioInforme: "",
@@ -3094,10 +2742,10 @@ setDataFechaFinal(respuestaDos.data)
                                                                 <TextField variant="outlined" margin="dense"
                                                                            onChange={handleChange}
                                                                            className="form-control"
-                                                                           type="text"
+                                                                           type="datetime-local"
                                                                            InputLabelProps={{shrink: true,}}
                                                                            label="Fecha / Hora"
-                                                                           placeholder={state.fecha}
+                                                                           value={state.fecha}
                                                                            readOnly={state.agregar == "Consultar"}
                                                                            id="fecha"
                                                                            name="fecha"
