@@ -649,7 +649,7 @@ function Guia(props) {
                 idGuia: respuesta.data.m_nIdGuia,
                 IdEmbarque: respuesta.data.m_nIdEmbarque,
                 idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
-                fecha: respuesta.data.m_dFecha + 'T'+ respuesta.data.m_sHora,
+                fecha: getCurrentDateTime(),
                 creadoEl: respuesta.data.m_dCreadoEl,
 
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
@@ -1179,11 +1179,16 @@ obtenerGuiaId(id).then(({data}) => {
         });
     }
 
-    //Recibe el id de embarque para obtener sus datos del servidor y mostrarlos en pantalla
+    /**Recibe el id de embarque para obtener sus datos del servidor y mostrarlos en pantalla*/
     function handleEmbarque(embarque) {
         obtenerEmbarquesId(embarque).then(respuesta => {
             setDataFromEmbarque(respuesta)
         });
+    }
+
+    const getCurrentDateTime = () => {
+        return `${new Date().getFullYear()}-${`${new Date().getMonth() +
+        1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
     }
 
     const setDataFromEmbarque = (respuesta) => {
@@ -1226,8 +1231,7 @@ obtenerGuiaId(id).then(({data}) => {
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
                 folioInforme: respuesta.data.m_nFolioInforme,
                 folioRelacionado: respuesta.m_sFolioEmbarqueRelacionado,
-                fecha: `${new Date().getFullYear()}-${`${new Date().getMonth() +
-                1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+                fecha: getCurrentDateTime(),
                 idEmbarqueRelacionado: respuesta.m_nIdEmbarqueRelacionado,
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
@@ -1354,8 +1358,7 @@ obtenerGuiaId(id).then(({data}) => {
                 ...state,
                 //Informacion General
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
-                fecha: `${new Date().getFullYear()}-${`${new Date().getMonth() +
-                1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+                fecha: getCurrentDateTime(),
                 folioGuia: "",
                 idEmbarque: 0,
                 folioInforme: "",
