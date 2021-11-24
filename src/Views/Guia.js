@@ -2742,7 +2742,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                                 <TextField variant="outlined" margin="dense"
                                                                            onChange={handleChange}
                                                                            className="form-control"
-                                                                           type="datetime-local"
+                                                                           type="text"
                                                                            InputLabelProps={{shrink: true,}}
                                                                            label="Fecha / Hora"
                                                                            placeholder={state.fecha}
