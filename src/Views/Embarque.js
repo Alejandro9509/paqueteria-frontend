@@ -720,31 +720,6 @@ function Embarque(props) {
         longitudR: ''
     })
 
-    const resetRemitente = () => {
-        setRemitente({
-            idRemitente: '',
-            aliasRemitente: '',
-            nombreRemitente: '',
-            RFCRemitente: '',
-            domicilioRemitente: '',
-            calleRemitente: '',
-            numeroIntRemitente: '0',
-            numeroExtRemitente: '',
-            coloniaRemitente: '',
-            estadoRemitente: '',
-            municipioRemitente: '',
-            codigoPostalRemitente: '',
-            correoRemitente: '',
-            telefonoRemitente: '',
-            contactoRemitente: '',
-            origenRemitente: '',
-            zonaOperativaRemitente: '',
-            zonaTarifaRemitente: '',
-            latitudR: '',
-            longitudR: ''
-        })
-    }
-
     const handleChangeRemitente = (data) => {
         setRemitente({
             idRemitente: data.id,
@@ -810,31 +785,6 @@ function Embarque(props) {
         latitudD: '',
         longitudD: ''
     })
-
-    const resetDestinatario = () => {
-        setDestinatario({
-            idDestinatario: '',
-            aliasDestinatario: '',
-            nombreDestinatario: '',
-            RFCDestinatario: '',
-            domicilioDestinatario: '',
-            calleDestinatario: '',
-            numeroIntDestinatario: '0',
-            numeroExtDestinatario: '',
-            coloniaDestinatario: '',
-            estadoDestinatario: '',
-            municipioDestinatario: '',
-            codigoPostalDestinatario: '',
-            correoDestinatario: '',
-            telefonoDestinatario: '',
-            contactoDestinatario: '',
-            destinoDestinatario: '',
-            zonaOperativaDestinatario: '',
-            zonaTarifaDestinatario: '',
-            latitudD: '',
-            longitudD: ''
-        })
-    }
 
     const handleChangeDestinatario = (data) => {
         setDestinatario({
@@ -1016,6 +966,11 @@ function Embarque(props) {
         })
     }
 
+    const getCurrentDateTime = () => {
+        return `${new Date().getFullYear()}-${`${new Date().getMonth() +
+        1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
+    }
+
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
         setState({
@@ -1061,14 +1016,12 @@ function Embarque(props) {
             m_nFolioGuia: state.folioGuia,
             m_nIdEmbarqueRelacionado: state.idEmbarqueRelacionado,
             m_nFolioInforme: state.folioInforme,
-            m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
-            m_tHoraRegistro: state.fechaHoraRegistro.split("T")[1],
             m_nIdEstatusEmbarque: state.estatusEmbarque,
             m_nIdMoneda: state.moneda,
             m_cTIpoCambio: state.tipoCambio,
             m_nIdTIpoCobro: state.tipoCobro,
-            m_dFecha: state.fechaHoraCreacion.split("T")[0],
-            m_tHora: state.fechaHoraCreacion.split("T")[1],
+            m_dFecha: state.fechaHoraRegistro.substr(0, 10),
+            m_sHora: state.fechaHoraRegistro.substr(state.fechaHoraRegistro.length - 5),
             m_nIdCliente: state.clientePaga.m_nIdCliente,
 
             m_sNOmbreRemitente: remitente.nombreRemitente.m_sNombre,
@@ -1165,7 +1118,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        if (state.idEmbarque != 0) {
+        /*if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1200,7 +1153,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
     };
 
     function handleSelectCP(id, cp) {
@@ -1419,57 +1372,14 @@ function Embarque(props) {
                 clientePaga: '',
                 idEmbarque: 0,
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
-                fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
-                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+                fechaHoraRegistro: getCurrentDateTime(),
                 moneda: 1,
                 estatusEmbarque: 16,
-
-                //Remitente
-                /*nombreRemitente: {m_sNombre: "Nombre", m_sAlias: "Alias"},
-                RFCRemitente: '',
-                domicilioRemitente: '',
-                ciudadRemitente: '',
-                codigoPostalRemitente: '',
-                correoRemitente: '',
-                telefonoRemitente: '',
-                contactoRemitente: '',
-                origenRemitente: '',
-                zonaRemitente: {},
-                idRemitente: '',
-                aliasRemitente: '',
-                calleRemitente: '',
-                numeroIntRemitente: '0',
-                numeroExtRemitente: '',
-                coloniaRemitente: '',
-*/
-                //Destinatario
-                /*nombreDestinatario: {m_sNombre: "Nombre", m_sAlias: "Alias"},
-                RFCDestinatario: '',
-                domicilioDestinatario: '',
-                ciudadDestinatario: '',
-                codigoPostalDestinatario: '',
-                correoDestinatario: '',
-                telefonoDestinatario: '',
-                contactoDestinatario: '',
-                destinoDestinatario: '',
-                zonaDestinatario: {},
-                idDestinatario: '',
-                aliasDestinatario: '',
-                calleDestinatario: '',
-                numeroIntDestinatario: '0',
-                numeroExtDestinatario: '',
-                coloniaDestinatario: '',*/
 
                 //Entrega
                 entregaEnSucursal: false,
                 diferenteEntrega: false,
                 idSucursalEntrega: '',
-                /*ciudadEntrega: '',
-                codigoPostalEntrega: '',
-                zonaEntrega: '',
-                domicilioEntrega: '',
-                entregaEn: '',
-                datosAdicionalesEntrega: '',*/
 
                 //Cita de recoleccion
                 entregaConCita: false,
@@ -1506,8 +1416,6 @@ function Embarque(props) {
                 height: window.innerHeight,
             }
         })
-        // resetRemitente()
-        // resetDestinatario()
         setDataEmbarqueConsulta(undefined)
         setDataPaquetes([])
         resetEntregaDD()
@@ -1660,14 +1568,7 @@ function Embarque(props) {
         setState(state => {
             return {
                 ...state,
-                fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
-                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(
-                    2,
-                    0
-                )}T${`${new Date().getHours()}`.padStart(
-                    2,
-                    0
-                )}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+                fechaHoraRegistro: getCurrentDateTime(),
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
                 folioEmbarque: respuesta.data.m_nFolioEmbarque,
@@ -1687,130 +1588,6 @@ function Embarque(props) {
         setDataEmbarqueConsulta(respuesta)
         getDataParaEditar()
         getAllCiudades()
-
-        /*obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(({data}) => {
-            let estado
-            if (respuesta.data.m_nIdEstadoRemitente < 10){
-                estado = `0${respuesta.data.m_nIdEstadoRemitente}`
-            }else{
-                estado = respuesta.data.m_nIdEstadoRemitente
-            }
-            setRemitente(remitente => {
-                return {
-                    ...remitente,
-                    nombreRemitente: data,
-                    RFCRemitente: respuesta.data.m_sRFCRemitente,
-                    domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
-                    ciudadRemitente: respuesta.data.m_nCiudadRemitente,
-                    correoRemitente: respuesta.data.m_sCorreoRemitente,
-                    telefonoRemitente: respuesta.data.m_sTelefonoRemitente,
-                    contactoRemitente: respuesta.data.m_sContactoRemitente,
-                    // origenRemitente: dataCiudad.find((o) => o.m_nIdCiudad == respuesta.data.m_nIdCiudadOrigen),
-                    // zonaRemitente: dataZona.find((z) => z.m_nIdZona == respuesta.data.m_nIdZonaRemitente),
-                    idRemitente: respuesta.data.m_nIdRemitente,
-                    aliasRemitente: respuesta.data.m_sAliasRemitente,
-                    calleRemitente: respuesta.data.m_sCalleRemitente,
-                    numeroIntRemitente: respuesta.data.m_sNoIntRemitente || 0,
-                    numeroExtRemitente: respuesta.data.m_sNoExtRemitente,
-                    coloniaRemitente: respuesta.data.m_sColoniaRemitente,
-                    estadoRemitente: estado || 0,
-                    municipioRemitente: respuesta.data.m_sMunicipioRemitente,
-                    latitudR: data.m_sLatitudR,
-                    longitudR: data.m_sLongitudR
-                }
-            })
-
-            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
-                setDataMunicipiosRemitente(data)
-            })
-            obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then((cp) => {
-                setRemitente(remitente => {
-                    return {
-                        ...remitente,
-                        codigoPostalRemitente: {
-                            m_nIdCP: cp.data.m_nIdCP,
-                            m_sCP: cp.data.m_sCP,
-                            m_sColonia: respuesta.data.m_sColoniaRemitente
-                        },
-                    }
-                })
-            })
-            obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({data}) => {
-                setRemitente(remitente => {
-                    return {
-                        ...remitente,
-                        origenRemitente: data
-                    }
-                })
-            })
-        })*/
-        /*obtenerRemitentesDestinatariosId(respuesta.data.m_nIdDestinatario).then(({data}) => {
-            setDestinatario(destinatario => {
-                return {
-                    ...destinatario,
-                    nombreDestinatario: data,
-                    RFCDestinatario: respuesta.data.m_sRFCDestinatario,
-                    domicilioDestinatario: respuesta.data.m_sDomicilioDestinatario,
-                    ciudadDestinatario: respuesta.data.m_nIdCIudadDestinatario,
-                    correoDestinatario: respuesta.data.m_sCorreoDestinatario,
-                    telefonoDestinatario: respuesta.data.m_sTelefonoDestinatario,
-                    contactoDestinatario: respuesta.data.m_sContactoDestinatario,
-                    idDestinatario: respuesta.data.m_nIdDestinatario,
-                    aliasDestinatario: respuesta.data.m_sAliasDestinatario,
-                    estadoDestinatario: estado || 0,
-                    calleDestinatario: respuesta.data.m_sCalleDestinatario,
-                    numeroIntDestinatario: respuesta.data.m_sNoIntDestinatario || 0,
-                    numeroExtDestinatario: respuesta.data.m_sNoExtDestinatario,
-                    municipioDestinatario: respuesta.data.m_sMunicipioDestinatario,
-                    coloniaDestinatario: respuesta.data.m_sColoniaDestinatario
-                }
-            })
-            obtenerMunicipiosByIdEstado(estado).then(({data}) =>    {
-                setDataMunicipiosDestinatario(data)
-            })
-            obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalDestinatario).then((cp) => {
-                setDestinatario(destinatario => {
-                    return {
-                        ...destinatario,
-                        codigoPostalDestinatario: {
-                            m_nIdCP: cp.data.m_nIdCP,
-                            m_sCP: cp.data.m_sCP,
-                            m_sColonia: respuesta.data.m_sColoniaDestinatario
-                        },
-                    }
-                })
-                obtenerZonaOperativaByIdCodigoPostal(cp.data.m_sCP).then(({data}) => {
-                    setDataZonasOperativasDestinatario(data)
-                })
-                obtenerZonaTarifaByIdCodigoPostal(cp.data.m_sCP).then(({data}) => {
-                    /!*if (data.length > 0){
-                        setDestinatario(destinatario => {
-                            return{
-                                ...destinatario,
-                                zonaTarifaDestinatario: data[0]
-                            }
-                        })
-                    }else{
-                        setDestinatario(destinatario => {
-                            return{
-                                ...destinatario,
-                                zonaTarifaDestinatario: {}
-                            }
-                        })
-                    }*!/
-                    setDataZonasTarifaDestinatario(data)
-                })
-            })
-            obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(({data}) => {
-                setDestinatario(destinatario => {
-                    return {
-                        ...destinatario,
-                        destinoDestinatario: data
-                    }
-                })
-            })
-
-        })*/
 
         /**Si es entrega en sucursal*/
         if(respuesta.data.m_bEntregaEnSucursal){
@@ -1938,7 +1715,7 @@ function Embarque(props) {
                 folioEmbarque: respuesta.data.m_nFolioEmbarque,
                 folioGuia: duplicar ? "" : respuesta.data.m_sFolioGuia,
                 folioInforme: duplicar ? "" : respuesta.data.m_nFolioInforme,
-                fechaHoraRegistro: respuesta.data.m_dFechaRegistro + "T" + respuesta.data.m_tHoraRegistro.slice(0, 5),
+                fechaHoraRegistro: getCurrentDateTime(),
                 estatusEmbarque: duplicar ? 16 : respuesta.data.m_nIdEstatusEmbarque,
                 moneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
@@ -3664,7 +3441,7 @@ function Embarque(props) {
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
-                                                                           label="Fecha / Hora de Registro"
+                                                                           label="Fecha / Hora"
                                                                            onChange={handleChange}
                                                                            required
                                                                            value={state.fechaHoraRegistro}
@@ -3674,10 +3451,7 @@ function Embarque(props) {
                                                                            InputLabelProps={{
                                                                                shrink: true,
                                                                            }}
-                                                                           disabled={
-                                                                               state.agregar === "Consultar" ||
-                                                                               state.agregar === "Modificar"
-                                                                           }
+                                                                           disabled
                                                                 />
                                                             </div>
                                                         </div>

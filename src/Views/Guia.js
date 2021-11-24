@@ -399,7 +399,7 @@ function Guia(props) {
         }
         console.log(params)
         console.log(JSON.stringify(params))
-        /*if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
+        if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
             agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 //window.location.reload();
@@ -421,7 +421,7 @@ function Guia(props) {
             });
             showSuccess('Guia modificada')
             limpiarCamposAgregar()
-        }*/
+        }
     }
 
     const handleEntregaOcurre = (e) => {
@@ -2742,7 +2742,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                                 <TextField variant="outlined" margin="dense"
                                                                            onChange={handleChange}
                                                                            className="form-control"
-                                                                           type="text"
+                                                                           type="datetime-local"
                                                                            InputLabelProps={{shrink: true,}}
                                                                            label="Fecha / Hora"
                                                                            placeholder={state.fecha}
