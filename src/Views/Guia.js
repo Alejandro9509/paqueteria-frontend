@@ -382,6 +382,8 @@ function Guia(props) {
             "IdSucursal": state.idSucursalAgregar,
             "ValorDeclarado": state.ValorDeclarado,
             "idTipoServicio": state.idTipoServicio,
+            "m_dFecha": state.fecha.substr(0, 10),
+            "m_sHora": state.fecha.substr(state.fecha.length - 5),
 
             "arClsGuiaConceptos": state.conceptosAdicionales.map(c => ({
                 m_nIdConceptosFacturacion: c.idConcepto,
@@ -397,7 +399,7 @@ function Guia(props) {
         }
         console.log(params)
         console.log(JSON.stringify(params))
-        if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
+        /*if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
             agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 //window.location.reload();
@@ -419,7 +421,7 @@ function Guia(props) {
             });
             showSuccess('Guia modificada')
             limpiarCamposAgregar()
-        }
+        }*/
     }
 
     const handleEntregaOcurre = (e) => {
@@ -647,7 +649,7 @@ function Guia(props) {
                 idGuia: respuesta.data.m_nIdGuia,
                 IdEmbarque: respuesta.data.m_nIdEmbarque,
                 idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
-                fecha: respuesta.data.m_dFecha,
+                fecha: respuesta.data.m_dFecha + 'T'+ respuesta.data.m_sHora,
                 creadoEl: respuesta.data.m_dCreadoEl,
 
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
@@ -1224,6 +1226,8 @@ obtenerGuiaId(id).then(({data}) => {
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
                 folioInforme: respuesta.data.m_nFolioInforme,
                 folioRelacionado: respuesta.m_sFolioEmbarqueRelacionado,
+                fecha: `${new Date().getFullYear()}-${`${new Date().getMonth() +
+                1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
                 idEmbarqueRelacionado: respuesta.m_nIdEmbarqueRelacionado,
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
@@ -1351,7 +1355,7 @@ obtenerGuiaId(id).then(({data}) => {
                 //Informacion General
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 fecha: `${new Date().getFullYear()}-${`${new Date().getMonth() +
-                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+                1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
                 folioGuia: "",
                 idEmbarque: 0,
                 folioInforme: "",
