@@ -569,14 +569,14 @@ function Embarque(props) {
                                 <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>
                             </a>
                         </Tooltip>
-                        <Tooltip title="Duplicar">
+                        {/*<Tooltip title="Duplicar">
                             <a
                                 className="btn btn-default btn-xs"
                                 onClick={() => handleShowDuplicarConsultar(row.row.m_nIdEmbarque)}
                             >
                                 <i className="fa fa-copy" style={{color: "#F9A03E"}}/>
                             </a>
-                        </Tooltip>
+                        </Tooltip>*/}
 
                     </div>
                 );
