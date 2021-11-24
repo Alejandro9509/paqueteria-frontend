@@ -360,7 +360,7 @@ function Informes({history}) {
         tipoModal: 0,
         IdInforme: 0,
         FolioInforme: 0,
-        fechaHora: `${new Date().getFullYear()}-${`${new Date().getMonth() + 1}`.padStart(2, 0)}-${`${new Date().getDate() }`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+        fechaHora: '',
         DerechoBorrar: 151,
         EstatusInforme: 5,
         IdViaje: {},
@@ -400,14 +400,19 @@ function Informes({history}) {
         indexCubicar: 0,
     });
 
+    const getCurrentDateTime = () => {
+        return `${new Date().getFullYear()}-${`${new Date().getMonth() +
+        1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
+    }
+
     const handleAceptar = (e) => {
         e.preventDefault();
 
         var params = {
             m_nIdInforme: state.IdInforme,
             m_nFolioInforme: state.FolioInforme,
-            m_dFecha: state.fechaHora.split("T")[0],
-            m_tHora: state.fechaHora.split("T")[1],
+            m_dFecha: state.fechaHora.substr(0, 10),
+            m_tHora: state.fechaHora.substr(state.fechaHora.length - 5),
             m_nIdCiudadDestino: state.IdCiudadDestino.m_nIdCiudad,
             m_nIdCiudadOrigen: state.IdCiudadOrigen.m_nIdCiudad,
             m_nIdEstatusInforme: state.EstatusInforme,
@@ -431,8 +436,9 @@ function Informes({history}) {
             m_nCreadoPor: state.CreadoPor,
             m_arrClsProInformeGuia: dataGuias.filter(g => g.select),
         };
-
-        if (state.IdInforme !== 0) {
+        console.log(params)
+        console.log(JSON.stringify(params))
+        /*if (state.IdInforme !== 0) {
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -461,7 +467,7 @@ function Informes({history}) {
                 .catch((err) => {
                     showSuccess(err);
                 });
-        }
+        }*/
     };
 
     function getFormatosImpresion() {
@@ -1000,7 +1006,7 @@ function Informes({history}) {
             GrupoUnidad: "",
             Color: "",
             IdOperador: 0,
-            fechaHora: state.fechaHora,
+            fechaHora: getCurrentDateTime(),
             IdCiudadDestino: {},
             IdCiudadOrigen: {},
             sucursalEmisora: 0,
@@ -1033,7 +1039,7 @@ function Informes({history}) {
                 ...state,
                 IdInforme: id,
                 guiasInforme: data.m_arrClsProGuia,
-                fechaHora: data.m_dFecha + "T" + data.m_tHora,
+                fechaHora: getCurrentDateTime(),
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadOrigen),
                 //IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
@@ -1065,7 +1071,7 @@ function Informes({history}) {
             setDataGuias(data.m_arrClsProGuia)
             setState({
                 ...state,
-                fechaHora: data.m_dFecha + "T" + data.m_tHora,
+                fechaHora: getCurrentDateTime(),
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
                 IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
@@ -1896,9 +1902,7 @@ function Informes({history}) {
                                                                                            shrink: true,
                                                                                        }}
                                                                                        value={state.fechaHora}
-                                                                                       disabled={
-                                                                                           state.agregar == "Consultar"
-                                                                                       }
+                                                                                       disabled
                                                                                        id="fechaHora"
                                                                             />
                                                                         </div>
