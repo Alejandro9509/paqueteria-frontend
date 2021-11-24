@@ -833,7 +833,7 @@ function Guia(props) {
                         <Tooltip title="Imprimir">
                             <a className="btn btn-default btn-xs"
                                onClick={() => printTicket(row.row.m_nIdGuia)}><i className="zmdi zmdi-print"
-                                                                       style={{color: "#F9A03E"}}/></a>
+                                                                                 style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
@@ -852,23 +852,38 @@ function Guia(props) {
             headerName: "Fecha/Hora Elaboración",
             field: "m_sFechaHora",
             width: 200,
-        }, {
+        },
+        {
             headerName: "Estatus Guia",
             field: "m_sEstatusGuia",
-            width: 125,
-        }, {
+            width: 200,
+        },
+        {
             headerName: "Origen",
             field: "m_sCiudadOrigen",
             width: 125,
-        }, {
+        },
+        {
             headerName: "Destino",
             field: "m_sCiudadDestino",
             width: 125,
-        }, {
+        },
+        {
             headerName: "Folio Guia",
             field: "m_nFolioGuia",
             width: 125,
-        }, {
+        },
+        {
+            headerName: "Tipo cobro",
+            field: "m_sTipoCobro",
+            width: 200,
+        },
+        {
+            headerName: "Tracking",
+            field: "m_sTracking",
+            width: 150,
+        },
+        {
             headerName: "Folio Relacionado",
             field: "m_sFolioGuiaRelacionada",
             width: 125,
@@ -878,15 +893,18 @@ function Guia(props) {
             headerName: "Cliente",
             field: "m_sCliente",
             width: 300,
-        }, {
+        },
+        {
             headerName: "Sucursal",
             field: "m_sSucursal",
             width: 125,
-        }, {
+        },
+        {
             headerName: "Folio Informe",
             field: "m_sFolioInforme",
             width: 125,
-        }, {
+        },
+        {
             headerName: "Folio Embarque",
             field: "m_sFolioEmbarque",
             width: 150,
