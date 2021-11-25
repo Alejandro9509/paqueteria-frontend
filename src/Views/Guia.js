@@ -219,6 +219,7 @@ function Guia(props) {
         idTipoCobro: 0,
         idTipoServicio: '2',
         ValorDeclarado: "",
+        porcentajeSeguro:'',
         //Conceptos de facturacion
         conceptosAdicionales: [],
         ivaTraslada: [],
@@ -678,6 +679,7 @@ function Guia(props) {
                 ValorDeclarado: respuesta.data.m_cValorDeclarado,
                 idTipoServicio: respuesta.data.m_nIdTipoServicio,
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
+                porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
 
                 conceptosAdicionales: conceptosAdicionales,
                 FolioGuiaRelacionada: respuesta.data.m_sFolioGuiaRelacionada,
@@ -1193,7 +1195,6 @@ obtenerGuiaId(id).then(({data}) => {
 
     const setDataFromEmbarque = (respuesta) => {
         console.log('Embarque datos: ', respuesta.data)
-        let valorDeclaradoTotal = 0
 
         const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
         let totalCantidad = 0
@@ -1210,7 +1211,6 @@ obtenerGuiaId(id).then(({data}) => {
             paq["descripcionPaquete"] = paq.m_sDescripcion
             paq["observacionesPaquete"] = paq.m_sObservaciones
             paq["id"] = paq.m_nIdEmbarqueDetalle
-            valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
             totalCantidad += parseInt(paq.ctd)
 
         })
@@ -1258,7 +1258,8 @@ obtenerGuiaId(id).then(({data}) => {
                 sobres: sobres,
 
                 IdEmbarque: respuesta.data.m_nIdEmbarque,
-                ValorDeclarado: valorDeclaradoTotal,
+                ValorDeclarado: respuesta.data.m_xValorDeclarado,
+                porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
 
                 folioGuia: respuesta.data.m_nFolioGuia,
                 idGuia: respuesta.data.m_nIdGuia,
@@ -3463,9 +3464,26 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                            disabled
                                                                                            id="ValorDeclarado"
                                                                                            name="ValorDeclarado"
-                                                                                           startAdornment={
-                                                                                               <InputAdornment
-                                                                                                   position="start">$</InputAdornment>}
+                                                                                           InputProps={{
+                                                                                               startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                                                                           }}
+                                                                                />
+                                                                            </div>
+                                                                        </Grid>
+                                                                        <Grid item xs>
+                                                                            <div className="input">
+                                                                                <TextField variant="outlined" margin="dense"
+                                                                                           className="form-control"
+                                                                                           type="number"
+                                                                                           disabled={state.agregar === "Consultar" || !state.aplicaSeguro}
+                                                                                           label="Porcentaje de seguro"
+                                                                                           onChange={handleChange}
+                                                                                           value={state.porcentajeSeguro}
+                                                                                           placeholder="%"
+                                                                                           name="porcentajeSeguro"
+                                                                                           InputProps={{
+                                                                                               endAdornment: <InputAdornment position="start">%</InputAdornment>,
+                                                                                           }}
                                                                                 />
                                                                             </div>
                                                                         </Grid>
@@ -3556,6 +3574,9 @@ obtenerGuiaId(id).then(({data}) => {
                                                                         keys={0}
                                                                         agregarConcepto={addConcepto}
                                                                         eliminarConcepto={removeConcepto}
+                                                                        mostrarTotales={true}
+                                                                        ivaTraslada={state.ivaTraslada}
+                                                                        ivaRetiene={state.ivaRetiene}
                                                                     />
                                                                 </div>
 
