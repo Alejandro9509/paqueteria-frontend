@@ -1264,7 +1264,11 @@ obtenerGuiaId(id).then(({data}) => {
                 idGuia: respuesta.data.m_nIdGuia,
                 creadoEl: respuesta.data.m_dCreadoEl,
                 idEstatusGuia: 4,
-                idTipoServicio: 2
+                idTipoServicio: 2,
+                tieneRecoleccion: respuesta.data.m_bEsRecolecta,
+                tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
+                tieneCitaRecoleccion: false,
+                tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
 
             }
         })
@@ -3365,7 +3369,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                                 {/*<form className="j-forms">*/}
                                                                 <div className="form-content">
                                                                     <Grid container spacing={2}>
-                                                                        <Grid item xs={2}>
+                                                                        <Grid item xs>
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth
                                                                                              variant="outlined"
@@ -3404,7 +3408,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                 </FormControl>
                                                                             </label>
                                                                         </Grid>
-                                                                        <Grid item xs={2}>
+                                                                        <Grid item xs>
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth
                                                                                              variant="outlined"
@@ -3442,7 +3446,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                 </FormControl>
                                                                             </label>
                                                                         </Grid>
-                                                                        <Grid item xs={2}>
+                                                                        <Grid item xs>
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
                                                                                            margin="dense"
@@ -3465,28 +3469,28 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                 />
                                                                             </div>
                                                                         </Grid>
-                                                                        <Grid item xs={1.5}>
+                                                                        <Grid item xs>
                                                                             <FormControlLabel disabled
                                                                                               control={<Checkbox
                                                                                                   checked={state.tieneRecoleccion}
                                                                                                   name="tieneRecolecion"/>}
                                                                                               label="Tiene recolección"/>
                                                                         </Grid>
-                                                                        <Grid item xs={1.5}>
+                                                                        <Grid item xs>
                                                                             <FormControlLabel disabled
                                                                                               control={<Checkbox
                                                                                                   checked={state.tieneEntregaDomicilio}
                                                                                                   name="tieneEntregaDomicilio"/>}
                                                                                               label="Tiene entrega a domicilio"/>
                                                                         </Grid>
-                                                                        <Grid item xs={1.5}>
+                                                                        {/*<Grid item xs={1.5}>
                                                                             <FormControlLabel disabled
                                                                                               control={<Checkbox
                                                                                                   checked={state.tieneCitaRecoleccion}
                                                                                                   name="tieneCita"/>}
                                                                                               label="Tiene cita para recolección"/>
-                                                                        </Grid>
-                                                                        <Grid item xs={1.5}>
+                                                                        </Grid>*/}
+                                                                        <Grid item xs>
                                                                             <FormControlLabel disabled
                                                                                               control={<Checkbox
                                                                                                   checked={state.tieneCitaEntrega}
