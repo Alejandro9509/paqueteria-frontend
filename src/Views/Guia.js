@@ -1193,7 +1193,6 @@ obtenerGuiaId(id).then(({data}) => {
 
     const setDataFromEmbarque = (respuesta) => {
         console.log('Embarque datos: ', respuesta.data)
-        let valorDeclaradoTotal = 0
 
         const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
         let totalCantidad = 0
@@ -1210,7 +1209,6 @@ obtenerGuiaId(id).then(({data}) => {
             paq["descripcionPaquete"] = paq.m_sDescripcion
             paq["observacionesPaquete"] = paq.m_sObservaciones
             paq["id"] = paq.m_nIdEmbarqueDetalle
-            valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
             totalCantidad += parseInt(paq.ctd)
 
         })
@@ -1258,7 +1256,7 @@ obtenerGuiaId(id).then(({data}) => {
                 sobres: sobres,
 
                 IdEmbarque: respuesta.data.m_nIdEmbarque,
-                ValorDeclarado: valorDeclaradoTotal,
+                ValorDeclarado: respuesta.data.m_xValorDeclarado,
 
                 folioGuia: respuesta.data.m_nFolioGuia,
                 idGuia: respuesta.data.m_nIdGuia,
