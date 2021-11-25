@@ -1177,7 +1177,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        /*if (state.idEmbarque != 0) {
+        if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1212,7 +1212,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }*/
+        }
     };
 
     function handleSelectCP(id, cp) {
