@@ -3574,6 +3574,9 @@ obtenerGuiaId(id).then(({data}) => {
                                                                         keys={0}
                                                                         agregarConcepto={addConcepto}
                                                                         eliminarConcepto={removeConcepto}
+                                                                        mostrarTotales={true}
+                                                                        ivaTraslada={state.ivaTraslada}
+                                                                        ivaRetiene={state.ivaRetiene}
                                                                     />
                                                                 </div>
 
