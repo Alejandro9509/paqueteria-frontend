@@ -438,7 +438,7 @@ function Informes({history}) {
         };
         console.log(params)
         console.log(JSON.stringify(params))
-        /*if (state.IdInforme !== 0) {
+        if (state.IdInforme !== 0) {
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -467,7 +467,7 @@ function Informes({history}) {
                 .catch((err) => {
                     showSuccess(err);
                 });
-        }*/
+        }
     };
 
     function getFormatosImpresion() {
