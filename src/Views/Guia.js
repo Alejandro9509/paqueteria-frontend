@@ -219,6 +219,7 @@ function Guia(props) {
         idTipoCobro: 0,
         idTipoServicio: '2',
         ValorDeclarado: "",
+        porcentajeSeguro:'',
         //Conceptos de facturacion
         conceptosAdicionales: [],
         ivaTraslada: [],
@@ -678,6 +679,7 @@ function Guia(props) {
                 ValorDeclarado: respuesta.data.m_cValorDeclarado,
                 idTipoServicio: respuesta.data.m_nIdTipoServicio,
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
+                porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
 
                 conceptosAdicionales: conceptosAdicionales,
                 FolioGuiaRelacionada: respuesta.data.m_sFolioGuiaRelacionada,
@@ -1257,6 +1259,7 @@ obtenerGuiaId(id).then(({data}) => {
 
                 IdEmbarque: respuesta.data.m_nIdEmbarque,
                 ValorDeclarado: respuesta.data.m_xValorDeclarado,
+                porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
 
                 folioGuia: respuesta.data.m_nFolioGuia,
                 idGuia: respuesta.data.m_nIdGuia,
@@ -3461,9 +3464,26 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                            disabled
                                                                                            id="ValorDeclarado"
                                                                                            name="ValorDeclarado"
-                                                                                           startAdornment={
-                                                                                               <InputAdornment
-                                                                                                   position="start">$</InputAdornment>}
+                                                                                           InputProps={{
+                                                                                               startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                                                                           }}
+                                                                                />
+                                                                            </div>
+                                                                        </Grid>
+                                                                        <Grid item xs>
+                                                                            <div className="input">
+                                                                                <TextField variant="outlined" margin="dense"
+                                                                                           className="form-control"
+                                                                                           type="number"
+                                                                                           disabled={state.agregar === "Consultar" || !state.aplicaSeguro}
+                                                                                           label="Porcentaje de seguro"
+                                                                                           onChange={handleChange}
+                                                                                           value={state.porcentajeSeguro}
+                                                                                           placeholder="%"
+                                                                                           name="porcentajeSeguro"
+                                                                                           InputProps={{
+                                                                                               endAdornment: <InputAdornment position="start">%</InputAdornment>,
+                                                                                           }}
                                                                                 />
                                                                             </div>
                                                                         </Grid>
