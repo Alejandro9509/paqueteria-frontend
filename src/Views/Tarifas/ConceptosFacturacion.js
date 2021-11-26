@@ -45,7 +45,9 @@ const headers = API_HEADERS
  * key={any} : clave que se le agregará a cada concepto para temas de filtrado.
  * agregarConcepto={funcion} : funcion a la que se le pasará el concepto que se va agregar al listado
  * eliminarConcepto={funcion} : funcion a la que se le pasará el concepto que se va eliminar del listado
- *
+ * ivaRetiene={listado} : listado de ids de los impuestos retiene usados por los conceptos
+ * ivaTraslada={listado} : listado de ids de los impuestos traslada usados por los conceptos
+ * mostrarTotales={booleano} : indica si se quiere que se muestren los totales de los conceptos
  * */
 export default function ConceptosFacturacion(props) {
     const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -654,58 +656,70 @@ export default function ConceptosFacturacion(props) {
                     </div>
 
                 </div>
-                {/*<div className="col-md-12 col-sm-12" style={{ padding: "5px", backgroundColor: "white", backgroundClip: "content-box" }}>
+                {
+                    props.mostrarTotales &&
+                    <div className="col-md-12 col-sm-12" style={{ padding: "5px", backgroundColor: "white", backgroundClip: "content-box" }}>
 
-                    <div className="col-md-12 col-sm-12"
-                         style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
-                        <div style={{margin: "5px", padding: "5px"}}>Subtotal</div>
-                        <div style={{
-                            margin: "4px",
-                            padding: "4px",
-                            marginRight: "15px",
-                            backgroundColor: "white",
-                            backgroundClip: "border-box",
-                            borderStyle: "solid",
-                            borderColor: "gray",
-                            minWidth: "230px",
-                            textAlign: "right"
-                        }}> ${parseFloat(props.dataList.reduce((total, arg) => total + parseFloat(arg.importe), 0)).toFixed(2)}</div>
-                    </div>
-                    <div className="col-md-12 col-sm-12"
-                         style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
+                        <div className="col-md-12 col-sm-12"
+                             style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
+                            <div style={{margin: "5px", padding: "5px"}}>Subtotal</div>
+                            <div style={{
+                                margin: "4px",
+                                padding: "4px",
+                                marginRight: "15px",
+                                backgroundColor: "white",
+                                backgroundClip: "border-box",
+                                borderStyle: "solid",
+                                borderColor: "gray",
+                                minWidth: "230px",
+                                textAlign: "right"
+                            }}> ${parseFloat(props.dataList.reduce((total, arg) => total + parseFloat(arg.importe), 0)).toFixed(2)}</div>
+                        </div>
+                        <div className="col-md-12 col-sm-12"
+                             style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
 
-                        <div style={{
-                            margin: "4px",
-                            padding: "4px",
-                            marginRight: "15px",
-                            backgroundColor: "white",
-                            backgroundClip: "border-box",
-                            borderStyle: "solid",
-                            borderColor: "gray",
-                            minWidth: "230px",
-                            textAlign: "right"
-                        }}>  {state.ivaTraslada.map(t => (
-                            <div>{`${state.impuestos.length !== 0 ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : "" : ""} `} ${parseFloat(props.dataList.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br/>
-                            </div>))} {state.ivaRetiene.map(t => (
-                            <div>{`${state.impuestos.length !== 0 ? `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : ""}` : ""} `} ${parseFloat(props.dataList.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br/>
-                            </div>))} </div>
+                            <div style={{
+                                margin: "4px",
+                                padding: "4px",
+                                marginRight: "15px",
+                                backgroundColor: "white",
+                                backgroundClip: "border-box",
+                                borderStyle: "solid",
+                                borderColor: "gray",
+                                minWidth: "230px",
+                                textAlign: "right"
+                            }}>  {props.ivaTraslada.map(t => (
+                                <div>{`${state.impuestos.length !== 0 ? 
+                                    state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? 
+                                        state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : 
+                                        "" : 
+                                    ""} `} ${parseFloat(props.dataList.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br/>
+                                </div>))} {props.ivaRetiene.map(t => (
+                                <div>{`${state.impuestos.length !== 0 ? 
+                                    `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? 
+                                        state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : 
+                                        ""}` : 
+                                    ""} `} ${parseFloat(props.dataList.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br/>
+                                </div>))} </div>
+                        </div>
+                        <div className="col-md-12 col-sm-12"
+                             style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
+                            <div style={{margin: "5px", padding: "5px"}}>Total</div>
+                            <div style={{
+                                margin: "4px",
+                                padding: "4px",
+                                marginRight: "15px",
+                                backgroundColor: "white",
+                                backgroundClip: "border-box",
+                                borderStyle: "solid",
+                                borderColor: "gray",
+                                minWidth: "230px",
+                                textAlign: "right"
+                            }}> ${parseFloat(props.dataList.reduce((total, arg) => total + parseFloat(arg.importe), 0) + props.dataList.filter(c => state.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) - props.dataList.filter(c => state.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
+                        </div>
                     </div>
-                    <div className="col-md-12 col-sm-12"
-                         style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
-                        <div style={{margin: "5px", padding: "5px"}}>Total</div>
-                        <div style={{
-                            margin: "4px",
-                            padding: "4px",
-                            marginRight: "15px",
-                            backgroundColor: "white",
-                            backgroundClip: "border-box",
-                            borderStyle: "solid",
-                            borderColor: "gray",
-                            minWidth: "230px",
-                            textAlign: "right"
-                        }}> ${parseFloat(props.dataList.reduce((total, arg) => total + parseFloat(arg.importe), 0) + props.dataList.filter(c => state.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) - props.dataList.filter(c => state.ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
-                    </div>
-                </div>*/}
+                }
+
 
             </div>
 
