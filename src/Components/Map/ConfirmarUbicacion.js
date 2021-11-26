@@ -24,7 +24,7 @@ class ConfirmarUbicacion extends Component {
         if (this.props.direccion) {
             obtenerUbicacion(this.props.direccion.m_sMunicipio, this.props.direccion.m_sCalle, this.props.direccion.m_sColonia, this.props.direccion.m_sCodigoPostal).then((coordenadas) => {
                 this.setState({coordenadas: {lat: coordenadas.y, lng: coordenadas.x}})
-                this.state.map.flyTo({lat: coordenadas.y, lng: coordenadas.x}, 18)
+                this.state.map.setView([ coordenadas.y, coordenadas.x], 18)
             })
         }
     }

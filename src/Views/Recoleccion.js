@@ -2560,6 +2560,15 @@ function Recoleccion() {
         setDataPaquetes(newList)
     }
 
+    const filtrarTipoCobro = (tipoCobro) => {
+        // if (!state.clientePaga) {
+        return tipoCobro.m_nIdTipoCobro === 10 || tipoCobro.m_nIdTipoCobro === 11
+        // }else {
+        //     return (state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 10) || ( !state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 11)
+        //
+        // }
+    }
+
     return (
         <div>
             {
@@ -3430,7 +3439,7 @@ function Recoleccion() {
                                                                         id="tipoCobro"
                                                                     >
                                                                         <option value="0">Seleccionar</option>
-                                                                        {dataTipoCobro.map((tipoCobro) => (
+                                                                        {dataTipoCobro.filter(d => filtrarTipoCobro(d)).map((tipoCobro) => (
                                                                             <option
                                                                                 key={tipoCobro.m_nIdTipoCobro}
                                                                                 value={tipoCobro.m_nIdTipoCobro}
@@ -3487,6 +3496,8 @@ function Recoleccion() {
                                                                                 label="Responsable de pago"
                                                                                 margin="dense"
                                                                                 required
+                                                                                error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
+                                                                                helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de credito: " + state.clientePaga.m_nDiasCredito : ""}
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
                                                                                 InputLabelProps={{shrink: true}}
                                                                                 onClick={handleClickResponsablePago}

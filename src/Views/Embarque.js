@@ -1292,7 +1292,7 @@ function Embarque(props) {
     useEffect(value => {
         let newTiposCobro = []
         if (state.entregaEnSucursal) {
-            if (state.tipoCobro == 5) {
+            if (state.tipoCobro === 5) {
                 showSuccess("No se puede hacer cobro en origen cuando es entrega en sucursal, elige otra opción.")
                 setState(state => {
                     return {
@@ -1302,7 +1302,7 @@ function Embarque(props) {
                 })
             }
             dataTipoCobro.forEach((i) => {
-                i.valid = !(i.m_nIdTipoCobro == 5);
+                i.valid = !(i.m_nIdTipoCobro === 5);
                 newTiposCobro.push(i)
             })
         } else {
@@ -1367,8 +1367,8 @@ function Embarque(props) {
                 folioEmbarque: '',
                 folioGuia: '',
                 folioInforme: '',
-                tipoCambio: '',
-                tipoCobro: '',
+                tipoCambio: '24',
+                tipoCobro: '10',
                 clientePaga: '',
                 idEmbarque: 0,
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -1862,7 +1862,8 @@ function Embarque(props) {
     const handlePatrocinadorSelected = (newValue) => {
         setState({
             ...state,
-            clientePaga: newValue
+            clientePaga: newValue,
+            tipoCobro: newValue.m_bSinCredito ? "10" : "11"
         })
     }
 
@@ -2623,6 +2624,15 @@ function Embarque(props) {
 
     const handleListPaquetesChange = (newList) => {
         setDataPaquetes(newList)
+    }
+
+    const filtrarTipoCobro = (tipoCobro) => {
+        // if (!state.clientePaga) {
+            return tipoCobro.m_nIdTipoCobro === 10 || tipoCobro.m_nIdTipoCobro === 11
+        // }else {
+        //     return (state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 10) || ( !state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 11)
+        //
+        // }
     }
 
     return (
@@ -3582,7 +3592,7 @@ function Embarque(props) {
                                                                             name: "tipoCobro"
                                                                         }}
                                                                     >
-                                                                        {dataTipoCobro.map((tipoCobro) => (
+                                                                        {dataTipoCobro.filter(d => filtrarTipoCobro(d)).map((tipoCobro) => (
                                                                             tipoCobro.valid &&
                                                                             <option
                                                                                 key={tipoCobro.m_nIdTipoCobro}
@@ -3628,6 +3638,7 @@ function Embarque(props) {
                                                                         disableClearable
                                                                         forcePopupIcon={false}
                                                                         options={dataClientes}
+
                                                                         disabled={state.agregar === "Consultar"}
                                                                         getOptionLabel={(option) => (
                                                                             option ?
@@ -3645,6 +3656,8 @@ function Embarque(props) {
                                                                                 label="Responsable de pago"
                                                                                 margin="dense"
                                                                                 required
+                                                                                error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
+                                                                                helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de credito: " + state.clientePaga.m_nDiasCredito : ""}
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
                                                                                 onClick={handleClickResponsablePago}
                                                                                 {...params}

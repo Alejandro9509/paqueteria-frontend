@@ -70,6 +70,7 @@ import {obtenerCodigoPostalId} from "../Util/Contexts/CodigoPostalContext";
 import {obtenerRecoleccionFiltro} from "../Util/Contexts/RecoleccionContext";
 import {confirmAlert} from "react-confirm-alert";
 import ConceptosFacturacion from "./Tarifas/ConceptosFacturacion";
+import CambiarTipoCobro from "./Guia/CambiarTipoCobro";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -2089,6 +2090,7 @@ obtenerGuiaId(id).then(({data}) => {
 
     return (
         <div>
+            <CambiarTipoCobro creditoVencido={state.creditoVencido} open={state.openTipoCobro} dataTipoCobro={dataTipoCobro} close={() => setState({...state, openTipoCobro: false})}/>
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
@@ -2321,29 +2323,34 @@ obtenerGuiaId(id).then(({data}) => {
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
-                        <li>
-                            <a onClick={(event) => {
-                                event.stopPropagation();
-                                setState({
-                                    ...state,
-                                    identificadorModal:
-                                        "imprimir",
-                                    tipoModal: 6,
-                                    openDialog: true
-                                });
-                            }}>
-                                <i className="fa fa-print"/> Imprimir
-                            </a>
-                        </li>
+                        {/*<li>*/}
+                        {/*    <a onClick={(event) => {*/}
+                        {/*        event.stopPropagation();*/}
+                        {/*        setState({*/}
+                        {/*            ...state,*/}
+                        {/*            identificadorModal:*/}
+                        {/*                "imprimir",*/}
+                        {/*            tipoModal: 6,*/}
+                        {/*            openDialog: true*/}
+                        {/*        });*/}
+                        {/*    }}>*/}
+                        {/*        <i className="fa fa-print"/> Imprimir*/}
+                        {/*    </a>*/}
+                        {/*</li>*/}
 
                         <li className="hide">
                             <a data-toggle="tab" href="#Importar">
                                 <i className="fa fa-upload"/> Importar
                             </a>
                         </li>
+                        <li >
+                            <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled} onClick={() => setState({...state,openTipoCobro: true})}>
+                                <i className="fa fa-refresh"/> Cambiar Tipo Cobro
+                            </a>
+                        </li>
                         <li>
                             <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}
-                               className={state.idGuia == 0 ? classes.disabled : ""}>
+                               className={state.idGuia === 0 ? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>
@@ -2546,7 +2553,9 @@ obtenerGuiaId(id).then(({data}) => {
                                                 onRowSelected={(row) => {
                                                     setState({
                                                         ...state,
-                                                        idGuia: row.data.m_nIdGuia
+                                                        idGuia: row.data.m_nIdGuia,
+                                                        cambioCobro: (row.data.m_nIdEstatusGuia === 14 || row.data.m_nIdEstatusGuia === 7) &&  row.data.m_nIdTipoCobro === 2,
+                                                        creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito
                                                     })
                                                 }}
                                             />
