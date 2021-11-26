@@ -52,7 +52,7 @@ import {
     modificarGuia,
     agregarGuia,
     imprimirGuia,
-    obtenerGuiaReporte, entregaOcurreGuia
+    obtenerGuiaReporte, entregaOcurreGuia, cambiarTipoCobro
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -2098,10 +2098,16 @@ obtenerGuiaId(id).then(({data}) => {
     const handleListPaquetesChange = (newList) => {
         setDataPaquetes(newList)
     }
+    const cambiarCobro = (tipoCobro) => {
+        cambiarTipoCobro(state.idGuia, tipoCobro).then(({data}) => {
+            showSuccess(data)
+            getAllData()
+        })
+    }
 
     return (
         <div>
-            <CambiarTipoCobro creditoVencido={state.creditoVencido} open={state.openTipoCobro} dataTipoCobro={dataTipoCobro} close={() => setState({...state, openTipoCobro: false})}/>
+            <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido} open={state.openTipoCobro} dataTipoCobro={dataTipoCobro} close={() => setState({...state, openTipoCobro: false})}/>
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
@@ -2354,11 +2360,11 @@ obtenerGuiaId(id).then(({data}) => {
                                 <i className="fa fa-upload"/> Importar
                             </a>
                         </li>
-                        {/*<li >*/}
-                        {/*    <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled} onClick={() => setState({...state,openTipoCobro: true})}>*/}
-                        {/*        <i className="fa fa-refresh"/> Cambiar Tipo Cobro*/}
-                        {/*    </a>*/}
-                        {/*</li>*/}
+                        <li >
+                            <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled} onClick={() => setState({...state,openTipoCobro: true})}>
+                                <i className="fa fa-refresh"/> Cambiar Tipo Cobro
+                            </a>
+                        </li>
                         <li>
                             <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}
                                className={state.idGuia === 0 ? classes.disabled : ""}>

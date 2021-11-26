@@ -30,7 +30,7 @@ class MyComponent extends Component {
                 <DialogTitle>
                     <Typography variant={"h3"}>Cambiar Tipo de Cobro</Typography>
                 </DialogTitle>
-                <form>
+                <form onSubmit={() => this.props.submit(this.state.tipoCobro)}>
                     <DialogContent>
                         <label className="input select" style={{width: "100%"}}>
                             <FormControl fullWidth
@@ -73,7 +73,7 @@ class MyComponent extends Component {
                         </label>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => this.props.close()}>
+                        <Button type={"submit"} onClick={() => this.props.close()}>
                             Aceptar
                         </Button>
                         <Button onClick={() => this.props.close()}>
