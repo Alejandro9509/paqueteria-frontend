@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, {Component, useState} from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import {
-    Checkbox,
+    Checkbox, CircularProgress,
     FormControlLabel, Grid,
     List,
     ListItem,
@@ -23,7 +23,9 @@ import {
     obtenerSATServicios,
     obtenerSATUnidades,
 } from "../../Util/Contexts/ConceptosFacturacionContext";
-
+import {Autocomplete} from "@material-ui/lab";
+import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
+import {API_HEADERS} from "../../Constants";
 class CrearConcepto extends Component {
     constructor(props) {
         super(props);
@@ -134,25 +136,6 @@ class CrearConcepto extends Component {
     }
 
     selectClase(row) {
-        /*if (this.state.complementoSAT === 1) {
-            this.setState({
-                claseSeleccionado: row.data,
-                claveSAT: row.data.m_sClaveSAT,
-                productoOServicio: row.data.m_sDescripcion,
-            });
-        } else if (this.state.complementoSAT === 2){
-            this.setState({
-                claveSATUnidad: row.data.m_sClaveSAT,
-                descripcionUnidad:row.data.m_sDescripcion,
-                catalogoUnidad:row.data.m_sCatalogoSAT,
-            })
-        }else if (this.state.complementoSAT === 3){
-            this.setState({
-                claveSATEmbalaje: row.data.m_sClaveSAT,
-                descripcionEmbalaje:row.data.m_sDescripcion,
-                catalogoEmbalaje:row.data.m_sCatalogoSAT,
-            })
-        }*/
         this.props.onChangeData(this.state.complementoSAT, row.data)
     }
 
@@ -160,161 +143,6 @@ class CrearConcepto extends Component {
         this.setState({ openDialog: false });
     }
 
-    Consulta = () =>{
-        return(
-            <>
-                <div className="form-content j-forms">
-                    <div className="main-container" style={{margin: "0px", padding: "0px"}}>
-                        <div className="row" style={{ margin: "0px" }}>
-                            <div className="col-sm-12 col-md-12 col-lg-12 unit" style={{ backgroundColor: "#E6E6E6", padding: "2px" }}>
-                                <label
-                                    className="label"
-                                    style={{
-                                        textAlign: "center",
-                                        width: "100%",
-                                        color: "#717171",
-                                    }}
-                                >
-                                    <strong>Sección Claves CFDI</strong>
-                                </label>
-                            </div>
-                        </div>
-                        <div className="row" style={{ margin: "0px" }}>
-                            <div
-                                className="col-sm-4 col-md-4 col-lg-4 unit"
-                                style={{ padding: "2px" }}
-                            >
-                                <div className="input">
-                                    <TextField
-                                        variant="outlined"
-                                        margin="dense"
-                                        type="text"
-                                        className="form-control"
-                                        label="Clave SAT"
-                                        disabled={this.props.consulta}
-                                        defaultValue={`${this.props.dataComplemento.claveProducto}`}
-                                        name="unidadMedia"
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                    />
-                                </div>
-                            </div>
-
-                            <div
-                                className="col-sm-8 col-md-8 col-lg-8 unit"
-                                style={{ padding: "2px" }}
-                            >
-                                <div className="input">
-                                    <TextField
-                                        variant="outlined"
-                                        margin="dense"
-                                        type="text"
-                                        className="form-control"
-                                        label="Producto o Servicio"
-                                        disabled={this.props.consulta}
-                                        defaultValue={`${this.props.dataComplemento.ProductoSAT}`}
-                                        name="unidadMedia"
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="row" style={{ margin: "0px" }}>
-                            <div
-                                className="col-sm-4 col-md-4 col-lg-4 unit"
-                                style={{ padding: "2px" }}
-                            >
-                                <div className="input">
-                                    <TextField
-                                        variant="outlined"
-                                        margin="dense"
-                                        type="text"
-                                        className="form-control"
-                                        label="Clave SAT"
-                                        disabled={this.props.consulta}
-                                        defaultValue={`${this.props.dataComplemento.claveUnidad}`}
-                                        name="unidadMedia"
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                    />
-                                </div>
-                            </div>
-
-                            <div
-                                className="col-sm-8 col-md-8 col-lg-8 unit"
-                                style={{ padding: "2px" }}
-                            >
-                                <div className="input">
-                                    <TextField
-                                        variant="outlined"
-                                        margin="dense"
-                                        className="form-control"
-                                        type="text"
-                                        label="Unidad Medida"
-                                        disabled={this.props.consulta}
-                                        required
-                                        defaultValue={`${this.props.dataComplemento.UnidadSAT}`}
-                                        name="unidadMedida"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="row" style={{ margin: "0px" }}>
-                            <div className="col-sm-4 col-md-4 col-lg-4 unit" style={{ padding: "2px" }}>
-                                <div className="input">
-                                    <TextField
-                                        variant="outlined"
-                                        margin="dense"
-                                        type="text"
-                                        className="form-control"
-                                        label="Clave SAT"
-                                        disabled
-                                        defaultValue={`${this.props.dataComplemento.claveEmbalaje}`}
-                                        name="claveEmbalaje"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="col-sm-8 col-md-8 col-lg-8 unit" style={{ padding: "2px" }}>
-                                <div className="input">
-                                    <TextField
-                                        variant="outlined"
-                                        margin="dense"
-                                        className="form-control"
-                                        type="text"
-                                        label="Embalaje"
-                                        disabled
-                                        required
-                                        value={`${this.props.dataComplemento.embalajeSAT}`}
-                                        name="embalajeSAT"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {this.props.children}
-                <DialogActions>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <button
-                            type="button"
-                            onClick={() => this.props.dialogVisible(false)}
-                            className="btn btn-secondary secondary-btn"
-                            style={{ marginRight: "20px" }}
-                        >
-                            Cancelar
-                        </button>
-                    </div>
-                </DialogActions>
-            </>
-        )
-    }
 
     render() {
         const { openDialog } = this.state;
@@ -507,4 +335,214 @@ class CrearConcepto extends Component {
     }
 }
 
-export default CrearConcepto;
+export default CrearConceptoSAT;
+
+function CrearConceptoSAT(props) {
+
+    const [state, setState] = React.useState({
+        openDialog: false,
+        complementoSAT: 0
+    });
+
+    const handleChange = (event) => {
+        setState({
+            ...state,
+            [event.target.name]: event.target.value,
+        });
+    }
+
+    const selectClase = (row) => {
+        debugger
+        props.onChangeData(state.complementoSAT, row.data)
+    }
+
+    const closeDialog = () => {
+        setState({ ...state, openDialog: false });
+    }
+
+    return(
+        <div>
+            <form className="j-forms">
+                <Dialog
+                    open={state.openDialog}
+                    fullWidth
+                    maxWidth="xl"
+                    onClose={() => setState({...state,openDialog: false})}
+                >
+                    <DialogTitle>Claves Productos y Servicios</DialogTitle>
+                    <DialogContent>
+                        <ClavesCFDI
+                            selectClase={selectClase}
+                            closeDialog={closeDialog}
+                            dataSAT={state.complementoSAT === 1 ? props.dataSAT : state.complementoSAT === 2 ? props.dataSATUnidades : state.complementoSAT === 3 ? props.dataSATEmbalajes : []}
+                            // isProducto={this.state.isProducto}
+                        />
+                    </DialogContent>
+                </Dialog>
+                <div className="form-content">
+                    <div className="main-container" style={{margin: "0px", padding: "0px"}}>
+                        <div className="row" style={{margin: "0px"}}>
+                            <div className="col-sm-12 col-md-12 col-lg-12 unit"
+                                 style={{backgroundColor: "#E6E6E6", padding: "2px"}}>
+                                <label className="label"
+                                       style={{textAlign: "center", width: "100%", color: "#717171",}}>
+                                    <strong>Sección Claves CFDI</strong>
+                                </label>
+                            </div>
+                        </div>
+
+                        <Grid container spacing={1}>
+                            <Grid item xs={2}>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    type="text"
+                                    className="form-control"
+                                    label="Clave SAT"
+                                    disabled={props.consulta}
+                                    value={props.dataComplemento.claveProducto}
+                                    onChange={handleChange}
+                                    name="unidadMedia"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    type="text"
+                                    className="form-control"
+                                    label="Producto o Servicio"
+                                    disabled={props.consulta}
+                                    value={props.dataComplemento.ProductoSAT}
+                                    onChange={handleChange}
+                                    name="unidadMedia"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={2}>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary primary-btn"
+                                    style={{margin: "0px"}}
+                                    onClick={() => setState({openDialog: true, complementoSAT: 1})}>
+                                    Seleccionar
+                                </button>
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing={1}>
+                            <Grid item xs={2}>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    type="text"
+                                    className="form-control"
+                                    label="Clave SAT"
+                                    disabled={props.consulta}
+                                    value={props.dataComplemento.claveUnidad}
+                                    onChange={handleChange}
+                                    name="unidadMedia"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    type="text"
+                                    label="Unidad Medida"
+                                    disabled={props.consulta}
+                                    required
+                                    value={props.dataComplemento.UnidadSAT}
+                                    name="unidadMedida"
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={2}>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary primary-btn"
+                                    style={{margin: "0px"}}
+                                    onClick={() =>
+                                        setState({openDialog: true, complementoSAT: 2})
+                                    }
+                                >
+                                    Seleccionar
+                                </button>
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing={1}>
+                            <Grid item xs={2}>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    type="text"
+                                    className="form-control"
+                                    label="Clave SAT"
+                                    aria-readonly={true}
+                                    value={props.dataComplemento.claveEmbalaje}
+                                    name="claveSATEmbalaje"
+                                />
+                            </Grid>
+                            <Grid item xs>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    className="form-control"
+                                    type="text"
+                                    label="Embalaje"
+                                    aria-readonly={true}
+                                    required
+                                    value={props.dataComplemento.embalajeSAT}
+                                    name="descripcionEmbalaje"
+                                />
+                            </Grid>
+                            <Grid item xs={2}>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary primary-btn"
+                                    style={{margin: "0px"}}
+                                    onClick={() => setState({openDialog: true, complementoSAT: 3})}>
+                                    Seleccionar
+                                </button>
+                            </Grid>
+                        </Grid>
+
+                    </div>
+                </div>
+                {props.children}
+            </form>
+            <DialogActions>
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    <button
+                        type="button"
+                        onClick={() => props.dialogVisible(false)}
+                        className="btn btn-secondary secondary-btn"
+                        style={{marginRight: "20px"}}
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => props.handleAceptar(state)}
+                        className="btn btn-primary primary-btn"
+                    >
+                        Aceptar
+                    </button>
+                </div>
+            </DialogActions>
+        </div>
+    )
+}

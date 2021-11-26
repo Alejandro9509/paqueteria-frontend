@@ -101,6 +101,7 @@ import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasC
 import ReplayIcon from "@material-ui/icons/Replay";
 import ZonaOperativa from "./ZonasOperativas/ZonaOperativa";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
+import ComplementosSAT from "./SAT/ComplementosSAT";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -514,11 +515,11 @@ function Embarque(props) {
             field: "m_nFolioEmbarque",
             width: 125,
         },
-        {
+        /*{
             headerName: "Folio Relacionado",
             field: "m_sFolioEmbarqueRelacionado",
             width: 150,
-        },
+        },*/
         {
             headerName: "Cliente",
             field: "m_sNombreCliente",
@@ -587,6 +588,7 @@ function Embarque(props) {
         },
     ]);
     const [dataPaquetes, setDataPaquetes] = useState([])
+    const [dataComplementosSAT, setDataComplementosSAT] = useState([])
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
     const [dataEstados, setDataEstados] = useState([])
     const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
@@ -2632,6 +2634,9 @@ function Embarque(props) {
     const handleListPaquetesChange = (newList) => {
         setDataPaquetes(newList)
     }
+    const handleListComplementosSATChange = (newList) => {
+        setDataComplementosSAT(newList)
+    }
 
     return (
         <div>
@@ -3992,6 +3997,14 @@ function Embarque(props) {
                                                 disabled={state.agregar === "Consultar" }
                                             />
                                         }
+
+                                    </div>
+                                    <div className="widget-wrap" id="complementosSat">
+                                        <ComplementosSAT
+                                            dataList={dataComplementosSAT}
+                                            onChangeList={handleListComplementosSATChange}
+                                            disabled={state.agregar === "Consultar" }
+                                        />
                                     </div>
 
                                     <div className="row">
