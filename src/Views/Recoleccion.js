@@ -747,6 +747,10 @@ function Recoleccion() {
             showSuccess("Debe agregar al menos 1 paquete o sobre.")
             return
         }
+        dataPaquetes.forEach(item => {
+            item.m_sClaveSATProducto = item.m_nClaveSATProducto
+            item.m_sClaveSATUnidad = item.m_nClaveSATUnidad
+        })
 
         let params = {
             //Informacion general
@@ -1058,6 +1062,10 @@ function Recoleccion() {
         getAllEmbalajes()
 
         respuesta.data.m_parrPaquetes.forEach((p) => {
+            p.m_nClaveSATProducto = p.m_sClaveSATProducto
+            p.m_nClaveSATUnidad = p.m_sClaveSATUnidad
+            p.m_sProductoSAT = p.m_nProductoSAT
+            p.m_sUnidadSAT = p.m_nUnidadSAT
             obtenerProductoById(p.m_nIdProducto).then(({data}) => {
                 p["producto"] = data
                 p.m_sProducto = data.m_sDescripcion
@@ -1339,6 +1347,7 @@ function Recoleccion() {
         setState(state => {
             return {
                 ...state,
+                idRecoleccion:0,
                 idSucursalAgregar: '',
                 folioRecoleccion: '',
                 folioEmbarque: '',

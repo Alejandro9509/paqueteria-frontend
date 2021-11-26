@@ -1495,6 +1495,10 @@ function Embarque(props) {
         getAllTiposSeguro()
 
         respuesta.data.m_parrPaquetes.forEach((p) => {
+            p.m_nClaveSATProducto = p.m_sClaveSATProducto
+            p.m_nClaveSATUnidad = p.m_sClaveSATUnidad
+            p.m_sProductoSAT = p.m_nProductoSAT
+            p.m_sUnidadSAT = p.m_nUnidadSAT
             obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
                 p["producto"] = data
                 p.m_sProducto = data.m_sDescripcion
