@@ -238,7 +238,7 @@ export default function ConceptosFacturacion(props) {
     /** Cuando se le pica al editar de algun concepto*/
     const handleRowClick = (item) => {
         if (!props.consult) {
-            item.concepto = props.conceptoFijo || props.conceptosBase.find(i => i.m_nIdConceptosFacturacion == item.idConcepto)
+            item.concepto = props.conceptoFijo || props.conceptosBase.find(i => i.m_nIdConceptosFacturacion === item.idConcepto)
             setConcepto(item)
             removeConcepto(item)
         }

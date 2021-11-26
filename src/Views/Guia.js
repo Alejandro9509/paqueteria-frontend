@@ -22,8 +22,6 @@ import {DataGrid} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 
 import Noty from 'noty';
-import {SignalCellularNoSimOutlined} from "@material-ui/icons";
-import ConceptosAdicionales from "./Tarifas/ConceptosAdicionales";
 import {
     Dialog,
     DialogActions,
@@ -140,6 +138,7 @@ function Guia(props) {
     const [totalPaquetes, setTotalPaquetes] = useState(0)
     const [showDialogOcurre, setShowDialogOcurre] = useState(false)
     const [dataOcurre, setDataOcurre] = useState()
+    const [conceptosAdicionales, setConceptosAdicionales] = useState([])
     const [dataConceptosBase, setDataConceptosBase] = useState([])
     const [filtros, setFiltros] = useState({
         fechaInicial: 0,
@@ -329,6 +328,7 @@ function Guia(props) {
     }
 
     const handleFolioEmbarqueFiltro = async (event) => {
+        event.preventDefault()
         if (event.keyCode == 13) {
             const {target} = event
             let value = target.value
@@ -391,7 +391,7 @@ function Guia(props) {
             "m_dFecha": state.fecha.substr(0, 10),
             "m_sHora": state.fecha.substr(state.fecha.length - 5),
 
-            "arClsGuiaConceptos": state.conceptosAdicionales.map(c => ({
+            "arClsGuiaConceptos": conceptosAdicionales.map(c => ({
                 m_nIdConceptosFacturacion: c.idConcepto,
                 m_cImporte: c.importe,
                 m_nIdImpuestoTraslada: c.traslada,
@@ -461,13 +461,13 @@ function Guia(props) {
     }
 
     async function getImpresion(id) {
-        //showSuccess (state.nGuiaId);		
-        //if (state.muestraPaquetes === true) return;		
+        //showSuccess (state.nGuiaId);
+        //if (state.muestraPaquetes === true) return;
         imprimirGuia(id).then(respuesta => {
             setState({
                 ...state,
                 paquetesI: [],
-                // muestraPaquetes:true 
+                // muestraPaquetes:true
             });
             const paquetesTemp = state.paquetesI;
             for (var i = 0; i < respuesta.data.length; i++) {
@@ -610,10 +610,10 @@ function Guia(props) {
 
         setTotalPaquetes(totalCantidad)
 
-        const conceptosAdicionales = []
+        const conceptosAdicionalesAux = []
 
         respuesta.data.m_arClsGuiaConceptos.forEach((element) => {
-            conceptosAdicionales.push({
+            conceptosAdicionalesAux.push({
                 id: Math.floor(Math.random() * 10000),
                 concepto: element,
                 idConcepto: element.m_nIdConceptoFacturacion,
@@ -629,14 +629,14 @@ function Guia(props) {
                 descuento: element.m_c_Descuento || 0
             })
         })
-        var ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
-        var ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
+        var ivaTraslada = getUniqueListBy(conceptosAdicionalesAux, "traslada").map(i => i.traslada);
+        var ivaRetiene = getUniqueListBy(conceptosAdicionalesAux, "retiene").map(i => i.retiene);
         setState({
             ...state,
-            conceptosAdicionales: conceptosAdicionales,
             ivaRetiene: ivaRetiene,
             ivaTraslada: ivaTraslada
         })
+        setConceptosAdicionales(conceptosAdicionalesAux)
 
         setState(state => {
             return {
@@ -680,7 +680,6 @@ function Guia(props) {
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
                 porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
 
-                conceptosAdicionales: conceptosAdicionales,
                 FolioGuiaRelacionada: respuesta.data.m_sFolioGuiaRelacionada,
                 tieneRecoleccion: !!respuesta.data.m_nFolioRecoleccion,
                 tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
@@ -692,7 +691,8 @@ function Guia(props) {
     }
 
     //Muestra la pestaña de cancelar
-    function handleShowCancelar() {
+    function handleShowCancelar(event) {
+        event.preventDefault()
         limpiarCamposAgregar()
         obtenerGuiaId(state.idGuia).then((respuesta) => {
             setState({
@@ -766,6 +766,7 @@ function Guia(props) {
     }
 
     const handleChange = event => {
+        event.preventDefault()
         console.log(event.target.name + " : " + event.target.value)
         setState(state => {
             return {
@@ -973,6 +974,7 @@ function Guia(props) {
         getAllConceptos()
     }, []);
 
+
     /**Configuracion de Impresora*/
     useEffect(value => {
         BrowserPrint.getDefaultDevice("printer", function (device) {
@@ -1108,10 +1110,10 @@ obtenerGuiaId(id).then(({data}) => {
     }
 
     function addConcepto(data) {
-        const {conceptosAdicionales} = state
+        const conceptosAdicionalesAux = conceptosAdicionales
         var ivaTraslada = []
         var ivaRetiene = []
-        conceptosAdicionales.push({
+        conceptosAdicionalesAux.push({
             id: Math.floor(Math.random() * 10000),
             idConcepto: data.concepto.m_nIdConceptosFacturacion,
             concepto: data.concepto,
@@ -1128,30 +1130,30 @@ obtenerGuiaId(id).then(({data}) => {
             descuento: data.descuento
 
         })
-        ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
+        ivaTraslada = getUniqueListBy(conceptosAdicionalesAux, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
         setState({
             ...state,
-            conceptosAdicionales: conceptosAdicionales,
             ivaRetiene: ivaRetiene,
             ivaTraslada: ivaTraslada
         })
+
+        setConceptosAdicionales(conceptosAdicionalesAux)
     }
 
     const filtrarConceptoAdicional = (c, item) => {
-        let valid = c.idConcepto === item.idConcepto
-            && c.importe === item.importe
-            && c.importeRet === item.importeRet
-            && c.retiene === item.retiene
-            && c.traslada === item.traslada
-            && c.importeIVA === item.importeIVA
+        let valid = c.idConcepto == item.idConcepto
+            && c.importe == item.importe
+            && c.importeRet == item.importeRet
+            && c.retiene == item.retiene
+            && c.traslada == item.traslada
+            && c.importeIVA == item.importeIVA;
         return !valid
     }
 
     function removeConcepto(item) {
-        const {conceptosAdicionales} = state
         const newArrayConceptos = conceptosAdicionales.filter(c => filtrarConceptoAdicional(c, item))
-        setState({...state, conceptosAdicionales: newArrayConceptos})
+        setConceptosAdicionales(  newArrayConceptos)
     }
 
     const handleUpload = (e) => {
@@ -1305,11 +1307,11 @@ obtenerGuiaId(id).then(({data}) => {
             setState(state => {
                 return {
                     ...state,
-                    conceptosAdicionales: conceptosCast,
                     ivaRetiene: ivaRetiene,
                     ivaTraslada: ivaTraslada
                 }
             })
+            setConceptosAdicionales(conceptosCast)
             // debugger
             /*if (tarifa.data.length != 0) {
                 let pesoTotal = 0
@@ -1432,6 +1434,7 @@ obtenerGuiaId(id).then(({data}) => {
             }
         })
         setTotalPaquetes(0)
+        setConceptosAdicionales([])
     }
 
     async function getAllDataMoneda() {
@@ -2049,7 +2052,7 @@ obtenerGuiaId(id).then(({data}) => {
             var guia = data
             if (guia.m_nIdEstatusGuia == 7) {
                 if (!guia.m_nClienteBloqueado) {
-                    
+
                     let importeTotal = 0
                     guia.m_arClsGuiaConceptos.forEach((c) => importeTotal += parseFloat(c.m_cTotal))
                     setDataOcurre({
@@ -2075,6 +2078,7 @@ obtenerGuiaId(id).then(({data}) => {
     }
 
     const handleFechaOcurre = (event) => {
+        event.preventDefault()
         setDataOcurre({
             ...dataOcurre,
             fechaOcurre: event.target.value,
@@ -2082,6 +2086,7 @@ obtenerGuiaId(id).then(({data}) => {
     }
 
     const handleHoraOcurre = (event) => {
+        event.preventDefault()
         setDataOcurre({
             ...dataOcurre,
             horaOcurre: event.target.value,
@@ -2089,6 +2094,7 @@ obtenerGuiaId(id).then(({data}) => {
     }
 
     const handleChangeDataOcurre = (event) => {
+        event.preventDefault()
         setDataOcurre({
             ...dataOcurre,
             [event.target.name]: event.target.value,
@@ -2185,6 +2191,7 @@ obtenerGuiaId(id).then(({data}) => {
                                     name="horaOcurre"
                                     label="Hora"
                                     type="time"
+                                    key={"horaOcurre"}
                                     value={dataOcurre.horaOcurre}
                                     onChange={handleHoraOcurre}
                                     className={"form-control"}
@@ -2199,6 +2206,7 @@ obtenerGuiaId(id).then(({data}) => {
                                     <Select
                                         labelId={"idTipoCobroLabel"}
                                         label={"Tipo Cobro"}
+                                        key={"tipoCobroOcurre"}
                                         className="form-control"
                                         value={dataOcurre.tipoCobroOcurre}
                                         disabled={true}
@@ -2231,6 +2239,7 @@ obtenerGuiaId(id).then(({data}) => {
                                            onChange={(event) => handleChangeDataOcurre(event)}
                                            className="form-control"
                                            type="text"
+                                           key={"comentarioOcurre"}
                                            value={dataOcurre.comentariosOcurre}
                                            disabled={state.agregar === "Consultar"}
                                            placeholder="Comentarios"
@@ -2244,6 +2253,7 @@ obtenerGuiaId(id).then(({data}) => {
                                     <Select
                                         labelId={"idTipoPagoLabel"}
                                         label={"Tipo Pago"}
+                                        key={"idTipoPagoOcurre"}
                                         className="form-control"
                                         value={dataOcurre.tipoPago}
                                         onChange={(event) => handleChangeDataOcurre(event)}
@@ -2272,6 +2282,7 @@ obtenerGuiaId(id).then(({data}) => {
                                            onChange={(event) => handleChangeDataOcurre(event)}
                                            className="form-control"
                                            type="number"
+                                           key={"importeOcurre"}
                                            value={dataOcurre.importeOcurre}
                                            placeholder="Importe"
                                            name="importeOcurre"
@@ -3569,7 +3580,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                             {
                                                                 state.idEmbarque &&
                                                                 <div>
-                                                                    <Tabs value={state.tab} onChange={handleTabChange}
+                                                                    <Tabs value={state.tab} onChange={() => handleTabChange()}
                                                                           aria-label="simple tabs example"
                                                                           variant="scrollable" scrollButtons="auto">
                                                                         <Tab
@@ -3587,23 +3598,26 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                           listadoConceptosAlternativos={dataTodosConceptosByEmbarque}
                                                                                           consult={state.agregar == "Consultar"}
                                                                                           mostrarDescuento={true}/>*/}
-                                                                    <ConceptosFacturacion
-                                                                        // consulta={consult}
-                                                                        dataList={state.conceptosAdicionales}
-                                                                        // onChangeList={this.handleChangeListConceptos}
-                                                                        mostrarRangos={false}
-                                                                        mostrarImpuestos={false}
-                                                                        mostrarDescuento={true}
-                                                                        mostrarTipoMedida={false}
-                                                                        mostrarTipoCalculo={false}
-                                                                        conceptosBase={dataConceptosBase}
-                                                                        keys={0}
-                                                                        agregarConcepto={addConcepto}
-                                                                        eliminarConcepto={removeConcepto}
-                                                                        mostrarTotales={true}
-                                                                        ivaTraslada={state.ivaTraslada}
-                                                                        ivaRetiene={state.ivaRetiene}
-                                                                    />
+                                                                    {
+                                                                        conceptosAdicionales.length > 0 &&
+                                                                        <ConceptosFacturacion
+                                                                            // consulta={consult}
+                                                                            dataList={conceptosAdicionales}
+                                                                            // onChangeList={this.handleChangeListConceptos}
+                                                                            mostrarRangos={false}
+                                                                            mostrarImpuestos={false}
+                                                                            mostrarDescuento={true}
+                                                                            mostrarTipoMedida={false}
+                                                                            mostrarTipoCalculo={false}
+                                                                            conceptosBase={dataConceptosBase}
+                                                                            agregarConcepto={addConcepto}
+                                                                            eliminarConcepto={(item) => removeConcepto(item)}
+                                                                            mostrarTotales={true}
+                                                                            ivaTraslada={state.ivaTraslada}
+                                                                            ivaRetiene={state.ivaRetiene}
+                                                                        />
+                                                                    }
+
                                                                 </div>
 
                                                             }
@@ -3845,24 +3859,6 @@ obtenerGuiaId(id).then(({data}) => {
     );
 }
 
-function TabPanel(props) {
-    const {children, value, index, ...other} = props;
 
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={1}>
-                    {children}
-                </Box>
-            )}
-        </div>
-    );
-}
 
 export default Guia;

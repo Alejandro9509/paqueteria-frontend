@@ -628,6 +628,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Tarifas/ConceptosFacturacion.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/Tarifas/CrearTarifa.js">
           <value>
             <set />
