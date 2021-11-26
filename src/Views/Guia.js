@@ -70,6 +70,9 @@ import {obtenerCodigoPostalId} from "../Util/Contexts/CodigoPostalContext";
 import {obtenerRecoleccionFiltro} from "../Util/Contexts/RecoleccionContext";
 import {confirmAlert} from "react-confirm-alert";
 import ConceptosFacturacion from "./Tarifas/ConceptosFacturacion";
+import Paquetes from "./Paquetes/Paquetes";
+import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
+import {obtenerEmbalajesId} from "../Util/Contexts/EmbalajesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -146,6 +149,7 @@ function Guia(props) {
         OrigenListado:0,
         DestinoListado:0,
     })
+    const [dataPaquetes, setDataPaquetes] = useState([])
     const [state, setState] = React.useState({
         //VARIABLES PARA LISTADO DE GUIAS
         sucursalListado: 0,
@@ -575,43 +579,39 @@ function Guia(props) {
     const setDataGuiaParaConsultarModificar = (respuesta, label) => {
         console.log('Guia datos:', respuesta.data)
 
-        const paquetes = []
-        const sobres = []
-        const {m_arrClsDetalle, m_arClsGuiaConceptos} = respuesta.data
-
-        m_arrClsDetalle.forEach((item) => {
-            if (item.m_nTipo == 1) {
-                sobres.push(item)
-            } else if (item.m_nTipo == 2) {
-                paquetes.push(item)
-            }
-        })
         let totalCantidad = 0
-        paquetes.forEach((paq) => {
-            paq["producto"] = paq.m_sProducto ? paq.m_sProducto : ""
-            paq["peso"] = paq.m_xPeso
-            paq["largo"] = paq.m_xLargo
-            paq["ancho"] = paq.m_xAncho
-            paq["alto"] = paq.m_xAlto
-            paq["volumen"] = paq.m_xVolumen
-            paq["tipoEmbalaje"] = paq.m_sEmbalaje
-            paq["valorDeclarado"] = paq.m_cValorDeclarado
-            paq["descripcionPaquete"] = paq.m_sDescripcion
-            paq["observacionesPaquete"] = paq.m_sObservaciones
-            paq["id"] = paq.m_nIdEmbarqueDetalle
-
-            totalCantidad += parseInt(paq.ctd)
+        respuesta.data.m_arrClsDetalle.forEach((p) => {
+            p.m_nIdPaquete = p.m_nIdEmbarqueDetalle
+            p.m_rPeso = p.m_xPeso
+            p.m_rLargo = p.m_xLargo
+            p.m_rAncho = p.m_xAncho
+            p.m_rAlto = p.m_xAlto
+            p.m_rVolumen = p.m_xVolumen
+            p.m_nIdTipoEmbalaje = p.m_nIdTIpoEmpaque
+            p.m_nCantidad = p.ctd
+            p.m_cyValorDeclarado = p.m_cValorDeclarado
+            p.m_nIdTipo = p.m_nTipo
+            p.m_sClaveSATProducto = p.m_nClaveSATProducto
+            p.m_sClaveSATUnidad = p.m_nClaveSATUnidad
+            p.m_sUnidad = p.m_sUnidadSAT
+            p.m_nProducto = p.m_sProductoSAT
+            totalCantidad += parseInt(p.ctd)
+            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+                p["producto"] = data
+                p.m_sProducto = data.m_sDescripcion
+            })
+            obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
+                p.m_sTipoEmbalaje = data.m_sNombre
+            })
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
         })
+        setDataPaquetes(respuesta.data.m_arrClsDetalle)
+
         setTotalPaquetes(totalCantidad)
-
-        sobres.forEach((sob) => {
-            sob["descripcionSobre"] = sob.m_sDescripcion
-            sob["id"] = sob.m_nIdEmbarqueDetalle
-        })
 
         const conceptosAdicionales = []
 
-        m_arClsGuiaConceptos.forEach((element) => {
+        respuesta.data.m_arClsGuiaConceptos.forEach((element) => {
             conceptosAdicionales.push({
                 id: Math.floor(Math.random() * 10000),
                 concepto: element,
@@ -673,8 +673,6 @@ function Guia(props) {
                 CiudadDestino: respuesta.data.m_sCiudadDestino,
                 codigoPostalDestinatario: respuesta.data.m_sCodigoPostalDestinatario,
 
-                paquetes: paquetes,
-                sobres: sobres,
                 agregar: label,
                 ValorDeclarado: respuesta.data.m_cValorDeclarado,
                 idTipoServicio: respuesta.data.m_nIdTipoServicio,
@@ -737,6 +735,7 @@ function Guia(props) {
                 idEstatusGuia: 4
             }
         });
+        setDataPaquetes([])
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1196,30 +1195,36 @@ obtenerGuiaId(id).then(({data}) => {
     const setDataFromEmbarque = (respuesta) => {
         console.log('Embarque datos: ', respuesta.data)
 
-        const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
         let totalCantidad = 0
-        paquetes.forEach((paq) => {
-            paq["producto"] = paq.m_sProducto ? paq.m_sProducto : ""
-            paq["peso"] = paq.m_xPeso
-            paq["largo"] = paq.m_xLargo
-            paq["ancho"] = paq.m_xAncho
-            paq["alto"] = paq.m_xAlto
-            paq["cdt"] = paq.ctd
-            paq["volumen"] = paq.m_xVolumen
-            paq["tipoEmbalaje"] = paq.m_nTipo
-            paq["valorDeclarado"] = paq.m_cValorDeclarado
-            paq["descripcionPaquete"] = paq.m_sDescripcion
-            paq["observacionesPaquete"] = paq.m_sObservaciones
-            paq["id"] = paq.m_nIdEmbarqueDetalle
-            totalCantidad += parseInt(paq.ctd)
-
+        respuesta.data.m_arrPaquetes.forEach((p) => {
+            p.m_nIdPaquete = p.m_nIdEmbarqueDetalle
+            p.m_rPeso = p.m_xPeso
+            p.m_rLargo = p.m_xLargo
+            p.m_rAncho = p.m_xAncho
+            p.m_rAlto = p.m_xAlto
+            p.m_rVolumen = p.m_xVolumen
+            p.m_nIdTipoEmbalaje = p.m_nIdTIpoEmpaque
+            p.m_nCantidad = p.ctd
+            p.m_cyValorDeclarado = p.m_cValorDeclarado
+            p.m_nIdTipo = p.m_nTipo
+            p.m_sClaveSATProducto = p.m_nClaveSATProducto
+            p.m_sClaveSATUnidad = p.m_nClaveSATUnidad
+            p.m_sUnidad = p.m_sUnidadSAT
+            p.m_nProducto = p.m_sProductoSAT
+            totalCantidad += parseInt(p.ctd)
+            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+                p["producto"] = data
+                p.m_sProducto = data.m_sDescripcion
+            })
+            obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
+                p.m_sTipoEmbalaje = data.m_sNombre
+            })
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
         })
+        setDataPaquetes(respuesta.data.m_arrPaquetes)
+
         setTotalPaquetes(totalCantidad)
 
-        sobres.forEach((sob) => {
-            sob["descripcionSobre"] = sob.m_sDescripcion
-            sob["id"] = sob.m_nIdEmbarqueDetalle
-        })
 
         setState(state => {
             return {
@@ -1253,9 +1258,6 @@ obtenerGuiaId(id).then(({data}) => {
                 sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 CiudadDestino: respuesta.data.m_sCiudadDestino,
                 codigoPostalDestinatario: respuesta.data.m_sCodigoPostalDestinatario,
-
-                paquetes: paquetes,
-                sobres: sobres,
 
                 IdEmbarque: respuesta.data.m_nIdEmbarque,
                 ValorDeclarado: respuesta.data.m_xValorDeclarado,
@@ -2090,6 +2092,10 @@ obtenerGuiaId(id).then(({data}) => {
             ...dataOcurre,
             [event.target.name]: event.target.value,
         })
+    }
+
+    const handleListPaquetesChange = (newList) => {
+        setDataPaquetes(newList)
     }
 
     return (
@@ -3295,9 +3301,14 @@ obtenerGuiaId(id).then(({data}) => {
                                     </div>
 
 
-                                    <div className="row" id="paquetesSobres">
+                                    <div className="widget-wrap" id="paquetesSobres">
+                                        <Paquetes
+                                            dataPaquetes={dataPaquetes}
+                                            onChangeList={handleListPaquetesChange}
+                                            disabled={true}
+                                        />
 
-                                        <div className="col-md-6">
+                                        {/*<div className="col-md-6">
                                             <div className="widget-wrap">
                                                 <div className="widget-header">
                                                     <div className="col-md-12">
@@ -3351,7 +3362,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>*/}
                                     </div>
                                     <div className="widget-wrap" id="detalleFacturacion">
                                         <div className="widget-header">
