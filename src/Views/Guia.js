@@ -70,6 +70,10 @@ import {obtenerCodigoPostalId} from "../Util/Contexts/CodigoPostalContext";
 import {obtenerRecoleccionFiltro} from "../Util/Contexts/RecoleccionContext";
 import {confirmAlert} from "react-confirm-alert";
 import ConceptosFacturacion from "./Tarifas/ConceptosFacturacion";
+import Paquetes from "./Paquetes/Paquetes";
+import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
+import {obtenerEmbalajesId} from "../Util/Contexts/EmbalajesContext";
+import CambiarTipoCobro from "./Guia/CambiarTipoCobro";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -146,6 +150,7 @@ function Guia(props) {
         OrigenListado:0,
         DestinoListado:0,
     })
+    const [dataPaquetes, setDataPaquetes] = useState([])
     const [state, setState] = React.useState({
         //VARIABLES PARA LISTADO DE GUIAS
         sucursalListado: 0,
@@ -219,6 +224,7 @@ function Guia(props) {
         idTipoCobro: 0,
         idTipoServicio: '2',
         ValorDeclarado: "",
+        porcentajeSeguro:'',
         //Conceptos de facturacion
         conceptosAdicionales: [],
         ivaTraslada: [],
@@ -574,43 +580,39 @@ function Guia(props) {
     const setDataGuiaParaConsultarModificar = (respuesta, label) => {
         console.log('Guia datos:', respuesta.data)
 
-        const paquetes = []
-        const sobres = []
-        const {m_arrClsDetalle, m_arClsGuiaConceptos} = respuesta.data
-
-        m_arrClsDetalle.forEach((item) => {
-            if (item.m_nTipo == 1) {
-                sobres.push(item)
-            } else if (item.m_nTipo == 2) {
-                paquetes.push(item)
-            }
-        })
         let totalCantidad = 0
-        paquetes.forEach((paq) => {
-            paq["producto"] = paq.m_sProducto ? paq.m_sProducto : ""
-            paq["peso"] = paq.m_xPeso
-            paq["largo"] = paq.m_xLargo
-            paq["ancho"] = paq.m_xAncho
-            paq["alto"] = paq.m_xAlto
-            paq["volumen"] = paq.m_xVolumen
-            paq["tipoEmbalaje"] = paq.m_sEmbalaje
-            paq["valorDeclarado"] = paq.m_cValorDeclarado
-            paq["descripcionPaquete"] = paq.m_sDescripcion
-            paq["observacionesPaquete"] = paq.m_sObservaciones
-            paq["id"] = paq.m_nIdEmbarqueDetalle
-
-            totalCantidad += parseInt(paq.ctd)
+        respuesta.data.m_arrClsDetalle.forEach((p) => {
+            p.m_nIdPaquete = p.m_nIdEmbarqueDetalle
+            p.m_rPeso = p.m_xPeso
+            p.m_rLargo = p.m_xLargo
+            p.m_rAncho = p.m_xAncho
+            p.m_rAlto = p.m_xAlto
+            p.m_rVolumen = p.m_xVolumen
+            p.m_nIdTipoEmbalaje = p.m_nIdTIpoEmpaque
+            p.m_nCantidad = p.ctd
+            p.m_cyValorDeclarado = p.m_cValorDeclarado
+            p.m_nIdTipo = p.m_nTipo
+            p.m_sClaveSATProducto = p.m_nClaveSATProducto
+            p.m_sClaveSATUnidad = p.m_nClaveSATUnidad
+            p.m_sUnidad = p.m_sUnidadSAT
+            p.m_nProducto = p.m_sProductoSAT
+            totalCantidad += parseInt(p.ctd)
+            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+                p["producto"] = data
+                p.m_sProducto = data.m_sDescripcion
+            })
+            obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
+                p.m_sTipoEmbalaje = data.m_sNombre
+            })
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
         })
+        setDataPaquetes(respuesta.data.m_arrClsDetalle)
+
         setTotalPaquetes(totalCantidad)
-
-        sobres.forEach((sob) => {
-            sob["descripcionSobre"] = sob.m_sDescripcion
-            sob["id"] = sob.m_nIdEmbarqueDetalle
-        })
 
         const conceptosAdicionales = []
 
-        m_arClsGuiaConceptos.forEach((element) => {
+        respuesta.data.m_arClsGuiaConceptos.forEach((element) => {
             conceptosAdicionales.push({
                 id: Math.floor(Math.random() * 10000),
                 concepto: element,
@@ -672,12 +674,11 @@ function Guia(props) {
                 CiudadDestino: respuesta.data.m_sCiudadDestino,
                 codigoPostalDestinatario: respuesta.data.m_sCodigoPostalDestinatario,
 
-                paquetes: paquetes,
-                sobres: sobres,
                 agregar: label,
                 ValorDeclarado: respuesta.data.m_cValorDeclarado,
                 idTipoServicio: respuesta.data.m_nIdTipoServicio,
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
+                porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
 
                 conceptosAdicionales: conceptosAdicionales,
                 FolioGuiaRelacionada: respuesta.data.m_sFolioGuiaRelacionada,
@@ -735,6 +736,7 @@ function Guia(props) {
                 idEstatusGuia: 4
             }
         });
+        setDataPaquetes([])
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1193,33 +1195,37 @@ obtenerGuiaId(id).then(({data}) => {
 
     const setDataFromEmbarque = (respuesta) => {
         console.log('Embarque datos: ', respuesta.data)
-        let valorDeclaradoTotal = 0
 
-        const {m_arrPaquetes: paquetes, m_arrSobres: sobres} = respuesta.data
         let totalCantidad = 0
-        paquetes.forEach((paq) => {
-            paq["producto"] = paq.m_sProducto ? paq.m_sProducto : ""
-            paq["peso"] = paq.m_xPeso
-            paq["largo"] = paq.m_xLargo
-            paq["ancho"] = paq.m_xAncho
-            paq["alto"] = paq.m_xAlto
-            paq["cdt"] = paq.ctd
-            paq["volumen"] = paq.m_xVolumen
-            paq["tipoEmbalaje"] = paq.m_nTipo
-            paq["valorDeclarado"] = paq.m_cValorDeclarado
-            paq["descripcionPaquete"] = paq.m_sDescripcion
-            paq["observacionesPaquete"] = paq.m_sObservaciones
-            paq["id"] = paq.m_nIdEmbarqueDetalle
-            valorDeclaradoTotal = valorDeclaradoTotal + paq.m_cValorDeclarado
-            totalCantidad += parseInt(paq.ctd)
-
+        respuesta.data.m_arrPaquetes.forEach((p) => {
+            p.m_nIdPaquete = p.m_nIdEmbarqueDetalle
+            p.m_rPeso = p.m_xPeso
+            p.m_rLargo = p.m_xLargo
+            p.m_rAncho = p.m_xAncho
+            p.m_rAlto = p.m_xAlto
+            p.m_rVolumen = p.m_xVolumen
+            p.m_nIdTipoEmbalaje = p.m_nIdTIpoEmpaque
+            p.m_nCantidad = p.ctd
+            p.m_cyValorDeclarado = p.m_cValorDeclarado
+            p.m_nIdTipo = p.m_nTipo
+            p.m_sClaveSATProducto = p.m_nClaveSATProducto
+            p.m_sClaveSATUnidad = p.m_nClaveSATUnidad
+            p.m_sUnidad = p.m_sUnidadSAT
+            p.m_nProducto = p.m_sProductoSAT
+            totalCantidad += parseInt(p.ctd)
+            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+                p["producto"] = data
+                p.m_sProducto = data.m_sDescripcion
+            })
+            obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
+                p.m_sTipoEmbalaje = data.m_sNombre
+            })
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
         })
+        setDataPaquetes(respuesta.data.m_arrPaquetes)
+
         setTotalPaquetes(totalCantidad)
 
-        sobres.forEach((sob) => {
-            sob["descripcionSobre"] = sob.m_sDescripcion
-            sob["id"] = sob.m_nIdEmbarqueDetalle
-        })
 
         setState(state => {
             return {
@@ -1254,17 +1260,19 @@ obtenerGuiaId(id).then(({data}) => {
                 CiudadDestino: respuesta.data.m_sCiudadDestino,
                 codigoPostalDestinatario: respuesta.data.m_sCodigoPostalDestinatario,
 
-                paquetes: paquetes,
-                sobres: sobres,
-
                 IdEmbarque: respuesta.data.m_nIdEmbarque,
-                ValorDeclarado: valorDeclaradoTotal,
+                ValorDeclarado: respuesta.data.m_xValorDeclarado,
+                porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
 
                 folioGuia: respuesta.data.m_nFolioGuia,
                 idGuia: respuesta.data.m_nIdGuia,
                 creadoEl: respuesta.data.m_dCreadoEl,
                 idEstatusGuia: 4,
-                idTipoServicio: 2
+                idTipoServicio: 2,
+                tieneRecoleccion: respuesta.data.m_bEsRecolecta,
+                tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
+                tieneCitaRecoleccion: false,
+                tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
 
             }
         })
@@ -2087,8 +2095,13 @@ obtenerGuiaId(id).then(({data}) => {
         })
     }
 
+    const handleListPaquetesChange = (newList) => {
+        setDataPaquetes(newList)
+    }
+
     return (
         <div>
+            <CambiarTipoCobro creditoVencido={state.creditoVencido} open={state.openTipoCobro} dataTipoCobro={dataTipoCobro} close={() => setState({...state, openTipoCobro: false})}/>
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
@@ -2321,29 +2334,34 @@ obtenerGuiaId(id).then(({data}) => {
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
-                        <li>
-                            <a onClick={(event) => {
-                                event.stopPropagation();
-                                setState({
-                                    ...state,
-                                    identificadorModal:
-                                        "imprimir",
-                                    tipoModal: 6,
-                                    openDialog: true
-                                });
-                            }}>
-                                <i className="fa fa-print"/> Imprimir
-                            </a>
-                        </li>
+                        {/*<li>*/}
+                        {/*    <a onClick={(event) => {*/}
+                        {/*        event.stopPropagation();*/}
+                        {/*        setState({*/}
+                        {/*            ...state,*/}
+                        {/*            identificadorModal:*/}
+                        {/*                "imprimir",*/}
+                        {/*            tipoModal: 6,*/}
+                        {/*            openDialog: true*/}
+                        {/*        });*/}
+                        {/*    }}>*/}
+                        {/*        <i className="fa fa-print"/> Imprimir*/}
+                        {/*    </a>*/}
+                        {/*</li>*/}
 
                         <li className="hide">
                             <a data-toggle="tab" href="#Importar">
                                 <i className="fa fa-upload"/> Importar
                             </a>
                         </li>
+                        <li >
+                            <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled} onClick={() => setState({...state,openTipoCobro: true})}>
+                                <i className="fa fa-refresh"/> Cambiar Tipo Cobro
+                            </a>
+                        </li>
                         <li>
                             <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}
-                               className={state.idGuia == 0 ? classes.disabled : ""}>
+                               className={state.idGuia === 0 ? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>
@@ -2546,7 +2564,9 @@ obtenerGuiaId(id).then(({data}) => {
                                                 onRowSelected={(row) => {
                                                     setState({
                                                         ...state,
-                                                        idGuia: row.data.m_nIdGuia
+                                                        idGuia: row.data.m_nIdGuia,
+                                                        cambioCobro: (row.data.m_nIdEstatusGuia === 14 || row.data.m_nIdEstatusGuia === 7) &&  row.data.m_nIdTipoCobro === 2,
+                                                        creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito
                                                     })
                                                 }}
                                             />
@@ -3290,9 +3310,14 @@ obtenerGuiaId(id).then(({data}) => {
                                     </div>
 
 
-                                    <div className="row" id="paquetesSobres">
+                                    <div className="widget-wrap" id="paquetesSobres">
+                                        <Paquetes
+                                            dataPaquetes={dataPaquetes}
+                                            onChangeList={handleListPaquetesChange}
+                                            disabled={true}
+                                        />
 
-                                        <div className="col-md-6">
+                                        {/*<div className="col-md-6">
                                             <div className="widget-wrap">
                                                 <div className="widget-header">
                                                     <div className="col-md-12">
@@ -3346,7 +3371,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>*/}
                                     </div>
                                     <div className="widget-wrap" id="detalleFacturacion">
                                         <div className="widget-header">
@@ -3365,7 +3390,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                                 {/*<form className="j-forms">*/}
                                                                 <div className="form-content">
                                                                     <Grid container spacing={2}>
-                                                                        <Grid item xs={2}>
+                                                                        <Grid item xs>
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth
                                                                                              variant="outlined"
@@ -3404,7 +3429,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                 </FormControl>
                                                                             </label>
                                                                         </Grid>
-                                                                        <Grid item xs={2}>
+                                                                        <Grid item xs>
                                                                             <label className="input select">
                                                                                 <FormControl fullWidth
                                                                                              variant="outlined"
@@ -3442,7 +3467,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                 </FormControl>
                                                                             </label>
                                                                         </Grid>
-                                                                        <Grid item xs={2}>
+                                                                        <Grid item xs>
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
                                                                                            margin="dense"
@@ -3459,34 +3484,51 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                            disabled
                                                                                            id="ValorDeclarado"
                                                                                            name="ValorDeclarado"
-                                                                                           startAdornment={
-                                                                                               <InputAdornment
-                                                                                                   position="start">$</InputAdornment>}
+                                                                                           InputProps={{
+                                                                                               startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                                                                           }}
                                                                                 />
                                                                             </div>
                                                                         </Grid>
-                                                                        <Grid item xs={1.5}>
+                                                                        <Grid item xs>
+                                                                            <div className="input">
+                                                                                <TextField variant="outlined" margin="dense"
+                                                                                           className="form-control"
+                                                                                           type="number"
+                                                                                           disabled={state.agregar === "Consultar" || !state.aplicaSeguro}
+                                                                                           label="Porcentaje de seguro"
+                                                                                           onChange={handleChange}
+                                                                                           value={state.porcentajeSeguro}
+                                                                                           placeholder="%"
+                                                                                           name="porcentajeSeguro"
+                                                                                           InputProps={{
+                                                                                               endAdornment: <InputAdornment position="start">%</InputAdornment>,
+                                                                                           }}
+                                                                                />
+                                                                            </div>
+                                                                        </Grid>
+                                                                        <Grid item xs>
                                                                             <FormControlLabel disabled
                                                                                               control={<Checkbox
                                                                                                   checked={state.tieneRecoleccion}
                                                                                                   name="tieneRecolecion"/>}
                                                                                               label="Tiene recolección"/>
                                                                         </Grid>
-                                                                        <Grid item xs={1.5}>
+                                                                        <Grid item xs>
                                                                             <FormControlLabel disabled
                                                                                               control={<Checkbox
                                                                                                   checked={state.tieneEntregaDomicilio}
                                                                                                   name="tieneEntregaDomicilio"/>}
                                                                                               label="Tiene entrega a domicilio"/>
                                                                         </Grid>
-                                                                        <Grid item xs={1.5}>
+                                                                        {/*<Grid item xs={1.5}>
                                                                             <FormControlLabel disabled
                                                                                               control={<Checkbox
                                                                                                   checked={state.tieneCitaRecoleccion}
                                                                                                   name="tieneCita"/>}
                                                                                               label="Tiene cita para recolección"/>
-                                                                        </Grid>
-                                                                        <Grid item xs={1.5}>
+                                                                        </Grid>*/}
+                                                                        <Grid item xs>
                                                                             <FormControlLabel disabled
                                                                                               control={<Checkbox
                                                                                                   checked={state.tieneCitaEntrega}
@@ -3552,6 +3594,9 @@ obtenerGuiaId(id).then(({data}) => {
                                                                         keys={0}
                                                                         agregarConcepto={addConcepto}
                                                                         eliminarConcepto={removeConcepto}
+                                                                        mostrarTotales={true}
+                                                                        ivaTraslada={state.ivaTraslada}
+                                                                        ivaRetiene={state.ivaRetiene}
                                                                     />
                                                                 </div>
 

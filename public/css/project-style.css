@@ -353,3 +353,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 .MuiDataGrid-root .MuiDataGrid-row.Mui-selected{
   background-color:  #f98522 !important;
 }
+
+.MuiFormHelperText-root{
+  font-size: 12px !important;
+}

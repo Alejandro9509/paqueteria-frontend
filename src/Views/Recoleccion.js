@@ -260,6 +260,8 @@ function Recoleccion() {
 
         //Entrega
         diferenteEntrega: false,
+        entregaEnSucursal: false,
+        idSucursalEntrega: 0,
         /*ciudadEntrega: '',
         codigoPostalEntrega: '',
         zonaEntrega: '',
@@ -336,7 +338,8 @@ function Recoleccion() {
     const [dataZonasTarifaRecoleccionDD, setDataZonasTarifaRecoleccionDD] = useState([])
     const [dataRecoleccionConsulta, setDataRecoleccionConsulta] = useState();
     const [tabActiva, setTabActiva] = useState(0);
-
+    const [isAgregar, setIsAgregar] = useState(false);
+    const [isModificar, setIsModificar] = useState(false);
     const [remitente, setRemitente] = useState({
         idRemitente: '',
         aliasRemitente: '',
@@ -831,6 +834,7 @@ function Recoleccion() {
             m_nCreadoPor: state.CreadoPor,
             m_nModificadoPor: state.ModificadoPor
         }
+       
         if (state.diferenteRecoleccion) {
             params.m_nIdCPDetalleRecoleccion = recoleccionDD.codigoPostalRec.m_nIdCP
             params.m_sDomicilioDetalleRecoleccion = recoleccionDD.domicilioRec
@@ -847,9 +851,11 @@ function Recoleccion() {
             params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente.m_nIdZona
             params.m_sLatitudR = coordenadas ? coordenadas.lat : remitente.latitudR
             params.m_sLongitudR = coordenadas ? coordenadas.lng : remitente.longitudR
-        }
+        } 
+            params.m_bEntregaEnSucursal = state.entregaEnSucursal;
+            params.m_nIdSucursalEntrega = state.idSucursalEntrega;
 
-        if (state.diferenteEntrega) {
+         if (state.diferenteEntrega) {
             params.m_nIdCPDetalleEntrega = entregaDD.codigoPostalEnt.m_nIdCP
             params.m_sDomicilioDetalleEntrega = entregaDD.domicilioEnt
             params.m_sEntregarEnDetalleEntrega = entregaDD.entregarEnEnt
@@ -874,7 +880,7 @@ function Recoleccion() {
 
         console.log(params)
         console.log(JSON.stringify(params))
-        if (state.idRecoleccion != 0) {
+   /*     if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -897,7 +903,7 @@ function Recoleccion() {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
 
     };
 
@@ -1003,6 +1009,7 @@ function Recoleccion() {
     }
 
     function handleShowModificar(id) {
+        setIsModificar(true);
         getDataParaEditar()
         obtenerRecoleccionId(id).then((respuesta) => {
             $('.nav-tabs li ').removeClass('active');
@@ -1010,6 +1017,7 @@ function Recoleccion() {
             $('.tab-content div ').removeClass('in show');
             $('#Agregar').addClass('in show');
             setTabActiva(1)
+            console.log("Recoleccion: ", respuesta.data);
             setState(state => {
                 return {
                     ...state,
@@ -1022,6 +1030,7 @@ function Recoleccion() {
     }
 
     function handleShowConsultar(id) {
+        setIsAgregar(false);
         getDataParaEditar()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
@@ -1191,6 +1200,8 @@ function Recoleccion() {
                 diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio,
                 fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
+                entregaEnSucursal:respuesta.data.m_bEntregaSucursal,
+                idSucursalEntrega:respuesta.data.m_nIdSucursalEntrega
 
             }
         });
@@ -1223,6 +1234,7 @@ function Recoleccion() {
     }
 
     function handleShowAgregar(event) {
+        setIsAgregar(false);
         event.stopPropagation()
         getDataParaEditar()
         limpiarInputsAgregar()
@@ -1245,6 +1257,7 @@ function Recoleccion() {
     }
 
     const handleShowListado = (event) => {
+        setIsAgregar(false);
         if (event !== undefined){
             event.stopPropagation();
         }
@@ -1408,6 +1421,7 @@ function Recoleccion() {
 
                 //Entrega
                 diferenteEntrega: false,
+                entregaEnSucursal:false,
                 /*ciudadEntrega: '',
                 codigoPostalEntrega: '',
                 zonaEntrega: '',
@@ -1515,7 +1529,12 @@ function Recoleccion() {
         })
 
     }
-
+    const handleChangeSucursalEntrega = (event) => {
+        setState({
+          ...state,
+          [event.target.name]: event.target.value
+        });
+      };
     //setea si la recoleccion es en diferente direccion a la del remitente
     const handleRecoleccionCheckboxChange = (event) => {
         // event.preventDefault();
@@ -1539,9 +1558,17 @@ function Recoleccion() {
         setState({
             ...state,
             diferenteEntrega: !state.diferenteEntrega,
+            entregaEnSucursal: !state.entregaEnSucursal && false
         });
     };
-
+    const handleEntregaEnSucursalCheckbox = (event) => {
+        setState({
+          ...state,
+          entregaEnSucursal: !state.entregaEnSucursal,
+          diferenteEntrega: !state.entregaEnSucursal && false,
+          entregaConCita: !state.entregaEnSucursal && false,
+        });
+      };
     //Maneja filtrado de listado embarque
     const handleFolioRecoleccionFiltro = async (event) => {
         if (event.keyCode == 13) {
@@ -2560,6 +2587,15 @@ function Recoleccion() {
         setDataPaquetes(newList)
     }
 
+    const filtrarTipoCobro = (tipoCobro) => {
+        // if (!state.clientePaga) {
+        return tipoCobro.m_nIdTipoCobro === 10 || tipoCobro.m_nIdTipoCobro === 11
+        // }else {
+        //     return (state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 10) || ( !state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 11)
+        //
+        // }
+    }
+
     return (
         <div>
             {
@@ -3430,7 +3466,7 @@ function Recoleccion() {
                                                                         id="tipoCobro"
                                                                     >
                                                                         <option value="0">Seleccionar</option>
-                                                                        {dataTipoCobro.map((tipoCobro) => (
+                                                                        {dataTipoCobro.filter(d => filtrarTipoCobro(d)).map((tipoCobro) => (
                                                                             <option
                                                                                 key={tipoCobro.m_nIdTipoCobro}
                                                                                 value={tipoCobro.m_nIdTipoCobro}
@@ -3487,6 +3523,8 @@ function Recoleccion() {
                                                                                 label="Responsable de pago"
                                                                                 margin="dense"
                                                                                 required
+                                                                                error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
+                                                                                helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de credito: " + state.clientePaga.m_nDiasCredito : ""}
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
                                                                                 InputLabelProps={{shrink: true}}
                                                                                 onClick={handleClickResponsablePago}
@@ -3515,6 +3553,9 @@ function Recoleccion() {
                                             dataPaquetes={dataPaquetes}
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.clientePaga.m_nIdTipoSeguro === undefined}
+                                            recoleccion={true}
+                                            isAgregar={isAgregar}
+                                            isModificar={isModificar}
                                         />
                                     </div>
 
@@ -3596,7 +3637,7 @@ function Recoleccion() {
                                                                         destinatario={true}
                                                                         componentePadre={"Recoleccion"}
                                                                         consulta={state.agregar === "Consultar"}
-                                                                        mostrarZonas={!state.diferenteEntrega}
+                                                                        mostrarZonas={!state.diferenteEntrega && !state.entregaEnSucursal}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}
                                                                         dataCiudad={dataCiudad}
@@ -3623,6 +3664,21 @@ function Recoleccion() {
                                                                         Entrega en Diferente Domicilio
                                                                     </label>
                                                                 </div>
+                                                                <div className="col-sm-12 col-md-12  unit">
+                                                              <label className="checkbox">
+                                                                      Entrega en Sucursal
+                                                                         <input
+                                                                             onChange={handleEntregaEnSucursalCheckbox}
+                                                                               className="form-control"
+                                                                               type="checkbox"
+                                                                               checked={state.entregaEnSucursal}
+                                                                               style={{ height: "20px" }}
+                                                                               disabled={state.agregar === "Consultar"}
+                                                                               id="entregaEnSucursal"
+                                                                          />
+                                                                           <i />
+                                                                          </label>
+                                                                      </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3633,7 +3689,60 @@ function Recoleccion() {
                                     </div>
 
                                     <div className="col-md-12">
-
+                                    {state.entregaEnSucursal ? (
+                                          <div className="widget-wrap" id="detallesRecoleccion">
+                        <div>
+                          <div className="widget-header">
+                            <h2>Entrega en sucursal</h2>
+                          </div>
+                          <div className="widget-container">
+                            <div className="widget-content">
+                              <div className="row">
+                                <div className="col-sm-12 col-md-12 col-lg-12 unit">
+                                  <label className="input select">
+                                    <FormControl
+                                      fullWidth
+                                      variant="outlined"
+                                      margin="dense"
+                                    >
+                                      <InputLabel id="idSucursalEntrega">
+                                        Sucursal de Entrega
+                                      </InputLabel>
+                                      <Select
+                                        labelId={"idSucursalEntrega"}
+                                        label="Sucursal de Entrega"
+                                        className="form-control"
+                                        required={state.entregaEnSucursal}
+                                        onChange={handleChangeSucursalEntrega}
+                                        value={state.idSucursalEntrega}
+                                        disabled={state.agregar === "Consultar"}
+                                        id="idSucursalEntrega"
+                                        name="idSucursalEntrega"
+                                        inputProps={{
+                                          name: "idSucursalEntrega",
+                                        }}
+                                      >
+                                        {dataSucursal.map((sucursal) => (
+                                          <option
+                                            key={sucursal.m_nIdSucursal}
+                                            value={sucursal.m_nIdSucursal}
+                                            // value={sucursal}
+                                          >
+                                            {sucursal.m_sSucursal}
+                                          </option>
+                                        ))}
+                                      </Select>
+                                    </FormControl>
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                                         </div>
+                                        ) : (
+                                          <div />
+                                       )}
                                         {state.recoleccionConCita &&
                                         <div className="widget-wrap" id="citaRecoleccion">
                                             <div>
