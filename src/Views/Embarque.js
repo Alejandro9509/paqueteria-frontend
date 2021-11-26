@@ -203,110 +203,6 @@ function Embarque(props) {
     // const [dataFolioEmbarque, SetDataFolioEmbarque] = React.useState([]);
     // const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario,] = React.useState([]);
-    const [state, setState] = React.useState({
-        //==VARIABLES DE LISTADO==
-        idEmbarque: 0,
-        fechaInicial: 0,
-        fechaFinal: 0,
-        sucursalListado: 0,
-        estatusListado: 0,
-        //==VARIABLES DE CANCELAR==
-        // folioEmbarque: '', se usa en agregar tambien
-        sucursalCancelacion: '',
-        fechaCancelacion: '',
-        usuario: localStorage.getItem("Usuario"),
-        // estatusEmbarque: '', se usa en agregar tambien
-        motivoCancelacion: '',
-
-        //==VARIABLES DE AGREGAR
-        //Informacion general
-        idSucursalAgregar: localStorage.getItem("Sucursal"),
-        folioRecoleccion: '',
-        folioEmbarque: '',
-        folioGuia: '',
-        folioInforme: '',
-        fechaHoraRegistro: '',
-        estatusEmbarque: '',
-        moneda: '',
-        tipoCambio: '',
-        tipoCobro: '',
-        clientePaga: '',
-
-        //Remitente
-        /*idRemitente: '',
-        aliasRemitente: '',
-        nombreRemitente: '',
-        RFCRemitente: '',
-        domicilioRemitente: '',
-        ciudadRemitente: '',
-        codigoPostalRemitente: '',
-        correoRemitente: '',
-        telefonoRemitente: '',
-        contactoRemitente: '',
-        ciudadOrigen: '',
-        zonaRemitente: {},
-        calleRemitente: '',
-        numeroIntRemitente: '0',
-        numeroExtRemitente: '',
-        coloniaRemitente: '',*/
-
-        //Destinatario
-        /*idDestinatario: '',
-        aliasDestinatario: '',
-        nombreDestinatario: '',
-        RFCDestinatario: '',
-        domicilioDestinatario: '',
-        ciudadDestinatario: '',
-        codigoPostalDestinatario: '',
-        correoDestinatario: '',
-        telefonoDestinatario: '',
-        contactoDestinatario: '',
-        destinoDestinatario: '',
-        zonaDestinatario: {},
-        calleDestinatario: '',
-        numeroIntDestinatario: '0',
-        numeroExtDestinatario: '',
-        coloniaDestinatario: '',*/
-
-        //Entrega
-        entregaEnSucursal: false,
-        idSucursalEntrega: '',
-        diferenteEntrega: false,
-        /*ciudadEntrega: '',
-        codigoPostalEntrega: '',
-        zonaEntrega: '',
-        domicilioEntrega: '',
-        entregaEn: '',
-        datosAdicionalesEntrega: '',*/
-
-        //Cita de recoleccion
-        entregaConCita: false,
-        fechaCita: '',
-        horaCitaMinima: '',
-        horaCitaMaxima: '',
-
-        //Paquetes/sobres
-        paquetes: [],
-        sobres: [
-            {
-                m_nTipo: 1,
-                m_sDescripcion: "",
-            },
-        ],
-        countSobres: 1,
-        countPaquetes: 1,
-
-        DerechoBorrar: 139,
-        identificadorModal: "",
-        tipoModal: 0,
-        openDialog: false,
-        agregar: "Agregar",
-        fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-        CreadoPor: localStorage.getItem("UsuarioId"),
-        ModificadoPor: localStorage.getItem("UsuarioId"),
-        height: window.innerHeight,
-
-    });
 
     const [filtros, setFiltros] = useState({
         fechaInicial: 0,
@@ -696,6 +592,166 @@ function Embarque(props) {
     const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
     const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
     const [dataZonasTarifaEntregaDD, setDataZonasTarifaEntregaDD] = useState([])
+    const [state, setState] = React.useState({
+        //==VARIABLES DE LISTADO==
+        idEmbarque: 0,
+        fechaInicial: 0,
+        fechaFinal: 0,
+        sucursalListado: 0,
+        estatusListado: 0,
+        //==VARIABLES DE CANCELAR==
+        // folioEmbarque: '', se usa en agregar tambien
+        sucursalCancelacion: '',
+        fechaCancelacion: '',
+        usuario: localStorage.getItem("Usuario"),
+        // estatusEmbarque: '', se usa en agregar tambien
+        motivoCancelacion: '',
+
+        //==VARIABLES DE AGREGAR
+        //Informacion general
+        idSucursalAgregar: localStorage.getItem("Sucursal"),
+        folioRecoleccion: '',
+        folioEmbarque: '',
+        folioGuia: '',
+        folioInforme: '',
+        fechaHoraRegistro: '',
+        estatusEmbarque: '',
+        moneda: '',
+        tipoCambio: '',
+        tipoCobro: '',
+        clientePaga: '',
+        valorDeclarado:0,
+        idTipoSeguro:5,
+        porcentajeSeguro: 0,
+        aplicaSeguro: false,
+
+        //Remitente
+        /*idRemitente: '',
+        aliasRemitente: '',
+        nombreRemitente: '',
+        RFCRemitente: '',
+        domicilioRemitente: '',
+        ciudadRemitente: '',
+        codigoPostalRemitente: '',
+        correoRemitente: '',
+        telefonoRemitente: '',
+        contactoRemitente: '',
+        ciudadOrigen: '',
+        zonaRemitente: {},
+        calleRemitente: '',
+        numeroIntRemitente: '0',
+        numeroExtRemitente: '',
+        coloniaRemitente: '',*/
+
+        //Destinatario
+        /*idDestinatario: '',
+        aliasDestinatario: '',
+        nombreDestinatario: '',
+        RFCDestinatario: '',
+        domicilioDestinatario: '',
+        ciudadDestinatario: '',
+        codigoPostalDestinatario: '',
+        correoDestinatario: '',
+        telefonoDestinatario: '',
+        contactoDestinatario: '',
+        destinoDestinatario: '',
+        zonaDestinatario: {},
+        calleDestinatario: '',
+        numeroIntDestinatario: '0',
+        numeroExtDestinatario: '',
+        coloniaDestinatario: '',*/
+
+        //Entrega
+        entregaEnSucursal: false,
+        idSucursalEntrega: '',
+        diferenteEntrega: false,
+        /*ciudadEntrega: '',
+        codigoPostalEntrega: '',
+        zonaEntrega: '',
+        domicilioEntrega: '',
+        entregaEn: '',
+        datosAdicionalesEntrega: '',*/
+
+        //Cita de recoleccion
+        entregaConCita: false,
+        fechaCita: '',
+        horaCitaMinima: '',
+        horaCitaMaxima: '',
+
+        //Paquetes/sobres
+        paquetes: [],
+        sobres: [
+            {
+                m_nTipo: 1,
+                m_sDescripcion: "",
+            },
+        ],
+        countSobres: 1,
+        countPaquetes: 1,
+
+        DerechoBorrar: 139,
+        identificadorModal: "",
+        tipoModal: 0,
+        openDialog: false,
+        agregar: "Agregar",
+        fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+        CreadoPor: localStorage.getItem("UsuarioId"),
+        ModificadoPor: localStorage.getItem("UsuarioId"),
+        height: window.innerHeight,
+
+    });
+    //Limpia todos los campos. Se usa al pasar del listado a consultar o modificar un registro
+    function limpiarCamposAgregar() {
+        setState(state => {
+            return {
+                ...state,
+                //==VARIABLES DE AGREGAR
+                //Informacion general
+                folioRecoleccion: '',
+                folioEmbarque: '',
+                folioGuia: '',
+                folioInforme: '',
+                tipoCambio: '24',
+                tipoCobro: '10',
+                clientePaga: '',
+                idEmbarque: 0,
+                idSucursalAgregar: localStorage.getItem("Sucursal"),
+                fechaHoraRegistro: getCurrentDateTime(),
+                moneda: 1,
+                estatusEmbarque: 16,
+                valorDeclarado: 0,
+                idTipoSeguro: 5,
+                porcentajeSeguro: 0,
+                aplicaSeguro: false,
+
+                //Entrega
+                entregaEnSucursal: false,
+                diferenteEntrega: false,
+                idSucursalEntrega: '',
+
+                //Cita de recoleccion
+                entregaConCita: false,
+                fechaCita: '',
+                horaCitaMinima: '',
+                horaCitaMaxima: '',
+
+                //Paquetes/sobres
+                paquetes: [],
+                sobres: [
+                    {
+                        m_nTipo: 1,
+                        m_sDescripcion: "",
+                    },
+                ],
+                countSobres: 1,
+                countPaquetes: 1,
+                height: window.innerHeight,
+            }
+        })
+        setDataEmbarqueConsulta(undefined)
+        setDataPaquetes([])
+        resetEntregaDD()
+    }
 
     const [remitente, setRemitente] = useState({
         idRemitente: '',
@@ -1011,7 +1067,6 @@ function Embarque(props) {
             m_nIdEmbarque: state.idEmbarque,
             m_nIdRecoleccion: props.location.idRecoleccion,
             IdSucursal: state.idSucursalAgregar,
-            ValorDeclarado: state.valorDeclarado,
             m_nFolioEmbarque: state.folioEmbarque,
             m_nFolioGuia: state.folioGuia,
             m_nIdEmbarqueRelacionado: state.idEmbarqueRelacionado,
@@ -1023,6 +1078,10 @@ function Embarque(props) {
             m_dFecha: state.fechaHoraRegistro.substr(0, 10),
             m_sHora: state.fechaHoraRegistro.substr(state.fechaHoraRegistro.length - 5),
             m_nIdCliente: state.clientePaga.m_nIdCliente,
+            ValorDeclarado: state.valorDeclarado,
+            m_nIdTipoSeguro: state.idTipoSeguro,
+            m_xPorcentajeSeguro: state.porcentajeSeguro,
+            m_bAplicaSeguro: state.aplicaSeguro,
 
             m_sNOmbreRemitente: remitente.nombreRemitente.m_sNombre,
             m_sRFCRemitente: remitente.RFCRemitente,
@@ -1356,71 +1415,6 @@ function Embarque(props) {
         });
     }
 
-    //Limpia todos los campos. Se usa al pasar del listado a consultar o modificar un registro
-    function limpiarCamposAgregar() {
-        setState(state => {
-            return {
-                ...state,
-                //==VARIABLES DE AGREGAR
-                //Informacion general
-                folioRecoleccion: '',
-                folioEmbarque: '',
-                folioGuia: '',
-                folioInforme: '',
-                tipoCambio: '24',
-                tipoCobro: '10',
-                clientePaga: '',
-                idEmbarque: 0,
-                idSucursalAgregar: localStorage.getItem("Sucursal"),
-                fechaHoraRegistro: getCurrentDateTime(),
-                moneda: 1,
-                estatusEmbarque: 16,
-
-                //Entrega
-                entregaEnSucursal: false,
-                diferenteEntrega: false,
-                idSucursalEntrega: '',
-
-                //Cita de recoleccion
-                entregaConCita: false,
-                fechaCita: '',
-                horaCitaMinima: '',
-                horaCitaMaxima: '',
-
-                //Paquetes/sobres
-                paquetes: [
-                    /*{
-                        m_xPeso: "",
-                        m_xLargo: "",
-                        m_xAncho: "",
-                        m_xAlto: "",
-                        m_xVolumen: "",
-                        m_nIdTIpoEmpaque: "",
-                        m_cValorDeclarado: "",
-                        m_sDescripcion: "",
-                        m_nCantidad: "",
-                        m_nTipo: 2,
-                        m_sObservaciones: "",
-                        m_nIdProducto:'',
-                        producto: ''
-                    },*/
-                ],
-                sobres: [
-                    {
-                        m_nTipo: 1,
-                        m_sDescripcion: "",
-                    },
-                ],
-                countSobres: 1,
-                countPaquetes: 1,
-                height: window.innerHeight,
-            }
-        })
-        setDataEmbarqueConsulta(undefined)
-        setDataPaquetes([])
-        resetEntregaDD()
-    }
-
     function handleShowConsultar(id) {
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
@@ -1515,7 +1509,10 @@ function Embarque(props) {
             setState(state => {
                 return {
                     ...state,
-                    clientePaga: data
+                    clientePaga: data,
+                    idTipoSeguro: data.m_bTieneSeguro ? data.m_nIdTipoSeguro : 5,
+                    porcentajeSeguro: data.m_bTieneSeguro ? data.m_cPorcentajeSeguro : 0,
+                    aplicaSeguro: data.m_bTieneSeguro
                 }
             })
         })
@@ -1707,7 +1704,6 @@ function Embarque(props) {
             return {
                 ...state,
                 idEmbarque: duplicar ? 0 : respuesta.data.m_nIdEmbarque,
-                valorDeclarado: respuesta.data.m_xValorDeclarado,
                 idEmbarqueRelacionado: duplicar ? respuesta.data.m_nIdEmbarque : 0,
                 idRecoleccion: duplicar ? 0 : respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.IdSucursal,
@@ -1720,6 +1716,10 @@ function Embarque(props) {
                 moneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 tipoCobro: respuesta.data.m_nIdTIpoCobro,
+                valorDeclarado: respuesta.data.m_xValorDeclarado,
+                idTipoSeguro: respuesta.data.m_nIdTipoSeguro,
+                porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
+                aplicaSeguro: respuesta.data.m_bAplicaSeguro,
                 // clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
                 duplicar: duplicar,
                 //Entrega
@@ -1863,7 +1863,11 @@ function Embarque(props) {
         setState({
             ...state,
             clientePaga: newValue,
+            idTipoSeguro: newValue.m_bTieneSeguro ? newValue.m_nIdTipoSeguro : 5,
+            porcentajeSeguro: newValue.m_bTieneSeguro ? newValue.m_cPorcentajeSeguro : 0,
+            aplicaSeguro: newValue.m_bTieneSeguro,
             tipoCobro: newValue.m_bSinCredito ? "10" : "11"
+
         })
     }
 
@@ -3606,29 +3610,8 @@ function Embarque(props) {
                                                             </label>
                                                         </div>
 
-
-                                                        <div className="col-md-12">
-                                                            <div className="col-md-4">
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                               className="form-control"
-                                                                               type="text"
-                                                                               disabled={state.agregar === "Consultar"}
-                                                                               label="Valor Declarado"
-                                                                               onChange={(event) => {
-                                                                                   event.preventDefault();
-                                                                                   setState({
-                                                                                       ...state,
-                                                                                       valorDeclarado: event.target.value,
-                                                                                   });
-                                                                               }}
-                                                                               value={state.valorDeclarado}
-                                                                               placeholder="$"
-                                                                               name="valorDeclarado"
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-4">
+                                                        <Grid container spacing={2} style={{marginBottom:'10px'}}>
+                                                            <Grid item xs>
                                                                 <div className="input">
                                                                     <Autocomplete
                                                                         value={state.clientePaga}
@@ -3642,7 +3625,7 @@ function Embarque(props) {
                                                                         disabled={state.agregar === "Consultar"}
                                                                         getOptionLabel={(option) => (
                                                                             option ?
-                                                                            `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`
+                                                                                `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`
                                                                                 : ''
                                                                         )}
                                                                         variant="outlined"
@@ -3665,15 +3648,77 @@ function Embarque(props) {
                                                                         }
                                                                     />
                                                                 </div>
-                                                            </div>
-                                                            <div className="col-md-4">
-                                                                {
-                                                                    state.clientePaga ? state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}`: `NO tiene seguro`
-                                                                        : ''
-
-                                                                }
-                                                            </div>
-                                                        </div>
+                                                            </Grid>
+                                                            <Grid item xs>
+                                                                <div className="input">
+                                                                    <TextField
+                                                                        name="idTipoSeguro"
+                                                                        select
+                                                                        required
+                                                                        label="Tipo seguro"
+                                                                        value={state.idTipoSeguro}
+                                                                        onChange={(event) => {
+                                                                            event.preventDefault();
+                                                                            setState({
+                                                                                ...state,
+                                                                                idTipoSeguro: event.target.value,
+                                                                                porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
+                                                                                aplicaSeguro: (event.target.value === 3) || (event.target.value === 4)
+                                                                            });
+                                                                        }}
+                                                                        variant="outlined"
+                                                                    >
+                                                                        {dataTiposSeguro.map((option) => (
+                                                                            <option key={option.m_nIdTipoSeguro} value={option.m_nIdTipoSeguro}>
+                                                                                {option.m_sDescripcion}
+                                                                            </option>
+                                                                        ))}
+                                                                    </TextField>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               className="form-control"
+                                                                               type="number"
+                                                                               required
+                                                                               disabled={state.agregar === "Consultar" || !state.aplicaSeguro}
+                                                                               label="Porcentaje de seguro"
+                                                                               onChange={handleChange}
+                                                                               value={state.porcentajeSeguro}
+                                                                               placeholder="%"
+                                                                               name="porcentajeSeguro"
+                                                                               InputProps={{
+                                                                                   endAdornment: <InputAdornment position="start">%</InputAdornment>,
+                                                                               }}
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               className="form-control"
+                                                                               type="number"
+                                                                               required
+                                                                               disabled={(state.agregar === "Consultar") || !state.aplicaSeguro}
+                                                                               label="Valor Declarado"
+                                                                               onChange={(event) => {
+                                                                                   event.preventDefault();
+                                                                                   setState({
+                                                                                       ...state,
+                                                                                       valorDeclarado: event.target.value,
+                                                                                   });
+                                                                               }}
+                                                                               value={state.valorDeclarado}
+                                                                               placeholder="$"
+                                                                               name="valorDeclarado"
+                                                                               InputProps={{
+                                                                                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                                                               }}
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                        </Grid>
                                                     </div>
 
                                                 </div>

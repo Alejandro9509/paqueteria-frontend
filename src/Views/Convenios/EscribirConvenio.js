@@ -42,6 +42,7 @@ import Noty from "noty";
 import {obtenerTarifaBy} from "../../Util/Contexts/TarifasContext";
 import DestinosTarifa from "../Tarifas/DestinosTarifa";
 import ProductosPrecios from "../Tarifas/ProductosPrecios";
+import {obtenerCliente} from "../../Util/Contexts/ClientesContext";
 
 const headers = API_HEADERS
 
@@ -297,8 +298,7 @@ class EscribirConvenio extends Component {
     };
 
     getAllClientes() {
-        const url = `${process.env.REACT_APP_API_URL}/Clientes/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerCliente().then((respuesta) => {
             this.setState({ dataClientes: respuesta.data });
         });
     }

@@ -31,7 +31,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
+function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recoleccion,isAgregar,isModificar,}) {
     const [openDialog, setOpenDialog] = useState(false)
     const [row, setRow] = useState(0)
     const [dataComplemento, setDataComplemento] = useState({})
@@ -40,72 +40,96 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro}) {
 
     function RowMenuCell(props) {
         const { api, id } = props;
-        setRow(id)
-
-
+        setRow(id);
+    
         const handleDeleteClick = (event) => {
-            event.stopPropagation();
-            console.log("id==>",id)
-            let row =  dataPaquetes.filter((p)=> p.m_nIdPaquete==id)[0]
-            console.log(row)
-            handlePaqueteClick(row)
-            // api.updateRows([{ id, _action: 'delete' }]);
-
+          event.stopPropagation();
+          console.log("id==>", id);
+          let row = dataPaquetes.filter((p) => p.m_nIdPaquete == id)[0];
+          console.log(row);
+          handlePaqueteClick(row);
+          // api.updateRows([{ id, _action: 'delete' }]);
         };
-
-        const handleOpenClick = (event)=>{
-            event.stopPropagation();
-
-
-            let row =  dataPaquetes.filter((p)=> p.m_nIdPaquete==id)[0]
+    
+        const handleOpenClick = (event) => {
+          event.stopPropagation();
+          let row = dataPaquetes.filter((p) => p.m_nIdPaquete == id)[0];
+          if (recoleccion && isModificar) {
             setDataComplemento({
-                claveProducto: row.m_sClaveSATProducto,
-                claveUnidad: row.m_sClaveSATUnidad,
-                UnidadSAT:row.m_sUnidad,
-                ProductoSAT:row.m_nProducto
-            })
-            setOpenDialog(true)
-
-        }
-
-
+              claveProducto: row.m_sClaveSATProducto,
+              claveUnidad: row.m_sClaveSATUnidad,
+              UnidadSAT: row.m_nUnidadSAT,
+              ProductoSAT: row.m_nProductoSAT,
+            });
+          } else {
+            setDataComplemento({
+              claveProducto: row.m_sClaveSATProducto,
+              claveUnidad: row.m_sClaveSATUnidad,
+              UnidadSAT: row.m_sUnidad,
+              ProductoSAT: row.m_nProducto,
+            });
+          }
+    
+          console.log(row);
+          setOpenDialog(true);
+        };
+    
         return (
-            <div>
-                <IconButton color="primary" size="small" aria-label="save" onClick={handleOpenClick}>
-                    <SaveIcon fontSize="large" />
-                </IconButton>
-                <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
-                    <EditIcon fontSize="large" />
-                </IconButton>
-            </div>
+          <div>
+            <IconButton
+              color="primary"
+              size="small"
+              aria-label="save"
+              onClick={handleOpenClick}
+            >
+              <SaveIcon fontSize="large" />
+            </IconButton>
+            <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
+              <EditIcon fontSize="large" />
+            </IconButton>
+          </div>
         );
-    }
+      }
 
-    function RowMenuCellConsulta(props) {
+      function RowMenuCellConsulta(props) {
         const { api, id } = props;
-        setRow(id)
-
-        const handleOpenClick = (event)=>{
-            event.stopPropagation();
-            let row =  dataPaquetes.filter((p)=> p.m_nIdPaquete==id)[0]
-            console.log(row)
+        setRow(id);
+    
+        const handleOpenClick = (event) => {
+          event.stopPropagation();
+          let row = dataPaquetes.filter((p) => p.m_nIdPaquete == id)[0];
+          console.log(row);
+          if (recoleccion && !isAgregar) {
             setDataComplemento({
-                claveProducto: row.m_nClaveSATProducto,
-                claveUnidad: row.m_nClaveSATUnidad,
-                UnidadSAT:row.m_sUnidadSAT,
-                ProductoSAT:row.m_sProductoSAT
-            })
-            setOpenDialog(true)
-
-        }
+              claveProducto: row.m_sClaveSATProducto,
+              claveUnidad: row.m_sClaveSATUnidad,
+              UnidadSAT: row.m_nUnidadSAT,
+              ProductoSAT: row.m_nProductoSAT,
+            });
+          } else {
+            setDataComplemento({
+              claveProducto: row.m_nClaveSATProducto,
+              claveUnidad: row.m_nClaveSATUnidad,
+              UnidadSAT: row.m_sUnidadSAT,
+              ProductoSAT: row.m_sProductoSAT,
+            });
+          }
+    
+          setOpenDialog(true);
+        };
         return (
-            <div>
-                <IconButton color="primary" size="small" aria-label="save" onClick={handleOpenClick}>
-                    <SaveIcon fontSize="large" />
-                </IconButton>
-            </div>
+          <div>
+            <IconButton
+              color="primary"
+              size="small"
+              aria-label="save"
+              onClick={handleOpenClick}
+            >
+              <SaveIcon fontSize="large" />
+            </IconButton>
+          </div>
         );
-    }
+      }
     const columnsPaquetes = React.useMemo(() => [
         {
             headerName: "Tipo",
