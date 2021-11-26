@@ -1050,8 +1050,9 @@ function Embarque(props) {
             p.ctd = p.m_nCantidad
             p.m_cValorDeclarado = p.m_cyValorDeclarado
             p.m_nTipo = p.m_nIdTipo
-            p.ClaveSATProducto = p.m_sClaveSATProducto
-            p.ClaveSATUnidad = p.m_sClaveSATUnidad
+            p.ClaveSATProducto = p.m_nClaveSATProducto
+            p.ClaveSATUnidad = p.m_nClaveSATUnidad
+            p.ClaveEmbalaje = p.m_sClaveEmbalaje
 
             packs.push(p)
         })
@@ -1675,10 +1676,10 @@ function Embarque(props) {
             p.m_nCantidad = p.ctd
             p.m_cyValorDeclarado = p.m_cValorDeclarado
             p.m_nIdTipo = p.m_nTipo
-            p.m_sClaveSATProducto = p.m_nClaveSATProducto
-            p.m_sClaveSATUnidad = p.m_nClaveSATUnidad
-            p.m_sUnidad = p.m_sUnidadSAT
-            p.m_nProducto = p.m_sProductoSAT
+            // p.m_nClaveSATProducto
+            // p.m_nClaveSATUnidad
+            // p.m_sUnidadSAT
+            // p.m_sProductoSAT
 
             obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
                 p["producto"] = data
