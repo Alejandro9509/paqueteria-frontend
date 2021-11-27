@@ -40,11 +40,13 @@ function ComplementosSAT(props) {
         comercioExterior: '',
         esPeligroso: false,
         claveMaterialPeligroso: '',
-        UnidadSAT: '',
-        ProductoSAT: '',
         claveEmbalaje:'',
         embalajeSAT:'',
         peso: '',
+        UnidadSAT: '',
+        ProductoSAT: '',
+        fraccionSAT:'',
+        materialPeligrosoSAT:'',
     })
 
     const [dataSAT, setDataSAT] = useState([])
@@ -61,11 +63,13 @@ function ComplementosSAT(props) {
             comercioExterior: '',
             esPeligroso: false,
             claveMaterialPeligroso: '',
-            UnidadSAT: '',
-            ProductoSAT: '',
             claveEmbalaje:'',
             embalajeSAT:'',
             peso: '',
+            UnidadSAT: '',
+            ProductoSAT: '',
+            fraccionSAT:'',
+            materialPeligrosoSAT:'',
         })
     }
 
@@ -141,34 +145,66 @@ function ComplementosSAT(props) {
         }
     ]);
 
-    const handleChangeComplementoSat = (idComplemento, {m_sClaveSAT,m_sDescripcion}) => {
-        debugger
+    const handleChangeComplementoSat = (idComplemento, data) => {
         if (idComplemento === 1){
-            console.log(m_sClaveSAT)
-            console.log(m_sDescripcion)
+            console.log(data.m_sClaveSAT)
+            console.log(data.m_sDescripcion)
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveProducto: m_sClaveSAT,
-                    ProductoSAT: m_sDescripcion,
+                    claveProducto: data.m_sClaveSAT,
+                    ProductoSAT: data.m_sDescripcion,
                 }
             });
         }else if (idComplemento === 2){
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveUnidad: m_sClaveSAT,
-                    UnidadSAT: m_sDescripcion,
+                    claveUnidad: data.m_sClaveSAT,
+                    UnidadSAT: data.m_sDescripcion,
                 }
             });
         }else if (idComplemento === 3){
             setDataComplemento(dataComplemento =>{
                 return {
                     ...dataComplemento,
-                    claveEmbalaje: m_sClaveSAT,
-                    embalajeSAT: m_sDescripcion
+                    claveEmbalaje: data.m_sClaveSAT,
+                    embalajeSAT: data.m_sDescripcion
                 }
             });
+        }else if (idComplemento === 4){
+            setDataComplemento(dataComplemento =>{
+                return {
+                    ...dataComplemento,
+                    claveFraccion: data.m_sClaveSAT,
+                    fraccionSAT: data.m_sDescripcion
+                }
+            });
+        }else if (idComplemento === 5){
+            setDataComplemento(dataComplemento =>{
+                return {
+                    ...dataComplemento,
+                    claveMaterialPeligroso: data.m_sClaveSAT,
+                    materialPeligrosoSAT: data.m_sDescripcion
+                }
+            });
+        }else{
+            if (data.target.name === "esPeligroso"){
+                setDataComplemento(dataComplemento =>{
+                    return {
+                        ...dataComplemento,
+                        [data.target.name]: data.target.checked,
+                    }
+                });
+            }else{
+                setDataComplemento(dataComplemento =>{
+                    return {
+                        ...dataComplemento,
+                        [data.target.name]: data.target.value,
+                    }
+                });
+            }
+
         }
     }
 
@@ -195,6 +231,8 @@ function ComplementosSAT(props) {
                     item.claveEmbalaje = dataComplemento.claveEmbalaje
                     item.embalajeSAT = dataComplemento.embalajeSAT
                     item.peso = dataComplemento.peso
+                    item.fraccionSAT = dataComplemento.fraccionSAT
+                    item.materialPeligroso = dataComplemento.materialPeligroso
                 }
             })
             props.onChangeList(props.dataList)
@@ -243,21 +281,7 @@ function ComplementosSAT(props) {
             getAllSATEmbalajes()
         }
 
-        setDataComplemento({
-            id:0,
-            cantidad:0,
-            claveProducto: '',
-            claveUnidad: '',
-            claveFraccion:'',
-            comercioExterior: '',
-            esPeligroso: false,
-            claveMaterialPeligroso: '',
-            UnidadSAT: '',
-            ProductoSAT: '',
-            claveEmbalaje:'',
-            embalajeSAT:'',
-            peso: '',
-        });
+        resetDataComplemento()
         setOpenDialog(true);
     };
 
@@ -267,7 +291,7 @@ function ComplementosSAT(props) {
 
     return(
         <div>
-            <Dialog open={openDialog} fullWidth maxWidth="lg" >
+            <Dialog open={openDialog} fullWidth maxWidth="md" >
                 <DialogTitle>Complemeto Carta Porte</DialogTitle>
                 <DialogContent>
                     {
