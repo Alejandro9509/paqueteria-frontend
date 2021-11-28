@@ -37,7 +37,7 @@ render(){
             <Route path="/Configuracion" component={Configuracion} />
             <Route exact path="/app/applications/:rfc/:esRecoleccion/:id/tracking" component={Tracking} />
             {dashboardRoutes.map((r, key) => {
-                  return (<Route exact key={key} path={r.path} component={r.component} />)
+                  return (<Route exact key={key} path={r.path}  component={r.component} />)
               })}
             {catalogdRoutes.map((r, key) => {
                 return (<Route exact key={r.path} path={r.path} component={r.component} />)
