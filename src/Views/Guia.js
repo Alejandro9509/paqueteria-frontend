@@ -700,7 +700,7 @@ function Guia(props) {
                 usuarioCancela: respuesta.data.m_nUsuarioCancelacion != 0 ? respuesta.data.m_nUsuarioCancelacion : localStorage.getItem("Usuario"),
                 folioGuia: respuesta.data.m_nFolioGuia,
                 sucursalCancelacion: respuesta.data.m_sSucursal,
-                fechaCancelado: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear(),
+                fechaCancelado:  today.getFullYear() + "/" + (today.getMonth() + 1) + "/" +  today.getDate() ,
                 estatusGuia: respuesta.data.m_sEstatusGuia,
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion
             })
