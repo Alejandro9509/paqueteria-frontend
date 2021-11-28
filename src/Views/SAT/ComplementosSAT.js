@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {FormControl, Grid, InputLabel, Select} from "@material-ui/core";
+import {Checkbox, FormControl, FormControlLabel, Grid, InputLabel, Select} from "@material-ui/core";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@material-ui/core';
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
@@ -42,7 +42,8 @@ function ComplementosSAT(props) {
         claveMaterialPeligroso: '',
         claveEmbalaje:'',
         embalajeSAT:'',
-        peso: '',
+        descripcionEmbalajeSAT:'',
+        peso: 0,
         UnidadSAT: '',
         ProductoSAT: '',
         fraccionSAT:'',
@@ -65,7 +66,8 @@ function ComplementosSAT(props) {
             claveMaterialPeligroso: '',
             claveEmbalaje:'',
             embalajeSAT:'',
-            peso: '',
+            descripcionEmbalajeSAT:'',
+            peso: 0,
             UnidadSAT: '',
             ProductoSAT: '',
             fraccionSAT:'',
@@ -110,29 +112,110 @@ function ComplementosSAT(props) {
         );
     }
 
+    const RowMenuCellMaterialPeligroso = (propss) => {
+        const {row} = propss;
+
+        return (
+            <div>
+                {row.esPeligroso ? "Sí" : "No"}
+            </div>
+        );
+    }
+
+    const RowMenuCellClaveMaterialPeligroso = (propss) => {
+        const {row} = propss;
+
+        return (
+            <div>
+                {row.esPeligroso ? row.claveMaterialPeligroso : "No aplica"}
+            </div>
+        );
+    }
+
     const columnsPaquetes = React.useMemo(() => [
         {
             headerName: "Cantidad",
             field: "cantidad",
             type:'number',
             valueFormatter: ({ value }) => `${value}`,
-            flex: 1,
+            width: 130,
             headerAlign: 'left',
             align: 'left',
         },
         {
-            headerName: "Categoría",
-            field: "m_sCategoria",
-            flex: 1,
-        },
-        {
-            headerName: "Clave Producto",
+            headerName: "Clave producto o servicio",
             field: "claveProducto",
-            flex: 1,
+            width: 180,
         },
         {
-            headerName: "Descripción",
-            field: "ProductoSAT",
+            headerName: "Clave unidad",
+            field: "claveUnidad",
+            width: 180,
+        },
+        {
+            headerName: "Clave fracción arancelaria",
+            field: "claveFraccion",
+            renderCell : (row) => {
+                return (
+                    <div>
+                        {row.row.esPeligroso ? row.row.claveFraccion ? row.row.claveFraccion : "Indefinido"  : "No aplica"}
+                    </div>
+                )
+            },
+            width: 200,
+        },
+        {
+            headerName: "Es material peligroso",
+            field: "esPeligroso",
+            renderCell: RowMenuCellMaterialPeligroso,
+            width: 200,
+        },
+        {
+            headerName: "Clave material peligroso",
+            field: "claveMaterialPeligroso",
+            renderCell: RowMenuCellClaveMaterialPeligroso,
+            width: 200,
+        },
+        {
+            headerName: "Clave embalaje",
+            field: "claveEmbalaje",
+            renderCell : (row) => {
+                return (
+                    <div>
+                        {row.row.esPeligroso ? row.row.claveEmbalaje : "No aplica"}
+                    </div>
+                )
+            },
+            width: 180,
+        },
+        {
+            headerName: "Tipo embalaje",
+            field: "embalajeSAT",
+            renderCell : (row) => {
+                return (
+                    <div>
+                        {row.row.esPeligroso ? row.row.embalajeSAT : "No aplica"}
+                    </div>
+                )
+            },
+            width: 200,
+        },
+        {
+            headerName: "Descripción embalaje",
+            field: "descripcionEmbalajeSAT",
+            renderCell : (row) => {
+                return (
+                    <div>
+                        {row.row.esPeligroso ? row.row.descripcionEmbalajeSAT ? row.row.descripcionEmbalajeSAT : "Indefinido" : "No aplica"}
+                    </div>
+                )
+            },
+            width: 200,
+        },
+        {
+            headerName: "Peso (Kg)",
+            field: "peso",
+            hide:true,
             flex: 1,
         },
         {
@@ -140,7 +223,7 @@ function ComplementosSAT(props) {
             field: 'complementos',
             renderCell: RowMenuCell,
             sortable: false,
-            flex:1,
+            width: 150,
             filterable: false,
         }
     ]);

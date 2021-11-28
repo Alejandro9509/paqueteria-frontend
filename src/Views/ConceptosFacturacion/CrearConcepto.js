@@ -183,6 +183,74 @@ function CrearConceptoSAT(props) {
                         </Grid>
 
                         <Grid container spacing={1}>
+                            {/*<Grid item xs>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    type="text"
+                                    className="form-control"
+                                    label="UUID Comercio exterior"
+                                    disabled={props.consulta}
+                                    value={props.dataComplemento.comercioExterior}
+                                    onChange={handleChange}
+                                    name="comercioExterior"
+                                />
+                            </Grid>*/}
+                            <Grid item xs>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={props.dataComplemento.esPeligroso}
+                                            onChange={handleChange}
+                                            name="esPeligroso"
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Es material peligroso"
+                                />
+                            </Grid>
+                        </Grid>
+
+                        {props.dataComplemento.esPeligroso &&
+                        <Grid container spacing={1}>
+                            <Grid item xs={2}>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    type="text"
+                                    className="form-control"
+                                    label="Clave SAT"
+                                    aria-readonly={true}
+                                    value={props.dataComplemento.claveMaterialPeligroso}
+                                    name="claveMaterialPeligroso"
+                                />
+                            </Grid>
+                            <Grid item xs>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    className="form-control"
+                                    type="text"
+                                    label="Material peligroso"
+                                    aria-readonly={true}
+                                    required
+                                    value={props.dataComplemento.materialPeligrosoSAT}
+                                    name="materialPeligroso"
+                                />
+                            </Grid>
+                            <Grid item xs={2}>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary primary-btn"
+                                    style={{margin: "0px"}}
+                                    onClick={() => setState({openDialog: true, complementoSAT: 5})}>
+                                    Seleccionar
+                                </button>
+                            </Grid>
+                        </Grid>
+                        }
+                        {props.dataComplemento.esPeligroso &&
+                        <Grid container spacing={1}>
                             <Grid item xs={2}>
                                 <TextField
                                     variant="outlined"
@@ -208,6 +276,19 @@ function CrearConceptoSAT(props) {
                                     name="descripcionEmbalaje"
                                 />
                             </Grid>
+                            <Grid item xs>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    type="text"
+                                    className="form-control"
+                                    label="Descripción embalaje"
+                                    disabled={props.consulta}
+                                    value={props.dataComplemento.descripcionEmbalajeSAT}
+                                    onChange={handleChange}
+                                    name="descripcionEmbalajeSAT"
+                                />
+                            </Grid>
                             <Grid item xs={2}>
                                 <button
                                     type="button"
@@ -218,7 +299,8 @@ function CrearConceptoSAT(props) {
                                 </button>
                             </Grid>
                         </Grid>
-
+                        }
+                        {props.dataComplemento.esPeligroso &&
                         <Grid container spacing={1}>
                             <Grid item xs={2}>
                                 <TextField
@@ -240,7 +322,6 @@ function CrearConceptoSAT(props) {
                                     type="text"
                                     label="Fracción aracelaria"
                                     aria-readonly={true}
-                                    required
                                     value={props.dataComplemento.fraccionSAT}
                                     name="fraccionSAT"
                                 />
@@ -255,72 +336,8 @@ function CrearConceptoSAT(props) {
                                 </button>
                             </Grid>
                         </Grid>
-                        <Grid container spacing={1}>
-                            <Grid item xs>
-                                <TextField
-                                    variant="outlined"
-                                    margin="dense"
-                                    type="text"
-                                    className="form-control"
-                                    label="UUID Comercio exterior"
-                                    disabled={props.consulta}
-                                    value={props.dataComplemento.comercioExterior}
-                                    onChange={handleChange}
-                                    name="comercioExterior"
-                                />
-                            </Grid>
-                            <Grid item xs>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={props.dataComplemento.esPeligroso}
-                                            onChange={handleChange}
-                                            name="esPeligroso"
-                                            color="primary"
-                                        />
-                                    }
-                                    label="Es material peligroso"
-                                />
-                            </Grid>
-                        </Grid>
-                        {props.dataComplemento.esPeligroso &&
-                            <Grid container spacing={1}>
-                                <Grid item xs={2}>
-                                    <TextField
-                                        variant="outlined"
-                                        margin="dense"
-                                        type="text"
-                                        className="form-control"
-                                        label="Clave SAT"
-                                        aria-readonly={true}
-                                        value={props.dataComplemento.claveMaterialPeligroso}
-                                        name="claveMaterialPeligroso"
-                                    />
-                                </Grid>
-                                <Grid item xs>
-                                    <TextField
-                                        variant="outlined"
-                                        margin="dense"
-                                        className="form-control"
-                                        type="text"
-                                        label="Material peligroso"
-                                        aria-readonly={true}
-                                        required
-                                        value={props.dataComplemento.materialPeligrosoSAT}
-                                        name="materialPeligroso"
-                                    />
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary primary-btn"
-                                        style={{margin: "0px"}}
-                                        onClick={() => setState({openDialog: true, complementoSAT: 5})}>
-                                        Seleccionar
-                                    </button>
-                                </Grid>
-                            </Grid>
                         }
+
 
 
                     </div>

@@ -87,14 +87,14 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
 
         return (
           <div>
-            <IconButton
+            {/*<IconButton
               color="primary"
               size="small"
               aria-label="save"
               onClick={handleOpenClick}
             >
               <SaveIcon fontSize="large" />
-            </IconButton>
+            </IconButton>*/}
             <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
               <EditIcon fontSize="large" />
             </IconButton>
@@ -123,14 +123,14 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
         };
         return (
           <div>
-            <IconButton
+            {/*<IconButton
               color="primary"
               size="small"
               aria-label="save"
               onClick={handleOpenClick}
             >
               <SaveIcon fontSize="large" />
-            </IconButton>
+            </IconButton>*/}
           </div>
         );
     }
