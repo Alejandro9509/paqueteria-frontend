@@ -13,6 +13,7 @@ import {DataGrid} from "@material-ui/data-grid";
 import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
+import * as XLSX from "xlsx";
 
 import {
     obtenerSATEmbalajes,
@@ -368,9 +369,52 @@ function ComplementosSAT(props) {
         setOpenDialog(true);
     };
 
-    const handleImportClick = () => {
-
+    const handleImportClick = (e) => {
+        const file = e.target.files[0];
+        readExcel(file);
     }
+
+    const readExcel = (file) => {
+        const promise = new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsArrayBuffer(file);
+
+            fileReader.onload = (e) => {
+                const bufferArray = e.target.result;
+
+                const wb = XLSX.read(bufferArray, { type: "buffer" });
+
+                const wsname = wb.SheetNames[0];
+                console.log(wsname)
+
+                const ws = (wb.Sheets[wsname]);
+
+                console.log(ws)
+
+                const data = XLSX.utils.sheet_to_json(ws, {range:2});
+
+                resolve(data);
+            };
+
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+
+        promise.then((d) => {
+            console.log(d);
+            const newArray = d.map(item => ({
+                id: Math.floor(Math.random() * 10000),
+                cantidad: item.Cantidad,
+                claveProducto: item['Clave productos y servicios'],
+                claveUnidad: item['Clave Unidad'],
+                esPeligroso: item['Es material peligroso'] !== "NO",
+            }))
+            console.log(newArray)
+            // props.dataList.push(newArray)
+            props.onChangeList(newArray)
+        });
+    };
 
     return(
         <div>
@@ -632,9 +676,9 @@ function ComplementosSAT(props) {
                                 {/*<IconButton onClick={removePaquetev2} style={{ padding: "0px" }} disabled={props.disabled}>
                                     <DeleteIcon style={{ fill: "red", fontSize: "xx-large" }} />
                                 </IconButton>*/}
-                                <IconButton onClick={handleImportClick} style={{ padding: "0px" }} disabled={props.disabled}>
-                                    <PublishIcon style={{ fill: "blue", fontSize: "xx-large" }} />
-                                </IconButton>
+                                <input type={"file"} onChange={handleImportClick} style={{ padding: "0px" }} disabled={props.disabled}>
+                                    {/*<PublishIcon style={{ fill: "blue", fontSize: "xx-large" }} />*/}
+                                </input>
                             </Grid>
                         </Grid>
                     </div>
