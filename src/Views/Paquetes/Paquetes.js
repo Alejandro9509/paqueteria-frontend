@@ -18,6 +18,7 @@ import axios from "axios";
 import Recoleccion from "../Recoleccion";
 import {API_HEADERS} from "../../Constants"
 import {
+    obtenerSATEmbalajes,
     obtenerSATServicios,
     obtenerSATUnidades,
 } from "../../Util/Contexts/ConceptosFacturacionContext";
@@ -31,17 +32,25 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recoleccion,isAgregar,isModificar,}) {
+function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recoleccion}) {
     const [openDialog, setOpenDialog] = useState(false)
     const [row, setRow] = useState(0)
-    const [dataComplemento, setDataComplemento] = useState({})
+    const [dataComplemento, setDataComplemento] = useState({
+        claveProducto: '',
+        claveUnidad: '',
+        UnidadSAT: '',
+        ProductoSAT: '',
+        embalajeSAT:'',
+        claveEmbalaje:''
+    })
     const [dataSAT, setDataSAT] = useState([])
     const [dataSATUnidades, setDataSATUnidades] = useState([])
+    const [dataSATEmbalajes, setDataSATEmbalajes] = useState([])
 
     function RowMenuCell(props) {
         const { api, id } = props;
         setRow(id);
-    
+
         const handleDeleteClick = (event) => {
           event.stopPropagation();
           console.log("id==>", id);
@@ -50,86 +59,82 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
           handlePaqueteClick(row);
           // api.updateRows([{ id, _action: 'delete' }]);
         };
-    
+
         const handleOpenClick = (event) => {
           event.stopPropagation();
+            if (dataSAT.length === 0 ) {
+                getAllSATServicios()
+            }
+            if (dataSATUnidades.length === 0 ) {
+                getAllSATUnidades()
+            }
+            if (dataSATEmbalajes.length === 0 ) {
+                getAllSATEmbalajes()
+            }
+
           let row = dataPaquetes.filter((p) => p.m_nIdPaquete == id)[0];
-          if (recoleccion && isModificar) {
             setDataComplemento({
-              claveProducto: row.m_sClaveSATProducto,
-              claveUnidad: row.m_sClaveSATUnidad,
-              UnidadSAT: row.m_nUnidadSAT,
-              ProductoSAT: row.m_nProductoSAT,
+                claveProducto: row.m_nClaveSATProducto||'',
+                claveUnidad: row.m_nClaveSATUnidad||'',
+                UnidadSAT: row.m_sUnidadSAT||'',
+                ProductoSAT: row.m_sProductoSAT||'',
+                embalajeSAT: row.m_sEmbalajeSAT||'',
+                claveEmbalaje:row.m_sClaveEmbalaje||''
             });
-          } else {
-            setDataComplemento({
-              claveProducto: row.m_sClaveSATProducto,
-              claveUnidad: row.m_sClaveSATUnidad,
-              UnidadSAT: row.m_sUnidad,
-              ProductoSAT: row.m_nProducto,
-            });
-          }
-    
           console.log(row);
           setOpenDialog(true);
         };
-    
+
         return (
           <div>
-            <IconButton
+            {/*<IconButton
               color="primary"
               size="small"
               aria-label="save"
               onClick={handleOpenClick}
             >
               <SaveIcon fontSize="large" />
-            </IconButton>
+            </IconButton>*/}
             <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
               <EditIcon fontSize="large" />
             </IconButton>
           </div>
         );
-      }
+    }
 
-      function RowMenuCellConsulta(props) {
+    function RowMenuCellConsulta(props) {
         const { api, id } = props;
         setRow(id);
-    
+
         const handleOpenClick = (event) => {
           event.stopPropagation();
           let row = dataPaquetes.filter((p) => p.m_nIdPaquete == id)[0];
           console.log(row);
-          if (recoleccion && !isAgregar) {
             setDataComplemento({
-              claveProducto: row.m_sClaveSATProducto,
-              claveUnidad: row.m_sClaveSATUnidad,
-              UnidadSAT: row.m_nUnidadSAT,
-              ProductoSAT: row.m_nProductoSAT,
+                claveProducto: row.m_sClaveSATProducto,
+                claveUnidad: row.m_sClaveSATUnidad,
+                UnidadSAT: row.m_nUnidadSAT,
+                ProductoSAT: row.m_nProductoSAT,
+                embalajeSAT:row.m_sEmbalajeSAT,
+                claveEmbalaje:row.m_sClaveEmbalaje
             });
-          } else {
-            setDataComplemento({
-              claveProducto: row.m_nClaveSATProducto,
-              claveUnidad: row.m_nClaveSATUnidad,
-              UnidadSAT: row.m_sUnidadSAT,
-              ProductoSAT: row.m_sProductoSAT,
-            });
-          }
-    
+
           setOpenDialog(true);
         };
         return (
           <div>
-            <IconButton
+            {/*<IconButton
               color="primary"
               size="small"
               aria-label="save"
               onClick={handleOpenClick}
             >
               <SaveIcon fontSize="large" />
-            </IconButton>
+            </IconButton>*/}
           </div>
         );
-      }
+    }
+
     const columnsPaquetes = React.useMemo(() => [
         {
             headerName: "Tipo",
@@ -459,6 +464,46 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
 
     };
 
+    const handleChangeComplementoSat = (idComplemento, {m_sClaveSAT,m_sDescripcion}) => {
+        debugger
+        let index = dataPaquetes.findIndex(d=> d.m_nIdPaquete == row)
+        if(index !=-1){
+
+            if (idComplemento === 1){
+                setDataComplemento(dataComplemento =>{
+                    return {
+                        ...dataComplemento,
+                        claveProducto: m_sClaveSAT,
+                        ProductoSAT: m_sDescripcion,
+                    }
+                });
+                /*dataPaquetes[index].m_nClaveSATProducto = data.m_sClaveSAT;
+                dataPaquetes[index].m_sProductoSAT = data.m_sDescripcion;*/
+            }else if (idComplemento === 2){
+                setDataComplemento(dataComplemento =>{
+                    return {
+                        ...dataComplemento,
+                        claveUnidad: m_sClaveSAT,
+                        UnidadSAT: m_sDescripcion,
+                    }
+                });
+                /*dataPaquetes[index].m_nClaveSATUnidad = data.m_sClaveSAT;
+                dataPaquetes[index].m_sUnidadSAT = data.m_sDescripcion;*/
+            }else if (idComplemento === 3){
+                setDataComplemento(dataComplemento =>{
+                    return {
+                        ...dataComplemento,
+                        claveEmbalaje: m_sClaveSAT,
+                        embalajeSAT: m_sDescripcion
+                    }
+                });
+                /*dataPaquetes[index].m_sClaveEmbalaje = m_sClaveSAT;
+                dataPaquetes[index].m_sEmbalajeSAT = m_sDescripcion;*/
+            }
+            console.log(dataComplemento)
+        }
+    }
+
     const resetPaquete = () =>{
         setPaquete(paquete => {
             return {
@@ -490,12 +535,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
         if (dataEmbalaje.length === 0 ) {
             getAllEmbalajes()
         }
-        if (dataSAT.length === 0 ) {
-            getAllSATServicios()
-        }
-        if (dataSATUnidades.length === 0 ) {
-            getAllSATUnidades()
-        }
     }
 
     const getAllProductos = () => {
@@ -508,11 +547,14 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
     const handleAceptar = (data)=>{
         var index = dataPaquetes.findIndex(d=> d.m_nIdPaquete == row)
         if(index !=-1){
-            dataPaquetes[index].m_sClaveSATProducto = String(data?.claseSeleccionado?.id);
-            dataPaquetes[index].m_sClaveSATUnidad = data?.claveSATUnidad;
-            dataPaquetes[index].m_nProducto = data.productoOServicio;
-            dataPaquetes[index].m_sUnidad = data.descripcionUnidad;
-
+            dataPaquetes[index].m_nClaveSATProducto = dataComplemento.claveProducto;
+            dataPaquetes[index].m_sProductoSAT = dataComplemento.ProductoSAT;
+            dataPaquetes[index].m_nClaveSATUnidad = dataComplemento.claveUnidad;
+            dataPaquetes[index].m_sUnidadSAT = dataComplemento.UnidadSAT;
+            dataPaquetes[index].m_sClaveEmbalaje = dataComplemento.claveEmbalaje;
+            dataPaquetes[index].m_sEmbalajeSAT = dataComplemento.embalajeSAT;
+            console.log(dataPaquetes)
+            onChangeList(dataPaquetes)
             showSuccess("Complemento Agregado!")
             dialogVisible(false)
         }
@@ -530,9 +572,16 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
             setDataEmbalaje(respuesta.data);
         });
     }
+
     function getAllSATServicios() {
         obtenerSATServicios().then((respuesta) => {
             setDataSAT(respuesta.data);
+        });
+    }
+
+    const getAllSATEmbalajes = () => {
+        obtenerSATEmbalajes().then((respuesta) => {
+            setDataSATEmbalajes(respuesta.data );
         });
     }
 
@@ -541,16 +590,20 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
             setDataSATUnidades(respuesta.data );
         });
     }
+
     return(
-
-
         <div>
             <Dialog open={openDialog} fullWidth maxWidth="lg" >
                 <DialogTitle>Complemeto Carta Porte</DialogTitle>
                 <DialogContent>
                     {
                         openDialog &&
-                        <CrearConcepto handleAceptar={handleAceptar} dialogVisible={dialogVisible} consulta={disabled} dataComplemento={dataComplemento} dataSAT={dataSAT} dataSATUnidades={dataSATUnidades}/>
+                        <CrearConcepto handleAceptar={handleAceptar} dialogVisible={dialogVisible} consulta={disabled}
+                                       dataComplemento={dataComplemento} dataSAT={dataSAT}
+                                       dataSATUnidades={dataSATUnidades}
+                                       dataSATEmbalajes={dataSATEmbalajes}
+                                       onChangeData={handleChangeComplementoSat}
+                        />
 
                     }
                 </DialogContent>
@@ -819,10 +872,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
                             getRowId={(row) => row.m_nIdPaquete}
                         />
                     </div>}
-
-
-
-
                 </div>
             </div>
         </div>

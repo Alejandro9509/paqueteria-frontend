@@ -101,6 +101,7 @@ import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasC
 import ReplayIcon from "@material-ui/icons/Replay";
 import ZonaOperativa from "./ZonasOperativas/ZonaOperativa";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
+import ComplementosSAT from "./SAT/ComplementosSAT";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -514,11 +515,11 @@ function Embarque(props) {
             field: "m_nFolioEmbarque",
             width: 125,
         },
-        {
+        /*{
             headerName: "Folio Relacionado",
             field: "m_sFolioEmbarqueRelacionado",
             width: 150,
-        },
+        },*/
         {
             headerName: "Cliente",
             field: "m_sNombreCliente",
@@ -587,6 +588,7 @@ function Embarque(props) {
         },
     ]);
     const [dataPaquetes, setDataPaquetes] = useState([])
+    const [dataComplementosSAT, setDataComplementosSAT] = useState([])
     const [dataTiposSeguro, setDataTiposSeguro] = useState([])
     const [dataEstados, setDataEstados] = useState([])
     const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
@@ -1050,10 +1052,29 @@ function Embarque(props) {
             p.ctd = p.m_nCantidad
             p.m_cValorDeclarado = p.m_cyValorDeclarado
             p.m_nTipo = p.m_nIdTipo
-            p.ClaveSATProducto = p.m_sClaveSATProducto
-            p.ClaveSATUnidad = p.m_sClaveSATUnidad
+            p.ClaveSATProducto = p.m_nClaveSATProducto
+            p.ClaveSATUnidad = p.m_nClaveSATUnidad
+            p.ClaveEmbalaje = p.m_sClaveEmbalaje
 
             packs.push(p)
+        })
+
+        dataComplementosSAT.forEach(item => {
+            item.m_nCantidad = item.cantidad
+            item.m_sClaveProductoServicio = item.claveProducto
+            // item.m_sProductoServicio = item.ProductoSAT
+            item.m_sClaveUnidad = item.claveUnidad
+            // item.m_sUnidad = item.UnidadSAT
+            item.m_sClaveFraccionArancelaria = item.claveFraccion
+            // item.m_sFraccionArancelaria = item.fraccionSAT
+            item.m_sUUIDComercioExterior = item.comercioExterior
+            item.m_sClaveMaterialPeligroso = item.claveMaterialPeligroso
+            item.m_sMaterialPeligroso = item.materialPeligrosoSAT
+            item.m_bEsMaterialPeligroso = item.esPeligroso
+            item.m_sClaveEmbalaje = item.claveEmbalaje
+            // item.m_sTipoEmbalaje = item.embalajeSAT
+            item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
+            item.m_xPeso = item.peso
         })
 
         /**Si no es entrega en sucursal se validan las coordenadas*/
@@ -1128,10 +1149,7 @@ function Embarque(props) {
             m_nNoPaquetes: state.paquetes.length,
             m_nNoSobres: state.sobres.length,
             m_arrClsDetalle: packs,
-            // m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
-            // m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
-            // FechaLlegada: state.fechaHoraLlegada.split("T")[0],
-            // HoraLlegada: state.fechaHoraLlegada.split("T")[1],
+            m_arrClsComplementoSAT: dataComplementosSAT,
             CreadoPor: state.CreadoPor,
             ModificadoPor: state.ModificadoPor,
             m_bEntregaEnSucursal: state.entregaEnSucursal,
@@ -1494,6 +1512,10 @@ function Embarque(props) {
         getAllTiposSeguro()
 
         respuesta.data.m_parrPaquetes.forEach((p) => {
+            p.m_nClaveSATProducto = p.m_sClaveSATProducto
+            p.m_nClaveSATUnidad = p.m_sClaveSATUnidad
+            p.m_sProductoSAT = p.m_nProductoSAT
+            p.m_sUnidadSAT = p.m_nUnidadSAT
             obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
                 p["producto"] = data
                 p.m_sProducto = data.m_sDescripcion
@@ -1675,10 +1697,10 @@ function Embarque(props) {
             p.m_nCantidad = p.ctd
             p.m_cyValorDeclarado = p.m_cValorDeclarado
             p.m_nIdTipo = p.m_nTipo
-            p.m_sClaveSATProducto = p.m_nClaveSATProducto
-            p.m_sClaveSATUnidad = p.m_nClaveSATUnidad
-            p.m_sUnidad = p.m_sUnidadSAT
-            p.m_nProducto = p.m_sProductoSAT
+            // p.m_nClaveSATProducto
+            // p.m_nClaveSATUnidad
+            // p.m_sUnidadSAT
+            // p.m_sProductoSAT
 
             obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
                 p["producto"] = data
@@ -1690,6 +1712,26 @@ function Embarque(props) {
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_arrPaquetes)
+
+        respuesta.data.m_arrClsComplementoSAT.forEach(item => {
+            item.id = item.m_nIdComplementoSAT
+            item.cantidad = item.m_nCantidad
+            item.claveProducto = item.m_sClaveProductoServicio
+            item.ProductoSAT = item.m_sProductoServicio
+            item.claveUnidad = item.m_sClaveUnidad
+            item.UnidadSAT = item.m_sUnidad
+            item.claveFraccion = item.m_sClaveFraccionArancelaria
+            item.fraccionSAT = item.m_sFraccionArancelaria
+            item.comercioExterior = item.m_sUUIDComercioExterior
+            item.claveMaterialPeligroso = item.m_sClaveMaterialPeligroso
+            item.materialPeligrosoSAT = item.m_sMaterialPeligroso
+            item.esPeligroso = item.m_bEsMaterialPeligroso
+            item.claveEmbalaje = item.m_sClaveEmbalaje
+            item.embalajeSAT = item.m_sTipoEmbalaje
+            item.descripcionEmbalajeSAT = item.m_sDescripcionEmbalaje
+            item.peso = item.m_xPeso
+        })
+        setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
 
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
             setState(state => {
@@ -2628,6 +2670,9 @@ function Embarque(props) {
 
     const handleListPaquetesChange = (newList) => {
         setDataPaquetes(newList)
+    }
+    const handleListComplementosSATChange = (newList) => {
+        setDataComplementosSAT(newList)
     }
 
     const filtrarTipoCobro = (tipoCobro) => {
@@ -4001,6 +4046,14 @@ function Embarque(props) {
                                                 disabled={state.agregar === "Consultar" }
                                             />
                                         }
+
+                                    </div>
+                                    <div className="widget-wrap" id="complementosSat">
+                                        <ComplementosSAT
+                                            dataList={dataComplementosSAT}
+                                            onChangeList={handleListComplementosSATChange}
+                                            disabled={state.agregar === "Consultar" || dataPaquetes.length === 0}
+                                        />
                                     </div>
 
                                     <div className="row">
