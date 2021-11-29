@@ -1195,7 +1195,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        /*if (state.idEmbarque != 0) {
+        if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1230,7 +1230,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }*/
+        }
     };
 
     function handleSelectCP(id, cp) {
@@ -1713,7 +1713,7 @@ function Embarque(props) {
         })
         setDataPaquetes(respuesta.data.m_arrPaquetes)
 
-        respuesta.data.dataComplementosSAT.forEach(item => {
+        respuesta.data.m_arrClsComplementoSAT.forEach(item => {
             item.id = item.m_nIdComplementoSAT
             item.cantidad = item.m_nCantidad
             item.claveProducto = item.m_sClaveProductoServicio
@@ -1731,7 +1731,7 @@ function Embarque(props) {
             item.descripcionEmbalajeSAT = item.m_sDescripcionEmbalaje
             item.peso = item.m_xPeso
         })
-        setDataComplementosSAT(respuesta.data.dataComplementosSAT)
+        setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
 
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
             setState(state => {
@@ -4038,7 +4038,7 @@ function Embarque(props) {
                                         <ComplementosSAT
                                             dataList={dataComplementosSAT}
                                             onChangeList={handleListComplementosSATChange}
-                                            disabled={state.agregar === "Consultar" }
+                                            disabled={state.agregar === "Consultar" || dataPaquetes.length === 0}
                                         />
                                     </div>
 

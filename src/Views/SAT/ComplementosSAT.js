@@ -308,6 +308,7 @@ function ComplementosSAT(props) {
                     item.ProductoSAT = dataComplemento.ProductoSAT
                     item.claveEmbalaje = dataComplemento.claveEmbalaje
                     item.embalajeSAT = dataComplemento.embalajeSAT
+                    item.descripcionEmbalajeSAT = dataComplemento.descripcionEmbalajeSAT
                     item.peso = dataComplemento.peso
                     item.fraccionSAT = dataComplemento.fraccionSAT
                     item.materialPeligroso = dataComplemento.materialPeligroso
@@ -468,8 +469,8 @@ function ComplementosSAT(props) {
                 <Grid item xs={0.5}>
                     <input id={"icon-button-file"} type={"file"} accept={"xlsx"} onChange={handleImportClick} style={{ padding: "0px",display: "none" }} disabled={props.disabled}/>
                     <label htmlFor="icon-button-file">
-                        <IconButton color="primary" aria-label="upload file" component="span" style={{ padding: "0px" }}>
-                            <PublishIcon style={{ fill: "blue", fontSize: "xx-large" }} />
+                        <IconButton color="primary" aria-label="upload file" component="span" style={{ padding: "0px" }} disabled={props.disabled}>
+                            <PublishIcon style={{ fill: "blue", fontSize: "xx-large" }}/>
                         </IconButton>
                     </label>
                 </Grid>
