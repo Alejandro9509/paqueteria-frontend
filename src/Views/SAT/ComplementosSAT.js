@@ -16,7 +16,7 @@ import Noty from "noty";
 import * as XLSX from "xlsx";
 
 import {
-    obtenerSATEmbalajes,
+    obtenerSATEmbalajes, obtenerSATFraccionArancelaria, obtenerSATMaterialPeligroso,
     obtenerSATServicios,
     obtenerSATUnidades,
 } from "../../Util/Contexts/ConceptosFacturacionContext";
@@ -54,6 +54,8 @@ function ComplementosSAT(props) {
     const [dataSAT, setDataSAT] = useState([])
     const [dataSATUnidades, setDataSATUnidades] = useState([])
     const [dataSATEmbalajes, setDataSATEmbalajes] = useState([])
+    const [dataSATMaterialPeligroso, setDataSATMaterialPeligroso] = useState([])
+    const [dataSATFraccion, setDataSATFraccion] = useState([])
 
     const resetDataComplemento = () => {
         setDataComplemento({
@@ -86,15 +88,7 @@ function ComplementosSAT(props) {
 
         const handleOpenClick = (event) => {
             event.stopPropagation();
-            if (dataSAT.length === 0 ) {
-                getAllSATServicios()
-            }
-            if (dataSATUnidades.length === 0 ) {
-                getAllSATUnidades()
-            }
-            if (dataSATEmbalajes.length === 0 ) {
-                getAllSATEmbalajes()
-            }
+            getSATData()
 
             setDataComplemento(row);
             console.log(row);
@@ -353,8 +347,19 @@ function ComplementosSAT(props) {
         });
     }
 
-    const handleOpenClick = (event) => {
-        event.stopPropagation();
+    const getAllSATMaterialPeligroso = () => {
+        obtenerSATMaterialPeligroso().then((respuesta) => {
+            setDataSATMaterialPeligroso(respuesta.data );
+        });
+    }
+
+    const getAllSATFraccionArancelaria = () => {
+        obtenerSATFraccionArancelaria().then((respuesta) => {
+            setDataSATFraccion(respuesta.data );
+        });
+    }
+
+    const getSATData = () => {
         if (dataSAT.length === 0 ) {
             getAllSATServicios()
         }
@@ -364,6 +369,17 @@ function ComplementosSAT(props) {
         if (dataSATEmbalajes.length === 0 ) {
             getAllSATEmbalajes()
         }
+        if (dataSATMaterialPeligroso.length === 0 ) {
+            getAllSATMaterialPeligroso()
+        }
+        if (dataSATFraccion.length === 0 ) {
+            getAllSATFraccionArancelaria()
+        }
+    }
+
+    const handleOpenClick = (event) => {
+        event.stopPropagation();
+        getSATData()
 
         resetDataComplemento()
         setOpenDialog(true);
@@ -430,6 +446,8 @@ function ComplementosSAT(props) {
                                        dataSAT={dataSAT}
                                        dataSATUnidades={dataSATUnidades}
                                        dataSATEmbalajes={dataSATEmbalajes}
+                                       dataSATMaterialPeligroso={dataSATMaterialPeligroso}
+                                       dataSATFraccionArancelaria={dataSATFraccion}
                                        onChangeData={handleChangeComplementoSat}
                         />
                     }

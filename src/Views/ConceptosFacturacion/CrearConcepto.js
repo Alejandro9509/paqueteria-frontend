@@ -60,7 +60,11 @@ function CrearConceptoSAT(props) {
                         <ClavesCFDI
                             selectClase={selectClase}
                             closeDialog={closeDialog}
-                            dataSAT={state.complementoSAT === 1 ? props.dataSAT : state.complementoSAT === 2 ? props.dataSATUnidades : state.complementoSAT === 3 ? props.dataSATEmbalajes : []}
+                            dataSAT={state.complementoSAT === 1 ? props.dataSAT :
+                                state.complementoSAT === 2 ? props.dataSATUnidades :
+                                    state.complementoSAT === 3 ? props.dataSATEmbalajes :
+                                        state.complementoSAT === 4 ? props.dataSATFraccionArancelaria :
+                                            state.complementoSAT === 5 ? props.dataSATMaterialPeligroso : []}
                             // isProducto={this.state.isProducto}
                         />
                     </DialogContent>
