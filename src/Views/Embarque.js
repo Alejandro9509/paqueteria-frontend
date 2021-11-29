@@ -1059,6 +1059,24 @@ function Embarque(props) {
             packs.push(p)
         })
 
+        dataComplementosSAT.forEach(item => {
+            item.m_nCantidad = item.cantidad
+            item.m_sClaveProductoServicio = item.claveProducto
+            // item.m_sProductoServicio = item.ProductoSAT
+            item.m_sClaveUnidad = item.claveUnidad
+            // item.m_sUnidad = item.UnidadSAT
+            item.m_sClaveFraccionArancelaria = item.claveFraccion
+            // item.m_sFraccionArancelaria = item.fraccionSAT
+            item.m_sUUIDComercioExterior = item.comercioExterior
+            item.m_sClaveMaterialPeligroso = item.claveMaterialPeligroso
+            item.m_sMaterialPeligroso = item.materialPeligrosoSAT
+            item.m_bEsMaterialPeligroso = item.esPeligroso
+            item.m_sClaveEmbalaje = item.claveEmbalaje
+            // item.m_sTipoEmbalaje = item.embalajeSAT
+            item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
+            item.m_xPeso = item.peso
+        })
+
         /**Si no es entrega en sucursal se validan las coordenadas*/
         if (!state.entregaEnSucursal){
             if (!validarCoordenadas(coordenadas)){
@@ -1131,10 +1149,7 @@ function Embarque(props) {
             m_nNoPaquetes: state.paquetes.length,
             m_nNoSobres: state.sobres.length,
             m_arrClsDetalle: packs,
-            // m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
-            // m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
-            // FechaLlegada: state.fechaHoraLlegada.split("T")[0],
-            // HoraLlegada: state.fechaHoraLlegada.split("T")[1],
+            m_arrClsComplementoSAT: dataComplementosSAT,
             CreadoPor: state.CreadoPor,
             ModificadoPor: state.ModificadoPor,
             m_bEntregaEnSucursal: state.entregaEnSucursal,
@@ -1180,7 +1195,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        if (state.idEmbarque != 0) {
+        /*if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1215,7 +1230,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
     };
 
     function handleSelectCP(id, cp) {
@@ -1697,6 +1712,26 @@ function Embarque(props) {
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_arrPaquetes)
+
+        respuesta.data.dataComplementosSAT.forEach(item => {
+            item.id = item.m_nIdComplementoSAT
+            item.cantidad = item.m_nCantidad
+            item.claveProducto = item.m_sClaveProductoServicio
+            item.ProductoSAT = item.m_sProductoServicio
+            item.claveUnidad = item.m_sClaveUnidad
+            item.UnidadSAT = item.m_sUnidad
+            item.claveFraccion = item.m_sClaveFraccionArancelaria
+            item.fraccionSAT = item.m_sFraccionArancelaria
+            item.comercioExterior = item.m_sUUIDComercioExterior
+            item.claveMaterialPeligroso = item.m_sClaveMaterialPeligroso
+            item.materialPeligrosoSAT = item.m_sMaterialPeligroso
+            item.esPeligroso = item.m_bEsMaterialPeligroso
+            item.claveEmbalaje = item.m_sClaveEmbalaje
+            item.embalajeSAT = item.m_sTipoEmbalaje
+            item.descripcionEmbalajeSAT = item.m_sDescripcionEmbalaje
+            item.peso = item.m_xPeso
+        })
+        setDataComplementosSAT(respuesta.data.dataComplementosSAT)
 
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
             setState(state => {
