@@ -266,6 +266,7 @@ function Guia(props) {
     })
 
     const handleChangeFiltros = (event) => {
+   
         event.preventDefault()
         const {target} = event
         setFiltros(filtros => {
@@ -275,22 +276,27 @@ function Guia(props) {
             }
         })
         if (target.name === "fechaInicial") {
+            
             obtenerGuiasFiltro(target.value, filtros.fechaFinal, filtros.sucursalListado, filtros.estatusListado, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
                     setData(respuesta.data)
+
                 }
             })
         } else if (target.name === "fechaFinal") {
+
             obtenerGuiasFiltro(filtros.fechaInicial, target.value, filtros.sucursalListado, filtros.estatusListado, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
                     setData(respuesta.data)
+
                 }
             })
         } else if (target.name === "sucursalListado") {
+
             obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal, target.value, filtros.estatusListado, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
@@ -304,6 +310,7 @@ function Guia(props) {
                     setData([])
                 } else {
                     setData(respuesta.data)
+
                 }
             })
         }
@@ -325,27 +332,9 @@ function Guia(props) {
                 }
             })
         }
-    }
+        else if (target.name === "folio"){
 
-    const handleFolioEmbarqueFiltro = async (event) => {
-        if (event.keyCode == 13) {
-            const {target} = event
-            let value = target.value
-            if (event.target.value == '') {
-                value = 0
-            }
-            setFiltros(filtros => {
-                return {
-                    ...filtros,
-                    [target.name]: target.value
-                }
-            })
-            /*setState({
-                ...state,
-                folioRecoleccion: event.target.value,
-            })*/
-            const {fechaInicial, fechaFinal, sucursalListado, estatusListado} = filtros
-            obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
+            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,target.value,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
@@ -354,6 +343,7 @@ function Guia(props) {
             })
         }
     }
+
 
     function cargaDiv(indice, valor) {
         //	showSuccess(indice);
@@ -2382,7 +2372,6 @@ obtenerGuiaId(id).then(({data}) => {
                                                     <Grid item xs={2}>
                                                         <TextField variant="outlined" margin="dense"
                                                                    onChange={handleChangeFiltros}
-                                                                   onKeyDown={handleFolioEmbarqueFiltro}
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Folio Guía"
