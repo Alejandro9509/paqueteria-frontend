@@ -1413,11 +1413,11 @@ function Embarque(props) {
                     (o) => o.m_nIdSucursal === respuesta.data.IdSucursal
                 ).m_sSucursal,
                 fechaCancelacion:
-                    today.getDate() +
+                    today.getFullYear() +
                     "/" +
                     (today.getMonth() + 1) +
                     "/" +
-                    today.getFullYear() +
+                    today.getDate() +
                     " " +
                     today.getHours() +
                     ":" +
