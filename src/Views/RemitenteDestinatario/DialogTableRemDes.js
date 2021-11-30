@@ -3,7 +3,7 @@ import Noty from "noty";
 import { DataGrid } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../../Constants";
 import { Dialog, DialogActions, DialogContent } from "@material-ui/core";
-import {obtenerRemitentesDestinatarios} from "../../Util/Contexts/RemitenteDestinatarioContext";
+import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
 //---------------------------->funcion para mostrar un mensaje<-----------------------------------------------------
 function showSuccess(mensaje) {
   new Noty({
@@ -36,19 +36,23 @@ const columns = [
       },
   ]
 let rowSelect
-
+let registros=7
 //----------------------------->Hooks useState <----------------------------------------------------------------------
 const [rows, setRow] = useState([])
+const [pagina, setPagina] = React.useState(0);
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------
 useEffect(() => {
-  
-  getAllRemitentesDestinatarios()
-}, [])
-function getAllRemitentesDestinatarios() {
-  obtenerRemitentesDestinatarios().then((respuesta) => {
-     setRow(respuesta.data);
-  });
+  cargarDesdeServidor(pagina.page,registros)
+}, [pagina])
+
+//--------------------------->Funciones<----------------------------------------------------------------------
+function cargarDesdeServidor(pagina,registros){
+  return new obtenerRemitentesDestinatariosPaginado(pagina,registros).then((respuesta)=>{
+    setRow(respuesta.data)
+    console.log(respuesta.data)
+  })
 }
+
 //----------------------------------------------Renderizado-------------------------------------------------
   return (
     <>
@@ -61,6 +65,12 @@ function getAllRemitentesDestinatarios() {
            onRowSelected={(row) => {
            rowSelect = row;
           }}
+          pagination
+          pageSize={registros}
+          rowCount={3600}
+          paginationMode="server"
+          onPageChange={(newPage)=>{setPagina(newPage)
+          console.log(newPage)}}
            />
         </div>
         <DialogActions style={{justifyContent: "rigth"}}>
@@ -72,7 +82,6 @@ function getAllRemitentesDestinatarios() {
                     Cerrar
                 </button>
                 <button
-                style={{color:'Primary'}}
                     onClick={() => {
                         if(rowSelect !=null){
                           handleChangeAutoCompleteRemitenteDestinatario(rowSelect);}

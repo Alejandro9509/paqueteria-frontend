@@ -106,13 +106,13 @@ function RemitenteDestinatario(props) {
     [props.dataRemitenteDestinatario]
   );
 
-  useEffect(
+  /*useEffect(
     (value) => {
       props.handleDataChange(state);
     },
     [state]
   );
-
+*/
   useEffect(
     (value) => {
       /**Para validar que hay una respuesta de donde tomar los datos*/
@@ -548,7 +548,41 @@ function RemitenteDestinatario(props) {
   };
 
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
-    console.log(row);
+    console.log(row)
+    let estado = row.data.m_nIdEstado;
+      setState({
+        ...state,
+        id: row.data.m_nIdRemitenteDestinatario,
+        alias: row.data.m_sAlias,
+        nombre: row.data.m_sNombre,
+        RFC: row.data.m_sRFC,
+        domicilio: row.data.m_sDomicilio || "No especificado",
+        codigoPostal:
+          row.data.m_nIdCP != 0
+            ? {
+                m_nIdCP: row.data.m_nIdCP,
+                m_sCP: row.data.m_sCodigoPostal,
+                m_sColonia: row.data.m_sColonia,
+              }
+            : "",
+        estado: estado || "",
+        municipio: row.data.m_nIdMunicipio || "",
+        correo: row.data.m_sCorreoElectronico || "",
+        telefono: row.data.m_sTelefono || 0,
+        contacto: row.data.m_sContacto || row.data.m_sNombre,
+        calle: row.data.m_sCalle || "No especificado",
+        numeroExt: row.data.m_sNoExterior || 0,
+        numeroInt: row.data.m_sNoInterior || 0,
+        colonia: row.data.m_sColonia || "No especificado",
+        latitud: row.data.m_sLatitud,
+        longitud: row.data.m_sLongitud,
+      });
+      console.log("entro")
+      obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
+        setDataMunicipios(data);
+        console.log("entro",data)
+      });
+    
   };
   const dialogVisible = (isVisible) => {
     setState({
@@ -582,6 +616,7 @@ function RemitenteDestinatario(props) {
               margin="dense"
               variant="outlined"
               required
+              value={state.nombre}
               //    onClick={props.handleClickRemitenteDestinatario}
               placeholder={"Alias (Nombre)"}
               InputLabelProps={{ shrink: true }}
