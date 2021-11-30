@@ -104,6 +104,33 @@ function obtenerSATUnidades(){
     return result
 }
 
+function obtenerSATEmbalajes(){
+    const url = `${process.env.REACT_APP_API_URL}/SAT/GetListadoEmbalajes`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+function obtenerSATMaterialPeligroso(){
+    const url = `${process.env.REACT_APP_API_URL}/SAT/GetListadoMaterialPeligroso`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+function obtenerSATFraccionArancelaria(){
+    const url = `${process.env.REACT_APP_API_URL}/SAT/GetListadoFraccion`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 function obtenerSATServicios(){
     const url = `${process.env.REACT_APP_API_URL}/SAT/GetListadoProductosServicios`;
     let result;
@@ -122,4 +149,4 @@ function obtenerConceptosDefectoListado(){
     return result
 }
 
-export {obtenerSATServicios,obtenerSATUnidades,obtenerImpuestosByConceptosFacturacion,modificarConceptosFacturacion, agregarConceptosFacturacion, eliminarConceptosFacturacion, obtenerConceptosFacturacion, obtenerConceptosFacturacionId, obtenerSAT, obtenerConceptosFacturacionManiobra, obtenerConceptosFacturacionEntrega, obtenerConceptosFacturacionRecoleccion, obtenerConceptosDefectoListado}
+export {obtenerSATFraccionArancelaria,obtenerSATMaterialPeligroso,obtenerSATEmbalajes,obtenerSATServicios,obtenerSATUnidades,obtenerImpuestosByConceptosFacturacion,modificarConceptosFacturacion, agregarConceptosFacturacion, eliminarConceptosFacturacion, obtenerConceptosFacturacion, obtenerConceptosFacturacionId, obtenerSAT, obtenerConceptosFacturacionManiobra, obtenerConceptosFacturacionEntrega, obtenerConceptosFacturacionRecoleccion, obtenerConceptosDefectoListado}
