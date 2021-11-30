@@ -7846,6 +7846,7 @@
     </routine>
     <routine id="1326" parent="96" name="usp_CatTarifasGetByOrigenDestinoTipoPQ">
       <ObjectId>2115291091</ObjectId>
+      <Outdated>1</Outdated>
       <SourceTextLength>56673</SourceTextLength>
       <CreatedTimestamp>2021-10-20.05:12:51.783</CreatedTimestamp>
       <ModifiedTimestamp>2021-11-25.07:12:27.163</ModifiedTimestamp>
