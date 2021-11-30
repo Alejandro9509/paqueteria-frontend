@@ -23,10 +23,7 @@ class App extends Component {
   constructor(props) { 
     super(props);
     this.state = {};
-    console.log(window.location.hostname)
-    if (window.location.hostname === "paqueteria.softwaregm.com.mx:8080" ){
-      window.location.hostname = "paqueteria.softwaregm.com.mx"
-    }
+
   }
 
 render(){
