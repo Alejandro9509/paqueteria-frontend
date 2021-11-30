@@ -618,168 +618,169 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
 
             <div className="widget-container">
                 <div className="widget-content">
-                    <div className="row">
-                        <Grid container spacing={1}>
-                            <Grid item xs={2}>
-                                <label className="input select">
-                                    <FormControl fullWidth variant="outlined" margin="dense" required>
-                                        <InputLabel id="m_nIdTipoEmbalajeLabel">Tipo de paquete</InputLabel>
-                                        <Select
-                                            label="Tipo de paquete"
-                                            labelId="m_nIdTipoLabel"
-                                            className="form-control"
-                                            value={paquete.m_nIdTipo}
-                                            disabled={disabled}
-                                            onChange={(event) => handleChangePaquetev2(event)}
-                                            id="m_nIdTipo"
-                                            name="m_nIdTipo"
-                                        >
-                                            <option key={2} value={2}>
-                                                Paquete
-                                            </option>
-                                            <option key={1} value={1}>
-                                                Sobre
-                                            </option>
-                                        </Select>
-                                    </FormControl>
-                                    <i className="fa fa-arrow-down"/>
-                                </label>
-                            </Grid>
-                            {paquete.m_nIdTipo != 1 &&
-                            <Grid item xs={2}>
-                                <div className="input">
-                                    <Autocomplete
-                                        value={paquete.producto}
-                                        freeSolo
-                                        onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
-                                        // disableClearable
-                                        forcePopupIcon={false}
-                                        options={dataProductos}
-                                        disabled={disabled}
-                                        getOptionLabel={(option) => `${option.m_nNoProducto}-${option.m_sDescripcion}`}
-                                        variant="outlined"
-                                        name={"producto"}
-                                        style={{transform: "translate(14px, 10px) scale(1) !important"}}
-                                        renderInput={(params) =>
-                                            <TextField
-                                                variant="outlined"
-                                                label="Producto"
-                                                margin="dense"
-                                                onClick={handleClickProducto}
-                                                {...params}
-                                            />
-                                        }
-                                    />
-                                </div>
-                            </Grid>
-                            }
-                            {paquete.m_nIdTipo != 1 &&
-                            <Grid item xs={1}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               className="form-control"
-                                               type="text"
-                                               value={paquete.m_rLargo}
-                                               label="Largo"
-                                               disabled={disabled}
-                                               placeholder="cms"
-                                               name="m_rLargo"
-                                    />
-                                </div>
-                            </Grid>
-                            }
-                            {paquete.m_nIdTipo != 1 &&
-                            <Grid item xs={1}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               className="form-control"
-                                               type="text"
-                                               label="Ancho"
-                                               value={paquete.m_rAncho}
-                                               disabled={disabled}
-                                               placeholder="cms"
-                                               name="m_rAncho"
-                                    />
-                                </div>
-                            </Grid>
-                            }
-                            {paquete.m_nIdTipo != 1 &&
-                            <Grid item xs={1}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               className="form-control"
-                                               type="text"
-                                               value={paquete.m_rAlto}
-                                               label="Alto"
-                                               disabled={disabled}
-                                               placeholder="cms"
-                                               name="m_rAlto"
-                                    />
-                                </div>
-                            </Grid>
-                            }
-                            {paquete.m_nIdTipo != 1 &&
-                            <Grid item xs={1}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               className="form-control"
-                                               type="text"
-                                               label="Peso"
-                                               value={paquete.m_rPeso}
-                                               disabled={disabled}
-                                               placeholder="kg"
-                                               name="m_rPeso"
-                                    />
-                                </div>
-                            </Grid>
-                            }
-                            {paquete.m_nIdTipo != 1 &&
-                            <Grid item xs={1}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
-                                        // onChange={(event) => handleChangePaquete(event, index)}
-                                               className="form-control"
-                                               type="text"
-                                               value={paquete.m_rVolumen}
-                                               label="Volumen"
-                                               disabled
-                                               placeholder="cm3"
-                                               name="m_rVolumen"
-                                    />
-                                </div>
-                            </Grid>
-                            }
-                            {paquete.m_nIdTipo != 1 &&
-                            <Grid item xs={1}>
-                                <label className="input select">
-                                    <FormControl fullWidth variant="outlined" margin="dense" >
-                                        <InputLabel id="m_nIdTipoEmbalajeLabel">Embalaje</InputLabel>
-                                        <Select
-                                            label="Embalaje"
-                                            labelId="m_nIdTipoEmbalajeLabel"
-                                            className="form-control"
-                                            value={paquete.m_nIdTipoEmbalaje}
-                                            disabled={disabled}
-                                            onChange={(event) => handleChangePaquetev2(event)}
-                                            id="m_nIdTipoEmbalaje"
-                                            name="m_nIdTipoEmbalaje"
-                                        >
-                                            {dataEmbalaje.map((embalaje) => (
-                                                <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
-                                                    {embalaje.m_sNombre}
+                    { !disabled &&
+                        <div className="row">
+                            <Grid container spacing={1}>
+                                <Grid item xs={2}>
+                                    <label className="input select">
+                                        <FormControl fullWidth variant="outlined" margin="dense" required>
+                                            <InputLabel id="m_nIdTipoEmbalajeLabel">Tipo de paquete</InputLabel>
+                                            <Select
+                                                label="Tipo de paquete"
+                                                labelId="m_nIdTipoLabel"
+                                                className="form-control"
+                                                value={paquete.m_nIdTipo}
+                                                disabled={disabled}
+                                                onChange={(event) => handleChangePaquetev2(event)}
+                                                id="m_nIdTipo"
+                                                name="m_nIdTipo"
+                                            >
+                                                <option key={2} value={2}>
+                                                    Paquete
                                                 </option>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    <i className="fa fa-arrow-down"/>
-                                </label>
-                            </Grid>
-                            }
-                            {/*{paquete.m_nIdTipo != 1 &&
+                                                <option key={1} value={1}>
+                                                    Sobre
+                                                </option>
+                                            </Select>
+                                        </FormControl>
+                                        <i className="fa fa-arrow-down"/>
+                                    </label>
+                                </Grid>
+                                {paquete.m_nIdTipo != 1 &&
+                                <Grid item xs={2}>
+                                    <div className="input">
+                                        <Autocomplete
+                                            value={paquete.producto}
+                                            freeSolo
+                                            onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
+                                            // disableClearable
+                                            forcePopupIcon={false}
+                                            options={dataProductos}
+                                            disabled={disabled}
+                                            getOptionLabel={(option) => `${option.m_nNoProducto}-${option.m_sDescripcion}`}
+                                            variant="outlined"
+                                            name={"producto"}
+                                            style={{transform: "translate(14px, 10px) scale(1) !important"}}
+                                            renderInput={(params) =>
+                                                <TextField
+                                                    variant="outlined"
+                                                    label="Producto"
+                                                    margin="dense"
+                                                    onClick={handleClickProducto}
+                                                    {...params}
+                                                />
+                                            }
+                                        />
+                                    </div>
+                                </Grid>
+                                }
+                                {paquete.m_nIdTipo != 1 &&
+                                <Grid item xs={1}>
+                                    <div className="input">
+                                        <TextField variant="outlined" margin="dense"
+                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                   className="form-control"
+                                                   type="text"
+                                                   value={paquete.m_rLargo}
+                                                   label="Largo"
+                                                   disabled={disabled}
+                                                   placeholder="cms"
+                                                   name="m_rLargo"
+                                        />
+                                    </div>
+                                </Grid>
+                                }
+                                {paquete.m_nIdTipo != 1 &&
+                                <Grid item xs={1}>
+                                    <div className="input">
+                                        <TextField variant="outlined" margin="dense"
+                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                   className="form-control"
+                                                   type="text"
+                                                   label="Ancho"
+                                                   value={paquete.m_rAncho}
+                                                   disabled={disabled}
+                                                   placeholder="cms"
+                                                   name="m_rAncho"
+                                        />
+                                    </div>
+                                </Grid>
+                                }
+                                {paquete.m_nIdTipo != 1 &&
+                                <Grid item xs={1}>
+                                    <div className="input">
+                                        <TextField variant="outlined" margin="dense"
+                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                   className="form-control"
+                                                   type="text"
+                                                   value={paquete.m_rAlto}
+                                                   label="Alto"
+                                                   disabled={disabled}
+                                                   placeholder="cms"
+                                                   name="m_rAlto"
+                                        />
+                                    </div>
+                                </Grid>
+                                }
+                                {paquete.m_nIdTipo != 1 &&
+                                <Grid item xs={1}>
+                                    <div className="input">
+                                        <TextField variant="outlined" margin="dense"
+                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                   className="form-control"
+                                                   type="text"
+                                                   label="Peso"
+                                                   value={paquete.m_rPeso}
+                                                   disabled={disabled}
+                                                   placeholder="kg"
+                                                   name="m_rPeso"
+                                        />
+                                    </div>
+                                </Grid>
+                                }
+                                {paquete.m_nIdTipo != 1 &&
+                                <Grid item xs={1}>
+                                    <div className="input">
+                                        <TextField variant="outlined" margin="dense"
+                                            // onChange={(event) => handleChangePaquete(event, index)}
+                                                   className="form-control"
+                                                   type="text"
+                                                   value={paquete.m_rVolumen}
+                                                   label="Volumen"
+                                                   disabled
+                                                   placeholder="cm3"
+                                                   name="m_rVolumen"
+                                        />
+                                    </div>
+                                </Grid>
+                                }
+                                {paquete.m_nIdTipo != 1 &&
+                                <Grid item xs={1}>
+                                    <label className="input select">
+                                        <FormControl fullWidth variant="outlined" margin="dense">
+                                            <InputLabel id="m_nIdTipoEmbalajeLabel">Embalaje</InputLabel>
+                                            <Select
+                                                label="Embalaje"
+                                                labelId="m_nIdTipoEmbalajeLabel"
+                                                className="form-control"
+                                                value={paquete.m_nIdTipoEmbalaje}
+                                                disabled={disabled}
+                                                onChange={(event) => handleChangePaquetev2(event)}
+                                                id="m_nIdTipoEmbalaje"
+                                                name="m_nIdTipoEmbalaje"
+                                            >
+                                                {dataEmbalaje.map((embalaje) => (
+                                                    <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
+                                                        {embalaje.m_sNombre}
+                                                    </option>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                        <i className="fa fa-arrow-down"/>
+                                    </label>
+                                </Grid>
+                                }
+                                {/*{paquete.m_nIdTipo != 1 &&
                             <Grid item xs={2}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
@@ -795,62 +796,63 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
                                 </div>
                             </Grid>
                             }*/}
-                            <Grid item xs={5}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               className="form-control"
-                                               type="text"
-                                               label="Descripción"
-                                               value={paquete.m_sDescripcion}
-                                               disabled={disabled}
-                                               placeholder="Descripción"
-                                               name="m_sDescripcion"
-                                    />
-                                </div>
+                                <Grid item xs={5}>
+                                    <div className="input">
+                                        <TextField variant="outlined" margin="dense"
+                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                   className="form-control"
+                                                   type="text"
+                                                   label="Descripción"
+                                                   value={paquete.m_sDescripcion}
+                                                   disabled={disabled}
+                                                   placeholder="Descripción"
+                                                   name="m_sDescripcion"
+                                        />
+                                    </div>
+                                </Grid>
+                                {paquete.m_nIdTipo != 1 &&
+                                <Grid item xs={1}>
+                                    <div className="input">
+                                        <TextField variant="outlined" margin="dense"
+                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                   className="form-control"
+                                                   type="text"
+                                                   label="Ctd"
+                                                   value={paquete.m_nCantidad}
+                                                   disabled={disabled}
+                                                   placeholder="Ctd"
+                                                   name="m_nCantidad"
+                                        />
+                                    </div>
+                                </Grid>
+                                }
+                                {paquete.m_nIdTipo != 1 &&
+                                <Grid item xs={5}>
+                                    <div className="input">
+                                        <TextField variant="outlined" margin="dense"
+                                                   onChange={(event) => handleChangePaquetev2(event)}
+                                                   className="form-control"
+                                                   type="text"
+                                                   label="Observaciones"
+                                                   value={paquete.m_sObservaciones}
+                                                   disabled={disabled}
+                                                   placeholder="Observaciones"
+                                                   name="m_sObservaciones"
+                                        />
+                                    </div>
+                                </Grid>
+                                }
+                                <Grid item xs={1}>
+                                    <IconButton onClick={addPaquetev2} style={{padding: "0px"}} disabled={disabled}>
+                                        <AddBoxIcon style={{fill: "green", fontSize: "xx-large"}}/>
+                                    </IconButton>
+                                    <IconButton onClick={removePaquetev2} style={{padding: "0px"}} disabled={disabled}>
+                                        <DeleteIcon style={{fill: "red", fontSize: "xx-large"}}/>
+                                    </IconButton>
+                                </Grid>
                             </Grid>
-                            {paquete.m_nIdTipo != 1 &&
-                            <Grid item xs={1}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               className="form-control"
-                                               type="text"
-                                               label="Ctd"
-                                               value={paquete.m_nCantidad}
-                                               disabled={disabled}
-                                               placeholder="Ctd"
-                                               name="m_nCantidad"
-                                    />
-                                </div>
-                            </Grid>
-                            }
-                            {paquete.m_nIdTipo != 1 &&
-                            <Grid item xs={5}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               className="form-control"
-                                               type="text"
-                                               label="Observaciones"
-                                               value={paquete.m_sObservaciones}
-                                               disabled={disabled}
-                                               placeholder="Observaciones"
-                                               name="m_sObservaciones"
-                                    />
-                                </div>
-                            </Grid>
-                            }
-                            <Grid item xs={1}>
-                                <IconButton onClick={addPaquetev2} style={{ padding: "0px" }} disabled={disabled}>
-                                    <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
-                                </IconButton>
-                                <IconButton onClick={removePaquetev2} style={{ padding: "0px" }} disabled={disabled}>
-                                    <DeleteIcon style={{ fill: "red", fontSize: "xx-large" }} />
-                                </IconButton>
-                            </Grid>
-                        </Grid>
-                    </div>
+                        </div>
+                    }
 
 
                     {!disabled?  <div className="row" style={{ height: 200}}>
