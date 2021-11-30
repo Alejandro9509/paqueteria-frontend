@@ -5,7 +5,6 @@
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
-    "@here/maps-api-for-javascript": "^1.23.0",
     "@material-ui/core": "^4.11.3",
     "@material-ui/data-grid": "^4.0.0-alpha.24",
     "@material-ui/icons": "^4.11.2",
@@ -40,7 +39,6 @@
     "react-data-table-component": "^6.11.6",
     "react-data-table-component-extensions": "^1.5.0",
     "react-dom": "^17.0.1",
-    "react-here-map": "^4.0.0-0",
     "react-hooks-use-modal": "^1.0.9",
     "react-icons": "^4.1.0",
     "react-leaflet": "^3.1.0",
