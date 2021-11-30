@@ -72,6 +72,7 @@ import Paquetes from "./Paquetes/Paquetes";
 import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
 import {obtenerEmbalajesId} from "../Util/Contexts/EmbalajesContext";
 import CambiarTipoCobro from "./Guia/CambiarTipoCobro";
+import Ocurre from "./Guia/Ocurre";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -268,6 +269,7 @@ function Guia(props) {
     const handleChangeFiltros = (event) => {
         event.preventDefault()
         const {target} = event
+        console.log(target.name)
         setFiltros(filtros => {
             return {
                 ...filtros,
@@ -328,7 +330,6 @@ function Guia(props) {
     }
 
     const handleFolioEmbarqueFiltro = async (event) => {
-        event.preventDefault()
         if (event.keyCode == 13) {
             const {target} = event
             let value = target.value
@@ -338,7 +339,7 @@ function Guia(props) {
             setFiltros(filtros => {
                 return {
                     ...filtros,
-                    [target.name]: target.value
+                    folio: event.target.value,
                 }
             })
             /*setState({
@@ -430,8 +431,7 @@ function Guia(props) {
         }
     }
 
-    const handleEntregaOcurre = (e) => {
-        e.preventDefault()
+    const handleEntregaOcurre = (dataOcurre) => {
         let params = {
             nIdGuia: dataOcurre.idGuia,
             m_nIdUsuarioEntregaOcurre: localStorage.getItem("Usuario"),
@@ -2121,201 +2121,12 @@ obtenerGuiaId(id).then(({data}) => {
                 aria-labelledby="form-dialog-title"
             >
                 {showDialogOcurre && <p style={{marginTop: '30px', marginLeft: '30px'}}>Ocurre</p>}
-                <DialogContent>
-                    {state.tipoModal === 6 &&
-                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
-                        <DialogTitle style={{padding: "0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
-                        <div>
-                            <label className="input select" style={{width: "100%"}}>
-                                <FormControl fullWidth variant="outlined" margin="dense">
-                                    <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
-                                    <Select
-                                        labelId="sucursalListadoLabel"
-                                        label="Formato"
-                                        className="form-control"
-                                        required
-                                        value={state.formatoSeleccionado}
-                                        onChange={(event) => setState({
-                                            ...state,
-                                            formatoSeleccionado: event.target.value
-                                        })}
-                                        id="formatoSeleccionado"
-                                        name="formatoSeleccionado"
-                                    >
-                                        {dataFormatos.map((formato) => (
-                                            <option
-                                                key={formato.m_nIdFormato}
-                                                value={formato.m_nIdFormato}
-                                            >
-                                                {formato.m_sFormato}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                                <i></i>
-                            </label>
-                        </div>
+                {
+                    dataOcurre &&
+                        <Ocurre handleEntregaOcurre={handleEntregaOcurre} closeOcurre={() => {setState({...state, openDialog: false});
+                            setShowDialogOcurre(false)}} dataTipoPago={dataTipoPago} dataOcurre={dataOcurre} dataTipoCobro={dataTipoCobro} showDialogOcurre={showDialogOcurre}/>
+                }
 
-                        <DialogActions style={{justifyContent: "left"}}>
-
-                            <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
-                            </button>
-                            <button onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn">Cerrar
-                            </button>
-
-                        </DialogActions>
-                    </div>
-                    }
-                    {showDialogOcurre &&
-                    <form onSubmit={(e) => handleEntregaOcurre(e)}>
-                        <Grid container spacing={3}>
-                            <Grid item xs={6}>
-                                <TextField
-                                    variant="outlined"
-                                    id="fechaOcurre"
-                                    name="fechaOcurre"
-                                    label="Fecha"
-                                    type="date"
-                                    onChange={handleFechaOcurre}
-                                    value={dataOcurre.fechaOcurre}
-                                    className={"form-control"}
-                                    InputLabelProps={{shrink: true,}}
-                                    required={showDialogOcurre}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    variant="outlined"
-                                    id="horaOcurre"
-                                    name="horaOcurre"
-                                    label="Hora"
-                                    type="time"
-                                    key={"horaOcurre"}
-                                    value={dataOcurre.horaOcurre}
-                                    onChange={handleHoraOcurre}
-                                    className={"form-control"}
-                                    InputLabelProps={{shrink: true,}}
-                                    inputProps={{step: 300,}}
-                                    required={showDialogOcurre}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <FormControl fullWidth variant="outlined" margin="dense">
-                                    <InputLabel id="idTipoCobroLabel">Tipo Cobro</InputLabel>
-                                    <Select
-                                        labelId={"idTipoCobroLabel"}
-                                        label={"Tipo Cobro"}
-                                        key={"tipoCobroOcurre"}
-                                        className="form-control"
-                                        value={dataOcurre.tipoCobroOcurre}
-                                        disabled={true}
-                                        onChange={(event) => {
-                                            event.preventDefault();
-                                            setState({
-                                                ...state,
-                                                tipoCobro: event.target.value,
-                                            });
-                                        }}
-                                        id="tipoCobro"
-                                        InputProps={{
-                                            id: "tipoCobroOcurre",
-                                            name: "tipoCobroOcurre"
-                                        }}
-                                    >
-                                        {dataTipoCobro.map((tipoCobro) => (
-                                            <option
-                                                key={tipoCobro.m_nIdTipoCobro}
-                                                value={tipoCobro.m_nIdTipoCobro}
-                                            >
-                                                {tipoCobro.m_sDescripcion}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField variant="outlined" margin="dense" label="Comentarios"
-                                           onChange={(event) => handleChangeDataOcurre(event)}
-                                           className="form-control"
-                                           type="text"
-                                           key={"comentarioOcurre"}
-                                           value={dataOcurre.comentariosOcurre}
-                                           disabled={state.agregar === "Consultar"}
-                                           placeholder="Comentarios"
-                                           name="comentariosOcurre"
-                                />
-                            </Grid>
-                            {(dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 || dataOcurre.tipoCobroOcurre == 11) &&
-                            <Grid item xs={12}>
-                                <FormControl fullWidth variant="outlined" margin="dense">
-                                    <InputLabel id="idTipoPagoLabel">Tipo Pago</InputLabel>
-                                    <Select
-                                        labelId={"idTipoPagoLabel"}
-                                        label={"Tipo Pago"}
-                                        key={"idTipoPagoOcurre"}
-                                        className="form-control"
-                                        value={dataOcurre.tipoPago}
-                                        onChange={(event) => handleChangeDataOcurre(event)}
-                                        id="tipoPago"
-                                        InputProps={{
-                                            id: "tipoPago",
-                                            name: "tipoPago"
-                                        }}
-                                        name={"tipoPago"}
-                                    >
-                                        {dataTipoPago.map((tipoPago) => (
-                                            <option
-                                                key={tipoPago.m_nIdTipoPago}
-                                                value={tipoPago.m_nIdTipoPago}
-                                            >
-                                                {tipoPago.m_sTipoPago}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            }
-                            {(dataOcurre.tipoPago == 1) &&
-                            <Grid item xs={6}>
-                                <TextField variant="outlined" margin="dense" label="Importe recibido"
-                                           onChange={(event) => handleChangeDataOcurre(event)}
-                                           className="form-control"
-                                           type="number"
-                                           key={"importeOcurre"}
-                                           value={dataOcurre.importeOcurre}
-                                           placeholder="Importe"
-                                           name="importeOcurre"
-                                           required={showDialogOcurre && (dataOcurre.tipoPago == 1)}
-                                />
-                                <p style={{
-                                    marginLeft: '10px',
-                                    marginTop: '5px'
-                                }}> {`Cambio: $${dataOcurre.importeOcurre ? parseFloat(dataOcurre.importeTotal) - parseFloat(dataOcurre.importeOcurre) : 0.0}`}</p>
-                            </Grid>
-                            }
-                            {dataOcurre.tipoPago == 1 &&
-                            <Grid item xs={6}>
-                                <p> {`Importe a pagar: $${parseFloat(dataOcurre.importeTotal)}`}</p>
-                            </Grid>
-                            }
-
-
-                        </Grid>
-                        <DialogActions>
-                            <Button onClick={() => {
-                                setState({...state, openDialog: false})
-                                setShowDialogOcurre(false)
-                            }} color="primary">
-                                Cancelar
-                            </Button>
-                            <Button type={"submit"} color="primary">
-                                Aceptar
-                            </Button>
-                        </DialogActions>
-                    </form>
-                    }
-                </DialogContent>
             </Dialog>
 
             <header className="topbar clearfix">

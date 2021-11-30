@@ -1188,7 +1188,7 @@ function Viajes() {
 
                             {
                                 state.open &&
-                                <AgregarViaje reload={getAllData} consult={state.consult} edit={state.edit} select={state.selectViaje} id={state.idViaje}/>
+                                <AgregarViaje reload={getAllData} consult={state.consult} editar={state.edit} select={state.selectViaje} id={state.idViaje}/>
 
                             }
 

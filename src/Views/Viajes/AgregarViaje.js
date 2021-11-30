@@ -163,6 +163,7 @@ class AgregarViaje extends Component {
             return
         }
         var params = {
+            m_nIdViaje: this.props.id,
             m_dFecha: this.state.fechaHoraRegistro.split("T")[0],
             m_tHora: this.state.fechaHoraRegistro.split("T")[1],
             m_nIdEstatusViaje: this.state.estatusListado,
@@ -194,7 +195,7 @@ class AgregarViaje extends Component {
                 horaEntrega: this.state.asignacionEquipo.horaEntregaGeneral,
             }
         }
-
+        console.log(this.props.editar)
         if (this.props.editar) {
             modificarViaje(this.props.id, params)
                 .then((respuesta) => {

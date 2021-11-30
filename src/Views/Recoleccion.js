@@ -3524,7 +3524,7 @@ function Recoleccion() {
                                                                                 margin="dense"
                                                                                 required
                                                                                 error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
-                                                                                helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de credito: " + state.clientePaga.m_nDiasCredito : ""}
+                                                                                helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
                                                                                 InputLabelProps={{shrink: true}}
                                                                                 onClick={handleClickResponsablePago}

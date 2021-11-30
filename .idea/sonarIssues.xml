@@ -533,6 +533,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Guia/Ocurre.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/Impuestos.js">
           <value>
             <set />
@@ -1363,6 +1368,11 @@
             <set />
           </value>
         </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProEmbarqueGetListadoFiltroPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProGuiaAgregarPQ.sql">
           <value>
             <set />
@@ -1374,6 +1384,11 @@
           </value>
         </entry>
         <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProGuiaTerminarParadaPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProGuiasGetListadoFiltro2PQ.sql">
           <value>
             <set />
           </value>
@@ -1398,7 +1413,17 @@
             <set />
           </value>
         </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProViajeCartaPorteAgregarPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProViajeLlegadaAgregarPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProViajeModificarPQ.sql">
           <value>
             <set />
           </value>
