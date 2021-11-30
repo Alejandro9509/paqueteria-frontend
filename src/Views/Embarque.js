@@ -4052,7 +4052,7 @@ function Embarque(props) {
                                         <ComplementosSAT
                                             dataList={dataComplementosSAT}
                                             onChangeList={handleListComplementosSATChange}
-                                            disabled={state.agregar === "Consultar" || dataPaquetes.length === 0}
+                                            disabled={state.agregar === "Consultar"}
                                         />
                                     </div>
 
