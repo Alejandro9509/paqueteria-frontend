@@ -2172,11 +2172,15 @@ obtenerGuiaId(id).then(({data}) => {
                                 <i className="fa fa-upload"/> Importar
                             </a>
                         </li>
-                        <li >
-                            <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled} onClick={() => setState({...state,openTipoCobro: true})}>
-                                <i className="fa fa-refresh"/> Cambiar Tipo Cobro
-                            </a>
-                        </li>
+                        {
+                            localStorage.getItem("Usuario") === 11 &&
+                            <li >
+                                <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled} onClick={() => setState({...state,openTipoCobro: true})}>
+                                    <i className="fa fa-refresh"/> Cambiar Tipo Cobro
+                                </a>
+                            </li>
+                        }
+
                         <li>
                             <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}
                                className={state.idGuia === 0 ? classes.disabled : ""}>
