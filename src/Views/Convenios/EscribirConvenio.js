@@ -43,6 +43,7 @@ import {obtenerTarifaBy} from "../../Util/Contexts/TarifasContext";
 import DestinosTarifa from "../Tarifas/DestinosTarifa";
 import ProductosPrecios from "../Tarifas/ProductosPrecios";
 import {obtenerCliente} from "../../Util/Contexts/ClientesContext";
+import {obtenerByIdZonaTarifa, obtenerListadoZonaTarifa} from "../../Util/Contexts/ZonaTarifaContext";
 
 const headers = API_HEADERS
 
@@ -155,6 +156,42 @@ class EscribirConvenio extends Component {
                     },
                 },
             ],
+            columnsZonas: [
+                {
+                    headerName: "Código Zona",
+                    field: 'm_sCodigoZona',
+                    minWidth: 200,
+                    flex: 1
+                },
+                {
+                    headerName: "Estado",
+                    field: 'm_sEstado',
+                    minWidth: 200,
+                    flex: 1
+                },
+                {
+                    headerName: "Activo",
+                    field: "m_bActivo",
+                    width: 200,
+                    renderCell: (row) => {
+                        return (
+                            <div
+                                style={{
+                                    width: "100%",
+                                    textAlign: "center",
+                                    color: row.row.m_bActivo == 'true' ? "green" : "red",
+                                }}
+                            >
+                                {row.row.m_bActivo ? (
+                                    <SvgIcon component={Activo} />
+                                ) : (
+                                    <SvgIcon component={NoActivo} />
+                                )}
+                            </div>
+                        );
+                    },
+                },
+            ],
             idsTarifasSeleccionadas : [],
             tarifasSeleccionadas : [],
             height: window.innerHeight,
@@ -205,7 +242,11 @@ class EscribirConvenio extends Component {
             //Aqui se guardan todos los productos que no estan seleccionados
             dataProductosTemp: [],
             //Aqui pues el nombre de la variable ya es muy explicita
-            dataProductosSeleccionados: []
+            dataProductosSeleccionados: [],
+            dataZonas:[],
+            dataRequerida:"",
+            idsZonasSeleccionadas:[],
+            zonasSeleccionadas: []
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleTabChange = this.handleTabChange.bind(this)
@@ -226,6 +267,8 @@ class EscribirConvenio extends Component {
         this.onSubmit = this.onSubmit.bind(this)
         this.getConvenioById = this.getConvenioById.bind(this)
         this.limpiarCampos = this.limpiarCampos.bind(this)
+        this.getAllZonas = this.getAllZonas.bind(this)
+        this.handleCardZonaClick = this.handleCardZonaClick.bind(this)
     }
 
     castConceptos(){
@@ -288,6 +331,7 @@ class EscribirConvenio extends Component {
         this.getAllClientes()
         this.getAllTarifas()
         this.getAllProductos()
+        this.getAllZonas()
     }
 
     getAllImpuestos() {
@@ -298,9 +342,9 @@ class EscribirConvenio extends Component {
     };
 
     getAllClientes() {
-        obtenerCliente().then((respuesta) => {
+        /*obtenerCliente().then((respuesta) => {
             this.setState({ dataClientes: respuesta.data });
-        });
+        });*/
     }
 
     handleChange(event) {
@@ -541,30 +585,47 @@ class EscribirConvenio extends Component {
 
     }
 
-    handleShowDialog = (event) => {
+    handleShowDialog = (event, dataRequerida) => {
         event.preventDefault()
         this.setState({
-            openDialog: !this.state.openDialog
+            openDialog: !this.state.openDialog,
+            dataRequerida: dataRequerida
         })
     };
 
     handleConfirmTarifas = (event) => {
         event.preventDefault()
-        const tarifas = []
-        this.state.idsTarifasSeleccionadas.forEach((idTarifa) => {
-            obtenerTarifaBy(idTarifa).then(respuesta=> {
-                tarifas.push(respuesta.data)
-                this.state.tarifasSeleccionadas.push(respuesta.data)
-                if (tarifas.length === this.state.idsTarifasSeleccionadas.length){
-                    this.setState({
-                        openDialog: !this.state.openDialog,
-                        tarifasSeleccionadas: this.state.tarifasSeleccionadas
-                    })
-                }
-            })
-            // tarifas.push(this.state.dataTarifas.find((t) => t.m_nIdTarifa == idTarifa))
-        })
 
+        if (this.state.dataRequerida === "Tarifas"){
+            const tarifas = []
+            this.state.idsTarifasSeleccionadas.forEach((idTarifa) => {
+                obtenerTarifaBy(idTarifa).then(respuesta=> {
+                    tarifas.push(respuesta.data)
+                    this.state.tarifasSeleccionadas.push(respuesta.data)
+                    if (tarifas.length === this.state.idsTarifasSeleccionadas.length){
+                        this.setState({
+                            openDialog: !this.state.openDialog,
+                            tarifasSeleccionadas: this.state.tarifasSeleccionadas
+                        })
+                    }
+                })
+                // tarifas.push(this.state.dataTarifas.find((t) => t.m_nIdTarifa == idTarifa))
+            })
+        }else{
+            const zonas = []
+            this.state.idsZonasSeleccionadas.forEach((idZona) => {
+                obtenerByIdZonaTarifa(idZona).then(respuesta => {
+                    zonas.push(respuesta.data)
+                    this.state.zonasSeleccionadas.push(respuesta.data)
+                    if (zonas.length === this.state.idsZonasSeleccionadas.length){
+                        this.setState({
+                            openDialog: !this.state.openDialog,
+                            zonasSeleccionadas: this.state.zonasSeleccionadas
+                        })
+                    }
+                })
+            })
+        }
     };
 
     getAllTarifas() {
@@ -583,9 +644,16 @@ class EscribirConvenio extends Component {
 
     //Funcion para reaccionar al seleccionar una tarifa del LISTADO DE DIALOGO
     handleTarifasSeleccionadas = (e) => {
-        this.setState({
-            idsTarifasSeleccionadas: e.selectionModel,
-        })
+        if (this.state.dataRequerida === "Tarifas"){
+            this.setState({
+                idsTarifasSeleccionadas: e.selectionModel,
+            })
+        }else{
+            this.setState({
+                idsZonasSeleccionadas: e.selectionModel,
+            })
+        }
+
     }
 
     handleGuardarTarifa = (e) => {
@@ -710,6 +778,39 @@ class EscribirConvenio extends Component {
         })
     }
 
+    getAllZonas = () => {
+        obtenerListadoZonaTarifa().then(({data}) => {
+            this.setState({ dataZonas: data, agregar: "Agregar" })
+        })
+    }
+    handleCardZonaClick(event, item){
+
+    }
+
+    cardZona(item){
+
+        return(
+            <Card style={{marginBottom: '10px'}}>
+                <CardActionArea onClick={(e) => this.handleCardClick(e, item)}>
+                    <CardContent>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Typography variant="body2" color="textSecondary" component="p">
+                                    {item.m_sCodigoZona}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography gutterBottom variant="h5" component="h2">
+                                    {item.m_sEstado}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </CardActionArea>
+            </Card>
+        )
+    }
+
     render() {
         const { disabled, todosConceptos, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, openDialog,
             columnsTarifas, dataTarifas, height, tarifasSeleccionadas, tarifaDetalles, dataProductosTemp,dataProductosSeleccionados, columnsProductos,
@@ -729,11 +830,11 @@ class EscribirConvenio extends Component {
                         <div style={{ display: 'flex', height: '800px' }}>
                             <DataGrid
                                 localeText={dataGridLocaleText}
-                                rows={dataTarifas}
-                                columns={columnsTarifas}
+                                rows={this.state.dataRequerida === "Tarifas" ? dataTarifas : this.state.dataZonas}
+                                columns={this.state.dataRequerida === "Tarifas" ? columnsTarifas: this.state.columnsZonas}
                                 density="compact"
                                 pageSize={Math.floor((height - 310) / 30)}
-                                getRowId={(row) => row.m_nIdTarifa}
+                                getRowId={(row) => this.state.dataRequerida === "Tarifas" ? row.m_nIdTarifa : row.m_nIdZona}
                                 checkboxSelection
                                 onSelectionModelChange={(e) => this.handleTarifasSeleccionadas(e)}
                             />
@@ -757,55 +858,54 @@ class EscribirConvenio extends Component {
                                 <div className="widget-wrap">
                                     <div className="widget-content">
                                         <div className="row">
-                                            <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                                <label className="input select" style={{ width: "100%" }}>
-                                                    <FormControl fullWidth variant="outlined" margin="dense">
-                                                        <InputLabel id="clienteLabel">Cliente</InputLabel>
-                                                        <Select
-                                                            native
-                                                            labelId="clienteLabel"
-                                                            label="Cliente"
+                                            <Grid container spacing={1}>
+                                                <Grid item xs={12}>
+                                                    <label className="input select" style={{ width: "100%" }}>
+                                                        <FormControl fullWidth variant="outlined" margin="dense">
+                                                            <InputLabel id="clienteLabel">Cliente</InputLabel>
+                                                            <Select
+                                                                native
+                                                                labelId="clienteLabel"
+                                                                label="Cliente"
+                                                                disabled={consult}
+                                                                className="form-control"
+                                                                required
+                                                                onChange={this.handleChange}
+                                                                value={cliente}
+                                                                name="cliente"
+                                                                id="cliente"
+                                                            >
+                                                                <option aria-label={"Seleccionar"} value={""}/>
+                                                                {this.state.dataClientes.map((c) => (
+                                                                    <option
+                                                                        key={c.m_nIdCliente}
+                                                                        value={c.m_nIdCliente}
+                                                                    >
+                                                                        {c.m_sNombreFiscal}
+                                                                    </option>
+                                                                ))}
+                                                            </Select>
+                                                        </FormControl>
+                                                    </label>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <label className="input" style={{ width: "100%" }}>
+                                                        <TextField
+                                                            variant="outlined"
+                                                            id="fechaVigencia"
+                                                            name="fechaVigencia"
+                                                            label="Vigencia"
+                                                            type="date"
                                                             disabled={consult}
-                                                            className="form-control"
-                                                            required
                                                             onChange={this.handleChange}
-                                                            value={cliente}
-                                                            name="cliente"
-                                                            id="cliente"
-                                                        >
-                                                            <option aria-label={"Seleccionar"} value={""}/>
-                                                            {this.state.dataClientes.map((c) => (
-                                                                <option
-                                                                    key={c.m_nIdCliente}
-                                                                    value={c.m_nIdCliente}
-                                                                >
-                                                                    {c.m_sNombreFiscal}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </label>
-
-                                            </div>
-
-                                            <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                                <label className="input" style={{ width: "100%" }}>
-                                                    <TextField
-                                                        variant="outlined"
-                                                        id="fechaVigencia"
-                                                        name="fechaVigencia"
-                                                        label="Vigencia"
-                                                        type="date"
-                                                        disabled={consult}
-                                                        onChange={this.handleChange}
-                                                        value={fechaVigencia}
-                                                        className={"form-control"}
-                                                        InputLabelProps={{shrink: true,}}
-                                                        required
-                                                    />
-                                                </label>
-                                            </div>
-                                            <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                                            value={fechaVigencia}
+                                                            className={"form-control"}
+                                                            InputLabelProps={{shrink: true,}}
+                                                            required
+                                                        />
+                                                    </label>
+                                                </Grid>
+                                                <Grid item xs={12}>
                                                 <label className="input" style={{ width: "100%" }}>
                                                     <TextField
                                                         variant="outlined"
@@ -821,18 +921,23 @@ class EscribirConvenio extends Component {
                                                         required
                                                     />
                                                 </label>
-                                            </div>
-                                            <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                                <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                                    <button className="btn btn-primary primary-btn" onClick={this.handleShowDialog} disabled={consult}>
+                                            </Grid>
+                                                <Grid item xs={12}>
+                                                    <button className="btn btn-primary primary-btn" onClick={(event) => this.handleShowDialog(event,"Tarifas")} disabled={consult}>
                                                         Seleccionar tarifas
                                                     </button>
-
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <button className="btn btn-primary primary-btn" onClick={(event) => this.handleShowDialog(event,"Zonas")} disabled={consult}>
+                                                        Seleccionar zonas
+                                                    </button>
+                                                </Grid>
+                                                <Grid item xs={12}>
                                                     <button type="submit" className="btn btn-primary primary-btn" disabled={consult}>
                                                         Guardar convenio
                                                     </button>
-                                                </div>
-                                            </div>
+                                                </Grid>
+                                            </Grid>
                                         </div>
 
                                     </div>
@@ -847,6 +952,7 @@ class EscribirConvenio extends Component {
 
                                 </div>
                                 <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+
                                     {
                                         tarifasSeleccionadas.map((t) => (
                                             <Card style={{marginBottom: '10px'}}>
@@ -871,6 +977,10 @@ class EscribirConvenio extends Component {
                                                 </CardActionArea>
                                             </Card>
                                         ))
+                                    }
+
+                                    {
+                                        this.state.zonasSeleccionadas.map((item) => this.cardZona(item))
                                     }
                                 </div>
                             </div>
