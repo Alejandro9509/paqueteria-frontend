@@ -101,6 +101,13 @@ function obtenerRemitentesDestinatariosId(id){
         );
     return result
 }
-
+function obtenerRemitentesDestinatariosPaginado(pagina,registros){
+    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListadoPaginado/${pagina}/${registros}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
 export {modificarRemitentesDestinatarios, agregarRemitentesDestinatarios, eliminarRemitentesDestinatarios, obtenerRemitentesDestinatarios,
-    obtenerRemitentesDestinatariosId, validarNumeroRemitente, obtenerUbicacion, actualizarRemitentesDestinatarios}
+    obtenerRemitentesDestinatariosId, validarNumeroRemitente, obtenerUbicacion, actualizarRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado}
