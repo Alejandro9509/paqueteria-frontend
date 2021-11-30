@@ -22,8 +22,6 @@ import {DataGrid} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 
 import Noty from 'noty';
-import {SignalCellularNoSimOutlined} from "@material-ui/icons";
-import ConceptosAdicionales from "./Tarifas/ConceptosAdicionales";
 import {
     Dialog,
     DialogActions,
@@ -52,7 +50,7 @@ import {
     modificarGuia,
     agregarGuia,
     imprimirGuia,
-    obtenerGuiaReporte, entregaOcurreGuia
+    obtenerGuiaReporte, entregaOcurreGuia, cambiarTipoCobro
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -73,6 +71,8 @@ import ConceptosFacturacion from "./Tarifas/ConceptosFacturacion";
 import Paquetes from "./Paquetes/Paquetes";
 import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
 import {obtenerEmbalajesId} from "../Util/Contexts/EmbalajesContext";
+import CambiarTipoCobro from "./Guia/CambiarTipoCobro";
+import Ocurre from "./Guia/Ocurre";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -139,6 +139,7 @@ function Guia(props) {
     const [totalPaquetes, setTotalPaquetes] = useState(0)
     const [showDialogOcurre, setShowDialogOcurre] = useState(false)
     const [dataOcurre, setDataOcurre] = useState()
+    const [conceptosAdicionales, setConceptosAdicionales] = useState([])
     const [dataConceptosBase, setDataConceptosBase] = useState([])
     const [filtros, setFiltros] = useState({
         fechaInicial: 0,
@@ -269,6 +270,7 @@ function Guia(props) {
    
         event.preventDefault()
         const {target} = event
+        console.log(target.name)
         setFiltros(filtros => {
             return {
                 ...filtros,
@@ -380,7 +382,7 @@ function Guia(props) {
             "m_dFecha": state.fecha.substr(0, 10),
             "m_sHora": state.fecha.substr(state.fecha.length - 5),
 
-            "arClsGuiaConceptos": state.conceptosAdicionales.map(c => ({
+            "arClsGuiaConceptos": conceptosAdicionales.map(c => ({
                 m_nIdConceptosFacturacion: c.idConcepto,
                 m_cImporte: c.importe,
                 m_nIdImpuestoTraslada: c.traslada,
@@ -419,8 +421,7 @@ function Guia(props) {
         }
     }
 
-    const handleEntregaOcurre = (e) => {
-        e.preventDefault()
+    const handleEntregaOcurre = (dataOcurre) => {
         let params = {
             nIdGuia: dataOcurre.idGuia,
             m_nIdUsuarioEntregaOcurre: localStorage.getItem("Usuario"),
@@ -450,13 +451,13 @@ function Guia(props) {
     }
 
     async function getImpresion(id) {
-        //showSuccess (state.nGuiaId);		
-        //if (state.muestraPaquetes === true) return;		
+        //showSuccess (state.nGuiaId);
+        //if (state.muestraPaquetes === true) return;
         imprimirGuia(id).then(respuesta => {
             setState({
                 ...state,
                 paquetesI: [],
-                // muestraPaquetes:true 
+                // muestraPaquetes:true
             });
             const paquetesTemp = state.paquetesI;
             for (var i = 0; i < respuesta.data.length; i++) {
@@ -599,10 +600,10 @@ function Guia(props) {
 
         setTotalPaquetes(totalCantidad)
 
-        const conceptosAdicionales = []
+        const conceptosAdicionalesAux = []
 
         respuesta.data.m_arClsGuiaConceptos.forEach((element) => {
-            conceptosAdicionales.push({
+            conceptosAdicionalesAux.push({
                 id: Math.floor(Math.random() * 10000),
                 concepto: element,
                 idConcepto: element.m_nIdConceptoFacturacion,
@@ -618,14 +619,14 @@ function Guia(props) {
                 descuento: element.m_c_Descuento || 0
             })
         })
-        var ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
-        var ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
+        var ivaTraslada = getUniqueListBy(conceptosAdicionalesAux, "traslada").map(i => i.traslada);
+        var ivaRetiene = getUniqueListBy(conceptosAdicionalesAux, "retiene").map(i => i.retiene);
         setState({
             ...state,
-            conceptosAdicionales: conceptosAdicionales,
             ivaRetiene: ivaRetiene,
             ivaTraslada: ivaTraslada
         })
+        setConceptosAdicionales(conceptosAdicionalesAux)
 
         setState(state => {
             return {
@@ -669,7 +670,6 @@ function Guia(props) {
                 idTipoCobro: respuesta.data.m_nIdTIpoCobro,
                 porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
 
-                conceptosAdicionales: conceptosAdicionales,
                 FolioGuiaRelacionada: respuesta.data.m_sFolioGuiaRelacionada,
                 tieneRecoleccion: !!respuesta.data.m_nFolioRecoleccion,
                 tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
@@ -681,7 +681,8 @@ function Guia(props) {
     }
 
     //Muestra la pestaña de cancelar
-    function handleShowCancelar() {
+    function handleShowCancelar(event) {
+        event.preventDefault()
         limpiarCamposAgregar()
         obtenerGuiaId(state.idGuia).then((respuesta) => {
             setState({
@@ -689,7 +690,7 @@ function Guia(props) {
                 usuarioCancela: respuesta.data.m_nUsuarioCancelacion != 0 ? respuesta.data.m_nUsuarioCancelacion : localStorage.getItem("Usuario"),
                 folioGuia: respuesta.data.m_nFolioGuia,
                 sucursalCancelacion: respuesta.data.m_sSucursal,
-                fechaCancelado: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear(),
+                fechaCancelado:  today.getFullYear() + "/" + (today.getMonth() + 1) + "/" +  today.getDate() ,
                 estatusGuia: respuesta.data.m_sEstatusGuia,
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion
             })
@@ -755,6 +756,7 @@ function Guia(props) {
     }
 
     const handleChange = event => {
+        event.preventDefault()
         console.log(event.target.name + " : " + event.target.value)
         setState(state => {
             return {
@@ -962,6 +964,7 @@ function Guia(props) {
         getAllConceptos()
     }, []);
 
+
     /**Configuracion de Impresora*/
     useEffect(value => {
         BrowserPrint.getDefaultDevice("printer", function (device) {
@@ -1097,10 +1100,10 @@ obtenerGuiaId(id).then(({data}) => {
     }
 
     function addConcepto(data) {
-        const {conceptosAdicionales} = state
+        const conceptosAdicionalesAux = conceptosAdicionales
         var ivaTraslada = []
         var ivaRetiene = []
-        conceptosAdicionales.push({
+        conceptosAdicionalesAux.push({
             id: Math.floor(Math.random() * 10000),
             idConcepto: data.concepto.m_nIdConceptosFacturacion,
             concepto: data.concepto,
@@ -1117,30 +1120,30 @@ obtenerGuiaId(id).then(({data}) => {
             descuento: data.descuento
 
         })
-        ivaTraslada = getUniqueListBy(conceptosAdicionales, "traslada").map(i => i.traslada);
+        ivaTraslada = getUniqueListBy(conceptosAdicionalesAux, "traslada").map(i => i.traslada);
         ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
         setState({
             ...state,
-            conceptosAdicionales: conceptosAdicionales,
             ivaRetiene: ivaRetiene,
             ivaTraslada: ivaTraslada
         })
+
+        setConceptosAdicionales(conceptosAdicionalesAux)
     }
 
     const filtrarConceptoAdicional = (c, item) => {
-        let valid = c.idConcepto === item.idConcepto
-            && c.importe === item.importe
-            && c.importeRet === item.importeRet
-            && c.retiene === item.retiene
-            && c.traslada === item.traslada
-            && c.importeIVA === item.importeIVA
+        let valid = c.idConcepto == item.idConcepto
+            && c.importe == item.importe
+            && c.importeRet == item.importeRet
+            && c.retiene == item.retiene
+            && c.traslada == item.traslada
+            && c.importeIVA == item.importeIVA;
         return !valid
     }
 
     function removeConcepto(item) {
-        const {conceptosAdicionales} = state
         const newArrayConceptos = conceptosAdicionales.filter(c => filtrarConceptoAdicional(c, item))
-        setState({...state, conceptosAdicionales: newArrayConceptos})
+        setConceptosAdicionales(  newArrayConceptos)
     }
 
     const handleUpload = (e) => {
@@ -1294,11 +1297,11 @@ obtenerGuiaId(id).then(({data}) => {
             setState(state => {
                 return {
                     ...state,
-                    conceptosAdicionales: conceptosCast,
                     ivaRetiene: ivaRetiene,
                     ivaTraslada: ivaTraslada
                 }
             })
+            setConceptosAdicionales(conceptosCast)
             // debugger
             /*if (tarifa.data.length != 0) {
                 let pesoTotal = 0
@@ -1421,6 +1424,7 @@ obtenerGuiaId(id).then(({data}) => {
             }
         })
         setTotalPaquetes(0)
+        setConceptosAdicionales([])
     }
 
     async function getAllDataMoneda() {
@@ -2038,7 +2042,7 @@ obtenerGuiaId(id).then(({data}) => {
             var guia = data
             if (guia.m_nIdEstatusGuia == 7) {
                 if (!guia.m_nClienteBloqueado) {
-                    
+
                     let importeTotal = 0
                     guia.m_arClsGuiaConceptos.forEach((c) => importeTotal += parseFloat(c.m_cTotal))
                     setDataOcurre({
@@ -2064,6 +2068,7 @@ obtenerGuiaId(id).then(({data}) => {
     }
 
     const handleFechaOcurre = (event) => {
+        event.preventDefault()
         setDataOcurre({
             ...dataOcurre,
             fechaOcurre: event.target.value,
@@ -2071,6 +2076,7 @@ obtenerGuiaId(id).then(({data}) => {
     }
 
     const handleHoraOcurre = (event) => {
+        event.preventDefault()
         setDataOcurre({
             ...dataOcurre,
             horaOcurre: event.target.value,
@@ -2078,6 +2084,7 @@ obtenerGuiaId(id).then(({data}) => {
     }
 
     const handleChangeDataOcurre = (event) => {
+        event.preventDefault()
         setDataOcurre({
             ...dataOcurre,
             [event.target.name]: event.target.value,
@@ -2087,9 +2094,16 @@ obtenerGuiaId(id).then(({data}) => {
     const handleListPaquetesChange = (newList) => {
         setDataPaquetes(newList)
     }
+    const cambiarCobro = (tipoCobro) => {
+        cambiarTipoCobro(state.idGuia, tipoCobro).then(({data}) => {
+            showSuccess(data)
+            getAllData()
+        })
+    }
 
     return (
         <div>
+            <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido} open={state.openTipoCobro} dataTipoCobro={dataTipoCobro} close={() => setState({...state, openTipoCobro: false})}/>
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
@@ -2097,196 +2111,12 @@ obtenerGuiaId(id).then(({data}) => {
                 aria-labelledby="form-dialog-title"
             >
                 {showDialogOcurre && <p style={{marginTop: '30px', marginLeft: '30px'}}>Ocurre</p>}
-                <DialogContent>
-                    {state.tipoModal === 6 &&
-                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
-                        <DialogTitle style={{padding: "0px"}}><h4>Selecciona el Formato</h4></DialogTitle>
-                        <div>
-                            <label className="input select" style={{width: "100%"}}>
-                                <FormControl fullWidth variant="outlined" margin="dense">
-                                    <InputLabel id="sucursalListadoLabel">Formato</InputLabel>
-                                    <Select
-                                        labelId="sucursalListadoLabel"
-                                        label="Formato"
-                                        className="form-control"
-                                        required
-                                        value={state.formatoSeleccionado}
-                                        onChange={(event) => setState({
-                                            ...state,
-                                            formatoSeleccionado: event.target.value
-                                        })}
-                                        id="formatoSeleccionado"
-                                        name="formatoSeleccionado"
-                                    >
-                                        {dataFormatos.map((formato) => (
-                                            <option
-                                                key={formato.m_nIdFormato}
-                                                value={formato.m_nIdFormato}
-                                            >
-                                                {formato.m_sFormato}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                                <i></i>
-                            </label>
-                        </div>
+                {
+                    dataOcurre &&
+                        <Ocurre handleEntregaOcurre={handleEntregaOcurre} closeOcurre={() => {setState({...state, openDialog: false});
+                            setShowDialogOcurre(false)}} dataTipoPago={dataTipoPago} dataOcurre={dataOcurre} dataTipoCobro={dataTipoCobro} showDialogOcurre={showDialogOcurre}/>
+                }
 
-                        <DialogActions style={{justifyContent: "left"}}>
-
-                            <button onClick={() => handleImprimir()} className="btn btn-primary primary-btn">Aceptar
-                            </button>
-                            <button onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn">Cerrar
-                            </button>
-
-                        </DialogActions>
-                    </div>
-                    }
-                    {showDialogOcurre &&
-                    <form onSubmit={(e) => handleEntregaOcurre(e)}>
-                        <Grid container spacing={3}>
-                            <Grid item xs={6}>
-                                <TextField
-                                    variant="outlined"
-                                    id="fechaOcurre"
-                                    name="fechaOcurre"
-                                    label="Fecha"
-                                    type="date"
-                                    onChange={handleFechaOcurre}
-                                    value={dataOcurre.fechaOcurre}
-                                    className={"form-control"}
-                                    InputLabelProps={{shrink: true,}}
-                                    required={showDialogOcurre}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    variant="outlined"
-                                    id="horaOcurre"
-                                    name="horaOcurre"
-                                    label="Hora"
-                                    type="time"
-                                    value={dataOcurre.horaOcurre}
-                                    onChange={handleHoraOcurre}
-                                    className={"form-control"}
-                                    InputLabelProps={{shrink: true,}}
-                                    inputProps={{step: 300,}}
-                                    required={showDialogOcurre}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <FormControl fullWidth variant="outlined" margin="dense">
-                                    <InputLabel id="idTipoCobroLabel">Tipo Cobro</InputLabel>
-                                    <Select
-                                        labelId={"idTipoCobroLabel"}
-                                        label={"Tipo Cobro"}
-                                        className="form-control"
-                                        value={dataOcurre.tipoCobroOcurre}
-                                        disabled={true}
-                                        onChange={(event) => {
-                                            event.preventDefault();
-                                            setState({
-                                                ...state,
-                                                tipoCobro: event.target.value,
-                                            });
-                                        }}
-                                        id="tipoCobro"
-                                        InputProps={{
-                                            id: "tipoCobroOcurre",
-                                            name: "tipoCobroOcurre"
-                                        }}
-                                    >
-                                        {dataTipoCobro.map((tipoCobro) => (
-                                            <option
-                                                key={tipoCobro.m_nIdTipoCobro}
-                                                value={tipoCobro.m_nIdTipoCobro}
-                                            >
-                                                {tipoCobro.m_sDescripcion}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField variant="outlined" margin="dense" label="Comentarios"
-                                           onChange={(event) => handleChangeDataOcurre(event)}
-                                           className="form-control"
-                                           type="text"
-                                           value={dataOcurre.comentariosOcurre}
-                                           disabled={state.agregar === "Consultar"}
-                                           placeholder="Comentarios"
-                                           name="comentariosOcurre"
-                                />
-                            </Grid>
-                            {(dataOcurre.tipoCobroOcurre == 10 || dataOcurre.tipoCobroOcurre == 3 || dataOcurre.tipoCobroOcurre == 11) &&
-                            <Grid item xs={12}>
-                                <FormControl fullWidth variant="outlined" margin="dense">
-                                    <InputLabel id="idTipoPagoLabel">Tipo Pago</InputLabel>
-                                    <Select
-                                        labelId={"idTipoPagoLabel"}
-                                        label={"Tipo Pago"}
-                                        className="form-control"
-                                        value={dataOcurre.tipoPago}
-                                        onChange={(event) => handleChangeDataOcurre(event)}
-                                        id="tipoPago"
-                                        InputProps={{
-                                            id: "tipoPago",
-                                            name: "tipoPago"
-                                        }}
-                                        name={"tipoPago"}
-                                    >
-                                        {dataTipoPago.map((tipoPago) => (
-                                            <option
-                                                key={tipoPago.m_nIdTipoPago}
-                                                value={tipoPago.m_nIdTipoPago}
-                                            >
-                                                {tipoPago.m_sTipoPago}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            }
-                            {(dataOcurre.tipoPago == 1) &&
-                            <Grid item xs={6}>
-                                <TextField variant="outlined" margin="dense" label="Importe recibido"
-                                           onChange={(event) => handleChangeDataOcurre(event)}
-                                           className="form-control"
-                                           type="number"
-                                           value={dataOcurre.importeOcurre}
-                                           placeholder="Importe"
-                                           name="importeOcurre"
-                                           required={showDialogOcurre && (dataOcurre.tipoPago == 1)}
-                                />
-                                <p style={{
-                                    marginLeft: '10px',
-                                    marginTop: '5px'
-                                }}> {`Cambio: $${dataOcurre.importeOcurre ? parseFloat(dataOcurre.importeTotal) - parseFloat(dataOcurre.importeOcurre) : 0.0}`}</p>
-                            </Grid>
-                            }
-                            {dataOcurre.tipoPago == 1 &&
-                            <Grid item xs={6}>
-                                <p> {`Importe a pagar: $${parseFloat(dataOcurre.importeTotal)}`}</p>
-                            </Grid>
-                            }
-
-
-                        </Grid>
-                        <DialogActions>
-                            <Button onClick={() => {
-                                setState({...state, openDialog: false})
-                                setShowDialogOcurre(false)
-                            }} color="primary">
-                                Cancelar
-                            </Button>
-                            <Button type={"submit"} color="primary">
-                                Aceptar
-                            </Button>
-                        </DialogActions>
-                    </form>
-                    }
-                </DialogContent>
             </Dialog>
 
             <header className="topbar clearfix">
@@ -2322,29 +2152,34 @@ obtenerGuiaId(id).then(({data}) => {
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
-                        <li>
-                            <a onClick={(event) => {
-                                event.stopPropagation();
-                                setState({
-                                    ...state,
-                                    identificadorModal:
-                                        "imprimir",
-                                    tipoModal: 6,
-                                    openDialog: true
-                                });
-                            }}>
-                                <i className="fa fa-print"/> Imprimir
-                            </a>
-                        </li>
+                        {/*<li>*/}
+                        {/*    <a onClick={(event) => {*/}
+                        {/*        event.stopPropagation();*/}
+                        {/*        setState({*/}
+                        {/*            ...state,*/}
+                        {/*            identificadorModal:*/}
+                        {/*                "imprimir",*/}
+                        {/*            tipoModal: 6,*/}
+                        {/*            openDialog: true*/}
+                        {/*        });*/}
+                        {/*    }}>*/}
+                        {/*        <i className="fa fa-print"/> Imprimir*/}
+                        {/*    </a>*/}
+                        {/*</li>*/}
 
                         <li className="hide">
                             <a data-toggle="tab" href="#Importar">
                                 <i className="fa fa-upload"/> Importar
                             </a>
                         </li>
+                        <li >
+                            <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled} onClick={() => setState({...state,openTipoCobro: true})}>
+                                <i className="fa fa-refresh"/> Cambiar Tipo Cobro
+                            </a>
+                        </li>
                         <li>
                             <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}
-                               className={state.idGuia == 0 ? classes.disabled : ""}>
+                               className={state.idGuia === 0 ? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>
@@ -2546,7 +2381,9 @@ obtenerGuiaId(id).then(({data}) => {
                                                 onRowSelected={(row) => {
                                                     setState({
                                                         ...state,
-                                                        idGuia: row.data.m_nIdGuia
+                                                        idGuia: row.data.m_nIdGuia,
+                                                        cambioCobro: (row.data.m_nIdEstatusGuia === 14 || row.data.m_nIdEstatusGuia === 7) &&  row.data.m_nIdTipoCobro === 2,
+                                                        creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito
                                                     })
                                                 }}
                                             />
@@ -3543,7 +3380,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                             {
                                                                 state.idEmbarque &&
                                                                 <div>
-                                                                    <Tabs value={state.tab} onChange={handleTabChange}
+                                                                    <Tabs value={state.tab} onChange={() => handleTabChange()}
                                                                           aria-label="simple tabs example"
                                                                           variant="scrollable" scrollButtons="auto">
                                                                         <Tab
@@ -3561,23 +3398,26 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                           listadoConceptosAlternativos={dataTodosConceptosByEmbarque}
                                                                                           consult={state.agregar == "Consultar"}
                                                                                           mostrarDescuento={true}/>*/}
-                                                                    <ConceptosFacturacion
-                                                                        // consulta={consult}
-                                                                        dataList={state.conceptosAdicionales}
-                                                                        // onChangeList={this.handleChangeListConceptos}
-                                                                        mostrarRangos={false}
-                                                                        mostrarImpuestos={false}
-                                                                        mostrarDescuento={true}
-                                                                        mostrarTipoMedida={false}
-                                                                        mostrarTipoCalculo={false}
-                                                                        conceptosBase={dataConceptosBase}
-                                                                        keys={0}
-                                                                        agregarConcepto={addConcepto}
-                                                                        eliminarConcepto={removeConcepto}
-                                                                        mostrarTotales={true}
-                                                                        ivaTraslada={state.ivaTraslada}
-                                                                        ivaRetiene={state.ivaRetiene}
-                                                                    />
+                                                                    {
+                                                                        conceptosAdicionales.length > 0 &&
+                                                                        <ConceptosFacturacion
+                                                                            // consulta={consult}
+                                                                            dataList={conceptosAdicionales}
+                                                                            // onChangeList={this.handleChangeListConceptos}
+                                                                            mostrarRangos={false}
+                                                                            mostrarImpuestos={false}
+                                                                            mostrarDescuento={true}
+                                                                            mostrarTipoMedida={false}
+                                                                            mostrarTipoCalculo={false}
+                                                                            conceptosBase={dataConceptosBase}
+                                                                            agregarConcepto={addConcepto}
+                                                                            eliminarConcepto={(item) => removeConcepto(item)}
+                                                                            mostrarTotales={true}
+                                                                            ivaTraslada={state.ivaTraslada}
+                                                                            ivaRetiene={state.ivaRetiene}
+                                                                        />
+                                                                    }
+
                                                                 </div>
 
                                                             }
@@ -3819,24 +3659,6 @@ obtenerGuiaId(id).then(({data}) => {
     );
 }
 
-function TabPanel(props) {
-    const {children, value, index, ...other} = props;
 
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={1}>
-                    {children}
-                </Box>
-            )}
-        </div>
-    );
-}
 
 export default Guia;

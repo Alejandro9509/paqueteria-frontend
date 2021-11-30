@@ -75,6 +75,15 @@ function reasignarGuia(idParadaDestino, idParadaFuente, idGuia) {
     return result
 }
 
+function cambiarTipoCobro(idGuia, tipoCobro) {
+    const url = `${process.env.REACT_APP_API_URL}/Guias/CambiarTipoCObro/${idGuia}/${tipoCobro}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, {}), { headers })
+    );
+    return result
+}
+
 function obtenerGuiaPendientes(idOrigen, idDestino) {
     const url = `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
         idOrigen +
@@ -166,4 +175,6 @@ function obtenerGuiasFiltroCorteCaja(fecha, destino, idMoneda, idTipoPago) {
     return result
 }
 
-export { obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId, obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia, obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte }
+export { obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
+    obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,
+    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro}

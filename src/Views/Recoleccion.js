@@ -747,6 +747,10 @@ function Recoleccion() {
             showSuccess("Debe agregar al menos 1 paquete o sobre.")
             return
         }
+        dataPaquetes.forEach(item => {
+            item.m_sClaveSATProducto = item.m_nClaveSATProducto
+            item.m_sClaveSATUnidad = item.m_nClaveSATUnidad
+        })
 
         let params = {
             //Informacion general
@@ -880,7 +884,7 @@ function Recoleccion() {
 
         console.log(params)
         console.log(JSON.stringify(params))
-   /*     if (state.idRecoleccion != 0) {
+        if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -903,7 +907,7 @@ function Recoleccion() {
                     console.log(err);
                     showSuccess(err);
                 });
-        }*/
+        }
 
     };
 
@@ -1058,6 +1062,10 @@ function Recoleccion() {
         getAllEmbalajes()
 
         respuesta.data.m_parrPaquetes.forEach((p) => {
+            p.m_nClaveSATProducto = p.m_sClaveSATProducto
+            p.m_nClaveSATUnidad = p.m_sClaveSATUnidad
+            p.m_sProductoSAT = p.m_nProductoSAT
+            p.m_sUnidadSAT = p.m_nUnidadSAT
             obtenerProductoById(p.m_nIdProducto).then(({data}) => {
                 p["producto"] = data
                 p.m_sProducto = data.m_sDescripcion
@@ -1339,6 +1347,7 @@ function Recoleccion() {
         setState(state => {
             return {
                 ...state,
+                idRecoleccion:0,
                 idSucursalAgregar: '',
                 folioRecoleccion: '',
                 folioEmbarque: '',
@@ -2587,6 +2596,15 @@ function Recoleccion() {
         setDataPaquetes(newList)
     }
 
+    const filtrarTipoCobro = (tipoCobro) => {
+        // if (!state.clientePaga) {
+        return tipoCobro.m_nIdTipoCobro === 10 || tipoCobro.m_nIdTipoCobro === 11
+        // }else {
+        //     return (state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 10) || ( !state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 11)
+        //
+        // }
+    }
+
     return (
         <div>
             {
@@ -3457,7 +3475,7 @@ function Recoleccion() {
                                                                         id="tipoCobro"
                                                                     >
                                                                         <option value="0">Seleccionar</option>
-                                                                        {dataTipoCobro.map((tipoCobro) => (
+                                                                        {dataTipoCobro.filter(d => filtrarTipoCobro(d)).map((tipoCobro) => (
                                                                             <option
                                                                                 key={tipoCobro.m_nIdTipoCobro}
                                                                                 value={tipoCobro.m_nIdTipoCobro}
@@ -3514,6 +3532,8 @@ function Recoleccion() {
                                                                                 label="Responsable de pago"
                                                                                 margin="dense"
                                                                                 required
+                                                                                error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
+                                                                                helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
                                                                                 InputLabelProps={{shrink: true}}
                                                                                 onClick={handleClickResponsablePago}

@@ -40,7 +40,7 @@ export default function SalidaParadas(props){
         origen: props.data.m_sCiudadOrigen,
         destino: props.data.m_sCiudadDestino,
         operador: props.data.m_sNombreCompleto,
-        unidad: props.data.m_sUnidad,
+        unidad: props.data.m_sUnidadIdentificador + props.data.m_sUnidad,
         placasUnidad: "",
         fechaSalida: props.data.m_dFechaSalida,
         horaSalida: props.data.m_dHoraSalida,
@@ -230,39 +230,39 @@ export default function SalidaParadas(props){
                 </Grid>
                 <Grid item xs={4}/> */}
 
-                <Grid item xs={8}>
-                    <TextField
-                        id={"ruta"}
-                        InputProps={{readOnly: true}}
-                        margin={"dense"}
-                        disabled
-                        label={"Ruta"}
-                        variant={"outlined"}
-                        value={data.ruta}
-                    />
-                </Grid>
-                <Grid item xs={2}>
-                    <TextField
-                        id={"fechaEntrega"}
-                        InputProps={{readOnly: true}}
-                        margin={"dense"}
-                        disabled
-                        label={"Fecha Entrega"}
-                        variant={"outlined"}
-                        value={data.fechaEntrega}
-                    />
-                </Grid>
-                <Grid item xs={2}>
-                    <TextField
-                        id={"horaEntrega"}
-                        InputProps={{readOnly: true}}
-                        margin={"dense"}
-                        disabled
-                        label={"Hora"}
-                        variant={"outlined"}
-                        value={data.horaEntrega}
-                    />
-                </Grid>
+                {/*<Grid item xs={8}>*/}
+                {/*    <TextField*/}
+                {/*        id={"ruta"}*/}
+                {/*        InputProps={{readOnly: true}}*/}
+                {/*        margin={"dense"}*/}
+                {/*        disabled*/}
+                {/*        label={"Ruta"}*/}
+                {/*        variant={"outlined"}*/}
+                {/*        value={data.ruta}*/}
+                {/*    />*/}
+                {/*</Grid>*/}
+                {/*<Grid item xs={2}>*/}
+                {/*    <TextField*/}
+                {/*        id={"fechaEntrega"}*/}
+                {/*        InputProps={{readOnly: true}}*/}
+                {/*        margin={"dense"}*/}
+                {/*        disabled*/}
+                {/*        label={"Fecha Entrega"}*/}
+                {/*        variant={"outlined"}*/}
+                {/*        value={data.fechaEntrega}*/}
+                {/*    />*/}
+                {/*</Grid>*/}
+                {/*<Grid item xs={2}>*/}
+                {/*    <TextField*/}
+                {/*        id={"horaEntrega"}*/}
+                {/*        InputProps={{readOnly: true}}*/}
+                {/*        margin={"dense"}*/}
+                {/*        disabled*/}
+                {/*        label={"Hora"}*/}
+                {/*        variant={"outlined"}*/}
+                {/*        value={data.horaEntrega}*/}
+                {/*    />*/}
+                {/*</Grid>*/}
 
                 <Grid item xs={5}>
                     <TextField
@@ -430,7 +430,7 @@ export default function SalidaParadas(props){
                         disabled
                         label={"Unidad"}
                         variant={"outlined"}
-                        value={data.unidad}
+                        value={ data.unidad}
                     />
                 </Grid>
                 <Grid item xs={1}>

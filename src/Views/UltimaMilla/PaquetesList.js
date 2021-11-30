@@ -259,6 +259,7 @@ class PaquetesList extends Component {
                                     <TableRow>
                                         <TableCell padding="checkbox">
                                             <Checkbox
+                                                disabled={u.m_bClienteBloqueado}
                                                 onClick={(event) => this.handleClick(event, u)}
                                                 checked={isItemSelected}
                                                 inputProps={{'aria-labelledby': labelId}}
@@ -273,7 +274,7 @@ class PaquetesList extends Component {
                                         <TableCell style={{color: u.m_bClienteBloqueado ? "red": "black"}}
                                                    align="left">{u.m_bClienteBloqueado ? "Bloqueado" : "Activo"}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sDomicilioRemitente: u.m_sDomicilioDestinatario}</TableCell>
-                                        <TableCell align="left">{u.m_bEsRecoleccion ? (u.m_bRecoleccionConCita ? "" : "Sin cita") : ""}</TableCell>
+                                        <TableCell align="left">{u.m_bEsRecoleccion ? (u.m_bRecoleccionConCita ? (u.m_sFechaRecoleccionCita + " " + u.m_sHoraCitarRecoleccionMinima + " a " + u.m_sHoraCitaRecoleccionMaxima) : "Sin cita") : u.m_bEmbarqueConCita ? (u.m_sFechaEmbarqueCita + " " + u.m_sHoraEmbarqueCitaMinima + " a " + u.m_sHoraEmbarqueCitaMaxima) : "Sin Cita"}</TableCell>
                                         <TableCell align="left">{u.m_dFechaRegistro}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sEstatusRecoleccion : u.m_sEstatusEmbarque}</TableCell>
                                     </TableRow>
