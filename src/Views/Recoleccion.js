@@ -97,6 +97,7 @@ import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
 import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
 import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
+import DialogTableClientes from "./Clientes/DialogTableClientes";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
 
 let timer;
@@ -364,6 +365,7 @@ function Recoleccion() {
     })
 
     const handleChangeRemitente = (data) => {
+        console.log(data)
         setRemitente({
             idRemitente: data.id,
             aliasRemitente: data.alias,
@@ -1328,19 +1330,20 @@ function Recoleccion() {
         $('#Cancelar').addClass('in show');
     }
 
-    const handlePatrocinadorSelected = (newValue) => {
+    const handlePatrocinadorSelected = (row) => {
+        console.log(row)
         setState({
             ...state,
-            clientePaga: newValue
+            clientePaga: row.data
         })
     }
 
-    const handleClickResponsablePago = (event) => {
+ /*   const handleClickResponsablePago = (event) => {
         event.preventDefault();
         if (dataClientes.length === 0) {
             getAllClientes()
         }
-    }
+    }*/
 
     //Limpia todos los inputs
     const limpiarInputsAgregar = () => {
@@ -1864,6 +1867,7 @@ function Recoleccion() {
     const getAllClientes = () => {
         obtenerCliente().then((respuesta) => {
             setDataClientes(respuesta.data)
+            console.log(respuesta.data)
         })
     }
 
@@ -2604,7 +2608,12 @@ function Recoleccion() {
         //
         // }
     }
-
+    const dialogVisible = (isVisible) => {
+        setState({
+          ...state,
+          openDialog: isVisible,
+        });
+      };
     return (
         <div>
             {
@@ -2919,7 +2928,13 @@ function Recoleccion() {
 
                         </DialogActions>
                     </div>
-                    }</DialogContent>
+                    }
+                     {state.tipoModal === 10 &&
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <DialogTableClientes dialogVisible={dialogVisible } handlePatrocinadorSelected={handlePatrocinadorSelected}/>
+                    </div>
+                    }
+                    </DialogContent>
 
             </Dialog>
 
@@ -3511,36 +3526,23 @@ function Recoleccion() {
                                                             </div>
                                                             <div className="col-md-4">
                                                                 <div className="input">
-                                                                    <Autocomplete
-                                                                        value={state.clientePaga}
-                                                                        freeSolo
-                                                                        onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
-                                                                        id="clientePaga"
-                                                                        disableClearable
-                                                                        forcePopupIcon={false}
-                                                                        options={dataClientes}
-                                                                        disabled={state.agregar === "Consultar"}
-                                                                        getOptionLabel={(option) => `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`}
-                                                                        variant="outlined"
-                                                                        name={"clientePaga"}
-                                                                        style={{
-                                                                            transform: "translate(14px, 10px) scale(1) !important"
-                                                                        }}
-                                                                        renderInput={(params) =>
+                                                                 
                                                                             <TextField
                                                                                 variant="outlined"
                                                                                 label="Responsable de pago"
                                                                                 margin="dense"
                                                                                 required
+                                                                                value={state.clientePaga.m_sNombreFiscal}
                                                                                 error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
                                                                                 helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
                                                                                 InputLabelProps={{shrink: true}}
-                                                                                onClick={handleClickResponsablePago}
-                                                                                {...params}
+                                                                                onClick={()=>{
+                                                                                    setState({ ...state, openDialog: true,tipoModal:10})
+                                                                                }}                                                                         
                                                                             />
-                                                                        }
-                                                                    />
+                                                                        
+                                                                   
                                                                 </div>
                                                             </div>
                                                             <div className="col-md-4">
