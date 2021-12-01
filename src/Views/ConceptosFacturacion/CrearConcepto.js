@@ -38,6 +38,7 @@ function CrearConceptoSAT(props) {
         dataSat: []
     });
 
+    
     const handleChange = (event) => {
         props.onChangeData(0, event)
     }
@@ -47,7 +48,7 @@ function CrearConceptoSAT(props) {
     }
 
     const closeDialog = () => {
-        setState({ ...state, openDialog: false });
+        setState({ ...state, openDialog: false, catalogo: "" });
     }
 
     function cargarDesdeServidor(pagina,numRegistros){
@@ -68,7 +69,7 @@ function CrearConceptoSAT(props) {
                     open={state.openDialog}
                     fullWidth
                     maxWidth="xl"
-                    onClose={() => setState({...state,openDialog: false})}
+                    onClose={() => setState({...state,openDialog: false, catalogo: ""})}
                 >
                     <DialogTitle>Claves Productos y Servicios</DialogTitle>
                     <DialogContent>
@@ -150,7 +151,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({...state,catalogo: "c_ClaveProdServ", busqueda: ""})}>
+                                    onClick={() => setState({...state,catalogo: "c_ClaveProdServ", busqueda: "", complementoSAT: 1})}>
                                     Seleccionar
                                 </button>
                             </Grid>
@@ -196,7 +197,7 @@ function CrearConceptoSAT(props) {
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
                                     onClick={() =>
-                                        setState({...state, catalogo: "c_ClaveUnidad", busqueda: ""})
+                                        setState({...state, catalogo: "c_ClaveUnidad", busqueda: "", complementoSAT: 2})
                                     }
                                 >
                                     Seleccionar
@@ -265,7 +266,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({...state,catalogo: "c_MaterialPeligroso", busqueda: ""})}>
+                                    onClick={() => setState({...state,catalogo: "c_MaterialPeligroso", busqueda: "", complementoSAT: 5})}>
                                     Seleccionar
                                 </button>
                             </Grid>
@@ -316,7 +317,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({...state,catalogo: "c_TipoEmbalaje", busqueda: ""})}>
+                                    onClick={() => setState({...state,catalogo: "c_TipoEmbalaje", busqueda: "", complementoSAT: 3})}>
                                     Seleccionar
                                 </button>
                             </Grid>
@@ -353,7 +354,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({...state,catalogo: "c_FraccionArancelaria", busqueda: ""})}>
+                                    onClick={() => setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4})}>
                                     Seleccionar
                                 </button>
                             </Grid>
