@@ -593,12 +593,22 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/RemitenteDestinatario/DialogTableRemDes.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/RemitentesDestinatarios.js">
           <value>
             <set />
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/Rutas.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/SAT/ComplementosSAT.js">
           <value>
             <set />
           </value>
@@ -1348,12 +1358,32 @@
             <set />
           </value>
         </entry>
+        <entry key="$APPLICATION_CONFIG_DIR$/consoles/db/f5746bf4-8842-4f3d-889c-20fece67adfe/console_4.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/a.sql">
           <value>
             <set />
           </value>
         </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatCatalogoSATPaginado.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatCatalogoSATPaginadoPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatCodigosPostalesGetMunicipiosByIdEstadoPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatRemitentesDestinatariosPaginado.sql">
           <value>
             <set />
           </value>
@@ -1389,6 +1419,16 @@
           </value>
         </entry>
         <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProGuiasGetListadoFiltro2PQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProRecoleccionAgregarPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProRecoleccionModificarPQ.sql">
           <value>
             <set />
           </value>

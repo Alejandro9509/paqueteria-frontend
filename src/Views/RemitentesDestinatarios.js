@@ -97,14 +97,14 @@ function RemitenteDestinatario(props) {
     [props.dataEstados]
   );
 
-  useEffect(
+  /*useEffect(
     (value) => {
       if (props.dataRemitenteDestinatario.length > 0) {
         setDataRemitenteDestinatario(props.dataRemitenteDestinatario);
       }
     },
     [props.dataRemitenteDestinatario]
-  );
+  );*/
 
   useEffect(
     (value) => {
@@ -112,7 +112,6 @@ function RemitenteDestinatario(props) {
     },
     [state]
   );
-
   useEffect(
     (value) => {
       /**Para validar que hay una respuesta de donde tomar los datos*/
@@ -475,48 +474,10 @@ function RemitenteDestinatario(props) {
   };
 
   const handleChangeAutocomplete = (input, newValue) => {
-    setState({
+    setState(() => ({
       ...state,
       [input]: newValue,
-    });
-    if (input === "Nombre") {
-      let estado = newValue.m_nIdEstado;
-      if (newValue.m_nIdCP == 0) {
-        showSuccess(
-          "El remitente o destinatario seleccionado no cuenta con Código Postal registrado. Contacte a un Administrador."
-        );
-      }
-      setState({
-        id: newValue.m_nIdRemitenteDestinatario,
-        alias: newValue.m_sAlias,
-        nombre: newValue,
-        RFC: newValue.m_sRFC,
-        domicilio: newValue.m_sDomicilio || "No especificado",
-        codigoPostal:
-          newValue.m_nIdCP != 0
-            ? {
-                m_nIdCP: newValue.m_nIdCP,
-                m_sCP: newValue.m_sCodigoPostal,
-                m_sColonia: newValue.m_sColonia,
-              }
-            : "",
-        estado: estado || "",
-        municipio: newValue.m_nIdMunicipio || "",
-        correo: newValue.m_sCorreoElectronico || "",
-        telefono: newValue.m_sTelefono || 0,
-        contacto: newValue.m_sContacto || newValue.m_sNombre,
-        calle: newValue.m_sCalle || "No especificado",
-        numeroExt: newValue.m_sNoExterior || 0,
-        numeroInt: newValue.m_sNoInterior || 0,
-        colonia: newValue.m_sColonia || "No especificado",
-        latitud: newValue.m_sLatitud,
-        longitud: newValue.m_sLongitud,
-      });
-
-      obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
-        setDataMunicipios(data);
-      });
-    }
+    }));
   };
 
   const handleClickCodigosPostalesInput = (input) => {
@@ -548,9 +509,9 @@ function RemitenteDestinatario(props) {
   };
 
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
-    console.log("id remitentedes",row.data.m_nIdRemitenteDestinatario)
     let estado = row.data.m_nIdEstado;
-      setState({
+
+      setState((state) => ({
         ...state,
         id: row.data.m_nIdRemitenteDestinatario,
         alias: row.data.m_sAlias,
@@ -576,19 +537,18 @@ function RemitenteDestinatario(props) {
         colonia: row.data.m_sColonia || "No especificado",
         latitud: row.data.m_sLatitud,
         longitud: row.data.m_sLongitud,
-      });
-      console.log("entro")
+        openDialog: false
+      }));
       obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
         setDataMunicipios(data);
-        console.log("entro",data)
       });
     
   };
   const dialogVisible = (isVisible) => {
-    setState({
+    setState(() => ({
       ...state,
       openDialog: isVisible,
-    });
+    }));
   };
   return (
     <div className="widget-content">
@@ -609,7 +569,7 @@ function RemitenteDestinatario(props) {
         </Dialog>
       
       <div className="col-md-6">
-        <div className="col-sm-10 col-md-10    unit">
+        <div className="col-sm-12 col-md-12    unit">
           <div className="input">
             <TextField
               label={"Alias (Nombre)"}
@@ -646,6 +606,7 @@ function RemitenteDestinatario(props) {
                           paddingBlockEnd: 0,
                           paddingLeft: 0,
                           paddingBlock: 0,
+                          cursor:"pointer"
                         }}
                       />
                     </IconButton>
@@ -655,7 +616,7 @@ function RemitenteDestinatario(props) {
             />
           </div>
         </div>
-        <div className="col-md-2">
+        {/*<div className="col-md-2">
           <IconButton
             style={{
               padding: "0px",
@@ -679,7 +640,7 @@ function RemitenteDestinatario(props) {
               }}
             />
           </IconButton>
-        </div>
+        </div>*/}
 
         <div className="col-sm-12 col-md-12 unit">
           <div className="input">

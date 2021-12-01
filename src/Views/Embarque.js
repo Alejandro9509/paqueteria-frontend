@@ -779,7 +779,8 @@ function Embarque(props) {
     })
 
     const handleChangeRemitente = (data) => {
-        setRemitente({
+        console.log("Entro al padre")
+        setRemitente(() => ({
             idRemitente: data.id,
             aliasRemitente: data.alias,
             nombreRemitente: data.nombre,
@@ -800,7 +801,7 @@ function Embarque(props) {
             zonaTarifaRemitente: data.zonaTarifa,
             latitudR: data.latitud,
             longitudR: data.longitud
-        })
+        }))
     };
 
     const handleClickCodigosPostalesInput = (input) => {
@@ -845,7 +846,7 @@ function Embarque(props) {
     })
 
     const handleChangeDestinatario = (data) => {
-        setDestinatario({
+        setDestinatario( () => ({
             idDestinatario: data.id,
             aliasDestinatario: data.alias,
             nombreDestinatario: data.nombre,
@@ -866,7 +867,7 @@ function Embarque(props) {
             zonaTarifaDestinatario: data.zonaTarifa,
             latitudD: data.latitud,
             longitudD: data.longitud
-        })
+        }))
     };
 
     const [entregaDD, setEntregaDD] = useState({
@@ -1413,11 +1414,11 @@ function Embarque(props) {
                     (o) => o.m_nIdSucursal === respuesta.data.IdSucursal
                 ).m_sSucursal,
                 fechaCancelacion:
-                    today.getDate() +
+                    today.getFullYear() +
                     "/" +
                     (today.getMonth() + 1) +
                     "/" +
-                    today.getFullYear() +
+                    today.getDate() +
                     " " +
                     today.getHours() +
                     ":" +
@@ -1526,7 +1527,25 @@ function Embarque(props) {
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_parrPaquetes)
-
+        respuesta.data.m_arrClsComplementoSAT.forEach(item => {
+            item.id = item.m_nIdComplementoSAT
+            item.cantidad = item.m_nCantidad
+            item.claveProducto = item.m_sClaveProductoServicio
+            item.ProductoSAT = item.m_sProductoServicio
+            item.claveUnidad = item.m_sClaveUnidad
+            item.UnidadSAT = item.m_sUnidad
+            item.claveFraccion = item.m_sClaveFraccionArancelaria
+            item.fraccionSAT = item.m_sFraccionArancelaria
+            item.comercioExterior = item.m_sUUIDComercioExterior
+            item.claveMaterialPeligroso = item.m_sClaveMaterialPeligroso
+            item.materialPeligrosoSAT = item.m_sMaterialPeligroso
+            item.esPeligroso = item.m_bEsMaterialPeligroso
+            item.claveEmbalaje = item.m_sClaveEmbalaje
+            item.embalajeSAT = item.m_sTipoEmbalaje
+            item.descripcionEmbalajeSAT = item.m_sDescripcionEmbalaje
+            item.peso = item.m_xPeso
+        })
+        setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
             setState(state => {
                 return {
@@ -1758,6 +1777,7 @@ function Embarque(props) {
                 moneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 tipoCobro: respuesta.data.m_nIdTIpoCobro,
+
                 valorDeclarado: respuesta.data.m_xValorDeclarado,
                 idTipoSeguro: respuesta.data.m_nIdTipoSeguro,
                 porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,

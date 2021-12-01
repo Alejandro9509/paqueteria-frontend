@@ -99,6 +99,7 @@ import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 import DialogTableClientes from "./Clientes/DialogTableClientes";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
+import ComplementosSAT from "./SAT/ComplementosSAT";
 
 let timer;
 
@@ -148,7 +149,7 @@ function Recoleccion() {
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
     const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
-
+    const [dataComplementosSAT, setDataComplementosSAT] = useState([])
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
     const [dataCiudadF, setDataCiudadF] = React.useState([]);
@@ -171,7 +172,8 @@ function Recoleccion() {
         // ===VARIABLES DE LISTADO===
         idRecoleccion: 0,
 
-
+        idTipoSeguro:5,
+        porcentajeSeguro: 0,
         // ===VARIABLES DE CANCELAR===
         // folioRecoleccion: '', Se usa en agregar tambien
         // folioRecoleccion:'', se usa en agregar tambien
@@ -184,7 +186,7 @@ function Recoleccion() {
         // ==VARIABLES DE LLEGADA/SALIDA===
         // sucursalCancelacion: '', Se usa en cancelar tambien
         // folioRecoleccion: '', Se usa en agregar tambien
-        fechaHoraCreacion: '',
+        fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
         // fechaRecoleccion: '', se usa en agregar tambien
         // zonaRecoleccion: '', se usa en agregar tambien
         // recogerEn: '', se usa en agregar tambien
@@ -198,7 +200,7 @@ function Recoleccion() {
         folioEmbarque: '',
         folioGuia: '',
         folioInforme: '',
-        fechaHoraRegistro: '',
+        fechaHoraRegistro:'',
         estatusRecoleccion: '',
         moneda: '',
         tipoCambio: '',
@@ -484,7 +486,6 @@ function Recoleccion() {
             datosAdicionalesEnt: ''
         })
     }
-
     const handleChangeEntregaDD = (event) => {
         event.preventDefault();
         setEntregaDD(entregaDD => {
@@ -753,7 +754,23 @@ function Recoleccion() {
             item.m_sClaveSATProducto = item.m_nClaveSATProducto
             item.m_sClaveSATUnidad = item.m_nClaveSATUnidad
         })
-
+        dataComplementosSAT.forEach(item => {
+            item.m_nCantidad = item.cantidad
+            item.m_sClaveProductoServicio = item.claveProducto
+            // item.m_sProductoServicio = item.ProductoSAT
+            item.m_sClaveUnidad = item.claveUnidad
+            // item.m_sUnidad = item.UnidadSAT
+            item.m_sClaveFraccionArancelaria = item.claveFraccion
+            // item.m_sFraccionArancelaria = item.fraccionSAT
+            item.m_sUUIDComercioExterior = item.comercioExterior
+            item.m_sClaveMaterialPeligroso = item.claveMaterialPeligroso
+            item.m_sMaterialPeligroso = item.materialPeligrosoSAT
+            item.m_bEsMaterialPeligroso = item.esPeligroso
+            item.m_sClaveEmbalaje = item.claveEmbalaje
+            // item.m_sTipoEmbalaje = item.embalajeSAT
+            item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
+            item.m_xPeso = item.peso
+        })
         let params = {
             //Informacion general
             m_nIdRecoleccion: state.idRecoleccion,
@@ -762,7 +779,6 @@ function Recoleccion() {
             m_nIdEmbarque: state.folioEmbarque,
             m_nIdGuia: state.folioGuia,
             m_nIdInforme: state.folioInforme,
-            ValorDeclarado: state.valorDeclarado,
             m_dFecha: state.fechaHoraCreacion.split("T")[0],
             m_tHora: state.fechaHoraCreacion.split("T")[1],
             m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
@@ -771,7 +787,10 @@ function Recoleccion() {
             m_rTipoCambio: state.tipoCambio,
             m_nIdTipoDeCobro: state.tipoCobro,
             m_nIdCliente: state.clientePaga.m_nIdCliente,
-
+            ValorDeclarado: state.valorDeclarado,
+            m_nIdTipoSeguro: state.idTipoSeguro,
+            m_xPorcentajeSeguro: state.porcentajeSeguro,
+            m_bAplicaSeguro: state.aplicaSeguro,
             //Remitente
             m_sNombreRemitente: remitente.nombreRemitente.m_sNombre,
             m_sRFCRemitente: remitente.RFCRemitente,
@@ -824,7 +843,7 @@ function Recoleccion() {
             //Entrega
             m_nIdCPDetalleEntrega: destinatario.codigoPostalDestinatario.m_nIdCP,
             m_bEntregaDiferenteDomicilio: state.diferenteEntrega,
-
+            m_arrClsComplementoSAT: dataComplementosSAT,
             //Detalles de la operación
             m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
             m_dFechaLlegada: state.fechaHoraLlegada.split("T")[0],
@@ -949,7 +968,9 @@ function Recoleccion() {
         JSON.stringify(params)
         cancelarRecoleccion(state.idRecoleccion, params).then((respuesta) => {
             showSuccess(respuesta.data)
-            getAllData()
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.sucursalListado, filtros.estatusListado, filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                setData(respuesta.data);
+            })
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(0).addClass('active');
             $('.tab-content div ').removeClass('in show');
@@ -1078,7 +1099,25 @@ function Recoleccion() {
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_parrPaquetes)
-
+        respuesta.data.m_arrClsComplementoSAT.forEach(item => {
+            item.id = item.m_nIdComplementoSAT
+            item.cantidad = item.m_nCantidad
+            item.claveProducto = item.m_sClaveProductoServicio
+            item.ProductoSAT = item.m_sProductoServicio
+            item.claveUnidad = item.m_sClaveUnidad
+            item.UnidadSAT = item.m_sUnidad
+            item.claveFraccion = item.m_sClaveFraccionArancelaria
+            item.fraccionSAT = item.m_sFraccionArancelaria
+            item.comercioExterior = item.m_sUUIDComercioExterior
+            item.claveMaterialPeligroso = item.m_sClaveMaterialPeligroso
+            item.materialPeligrosoSAT = item.m_sMaterialPeligroso
+            item.esPeligroso = item.m_bEsMaterialPeligroso
+            item.claveEmbalaje = item.m_sClaveEmbalaje
+            item.embalajeSAT = item.m_sTipoEmbalaje
+            item.descripcionEmbalajeSAT = item.m_sDescripcionEmbalaje
+            item.peso = item.m_xPeso
+        })
+        setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
         if (respuesta.data.m_bRecoleccionDiferenteDomicilio){
             let estado = respuesta.data.m_nIdEstadoRecoleccion < 10 ? `0${respuesta.data.m_nIdEstadoRecoleccion}` :  respuesta.data.m_nIdEstadoRecoleccion
             setRecoleccionDD(recoleccionDD => {
@@ -1173,7 +1212,10 @@ function Recoleccion() {
             setState(state => {
                 return {
                     ...state,
-                    clientePaga: data
+                    clientePaga: data,
+                    idTipoSeguro: data.m_bTieneSeguro ? data.m_nIdTipoSeguro : 5,
+                    porcentajeSeguro: data.m_bTieneSeguro ? data.m_cPorcentajeSeguro : 0,
+                    aplicaSeguro: data.m_bTieneSeguro
                 }
             })
         })
@@ -1200,7 +1242,10 @@ function Recoleccion() {
                 mismoPaquete: false,
                 mismoSobre: false,
                 sobres: respuesta.data.m_parrSobres,
-
+                ValorDeclarado: state.valorDeclarado,
+                idTipoSeguro: respuesta.data.m_nIdTipoSeguro,
+                porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
+                aplicaSeguro: respuesta.data.m_bAplicaSeguro,
                 //Cita de recoleccion
                 recoleccionConCita: respuesta.data.m_bRecoleccionConCita,
                 fechaCita: respuesta.data.m_sFechaCita,
@@ -1216,6 +1261,30 @@ function Recoleccion() {
             }
         });
     }
+    useEffect(value => {
+        let newTiposCobro = []
+        if (state.entregaEnSucursal) {
+            if (state.tipoCobro === 5) {
+                showSuccess("No se puede hacer cobro en origen cuando es entrega en sucursal, elige otra opción.")
+                setState(state => {
+                    return {
+                        ...state,
+                        tipoCobro: 0
+                    }
+                })
+            }
+            dataTipoCobro.forEach((i) => {
+                i.valid = !(i.m_nIdTipoCobro === 5);
+                newTiposCobro.push(i)
+            })
+        } else {
+            dataTipoCobro.forEach((i) => {
+                i.valid = true
+                newTiposCobro.push(i)
+            })
+        }
+        setDataTipoCobro(newTiposCobro)
+    }, [state.entregaEnSucursal])
 
     function handleShowSalidaLlegada(type) {
         obtenerRecoleccionId(state.idRecoleccion).then((respuesta) => {
@@ -1338,12 +1407,17 @@ function Recoleccion() {
         })
     }
 
- /*   const handleClickResponsablePago = (event) => {
+    const handleClickResponsablePago = (event) => {
         event.preventDefault();
         if (dataClientes.length === 0) {
             getAllClientes()
         }
-    }*/
+    }
+    
+    const getCurrentDateTime = () => {
+        return `${new Date().getFullYear()}-${`${new Date().getMonth() +
+        1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
+    }
 
     //Limpia todos los inputs
     const limpiarInputsAgregar = () => {
@@ -1356,11 +1430,14 @@ function Recoleccion() {
                 folioEmbarque: '',
                 folioGuia: '',
                 folioInforme: '',
-                fechaHoraRegistro: '',
+                fechaHoraRegistro: getCurrentDateTime(),
                 estatusRecoleccion: 1,
                 moneda: 1,
-                tipoCambio: '',
-                tipoCobro: '',
+                tipoCambio: '24',
+                tipoCobro: '10',
+                idTipoSeguro: 5,
+                valorDeclarado: 0,
+                porcentajeSeguro: 0,
                 clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
 
                 //Remitente
@@ -1581,6 +1658,9 @@ function Recoleccion() {
           entregaConCita: !state.entregaEnSucursal && false,
         });
       };
+    const handleListComplementosSATChange = (newList) => {
+        setDataComplementosSAT(newList)
+    }
     //Maneja filtrado de listado embarque
     const handleFolioRecoleccionFiltro = async (event) => {
         if (event.keyCode == 13) {
@@ -1633,7 +1713,7 @@ function Recoleccion() {
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
                                    title: 'Confirmar Eliminar',
-                                   message: '¿Está seguro de eliminar Embarque?',
+                                   message: '¿Está seguro de eliminar la recolección?',
                                    buttons: [
                                        {
                                            label: 'Si',
@@ -1891,6 +1971,9 @@ function Recoleccion() {
 
     function getAllTipoCobro() {
         obtenerTipoCobro().then((respuesta) => {
+            respuesta.data.forEach((i) => {
+                i.valid = true
+            })
             setDataTipoCobro(respuesta.data);
         });
     }
@@ -3466,18 +3549,16 @@ function Recoleccion() {
                                                                 <i className="fa fa-arrow-down"/>
                                                             </label>
                                                         </div>
-
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="input select">
-                                                                <FormControl fullWidth variant="outlined"
+                                                                <FormControl fullWidth variant="outlined" required
                                                                              margin="dense">
-                                                                    <InputLabel id="tipoCobroLabel">Tipo
+                                                                    <InputLabel id="idTipoCobroLabel">Tipo
                                                                         Cobro</InputLabel>
                                                                     <Select
-                                                                        labelId="tipoCobroLabel"
-                                                                        label="Tipo Cobro"
+                                                                        labelId={"idTipoCobroLabel"}
+                                                                        label={"Tipo Cobro"}
                                                                         className="form-control"
-                                                                        required
                                                                         value={state.tipoCobro}
                                                                         disabled={state.agregar === "Consultar"}
                                                                         onChange={(event) => {
@@ -3488,9 +3569,13 @@ function Recoleccion() {
                                                                             });
                                                                         }}
                                                                         id="tipoCobro"
+                                                                        InputProps={{
+                                                                            id: "tipoCobro",
+                                                                            name: "tipoCobro"
+                                                                        }}
                                                                     >
-                                                                        <option value="0">Seleccionar</option>
                                                                         {dataTipoCobro.filter(d => filtrarTipoCobro(d)).map((tipoCobro) => (
+                                                                            tipoCobro.valid &&
                                                                             <option
                                                                                 key={tipoCobro.m_nIdTipoCobro}
                                                                                 value={tipoCobro.m_nIdTipoCobro}
@@ -3502,14 +3587,101 @@ function Recoleccion() {
                                                                 </FormControl>
                                                             </label>
                                                         </div>
+                                                        <Grid container spacing={2} style={{marginBottom:'10px'}}>
+                                                            <Grid item xs>
+                                                                <div className="input">
+                                                                 
+                                                                    <Autocomplete
+                                                                        value={state.clientePaga}
+                                                                        freeSolo
+                                                                        onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
+                                                                        id="clientePaga"
+                                                                        disableClearable
+                                                                        forcePopupIcon={false}
+                                                                        options={dataClientes}
 
-                                                        <div className="col-md-12">
-                                                            <div className="col-md-4">
+                                                                        disabled={state.agregar === "Consultar"}
+                                                                        getOptionLabel={(option) => (
+                                                                            option ?
+                                                                                `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`
+                                                                                : ''
+                                                                        )}
+                                                                        variant="outlined"
+                                                                        name={"clientePaga"}
+                                                                        style={{
+                                                                            transform: "translate(14px, 10px) scale(1) !important"
+                                                                        }}
+                                                                        renderInput={(params) =>(
+                                                                            <div>
+                                                                            <TextField
+                                                                                variant="outlined"
+                                                                                label="Responsable de pago"
+                                                                                margin="dense"
+                                                                                required
+                                                                                value={state.clientePaga.m_sNombreFiscal}
+                                                                                error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
+                                                                                helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
+                                                                                placeholder={"No. Cliente: Nombre fiscal"}
+                                                                                onClick={handleClickResponsablePago}
+                                                                                {...params}
+                                                                            />
+                                                                            </div>
+                                                                        )}
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs>
+                                                                <div className="input">
+                                                                    <TextField
+                                                                        name="idTipoSeguro"
+                                                                        select
+                                                                        required
+                                                                        label="Tipo seguro"
+                                                                        value={state.idTipoSeguro}
+                                                                        onChange={(event) => {
+                                                                            event.preventDefault();
+                                                                            setState({
+                                                                                ...state,
+                                                                                idTipoSeguro: event.target.value,
+                                                                                porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
+                                                                                aplicaSeguro: (event.target.value === 3) || (event.target.value === 4)
+                                                                            });
+                                                                        }}
+                                                                        variant="outlined"
+                                                                    >
+                                                                        {dataTiposSeguro.map((option) => (
+                                                                            <option key={option.m_nIdTipoSeguro} value={option.m_nIdTipoSeguro}>
+                                                                                {option.m_sDescripcion}
+                                                                            </option>
+                                                                        ))}
+                                                                    </TextField>
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs>
                                                                 <div className="input">
                                                                     <TextField variant="outlined" margin="dense"
                                                                                className="form-control"
-                                                                               type="text"
-                                                                               disabled={state.agregar === "Consultar"}
+                                                                               type="number"
+                                                                               required
+                                                                               disabled={state.agregar === "Consultar" || !state.aplicaSeguro}
+                                                                               label="Porcentaje de seguro"
+                                                                               onChange={handleChange}
+                                                                               value={state.porcentajeSeguro}
+                                                                               placeholder="%"
+                                                                               name="porcentajeSeguro"
+                                                                               InputProps={{
+                                                                                   endAdornment: <InputAdornment position="start">%</InputAdornment>,
+                                                                               }}
+                                                                    />
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid item xs>
+                                                                <div className="input">
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                               className="form-control"
+                                                                               type="number"
+                                                                               required
+                                                                               disabled={(state.agregar === "Consultar") || !state.aplicaSeguro}
                                                                                label="Valor Declarado"
                                                                                onChange={(event) => {
                                                                                    event.preventDefault();
@@ -3521,38 +3693,13 @@ function Recoleccion() {
                                                                                value={state.valorDeclarado}
                                                                                placeholder="$"
                                                                                name="valorDeclarado"
+                                                                               InputProps={{
+                                                                                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                                                               }}
                                                                     />
                                                                 </div>
-                                                            </div>
-                                                            <div className="col-md-4">
-                                                                <div className="input">
-                                                                 
-                                                                            <TextField
-                                                                                variant="outlined"
-                                                                                label="Responsable de pago"
-                                                                                margin="dense"
-                                                                                required
-                                                                                value={state.clientePaga.m_sNombreFiscal}
-                                                                                error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
-                                                                                helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
-                                                                                placeholder={"No. Cliente: Nombre fiscal"}
-                                                                                InputLabelProps={{shrink: true}}
-                                                                                onClick={()=>{
-                                                                                    setState({ ...state, openDialog: true,tipoModal:10})
-                                                                                }}                                                                         
-                                                                            />
-                                                                        
-                                                                   
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-4">
-                                                                {
-                                                                    state.clientePaga.m_nIdTipoSeguro === undefined ? ``
-                                                                        : state.clientePaga.m_nIdTipoSeguro == 3 || state.clientePaga.m_nIdTipoSeguro == 4 ? `Tiene seguro: ${dataTiposSeguro.find(i => i.m_nIdTipoSeguro == state.clientePaga.m_nIdTipoSeguro).m_sDescripcion}` : `NO tiene seguro`
-
-                                                                }
-                                                            </div>
-                                                        </div>
+                                                            </Grid>
+                                                        </Grid>
                                                     </div>
                                                 </div>
                                             </div>
@@ -3567,6 +3714,13 @@ function Recoleccion() {
                                             recoleccion={true}
                                             isAgregar={isAgregar}
                                             isModificar={isModificar}
+                                        />
+                                    </div>
+                                    <div className="widget-wrap" id="complementosSat">
+                                        <ComplementosSAT
+                                            dataList={dataComplementosSAT}
+                                            onChangeList={handleListComplementosSATChange}
+                                            disabled={state.agregar === "Consultar"}
                                         />
                                     </div>
 
