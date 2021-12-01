@@ -54,7 +54,7 @@ export default function ConceptosFacturacion(props) {
         style: 'currency',
         currency: 'USD',
     });
-
+    const [conceptos, setConceptos] = useState([])
     const [state, setState] = useState({
         impuestos: [],
         ivaTraslada: [],
@@ -79,6 +79,10 @@ export default function ConceptosFacturacion(props) {
         descuento: 0,
         agregadoDesde: props.keys
     })
+
+    useEffect(() => {
+        setConceptos(props.dataList)
+    }, [props])
 
     const resetConcepto = () => {
         setConcepto({
@@ -226,7 +230,6 @@ export default function ConceptosFacturacion(props) {
 
     const onSubmit = (event) => {
         event.preventDefault()
-        debugger
         props.agregarConcepto(concepto)
         resetConcepto()
     }
@@ -237,9 +240,13 @@ export default function ConceptosFacturacion(props) {
 
     /** Cuando se le pica al editar de algun concepto*/
     const handleRowClick = (item) => {
+        console.log("click")
         if (!props.consult) {
+            console.log("consult")
             item.concepto = props.conceptoFijo || props.conceptosBase.find(i => i.m_nIdConceptosFacturacion === item.idConcepto)
             setConcepto(item)
+            console.log("setConcepto")
+            console.log(conceptos)
             removeConcepto(item)
         }
     }
@@ -361,7 +368,7 @@ export default function ConceptosFacturacion(props) {
                 renderCell: (row) => {
                     return (
                         <div>
-                            <IconButton color="inherit" size="small" aria-label="delete" onClick={() => handleRowClick(row.row)}>
+                            <IconButton color="inherit" size="small" aria-label="delete" onClick={(e) => {handleRowClick(row.row)}}>
                                 <EditIcon fontSize="large" />
                             </IconButton>
                         </div>
@@ -717,7 +724,7 @@ export default function ConceptosFacturacion(props) {
                                 textAlign: "right"
                             }}> ${parseFloat(
                                 props.dataList.reduce((total, arg) => total + parseFloat(arg.importe), 0) +
-                                props.dataList.reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)+
+                                props.dataList.reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)-
                                 props.dataList.reduce((total, arg) => total + parseFloat(arg.importeRet), 0)
                             ).toFixed(2)}</div>
                         </div>
