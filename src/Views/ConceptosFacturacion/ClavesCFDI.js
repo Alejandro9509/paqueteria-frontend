@@ -19,6 +19,7 @@ class ClavesCFDI extends Component {
         super(props);
         this.state = {
             row:[],
+            reload: false,
             rowFilter: [],
             searchText:"",
             height: window.innerHeight,
@@ -79,9 +80,8 @@ class ClavesCFDI extends Component {
     }
 
     componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
-        console.log(prevProps.catalogo)
-        console.log(this.props.catalogo)
-        if (prevProps.catalogo !== this.props.catalogo ){
+
+        if (prevProps.catalogo !== this.props.catalogo || this.props.dataSAT.length !==  prevProps.dataSAT.length){
             console.log("diferente")
             this.setState({
                 row:this.props.dataSAT,
@@ -177,8 +177,15 @@ class ClavesCFDI extends Component {
         })*/
     };
 
-    render() {
+    componentWillReceiveProps(props) {
+        console.log(this.props.dataSAT)
+        this.setState({
+            row:this.props.dataSAT,
+            rowFilter: this.props.dataSAT
+        })
+    }
 
+    render() {
         return (
             <div>
                 <div
@@ -214,10 +221,10 @@ class ClavesCFDI extends Component {
                         </Button>
                     </div>
                     <div style={{height:"300px", padding:"5px"}}>
-                        {this.props.dataSAT.length != 0 ? (
+                        {this.props.dataSAT != 0 ? (
                             <DataGrid
                                 localeText={dataGridLocaleText}
-                                rows={this.state.rowFilter}
+                                rows={this.props.dataSAT}
                                 columns={this.state.columnsUnidades}
                                 paginationMode="server"
                                 onPageChange={(newPage)=>{this.props.setPagina(newPage)}}

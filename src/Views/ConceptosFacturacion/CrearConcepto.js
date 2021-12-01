@@ -50,7 +50,7 @@ function CrearConceptoSAT(props) {
     const closeDialog = () => {
         setState({ ...state, openDialog: false, catalogo: "" });
     }
-
+    
     function cargarDesdeServidor(pagina,numRegistros){
         if (state.catalogo !== "") {
             return new obtenerSATPaginado(numRegistros, pagina || 0, state.catalogo, state.busqueda).then((respuesta) => {
