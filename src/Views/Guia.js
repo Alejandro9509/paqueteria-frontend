@@ -1132,12 +1132,12 @@ obtenerGuiaId(id).then(({data}) => {
     }
 
     const filtrarConceptoAdicional = (c, item) => {
-        let valid = c.idConcepto == item.idConcepto
-            && c.importe == item.importe
-            && c.importeRet == item.importeRet
-            && c.retiene == item.retiene
-            && c.traslada == item.traslada
-            && c.importeIVA == item.importeIVA;
+        let valid = c.idConcepto === item.idConcepto
+            && c.importe === item.importe
+            && c.importeRet === item.importeRet
+            && c.retiene === item.retiene
+            && c.traslada === item.traslada
+            && c.importeIVA === item.importeIVA;
         return !valid
     }
 
