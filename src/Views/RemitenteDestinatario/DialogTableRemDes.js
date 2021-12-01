@@ -21,19 +21,19 @@ function DialogTableRemDes(props) {
 //----------------------------->Atributos<----------------------------------------------------------------------------
 const columns = [
     {
-      headerName: "No.Cliente",
+      headerName: "No. Remitente / Destinatario",
       field: "m_nNumero",
-      width: 125,
+      width: 150,
     },
     {
       headerName: "Nombre",
       field: "m_sNombre",
-      flex: 1,
+        width: 300,
     },
     {
         headerName: "Domicilio",
         field: "m_sDomicilio",
-        flex: 1,
+        width: 500,
       },
   ]
 let rowSelect
@@ -54,6 +54,9 @@ function cargarDesdeServidor(pagina,registros){
     console.log(respuesta.data)
   })
 }
+useEffect(() => {
+    cargarDesdeServidor(0,registros)
+},[busqueda])
 
 //----------------------------------------------Renderizado-------------------------------------------------
   return (
@@ -61,7 +64,7 @@ function cargarDesdeServidor(pagina,registros){
         <TextField
             variant="standard"
             value={busqueda}
-            onChange={(e) => setBusqueda( e.target.value)}
+            onChange={(e) => {e.stopPropagation();setBusqueda( e.target.value)}}
             placeholder
             InputProps={{
                 endAdornment: <SearchIcon style={{
@@ -72,12 +75,11 @@ function cargarDesdeServidor(pagina,registros){
                     paddingBlockEnd: 0,
                     paddingLeft: 0,
                     paddingBlock: 0,
-                    cursor:"pointer"
-                }} onClick={() => cargarDesdeServidor(pagina, registros)}/>,
+                }} onClick={() => console.log("")}/>,
             }}
             style={{width:'60ch'}}
         />
-        <div style={{height:"300px", padding:"5px"}}>
+        <div style={{height:"500px", padding:"5px"}}>
            <DataGrid
            localeText={dataGridLocaleText}
            columns={columns}
@@ -87,7 +89,8 @@ function cargarDesdeServidor(pagina,registros){
            rowSelect = row;
           }}
           pagination
-          pageSize={registros}
+           rowsPerPageOptions={[20]}
+          pageSize={20}
           rowCount={13600}
           paginationMode="server"
           onPageChange={(newPage)=>{setPagina(newPage)

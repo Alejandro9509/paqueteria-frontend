@@ -141,7 +141,7 @@ function RemitenteDestinatario(props) {
                   ...state,
                   id: respuesta.data.m_nIdRemitente,
                   alias: respuesta.data.m_sAliasRemitente,
-                  nombre: data,
+                  nombre: data.m_sNombre,
                   RFC: respuesta.data.m_sRFCRemitente,
                   domicilio: respuesta.data.m_sDomicilioRemitente,
                   calle: respuesta.data.m_sCalleRemitente,
@@ -225,7 +225,7 @@ function RemitenteDestinatario(props) {
                 ...state,
                 id: respuesta.data.m_nIdDestinatario,
                 alias: respuesta.data.m_sAliasDestinatario,
-                nombre: data,
+                nombre: data.m_sNombre,
                 RFC: respuesta.data.m_sRFCDestinatario,
                 domicilio: respuesta.data.m_sDomicilioDestinatario,
                 calle: respuesta.data.m_sCalleDestinatario,
@@ -310,7 +310,7 @@ function RemitenteDestinatario(props) {
               setState((state) => {
                 return {
                   ...state,
-                  nombre: data,
+                  nombre: data.m_sNombre,
                   RFC: respuesta.data.m_sRFCRemitente,
                   domicilio: respuesta.data.m_sDomicilioRemitente,
                   ciudad: respuesta.data.m_nCiudadRemitente,
@@ -367,7 +367,7 @@ function RemitenteDestinatario(props) {
             setState((state) => {
               return {
                 ...state,
-                nombre: data,
+                nombre: data.m_sNombre,
                 RFC: respuesta.data.m_sRFCDestinatario,
                 domicilio: respuesta.data.m_sDomicilioDestinatario,
                 ciudad: respuesta.data.m_nIdCIudadDestinatario,
@@ -532,6 +532,7 @@ function RemitenteDestinatario(props) {
         telefono: row.data.m_sTelefono || 0,
         contacto: row.data.m_sContacto || row.data.m_sNombre,
         calle: row.data.m_sCalle || "No especificado",
+        municipioTexto: row.data.m_sMunicipio || "No especificado",
         numeroExt: row.data.m_sNoExterior || 0,
         numeroInt: row.data.m_sNoInterior || 0,
         colonia: row.data.m_sColonia || "No especificado",

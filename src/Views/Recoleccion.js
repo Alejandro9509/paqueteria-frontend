@@ -377,6 +377,7 @@ function Recoleccion() {
             numeroExtRemitente: data.numeroExt,
             coloniaRemitente: data.colonia,
             estadoRemitente: data.estado,
+            municipioTexto:data.municipioTexto,
             municipioRemitente: data.municipio,
             codigoPostalRemitente: data.codigoPostal,
             correoRemitente: data.correo,
@@ -2693,7 +2694,8 @@ function Recoleccion() {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     titulo={state.titulo}
-                                    direccion={remitente.nombreRemitente}>
+                                    recoleccion={true}
+                                    direccion={remitente}>
 
                 </ConfirmarUbicacion>
             }

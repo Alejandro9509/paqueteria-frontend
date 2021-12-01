@@ -779,7 +779,6 @@ function Embarque(props) {
     })
 
     const handleChangeRemitente = (data) => {
-        console.log("Entro al padre")
         setRemitente(() => ({
             idRemitente: data.id,
             aliasRemitente: data.alias,
@@ -791,6 +790,7 @@ function Embarque(props) {
             numeroExtRemitente: data.numeroExt,
             coloniaRemitente: data.colonia,
             estadoRemitente: data.estado,
+            municipioTexto:data.municipioTexto,
             municipioRemitente: data.municipio,
             codigoPostalRemitente: data.codigoPostal,
             correoRemitente: data.correo,
@@ -858,6 +858,7 @@ function Embarque(props) {
             coloniaDestinatario: data.colonia,
             estadoDestinatario: data.estado,
             municipioDestinatario: data.municipio,
+            municipioTexto:data.municipioTexto,
             codigoPostalDestinatario: data.codigoPostal,
             correoDestinatario: data.correo,
             telefonoDestinatario: data.telefono,
@@ -2711,7 +2712,8 @@ function Embarque(props) {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     titulo={state.titulo}
-                                    direccion={destinatario.nombreDestinatario}>
+                                    recoleccion={false}
+                                    direccion={destinatario}>
 
                 </ConfirmarUbicacion>
             }
