@@ -266,6 +266,10 @@ function Guia(props) {
 
     })
 
+    useEffect(() => {
+        console.log(conceptosAdicionales.length)
+    }, [conceptosAdicionales])
+
     const handleChangeFiltros = (event) => {
    
         event.preventDefault()
@@ -1100,9 +1104,11 @@ obtenerGuiaId(id).then(({data}) => {
     }
 
     function addConcepto(data) {
-        const conceptosAdicionalesAux = conceptosAdicionales
+        var conceptosAdicionalesAux = [...conceptosAdicionales]
         var ivaTraslada = []
         var ivaRetiene = []
+        conceptosAdicionalesAux = [...conceptosAdicionales].filter(c => c.idConcepto !== data.concepto.m_nIdConceptosFacturacion)
+
         conceptosAdicionalesAux.push({
             id: Math.floor(Math.random() * 10000),
             idConcepto: data.concepto.m_nIdConceptosFacturacion,
@@ -1142,13 +1148,14 @@ obtenerGuiaId(id).then(({data}) => {
     }
 
     function removeConcepto(item) {
-        const newArrayConceptos = conceptosAdicionales.filter(c => filtrarConceptoAdicional(c, item))
-        setConceptosAdicionales(  newArrayConceptos)
+        console.log("editar")
+        const newArrayConceptos = [...conceptosAdicionales].filter(c => filtrarConceptoAdicional(c, item))
+        console.log(newArrayConceptos)
+        //setConceptosAdicionales( newArrayConceptos)
     }
 
     const handleUpload = (e) => {
         e.preventDefault();
-
         var files = e.target.files, f = files[0];
         var reader = new FileReader();
         console.log(e.target.files)
@@ -1353,6 +1360,7 @@ obtenerGuiaId(id).then(({data}) => {
     }
 
     const limpiarCamposAgregar = () => {
+        console.log("limpiar")
         setState(state => {
             return {
                 ...state,
@@ -3402,25 +3410,25 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                           listadoConceptosAlternativos={dataTodosConceptosByEmbarque}
                                                                                           consult={state.agregar == "Consultar"}
                                                                                           mostrarDescuento={true}/>*/}
-                                                                    {
-                                                                        conceptosAdicionales.length > 0 &&
+
                                                                         <ConceptosFacturacion
+                                                                            key={"conceptosGuias"}
                                                                             // consulta={consult}
-                                                                            dataList={conceptosAdicionales}
+                                                                            dataList={[...conceptosAdicionales]}
                                                                             // onChangeList={this.handleChangeListConceptos}
                                                                             mostrarRangos={false}
                                                                             mostrarImpuestos={false}
                                                                             mostrarDescuento={true}
                                                                             mostrarTipoMedida={false}
                                                                             mostrarTipoCalculo={false}
-                                                                            conceptosBase={dataConceptosBase}
+                                                                            conceptosBase={[...dataConceptosBase]}
                                                                             agregarConcepto={addConcepto}
                                                                             eliminarConcepto={(item) => removeConcepto(item)}
                                                                             mostrarTotales={true}
-                                                                            ivaTraslada={state.ivaTraslada}
-                                                                            ivaRetiene={state.ivaRetiene}
+                                                                            ivaTraslada={[...state.ivaTraslada]}
+                                                                            ivaRetiene={[...state.ivaRetiene]}
                                                                         />
-                                                                    }
+
 
                                                                 </div>
 
