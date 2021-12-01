@@ -16,7 +16,7 @@ function showSuccess(mensaje) {
 }
 
 function DialogTableRemDes(props) {
-    let {dialogVisible,openDialog,handleChangeAutoCompleteRemitenteDestinatario} = props
+    let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
 const columns = [
@@ -39,7 +39,7 @@ const columns = [
 let rowSelect
 let registros=20
 //----------------------------->Hooks useState <----------------------------------------------------------------------
-const [rows, setRow] = useState([])
+const [rows, setRow] = React.useState([])
 const [pagina, setPagina] = React.useState(0);
     const [busqueda, setBusqueda] = React.useState("");
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------

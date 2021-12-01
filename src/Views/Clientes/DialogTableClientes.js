@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import Noty from "noty";
 import { DataGrid } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../../Constants";
-import { DialogActions } from "@material-ui/core";
+import { DialogActions, TextField } from "@material-ui/core";
 import {obtenerClientePaginado} from "../../Util/Contexts/ClientesContext";
+import SearchIcon from "@material-ui/icons/Search";
 //---------------------------->funcion para mostrar un mensaje<-----------------------------------------------------
 function showSuccess(mensaje) {
   new Noty({
@@ -38,8 +39,9 @@ const columns = [
 let rowSelect
 let registros=7
 //----------------------------->Hooks useState <----------------------------------------------------------------------
-const [rows, setRow] = useState([])
+const [rows, setRow] = React.useState([])
 const [pagina, setPagina] = React.useState(0);
+const [busqueda, setBusqueda] = React.useState("");
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------
 useEffect(() => {
   cargarDesdeServidor(pagina.page,registros)
@@ -47,7 +49,7 @@ useEffect(() => {
 
 //--------------------------->Funciones<----------------------------------------------------------------------
 function cargarDesdeServidor(pagina,registros){
-  return new obtenerClientePaginado(pagina,registros).then((respuesta) => {
+  return new obtenerClientePaginado(pagina,registros,busqueda).then((respuesta) => {
     setRow(respuesta.data)
     console.log(respuesta.data)
 
@@ -57,6 +59,25 @@ function cargarDesdeServidor(pagina,registros){
 //----------------------------------------------Renderizado-------------------------------------------------
   return (
     <>
+        <TextField
+            variant="standard"
+            value={busqueda}
+            onChange={(e) => setBusqueda( e.target.value)}
+            placeholder
+            InputProps={{
+                endAdornment: <SearchIcon style={{
+                    color: "#F9A03E",
+                    fontSize: 32,
+                    paddingInlineEnd: 0,
+                    paddingRight: 0,
+                    paddingBlockEnd: 0,
+                    paddingLeft: 0,
+                    paddingBlock: 0,
+                    cursor:"pointer"
+                }} onClick={() => cargarDesdeServidor(pagina, registros)}/>,
+            }}
+            style={{width:'60ch'}}
+        />
         <div style={{height:"300px", padding:"5px"}}>
            <DataGrid
            localeText={dataGridLocaleText}
@@ -85,8 +106,8 @@ function cargarDesdeServidor(pagina,registros){
                 <button
                     onClick={() => {
                         if(rowSelect !=null){
-                            handlePatrocinadorSelected(rowSelect);}
-                        dialogVisible(false)}}
+                            handlePatrocinadorSelected(rowSelect)}
+                        }}
                     className="btn btn-secondary secondary-btn"
                 >
                     Seleccionar

@@ -1401,10 +1401,11 @@ function Recoleccion() {
 
     const handlePatrocinadorSelected = (row) => {
         console.log(row)
-        setState({
+        setState((state)=>({
             ...state,
-            clientePaga: row.data
-        })
+            clientePaga: row.data,
+            openDialog: false,
+        }))
     }
 
     const handleClickResponsablePago = (event) => {
@@ -3589,30 +3590,7 @@ function Recoleccion() {
                                                         </div>
                                                         <Grid container spacing={2} style={{marginBottom:'10px'}}>
                                                             <Grid item xs>
-                                                                <div className="input">
-                                                                 
-                                                                    <Autocomplete
-                                                                        value={state.clientePaga}
-                                                                        freeSolo
-                                                                        onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
-                                                                        id="clientePaga"
-                                                                        disableClearable
-                                                                        forcePopupIcon={false}
-                                                                        options={dataClientes}
-
-                                                                        disabled={state.agregar === "Consultar"}
-                                                                        getOptionLabel={(option) => (
-                                                                            option ?
-                                                                                `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`
-                                                                                : ''
-                                                                        )}
-                                                                        variant="outlined"
-                                                                        name={"clientePaga"}
-                                                                        style={{
-                                                                            transform: "translate(14px, 10px) scale(1) !important"
-                                                                        }}
-                                                                        renderInput={(params) =>(
-                                                                            <div>
+                                                                <div className="input">                       
                                                                             <TextField
                                                                                 variant="outlined"
                                                                                 label="Responsable de pago"
@@ -3622,12 +3600,11 @@ function Recoleccion() {
                                                                                 error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
                                                                                 helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
-                                                                                onClick={handleClickResponsablePago}
-                                                                                {...params}
+                                                                                InputLabelProps={{shrink: true}}
+                                                                                onClick={()=>{
+                                                                                    setState({ ...state, openDialog: true,tipoModal:10})
+                                                                                }}                                                                         
                                                                             />
-                                                                            </div>
-                                                                        )}
-                                                                    />
                                                                 </div>
                                                             </Grid>
                                                             <Grid item xs>
