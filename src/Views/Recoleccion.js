@@ -966,7 +966,9 @@ function Recoleccion() {
         JSON.stringify(params)
         cancelarRecoleccion(state.idRecoleccion, params).then((respuesta) => {
             showSuccess(respuesta.data)
-            getAllData()
+            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.sucursalListado, filtros.estatusListado, filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                setData(respuesta.data);
+            })
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(0).addClass('active');
             $('.tab-content div ').removeClass('in show');
@@ -1707,7 +1709,7 @@ function Recoleccion() {
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
                                    title: 'Confirmar Eliminar',
-                                   message: '¿Está seguro de eliminar Embarque?',
+                                   message: '¿Está seguro de eliminar la recolección?',
                                    buttons: [
                                        {
                                            label: 'Si',

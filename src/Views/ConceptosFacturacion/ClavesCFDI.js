@@ -78,6 +78,18 @@ class ClavesCFDI extends Component {
 
     }
 
+    componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
+        console.log(prevProps.catalogo)
+        console.log(this.props.catalogo)
+        if (prevProps.catalogo !== this.props.catalogo ){
+            console.log("diferente")
+            this.setState({
+                row:this.props.dataSAT,
+                rowFilter: this.props.dataSAT
+            })
+        }
+    }
+
     handleChange(event) {
         this.setState({
             [event.target.name]: event.target.value,
@@ -147,14 +159,10 @@ class ClavesCFDI extends Component {
     }
 
     requestSearch = (searchValue) => {
-        if(searchValue === "") {
             this.setState({
-                rowFilter:this.state.row,
                 searchText:searchValue
             })
-            return
-        }
-        const filteredRows = this.state.row.filter((row) => {
+        /*const filteredRows = this.state.row.filter((row) => {
 
                 if (row.m_sClaveSAT.includes(searchValue) || row.m_sDescripcion.includes(searchValue)) {
                     return true
@@ -166,7 +174,7 @@ class ClavesCFDI extends Component {
         this.setState({
             rowFilter:filteredRows,
             searchText:searchValue
-        })
+        })*/
     };
 
     render() {
@@ -184,7 +192,16 @@ class ClavesCFDI extends Component {
                             onChange={(e) => this.requestSearch(e.target.value)}
                             placeholder
                             InputProps={{
-                                startAdornment: <SearchIcon fontSize="small" />,
+                                endAdornment: <SearchIcon style={{
+                                    color: "#F9A03E",
+                                    fontSize: 32,
+                                    paddingInlineEnd: 0,
+                                    paddingRight: 0,
+                                    paddingBlockEnd: 0,
+                                    paddingLeft: 0,
+                                    paddingBlock: 0,
+                                    cursor:"pointer"
+                                }} onClick={() => this.props.setBusqueda(this.state.searchText)}/>,
                             }}
                             style={{width:'60ch'}}
                         />
@@ -202,8 +219,10 @@ class ClavesCFDI extends Component {
                                 localeText={dataGridLocaleText}
                                 rows={this.state.rowFilter}
                                 columns={this.state.columnsUnidades}
-
+                                paginationMode="server"
+                                onPageChange={(newPage)=>{this.props.setPagina(newPage)}}
                                 density="compact"
+                                rowCount={100000}
                                 getRowId={ ((row)=> row.m_sClaveSAT)}
                                 onRowSelected={(row) => {
                                     this.props.selectClase(row);

@@ -779,7 +779,8 @@ function Embarque(props) {
     })
 
     const handleChangeRemitente = (data) => {
-        setRemitente({
+        console.log("Entro al padre")
+        setRemitente(() => ({
             idRemitente: data.id,
             aliasRemitente: data.alias,
             nombreRemitente: data.nombre,
@@ -800,7 +801,7 @@ function Embarque(props) {
             zonaTarifaRemitente: data.zonaTarifa,
             latitudR: data.latitud,
             longitudR: data.longitud
-        })
+        }))
     };
 
     const handleClickCodigosPostalesInput = (input) => {
@@ -845,7 +846,7 @@ function Embarque(props) {
     })
 
     const handleChangeDestinatario = (data) => {
-        setDestinatario({
+        setDestinatario( () => ({
             idDestinatario: data.id,
             aliasDestinatario: data.alias,
             nombreDestinatario: data.nombre,
@@ -866,7 +867,7 @@ function Embarque(props) {
             zonaTarifaDestinatario: data.zonaTarifa,
             latitudD: data.latitud,
             longitudD: data.longitud
-        })
+        }))
     };
 
     const [entregaDD, setEntregaDD] = useState({
