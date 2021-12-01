@@ -724,7 +724,7 @@ export default function ConceptosFacturacion(props) {
                                 textAlign: "right"
                             }}> ${parseFloat(
                                 props.dataList.reduce((total, arg) => total + parseFloat(arg.importe), 0) +
-                                props.dataList.reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)+
+                                props.dataList.reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)-
                                 props.dataList.reduce((total, arg) => total + parseFloat(arg.importeRet), 0)
                             ).toFixed(2)}</div>
                         </div>
