@@ -1,4 +1,4 @@
-import React, {Component, useState} from "react";
+import React, {Component, useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import {
@@ -19,19 +19,23 @@ import {
 import ClavesCFDI from "./ClavesCFDI";
 import { obtenerImpuestos } from "../../Util/Contexts/ImpuestosContext";
 import {
-    obtenerSATEmbalajes,
+    obtenerSATEmbalajes, obtenerSATPaginado,
     obtenerSATServicios,
     obtenerSATUnidades,
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import {Autocomplete} from "@material-ui/lab";
 import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
 import {API_HEADERS} from "../../Constants";
-
+import {obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
+var numRegistros = 20
 function CrearConceptoSAT(props) {
-
+    const [pagina, setPagina] = React.useState(0);
+    const [rows, setRow] = useState([])
     const [state, setState] = React.useState({
         openDialog: false,
-        complementoSAT: 0
+        catalogo: "",
+        busqueda: "",
+        dataSat: []
     });
 
     const handleChange = (event) => {
@@ -46,9 +50,20 @@ function CrearConceptoSAT(props) {
         setState({ ...state, openDialog: false });
     }
 
+    function cargarDesdeServidor(pagina,numRegistros){
+        if (state.catalogo !== "") {
+            return new obtenerSATPaginado(numRegistros, pagina || 0, state.catalogo, state.busqueda).then((respuesta) => {
+                setState({...state, dataSat: respuesta.data, openDialog: true})
+            })
+        }
+    }
+    useEffect(() => {
+        cargarDesdeServidor(pagina.page,numRegistros)
+    }, [pagina, state.busqueda, state.catalogo])
+
     return(
         <div>
-            <form className="j-forms">
+
                 <Dialog
                     open={state.openDialog}
                     fullWidth
@@ -57,18 +72,21 @@ function CrearConceptoSAT(props) {
                 >
                     <DialogTitle>Claves Productos y Servicios</DialogTitle>
                     <DialogContent>
-                        <ClavesCFDI
-                            selectClase={selectClase}
-                            closeDialog={closeDialog}
-                            dataSAT={state.complementoSAT === 1 ? props.dataSAT :
-                                state.complementoSAT === 2 ? props.dataSATUnidades :
-                                    state.complementoSAT === 3 ? props.dataSATEmbalajes :
-                                        state.complementoSAT === 4 ? props.dataSATFraccionArancelaria :
-                                            state.complementoSAT === 5 ? props.dataSATMaterialPeligroso : []}
-                            // isProducto={this.state.isProducto}
-                        />
+
+                            <ClavesCFDI
+                                selectClase={selectClase}
+                                closeDialog={closeDialog}
+                                dataSAT={state.dataSat}
+                                catalogo={state.catalogo}
+                                setPagina={setPagina}
+                                setBusqueda={(value) => setState({...state, busqueda: value})}
+                                // isProducto={this.state.isProducto}
+                            />
+
+
                     </DialogContent>
                 </Dialog>
+            <form className="j-forms">
                 <div className="form-content">
                     <div className="main-container" style={{margin: "0px", padding: "0px"}}>
                         <div className="row" style={{margin: "0px"}}>
@@ -132,7 +150,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({openDialog: true, complementoSAT: 1})}>
+                                    onClick={() => setState({...state,catalogo: "c_ClaveProdServ", busqueda: ""})}>
                                     Seleccionar
                                 </button>
                             </Grid>
@@ -178,7 +196,7 @@ function CrearConceptoSAT(props) {
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
                                     onClick={() =>
-                                        setState({openDialog: true, complementoSAT: 2})
+                                        setState({...state, catalogo: "c_ClaveUnidad", busqueda: ""})
                                     }
                                 >
                                     Seleccionar
@@ -247,7 +265,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({openDialog: true, complementoSAT: 5})}>
+                                    onClick={() => setState({...state,catalogo: "c_MaterialPeligroso", busqueda: ""})}>
                                     Seleccionar
                                 </button>
                             </Grid>
@@ -298,7 +316,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({openDialog: true, complementoSAT: 3})}>
+                                    onClick={() => setState({...state,catalogo: "c_TipoEmbalaje", busqueda: ""})}>
                                     Seleccionar
                                 </button>
                             </Grid>
@@ -335,7 +353,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({openDialog: true, complementoSAT: 4})}>
+                                    onClick={() => setState({...state,catalogo: "c_FraccionArancelaria", busqueda: ""})}>
                                     Seleccionar
                                 </button>
                             </Grid>
