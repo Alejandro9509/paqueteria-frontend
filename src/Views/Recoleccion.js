@@ -389,6 +389,7 @@ function Recoleccion() {
             latitudR: data.latitud,
             longitudR: data.longitud
         })
+        console.log(data.zonaOperativa)
     };
 
     const handleClickCodigosPostalesInput = (input) => {
@@ -2634,7 +2635,7 @@ function Recoleccion() {
     }
 
     if (redirect) {
-        if (data.find((o) => o.m_nIdRecoleccion == state.idRecoleccion).m_nIdEmbarque != 0) {
+        if (data.find((o) => o.m_nIdRecoleccion === state.idRecoleccion).m_nIdEmbarque != 0) {
             showSuccess("Recolección ya tiene Embarque")
         } else {
             return (

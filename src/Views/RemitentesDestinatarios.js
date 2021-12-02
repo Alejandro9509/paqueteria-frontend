@@ -511,38 +511,52 @@ function RemitenteDestinatario(props) {
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
     let estado = row.data.m_nIdEstado;
 
-      setState((state) => ({
-        ...state,
-        id: row.data.m_nIdRemitenteDestinatario,
-        alias: row.data.m_sAlias,
-        nombre: row.data.m_sNombre,
-        RFC: row.data.m_sRFC,
-        domicilio: row.data.m_sDomicilio || "No especificado",
-        codigoPostal:
-          row.data.m_nIdCP != 0
-            ? {
-                m_nIdCP: row.data.m_nIdCP,
-                m_sCP: row.data.m_sCodigoPostal,
-                m_sColonia: row.data.m_sColonia,
-              }
-            : "",
-        estado: estado || "",
-        municipio: row.data.m_nIdMunicipio || "",
-        correo: row.data.m_sCorreoElectronico || "",
-        telefono: row.data.m_sTelefono || 0,
-        contacto: row.data.m_sContacto || row.data.m_sNombre,
-        calle: row.data.m_sCalle || "No especificado",
-        municipioTexto: row.data.m_sMunicipio || "No especificado",
-        numeroExt: row.data.m_sNoExterior || 0,
-        numeroInt: row.data.m_sNoInterior || 0,
-        colonia: row.data.m_sColonia || "No especificado",
-        latitud: row.data.m_sLatitud,
-        longitud: row.data.m_sLongitud,
-        openDialog: false
-      }));
+
       obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
         setDataMunicipios(data);
       });
+      obtenerZonaOperativaByIdCodigoPostal(row.data.m_sCodigoPostal).then(
+          ( zonaOperativa ) => {
+            obtenerZonaTarifaByIdCodigoPostal(row.data.m_sCodigoPostal).then(
+                ( zonaTarifa ) => {
+                  setState((state) => ({
+                    ...state,
+                    id: row.data.m_nIdRemitenteDestinatario,
+                    alias: row.data.m_sAlias,
+                    nombre: row.data.m_sNombre,
+                    RFC: row.data.m_sRFC,
+                    domicilio: row.data.m_sDomicilio || "No especificado",
+                    codigoPostal:
+                        row.data.m_nIdCP != 0
+                            ? {
+                              m_nIdCP: row.data.m_nIdCP,
+                              m_sCP: row.data.m_sCodigoPostal,
+                              m_sColonia: row.data.m_sColonia,
+                            }
+                            : "",
+                    estado: estado || "",
+                    municipio: row.data.m_nIdMunicipio || "",
+                    correo: row.data.m_sCorreoElectronico || "",
+                    telefono: row.data.m_sTelefono || 0,
+                    contacto: row.data.m_sContacto || row.data.m_sNombre,
+                    calle: row.data.m_sCalle || "No especificado",
+                    municipioTexto: row.data.m_sMunicipio || "No especificado",
+                    numeroExt: row.data.m_sNoExterior || 0,
+                    numeroInt: row.data.m_sNoInterior || 0,
+                    colonia: row.data.m_sColonia || "No especificado",
+                    latitud: row.data.m_sLatitud,
+                    longitud: row.data.m_sLongitud,
+                    openDialog: false,
+                    zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+                    zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null
+                  }));
+                }
+            );
+
+          }
+      );
+
+
     
   };
   const dialogVisible = (isVisible) => {
