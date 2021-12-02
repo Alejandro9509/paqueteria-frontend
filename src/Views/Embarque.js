@@ -1616,7 +1616,7 @@ function Embarque(props) {
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-
+                estatusEmbarque: 16,
                 //Datos entrega
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
             }
