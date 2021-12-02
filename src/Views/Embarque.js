@@ -102,6 +102,7 @@ import ReplayIcon from "@material-ui/icons/Replay";
 import ZonaOperativa from "./ZonasOperativas/ZonaOperativa";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
 import ComplementosSAT from "./SAT/ComplementosSAT";
+import DialogTableClientes from "./Clientes/DialogTableClientes";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -621,7 +622,7 @@ function Embarque(props) {
         moneda: '',
         tipoCambio: '',
         tipoCobro: '',
-        clientePaga: '',
+        clientePaga: {},
         valorDeclarado:0,
         idTipoSeguro:5,
         porcentajeSeguro: 0,
@@ -715,7 +716,7 @@ function Embarque(props) {
                 folioInforme: '',
                 tipoCambio: '24',
                 tipoCobro: '10',
-                clientePaga: '',
+                clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
                 idEmbarque: 0,
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 fechaHoraRegistro: getCurrentDateTime(),
@@ -1922,15 +1923,16 @@ function Embarque(props) {
         console.log(state.identificadorModal);
     }
 
-    const handlePatrocinadorSelected = (newValue) => {
+    const handlePatrocinadorSelected = (row) => {
+        console.log(row)
         setState({
             ...state,
-            clientePaga: newValue,
-            idTipoSeguro: newValue.m_bTieneSeguro ? newValue.m_nIdTipoSeguro : 5,
-            porcentajeSeguro: newValue.m_bTieneSeguro ? newValue.m_cPorcentajeSeguro : 0,
-            aplicaSeguro: newValue.m_bTieneSeguro,
-            tipoCobro: newValue.m_bSinCredito ? "10" : "11"
-
+            clientePaga: row.data,
+            idTipoSeguro: row.data.m_bTieneSeguro ? row.data.m_nIdTipoSeguro : 5,
+            porcentajeSeguro: row.data.m_bTieneSeguro ? row.data.m_cPorcentajeSeguro : 0,
+            aplicaSeguro: row.data.m_bTieneSeguro,
+            tipoCobro: row.data.m_bSinCredito ? "10" : "11",
+            openDialog: false,
         })
     }
 
@@ -2704,7 +2706,12 @@ function Embarque(props) {
         //
         // }
     }
-
+    const dialogVisible = (isVisible) => {
+        setState({
+          ...state,
+          openDialog: isVisible,
+        });
+      };
     return (
         <div>
 
@@ -3115,6 +3122,12 @@ function Embarque(props) {
                         </DialogActions>
                     </div>
                     }*/}
+
+                    {state.tipoModal === 10 &&
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <DialogTableClientes dialogVisible={dialogVisible } handlePatrocinadorSelected={handlePatrocinadorSelected}/>
+                    </div>
+                    }
                 </DialogContent>
             </Dialog>
 
@@ -3680,40 +3693,20 @@ function Embarque(props) {
                                                         <Grid container spacing={2} style={{marginBottom:'10px'}}>
                                                             <Grid item xs>
                                                                 <div className="input">
-                                                                    <Autocomplete
-                                                                        value={state.clientePaga}
-                                                                        freeSolo
-                                                                        onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
-                                                                        id="clientePaga"
-                                                                        disableClearable
-                                                                        forcePopupIcon={false}
-                                                                        options={dataClientes}
-
-                                                                        disabled={state.agregar === "Consultar"}
-                                                                        getOptionLabel={(option) => (
-                                                                            option ?
-                                                                                `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`
-                                                                                : ''
-                                                                        )}
-                                                                        variant="outlined"
-                                                                        name={"clientePaga"}
-                                                                        style={{
-                                                                            transform: "translate(14px, 10px) scale(1) !important"
-                                                                        }}
-                                                                        renderInput={(params) =>
                                                                             <TextField
                                                                                 variant="outlined"
                                                                                 label="Responsable de pago"
                                                                                 margin="dense"
                                                                                 required
+                                                                                value={state.clientePaga.m_sNombreFiscal}
                                                                                 error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
                                                                                 helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
-                                                                                onClick={handleClickResponsablePago}
-                                                                                {...params}
+                                                                                InputLabelProps={{shrink: true}}
+                                                                                onClick={()=>{
+                                                                                    setState({ ...state, openDialog: true,tipoModal:10})
+                                                                                }} 
                                                                             />
-                                                                        }
-                                                                    />
                                                                 </div>
                                                             </Grid>
                                                             <Grid item xs>

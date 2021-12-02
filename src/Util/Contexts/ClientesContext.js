@@ -40,6 +40,14 @@ function obtenerCliente(){
         );
     return result
 }
+function obtenerClientePaginado(pagina,registros,busqueda){
+    const url = `${process.env.REACT_APP_API_URL}/Clientes/ListadoPaginado/${pagina}/${registros}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, {busqueda: busqueda}), { headers })
+        );
+    return result
+}
 function validarNumeroCliente(state){
     const url = `${process.env.REACT_APP_API_URL}/Clientes/ValidaNumeroCliente/` + state.numeroCliente + `/${state.idCliente}`;
     let result;
@@ -58,4 +66,4 @@ function obtenerClienteId(id){
     return result
 }
 
-export {modificarCliente, agregarCliente, eliminarCliente, obtenerCliente, obtenerClienteId, validarNumeroCliente}
+export {modificarCliente, agregarCliente, eliminarCliente, obtenerCliente, obtenerClienteId, validarNumeroCliente,obtenerClientePaginado}

@@ -58,12 +58,12 @@ function showSuccess(mensaje) {
 function RemitenteDestinatario(props) {
   const [dataRemitenteDestinatario, setDataRemitenteDestinatario] =
     React.useState([]);
-  const [dataEstados, setDataEstados] = useState([]);
+  const [dataEstados, setDataEstados] = React.useState([]);
   const [dataCodigosPostales, setDataCodigosPostales] = React.useState([]);
-  const [dataZonasOperativas, setDataZonasOperativas] = useState([]);
-  const [dataZonasTarifa, setDataZonasTarifa] = useState([]);
-  const [dataMunicipios, setDataMunicipios] = useState([]);
-  const [state, setState] = useState({
+  const [dataZonasOperativas, setDataZonasOperativas] = React.useState([]);
+  const [dataZonasTarifa, setDataZonasTarifa] = React.useState([]);
+  const [dataMunicipios, setDataMunicipios] = React.useState([]);
+  const [state, setState] = React.useState({
     id: "",
     alias: "",
     nombre: "",
@@ -592,7 +592,6 @@ function RemitenteDestinatario(props) {
               variant="outlined"
               required
               value={state.nombre}
-              //    onClick={props.handleClickRemitenteDestinatario}
               placeholder={"Alias (Nombre)"}
               InputLabelProps={{ shrink: true }}
               InputProps={{
@@ -605,6 +604,7 @@ function RemitenteDestinatario(props) {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
+                      disabled={props.consulta}
                       padding="0px"
                       style={{
                         paddingRight: "0px",
