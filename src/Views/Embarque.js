@@ -2663,6 +2663,11 @@ function Embarque(props) {
                     to={{
                         pathname: "/Guia",
                         idEmbarque: state.idEmbarque,
+                        dataTipoCambio: dataTipoCambio,
+                        dataSucursal: dataSucursal,
+                        dataTipoCobro: dataTipoCobro,
+                        dataMoneda: dataTipoMoneda,
+                        dataCiudades: dataCiudad
                     }}
                 />
             );

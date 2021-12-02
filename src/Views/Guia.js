@@ -950,19 +950,24 @@ function Guia(props) {
                 $('.nav-tabs li').eq(1).addClass('active');
                 $('.tab-content div ').removeClass('in show');
                 $('#Agregar').addClass('in show');
+                setDataMoneda(props.location.dataMoneda)
+                setDataSucursal(props.location.dataSucursal)
+                setDataTipoCobro(props.location.dataTipoCobro)
+                setDataTipoCambio(props.location.dataTipoCambio)
+                setDataCiudadF(props.location.dataCiudades)
             });
         }else{
             getAllData()
-        }
-        getAllCiudadesFiltro()
-        getAllDataSucursal()
-        getAllDataTipoServicio()
-        getAllDataMoneda()
-        getAllDataTipoCobro()
+            getAllCiudadesFiltro()
+            getAllDataSucursal()
 
+            getAllDataMoneda()
+            getAllDataTipoCobro()
+            getTipoCambio()
+        }
         getAllDataEstatusGuia()
         getUltimoFolioGuia()
-        getTipoCambio()
+        getAllDataTipoServicio()
         cargaEmbarqueMoneda(1)
         getAllDataTipoPago()
         getAllConceptos()
