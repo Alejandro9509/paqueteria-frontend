@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Noty from "noty";
 import { DataGrid } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../../Constants";
-import {Dialog, DialogActions, DialogContent, TextField} from "@material-ui/core";
-import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
+import { DialogActions, TextField } from "@material-ui/core";
+import {obtenerClientePaginado} from "../../Util/Contexts/ClientesContext";
 import SearchIcon from "@material-ui/icons/Search";
 //---------------------------->funcion para mostrar un mensaje<-----------------------------------------------------
 function showSuccess(mensaje) {
@@ -15,33 +15,33 @@ function showSuccess(mensaje) {
   }).show();
 }
 
-function DialogTableRemDes(props) {
-    let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario} = props
+function DialogTableClientes(props) {
+    let {dialogVisible,handlePatrocinadorSelected} = props
 
 //----------------------------->Atributos<----------------------------------------------------------------------------
 const columns = [
     {
-      headerName: "No. Remitente / Destinatario",
-      field: "m_nNumero",
-      width: 150,
+      headerName: "Id Cliente",
+      field: "m_nIdCliente",
+      width: 125,
     },
     {
       headerName: "Nombre",
-      field: "m_sNombre",
-        width: 300,
+      field: "m_sNombreFiscal",
+      flex: 1,
     },
     {
-        headerName: "Domicilio",
-        field: "m_sDomicilio",
-        width: 500,
+        headerName: "RFC",
+        field: "m_sRFC",
+        flex: 1,
       },
   ]
 let rowSelect
-let registros=20
+let registros=7
 //----------------------------->Hooks useState <----------------------------------------------------------------------
 const [rows, setRow] = React.useState([])
 const [pagina, setPagina] = React.useState(0);
-    const [busqueda, setBusqueda] = React.useState("");
+const [busqueda, setBusqueda] = React.useState("");
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------
 useEffect(() => {
   cargarDesdeServidor(pagina.page,registros)
@@ -49,22 +49,22 @@ useEffect(() => {
 
 //--------------------------->Funciones<----------------------------------------------------------------------
 function cargarDesdeServidor(pagina,registros){
-  return new obtenerRemitentesDestinatariosPaginado(pagina,registros, busqueda).then((respuesta)=>{
+  return new obtenerClientePaginado(pagina,registros,busqueda).then((respuesta) => {
     setRow(respuesta.data)
-    console.log(respuesta.data)
+
   })
 }
-useEffect(() => {
-    cargarDesdeServidor(0,registros)
-},[busqueda])
+    useEffect(() => {
+        cargarDesdeServidor(0,registros)
+    },[busqueda])
 
 //----------------------------------------------Renderizado-------------------------------------------------
   return (
-    <div>
+    <>
         <TextField
             variant="standard"
             value={busqueda}
-            onChange={(e) => {e.stopPropagation();setBusqueda( e.target.value)}}
+            onChange={(e) => setBusqueda( e.target.value)}
             placeholder
             InputProps={{
                 endAdornment: <SearchIcon style={{
@@ -75,23 +75,22 @@ useEffect(() => {
                     paddingBlockEnd: 0,
                     paddingLeft: 0,
                     paddingBlock: 0,
-                }} onClick={() => console.log("")}/>,
+                }} />,
             }}
             style={{width:'60ch'}}
         />
-        <div style={{height:"500px", padding:"5px"}}>
+        <div style={{height:"300px", padding:"5px"}}>
            <DataGrid
            localeText={dataGridLocaleText}
            columns={columns}
            rows={rows}
-           getRowId={ ((row)=> row.m_nNumero)}
+           getRowId={ ((row)=> row.m_nIdCliente)}
            onRowSelected={(row) => {
            rowSelect = row;
           }}
           pagination
-           rowsPerPageOptions={[20]}
-          pageSize={20}
-          rowCount={13600}
+          pageSize={registros}
+          rowCount={3600}
           paginationMode="server"
           onPageChange={(newPage)=>{setPagina(newPage)
           console.log(newPage)}}
@@ -108,15 +107,15 @@ useEffect(() => {
                 <button
                     onClick={() => {
                         if(rowSelect !=null){
-                          handleChangeAutoCompleteRemitenteDestinatario(rowSelect);}
+                            handlePatrocinadorSelected(rowSelect)}
                         }}
                     className="btn btn-primary primary-btn"
                 >
                     Seleccionar
                 </button>
             </DialogActions>
-    </div>
+    </>
   );
 }
 
-export default DialogTableRemDes;
+export default DialogTableClientes;

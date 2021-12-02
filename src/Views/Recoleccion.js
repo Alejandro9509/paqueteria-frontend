@@ -97,6 +97,7 @@ import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
 import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
 import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
+import DialogTableClientes from "./Clientes/DialogTableClientes";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
 import ComplementosSAT from "./SAT/ComplementosSAT";
 
@@ -366,6 +367,7 @@ function Recoleccion() {
     })
 
     const handleChangeRemitente = (data) => {
+        console.log(data)
         setRemitente({
             idRemitente: data.id,
             aliasRemitente: data.alias,
@@ -377,6 +379,7 @@ function Recoleccion() {
             numeroExtRemitente: data.numeroExt,
             coloniaRemitente: data.colonia,
             estadoRemitente: data.estado,
+            municipioTexto:data.municipioTexto,
             municipioRemitente: data.municipio,
             codigoPostalRemitente: data.codigoPostal,
             correoRemitente: data.correo,
@@ -388,6 +391,7 @@ function Recoleccion() {
             latitudR: data.latitud,
             longitudR: data.longitud
         })
+        console.log(data.zonaOperativa)
     };
 
     const handleClickCodigosPostalesInput = (input) => {
@@ -790,7 +794,7 @@ function Recoleccion() {
             m_xPorcentajeSeguro: state.porcentajeSeguro,
             m_bAplicaSeguro: state.aplicaSeguro,
             //Remitente
-            m_sNombreRemitente: remitente.nombreRemitente.m_sNombre,
+            m_sNombreRemitente: remitente.nombreRemitente,
             m_sRFCRemitente: remitente.RFCRemitente,
             m_sDomicilioRemitente: remitente.domicilioRemitente,
             m_sIdCodigoPostalRemitente: remitente.codigoPostalRemitente.m_nIdCP,
@@ -810,7 +814,7 @@ function Recoleccion() {
             m_nIdEstadoRemitente: remitente.estadoRemitente,
 
             //Destinatario
-            m_sNombreDestinatario: destinatario.nombreDestinatario.m_sNombre,
+            m_sNombreDestinatario: destinatario.nombreDestinatario,
             m_sRFCDestinatario: destinatario.RFCDestinatario,
             m_sDomicilioDestinatario: destinatario.domicilioDestinatario,
             m_sIdCodigoPostalDestinatario: destinatario.codigoPostalDestinatario.m_nIdCP,
@@ -1397,11 +1401,13 @@ function Recoleccion() {
         $('#Cancelar').addClass('in show');
     }
 
-    const handlePatrocinadorSelected = (newValue) => {
-        setState({
+    const handlePatrocinadorSelected = (row) => {
+        console.log(row)
+        setState((state)=>({
             ...state,
-            clientePaga: newValue
-        })
+            clientePaga: row.data,
+            openDialog: false,
+        }))
     }
 
     const handleClickResponsablePago = (event) => {
@@ -1410,6 +1416,7 @@ function Recoleccion() {
             getAllClientes()
         }
     }
+    
     const getCurrentDateTime = () => {
         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
         1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
@@ -1943,6 +1950,7 @@ function Recoleccion() {
     const getAllClientes = () => {
         obtenerCliente().then((respuesta) => {
             setDataClientes(respuesta.data)
+            console.log(respuesta.data)
         })
     }
 
@@ -2633,7 +2641,7 @@ function Recoleccion() {
     }
 
     if (redirect) {
-        if (data.find((o) => o.m_nIdRecoleccion == state.idRecoleccion).m_nIdEmbarque != 0) {
+        if (data.find((o) => o.m_nIdRecoleccion === state.idRecoleccion).m_nIdEmbarque != 0) {
             showSuccess("Recolección ya tiene Embarque")
         } else {
             return (
@@ -2680,20 +2688,30 @@ function Recoleccion() {
 
     const filtrarTipoCobro = (tipoCobro) => {
         // if (!state.clientePaga) {
-        return tipoCobro.m_nIdTipoCobro === 10 || tipoCobro.m_nIdTipoCobro === 11
+        if (localStorage.getItem("RFC") === "ADI880815DA7") {
+            return tipoCobro.m_nIdTipoCobro === 10 || tipoCobro.m_nIdTipoCobro === 11
+        }else {
+            return true
+        }
         // }else {
         //     return (state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 10) || ( !state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 11)
         //
         // }
     }
-
+    const dialogVisible = (isVisible) => {
+        setState({
+          ...state,
+          openDialog: isVisible,
+        });
+      };
     return (
         <div>
             {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     titulo={state.titulo}
-                                    direccion={remitente.nombreRemitente}>
+                                    recoleccion={true}
+                                    direccion={remitente}>
 
                 </ConfirmarUbicacion>
             }
@@ -3001,7 +3019,13 @@ function Recoleccion() {
 
                         </DialogActions>
                     </div>
-                    }</DialogContent>
+                    }
+                     {state.tipoModal === 10 &&
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <DialogTableClientes dialogVisible={dialogVisible } handlePatrocinadorSelected={handlePatrocinadorSelected}/>
+                    </div>
+                    }
+                    </DialogContent>
 
             </Dialog>
 
@@ -3573,41 +3597,21 @@ function Recoleccion() {
                                                         </div>
                                                         <Grid container spacing={2} style={{marginBottom:'10px'}}>
                                                             <Grid item xs>
-                                                                <div className="input">
-                                                                    <Autocomplete
-                                                                        value={state.clientePaga}
-                                                                        freeSolo
-                                                                        onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
-                                                                        id="clientePaga"
-                                                                        disableClearable
-                                                                        forcePopupIcon={false}
-                                                                        options={dataClientes}
-
-                                                                        disabled={state.agregar === "Consultar"}
-                                                                        getOptionLabel={(option) => (
-                                                                            option ?
-                                                                                `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`
-                                                                                : ''
-                                                                        )}
-                                                                        variant="outlined"
-                                                                        name={"clientePaga"}
-                                                                        style={{
-                                                                            transform: "translate(14px, 10px) scale(1) !important"
-                                                                        }}
-                                                                        renderInput={(params) =>
+                                                                <div className="input">                       
                                                                             <TextField
                                                                                 variant="outlined"
                                                                                 label="Responsable de pago"
                                                                                 margin="dense"
                                                                                 required
+                                                                                value={state.clientePaga.m_sNombreFiscal}
                                                                                 error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
                                                                                 helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
-                                                                                onClick={handleClickResponsablePago}
-                                                                                {...params}
+                                                                                InputLabelProps={{shrink: true}}
+                                                                                onClick={()=>{
+                                                                                    setState({ ...state, openDialog: true,tipoModal:10})
+                                                                                }}                                                                         
                                                                             />
-                                                                        }
-                                                                    />
                                                                 </div>
                                                             </Grid>
                                                             <Grid item xs>

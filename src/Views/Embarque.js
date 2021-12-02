@@ -102,6 +102,7 @@ import ReplayIcon from "@material-ui/icons/Replay";
 import ZonaOperativa from "./ZonasOperativas/ZonaOperativa";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
 import ComplementosSAT from "./SAT/ComplementosSAT";
+import DialogTableClientes from "./Clientes/DialogTableClientes";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -621,7 +622,7 @@ function Embarque(props) {
         moneda: '',
         tipoCambio: '',
         tipoCobro: '',
-        clientePaga: '',
+        clientePaga: {},
         valorDeclarado:0,
         idTipoSeguro:5,
         porcentajeSeguro: 0,
@@ -715,7 +716,7 @@ function Embarque(props) {
                 folioInforme: '',
                 tipoCambio: '24',
                 tipoCobro: '10',
-                clientePaga: '',
+                clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
                 idEmbarque: 0,
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 fechaHoraRegistro: getCurrentDateTime(),
@@ -779,7 +780,6 @@ function Embarque(props) {
     })
 
     const handleChangeRemitente = (data) => {
-        console.log("Entro al padre")
         setRemitente(() => ({
             idRemitente: data.id,
             aliasRemitente: data.alias,
@@ -791,6 +791,7 @@ function Embarque(props) {
             numeroExtRemitente: data.numeroExt,
             coloniaRemitente: data.colonia,
             estadoRemitente: data.estado,
+            municipioTexto:data.municipioTexto,
             municipioRemitente: data.municipio,
             codigoPostalRemitente: data.codigoPostal,
             correoRemitente: data.correo,
@@ -858,6 +859,7 @@ function Embarque(props) {
             coloniaDestinatario: data.colonia,
             estadoDestinatario: data.estado,
             municipioDestinatario: data.municipio,
+            municipioTexto:data.municipioTexto,
             codigoPostalDestinatario: data.codigoPostal,
             correoDestinatario: data.correo,
             telefonoDestinatario: data.telefono,
@@ -1105,7 +1107,7 @@ function Embarque(props) {
             m_xPorcentajeSeguro: state.porcentajeSeguro,
             m_bAplicaSeguro: state.aplicaSeguro,
 
-            m_sNOmbreRemitente: remitente.nombreRemitente.m_sNombre,
+            m_sNOmbreRemitente: remitente.nombreRemitente,
             m_sRFCRemitente: remitente.RFCRemitente,
             m_sDomicilioRemitente: remitente.domicilioRemitente,
             m_nIdCodigoPostalRemitente: remitente.codigoPostalRemitente.m_nIdCP,
@@ -1124,7 +1126,7 @@ function Embarque(props) {
             m_sColoniaRemitente: remitente.coloniaRemitente,
             m_sMunicipioRemitente: remitente.municipioRemitente,
 
-            m_sNombreDestinatario: destinatario.nombreDestinatario.m_sNombre,
+            m_sNombreDestinatario: destinatario.nombreDestinatario,
             m_sRFCDestinatario: destinatario.RFCDestinatario,
             m_sDomicilioDestinatario: destinatario.domicilioDestinatario,
             m_nIdCodigoPostalDestinatario: destinatario.codigoPostalDestinatario.m_nIdCP,
@@ -1614,7 +1616,7 @@ function Embarque(props) {
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-
+                estatusEmbarque: 16,
                 //Datos entrega
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
             }
@@ -1921,16 +1923,16 @@ function Embarque(props) {
         console.log(state.identificadorModal);
     }
 
-    const handlePatrocinadorSelected = (newValue) => {
-        setState({
+    const handlePatrocinadorSelected = (row) => {
+        setState(() => ({
             ...state,
-            clientePaga: newValue,
-            idTipoSeguro: newValue.m_bTieneSeguro ? newValue.m_nIdTipoSeguro : 5,
-            porcentajeSeguro: newValue.m_bTieneSeguro ? newValue.m_cPorcentajeSeguro : 0,
-            aplicaSeguro: newValue.m_bTieneSeguro,
-            tipoCobro: newValue.m_bSinCredito ? "10" : "11"
-
-        })
+            clientePaga: row.data,
+            idTipoSeguro: row.data.m_bTieneSeguro ? row.data.m_nIdTipoSeguro : 5,
+            porcentajeSeguro: row.data.m_bTieneSeguro ? row.data.m_cPorcentajeSeguro : 0,
+            aplicaSeguro: row.data.m_bTieneSeguro,
+            tipoCobro: row.data.m_bSinCredito ? "10" : "11",
+            openDialog: false,
+        }))
     }
 
     const handleClickResponsablePago = (event) => {
@@ -2661,6 +2663,11 @@ function Embarque(props) {
                     to={{
                         pathname: "/Guia",
                         idEmbarque: state.idEmbarque,
+                        dataTipoCambio: dataTipoCambio,
+                        dataSucursal: dataSucursal,
+                        dataTipoCobro: dataTipoCobro,
+                        dataMoneda: dataTipoMoneda,
+                        dataCiudades: dataCiudad
                     }}
                 />
             );
@@ -2697,13 +2704,22 @@ function Embarque(props) {
 
     const filtrarTipoCobro = (tipoCobro) => {
         // if (!state.clientePaga) {
+        if (localStorage.getItem("RFC") === "ADI880815DA7") {
             return tipoCobro.m_nIdTipoCobro === 10 || tipoCobro.m_nIdTipoCobro === 11
+        }else {
+            return true
+        }
         // }else {
         //     return (state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 10) || ( !state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 11)
         //
         // }
     }
-
+    const dialogVisible = (isVisible) => {
+        setState({
+          ...state,
+          openDialog: isVisible,
+        });
+      };
     return (
         <div>
 
@@ -2711,7 +2727,8 @@ function Embarque(props) {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     titulo={state.titulo}
-                                    direccion={destinatario.nombreDestinatario}>
+                                    recoleccion={false}
+                                    direccion={destinatario}>
 
                 </ConfirmarUbicacion>
             }
@@ -3113,6 +3130,12 @@ function Embarque(props) {
                         </DialogActions>
                     </div>
                     }*/}
+
+                    {state.tipoModal === 10 &&
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <DialogTableClientes dialogVisible={dialogVisible } handlePatrocinadorSelected={handlePatrocinadorSelected}/>
+                    </div>
+                    }
                 </DialogContent>
             </Dialog>
 
@@ -3678,40 +3701,20 @@ function Embarque(props) {
                                                         <Grid container spacing={2} style={{marginBottom:'10px'}}>
                                                             <Grid item xs>
                                                                 <div className="input">
-                                                                    <Autocomplete
-                                                                        value={state.clientePaga}
-                                                                        freeSolo
-                                                                        onChange={(event, newValue) => handlePatrocinadorSelected(newValue)}
-                                                                        id="clientePaga"
-                                                                        disableClearable
-                                                                        forcePopupIcon={false}
-                                                                        options={dataClientes}
-
-                                                                        disabled={state.agregar === "Consultar"}
-                                                                        getOptionLabel={(option) => (
-                                                                            option ?
-                                                                                `${option.m_nNumeroCliente}: ${option.m_sNombreFiscal}`
-                                                                                : ''
-                                                                        )}
-                                                                        variant="outlined"
-                                                                        name={"clientePaga"}
-                                                                        style={{
-                                                                            transform: "translate(14px, 10px) scale(1) !important"
-                                                                        }}
-                                                                        renderInput={(params) =>
                                                                             <TextField
                                                                                 variant="outlined"
                                                                                 label="Responsable de pago"
                                                                                 margin="dense"
                                                                                 required
+                                                                                value={state.clientePaga.m_sNombreFiscal}
                                                                                 error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
                                                                                 helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
-                                                                                onClick={handleClickResponsablePago}
-                                                                                {...params}
+                                                                                InputLabelProps={{shrink: true}}
+                                                                                onClick={()=>{
+                                                                                    setState({ ...state, openDialog: true,tipoModal:10})
+                                                                                }} 
                                                                             />
-                                                                        }
-                                                                    />
                                                                 </div>
                                                             </Grid>
                                                             <Grid item xs>

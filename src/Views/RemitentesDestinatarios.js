@@ -58,12 +58,12 @@ function showSuccess(mensaje) {
 function RemitenteDestinatario(props) {
   const [dataRemitenteDestinatario, setDataRemitenteDestinatario] =
     React.useState([]);
-  const [dataEstados, setDataEstados] = useState([]);
+  const [dataEstados, setDataEstados] = React.useState([]);
   const [dataCodigosPostales, setDataCodigosPostales] = React.useState([]);
-  const [dataZonasOperativas, setDataZonasOperativas] = useState([]);
-  const [dataZonasTarifa, setDataZonasTarifa] = useState([]);
-  const [dataMunicipios, setDataMunicipios] = useState([]);
-  const [state, setState] = useState({
+  const [dataZonasOperativas, setDataZonasOperativas] = React.useState([]);
+  const [dataZonasTarifa, setDataZonasTarifa] = React.useState([]);
+  const [dataMunicipios, setDataMunicipios] = React.useState([]);
+  const [state, setState] = React.useState({
     id: "",
     alias: "",
     nombre: "",
@@ -141,7 +141,7 @@ function RemitenteDestinatario(props) {
                   ...state,
                   id: respuesta.data.m_nIdRemitente,
                   alias: respuesta.data.m_sAliasRemitente,
-                  nombre: data,
+                  nombre: data.m_sNombre,
                   RFC: respuesta.data.m_sRFCRemitente,
                   domicilio: respuesta.data.m_sDomicilioRemitente,
                   calle: respuesta.data.m_sCalleRemitente,
@@ -225,7 +225,7 @@ function RemitenteDestinatario(props) {
                 ...state,
                 id: respuesta.data.m_nIdDestinatario,
                 alias: respuesta.data.m_sAliasDestinatario,
-                nombre: data,
+                nombre: data.m_sNombre,
                 RFC: respuesta.data.m_sRFCDestinatario,
                 domicilio: respuesta.data.m_sDomicilioDestinatario,
                 calle: respuesta.data.m_sCalleDestinatario,
@@ -310,7 +310,7 @@ function RemitenteDestinatario(props) {
               setState((state) => {
                 return {
                   ...state,
-                  nombre: data,
+                  nombre: data.m_sNombre,
                   RFC: respuesta.data.m_sRFCRemitente,
                   domicilio: respuesta.data.m_sDomicilioRemitente,
                   ciudad: respuesta.data.m_nCiudadRemitente,
@@ -367,7 +367,7 @@ function RemitenteDestinatario(props) {
             setState((state) => {
               return {
                 ...state,
-                nombre: data,
+                nombre: data.m_sNombre,
                 RFC: respuesta.data.m_sRFCDestinatario,
                 domicilio: respuesta.data.m_sDomicilioDestinatario,
                 ciudad: respuesta.data.m_nIdCIudadDestinatario,
@@ -511,37 +511,52 @@ function RemitenteDestinatario(props) {
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
     let estado = row.data.m_nIdEstado;
 
-      setState((state) => ({
-        ...state,
-        id: row.data.m_nIdRemitenteDestinatario,
-        alias: row.data.m_sAlias,
-        nombre: row.data.m_sNombre,
-        RFC: row.data.m_sRFC,
-        domicilio: row.data.m_sDomicilio || "No especificado",
-        codigoPostal:
-          row.data.m_nIdCP != 0
-            ? {
-                m_nIdCP: row.data.m_nIdCP,
-                m_sCP: row.data.m_sCodigoPostal,
-                m_sColonia: row.data.m_sColonia,
-              }
-            : "",
-        estado: estado || "",
-        municipio: row.data.m_nIdMunicipio || "",
-        correo: row.data.m_sCorreoElectronico || "",
-        telefono: row.data.m_sTelefono || 0,
-        contacto: row.data.m_sContacto || row.data.m_sNombre,
-        calle: row.data.m_sCalle || "No especificado",
-        numeroExt: row.data.m_sNoExterior || 0,
-        numeroInt: row.data.m_sNoInterior || 0,
-        colonia: row.data.m_sColonia || "No especificado",
-        latitud: row.data.m_sLatitud,
-        longitud: row.data.m_sLongitud,
-        openDialog: false
-      }));
+
       obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
         setDataMunicipios(data);
       });
+      obtenerZonaOperativaByIdCodigoPostal(row.data.m_sCodigoPostal).then(
+          ( zonaOperativa ) => {
+            obtenerZonaTarifaByIdCodigoPostal(row.data.m_sCodigoPostal).then(
+                ( zonaTarifa ) => {
+                  setState((state) => ({
+                    ...state,
+                    id: row.data.m_nIdRemitenteDestinatario,
+                    alias: row.data.m_sAlias,
+                    nombre: row.data.m_sNombre,
+                    RFC: row.data.m_sRFC,
+                    domicilio: row.data.m_sDomicilio || "No especificado",
+                    codigoPostal:
+                        row.data.m_nIdCP != 0
+                            ? {
+                              m_nIdCP: row.data.m_nIdCP,
+                              m_sCP: row.data.m_sCodigoPostal,
+                              m_sColonia: row.data.m_sColonia,
+                            }
+                            : "",
+                    estado: estado || "",
+                    municipio: row.data.m_nIdMunicipio || "",
+                    correo: row.data.m_sCorreoElectronico || "",
+                    telefono: row.data.m_sTelefono || 0,
+                    contacto: row.data.m_sContacto || row.data.m_sNombre,
+                    calle: row.data.m_sCalle || "No especificado",
+                    municipioTexto: row.data.m_sMunicipio || "No especificado",
+                    numeroExt: row.data.m_sNoExterior || 0,
+                    numeroInt: row.data.m_sNoInterior || 0,
+                    colonia: row.data.m_sColonia || "No especificado",
+                    latitud: row.data.m_sLatitud,
+                    longitud: row.data.m_sLongitud,
+                    openDialog: false,
+                    zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+                    zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null
+                  }));
+                }
+            );
+
+          }
+      );
+
+
     
   };
   const dialogVisible = (isVisible) => {
@@ -577,7 +592,6 @@ function RemitenteDestinatario(props) {
               variant="outlined"
               required
               value={state.nombre}
-              //    onClick={props.handleClickRemitenteDestinatario}
               placeholder={"Alias (Nombre)"}
               InputLabelProps={{ shrink: true }}
               InputProps={{
@@ -590,6 +604,7 @@ function RemitenteDestinatario(props) {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
+                      disabled={props.consulta}
                       padding="0px"
                       style={{
                         paddingRight: "0px",
