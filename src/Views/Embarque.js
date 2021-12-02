@@ -2704,7 +2704,11 @@ function Embarque(props) {
 
     const filtrarTipoCobro = (tipoCobro) => {
         // if (!state.clientePaga) {
+        if (localStorage.getItem("RFC") === "ADI880815DA7") {
             return tipoCobro.m_nIdTipoCobro === 10 || tipoCobro.m_nIdTipoCobro === 11
+        }else {
+            return true
+        }
         // }else {
         //     return (state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 10) || ( !state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 11)
         //
