@@ -201,7 +201,7 @@ class UltimaMilla extends Component {
 
     async generarRuta(data) {
         this.setState({tour: null})
-        if (data.paquetesSeleccionadas.length != 0) {
+        if (data.paquetesSeleccionadas.length !== 0 || data.unidadesSeleccionadas.length !== 0) {
             var guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
             var unidades = data.unidadesSeleccionadas
             obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {

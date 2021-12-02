@@ -44,7 +44,7 @@ const [pagina, setPagina] = React.useState(0);
 const [busqueda, setBusqueda] = React.useState("");
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------
 useEffect(() => {
-  cargarDesdeServidor(pagina.page,registros)
+  cargarDesdeServidor(pagina,registros)
 }, [pagina])
 
 //--------------------------->Funciones<----------------------------------------------------------------------
@@ -54,9 +54,6 @@ function cargarDesdeServidor(pagina,registros){
 
   })
 }
-    useEffect(() => {
-        cargarDesdeServidor(0,registros)
-    },[busqueda])
 
 //----------------------------------------------Renderizado-------------------------------------------------
   return (
@@ -75,7 +72,8 @@ function cargarDesdeServidor(pagina,registros){
                     paddingBlockEnd: 0,
                     paddingLeft: 0,
                     paddingBlock: 0,
-                }} />,
+                    cursor:"pointer"
+                }}  onClick={() =>  cargarDesdeServidor(0,registros)}/>,
             }}
             style={{width:'60ch'}}
         />
@@ -92,7 +90,7 @@ function cargarDesdeServidor(pagina,registros){
           pageSize={registros}
           rowCount={3600}
           paginationMode="server"
-          onPageChange={(newPage)=>{setPagina(newPage)
+          onPageChange={(newPage)=>{setPagina(newPage.page)
           console.log(newPage)}}
            />
         </div>

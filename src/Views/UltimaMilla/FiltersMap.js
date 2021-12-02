@@ -235,9 +235,8 @@ class FiltersMap extends Component {
     asignarOperadorUnidad(event) {
         event.preventDefault()
         cambiarOperadorUnidad(this.state.unidadSeleccionada, this.state.operadorSeleccionada).then(({data}) => {
-            this.setState({openUnidades: true, openOperadorDialog: false})
+            this.setState({openUnidades: true, openOperadorDialog: false,unidadesSeleccionadas: []})
         })
-
     }
 
 
