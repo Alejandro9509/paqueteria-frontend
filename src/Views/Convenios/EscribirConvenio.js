@@ -487,6 +487,7 @@ class EscribirConvenio extends Component {
                 fechaVigencia: respuesta.data.m_sVigencia,
                 CuotaMensual:respuesta.data.m_xCuotaMensual,
                 tarifasSeleccionadas : respuesta.data.m_arrArTarifas,
+                zonasSeleccionadas : respuesta.data.m_arrArZonas
             })
         });
     }
