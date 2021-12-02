@@ -1107,7 +1107,7 @@ function Embarque(props) {
             m_xPorcentajeSeguro: state.porcentajeSeguro,
             m_bAplicaSeguro: state.aplicaSeguro,
 
-            m_sNOmbreRemitente: remitente.nombreRemitente.m_sNombre,
+            m_sNOmbreRemitente: remitente.nombreRemitente,
             m_sRFCRemitente: remitente.RFCRemitente,
             m_sDomicilioRemitente: remitente.domicilioRemitente,
             m_nIdCodigoPostalRemitente: remitente.codigoPostalRemitente.m_nIdCP,
@@ -1126,7 +1126,7 @@ function Embarque(props) {
             m_sColoniaRemitente: remitente.coloniaRemitente,
             m_sMunicipioRemitente: remitente.municipioRemitente,
 
-            m_sNombreDestinatario: destinatario.nombreDestinatario.m_sNombre,
+            m_sNombreDestinatario: destinatario.nombreDestinatario,
             m_sRFCDestinatario: destinatario.RFCDestinatario,
             m_sDomicilioDestinatario: destinatario.domicilioDestinatario,
             m_nIdCodigoPostalDestinatario: destinatario.codigoPostalDestinatario.m_nIdCP,
@@ -1924,8 +1924,7 @@ function Embarque(props) {
     }
 
     const handlePatrocinadorSelected = (row) => {
-        console.log(row)
-        setState({
+        setState(() => ({
             ...state,
             clientePaga: row.data,
             idTipoSeguro: row.data.m_bTieneSeguro ? row.data.m_nIdTipoSeguro : 5,
@@ -1933,7 +1932,7 @@ function Embarque(props) {
             aplicaSeguro: row.data.m_bTieneSeguro,
             tipoCobro: row.data.m_bSinCredito ? "10" : "11",
             openDialog: false,
-        })
+        }))
     }
 
     const handleClickResponsablePago = (event) => {

@@ -51,10 +51,12 @@ useEffect(() => {
 function cargarDesdeServidor(pagina,registros){
   return new obtenerClientePaginado(pagina,registros,busqueda).then((respuesta) => {
     setRow(respuesta.data)
-    console.log(respuesta.data)
 
   })
 }
+    useEffect(() => {
+        cargarDesdeServidor(0,registros)
+    },[busqueda])
 
 //----------------------------------------------Renderizado-------------------------------------------------
   return (
@@ -73,8 +75,7 @@ function cargarDesdeServidor(pagina,registros){
                     paddingBlockEnd: 0,
                     paddingLeft: 0,
                     paddingBlock: 0,
-                    cursor:"pointer"
-                }} onClick={() => cargarDesdeServidor(pagina, registros)}/>,
+                }} />,
             }}
             style={{width:'60ch'}}
         />
@@ -108,7 +109,7 @@ function cargarDesdeServidor(pagina,registros){
                         if(rowSelect !=null){
                             handlePatrocinadorSelected(rowSelect)}
                         }}
-                    className="btn btn-secondary secondary-btn"
+                    className="btn btn-primary primary-btn"
                 >
                     Seleccionar
                 </button>

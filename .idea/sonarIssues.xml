@@ -408,6 +408,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Clientes/DialogTableClientes.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Views/ConceptosFacturacion/ClavesCFDI.js">
           <value>
             <set />

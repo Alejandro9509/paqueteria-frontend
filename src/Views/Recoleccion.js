@@ -794,7 +794,7 @@ function Recoleccion() {
             m_xPorcentajeSeguro: state.porcentajeSeguro,
             m_bAplicaSeguro: state.aplicaSeguro,
             //Remitente
-            m_sNombreRemitente: remitente.nombreRemitente.m_sNombre,
+            m_sNombreRemitente: remitente.nombreRemitente,
             m_sRFCRemitente: remitente.RFCRemitente,
             m_sDomicilioRemitente: remitente.domicilioRemitente,
             m_sIdCodigoPostalRemitente: remitente.codigoPostalRemitente.m_nIdCP,
@@ -814,7 +814,7 @@ function Recoleccion() {
             m_nIdEstadoRemitente: remitente.estadoRemitente,
 
             //Destinatario
-            m_sNombreDestinatario: destinatario.nombreDestinatario.m_sNombre,
+            m_sNombreDestinatario: destinatario.nombreDestinatario,
             m_sRFCDestinatario: destinatario.RFCDestinatario,
             m_sDomicilioDestinatario: destinatario.domicilioDestinatario,
             m_sIdCodigoPostalDestinatario: destinatario.codigoPostalDestinatario.m_nIdCP,
