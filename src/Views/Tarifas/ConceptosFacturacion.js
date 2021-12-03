@@ -33,6 +33,7 @@ import {getUniqueListBy} from "../../Util/Util";
 import {DataGrid} from "@material-ui/data-grid";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
+import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
 const headers = API_HEADERS
 
 /**Props usadas:
@@ -184,8 +185,7 @@ export default function ConceptosFacturacion(props) {
     },[])
 
     const getAllImpuestos = () => {
-        const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerImpuestos().then(respuesta => {
             setState(state =>{
                 return { ...state, impuestos: respuesta.data }
             })
@@ -320,7 +320,7 @@ export default function ConceptosFacturacion(props) {
             )
         }
 
-        if (mostrarImpuestos){
+        /*if (mostrarImpuestos){
             columns.push(
                 {
                     headerName: "Traslada",
@@ -335,7 +335,7 @@ export default function ConceptosFacturacion(props) {
                     valueFormatter: ({value}) => `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)).m_sImpuesto} `,
                 },
             )
-        }
+        }*/
         if (mostrarDescuento){
             columns.push(
                 {
@@ -489,14 +489,8 @@ export default function ConceptosFacturacion(props) {
                                     onChange={handleChange}
                                     name="traslada"
                                 >
-                                    <option
-                                        key={0}
-                                        value={""}
-                                    >
-                                        Selecciona
-                                    </option>
-                                    {concepto.concepto &&
-                                    state.impuestos.filter(i => concepto.concepto.arClsDetalle.find(c => c.m_nIdImpuesto === i.m_nIdImpuesto && c.m_bTrasladado === true)).map((impuesto) => (
+                                    <option key={0} value={0}>Selecciona</option>
+                                    {state.impuestos.filter(i => i.m_nTIpoCalculo === 1).map((impuesto) => (
                                         <option
                                             key={impuesto.m_nIdImpuesto}
                                             value={impuesto.m_nIdImpuesto}
@@ -540,14 +534,8 @@ export default function ConceptosFacturacion(props) {
                                     name="retiene"
                                     value={concepto.retiene}
                                 >
-                                    <option
-                                        key={0}
-                                        value={""}
-                                    >
-                                        Selecciona
-                                    </option>
-                                    {concepto.concepto &&
-                                    state.impuestos.filter(i => concepto.concepto.arClsDetalle.find(c => c.m_nIdImpuesto === i.m_nIdImpuesto && c.m_bTrasladado === false)).map((impuesto) => (
+                                    <option key={0} value={0}>Selecciona</option>
+                                    {state.impuestos.filter(i => i.m_nTIpoCalculo === 2).map((impuesto) => (
                                         <option
                                             key={impuesto.m_nIdImpuesto}
                                             value={impuesto.m_nIdImpuesto}

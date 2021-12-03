@@ -276,6 +276,7 @@ class EscribirConvenio extends Component {
         this.addConceptoV2 = this.addConceptoV2.bind(this)
         this.removeConceptoV2 = this.removeConceptoV2.bind(this)
         this.getAllConceptos = this.getAllConceptos.bind(this)
+        this.guardarZonaTarifa = this.guardarZonaTarifa.bind(this)
     }
 
     castConceptos(){
@@ -706,6 +707,7 @@ class EscribirConvenio extends Component {
             }
         })
         console.log(this.state.tarifasSeleccionadas)
+        showSuccess("Tarifa guardada.")
     }
 
     handleCardClick = (event, tarifa, tipo) => {
@@ -742,7 +744,8 @@ class EscribirConvenio extends Component {
                     nombreConcepto: element.m_sConcepto,
                     tipoCalculo: element.m_nIdTipoCalculo,
                     agregadoDesde: element.m_nIdAgregadoDesde,
-                    tipoMedida: element.m_nIdTipoMedida
+                    tipoMedida: element.m_nIdTipoMedida,
+                    concepto: element
                 }
                 conceptos.push(concepto)
             })
@@ -771,7 +774,13 @@ class EscribirConvenio extends Component {
             tarifaDetalles: {m_arrArConceptos:[]},
             idsTarifasSeleccionadas: [],
             dataProductosSeleccionados:[],
-            dataProductosTemp:this.state.dataProductos
+            dataProductosTemp:this.state.dataProductos,
+            dataZonas:[],
+            dataRequerida:"",
+            idsZonasSeleccionadas:[],
+            zonasSeleccionadas: [],
+            seleccionDetalles: {tipoSeleccion:null},
+            conceptosZona:[]
         })
     }
 
@@ -784,7 +793,8 @@ class EscribirConvenio extends Component {
             m_sVigencia: this.state.fechaVigencia,
             m_xCuotaMensual: this.state.CuotaMensual,
             m_bActivo: true,
-            m_arrArTarifas: this.state.tarifasSeleccionadas
+            m_arrArTarifas: this.state.tarifasSeleccionadas,
+            m_arrArZonas: this.state.zonasSeleccionadas
         }
         console.log(params)
         console.log(JSON.stringify(params))
@@ -829,6 +839,51 @@ class EscribirConvenio extends Component {
         })
     }
 
+    removeConceptoV2 = (data) => {
+        this.setState({
+            conceptosZona: this.state.conceptosZona.filter(item => data.id !== item.id)
+        })
+    }
+
+    addConceptoV2 = (data) => {
+        data.idConcepto = data.concepto.m_nIdConceptosFacturacion
+        data.nombreConcepto = data.concepto.m_sConcepto
+        this.state.conceptosZona.push(data)
+        this.setState({
+            conceptosZona: this.state.conceptosZona
+        })
+    }
+
+    guardarZonaTarifa(){
+        this.state.zonasSeleccionadas.forEach(item => {
+            if (item.m_nIdZona === this.state.seleccionDetalles.m_nIdZona){
+                const conceptos = []
+                this.state.conceptosZona.forEach(element => {
+                    let concepto = {
+                        m_nIdConceptosFacturacion : element.idConcepto,
+                        m_cImporte: element.importe,
+                        m_nIdImpuestoRetiene: element.retiene,
+                        m_nIdImpuestoTraslada: element.traslada,
+                        m_cImporteRetiene: element.importeRet,
+                        m_cImporteIva: element.importeIVA,
+                        m_xnRangoMinimo: element.rangoMinimo,
+                        m_xnRangoMaximo: element.rangoMaximo,
+                        nombreConcepto: element.m_sConcepto,
+                        m_sConcepto: element.nombreConcepto,
+                        m_nIdTipoCalculo: element.tipoCalculo,
+                        m_nIdAgregadoDesde: element.agregadoDesde,
+                        m_nIdTipoMedida: element.tipoMedida,
+                        arClsDetalle:element.concepto.arClsDetalle
+                    }
+                    conceptos.push(concepto)
+                })
+                item.m_arrArConceptos = conceptos
+            }
+        })
+        showSuccess("Tarifa guardada.")
+
+    }
+
     cardZona(item){
 
         return(
@@ -851,25 +906,6 @@ class EscribirConvenio extends Component {
                 </CardActionArea>
             </Card>
         )
-    }
-
-    removeConceptoV2 = (data) => {
-        this.setState({
-            conceptosZona: this.state.conceptosZona.filter(item => data.id !== item.id)
-        })
-    }
-
-    addConceptoV2 = (data) => {
-        data.idConcepto = data.concepto.m_nIdConceptosFacturacion
-        data.nombreConcepto = data.concepto.m_sConcepto
-        this.state.conceptosZona.push(data)
-        this.setState({
-            conceptosZona: this.state.conceptosZona
-        })
-    }
-
-    guardarZonaTarifa(){
-
     }
 
     render() {
@@ -1004,12 +1040,12 @@ class EscribirConvenio extends Component {
                                     </div>
                                 </div>
                                 <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                    {
+                                    {/*{
                                         tarifasSeleccionadas.length > 0 &&
                                         <button className="btn btn-primary primary-btn" onClick={this.handleDuplicarTarifa} disabled={consult}>
                                             Duplicar Tarifa
                                         </button>
-                                    }
+                                    }*/}
 
                                 </div>
                                 <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
@@ -1266,7 +1302,7 @@ class EscribirConvenio extends Component {
                                         { this.state.seleccionDetalles.tipoSeleccion === "Zona" &&
                                             <div>
                                                 <div className="widget-header">
-                                                    <h2>Zonas</h2>
+                                                    <h2>{this.state.seleccionDetalles.m_sCodigoZona}</h2>
                                                 </div>
                                                 <div className="widget-container">
                                                     <div className="widget-content">
@@ -1338,7 +1374,7 @@ class EscribirConvenio extends Component {
                                                 <div className="row">
                                                     <Grid container spacing={2}>
                                                         <Grid item xs={12}>
-                                                            <button onClick={this.guardarZonaTarifa} className="btn btn-primary primary-btn"  disabled={true}>
+                                                            <button onClick={this.guardarZonaTarifa} type={"button"} className="btn btn-primary primary-btn">
                                                                 Guardar tarifa
                                                             </button>
                                                         </Grid>
