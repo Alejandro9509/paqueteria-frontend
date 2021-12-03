@@ -41,7 +41,7 @@ function obtenerCliente(){
     return result
 }
 function obtenerClientePaginado(pagina,registros,busqueda){
-    const url = `${process.env.REACT_APP_API_URL}/Clientes/ListadoPaginado/${pagina}/${registros}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Client/GetListadoPaginado/${pagina}/${registros}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {busqueda: busqueda}), { headers })
