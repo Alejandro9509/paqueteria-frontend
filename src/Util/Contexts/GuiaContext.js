@@ -9,7 +9,7 @@ function modificarGuia(id, params) {
     const url = `${process.env.REACT_APP_API_URL}/Guia/Modificar/` + id;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers }),"progress"
         );
     return result
 }
@@ -18,7 +18,7 @@ function entregaOcurreGuia(id, params) {
     const url = `${process.env.REACT_APP_API_URL}/Guia/EntregaOcurre/` + id;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers }),"progress"
     );
     return result
 }
@@ -27,7 +27,7 @@ function agregarGuia(params) {
     const url = `${process.env.REACT_APP_API_URL}/Guia/Agregar`;
     let result;
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers })
+        result =  axios.post(url, Object.assign({}, params), { headers }),"progress"
         );
     return result
 }
@@ -44,7 +44,7 @@ function cancelarGuia(id, params) {
     const url = `${process.env.REACT_APP_API_URL}/Guia/Cancelar/${id}`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers }),"progress"
         );
     return result
 }

@@ -9,7 +9,7 @@ function modificarEmbarques(id, params){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/` + id;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers }), "progress"
         );
     return result
 }
@@ -19,7 +19,7 @@ function agregarEmbarques( params){
     let result;
     console.log()
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers })
+        result =  axios.post(url, Object.assign({}, params), { headers }),"progress"
         );
     return result
 }
@@ -81,7 +81,7 @@ function cancelarEmbarque(state, params){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/Cancelar/${state.idEmbarque}`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers }),"progress"
         );
     return result
 }

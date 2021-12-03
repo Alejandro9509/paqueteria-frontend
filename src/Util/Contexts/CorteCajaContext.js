@@ -9,7 +9,7 @@ function modificarCorte(id, params) {
     const url = `${process.env.REACT_APP_API_URL}/CorteCaja/Modificar/` + id;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers }), "progress"
     );
     return result
 }
@@ -18,7 +18,7 @@ function agregarCorte(params) {
     const url = `${process.env.REACT_APP_API_URL}/CorteCaja/Agregar`;
     let result;
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers })
+        result =  axios.post(url, Object.assign({}, params), { headers }), "progress"
     );
     return result
 }

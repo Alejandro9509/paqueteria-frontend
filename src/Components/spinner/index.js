@@ -6,7 +6,7 @@ import Lottie from 'react-lottie-player'
 import { Modal } from '@material-ui/core'
 
 export const Spinner = props => {
-    const { promiseInProgress } = usePromiseTracker()
+    const { promiseInProgress } = usePromiseTracker({area: "progress"})
     const defaultOptions = {
         loop: true,
         autoplay: true,

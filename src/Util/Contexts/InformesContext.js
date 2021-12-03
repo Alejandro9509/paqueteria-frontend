@@ -8,7 +8,7 @@ function modificarInformes(id, params){
     const url = `${process.env.REACT_APP_API_URL}/Informes/Modificar`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers }),"progress"
         );
     return result
 }
@@ -35,7 +35,7 @@ function agregarInformes( params){
     const url = `${process.env.REACT_APP_API_URL}/Informes/Agregar`;
     let result;
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers })
+        result =  axios.post(url, Object.assign({}, params), { headers }), "progress"
         );
     return result
 }
