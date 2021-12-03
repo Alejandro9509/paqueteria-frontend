@@ -46,6 +46,7 @@ import {obtenerCliente} from "../../Util/Contexts/ClientesContext";
 import {obtenerByIdZonaTarifa, obtenerListadoZonaTarifa} from "../../Util/Contexts/ZonaTarifaContext";
 import CodigosPostalesZonas from "../ZonasOperativas/CodigosPostalesZonas";
 import ConceptosFacturacion from "../Tarifas/ConceptosFacturacion";
+import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 
 const headers = API_HEADERS
 
@@ -272,7 +273,9 @@ class EscribirConvenio extends Component {
         this.getConvenioById = this.getConvenioById.bind(this)
         this.limpiarCampos = this.limpiarCampos.bind(this)
         this.getAllZonas = this.getAllZonas.bind(this)
-        this.handleCardZonaClick = this.handleCardZonaClick.bind(this)
+        this.addConceptoV2 = this.addConceptoV2.bind(this)
+        this.removeConceptoV2 = this.removeConceptoV2.bind(this)
+        this.getAllConceptos = this.getAllConceptos.bind(this)
     }
 
     castConceptos(){
@@ -336,6 +339,11 @@ class EscribirConvenio extends Component {
         this.getAllTarifas()
         this.getAllProductos()
         this.getAllZonas()
+        this.getAllConceptos()
+    }
+
+    getAllConceptos() {
+        obtenerConceptosFacturacion().then(respuesta => {this.setState({ dataConceptosBase: respuesta.data })});
     }
 
     getAllImpuestos() {
@@ -346,6 +354,7 @@ class EscribirConvenio extends Component {
     };
 
     getAllClientes() {
+        showSuccess('recuerda habilitar peticion')
         /*obtenerCliente().then((respuesta) => {
             this.setState({ dataClientes: respuesta.data });
         });*/
@@ -819,9 +828,6 @@ class EscribirConvenio extends Component {
             this.setState({ dataZonas: data, agregar: "Agregar" })
         })
     }
-    handleCardZonaClick(event, item){
-
-    }
 
     cardZona(item){
 
@@ -847,11 +853,23 @@ class EscribirConvenio extends Component {
         )
     }
 
-    removeConcepto = (item) => {
-        // const newArrayConceptos = conceptosRecoleccion.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
-       /* const newArrayTodosConceptos = this.state.seleccionDetalles.m_arrArZonaConceptos.filter(c => c !== item)
-        // this.setState({ conceptosRecoleccion: newArrayTodosConceptos, todosConceptos: newArrayTodosConceptos })
-        setTodosConceptos(newArrayTodosConceptos)*/
+    removeConceptoV2 = (data) => {
+        this.setState({
+            conceptosZona: this.state.conceptosZona.filter(item => data.id !== item.id)
+        })
+    }
+
+    addConceptoV2 = (data) => {
+        data.idConcepto = data.concepto.m_nIdConceptosFacturacion
+        data.nombreConcepto = data.concepto.m_sConcepto
+        this.state.conceptosZona.push(data)
+        this.setState({
+            conceptosZona: this.state.conceptosZona
+        })
+    }
+
+    guardarZonaTarifa(){
+
     }
 
     render() {
@@ -1273,15 +1291,15 @@ class EscribirConvenio extends Component {
                                                                             consulta={consult}
                                                                             dataList={this.state.conceptosZona.filter(i => i.agregadoDesde === 3)}
                                                                             // onChangeList={this.handleChangeListConceptos}
-                                                                            mostrarRangos={false}
-                                                                            mostrarImpuestos={false}
+                                                                            mostrarRangos={true}
+                                                                            mostrarImpuestos={true}
                                                                             mostrarDescuento={false}
-                                                                            mostrarTipoMedida={false}
-                                                                            mostrarTipoCalculo={false}
+                                                                            mostrarTipoMedida={true}
+                                                                            mostrarTipoCalculo={true}
                                                                             conceptosBase={this.state.dataConceptosBase}
                                                                             keys={3}
-                                                                            agregarConcepto={this.addConcepto}
-                                                                            eliminarConcepto={this.removeConceptoAdicional}
+                                                                            agregarConcepto={this.addConceptoV2}
+                                                                            eliminarConcepto={this.removeConceptoV2}
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -1308,8 +1326,8 @@ class EscribirConvenio extends Component {
                                                                             mostrarTipoCalculo={true}
                                                                             conceptosBase={this.state.dataConceptosBase}
                                                                             keys={2}
-                                                                            agregarConcepto={this.addConcepto}
-                                                                            eliminarConcepto={this.removeConceptoAdicional}
+                                                                            agregarConcepto={this.addConceptoV2}
+                                                                            eliminarConcepto={this.removeConceptoV2}
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -1320,8 +1338,8 @@ class EscribirConvenio extends Component {
                                                 <div className="row">
                                                     <Grid container spacing={2}>
                                                         <Grid item xs={12}>
-                                                            <button type={"submit"} className="btn btn-primary primary-btn"  disabled={true}>
-                                                                Aceptar
+                                                            <button onClick={this.guardarZonaTarifa} className="btn btn-primary primary-btn"  disabled={true}>
+                                                                Guardar tarifa
                                                             </button>
                                                         </Grid>
 

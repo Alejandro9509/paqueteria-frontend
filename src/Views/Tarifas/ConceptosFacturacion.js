@@ -62,6 +62,7 @@ export default function ConceptosFacturacion(props) {
         tiposCalculo: [],
         columns: []
     })
+
     const [concepto, setConcepto] = useState({
         id:Math.floor(Math.random() * 10000),
         concepto: null,
@@ -226,12 +227,13 @@ export default function ConceptosFacturacion(props) {
 
     const onSubmit = (event) => {
         event.preventDefault()
-        debugger
+        console.log(concepto)
         props.agregarConcepto(concepto)
         resetConcepto()
     }
 
     const removeConcepto = (item) => {
+        console.log(concepto)
         props.eliminarConcepto(item)
     }
 
@@ -323,19 +325,14 @@ export default function ConceptosFacturacion(props) {
                 {
                     headerName: "Traslada",
                     field: "traslada",
-                    type:'number',
-
-                    width: 150,
-                    valueFormatter: ({value}) => `${state.impuestos.length !== 0 && (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)).m_sImpuesto : "No Aplica")} `,
+                    width: 200,
+                    valueFormatter: ({value}) => `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)).m_sImpuesto} `,
                 },
                 {
                     headerName: "Retiene",
                     field: "retiene",
-
-                    width: 150,
-                    valueFormatter: ({value}) =>
-                        `${state.impuestos.length !== 0 && (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)).m_sImpuesto : "No Aplica")} `,
-
+                    width: 200,
+                    valueFormatter: ({value}) => `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)).m_sImpuesto} `,
                 },
             )
         }
@@ -396,9 +393,7 @@ export default function ConceptosFacturacion(props) {
                                     option.m_sConcepto
                                 }
                                 variant="outlined"
-                                style={{
-                                    transform: "translate(14px, 10px) scale(1) !important"
-                                }}
+                                style={{transform: "translate(14px, 10px) scale(1) !important"}}
                                 renderInput={(params) => (
                                     <div>
                                         <TextField
