@@ -136,7 +136,7 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
         folioGuia = 0
     }
     const url =
-        `${process.env.REACT_APP_API_URL}/Guia/GetByFiltro/` +
+        `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetByFiltro/` +
         fechaInicial +
         "/" +
         fechaFinal +
