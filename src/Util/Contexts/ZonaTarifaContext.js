@@ -52,7 +52,7 @@ function obtenerByIdZonaTarifa(id) {
 }
 //Se va mandar el codigo postal porque surgio la necesidad
 function obtenerZonaTarifaByIdCodigoPostal(id) {
-    const url = `${process.env.REACT_APP_API_URL}/ZonaTarifa/GetByIdCodigoPostal/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaTarifa/GetByIdCodigoPostal/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

@@ -37,7 +37,7 @@ const columns = [
       },
   ]
 let rowSelect
-let registros=20
+let registros=10
 //----------------------------->Hooks useState <----------------------------------------------------------------------
 const [rows, setRow] = React.useState([])
 const [pagina, setPagina] = React.useState(0);
@@ -51,7 +51,6 @@ useEffect(() => {
 function cargarDesdeServidor(pagina,registros){
   return new obtenerRemitentesDestinatariosPaginado(pagina,registros, busqueda).then((respuesta)=>{
     setRow(respuesta.data)
-    console.log(respuesta.data)
   })
 }
 
@@ -86,8 +85,8 @@ function cargarDesdeServidor(pagina,registros){
            rowSelect = row;
           }}
           pagination
-           rowsPerPageOptions={[20]}
-          pageSize={20}
+           rowsPerPageOptions={[registros]}
+          pageSize={registros}
           rowCount={13600}
           paginationMode="server"
           onPageChange={(newPage)=>{setPagina(newPage.page)
