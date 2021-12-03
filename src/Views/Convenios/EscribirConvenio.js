@@ -355,10 +355,10 @@ class EscribirConvenio extends Component {
     };
 
     getAllClientes() {
-        showSuccess('recuerda habilitar peticion')
-        /*obtenerCliente().then((respuesta) => {
+        // showSuccess('recuerda habilitar peticion')
+        obtenerCliente().then((respuesta) => {
             this.setState({ dataClientes: respuesta.data });
-        });*/
+        });
     }
 
     handleChange(event) {
