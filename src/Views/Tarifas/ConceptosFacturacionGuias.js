@@ -29,23 +29,9 @@ function showSuccess(mensaje) {
     }).show()
 }
 function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,keys, conceptosBase=[],ivaRetiene, ivaTraslada}) {
-    const [openDialog, setOpenDialog] = useState(false)
-    const [row, setRow] = useState(0)
-    const [dataComplemento, setDataComplemento] = useState({
-        claveProducto: '',
-        claveUnidad: '',
-        UnidadSAT: '',
-        ProductoSAT: '',
-        embalajeSAT:'',
-        claveEmbalaje:''
-    })
-    const [dataSAT, setDataSAT] = useState([])
-    const [dataSATUnidades, setDataSATUnidades] = useState([])
-    const [dataSATEmbalajes, setDataSATEmbalajes] = useState([])
 
     function RowMenuCell(props) {
         const { api, id } = props;
-        setRow(id);
 
         const handleDeleteClick = (event) => {
             event.stopPropagation();
@@ -54,31 +40,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
             console.log(row);
             handlePaqueteClick(row);
             // api.updateRows([{ id, _action: 'delete' }]);
-        };
-
-        const handleOpenClick = (event) => {
-            event.stopPropagation();
-            if (dataSAT.length === 0 ) {
-                getAllSATServicios()
-            }
-            if (dataSATUnidades.length === 0 ) {
-                getAllSATUnidades()
-            }
-            if (dataSATEmbalajes.length === 0 ) {
-                getAllSATEmbalajes()
-            }
-
-            let row = dataPaquetes.filter((p) => p.m_nIdPaquete == id)[0];
-            setDataComplemento({
-                claveProducto: row.m_nClaveSATProducto||'',
-                claveUnidad: row.m_nClaveSATUnidad||'',
-                UnidadSAT: row.m_sUnidadSAT||'',
-                ProductoSAT: row.m_sProductoSAT||'',
-                embalajeSAT: row.m_sEmbalajeSAT||'',
-                claveEmbalaje:row.m_sClaveEmbalaje||''
-            });
-            console.log(row);
-            setOpenDialog(true);
         };
 
         return (
@@ -152,26 +113,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         style: 'currency',
         currency: 'USD',
     });
-    const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
-    const [dataProductos, setDataProductos] = useState([])
     const [concepto, setConcepto] = useState({
-        id:Math.floor(Math.random() * 10000),
-        concepto: null,
-        idConcepto: 0,
-        importe: 0,
-        nombreConcepto: "",
-        importeRet: "0",
-        retiene: 0,
-        traslada: 0,
-        importeIVA: "0",
-        rangoMinimo: 0,
-        rangoMaximo: 0,
-        tipoCalculo: 0,
-        tipoMedida: 0,
-        descuento: 0,
-        agregadoDesde: keys
-    })
-    const [paquete, setPaquete] = useState({
         id:Math.floor(Math.random() * 10000),
         concepto: null,
         idConcepto: 0,
@@ -241,12 +183,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         }
     }
 
-    const removePaquetev2 = (event) => {
-        event.preventDefault()
-        resetPaquete()
-
-    }
-
     const handlePaqueteClick = (data) =>{
         if(!disabled){
             onChangeList(dataPaquetes.filter((i) => i.id != data.id))
@@ -264,39 +200,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         }
 
     }
-
-    const handleChangePaqueteProductov2 = (event, newValue) => {
-        if (newValue){
-            setPaquete(paquete =>{
-                return{
-                    ...paquete,
-                    producto: newValue,
-                    m_nIdProducto: newValue.m_nIdProducto || 0,
-                    m_rLargo: newValue.m_xLargo,
-                    m_rAlto: newValue.m_xAlto,
-                    m_rAncho: newValue.m_xAncho,
-                    m_rPeso: newValue.m_xPeso,
-                    m_nIdTipoEmbalaje: newValue.m_nIdEmbalaje,
-                    m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == newValue.m_nIdEmbalaje).m_sNombre,
-                    m_sDescripcion: newValue.m_nIdProducto== 1 ? "" : newValue.m_sDescripcion,
-                    m_sProducto: newValue.m_sDescripcion
-                }
-            })
-            setPaquete(paquete =>{
-                return{
-                    ...paquete,
-                    m_rVolumen: paquete.m_rLargo * paquete.m_rAlto * paquete.m_rAncho
-                }})
-        }else{
-            setPaquete(paquete =>{
-                return{
-                    ...paquete,
-                    producto: null,
-                    m_nIdProducto:  0,
-                }
-            })
-        }
-    };
 
     const calcularDescuento = (event) => {
         if (event.keyCode == 13){
@@ -352,46 +255,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         }
     };
 
-    const handleChangeComplementoSat = (idComplemento, {m_sClaveSAT,m_sDescripcion}) => {
-        debugger
-        let index = dataPaquetes.findIndex(d=> d.m_nIdPaquete == row)
-        if(index !=-1){
-
-            if (idComplemento === 1){
-                setDataComplemento(dataComplemento =>{
-                    return {
-                        ...dataComplemento,
-                        claveProducto: m_sClaveSAT,
-                        ProductoSAT: m_sDescripcion,
-                    }
-                });
-                /*dataPaquetes[index].m_nClaveSATProducto = data.m_sClaveSAT;
-                dataPaquetes[index].m_sProductoSAT = data.m_sDescripcion;*/
-            }else if (idComplemento === 2){
-                setDataComplemento(dataComplemento =>{
-                    return {
-                        ...dataComplemento,
-                        claveUnidad: m_sClaveSAT,
-                        UnidadSAT: m_sDescripcion,
-                    }
-                });
-                /*dataPaquetes[index].m_nClaveSATUnidad = data.m_sClaveSAT;
-                dataPaquetes[index].m_sUnidadSAT = data.m_sDescripcion;*/
-            }else if (idComplemento === 3){
-                setDataComplemento(dataComplemento =>{
-                    return {
-                        ...dataComplemento,
-                        claveEmbalaje: m_sClaveSAT,
-                        embalajeSAT: m_sDescripcion
-                    }
-                });
-                /*dataPaquetes[index].m_sClaveEmbalaje = m_sClaveSAT;
-                dataPaquetes[index].m_sEmbalajeSAT = m_sDescripcion;*/
-            }
-            console.log(dataComplemento)
-        }
-    }
-
     const resetPaquete = () =>{
         setConcepto(concepto => {
             return {
@@ -413,69 +276,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                 agregadoDesde: keys
             }
         })
-    }
-
-    const handleClickProducto = () => {
-        if (dataProductos.length === 0 ){
-            getAllProductos()
-        }
-        if (dataEmbalaje.length === 0 ) {
-            getAllEmbalajes()
-        }
-    }
-
-    const getAllProductos = () => {
-        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
-        axios.get(url, {headers}).then(respuesta => {
-            setDataProductos(respuesta.data)
-        });
-    }
-
-    const handleAceptar = (data)=>{
-        var index = dataPaquetes.findIndex(d=> d.m_nIdPaquete == row)
-        if(index !=-1){
-            dataPaquetes[index].m_nClaveSATProducto = dataComplemento.claveProducto;
-            dataPaquetes[index].m_sProductoSAT = dataComplemento.ProductoSAT;
-            dataPaquetes[index].m_nClaveSATUnidad = dataComplemento.claveUnidad;
-            dataPaquetes[index].m_sUnidadSAT = dataComplemento.UnidadSAT;
-            dataPaquetes[index].m_sClaveEmbalaje = dataComplemento.claveEmbalaje;
-            dataPaquetes[index].m_sEmbalajeSAT = dataComplemento.embalajeSAT;
-            console.log(dataPaquetes)
-            onChangeList(dataPaquetes)
-            showSuccess("Complemento Agregado!")
-            dialogVisible(false)
-        }
-
-
-    }
-
-    function dialogVisible(isVisible){
-        setOpenDialog(isVisible)
-
-    }
-
-    function getAllEmbalajes() {
-        obtenerEmbalajes().then((respuesta) => {
-            setDataEmbalaje(respuesta.data);
-        });
-    }
-
-    function getAllSATServicios() {
-        obtenerSATServicios().then((respuesta) => {
-            setDataSAT(respuesta.data);
-        });
-    }
-
-    const getAllSATEmbalajes = () => {
-        obtenerSATEmbalajes().then((respuesta) => {
-            setDataSATEmbalajes(respuesta.data );
-        });
-    }
-
-    function  getAllSATUnidades() {
-        obtenerSATUnidades().then((respuesta) => {
-            setDataSATUnidades(respuesta.data );
-        });
     }
 
     /**Al seleccionar un concepto del listado del autocomplete*/
@@ -506,7 +306,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         <div>
             <div className="row">
                 <Grid container spacing={1}>
-                    <Grid item xs={2}>
+                    <Grid item xs>
                         <div className="input">
                             <Autocomplete
                                 value={concepto.concepto}
@@ -536,7 +336,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             />
                         </div>
                     </Grid>
-                    <Grid item xs={2}>
+                    {/*<Grid item xs={2}>
                         <label className="input select" style={{ width: "100%" }}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="tipoLabel">Medida</InputLabel>
@@ -556,8 +356,8 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                                 </Select>
                             </FormControl>
                         </label>
-                    </Grid>
-                    <Grid item xs={2}>
+                    </Grid>*/}
+                    {/*<Grid item xs={2}>
                         <div className="input">
                             <TextField variant="outlined" margin="dense"
                                        onChange={handleChangePaquetev2}
@@ -582,8 +382,8 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                                        name="rangoMaximo"
                             />
                         </div>
-                    </Grid>
-                    <Grid item xs={2}>
+                    </Grid>*/}
+                    <Grid item xs>
                         <div className="input">
                             <TextField variant="outlined" margin="dense"
                                        onChange={handleChangePaquetev2}
@@ -598,7 +398,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             />
                         </div>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs>
                         <label className="input select" style={{width: "100%"}}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="trasladaLabel">Traslada</InputLabel>
@@ -609,6 +409,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                                     value={concepto.traslada}
                                     onChange={handleChangePaquetev2}
                                     name="traslada"
+                                    disabled={true}
                                 >
                                     <option key={0} value={0}>Selecciona</option>
                                     {state.impuestos.filter(i => i.m_nTIpoCalculo === 1).map((impuesto) => (
@@ -623,7 +424,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             </FormControl>
                         </label>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs>
                         <div className="input">
                             <TextField variant="outlined" margin="dense"
                                        onChange={handleChangePaquetev2}
@@ -639,11 +440,12 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             />
                         </div>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs>
                         <label className="input select" style={{width: "100%"}}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="retieneLabel">Retiene</InputLabel>
                                 <Select
+                                    disabled={true}
                                     labelId="retieneLabel"
                                     label="Retiene"
                                     className="form-control"
@@ -664,7 +466,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             </FormControl>
                         </label>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs>
                         <div className="input">
                             <TextField variant="outlined" margin="dense"
                                        onChange={handleChangePaquetev2}
@@ -681,7 +483,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                         </div>
                     </Grid>
 
-                    <Grid item xs={2}>
+                    {/*<Grid item xs={2}>
                         <label className="input select" style={{width: "100%"}}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="tipoLabel">Tipo Cálculo</InputLabel>
@@ -704,9 +506,9 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                                 </Select>
                             </FormControl>
                         </label>
-                    </Grid>
+                    </Grid>*/}
 
-                    <Grid item xs={2}>
+                    <Grid item xs>
                         <div className="input">
                             <TextField variant="outlined" margin="dense"
                                        onChange={handleChangePaquetev2}
@@ -807,7 +609,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             textAlign: "right"
                         }}> ${parseFloat(
                             dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importe), 0) +
-                            dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)+
+                            dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)-
                             dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importeRet), 0)
                         ).toFixed(2)}</div>
                     </div>
