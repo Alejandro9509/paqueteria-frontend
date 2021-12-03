@@ -20,7 +20,7 @@ ReactDOM.render(
     <ThemeProvider theme={Themes.default}>
         <Router history={hist} basename={'/'}>
 
-
+            <Spinner/>
 
                 <App/>
 
