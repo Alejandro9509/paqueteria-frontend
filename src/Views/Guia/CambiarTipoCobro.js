@@ -30,7 +30,7 @@ class MyComponent extends Component {
                 <DialogTitle>
                     <Typography variant={"h3"}>Cambiar Tipo de Cobro</Typography>
                 </DialogTitle>
-                <form onSubmit={() => this.props.submit(this.state.tipoCobro)}>
+                <form onSubmit={(e) => { e.preventDefault();this.props.submit(this.state.tipoCobro)}}>
                     <DialogContent>
                         <label className="input select" style={{width: "100%"}}>
                             <FormControl fullWidth
