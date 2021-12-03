@@ -349,18 +349,37 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
         if (paquete.m_nIdTipo == 1){
             return !!(paquete.m_sDescripcion != '');
         }else{
-            return !!(paquete.m_rPeso != ''
-                && paquete.m_rLargo != ''
-                && paquete.m_rAncho != ''
-                && paquete.m_rAlto != ''
-                && paquete.m_sDescripcion != ''
-                && paquete.m_nCantidad != ''
-                && paquete.producto
-                && paquete.m_nIdTipoEmbalaje);
+            if (!paquete.producto){
+                showSuccess("Seleccione un producto del listado")
+                return false
+            }
+            if (!paquete.m_rLargo || !paquete.m_rAncho || !paquete.m_rAncho){
+                showSuccess("Ingrese las dimensiones del paquete.")
+                return false
+            }
+            if (!paquete.m_rPeso){
+                showSuccess("Ingrese el peso del paquete.")
+                return false
+            }
+            if (!paquete.m_nIdTipoEmbalaje){
+                showSuccess("Seleccione un tipo de embalaje del listado")
+                return false
+            }
+            if (paquete.m_sDescripcion === ''){
+                showSuccess("Ingrese la descripcion del paquete.")
+                return false
+            }
+            if (paquete.m_nCantidad === ''){
+                showSuccess("Ingrese la cantidad de paquetes.")
+                return false
+            }
+            return true
         }
     }
 
     const addPaquetev2 = (event) => {
+        event.preventDefault()
+        event.stopPropagation()
         console.log(paquete)
         let paq = paquete
         if (validarPaquetes(paq)){
@@ -374,8 +393,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
             resetPaquete()
 
             onChangeList(dataPaquetes)
-        }else{
-            showSuccess("Rellene los campos obligatorios.")
         }
     }
 
