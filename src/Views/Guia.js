@@ -265,7 +265,7 @@ function Guia(props) {
         openDialog: false
 
     })
-
+const [tiempoTecleado, setTiempoTecleado] = useState(0)
     useEffect(() => {
         console.log(conceptosAdicionales.length)
     }, [conceptosAdicionales])
@@ -339,14 +339,17 @@ function Guia(props) {
             })
         }
         else if (target.name === "folio"){
-
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,target.value,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+            clearTimeout(tiempoTecleado)
+            setTiempoTecleado(setTimeout(function(){
+                 obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,target.value,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setData([])
                 } else {
                     setData(respuesta.data)
                 }
             })
+            },1000))
+           
         }
     }
 
