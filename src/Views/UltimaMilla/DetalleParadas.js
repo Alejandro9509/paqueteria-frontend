@@ -15,6 +15,7 @@ import {
     Typography, Tooltip, Popper, Paper, FormControl, InputLabel, Select
 } from "@material-ui/core";
 import {confirmAlert} from 'react-confirm-alert'; // Import
+import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReorderIcon from '@material-ui/icons/Reorder';
@@ -37,6 +38,7 @@ import {
 import Noty from "noty";
 import {obtenerCorteReporte} from "../../Util/Contexts/CorteCajaContext";
 import {InsertDriveFile} from "@material-ui/icons";
+import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -141,6 +143,10 @@ class DetalleParadas extends Component {
         })
     }
 
+    confirmarUbicacion(coordenadas) {
+
+    }
+
     generarReporte(e, id) {
         e.preventDefault()
         console.log(' id: ' + id)
@@ -161,6 +167,14 @@ class DetalleParadas extends Component {
         const allGuias = [].concat(...this.props.tour.m_arrClsParadaUltimaMilla.map(a => a.m_arrClsProGuia))
         return (
             <div>
+                {
+                    this.state.showConfirmarUbicacion &&
+                    <ConfirmarUbicacion confirmarUbicacion={this.confirmarUbicacion} open={this.state.showConfirmarUbicacion}
+                                        titulo={this.state.titulo}
+                                        recoleccion={true}
+                                        direccion={this.state.ubicación}>
+                    </ConfirmarUbicacion>
+                }
                 {
                     this.state.openAgregar &&
                     <AgregarPaqueteUltimaMilla zonasIds={this.props.filtros.zonasSeleccionada}
@@ -487,6 +501,15 @@ class DetalleParadas extends Component {
                                                                                                                     fontSize="default"/>
                                                                                                             </Tooltip>
                                                                                                         </IconButton>
+                                                                                                        {/*<IconButton
+                                                                                                            aria-label="delete">
+                                                                                                            <Tooltip
+                                                                                                                title={"Cambiar ubicación"}>
+                                                                                                                <GpsFixedIcon
+                                                                                                                    onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
+                                                                                                                    fontSize="default"/>
+                                                                                                            </Tooltip>
+                                                                                                        </IconButton>*/}
                                                                                                         <IconButton
                                                                                                             aria-label="delete">
                                                                                                             <Tooltip
@@ -496,6 +519,7 @@ class DetalleParadas extends Component {
                                                                                                                     fontSize="default"/>
                                                                                                             </Tooltip>
                                                                                                         </IconButton>
+
                                                                                                     </ButtonGroup>
                                                                                                 }
 
