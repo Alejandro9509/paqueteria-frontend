@@ -429,9 +429,22 @@ function eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion) {
     let result;
     trackPromise(
         result = axios.put(url, Object.assign({}, {
-            EsRecoleccion: idParada,
+            EsRecoleccion: esRecoleccion,
             IdGuia: idGuia,
-            IdParada: esRecoleccion,
+            IdParada: idParada,
+        }), {headers})
+    );
+    return result
+}
+
+function confirmarUbicacion(coordenadas, id,esRecoleccion) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/CambiarUbicacion`;
+    let result;
+    trackPromise(
+        result = axios.put(url, Object.assign({}, {
+            EsRecoleccion: esRecoleccion,
+            IdGuia: id,
+            Coordenadas: coordenadas,
         }), {headers})
     );
     return result

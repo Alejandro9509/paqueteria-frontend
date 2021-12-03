@@ -266,9 +266,6 @@ function Guia(props) {
 
     })
 
-    useEffect(() => {
-        console.log(conceptosAdicionales.length)
-    }, [conceptosAdicionales])
 
     const handleChangeFiltros = (event) => {
    
