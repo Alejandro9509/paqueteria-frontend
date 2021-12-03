@@ -73,6 +73,7 @@ import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
 import {obtenerEmbalajesId} from "../Util/Contexts/EmbalajesContext";
 import CambiarTipoCobro from "./Guia/CambiarTipoCobro";
 import Ocurre from "./Guia/Ocurre";
+import ConceptosFacturacionGuias from "./Tarifas/ConceptosFacturacionGuias";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -2104,11 +2105,16 @@ obtenerGuiaId(id).then(({data}) => {
     const handleListPaquetesChange = (newList) => {
         setDataPaquetes(newList)
     }
+
     const cambiarCobro = (tipoCobro) => {
         cambiarTipoCobro(state.idGuia, tipoCobro).then(({data}) => {
             showSuccess(data)
             getAllData()
         })
+    }
+
+    const handleChangeListConceptos = (newList) => {
+        setConceptosAdicionales(newList)
     }
 
     return (
@@ -3390,53 +3396,15 @@ obtenerGuiaId(id).then(({data}) => {
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <form className="j-forms">
-                                                            {
-                                                                state.idEmbarque &&
-                                                                <div>
-                                                                    <Tabs value={state.tab} onChange={() => handleTabChange()}
-                                                                          aria-label="simple tabs example"
-                                                                          variant="scrollable" scrollButtons="auto">
-                                                                        <Tab
-                                                                            label="Concetos Adicionales por Destino" {...a11yProps(0)}
-                                                                            className={{backgroundColor: "white !important"}}/>
-                                                                    </Tabs>
-                                                                    {/*<ConceptosAdicionales guias={true}
-                                                                                          conceptosAdicionales={state.conceptosAdicionales}
-                                                                                          addConcepto={addConcepto}
-                                                                                          removeConcepto={removeConcepto}
-                                                                                          ivaRetiene={state.ivaRetiene}
-                                                                                          ivaTraslada={state.ivaTraslada}
-                                                                                          mostrarRangos={false}
-                                                                                          customConceptos={true}
-                                                                                          listadoConceptosAlternativos={dataTodosConceptosByEmbarque}
-                                                                                          consult={state.agregar == "Consultar"}
-                                                                                          mostrarDescuento={true}/>*/}
-
-                                                                        <ConceptosFacturacion
-                                                                            key={"conceptosGuias"}
-                                                                            // consulta={consult}
-                                                                            dataList={[...conceptosAdicionales]}
-                                                                            // onChangeList={this.handleChangeListConceptos}
-                                                                            mostrarRangos={false}
-                                                                            mostrarImpuestos={false}
-                                                                            mostrarDescuento={true}
-                                                                            mostrarTipoMedida={false}
-                                                                            mostrarTipoCalculo={false}
-                                                                            conceptosBase={[...dataConceptosBase]}
-                                                                            agregarConcepto={addConcepto}
-                                                                            eliminarConcepto={(item) => removeConcepto(item)}
-                                                                            mostrarTotales={true}
-                                                                            ivaTraslada={[...state.ivaTraslada]}
-                                                                            ivaRetiene={[...state.ivaRetiene]}
-                                                                        />
-
-
-                                                                </div>
-
-                                                            }
-
-                                                        </form>
+                                                        <ConceptosFacturacionGuias
+                                                            keys={0}
+                                                            disabled={false}
+                                                            dataPaquetes={conceptosAdicionales}
+                                                            onChangeList={handleChangeListConceptos}
+                                                            conceptosBase={dataConceptosBase}
+                                                            ivaTraslada={state.ivaTraslada}
+                                                            ivaRetiene={state.ivaRetiene}
+                                                        />
                                                     </div>
 
                                                     <div className="form-footer" className="col-md-12">
