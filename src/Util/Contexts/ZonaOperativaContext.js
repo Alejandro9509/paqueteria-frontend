@@ -59,7 +59,7 @@ function obtenerByIdZonaOperativa(id) {
 }
 //Se va mandar el codigo postal porque surgio la necesidad
 function obtenerZonaOperativaByIdCodigoPostal(id) {
-    const url = `${process.env.REACT_APP_API_URL}/ZonaOperativa/GetByIdCodigoPostal/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetByIdCodigoPostal/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
