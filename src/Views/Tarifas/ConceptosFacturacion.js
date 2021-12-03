@@ -33,6 +33,7 @@ import {getUniqueListBy} from "../../Util/Util";
 import {DataGrid} from "@material-ui/data-grid";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
+import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
 const headers = API_HEADERS
 
 /**Props usadas:
@@ -54,7 +55,7 @@ export default function ConceptosFacturacion(props) {
         style: 'currency',
         currency: 'USD',
     });
-    const [conceptos, setConceptos] = useState([])
+
     const [state, setState] = useState({
         impuestos: [],
         ivaTraslada: [],
@@ -62,6 +63,7 @@ export default function ConceptosFacturacion(props) {
         tiposCalculo: [],
         columns: []
     })
+
     const [concepto, setConcepto] = useState({
         id:Math.floor(Math.random() * 10000),
         concepto: null,
@@ -79,10 +81,6 @@ export default function ConceptosFacturacion(props) {
         descuento: 0,
         agregadoDesde: props.keys
     })
-
-    useEffect(() => {
-        setConceptos(props.dataList)
-    }, [props])
 
     const resetConcepto = () => {
         setConcepto({
@@ -187,8 +185,7 @@ export default function ConceptosFacturacion(props) {
     },[])
 
     const getAllImpuestos = () => {
-        const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerImpuestos().then(respuesta => {
             setState(state =>{
                 return { ...state, impuestos: respuesta.data }
             })
@@ -230,23 +227,21 @@ export default function ConceptosFacturacion(props) {
 
     const onSubmit = (event) => {
         event.preventDefault()
+        console.log(concepto)
         props.agregarConcepto(concepto)
         resetConcepto()
     }
 
     const removeConcepto = (item) => {
+        console.log(concepto)
         props.eliminarConcepto(item)
     }
 
     /** Cuando se le pica al editar de algun concepto*/
     const handleRowClick = (item) => {
-        console.log("click")
         if (!props.consult) {
-            console.log("consult")
             item.concepto = props.conceptoFijo || props.conceptosBase.find(i => i.m_nIdConceptosFacturacion === item.idConcepto)
             setConcepto(item)
-            console.log("setConcepto")
-            console.log(conceptos)
             removeConcepto(item)
         }
     }
@@ -325,27 +320,22 @@ export default function ConceptosFacturacion(props) {
             )
         }
 
-        if (mostrarImpuestos){
+        /*if (mostrarImpuestos){
             columns.push(
                 {
                     headerName: "Traslada",
                     field: "traslada",
-                    type:'number',
-
-                    width: 150,
-                    valueFormatter: ({value}) => `${state.impuestos.length !== 0 && (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)).m_sImpuesto : "No Aplica")} `,
+                    width: 200,
+                    valueFormatter: ({value}) => `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)).m_sImpuesto} `,
                 },
                 {
                     headerName: "Retiene",
                     field: "retiene",
-
-                    width: 150,
-                    valueFormatter: ({value}) =>
-                        `${state.impuestos.length !== 0 && (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)).m_sImpuesto : "No Aplica")} `,
-
+                    width: 200,
+                    valueFormatter: ({value}) => `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(value)).m_sImpuesto} `,
                 },
             )
-        }
+        }*/
         if (mostrarDescuento){
             columns.push(
                 {
@@ -368,7 +358,7 @@ export default function ConceptosFacturacion(props) {
                 renderCell: (row) => {
                     return (
                         <div>
-                            <IconButton color="inherit" size="small" aria-label="delete" onClick={(e) => {handleRowClick(row.row)}}>
+                            <IconButton color="inherit" size="small" aria-label="delete" onClick={() => handleRowClick(row.row)}>
                                 <EditIcon fontSize="large" />
                             </IconButton>
                         </div>
@@ -403,9 +393,7 @@ export default function ConceptosFacturacion(props) {
                                     option.m_sConcepto
                                 }
                                 variant="outlined"
-                                style={{
-                                    transform: "translate(14px, 10px) scale(1) !important"
-                                }}
+                                style={{transform: "translate(14px, 10px) scale(1) !important"}}
                                 renderInput={(params) => (
                                     <div>
                                         <TextField
@@ -501,14 +489,8 @@ export default function ConceptosFacturacion(props) {
                                     onChange={handleChange}
                                     name="traslada"
                                 >
-                                    <option
-                                        key={0}
-                                        value={""}
-                                    >
-                                        Selecciona
-                                    </option>
-                                    {concepto.concepto &&
-                                    state.impuestos.filter(i => concepto.concepto.arClsDetalle.find(c => c.m_nIdImpuesto === i.m_nIdImpuesto && c.m_bTrasladado === true)).map((impuesto) => (
+                                    <option key={0} value={0}>Selecciona</option>
+                                    {state.impuestos.filter(i => i.m_nTIpoCalculo === 1).map((impuesto) => (
                                         <option
                                             key={impuesto.m_nIdImpuesto}
                                             value={impuesto.m_nIdImpuesto}
@@ -552,14 +534,8 @@ export default function ConceptosFacturacion(props) {
                                     name="retiene"
                                     value={concepto.retiene}
                                 >
-                                    <option
-                                        key={0}
-                                        value={""}
-                                    >
-                                        Selecciona
-                                    </option>
-                                    {concepto.concepto &&
-                                    state.impuestos.filter(i => concepto.concepto.arClsDetalle.find(c => c.m_nIdImpuesto === i.m_nIdImpuesto && c.m_bTrasladado === false)).map((impuesto) => (
+                                    <option key={0} value={0}>Selecciona</option>
+                                    {state.impuestos.filter(i => i.m_nTIpoCalculo === 2).map((impuesto) => (
                                         <option
                                             key={impuesto.m_nIdImpuesto}
                                             value={impuesto.m_nIdImpuesto}
@@ -724,7 +700,7 @@ export default function ConceptosFacturacion(props) {
                                 textAlign: "right"
                             }}> ${parseFloat(
                                 props.dataList.reduce((total, arg) => total + parseFloat(arg.importe), 0) +
-                                props.dataList.reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)-
+                                props.dataList.reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)+
                                 props.dataList.reduce((total, arg) => total + parseFloat(arg.importeRet), 0)
                             ).toFixed(2)}</div>
                         </div>
