@@ -9,7 +9,7 @@ function modificarRecoleccion(id, params) {
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${id}`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers }),"progress"
+        result =  axios.put(url, Object.assign({}, params), { headers })
         );
     return result
 }
@@ -18,7 +18,7 @@ function agregarRecoleccion(params) {
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Agregar`;
     let result;
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers }),"progress"
+        result =  axios.post(url, Object.assign({}, params), { headers })
         );
     return result
 }
@@ -27,7 +27,7 @@ function cancelarRecoleccion(id, params) {
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Cancelar/${id}`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers }),"progress"
+        result =  axios.put(url, Object.assign({}, params), { headers })
         );
     return result
 }
@@ -36,7 +36,7 @@ function eliminarRecoleccion(id, idEliminadoPor) {
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
-        result =  axios.delete(url, { headers }), "progress"
+        result =  axios.delete(url, { headers })
         );
     return result
 }
@@ -73,7 +73,7 @@ function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, est
         folioRecoleccion = 0
     }
     const url =
-        `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+        `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/GetByFiltro/` +
         fechaInicial +
         "/" +
         fechaFinal +

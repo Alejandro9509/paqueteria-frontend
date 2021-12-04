@@ -21,8 +21,8 @@ function DialogTableClientes(props) {
 //----------------------------->Atributos<----------------------------------------------------------------------------
 const columns = [
     {
-      headerName: "Id Cliente",
-      field: "m_nIdCliente",
+      headerName: "Num. Cliente",
+      field: "m_nNumeroCliente",
       width: 125,
     },
     {

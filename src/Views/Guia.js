@@ -279,6 +279,15 @@ function Guia(props) {
                 [target.name]: target.value
             }
         })
+        if (target.name && event.keyCode == 13){
+            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,target.value,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
         if (target.name === "fechaInicial") {
             
             obtenerGuiasFiltro(target.value, filtros.fechaFinal, filtros.sucursalListado, filtros.estatusListado, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
@@ -2227,6 +2236,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                     <Grid item xs={2}>
                                                         <TextField variant="outlined" margin="dense"
                                                                    onChange={handleChangeFiltros}
+                                                                   onKeyDown={handleChangeFiltros}
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Folio Guía"
@@ -2495,7 +2505,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                                            onChange={handleChange}
                                                                            className="form-control"
                                                                            type="text"
-                                                                           label="Folio Guia"
+                                                                           label="Folio Guía"
                                                                            placeholder={state.folioGuia}
                                                                            readOnly={state.agregar == "Consultar"}
                                                                            id="folioGuia"
