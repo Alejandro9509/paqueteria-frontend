@@ -43,7 +43,7 @@ function obtenerListadoZonaTarifa() {
 }
 
 function obtenerByIdZonaTarifa(id) {
-    const url = `${process.env.REACT_APP_API_URL}/ZonaTarifa/GetById/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaTarifa/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

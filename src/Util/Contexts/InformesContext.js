@@ -8,7 +8,7 @@ function modificarInformes(id, params){
     const url = `${process.env.REACT_APP_API_URL}/Informes/Modificar`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers }),"progress"
+        result =  axios.put(url, Object.assign({}, params), { headers })
         );
     return result
 }
@@ -35,7 +35,7 @@ function agregarInformes( params){
     const url = `${process.env.REACT_APP_API_URL}/Informes/Agregar`;
     let result;
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers }), "progress"
+        result =  axios.post(url, Object.assign({}, params), { headers })
         );
     return result
 }
@@ -50,7 +50,7 @@ function eliminarInformes(id, idEliminadoPor){
 }
 
 function obtenerInformes(){
-    const url = `${process.env.REACT_APP_API_URL}/Informes/GetListadoSinViajes`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Informes/GetListadoSinViajes`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -85,7 +85,7 @@ function obtenerInformesDisponiblesViajes(idOrigen, idDestino, idRuta){
 }
 
 function obtenerInformesId(id){
-    const url = `${process.env.REACT_APP_API_URL}/Informes/GetById/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Informes/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -98,7 +98,7 @@ function obtenerInformeFiltro(fechaInicial, fechaFinal, sucursalListado, estatus
         folioInforme = 0
     }
     const url =
-        `${process.env.REACT_APP_API_URL}/Informes/GetByFiltros/` +
+        `${process.env.REACT_APP_REPORT_URL}/api/Informes/GetByFiltro/` +
         fechaInicial +
         "/" +
         fechaFinal +
