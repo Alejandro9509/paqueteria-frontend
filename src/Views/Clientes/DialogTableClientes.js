@@ -44,14 +44,13 @@ const [pagina, setPagina] = React.useState(0);
 const [busqueda, setBusqueda] = React.useState("");
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------
 useEffect(() => {
-  cargarDesdeServidor(pagina.page,registros)
+  cargarDesdeServidor(pagina,registros)
 }, [pagina])
 
 //--------------------------->Funciones<----------------------------------------------------------------------
 function cargarDesdeServidor(pagina,registros){
   return new obtenerClientePaginado(pagina,registros,busqueda).then((respuesta) => {
     setRow(respuesta.data)
-    console.log(respuesta.data)
 
   })
 }
@@ -74,7 +73,7 @@ function cargarDesdeServidor(pagina,registros){
                     paddingLeft: 0,
                     paddingBlock: 0,
                     cursor:"pointer"
-                }} onClick={() => cargarDesdeServidor(pagina, registros)}/>,
+                }}  onClick={() =>  cargarDesdeServidor(0,registros)}/>,
             }}
             style={{width:'60ch'}}
         />
@@ -91,7 +90,7 @@ function cargarDesdeServidor(pagina,registros){
           pageSize={registros}
           rowCount={3600}
           paginationMode="server"
-          onPageChange={(newPage)=>{setPagina(newPage)
+          onPageChange={(newPage)=>{setPagina(newPage.page)
           console.log(newPage)}}
            />
         </div>
@@ -108,7 +107,7 @@ function cargarDesdeServidor(pagina,registros){
                         if(rowSelect !=null){
                             handlePatrocinadorSelected(rowSelect)}
                         }}
-                    className="btn btn-secondary secondary-btn"
+                    className="btn btn-primary primary-btn"
                 >
                     Seleccionar
                 </button>

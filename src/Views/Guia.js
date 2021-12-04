@@ -73,6 +73,7 @@ import {obtenerProductoById} from "../Util/Contexts/ProductosContext";
 import {obtenerEmbalajesId} from "../Util/Contexts/EmbalajesContext";
 import CambiarTipoCobro from "./Guia/CambiarTipoCobro";
 import Ocurre from "./Guia/Ocurre";
+import ConceptosFacturacionGuias from "./Tarifas/ConceptosFacturacionGuias";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -281,6 +282,15 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
                 [target.name]: target.value
             }
         })
+        if (target.name && event.keyCode == 13){
+            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,target.value,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
         if (target.name === "fechaInicial") {
             
             obtenerGuiasFiltro(target.value, filtros.fechaFinal, filtros.sucursalListado, filtros.estatusListado, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
@@ -953,19 +963,24 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
                 $('.nav-tabs li').eq(1).addClass('active');
                 $('.tab-content div ').removeClass('in show');
                 $('#Agregar').addClass('in show');
+                setDataMoneda(props.location.dataMoneda)
+                setDataSucursal(props.location.dataSucursal)
+                setDataTipoCobro(props.location.dataTipoCobro)
+                setDataTipoCambio(props.location.dataTipoCambio)
+                setDataCiudadF(props.location.dataCiudades)
             });
         }else{
             getAllData()
-        }
-        getAllCiudadesFiltro()
-        getAllDataSucursal()
-        getAllDataTipoServicio()
-        getAllDataMoneda()
-        getAllDataTipoCobro()
+            getAllCiudadesFiltro()
+            getAllDataSucursal()
 
+            getAllDataMoneda()
+            getAllDataTipoCobro()
+            getTipoCambio()
+        }
         getAllDataEstatusGuia()
         getUltimoFolioGuia()
-        getTipoCambio()
+        getAllDataTipoServicio()
         cargaEmbarqueMoneda(1)
         getAllDataTipoPago()
         getAllConceptos()
@@ -2105,11 +2120,16 @@ obtenerGuiaId(id).then(({data}) => {
     const handleListPaquetesChange = (newList) => {
         setDataPaquetes(newList)
     }
+
     const cambiarCobro = (tipoCobro) => {
         cambiarTipoCobro(state.idGuia, tipoCobro).then(({data}) => {
             showSuccess(data)
             getAllData()
         })
+    }
+
+    const handleChangeListConceptos = (newList) => {
+        setConceptosAdicionales(newList)
     }
 
     return (
@@ -2222,6 +2242,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                     <Grid item xs={2}>
                                                         <TextField variant="outlined" margin="dense"
                                                                    onChange={handleChangeFiltros}
+                                                                   onKeyDown={handleChangeFiltros}
                                                                    className="form-control"
                                                                    type="text"
                                                                    label="Folio Guía"
@@ -2490,7 +2511,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                                            onChange={handleChange}
                                                                            className="form-control"
                                                                            type="text"
-                                                                           label="Folio Guia"
+                                                                           label="Folio Guía"
                                                                            placeholder={state.folioGuia}
                                                                            readOnly={state.agregar == "Consultar"}
                                                                            id="folioGuia"
@@ -3391,53 +3412,15 @@ obtenerGuiaId(id).then(({data}) => {
                                             <div className="widget-content">
                                                 <div className="row">
                                                     <div className="col-md-12">
-                                                        <form className="j-forms">
-                                                            {
-                                                                state.idEmbarque &&
-                                                                <div>
-                                                                    <Tabs value={state.tab} onChange={() => handleTabChange()}
-                                                                          aria-label="simple tabs example"
-                                                                          variant="scrollable" scrollButtons="auto">
-                                                                        <Tab
-                                                                            label="Concetos Adicionales por Destino" {...a11yProps(0)}
-                                                                            className={{backgroundColor: "white !important"}}/>
-                                                                    </Tabs>
-                                                                    {/*<ConceptosAdicionales guias={true}
-                                                                                          conceptosAdicionales={state.conceptosAdicionales}
-                                                                                          addConcepto={addConcepto}
-                                                                                          removeConcepto={removeConcepto}
-                                                                                          ivaRetiene={state.ivaRetiene}
-                                                                                          ivaTraslada={state.ivaTraslada}
-                                                                                          mostrarRangos={false}
-                                                                                          customConceptos={true}
-                                                                                          listadoConceptosAlternativos={dataTodosConceptosByEmbarque}
-                                                                                          consult={state.agregar == "Consultar"}
-                                                                                          mostrarDescuento={true}/>*/}
-
-                                                                        <ConceptosFacturacion
-                                                                            key={"conceptosGuias"}
-                                                                            // consulta={consult}
-                                                                            dataList={[...conceptosAdicionales]}
-                                                                            // onChangeList={this.handleChangeListConceptos}
-                                                                            mostrarRangos={false}
-                                                                            mostrarImpuestos={false}
-                                                                            mostrarDescuento={true}
-                                                                            mostrarTipoMedida={false}
-                                                                            mostrarTipoCalculo={false}
-                                                                            conceptosBase={[...dataConceptosBase]}
-                                                                            agregarConcepto={addConcepto}
-                                                                            eliminarConcepto={(item) => removeConcepto(item)}
-                                                                            mostrarTotales={true}
-                                                                            ivaTraslada={[...state.ivaTraslada]}
-                                                                            ivaRetiene={[...state.ivaRetiene]}
-                                                                        />
-
-
-                                                                </div>
-
-                                                            }
-
-                                                        </form>
+                                                        <ConceptosFacturacionGuias
+                                                            keys={0}
+                                                            disabled={false}
+                                                            dataPaquetes={conceptosAdicionales}
+                                                            onChangeList={handleChangeListConceptos}
+                                                            conceptosBase={dataConceptosBase}
+                                                            ivaTraslada={state.ivaTraslada}
+                                                            ivaRetiene={state.ivaRetiene}
+                                                        />
                                                     </div>
 
                                                     <div className="form-footer" className="col-md-12">

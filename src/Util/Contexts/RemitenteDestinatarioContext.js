@@ -102,7 +102,7 @@ function obtenerRemitentesDestinatariosId(id){
     return result
 }
 function obtenerRemitentesDestinatariosPaginado(pagina,registros, busqueda){
-    const url = `${process.env.REACT_APP_API_URL}/RemitentesDestinatarios/GetListadoPaginado/${pagina}/${registros}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Remitentes/GetListadoPaginado/${pagina}/${registros}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, {busqueda: busqueda}), { headers })

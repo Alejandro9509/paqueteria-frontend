@@ -237,6 +237,15 @@ function Embarque(props) {
                 [target.name]: target.value
             }
         })
+        if (target.name && event.keyCode == 13){
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,target.value,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
         if (target.name === "fechaInicial"){
             obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
@@ -780,7 +789,6 @@ function Embarque(props) {
     })
 
     const handleChangeRemitente = (data) => {
-        console.log("Entro al padre")
         setRemitente(() => ({
             idRemitente: data.id,
             aliasRemitente: data.alias,
@@ -792,6 +800,7 @@ function Embarque(props) {
             numeroExtRemitente: data.numeroExt,
             coloniaRemitente: data.colonia,
             estadoRemitente: data.estado,
+            municipioTexto:data.municipioTexto,
             municipioRemitente: data.municipio,
             codigoPostalRemitente: data.codigoPostal,
             correoRemitente: data.correo,
@@ -859,6 +868,7 @@ function Embarque(props) {
             coloniaDestinatario: data.colonia,
             estadoDestinatario: data.estado,
             municipioDestinatario: data.municipio,
+            municipioTexto:data.municipioTexto,
             codigoPostalDestinatario: data.codigoPostal,
             correoDestinatario: data.correo,
             telefonoDestinatario: data.telefono,
@@ -1106,7 +1116,7 @@ function Embarque(props) {
             m_xPorcentajeSeguro: state.porcentajeSeguro,
             m_bAplicaSeguro: state.aplicaSeguro,
 
-            m_sNOmbreRemitente: remitente.nombreRemitente.m_sNombre,
+            m_sNOmbreRemitente: remitente.nombreRemitente,
             m_sRFCRemitente: remitente.RFCRemitente,
             m_sDomicilioRemitente: remitente.domicilioRemitente,
             m_nIdCodigoPostalRemitente: remitente.codigoPostalRemitente.m_nIdCP,
@@ -1125,7 +1135,7 @@ function Embarque(props) {
             m_sColoniaRemitente: remitente.coloniaRemitente,
             m_sMunicipioRemitente: remitente.municipioRemitente,
 
-            m_sNombreDestinatario: destinatario.nombreDestinatario.m_sNombre,
+            m_sNombreDestinatario: destinatario.nombreDestinatario,
             m_sRFCDestinatario: destinatario.RFCDestinatario,
             m_sDomicilioDestinatario: destinatario.domicilioDestinatario,
             m_nIdCodigoPostalDestinatario: destinatario.codigoPostalDestinatario.m_nIdCP,
@@ -1615,7 +1625,7 @@ function Embarque(props) {
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-
+                estatusEmbarque: 16,
                 //Datos entrega
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
             }
@@ -1923,8 +1933,7 @@ function Embarque(props) {
     }
 
     const handlePatrocinadorSelected = (row) => {
-        console.log(row)
-        setState({
+        setState(() => ({
             ...state,
             clientePaga: row.data,
             idTipoSeguro: row.data.m_bTieneSeguro ? row.data.m_nIdTipoSeguro : 5,
@@ -1932,7 +1941,7 @@ function Embarque(props) {
             aplicaSeguro: row.data.m_bTieneSeguro,
             tipoCobro: row.data.m_bSinCredito ? "10" : "11",
             openDialog: false,
-        })
+        }))
     }
 
     const handleClickResponsablePago = (event) => {
@@ -2663,6 +2672,11 @@ function Embarque(props) {
                     to={{
                         pathname: "/Guia",
                         idEmbarque: state.idEmbarque,
+                        dataTipoCambio: dataTipoCambio,
+                        dataSucursal: dataSucursal,
+                        dataTipoCobro: dataTipoCobro,
+                        dataMoneda: dataTipoMoneda,
+                        dataCiudades: dataCiudad
                     }}
                 />
             );
@@ -2699,7 +2713,11 @@ function Embarque(props) {
 
     const filtrarTipoCobro = (tipoCobro) => {
         // if (!state.clientePaga) {
+        if (localStorage.getItem("RFC") === "ADI880815DA7") {
             return tipoCobro.m_nIdTipoCobro === 10 || tipoCobro.m_nIdTipoCobro === 11
+        }else {
+            return true
+        }
         // }else {
         //     return (state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 10) || ( !state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 11)
         //
@@ -2718,7 +2736,8 @@ function Embarque(props) {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     titulo={state.titulo}
-                                    direccion={destinatario.nombreDestinatario}>
+                                    recoleccion={false}
+                                    direccion={destinatario}>
 
                 </ConfirmarUbicacion>
             }
@@ -3214,7 +3233,7 @@ function Embarque(props) {
                                             <Grid item xs={2}>
                                                 <TextField variant="outlined" margin="dense"
                                                            onChange={handleChangeFiltros}
-                                                           onKeyDown={handleFolioEmbarqueFiltro}
+                                                           onKeyDown={handleChangeFiltros}
                                                            className="form-control"
                                                            type="text"
                                                            label="Folio Embarque"

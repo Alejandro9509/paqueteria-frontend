@@ -21,37 +21,36 @@ function DialogTableRemDes(props) {
 //----------------------------->Atributos<----------------------------------------------------------------------------
 const columns = [
     {
-      headerName: "No.Cliente",
+      headerName: "No. Remitente / Destinatario",
       field: "m_nNumero",
-      width: 125,
+      width: 150,
     },
     {
       headerName: "Nombre",
       field: "m_sNombre",
-      flex: 1,
+        width: 500,
     },
     {
         headerName: "Domicilio",
         field: "m_sDomicilio",
-        flex: 1,
+        width: 500,
       },
   ]
 let rowSelect
-let registros=20
+let registros=10
 //----------------------------->Hooks useState <----------------------------------------------------------------------
 const [rows, setRow] = React.useState([])
 const [pagina, setPagina] = React.useState(0);
     const [busqueda, setBusqueda] = React.useState("");
 //----------------------------->Hooks useEffect <----------------------------------------------------------------------
 useEffect(() => {
-  cargarDesdeServidor(pagina.page,registros)
+  cargarDesdeServidor(pagina,registros)
 }, [pagina])
 
 //--------------------------->Funciones<----------------------------------------------------------------------
 function cargarDesdeServidor(pagina,registros){
   return new obtenerRemitentesDestinatariosPaginado(pagina,registros, busqueda).then((respuesta)=>{
     setRow(respuesta.data)
-    console.log(respuesta.data)
   })
 }
 
@@ -61,7 +60,7 @@ function cargarDesdeServidor(pagina,registros){
         <TextField
             variant="standard"
             value={busqueda}
-            onChange={(e) => setBusqueda( e.target.value)}
+            onChange={(e) => {e.stopPropagation();setBusqueda( e.target.value)}}
             placeholder
             InputProps={{
                 endAdornment: <SearchIcon style={{
@@ -72,12 +71,11 @@ function cargarDesdeServidor(pagina,registros){
                     paddingBlockEnd: 0,
                     paddingLeft: 0,
                     paddingBlock: 0,
-                    cursor:"pointer"
-                }} onClick={() => cargarDesdeServidor(pagina, registros)}/>,
+                }} onClick={() => cargarDesdeServidor(0,registros)}/>,
             }}
             style={{width:'60ch'}}
         />
-        <div style={{height:"300px", padding:"5px"}}>
+        <div style={{height:"500px", padding:"5px"}}>
            <DataGrid
            localeText={dataGridLocaleText}
            columns={columns}
@@ -87,10 +85,11 @@ function cargarDesdeServidor(pagina,registros){
            rowSelect = row;
           }}
           pagination
+           rowsPerPageOptions={[registros]}
           pageSize={registros}
           rowCount={13600}
           paginationMode="server"
-          onPageChange={(newPage)=>{setPagina(newPage)
+          onPageChange={(newPage)=>{setPagina(newPage.page)
           console.log(newPage)}}
            />
         </div>

@@ -379,6 +379,7 @@ function Recoleccion() {
             numeroExtRemitente: data.numeroExt,
             coloniaRemitente: data.colonia,
             estadoRemitente: data.estado,
+            municipioTexto:data.municipioTexto,
             municipioRemitente: data.municipio,
             codigoPostalRemitente: data.codigoPostal,
             correoRemitente: data.correo,
@@ -390,6 +391,7 @@ function Recoleccion() {
             latitudR: data.latitud,
             longitudR: data.longitud
         })
+        console.log(data.zonaOperativa)
     };
 
     const handleClickCodigosPostalesInput = (input) => {
@@ -792,7 +794,7 @@ function Recoleccion() {
             m_xPorcentajeSeguro: state.porcentajeSeguro,
             m_bAplicaSeguro: state.aplicaSeguro,
             //Remitente
-            m_sNombreRemitente: remitente.nombreRemitente.m_sNombre,
+            m_sNombreRemitente: remitente.nombreRemitente,
             m_sRFCRemitente: remitente.RFCRemitente,
             m_sDomicilioRemitente: remitente.domicilioRemitente,
             m_sIdCodigoPostalRemitente: remitente.codigoPostalRemitente.m_nIdCP,
@@ -812,7 +814,7 @@ function Recoleccion() {
             m_nIdEstadoRemitente: remitente.estadoRemitente,
 
             //Destinatario
-            m_sNombreDestinatario: destinatario.nombreDestinatario.m_sNombre,
+            m_sNombreDestinatario: destinatario.nombreDestinatario,
             m_sRFCDestinatario: destinatario.RFCDestinatario,
             m_sDomicilioDestinatario: destinatario.domicilioDestinatario,
             m_sIdCodigoPostalDestinatario: destinatario.codigoPostalDestinatario.m_nIdCP,
@@ -2639,7 +2641,7 @@ function Recoleccion() {
     }
 
     if (redirect) {
-        if (data.find((o) => o.m_nIdRecoleccion == state.idRecoleccion).m_nIdEmbarque != 0) {
+        if (data.find((o) => o.m_nIdRecoleccion === state.idRecoleccion).m_nIdEmbarque != 0) {
             showSuccess("Recolección ya tiene Embarque")
         } else {
             return (
@@ -2686,7 +2688,11 @@ function Recoleccion() {
 
     const filtrarTipoCobro = (tipoCobro) => {
         // if (!state.clientePaga) {
-        return tipoCobro.m_nIdTipoCobro === 10 || tipoCobro.m_nIdTipoCobro === 11
+        if (localStorage.getItem("RFC") === "ADI880815DA7") {
+            return tipoCobro.m_nIdTipoCobro === 10 || tipoCobro.m_nIdTipoCobro === 11
+        }else {
+            return true
+        }
         // }else {
         //     return (state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 10) || ( !state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 11)
         //
@@ -2704,7 +2710,8 @@ function Recoleccion() {
                 state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     titulo={state.titulo}
-                                    direccion={remitente.nombreRemitente}>
+                                    recoleccion={true}
+                                    direccion={remitente}>
 
                 </ConfirmarUbicacion>
             }

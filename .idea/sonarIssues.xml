@@ -298,6 +298,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/ClientesContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/ConceptosFacturacionContext.js">
           <value>
             <set />
@@ -363,6 +368,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/ZonaTarifaContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/ZonasContext.js">
           <value>
             <set />
@@ -404,6 +414,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/Clientes.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Clientes/DialogTableClientes.js">
           <value>
             <set />
           </value>
@@ -529,6 +544,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/Guia/CambiarTipoCobro.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/Guia/ImprimirEtiquetas.js">
           <value>
             <set />
           </value>
@@ -1378,7 +1398,17 @@
             <set />
           </value>
         </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatClientesPaginado.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatCodigosPostalesGetMunicipiosByIdEstadoPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatCotizacionAgregarPQ.sql">
           <value>
             <set />
           </value>
