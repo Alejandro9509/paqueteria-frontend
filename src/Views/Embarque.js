@@ -237,6 +237,15 @@ function Embarque(props) {
                 [target.name]: target.value
             }
         })
+        if (target.name && event.keyCode == 13){
+            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,target.value,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                if (respuesta.data == "Vacio") {
+                    setData([])
+                } else {
+                    setData(respuesta.data)
+                }
+            })
+        }
         if (target.name === "fechaInicial"){
             obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
@@ -3224,7 +3233,7 @@ function Embarque(props) {
                                             <Grid item xs={2}>
                                                 <TextField variant="outlined" margin="dense"
                                                            onChange={handleChangeFiltros}
-                                                           onKeyDown={handleFolioEmbarqueFiltro}
+                                                           onKeyDown={handleChangeFiltros}
                                                            className="form-control"
                                                            type="text"
                                                            label="Folio Embarque"

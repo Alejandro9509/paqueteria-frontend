@@ -28,7 +28,7 @@ const columns = [
     {
       headerName: "Nombre",
       field: "m_sNombre",
-        width: 300,
+        width: 500,
     },
     {
         headerName: "Domicilio",
