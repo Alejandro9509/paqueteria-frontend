@@ -103,6 +103,7 @@ import ZonaOperativa from "./ZonasOperativas/ZonaOperativa";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
 import ComplementosSAT from "./SAT/ComplementosSAT";
 import DialogTableClientes from "./Clientes/DialogTableClientes";
+import Cotizador from "./ConceptosFacturacion/Cotizador";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -2711,6 +2712,7 @@ function Embarque(props) {
         setDataComplementosSAT(newList)
     }
 
+
     const filtrarTipoCobro = (tipoCobro) => {
         // if (!state.clientePaga) {
         if (localStorage.getItem("RFC") === "ADI880815DA7") {
@@ -4848,6 +4850,21 @@ function Embarque(props) {
                                             </div>
                                         </div>
                                         }
+                                    </div>
+
+                                    <div className="row">
+                                        <Cotizador embarque={state} remitente={remitente} paquetes={dataPaquetes.map(p =>({
+                                            Tipo: p.m_nIdTipo,
+                                            Peso: p.m_rPeso,
+                                            Largo: p.m_rLargo,
+                                            Ancho: p.m_rAncho,
+                                            Alto:p.m_rAlto,
+                                            Volumen:p.m_rVolumen,
+                                            IdTipoEmpaque:p.m_nIdTipoEmbalaje,
+                                            Activo: 1,
+                                            ctd:p.m_nCantidad,
+                                            IdProducto:p.m_nIdProducto
+                                        }))} destinatario={destinatario}/>
                                     </div>
 
                                 </div>
