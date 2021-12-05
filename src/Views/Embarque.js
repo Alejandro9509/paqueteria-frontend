@@ -1618,6 +1618,7 @@ function Embarque(props) {
         setState(state => {
             return {
                 ...state,
+                idRecoleccion: respuesta.data.m_nIdRecoleccion,
                 fechaHoraRegistro: getCurrentDateTime(),
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
@@ -2061,7 +2062,7 @@ function Embarque(props) {
     }
 
     async function getAllTiposSeguro(){
-        axios.get(`${process.env.REACT_APP_API_URL}/TipoSeguros/GetListado`, {headers}).then(({data}) => {
+        axios.get(`${process.env.REACT_APP_REPORT_URL}/api/TipoSeguros/GetListado`, {headers}).then(({data}) => {
             setDataTiposSeguro(data)
         })
     }
