@@ -70,7 +70,7 @@ function obtenerProductoById(id){
 }
 
 function obtenerProductos(){
-    const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
