@@ -781,10 +781,8 @@ function Recoleccion() {
             m_nIdEmbarque: state.folioEmbarque,
             m_nIdGuia: state.folioGuia,
             m_nIdInforme: state.folioInforme,
-            m_dFecha: state.fechaHoraCreacion.split("T")[0],
-            m_tHora: state.fechaHoraCreacion.split("T")[1],
-            m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
-            m_tHoraRegistro: state.fechaHoraRegistro.split("T")[1],
+            m_sFecha: state.fechaHoraRegistro.substr(0, 10),
+            m_sHora: state.fechaHoraRegistro.substr(state.fechaHoraRegistro.length - 5),
             m_nMoneda: state.moneda,
             m_rTipoCambio: state.tipoCambio,
             m_nIdTipoDeCobro: state.tipoCobro,
@@ -1324,8 +1322,7 @@ function Recoleccion() {
                 ...state,
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 folioRecoleccion: dataFolioRecoleccion.length !== 0 ? dataFolioRecoleccion[0].m_sFolioRecoleccion : "",
-                fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
-                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+                fechaHoraRegistro: getCurrentDateTime()
 
             }
         });
@@ -1540,6 +1537,7 @@ function Recoleccion() {
             }
         });
         setDataPaquetes([])
+        setDataComplementosSAT([])
         resetRecoleccionDD()
         resetEntregaDD()
         setDataRecoleccionConsulta(undefined)
@@ -1741,6 +1739,11 @@ function Recoleccion() {
             width: 200,
         },
         {
+            headerName: "Folio Recolección",
+            field: "m_sFolioRecoleccion",
+            width: 150,
+        },
+        {
             headerName: "Estatus",
             field: "m_sEstatusRecoleccion",
             width: 125,
@@ -1766,8 +1769,8 @@ function Recoleccion() {
             width: 150,
         },
         {
-            headerName: "Folio",
-            field: "m_sFolioRecoleccion",
+            headerName: "Folio Embarque",
+            field: "m_sFolioEmbarque",
             width: 150,
         },
         {
@@ -1781,17 +1784,16 @@ function Recoleccion() {
             width: 125,
         },
         {
-            headerName: "Fecha/Hora Recolección",
-            field: "m_sFechaHoraDetalleRec",
-            width: 250,
-        },
-
-        {
             headerName: "Zona Recolección",
             field: "m_sZonaRecoleccion",
             width: 200,
         },
         {
+            headerName: "Fecha/Hora Recolección",
+            field: "m_sFechaHoraDetalleRec",
+            width: 250,
+        },
+        /*{
             headerName: "Operador",
             field: "m_sOperador",
             width: 250,
@@ -1800,7 +1802,7 @@ function Recoleccion() {
             headerName: "Unidad",
             field: "m_sUnidad",
             width: 125,
-        }
+        }*/
     ]);
 
     const columnsCP = React.useMemo(() => [
@@ -2007,7 +2009,7 @@ function Recoleccion() {
     }
 
     async function getAllTiposSeguro() {
-        axios.get(`${process.env.REACT_APP_API_URL}/TipoSeguros/GetListado`, {headers}).then(({data}) => {
+        axios.get(`${process.env.REACT_APP_REPORT_URL}/api/TipoSeguros/GetListado`, {headers}).then(({data}) => {
             setDataTiposSeguro(data)
         })
     }
@@ -2641,7 +2643,7 @@ function Recoleccion() {
     }
 
     if (redirect) {
-        if (data.find((o) => o.m_nIdRecoleccion === state.idRecoleccion).m_nIdEmbarque != 0) {
+        if (data.find((o) => o.m_nIdRecoleccion === state.idRecoleccion).m_sFolioEmbarque) {
             showSuccess("Recolección ya tiene Embarque")
         } else {
             return (
@@ -2704,6 +2706,24 @@ function Recoleccion() {
           openDialog: isVisible,
         });
       };
+
+    const genererEmbarque = (e) => {
+        const rec = data.find(i => i.m_nIdRecoleccion === state.idRecoleccion)
+        debugger
+        if (rec){
+            if (!rec.m_sFolioEmbarque){
+                return (
+                    <Redirect push to={{
+                        pathname: '/Embarque',
+                        idRecoleccion: state.idRecoleccion,
+                    }}
+                    />
+                )
+            }else{
+                showSuccess("Recolección ya tiene Embarque")
+            }
+        }
+    }
     return (
         <div>
             {

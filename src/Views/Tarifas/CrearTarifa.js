@@ -23,6 +23,7 @@ import {
     obtenerConceptosFacturacion,
     obtenerConceptosFacturacionManiobra
 } from "../../Util/Contexts/ConceptosFacturacionContext";
+import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 
 const headers = API_HEADERS
 
@@ -192,8 +193,7 @@ class CrearTarifa extends Component {
     };
 
     getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             this.setState({ dataSucursal: respuesta.data });
         });
     }

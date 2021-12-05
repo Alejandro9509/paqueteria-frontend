@@ -33,7 +33,7 @@ function eliminarMonedas(id, idEliminadoPor){
 }
 
 function obtenerMonedas(){
-    const url = `${process.env.REACT_APP_API_URL}/Moneda/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Moneda/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
