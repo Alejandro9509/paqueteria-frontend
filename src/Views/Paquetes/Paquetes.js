@@ -145,7 +145,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
         {
             headerName: "Producto",
             field: "m_sProducto",
-            flex: 1,
+            width: 200,
         },
         {
             headerName: "Largo",
@@ -197,7 +197,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
         {
             headerName: "Descripcion",
             field: "m_sDescripcion",
-            flex: 1,
+            width: 100,
         },
         {
             headerName: "Cantidad",
@@ -209,9 +209,9 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
         {
             headerName: "Observaciones",
             field: "m_sObservaciones",
-            flex: 1,
+            width: 100,
         },
-        {
+        /*{
             field: 'complementos',
             headerName: 'Complementos',
             renderCell: RowMenuCell,
@@ -222,7 +222,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
             align: 'center',
             disableColumnMenu: true,
             disableReorder: true,
-        }
+        }*/
     ]);
 
     const columnsPaquetesConsulta = React.useMemo(() => [
@@ -872,7 +872,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
                     }
 
 
-                    {!disabled?  <div className="row" style={{ height: 200}}>
+                    {!disabled?  <div className="row" style={{ height: 200, width: "100%"}}>
                         <DataGrid
                             localeText={dataGridLocaleText}
                             density="compact"
@@ -881,7 +881,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
                             rows={dataPaquetes}
                             getRowId={(row) => row.m_nIdPaquete}
                         />
-                    </div> : <div className="row" style={{ height: 200}}>
+                    </div> : <div className="row" style={{ height: 200, width: "100%"}}>
                         <DataGrid
                             localeText={dataGridLocaleText}
                             density="compact"
