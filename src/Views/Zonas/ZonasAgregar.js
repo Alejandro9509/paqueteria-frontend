@@ -7,6 +7,7 @@ import axios from "axios";
 import {AppBar, Box, FormControl, InputLabel, Select, Tab, Tabs, TextField, Typography} from '@material-ui/core';
 import {obtenerCodigoPostalCiudad} from "../../Util/Contexts/CodigoPostalContext";
 import {API_HEADERS} from "../../Constants";
+import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 
 const headers = API_HEADERS
 
@@ -86,8 +87,7 @@ class ZonasAgregar extends Component {
     }
 
     async getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        await axios.get(url, {headers}).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             this.setState({dataSucursal: respuesta.data});
         });
     }

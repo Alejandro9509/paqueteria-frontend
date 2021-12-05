@@ -145,7 +145,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
         {
             headerName: "Producto",
             field: "m_sProducto",
-            flex: 1,
+            width: 200,
         },
         {
             headerName: "Largo",
@@ -197,7 +197,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
         {
             headerName: "Descripcion",
             field: "m_sDescripcion",
-            flex: 1,
+            width: 100,
         },
         {
             headerName: "Cantidad",
@@ -209,9 +209,9 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
         {
             headerName: "Observaciones",
             field: "m_sObservaciones",
-            flex: 1,
+            width: 100,
         },
-        {
+        /*{
             field: 'complementos',
             headerName: 'Complementos',
             renderCell: RowMenuCell,
@@ -222,7 +222,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
             align: 'center',
             disableColumnMenu: true,
             disableReorder: true,
-        }
+        }*/
     ]);
 
     const columnsPaquetesConsulta = React.useMemo(() => [
@@ -349,18 +349,37 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
         if (paquete.m_nIdTipo == 1){
             return !!(paquete.m_sDescripcion != '');
         }else{
-            return !!(paquete.m_rPeso != ''
-                && paquete.m_rLargo != ''
-                && paquete.m_rAncho != ''
-                && paquete.m_rAlto != ''
-                && paquete.m_sDescripcion != ''
-                && paquete.m_nCantidad != ''
-                && paquete.producto
-                && paquete.m_nIdTipoEmbalaje);
+            if (!paquete.producto){
+                showSuccess("Seleccione un producto del listado")
+                return false
+            }
+            if (!paquete.m_rLargo || !paquete.m_rAncho || !paquete.m_rAncho){
+                showSuccess("Ingrese las dimensiones del paquete.")
+                return false
+            }
+            if (!paquete.m_rPeso){
+                showSuccess("Ingrese el peso del paquete.")
+                return false
+            }
+            if (!paquete.m_nIdTipoEmbalaje){
+                showSuccess("Seleccione un tipo de embalaje del listado")
+                return false
+            }
+            if (paquete.m_sDescripcion === ''){
+                showSuccess("Ingrese la descripcion del paquete.")
+                return false
+            }
+            if (paquete.m_nCantidad === ''){
+                showSuccess("Ingrese la cantidad de paquetes.")
+                return false
+            }
+            return true
         }
     }
 
     const addPaquetev2 = (event) => {
+        event.preventDefault()
+        event.stopPropagation()
         console.log(paquete)
         let paq = paquete
         if (validarPaquetes(paq)){
@@ -374,8 +393,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
             resetPaquete()
 
             onChangeList(dataPaquetes)
-        }else{
-            showSuccess("Rellene los campos obligatorios.")
         }
     }
 
@@ -855,7 +872,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
                     }
 
 
-                    {!disabled?  <div className="row" style={{ height: 200}}>
+                    {!disabled?  <div className="row" style={{ height: 200, width: "100%"}}>
                         <DataGrid
                             localeText={dataGridLocaleText}
                             density="compact"
@@ -864,7 +881,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
                             rows={dataPaquetes}
                             getRowId={(row) => row.m_nIdPaquete}
                         />
-                    </div> : <div className="row" style={{ height: 200}}>
+                    </div> : <div className="row" style={{ height: 200, width: "100%"}}>
                         <DataGrid
                             localeText={dataGridLocaleText}
                             density="compact"

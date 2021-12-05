@@ -59,7 +59,7 @@ class DetalleInforme extends Component {
                                                 <div className="input">
 
                                                     <TextField variant="outlined" margin="dense" label="Total"
-                                                               value={value.m_arClsGuiaConceptos.reduce((a, b) => +a + +b.m_cTotal, 0)}
+                                                               value={value.m_xTotal}
                                                                disabled="true"
                                                                className="form-control"
                                                                type="text"

@@ -133,7 +133,7 @@ async function obtenerRutas(truck, guias, data) {
                     "$type": "DirectDistance"
                 }
             }, (r, e) => resolve(r))
-        }),"progress"
+        })
     )
     return result
 
@@ -216,7 +216,7 @@ function calcularRutaUltimaMilla(points, sucursal, camion) {
                 }
 
             }, (r, e) => resolve(r))
-        }),"progress"
+        })
     )
     return result
 
@@ -350,7 +350,7 @@ function agregarRuta(idUltimaMilla, tour, data) {
     })
 
     trackPromise(
-        result = axios.post(url, Object.assign({}, ultimaMillaObject), {headers}),"progress"
+        result = axios.post(url, Object.assign({}, ultimaMillaObject), {headers})
     );
     return result
 }
@@ -368,7 +368,7 @@ async function ordenarParada(idParada, guias) {
         esRecoleccion: g.m_bEsRecoleccion
     }))
     trackPromise(
-        result = axios.put(url, Object.assign({}, {guias: paquetes}), {headers}),"progress"
+        result = axios.put(url, Object.assign({}, {guias: paquetes}), {headers})
     )
     ;
     return result
@@ -432,7 +432,7 @@ function eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion) {
             EsRecoleccion: esRecoleccion,
             IdGuia: idGuia,
             IdParada: idParada,
-        }), {headers}),"progress"
+        }), {headers})
     );
     return result
 }

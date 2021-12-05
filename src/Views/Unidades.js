@@ -23,6 +23,7 @@ import { obtenerGrupoUnidades } from "../Util/Contexts/GrupoUnidadesContext";
 import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
 import { obtenerUnidades, obtenerUnidadesId, eliminarUnidades, validaCodigoUnidad, modificarUnidades, agregarUnidades } from "../Util/Contexts/UnidadesContext";
 import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
+import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -449,8 +450,7 @@ function Unidades(props) {
     }
 
     function getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursales(respuesta.data);
         });
     }

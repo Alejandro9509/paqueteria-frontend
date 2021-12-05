@@ -53,6 +53,7 @@ import {obtenerInformesPorViaje} from "../Util/Contexts/InformesContext";
 import {getUniqueListBy} from "../Util/Util";
 import DetalleInforme from "./Viajes/DetalleInforme";
 import {obtenerDetalleParadasIdInformes, obtenerDetalleParadasIdViaje} from "../Util/Contexts/DetalleParadasContext";
+import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -117,8 +118,7 @@ function Viajes() {
     }
 
     function getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, {headers}).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursal(respuesta.data);
         });
     }
@@ -545,13 +545,13 @@ function Viajes() {
             headerName: "Salida",
             field: "m_dFechaSalida",
             width: 130,
-            valueFormatter: row => row.value.startsWith("0000") ? "Sin definir" : row.value
+            valueFormatter: row => !row.value ? "Sin definir" : row.value
         },
         {
             headerName: "Llegada",
             field: "m_dFechaLlegada",
             width: 130,
-            valueFormatter: row => row.value.startsWith("0000") ? "Sin definir" : row.value
+            valueFormatter: row => !row.value ? "Sin definir" : row.value
         },
         {
             headerName: "Guías",
@@ -1087,20 +1087,20 @@ function Viajes() {
 
                                                                         <ListItemText primary={`Ruta: ${p.m_sOrigen}  - ${p.m_sDestino}`}/>
                                                                         {
-                                                                            p.m_dFechaSalida.startsWith("0000") &&
+                                                                            !p.m_dFechaSalida  &&
 
                                                                             <Link style={{cursor: "pointer"}}
                                                                                   onClick={() => showSalidaDialog(p)}>Marcar
                                                                                 Salida</Link>
                                                                         }
 
-                                                                        {p.m_dFechaLlegada.startsWith("0000") && p.m_dFechaSalida.startsWith("0000") &&
+                                                                        {!p.m_dFechaLlegada  && !p.m_dFechaSalida  &&
                                                                         "/"
                                                                         }
 
 
                                                                         {
-                                                                            p.m_dFechaLlegada.startsWith("0000") &&
+                                                                            !p.m_dFechaLlegada &&
 
                                                                             <Link style={{cursor: "pointer"}}
                                                                                   onClick={() => showLlegadaDialog(p)}>Marcar

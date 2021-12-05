@@ -32,7 +32,7 @@ function eliminarTipoCobro(id, idEliminadoPor) {
 }
 
 function obtenerTipoCobro() {
-    const url = `${process.env.REACT_APP_API_URL}/TipoCobro/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoCobro/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

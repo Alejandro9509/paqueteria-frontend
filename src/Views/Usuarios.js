@@ -27,6 +27,7 @@ import {
 import { agregarUnidades } from "../Util/Contexts/UnidadesContext";
 import Derechos from "./Usuarios/Derechos";
 import CopiarDerechos from "./Usuarios/CopiarDerechos";
+import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -512,8 +513,7 @@ function Usuarios() {
     };
 
     async function getAllSucursalData() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        await axios.get(url, { headers }).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursal(respuesta.data);
         });
     }

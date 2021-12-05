@@ -1709,7 +1709,7 @@ function Informes({history}) {
                                                             name="OrigenListado"
                                                         >
                                                             <option value="0">Todos</option>
-                                                            {dataCiudadF.map((ciudad) => (
+                                                            {dataOrigenes.map((ciudad) => (
                                                                 <option
                                                                     key={ciudad.m_nIdCiudad}
                                                                     value={ciudad.m_nIdCiudad}
@@ -1734,7 +1734,7 @@ function Informes({history}) {
                                                             name="DestinoListado"
                                                         >
                                                             <option value="0">Todos</option>
-                                                            {dataCiudadF.map((ciudad) => (
+                                                            {dataOrigenes.map((ciudad) => (
                                                                 <option
                                                                     key={ciudad.m_nIdCiudad}
                                                                     value={ciudad.m_nIdCiudad}

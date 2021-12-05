@@ -9,7 +9,7 @@ function agregarViaje( params){
     const url = `${process.env.REACT_APP_API_URL}/Viajes/Agregar`;
     let result;
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers }),"progress"
+        result =  axios.post(url, Object.assign({}, params), { headers })
         );
     return result
 }
@@ -18,7 +18,7 @@ function modificarViaje( id,params){
     const url = `${process.env.REACT_APP_API_URL}/Viajes/Modificar`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers }),"progress"
+        result =  axios.put(url, Object.assign({}, params), { headers })
     );
     return result
 }
@@ -27,7 +27,7 @@ function agregarViajeSalida( params){
     const url = `${process.env.REACT_APP_API_URL}/Viajes/AgregarSalida`;
     let result;
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers }),"progress"
+        result =  axios.post(url, Object.assign({}, params), { headers })
         );
     return result
 
@@ -39,7 +39,7 @@ function agregarViajeLlegada( params){
     const url = `${process.env.REACT_APP_API_URL}/Viajes/AgregarLlegada`;
     let result;
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers }), "progress"
+        result =  axios.post(url, Object.assign({}, params), { headers })
         );
     return result
 }
