@@ -1099,7 +1099,7 @@ function Embarque(props) {
 
         const params = {
             m_nIdEmbarque: state.idEmbarque,
-            m_nIdRecoleccion: props.location.idRecoleccion,
+            m_nIdRecoleccion: state.idRecoleccion,
             IdSucursal: state.idSucursalAgregar,
             m_nFolioEmbarque: state.folioEmbarque,
             m_nFolioGuia: state.folioGuia,
