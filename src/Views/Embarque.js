@@ -496,6 +496,11 @@ function Embarque(props) {
             width: 200,
         },
         {
+            headerName: "Folio Embarque",
+            field: "m_nFolioEmbarque",
+            width: 125,
+        },
+        {
             headerName: "Estatus de la Orden",
             field: "m_sEstatusEmbarque",
             width: 200,
@@ -521,11 +526,6 @@ function Embarque(props) {
             field: "m_sCiudadDestino",
             width: 200,
         },
-        {
-            headerName: "Folio",
-            field: "m_nFolioEmbarque",
-            width: 125,
-        },
         /*{
             headerName: "Folio Relacionado",
             field: "m_sFolioEmbarqueRelacionado",
@@ -539,18 +539,6 @@ function Embarque(props) {
         {
             headerName: "Sucursal",
             field: "m_sSucursal",
-            width: 150,
-        },
-
-
-        {
-            headerName: "Folio Guía",
-            field: "m_sFolioGuia",
-            width: 150,
-        },
-        {
-            headerName: "Folio Informe",
-            field: "m_nFolioInforme",
             width: 150,
         },
         {
@@ -580,6 +568,16 @@ function Embarque(props) {
         {
             headerName: "Folio Recolección",
             field: "m_sFolioRecoleccion",
+            width: 150,
+        },
+        {
+            headerName: "Folio Guía",
+            field: "m_sFolioGuia",
+            width: 150,
+        },
+        {
+            headerName: "Folio Informe",
+            field: "m_nFolioInforme",
             width: 150,
         },
         {
@@ -3393,25 +3391,21 @@ function Embarque(props) {
                                     </div>
                                 </div>
                                 <div className="row" style={{height: state.height - 250, width: "100%"}}>
-                                    {conDatos() ? (
-                                        <DataGrid
-                                            localeText={dataGridLocaleText}
-                                            className={classes.root}
-                                            rows={data}
-                                            columns={columns}
-                                            density="compact"
-                                            pageSize={Math.floor((state.height - 310) / 30)}
-                                            getRowId={(row) => row.m_nIdEmbarque}
-                                            onRowSelected={(row) => {
-                                                setState({
-                                                    ...state,
-                                                    idEmbarque: row.data.m_nIdEmbarque,
-                                                });
-                                            }}
-                                        />
-                                    ) : (
-                                        <div>No se encontró ningún registro</div>
-                                    )}
+                                    <DataGrid
+                                        localeText={dataGridLocaleText}
+                                        className={classes.root}
+                                        rows={data}
+                                        columns={columns}
+                                        density="compact"
+                                        pageSize={Math.floor((state.height - 310) / 30)}
+                                        getRowId={(row) => row.m_nIdEmbarque}
+                                        onRowSelected={(row) => {
+                                            setState({
+                                                ...state,
+                                                idEmbarque: row.data.m_nIdEmbarque,
+                                            });
+                                        }}
+                                    />
                                 </div>
                             </div>
                         </div>
