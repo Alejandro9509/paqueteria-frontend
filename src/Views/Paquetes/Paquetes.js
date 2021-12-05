@@ -211,7 +211,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
             field: "m_sObservaciones",
             width: 100,
         },
-        /*{
+        {
             field: 'complementos',
             headerName: 'Complementos',
             renderCell: RowMenuCell,
@@ -222,7 +222,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
             align: 'center',
             disableColumnMenu: true,
             disableReorder: true,
-        }*/
+        }
     ]);
 
     const columnsPaquetesConsulta = React.useMemo(() => [
