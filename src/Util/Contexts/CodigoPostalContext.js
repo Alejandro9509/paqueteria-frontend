@@ -61,7 +61,7 @@ function obtenerCodigoPostalEstado(idEstado){
 }
 
 function obtenerCodigoPostalId(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/CodigoPostal/GetById/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
