@@ -33,7 +33,7 @@ function eliminarCiudad(id, idEliminadoPor){
 }
 
 function obtenerCiudades(){
-    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Ciudades/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

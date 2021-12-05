@@ -36,6 +36,7 @@ import InformesPorAsignar from "./InformesPorAsignar";
 import Noty from "noty";
 import {obtenerEstatusUnidadeId, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 import {obtenerOperadoresId} from "../../Util/Contexts/OperadoresContext";
+import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 
 const headers = API_HEADERS
 
@@ -248,8 +249,7 @@ class AgregarViaje extends Component {
     }
 
     getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, {headers}).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             this.setState({dataSucursal: respuesta.data})
         });
     }

@@ -53,6 +53,7 @@ import {obtenerInformesPorViaje} from "../Util/Contexts/InformesContext";
 import {getUniqueListBy} from "../Util/Util";
 import DetalleInforme from "./Viajes/DetalleInforme";
 import {obtenerDetalleParadasIdInformes, obtenerDetalleParadasIdViaje} from "../Util/Contexts/DetalleParadasContext";
+import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -117,8 +118,7 @@ function Viajes() {
     }
 
     function getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, {headers}).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursal(respuesta.data);
         });
     }
