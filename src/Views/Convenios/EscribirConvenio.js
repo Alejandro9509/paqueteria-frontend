@@ -47,6 +47,7 @@ import {obtenerByIdZonaTarifa, obtenerListadoZonaTarifa} from "../../Util/Contex
 import CodigosPostalesZonas from "../ZonasOperativas/CodigosPostalesZonas";
 import ConceptosFacturacion from "../Tarifas/ConceptosFacturacion";
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
+import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 
 const headers = API_HEADERS
 
@@ -652,8 +653,7 @@ class EscribirConvenio extends Component {
     }
 
     getAllProductos(){
-        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerProductos().then(respuesta => {
             this.setState({ dataProductos: respuesta.data, dataProductosTemp: respuesta.data, agregar: "Agregar" })
         });
     }

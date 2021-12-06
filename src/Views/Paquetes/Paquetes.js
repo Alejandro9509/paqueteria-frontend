@@ -12,7 +12,7 @@ import {DataGrid} from "@material-ui/data-grid";
 import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
-import {obtenerProductoById} from "../../Util/Contexts/ProductosContext";
+import {obtenerProductoById, obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import {obtenerEmbalajes} from "../../Util/Contexts/EmbalajesContext";
 import axios from "axios";
 import Recoleccion from "../Recoleccion";
@@ -211,7 +211,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
             field: "m_sObservaciones",
             width: 100,
         },
-        /*{
+        {
             field: 'complementos',
             headerName: 'Complementos',
             renderCell: RowMenuCell,
@@ -222,7 +222,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
             align: 'center',
             disableColumnMenu: true,
             disableReorder: true,
-        }*/
+        }
     ]);
 
     const columnsPaquetesConsulta = React.useMemo(() => [
@@ -555,8 +555,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
     }
 
     const getAllProductos = () => {
-        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
-        axios.get(url, {headers}).then(respuesta => {
+        obtenerProductos().then(respuesta => {
             setDataProductos(respuesta.data)
         });
     }
