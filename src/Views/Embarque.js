@@ -3228,9 +3228,7 @@ function Embarque(props) {
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in show"}>
 
                             <div className="widget-wrap">
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <Grid container spacing={2} alignItems="center">
+                                    <Grid container spacing={2} alignItems="center">
                                             <Grid item xs={2}>
                                                 <TextField variant="outlined" margin="dense"
                                                            onChange={handleChangeFiltros}
@@ -3388,8 +3386,7 @@ function Embarque(props) {
                                                 </IconButton>
                                             </Grid>
                                         </Grid>
-                                    </div>
-                                </div>
+
                                 <div className="row" style={{height: state.height - 250, width: "100%"}}>
                                     <DataGrid
                                         localeText={dataGridLocaleText}
@@ -3448,7 +3445,6 @@ function Embarque(props) {
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row">
-                                                    <div className="col-md-12">
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
@@ -3793,7 +3789,7 @@ function Embarque(props) {
                                                                 </div>
                                                             </Grid>
                                                         </Grid>
-                                                    </div>
+
 
                                                 </div>
                                             </div>
@@ -4086,7 +4082,6 @@ function Embarque(props) {
                                     </div>
 
                                     <div className="row">
-                                        <div className="col-md-12">
                                             <div className="widget-wrap" id="remitenteDestinatario">
                                                 <div className="row">
                                                     <div className="col-md-6">
@@ -4235,7 +4230,7 @@ function Embarque(props) {
                                                 }
 
                                             </div>
-                                        </div>
+
 
                                         {/*<div className="widget-wrap col-md-5" id="paquetesSobres">
                                             <div className="row">
@@ -4847,7 +4842,7 @@ function Embarque(props) {
                                         }
                                     </div>
 
-                                    {/*<div className="row">
+                                    <div className="row">
                                         <Cotizador embarque={state} remitente={remitente} paquetes={dataPaquetes.map(p =>({
                                             Tipo: p.m_nIdTipo,
                                             Peso: p.m_rPeso,
@@ -4860,7 +4855,7 @@ function Embarque(props) {
                                             ctd:p.m_nCantidad,
                                             IdProducto:p.m_nIdProducto
                                         }))} destinatario={destinatario}/>
-                                    </div>*/}
+                                    </div>
 
                                 </div>
                                 <div className="form-footer ol-md-12">
@@ -4893,7 +4888,6 @@ function Embarque(props) {
                             <div className="widget-wrap">
                                 <div className="widget-container">
                                     <div className="widget-content">
-                                        <div className="row">
                                             <form className="j-forms" onSubmit={handleCancelar}>
                                                 <div className="form-content">
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
@@ -5003,7 +4997,7 @@ function Embarque(props) {
                                                     </div>
                                                 </div>
                                             </form>
-                                        </div>
+
                                     </div>
                                 </div>
                             </div>

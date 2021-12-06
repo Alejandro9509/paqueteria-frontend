@@ -24,7 +24,7 @@
 }
 .login-form-footer .btn {
   padding: 10px 20px !important;
-  font-size: 16px !important;
+  font-size: 12px !important;
   font-weight: 400 !important;
 }
 .btn-login {
@@ -35,7 +35,7 @@
   -moz-border-radius: 3px !important;
   border-radius: 3px !important;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16), 0 2px 10px rgba(0, 0, 0, 0.12) !important;
-  font-size: 16px !important;
+  font-size: 12px !important;
   font-weight: 400 !important;
 }
 .btn-login:hover {
@@ -82,7 +82,7 @@
 }
 .boxed-login .login-form-footer .btn {
   padding: 10px 20px !important;
-  font-size: 16px !important;
+  font-size: 12px !important;
   font-weight: 400 !important;
 }
 .social-login {

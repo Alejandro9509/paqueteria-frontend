@@ -423,21 +423,25 @@ function ComplementosSAT(props) {
                 </Grid>
             </Grid>
 
-            <div className="widget-container">
-                <div className="widget-content">
-                    <div className="row" style={{ height: 200}}>
-                        <DataGrid
-                            localeText={dataGridLocaleText}
-                            density="compact"
-                            pageSize={10}
-                            columns={columnsPaquetes}
-                            rows={props.dataList}
-                            getRowId={(row) => row.id}
-                        />
-                    </div>
+            {
+                props.dataList.length !== 0 &&
+                <div className="widget-container">
+                    <div className="widget-content">
+                        <div className="row" style={{ height: 200}}>
+                            <DataGrid
+                                localeText={dataGridLocaleText}
+                                density="compact"
+                                pageSize={10}
+                                columns={columnsPaquetes}
+                                rows={props.dataList}
+                                getRowId={(row) => row.id}
+                            />
+                        </div>
 
+                    </div>
                 </div>
-            </div>
+            }
+
         </div>
     )
 }

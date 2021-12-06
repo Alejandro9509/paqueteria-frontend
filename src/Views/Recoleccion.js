@@ -3361,7 +3361,6 @@ function Recoleccion() {
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row ">
-                                                    <div className="col-md-12">
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             {" "}
                                                             <label className="input select">
@@ -3704,7 +3703,7 @@ function Recoleccion() {
                                                                 </div>
                                                             </Grid>
                                                         </Grid>
-                                                    </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -3729,7 +3728,6 @@ function Recoleccion() {
                                     </div>
 
                                     <div className="row ">
-                                        <div className="col-md-12">
                                             <div className="widget-wrap" id="remitenteDestinatario">
                                                 <div className="row">
                                                     <div className="col-md-6">
@@ -3853,7 +3851,6 @@ function Recoleccion() {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
 
                                     </div>
 
