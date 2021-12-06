@@ -43,7 +43,11 @@ import {obtenerTarifaBy} from "../../Util/Contexts/TarifasContext";
 import DestinosTarifa from "../Tarifas/DestinosTarifa";
 import ProductosPrecios from "../Tarifas/ProductosPrecios";
 import {obtenerCliente} from "../../Util/Contexts/ClientesContext";
-import {obtenerByIdZonaTarifa, obtenerListadoZonaTarifa} from "../../Util/Contexts/ZonaTarifaContext";
+import {
+    obtenerByIdZonaTarifa,
+    obtenerByIdZonaTarifaSinCP,
+    obtenerListadoZonaTarifa
+} from "../../Util/Contexts/ZonaTarifaContext";
 import CodigosPostalesZonas from "../ZonasOperativas/CodigosPostalesZonas";
 import ConceptosFacturacion from "../Tarifas/ConceptosFacturacion";
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
@@ -631,7 +635,7 @@ class EscribirConvenio extends Component {
         }else{
             const zonas = []
             this.state.idsZonasSeleccionadas.forEach((idZona) => {
-                obtenerByIdZonaTarifa(idZona).then(respuesta => {
+                obtenerByIdZonaTarifaSinCP(idZona).then(respuesta => {
                     zonas.push(respuesta.data)
                     this.state.zonasSeleccionadas.push(respuesta.data)
                     if (zonas.length === this.state.idsZonasSeleccionadas.length){
