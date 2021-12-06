@@ -4847,7 +4847,7 @@ function Embarque(props) {
                                         }
                                     </div>
 
-                                    <div className="row">
+                                    {/*<div className="row">
                                         <Cotizador embarque={state} remitente={remitente} paquetes={dataPaquetes.map(p =>({
                                             Tipo: p.m_nIdTipo,
                                             Peso: p.m_rPeso,
@@ -4860,7 +4860,7 @@ function Embarque(props) {
                                             ctd:p.m_nCantidad,
                                             IdProducto:p.m_nIdProducto
                                         }))} destinatario={destinatario}/>
-                                    </div>
+                                    </div>*/}
 
                                 </div>
                                 <div className="form-footer ol-md-12">
