@@ -29,9 +29,6 @@ function Filtros(props) {
 
     const handleChangeFiltros = (event) => {
         const {target} = event
-        console.log(target.name)
-        console.log(event)
-        console.log(target)
         setFiltros(filtros => {
             return {
                 ...filtros,
@@ -47,7 +44,7 @@ function Filtros(props) {
                 }
             })
         }
-        if (target.name === "fechaInicial"){
+        /*if (target.name === "fechaInicial"){
             obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     props.listaResultado([])
@@ -99,7 +96,7 @@ function Filtros(props) {
                     props.listaResultado(respuesta.data)
                 }
             })
-        }
+        }*/
     }
 
     const filtrar = () => {
