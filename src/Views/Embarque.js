@@ -1795,7 +1795,7 @@ function Embarque(props) {
                 idRecoleccion: duplicar ? 0 : respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.IdSucursal,
                 folioRecoleccion: duplicar ? "" : respuesta.data.m_sFolioRecoleccion,
-                folioEmbarque: respuesta.data.m_nFolioEmbarque,
+                folioEmbarque: respuesta.data.m_sFolioEmbarque,
                 folioGuia: duplicar ? "" : respuesta.data.m_sFolioGuia,
                 folioInforme: duplicar ? "" : respuesta.data.m_nFolioInforme,
                 fechaHoraRegistro: getCurrentDateTime(),
