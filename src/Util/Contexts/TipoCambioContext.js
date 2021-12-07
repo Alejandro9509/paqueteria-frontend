@@ -33,7 +33,7 @@ function eliminarTipoCambio(id, idEliminadoPor) {
 }
 
 function obtenerTipoCambio() {
-    const url = `${process.env.REACT_APP_API_URL}/TipoCambio/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoCambio/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

@@ -103,6 +103,7 @@ import ZonaOperativa from "./ZonasOperativas/ZonaOperativa";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
 import ComplementosSAT from "./SAT/ComplementosSAT";
 import DialogTableClientes from "./Clientes/DialogTableClientes";
+import Cotizador from "./ConceptosFacturacion/Cotizador";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -495,6 +496,11 @@ function Embarque(props) {
             width: 200,
         },
         {
+            headerName: "Folio Embarque",
+            field: "m_nFolioEmbarque",
+            width: 125,
+        },
+        {
             headerName: "Estatus de la Orden",
             field: "m_sEstatusEmbarque",
             width: 200,
@@ -520,11 +526,6 @@ function Embarque(props) {
             field: "m_sCiudadDestino",
             width: 200,
         },
-        {
-            headerName: "Folio",
-            field: "m_nFolioEmbarque",
-            width: 125,
-        },
         /*{
             headerName: "Folio Relacionado",
             field: "m_sFolioEmbarqueRelacionado",
@@ -538,18 +539,6 @@ function Embarque(props) {
         {
             headerName: "Sucursal",
             field: "m_sSucursal",
-            width: 150,
-        },
-
-
-        {
-            headerName: "Folio Guía",
-            field: "m_sFolioGuia",
-            width: 150,
-        },
-        {
-            headerName: "Folio Informe",
-            field: "m_nFolioInforme",
             width: 150,
         },
         {
@@ -579,6 +568,16 @@ function Embarque(props) {
         {
             headerName: "Folio Recolección",
             field: "m_sFolioRecoleccion",
+            width: 150,
+        },
+        {
+            headerName: "Folio Guía",
+            field: "m_sFolioGuia",
+            width: 150,
+        },
+        {
+            headerName: "Folio Informe",
+            field: "m_nFolioInforme",
             width: 150,
         },
         {
@@ -1098,7 +1097,7 @@ function Embarque(props) {
 
         const params = {
             m_nIdEmbarque: state.idEmbarque,
-            m_nIdRecoleccion: props.location.idRecoleccion,
+            m_nIdRecoleccion: state.idRecoleccion,
             IdSucursal: state.idSucursalAgregar,
             m_nFolioEmbarque: state.folioEmbarque,
             m_nFolioGuia: state.folioGuia,
@@ -1580,7 +1579,7 @@ function Embarque(props) {
                     datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
                 }
             })
-            let estado = respuesta.data.m_nIdEstadoEntrega < 10 ? `0${respuesta.data.m_nIdEstadoEntrega}` : respuesta.data.m_nIdEstadoEntrega
+            let estado = `${respuesta.data.m_nIdEstadoEntrega}`
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipiosEntregaDD(data)
             })
@@ -1617,6 +1616,7 @@ function Embarque(props) {
         setState(state => {
             return {
                 ...state,
+                idRecoleccion: respuesta.data.m_nIdRecoleccion,
                 fechaHoraRegistro: getCurrentDateTime(),
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
@@ -1650,7 +1650,7 @@ function Embarque(props) {
             })
             /**Si es entrega es en diferente domicilio*/
         }else if (!respuesta.data.EntregarMismoDomicilio){
-            let estado = respuesta.data.m_nIdEstadoEntrega < 10 ? `0${respuesta.data.m_nIdEstadoEntrega}` : respuesta.data.m_nIdEstadoEntrega
+            let estado =  `${respuesta.data.m_nIdEstadoEntrega}`
             setEntregaDD(entregaDD => {
                 return {
                     ...entregaDD,
@@ -2060,7 +2060,7 @@ function Embarque(props) {
     }
 
     async function getAllTiposSeguro(){
-        axios.get(`${process.env.REACT_APP_API_URL}/TipoSeguros/GetListado`, {headers}).then(({data}) => {
+        axios.get(`${process.env.REACT_APP_REPORT_URL}/api/TipoSeguros/GetListado`, {headers}).then(({data}) => {
             setDataTiposSeguro(data)
         })
     }
@@ -2710,6 +2710,7 @@ function Embarque(props) {
     const handleListComplementosSATChange = (newList) => {
         setDataComplementosSAT(newList)
     }
+
 
     const filtrarTipoCobro = (tipoCobro) => {
         // if (!state.clientePaga) {
@@ -3390,25 +3391,21 @@ function Embarque(props) {
                                     </div>
                                 </div>
                                 <div className="row" style={{height: state.height - 250, width: "100%"}}>
-                                    {conDatos() ? (
-                                        <DataGrid
-                                            localeText={dataGridLocaleText}
-                                            className={classes.root}
-                                            rows={data}
-                                            columns={columns}
-                                            density="compact"
-                                            pageSize={Math.floor((state.height - 310) / 30)}
-                                            getRowId={(row) => row.m_nIdEmbarque}
-                                            onRowSelected={(row) => {
-                                                setState({
-                                                    ...state,
-                                                    idEmbarque: row.data.m_nIdEmbarque,
-                                                });
-                                            }}
-                                        />
-                                    ) : (
-                                        <div>No se encontró ningún registro</div>
-                                    )}
+                                    <DataGrid
+                                        localeText={dataGridLocaleText}
+                                        className={classes.root}
+                                        rows={data}
+                                        columns={columns}
+                                        density="compact"
+                                        pageSize={Math.floor((state.height - 310) / 30)}
+                                        getRowId={(row) => row.m_nIdEmbarque}
+                                        onRowSelected={(row) => {
+                                            setState({
+                                                ...state,
+                                                idEmbarque: row.data.m_nIdEmbarque,
+                                            });
+                                        }}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -4849,6 +4846,21 @@ function Embarque(props) {
                                         </div>
                                         }
                                     </div>
+
+                                    {/*<div className="row">
+                                        <Cotizador embarque={state} remitente={remitente} paquetes={dataPaquetes.map(p =>({
+                                            Tipo: p.m_nIdTipo,
+                                            Peso: p.m_rPeso,
+                                            Largo: p.m_rLargo,
+                                            Ancho: p.m_rAncho,
+                                            Alto:p.m_rAlto,
+                                            Volumen:p.m_rVolumen,
+                                            IdTipoEmpaque:p.m_nIdTipoEmbalaje,
+                                            Activo: 1,
+                                            ctd:p.m_nCantidad,
+                                            IdProducto:p.m_nIdProducto
+                                        }))} destinatario={destinatario}/>
+                                    </div>*/}
 
                                 </div>
                                 <div className="form-footer ol-md-12">

@@ -33,7 +33,7 @@ function eliminarEmbalajes(id, idEliminadoPor){
 }
 
 function obtenerEmbalajes(){
-    const url = `${process.env.REACT_APP_API_URL}/Embalajes/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embalajes/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

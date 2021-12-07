@@ -175,7 +175,7 @@ function Guia(props) {
         folioInforme: "",
         tracking: "",
         fecha: "",
-        idEstatusGuia: '',
+        idEstatusGuia: 0,
         idMoneda: 0,
         idTipoTarifa: 2,
         tipoCambio: 0,
@@ -223,7 +223,7 @@ function Guia(props) {
         ],
         //Detalle de faturación
         idTipoCobro: 0,
-        idTipoServicio: '2',
+        idTipoServicio: 2,
         ValorDeclarado: "",
         porcentajeSeguro:'',
         //Conceptos de facturacion
@@ -860,6 +860,11 @@ function Guia(props) {
             width: 200,
         },
         {
+            headerName: "Folio Guia",
+            field: "m_nFolioGuia",
+            width: 125,
+        },
+        {
             headerName: "Estatus Guia",
             field: "m_sEstatusGuia",
             width: 200,
@@ -873,11 +878,6 @@ function Guia(props) {
             headerName: "Destino",
             field: "m_sCiudadDestino",
             width: 150,
-        },
-        {
-            headerName: "Folio Guia",
-            field: "m_nFolioGuia",
-            width: 125,
         },
         {
             headerName: "Tipo cobro",
@@ -957,21 +957,21 @@ function Guia(props) {
                 $('.nav-tabs li').eq(1).addClass('active');
                 $('.tab-content div ').removeClass('in show');
                 $('#Agregar').addClass('in show');
-                setDataMoneda(props.location.dataMoneda)
-                setDataSucursal(props.location.dataSucursal)
-                setDataTipoCobro(props.location.dataTipoCobro)
-                setDataTipoCambio(props.location.dataTipoCambio)
-                setDataCiudadF(props.location.dataCiudades)
+                // setDataMoneda(props.location.dataMoneda)
+                // setDataSucursal(props.location.dataSucursal)
+                // setDataTipoCobro(props.location.dataTipoCobro)
+                // setDataTipoCambio(props.location.dataTipoCambio)
+                // setDataCiudadF(props.location.dataCiudades)
             });
         }else{
             getAllData()
-            getAllCiudadesFiltro()
-            getAllDataSucursal()
-
-            getAllDataMoneda()
-            getAllDataTipoCobro()
-            getTipoCambio()
         }
+        getAllCiudadesFiltro()
+        getAllDataSucursal()
+        getAllDataSucursal()
+        getAllDataMoneda()
+        getAllDataTipoCobro()
+        getTipoCambio()
         getAllDataEstatusGuia()
         getUltimoFolioGuia()
         getAllDataTipoServicio()
@@ -1250,7 +1250,7 @@ obtenerGuiaId(id).then(({data}) => {
                 folioRelacionado: respuesta.m_sFolioEmbarqueRelacionado,
                 fecha: getCurrentDateTime(),
                 idEmbarqueRelacionado: respuesta.m_nIdEmbarqueRelacionado,
-                nombreRemitente: respuesta.data.m_sNOmbreRemitente,
+                nombreRemitente: respuesta.data.m_sNombreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
                 FolioGuiaRelacionada: respuesta.data.m_sFolioGuiaRelacionada,
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
@@ -1280,7 +1280,7 @@ obtenerGuiaId(id).then(({data}) => {
                 creadoEl: respuesta.data.m_dCreadoEl,
                 idEstatusGuia: 4,
                 idTipoServicio: 2,
-                tieneRecoleccion: respuesta.data.m_bEsRecolecta,
+                tieneRecoleccion: respuesta.data.m_bEsRecoleccion,
                 tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
                 tieneCitaRecoleccion: false,
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
@@ -1383,7 +1383,7 @@ obtenerGuiaId(id).then(({data}) => {
                 idEmbarque: 0,
                 folioInforme: "",
                 tracking: "",
-                idEstatusGuia: '',
+                idEstatusGuia: 0,
                 idMoneda: 1,
                 tipoCambio: 0,
                 //Remitente
@@ -1431,7 +1431,7 @@ obtenerGuiaId(id).then(({data}) => {
                 ],
                 //Detalle de faturación
                 idTipoCobro: 0,
-                idTipoServicio: '2',
+                idTipoServicio: 2,
                 ValorDeclarado: "",
                 //Conceptos de facturacion
                 conceptosAdicionales: [],
@@ -2198,7 +2198,7 @@ obtenerGuiaId(id).then(({data}) => {
                             </a>
                         </li>
                         {
-                            localStorage.getItem("UsuarioId") == 11 &&
+                            localStorage.getItem("Usuario") === 11 &&
                             <li >
                                 <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled} onClick={() => setState({...state,openTipoCobro: true})}>
                                     <i className="fa fa-refresh"/> Cambiar Tipo Cobro
@@ -2400,26 +2400,22 @@ obtenerGuiaId(id).then(({data}) => {
                                     </div>
 
                                     <div className="row" style={{height: state.height - 250, width: '100%'}}>
-                                        {data.length != 0 ? (
-                                            <DataGrid
-                                                localeText={dataGridLocaleText}
-                                                rows={data}
-                                                columns={columns}
-                                                density="compact"
-                                                pageSize={Math.floor((state.height - 310) / 30)}
-                                                getRowId={(row) => row.m_nIdGuia}
-                                                onRowSelected={(row) => {
-                                                    setState({
-                                                        ...state,
-                                                        idGuia: row.data.m_nIdGuia,
-                                                        cambioCobro: (row.data.m_nIdEstatusGuia === 14 || row.data.m_nIdEstatusGuia === 7) &&  (row.data.m_nIdTipoCobro === 2 || row.data.m_nIdTipoCobro === 10 || row.data.m_nIdTipoCobro === 12),
-                                                        creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito
-                                                    })
-                                                }}
-                                            />
-                                        ) : (
-                                            <div>No se encontró ningún registro</div>
-                                        )}
+                                        <DataGrid
+                                            localeText={dataGridLocaleText}
+                                            rows={data}
+                                            columns={columns}
+                                            density="compact"
+                                            pageSize={Math.floor((state.height - 310) / 30)}
+                                            getRowId={(row) => row.m_nIdGuia}
+                                            onRowSelected={(row) => {
+                                                setState({
+                                                    ...state,
+                                                    idGuia: row.data.m_nIdGuia,
+                                                    cambioCobro: (row.data.m_nIdEstatusGuia === 14 || row.data.m_nIdEstatusGuia === 7) &&  row.data.m_nIdTipoCobro === 2,
+                                                    creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito
+                                                })
+                                            }}
+                                        />
                                     </div>
 
                                 </div>
@@ -2641,7 +2637,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                                             shrink: true,
                                                                         }}
                                                                     >
-                                                                        <option value=""></option>
+                                                                        <option key={0} value="0">Seleccionar</option>
                                                                         {dataEstatusGuia.filter(e => e.m_nIdEstatusGuia == 4).map(
                                                                             (estatusGuia) => (
                                                                                 <option
@@ -3298,7 +3294,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                         value={state.idTipoServicio}
 
                                                                                     >
-                                                                                        <option value=""></option>
+                                                                                        <option key={0} value="0">Seleccionar</option>
                                                                                         {dataTipoServicio.map(
                                                                                             (tipoServicio) => (
                                                                                                 <option
