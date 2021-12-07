@@ -67,6 +67,7 @@ import {
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {validarPermisos} from "../Util/Contexts/UsuarioContext";
 import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
+import Filtros from "./Filtros/Filtros";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -1322,6 +1323,10 @@ function Informes({history}) {
         }
     }
 
+    const setDataListado = (listado) => {
+        setData(listado)
+    }
+
 
     return (
         <div>
@@ -1596,7 +1601,7 @@ function Informes({history}) {
 
                                 <div className="row">
                                     <div className="col-md-12">
-                                        <Grid container spacing={2} alignItems="center">
+                                        {/*<Grid container spacing={2} alignItems="center">
 
                                         <Grid item xs={2}>
                                                 <TextField variant="outlined" margin="dense"
@@ -1754,9 +1759,13 @@ function Informes({history}) {
                                                     Limpiar filtros
                                                 </IconButton>
                                             </Grid>
-                                            </Grid>
-                                        </div>
+                                            </Grid>*/}
+                                        <Filtros
+                                            listaResultado={setDataListado}
+                                            informe={true}
+                                        />
                                     </div>
+                                </div>
 
                                     <div className="row" style={{height: state.height - 250, width: "100%"}}>
                                         <DataGrid

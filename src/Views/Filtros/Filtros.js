@@ -11,13 +11,14 @@ import {obtenerEmbarquesFiltro} from "../../Util/Contexts/EmbarquesContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {
     obtenerEstatusEmbarque,
-    obtenerEstatusGuia,
+    obtenerEstatusGuia, obtenerEstatusInforme,
     obtenerEstatusRecoleccion
 } from "../../Util/Contexts/EstatusContext";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import {obtenerFechaFinal, obtenerFechaInicio} from "../../Util/Contexts/UtileriasContext";
 import {obtenerRecoleccionFiltro} from "../../Util/Contexts/RecoleccionContext";
 import {obtenerGuiasFiltro} from "../../Util/Contexts/GuiaContext";
+import {obtenerInformeFiltro} from "../../Util/Contexts/InformesContext";
 
 function Filtros(props) {
     const [dataSucursal, setDataSucursal] = React.useState([]);
@@ -109,30 +110,17 @@ function Filtros(props) {
         if (props.embarque){
             if (filtros.folio.length > 0){
                 obtenerEmbarquesFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
-                    if (respuesta.data == "Vacio") {
-                        props.listaResultado([])
-                    } else {
-                        props.listaResultado(respuesta.data)
-                    }
+                    props.listaResultado(respuesta.data)
                 })
             }else {
                 obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                    if (respuesta.data == "Vacio") {
-                        props.listaResultado([])
-                    } else {
-                        props.listaResultado(respuesta.data)
-                    }
+                    props.listaResultado(respuesta.data)
                 })
             }
-
         }else if (props.recoleccion){
             if (filtros.folio.length > 0){
                 obtenerRecoleccionFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
-                    if (respuesta.data == "Vacio") {
-                        props.listaResultado([])
-                    } else {
-                        props.listaResultado(respuesta.data)
-                    }
+                    props.listaResultado(respuesta.data)
                 })
             }else{
                 obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
@@ -142,14 +130,20 @@ function Filtros(props) {
         }else if (props.guia){
             if (filtros.folio.length > 0){
                 obtenerGuiasFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
-                    if (respuesta.data == "Vacio") {
-                        props.listaResultado([])
-                    } else {
-                        props.listaResultado(respuesta.data)
-                    }
+                    props.listaResultado(respuesta.data)
                 })
             }else{
                 obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
+                    props.listaResultado(respuesta.data)
+                })
+            }
+        }else if (props.informe){
+            if (filtros.folio.length > 0){
+                obtenerInformeFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                    props.listaResultado(respuesta.data)
+                })
+            }else{
+                obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
                     props.listaResultado(respuesta.data)
                 })
             }
@@ -195,6 +189,10 @@ function Filtros(props) {
             obtenerEstatusGuia().then((respuesta) => {
                 setEstatus(respuesta.data);
             });
+        }else if (props.informe){
+            obtenerEstatusInforme().then((respuesta) => {
+                setEstatus(respuesta.data);
+            });
         }
 
     }
@@ -229,6 +227,10 @@ function Filtros(props) {
                     })
                 }else if (props.guia){
                     obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                        props.listaResultado(respuesta.data);
+                    })
+                }else if (props.informe){
+                    obtenerInformeFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
                         props.listaResultado(respuesta.data);
                     })
                 }
@@ -346,6 +348,11 @@ function Filtros(props) {
                             ))}
                             {props.guia && dataEstatus.map((estatus) => (
                                 <option key={estatus.m_nIdEstatusGuia} value={estatus.m_nIdEstatusGuia}>
+                                    {estatus.m_sEstatus}
+                                </option>
+                            ))}
+                            {props.informe && dataEstatus.map((estatus) => (
+                                <option key={estatus.m_nIdEstatusInforme} value={estatus.m_nIdEstatusInforme}>
                                     {estatus.m_sEstatus}
                                 </option>
                             ))}
