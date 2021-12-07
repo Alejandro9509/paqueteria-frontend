@@ -9,13 +9,14 @@ import RestartAltIcon from "@material-ui/icons/Refresh";
 import SearchIcon from '@material-ui/icons/Search';
 import {obtenerEmbarquesFiltro} from "../../Util/Contexts/EmbarquesContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
-import {obtenerEstatusEmbarque} from "../../Util/Contexts/EstatusContext";
+import {obtenerEstatusEmbarque, obtenerEstatusRecoleccion} from "../../Util/Contexts/EstatusContext";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import {obtenerFechaFinal, obtenerFechaInicio} from "../../Util/Contexts/UtileriasContext";
+import {obtenerRecoleccionFiltro} from "../../Util/Contexts/RecoleccionContext";
 
 function Filtros(props) {
     const [dataSucursal, setDataSucursal] = React.useState([]);
-    const [dataEstatusEmbarque, setEstatusEmbarque] = React.useState([]);
+    const [dataEstatus, setEstatus] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
     const [filtros, setFiltros] = useState({
         fechaInicial: 0,
@@ -36,7 +37,7 @@ function Filtros(props) {
             }
         })
         if (target.name && event.keyCode == 13){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,target.value,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+            obtenerEmbarquesFiltro(0, 0,0, 0,target.value,0,0).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     props.listaResultado([])
                 } else {
@@ -100,13 +101,41 @@ function Filtros(props) {
     }
 
     const filtrar = () => {
-        obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-            if (respuesta.data == "Vacio") {
-                props.listaResultado([])
-            } else {
-                props.listaResultado(respuesta.data)
+        if (props.embarque){
+            if (filtros.folio.length > 0){
+                obtenerEmbarquesFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                    if (respuesta.data == "Vacio") {
+                        props.listaResultado([])
+                    } else {
+                        props.listaResultado(respuesta.data)
+                    }
+                })
+            }else {
+                obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                    if (respuesta.data == "Vacio") {
+                        props.listaResultado([])
+                    } else {
+                        props.listaResultado(respuesta.data)
+                    }
+                })
             }
-        })
+
+        }else if (props.recoleccion){
+            if (filtros.folio.length > 0){
+                obtenerRecoleccionFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                    if (respuesta.data == "Vacio") {
+                        props.listaResultado([])
+                    } else {
+                        props.listaResultado(respuesta.data)
+                    }
+                })
+            }else{
+                obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
+                    props.listaResultado(respuesta.data)
+                })
+            }
+        }
+
     }
 
     const resetFiltros = () => {
@@ -132,12 +161,19 @@ function Filtros(props) {
             setDataSucursal(respuesta.data);
         });
     }
-    async function getAllEstatusEmbarque() {
-        if (dataEstatusEmbarque.length > 0)
+    async function getAllEstatus() {
+        if (dataEstatus.length > 0)
             return
-        obtenerEstatusEmbarque().then((respuesta) => {
-            setEstatusEmbarque(respuesta.data);
-        });
+        if (props.embarque){
+            obtenerEstatusEmbarque().then((respuesta) => {
+                setEstatus(respuesta.data);
+            });
+        }else if (props.recoleccion){
+            obtenerEstatusRecoleccion().then((respuesta) => {
+                setEstatus(respuesta.data);
+            });
+        }
+
     }
     async function getAllCiudades() {
         if (dataCiudad.length > 0)
@@ -146,35 +182,39 @@ function Filtros(props) {
             setDataCiudad(respuesta.data);
         });
     }
-    async function getAllEmbarque() {
+
+    async function getAllListado(){
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
                 console.log(respuestaUno.data[0].Fecha)
                 console.log(respuestaDos.data[0].Fecha)
                 setFiltros(filtros=>{
                     return {
-                    ...filtros,
+                        ...filtros,
                         fechaInicial: respuestaUno.data[0].Fecha,
                         fechaFinal: respuestaDos.data[0].Fecha
                     }
                 });
 
-                obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
-                    props.listaResultado(respuesta.data);
-                })
-
+                if (props.embarque){
+                    obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                        props.listaResultado(respuesta.data);
+                    })
+                }else if (props.recoleccion){
+                    obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                        props.listaResultado(respuesta.data);
+                    })
+                }
             })
-
         })
+
     }
 
     useEffect(value => {
         getAllSucursales()
         getAllCiudades()
-        if (props.embarque){
-            getAllEstatusEmbarque()
-            getAllEmbarque()
-        }
+        getAllEstatus()
+        getAllListado()
     },[])
 
     return(
@@ -266,10 +306,13 @@ function Filtros(props) {
                             name="estatusListado"
                         >
                             <option value="0">Todos</option>
-                            {dataEstatusEmbarque.map((estatus) => (
-                                <option
-                                    key={estatus.m_nIdEstatusEmbarque}
-                                    value={estatus.m_nIdEstatusEmbarque}
+                            {props.embarque && dataEstatus.map((estatus) => (
+                                <option key={estatus.m_nIdEstatusEmbarque} value={estatus.m_nIdEstatusEmbarque}>
+                                    {estatus.m_sEstatus}
+                                </option>
+                            )) }
+                            {props.recoleccion && dataEstatus.map((estatus) => (
+                                <option key={estatus.m_nIdEstatusRecoleccion} value={estatus.m_nIdEstatusRecoleccion}
                                 >
                                     {estatus.m_sEstatus}
                                 </option>
@@ -330,7 +373,7 @@ function Filtros(props) {
                 <Grid item container xs={2}>
                     <IconButton aria-label="delete" onClick={() => {
                         resetFiltros()
-                        getAllEmbarque()
+                        getAllListado()
                     }}>
                         <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                         Limpiar filtros
