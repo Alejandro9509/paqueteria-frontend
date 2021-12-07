@@ -75,7 +75,7 @@ import {
     eliminarRecoleccion,
     obtenerRecoleccionId,
     obtenerRecoleccionFiltro,
-    obtenerRecoleccion
+    obtenerRecoleccion, obtenerRecoleccionReporte
 } from "../Util/Contexts/RecoleccionContext";
 import {obtenerTipoUnidades, obtenerTipoUnidadesId} from "../Util/Contexts/TipoUnidadContext";
 import {obtenerUnidades, obtenerUnidadesId, obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
@@ -100,6 +100,7 @@ import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasC
 import DialogTableClientes from "./Clientes/DialogTableClientes";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
 import ComplementosSAT from "./SAT/ComplementosSAT";
+import {obtenerInformeReporte} from "../Util/Contexts/InformesContext";
 
 let timer;
 
@@ -1710,6 +1711,13 @@ function Recoleccion() {
                                onClick={() => (handleShowConsultar(row.row.m_nIdRecoleccion))}><i className="fa fa-eye"
                                                                                                   style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
+                        <Tooltip title="Reporte">
+                            <a  className="btn btn-default btn-xs"
+                                onClick={() => generarReporte(row.row.m_nIdRecoleccion, row.row.m_sFolioRecoleccion)}><i className="zmdi zmdi-file"
+                                                                                                                 style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+
                         <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
@@ -1881,6 +1889,14 @@ function Recoleccion() {
             accessor: "m_nIdTipoUnidad",
         }
     ]);
+    function generarReporte(id, folio){
+        obtenerRecoleccionReporte(id).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Recolección " + folio;
+        })
+    }
 
     const columnsUnidades = React.useMemo(() => [
         {
