@@ -105,6 +105,7 @@ import ComplementosSAT from "./SAT/ComplementosSAT";
 import DialogTableClientes from "./Clientes/DialogTableClientes";
 import Cotizador from "./ConceptosFacturacion/Cotizador";
 import {obtenerInformeReporte} from "../Util/Contexts/InformesContext";
+import Filtros from "./Filtros/Filtros";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -1795,7 +1796,7 @@ function Embarque(props) {
                 idRecoleccion: duplicar ? 0 : respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.IdSucursal,
                 folioRecoleccion: duplicar ? "" : respuesta.data.m_sFolioRecoleccion,
-                folioEmbarque: respuesta.data.m_nFolioEmbarque,
+                folioEmbarque: respuesta.data.m_sFolioEmbarque,
                 folioGuia: duplicar ? "" : respuesta.data.m_sFolioGuia,
                 folioInforme: duplicar ? "" : respuesta.data.m_nFolioInforme,
                 fechaHoraRegistro: getCurrentDateTime(),
@@ -2745,6 +2746,10 @@ function Embarque(props) {
           openDialog: isVisible,
         });
       };
+
+    const setDataListado = (listado) => {
+        setData(listado)
+    }
     return (
         <div>
 
@@ -3243,7 +3248,7 @@ function Embarque(props) {
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in show"}>
 
                             <div className="widget-wrap">
-                                    <Grid container spacing={2} alignItems="center">
+                                    {/*<Grid container spacing={2} alignItems="center">
                                             <Grid item xs={2}>
                                                 <TextField variant="outlined" margin="dense"
                                                            onChange={handleChangeFiltros}
@@ -3400,7 +3405,11 @@ function Embarque(props) {
                                                     Limpiar filtros
                                                 </IconButton>
                                             </Grid>
-                                        </Grid>
+                                        </Grid>*/}
+                                <Filtros
+                                    listaResultado={setDataListado}
+                                    embarque={true}
+                                />
 
                                 <div className="row" style={{height: state.height - 250, width: "100%"}}>
                                     <DataGrid

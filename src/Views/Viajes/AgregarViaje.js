@@ -85,8 +85,8 @@ class AgregarViaje extends Component {
             idSucursalAgregar: localStorage.getItem("Sucursal"),
             folioViaje: "",
             viajeCliente: "",
-            fechaHoraCreacion: `${new Date().getFullYear()}-${`${new Date().getMonth()}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
-            fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth()}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+            fechaHoraCreacion: this.getCurrentDateTime(),
+            fechaHoraRegistro: this.getCurrentDateTime(),
             candadoOficial: "",
             identificadorViaje: "",
             estatusListado: '8',
@@ -157,6 +157,11 @@ class AgregarViaje extends Component {
         }
     }
 
+    getCurrentDateTime = () => {
+        return `${new Date().getFullYear()}-${`${new Date().getMonth() +
+        1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
+    }
+
     handleAceptar = (e) => {
         e.preventDefault();
         if (Object.keys(this.state.asignacionEquipo).length === 0) {
@@ -165,8 +170,8 @@ class AgregarViaje extends Component {
         }
         var params = {
             m_nIdViaje: this.props.id,
-            m_dFecha: this.state.fechaHoraRegistro.split("T")[0],
-            m_tHora: this.state.fechaHoraRegistro.split("T")[1],
+            m_sFecha: this.state.fechaHoraRegistro.substr(0, 10),
+            m_sHora: this.state.fechaHoraRegistro.substr(this.state.fechaHoraRegistro.length - 5),
             m_nIdEstatusViaje: this.state.estatusListado,
             m_nIdSucursal: this.state.idSucursalAgregar,
             m_sCandadoOficial: this.state.candadoOficial,
