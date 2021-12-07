@@ -56,7 +56,7 @@ function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estat
         folioEmbarque = 0
     }
     const url =
-        `${process.env.REACT_APP_REPORT_URL}/api/Embarque/GetByFiltro/` +
+        `${process.env.REACT_APP_API_URL_LOCAL}/api/Embarque/GetByFiltro/` +
         fechaInicial +
         "/" +
         fechaFinal +

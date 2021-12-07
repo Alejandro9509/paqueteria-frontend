@@ -101,6 +101,7 @@ import DialogTableClientes from "./Clientes/DialogTableClientes";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
 import ComplementosSAT from "./SAT/ComplementosSAT";
 import {obtenerInformeReporte} from "../Util/Contexts/InformesContext";
+import Filtros from "./Filtros/Filtros";
 
 let timer;
 
@@ -2723,22 +2724,8 @@ function Recoleccion() {
         });
       };
 
-    const genererEmbarque = (e) => {
-        const rec = data.find(i => i.m_nIdRecoleccion === state.idRecoleccion)
-        debugger
-        if (rec){
-            if (!rec.m_sFolioEmbarque){
-                return (
-                    <Redirect push to={{
-                        pathname: '/Embarque',
-                        idRecoleccion: state.idRecoleccion,
-                    }}
-                    />
-                )
-            }else{
-                showSuccess("Recolección ya tiene Embarque")
-            }
-        }
+    const setDataListado = (listado) => {
+        setData(listado)
     }
     return (
         <div>
@@ -3154,7 +3141,7 @@ function Recoleccion() {
                                 <div className="widget-content">
                                     <div className="row">
                                         <div className="col-md-12">
-                                            <Grid container spacing={2} alignItems="center">
+                                            {/*<Grid container spacing={2} alignItems="center">
                                                 <Grid item xs={2}>
                                                     <TextField variant="outlined" margin="dense"
                                                                onChange={handleChangeFiltros}
@@ -3312,7 +3299,11 @@ function Recoleccion() {
                                                         Limpiar filtros
                                                     </IconButton>
                                                 </Grid>
-                                            </Grid>
+                                            </Grid>*/}
+                                            <Filtros
+                                                listaResultado={setDataListado}
+                                                recoleccion={true}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -3324,7 +3315,6 @@ function Recoleccion() {
                                         components={{
                                             LoadingOverlay: CustomLoadingOverlay,
                                         }}
-                                        loading={data == undefined}
                                         rows={data}
                                         columns={columns}
                                         density="compact"
