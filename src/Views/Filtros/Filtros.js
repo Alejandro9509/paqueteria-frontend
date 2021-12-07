@@ -9,10 +9,15 @@ import RestartAltIcon from "@material-ui/icons/Refresh";
 import SearchIcon from '@material-ui/icons/Search';
 import {obtenerEmbarquesFiltro} from "../../Util/Contexts/EmbarquesContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
-import {obtenerEstatusEmbarque, obtenerEstatusRecoleccion} from "../../Util/Contexts/EstatusContext";
+import {
+    obtenerEstatusEmbarque,
+    obtenerEstatusGuia,
+    obtenerEstatusRecoleccion
+} from "../../Util/Contexts/EstatusContext";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import {obtenerFechaFinal, obtenerFechaInicio} from "../../Util/Contexts/UtileriasContext";
 import {obtenerRecoleccionFiltro} from "../../Util/Contexts/RecoleccionContext";
+import {obtenerGuiasFiltro} from "../../Util/Contexts/GuiaContext";
 
 function Filtros(props) {
     const [dataSucursal, setDataSucursal] = React.useState([]);
@@ -134,6 +139,20 @@ function Filtros(props) {
                     props.listaResultado(respuesta.data)
                 })
             }
+        }else if (props.guia){
+            if (filtros.folio.length > 0){
+                obtenerGuiasFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                    if (respuesta.data == "Vacio") {
+                        props.listaResultado([])
+                    } else {
+                        props.listaResultado(respuesta.data)
+                    }
+                })
+            }else{
+                obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
+                    props.listaResultado(respuesta.data)
+                })
+            }
         }
 
     }
@@ -172,6 +191,10 @@ function Filtros(props) {
             obtenerEstatusRecoleccion().then((respuesta) => {
                 setEstatus(respuesta.data);
             });
+        }else if (props.guia){
+            obtenerEstatusGuia().then((respuesta) => {
+                setEstatus(respuesta.data);
+            });
         }
 
     }
@@ -202,6 +225,10 @@ function Filtros(props) {
                     })
                 }else if (props.recoleccion){
                     obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                        props.listaResultado(respuesta.data);
+                    })
+                }else if (props.guia){
+                    obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
                         props.listaResultado(respuesta.data);
                     })
                 }
@@ -314,6 +341,11 @@ function Filtros(props) {
                             {props.recoleccion && dataEstatus.map((estatus) => (
                                 <option key={estatus.m_nIdEstatusRecoleccion} value={estatus.m_nIdEstatusRecoleccion}
                                 >
+                                    {estatus.m_sEstatus}
+                                </option>
+                            ))}
+                            {props.guia && dataEstatus.map((estatus) => (
+                                <option key={estatus.m_nIdEstatusGuia} value={estatus.m_nIdEstatusGuia}>
                                     {estatus.m_sEstatus}
                                 </option>
                             ))}
