@@ -408,12 +408,12 @@ function ComplementosSAT(props) {
                     </div>
                 </Grid>
                 <Grid item xs={5}/>
-                <Grid item xs={0.5}>
+                <Grid item xs={1}>
                     <IconButton onClick={handleOpenClick} style={{ padding: "0px" }} disabled={props.disabled}>
                         <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
                     </IconButton>
                 </Grid>
-                <Grid item xs={0.5}>
+                <Grid item xs={1}>
                     <input id={"icon-button-file"} type={"file"} accept={"xlsx"} onChange={handleImportClick} style={{ padding: "0px",display: "none" }} disabled={props.disabled}/>
                     <label htmlFor="icon-button-file">
                         <IconButton color="primary" aria-label="upload file" component="span" style={{ padding: "0px" }} disabled={props.disabled}>

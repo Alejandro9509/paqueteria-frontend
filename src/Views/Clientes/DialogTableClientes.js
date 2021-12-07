@@ -62,7 +62,7 @@ function cargarDesdeServidor(pagina,registros){
             variant="standard"
             value={busqueda}
             onChange={(e) => setBusqueda( e.target.value)}
-            placeholder
+
             InputProps={{
                 endAdornment: <SearchIcon style={{
                     color: "#F9A03E",

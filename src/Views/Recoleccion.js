@@ -1349,7 +1349,6 @@ function Recoleccion() {
                 sucursalListado: 0,
                 estatusListado: 0,
                 folioRecoleccion: '',
-                height: window.height,
                 agregar: "Agregar",
             }
         });
@@ -3393,7 +3392,7 @@ function Recoleccion() {
                                                                         onChange={handleChange}
                                                                         id="idSucursalAgregar"
 
-                                                                        disabled="disabled"
+                                                                        disabled
                                                                     >
                                                                         {dataSucursal.map((sucursal) => (
                                                                             <option
@@ -3612,7 +3611,7 @@ function Recoleccion() {
                                                                             });
                                                                         }}
                                                                         id="tipoCobro"
-                                                                        InputProps={{
+                                                                        inputProps={{
                                                                             id: "tipoCobro",
                                                                             name: "tipoCobro"
                                                                         }}
@@ -4285,7 +4284,7 @@ function Recoleccion() {
                                                                             id="municipioEnt"
                                                                             name="municipioEnt"
                                                                             disabled={state.agregar === "Consultar"}
-                                                                            InputProps={{name: "municipioEnt"}}
+                                                                            inputProps={{name: "municipioEnt"}}
                                                                         >
                                                                             {dataMunicipiosEntregaDD.map((municipio) => (
                                                                                 <option
