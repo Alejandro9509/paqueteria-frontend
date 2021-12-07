@@ -870,26 +870,34 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
                         </div>
                     }
 
+                    {
+                        dataPaquetes.length !== 0 &&
+                        (
+                        !disabled ?  <div className="row" style={{ height: 200, width: "100%"}}>
+                        <DataGrid
+                        localeText={dataGridLocaleText}
+                        density="compact"
+                        pageSize={10}
+                        columns={columnsPaquetes}
+                        rows={dataPaquetes}
+                        getRowId={(row) => row.m_nIdPaquete}
+                        />
+                        </div> : <div className="row" style={{ height: 200, width: "100%"}}>
+                        <DataGrid
+                        localeText={dataGridLocaleText}
+                        density="compact"
+                        pageSize={10}
+                        columns={columnsPaquetesConsulta}
+                        rows={dataPaquetes}
+                        getRowId={(row) => row.m_nIdPaquete}
+                        />
 
-                    {!disabled?  <div className="row" style={{ height: 200, width: "100%"}}>
-                        <DataGrid
-                            localeText={dataGridLocaleText}
-                            density="compact"
-                            pageSize={10}
-                            columns={columnsPaquetes}
-                            rows={dataPaquetes}
-                            getRowId={(row) => row.m_nIdPaquete}
-                        />
-                    </div> : <div className="row" style={{ height: 200, width: "100%"}}>
-                        <DataGrid
-                            localeText={dataGridLocaleText}
-                            density="compact"
-                            pageSize={10}
-                            columns={columnsPaquetesConsulta}
-                            rows={dataPaquetes}
-                            getRowId={(row) => row.m_nIdPaquete}
-                        />
-                    </div>}
+                        </div>
+                        )
+
+                    }
+
+
                 </div>
             </div>
         </div>

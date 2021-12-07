@@ -73,7 +73,7 @@ import {
     agregarEmbarques,
     modificarEmbarques,
     obtenerEmbarquesFiltro,
-    obtenerEmbarques
+    obtenerEmbarques, obtenerEmbarqueReporte
 } from "../Util/Contexts/EmbarquesContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerOperadores} from "../Util/Contexts/OperadoresContext";
@@ -104,6 +104,7 @@ import RemitentesDestinatarios from "./RemitentesDestinatarios";
 import ComplementosSAT from "./SAT/ComplementosSAT";
 import DialogTableClientes from "./Clientes/DialogTableClientes";
 import Cotizador from "./ConceptosFacturacion/Cotizador";
+import {obtenerInformeReporte} from "../Util/Contexts/InformesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -455,6 +456,12 @@ function Embarque(props) {
                             >
                                 <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                             </a>
+                        </Tooltip>
+                        <Tooltip title="Reporte">
+                            <a  className="btn btn-default btn-xs"
+                                onClick={() => generarReporte(row.row.m_nIdEmbarque, row.row.m_sFolioEmbarque)}><i className="zmdi zmdi-file"
+                                                                                                                 style={{color: "#F9A03E"}}/></a>
+
                         </Tooltip>
                         <Tooltip title="Eliminar">
                             <a
@@ -908,6 +915,14 @@ function Embarque(props) {
         })
     }
 
+    function generarReporte(id, folio){
+        obtenerEmbarqueReporte(id).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Embarque " + folio;
+        })
+    }
     const handleChangeEntregaDD = (event) => {
         event.preventDefault();
         setEntregaDD(entregaDD => {
@@ -3228,9 +3243,7 @@ function Embarque(props) {
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in show"}>
 
                             <div className="widget-wrap">
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <Grid container spacing={2} alignItems="center">
+                                    <Grid container spacing={2} alignItems="center">
                                             <Grid item xs={2}>
                                                 <TextField variant="outlined" margin="dense"
                                                            onChange={handleChangeFiltros}
@@ -3388,8 +3401,7 @@ function Embarque(props) {
                                                 </IconButton>
                                             </Grid>
                                         </Grid>
-                                    </div>
-                                </div>
+
                                 <div className="row" style={{height: state.height - 250, width: "100%"}}>
                                     <DataGrid
                                         localeText={dataGridLocaleText}
@@ -3448,7 +3460,6 @@ function Embarque(props) {
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row">
-                                                    <div className="col-md-12">
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
@@ -3793,7 +3804,7 @@ function Embarque(props) {
                                                                 </div>
                                                             </Grid>
                                                         </Grid>
-                                                    </div>
+
 
                                                 </div>
                                             </div>
@@ -4086,7 +4097,6 @@ function Embarque(props) {
                                     </div>
 
                                     <div className="row">
-                                        <div className="col-md-12">
                                             <div className="widget-wrap" id="remitenteDestinatario">
                                                 <div className="row">
                                                     <div className="col-md-6">
@@ -4235,7 +4245,7 @@ function Embarque(props) {
                                                 }
 
                                             </div>
-                                        </div>
+
 
                                         {/*<div className="widget-wrap col-md-5" id="paquetesSobres">
                                             <div className="row">
@@ -4847,7 +4857,7 @@ function Embarque(props) {
                                         }
                                     </div>
 
-                                    {/*<div className="row">
+                                    <div className="row">
                                         <Cotizador embarque={state} remitente={remitente} paquetes={dataPaquetes.map(p =>({
                                             Tipo: p.m_nIdTipo,
                                             Peso: p.m_rPeso,
@@ -4860,7 +4870,7 @@ function Embarque(props) {
                                             ctd:p.m_nCantidad,
                                             IdProducto:p.m_nIdProducto
                                         }))} destinatario={destinatario}/>
-                                    </div>*/}
+                                    </div>
 
                                 </div>
                                 <div className="form-footer ol-md-12">
@@ -4893,7 +4903,6 @@ function Embarque(props) {
                             <div className="widget-wrap">
                                 <div className="widget-container">
                                     <div className="widget-content">
-                                        <div className="row">
                                             <form className="j-forms" onSubmit={handleCancelar}>
                                                 <div className="form-content">
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
@@ -5003,7 +5012,7 @@ function Embarque(props) {
                                                     </div>
                                                 </div>
                                             </form>
-                                        </div>
+
                                     </div>
                                 </div>
                             </div>

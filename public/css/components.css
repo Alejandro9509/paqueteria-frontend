@@ -1888,7 +1888,7 @@ a.waves-effect .waves-ripple {
 /* Content
 =============================== */
 .j-forms .form-content {
-  padding: 15px;
+  padding: 0px;
 }
 .j-forms .form-content:after {
   clear: both;
@@ -9085,7 +9085,7 @@ table.dataTable > tbody > tr.child span.dtr-title {
   padding: 0px 10px;
 }
 .row-edit span {
-  font-size: 16px !important;
+  font-size: 12px !important;
 }
 .td-right {
   text-align: right;
