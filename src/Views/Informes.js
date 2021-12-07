@@ -194,7 +194,7 @@ function Informes({history}) {
         },
         {
             headerName: "Fecha/Hora Elaboración",
-            field: "m_sFechayHora",
+            field: "m_sFechaHora",
             width: 200,
         },
         {
@@ -1759,24 +1759,20 @@ function Informes({history}) {
                                     </div>
 
                                     <div className="row" style={{height: state.height - 250, width: "100%"}}>
-                                        {data.length != 0 ? (
-                                            <DataGrid
-                                                localeText={dataGridLocaleText}
-                                                rows={data}
-                                                columns={columns}
-                                                density="compact"
-                                                pageSize={Math.floor((state.height - 310) / 30)}
-                                                getRowId={(row) => row.m_nIdInforme}
-                                                onRowSelected={(row) => {
-                                                    setState({
-                                                        ...state,
-                                                        IdInforme: row.data.m_nIdInforme,
-                                                    });
-                                                }}
-                                            />
-                                        ) : (
-                                            <div>No se encontró ningún registro</div>
-                                        )}
+                                        <DataGrid
+                                            localeText={dataGridLocaleText}
+                                            rows={data}
+                                            columns={columns}
+                                            density="compact"
+                                            pageSize={Math.floor((state.height - 310) / 30)}
+                                            getRowId={(row) => row.m_nIdInforme}
+                                            onRowSelected={(row) => {
+                                                setState({
+                                                    ...state,
+                                                    IdInforme: row.data.m_nIdInforme,
+                                                });
+                                            }}
+                                        />
                                     </div>
                                 </div>
                             </div>
