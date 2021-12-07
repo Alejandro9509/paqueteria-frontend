@@ -73,7 +73,7 @@ import {
     agregarEmbarques,
     modificarEmbarques,
     obtenerEmbarquesFiltro,
-    obtenerEmbarques
+    obtenerEmbarques, obtenerEmbarqueReporte
 } from "../Util/Contexts/EmbarquesContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerOperadores} from "../Util/Contexts/OperadoresContext";
@@ -104,6 +104,7 @@ import RemitentesDestinatarios from "./RemitentesDestinatarios";
 import ComplementosSAT from "./SAT/ComplementosSAT";
 import DialogTableClientes from "./Clientes/DialogTableClientes";
 import Cotizador from "./ConceptosFacturacion/Cotizador";
+import {obtenerInformeReporte} from "../Util/Contexts/InformesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -455,6 +456,12 @@ function Embarque(props) {
                             >
                                 <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                             </a>
+                        </Tooltip>
+                        <Tooltip title="Reporte">
+                            <a  className="btn btn-default btn-xs"
+                                onClick={() => generarReporte(row.row.m_nIdEmbarque, row.row.m_sFolioEmbarque)}><i className="zmdi zmdi-file"
+                                                                                                                 style={{color: "#F9A03E"}}/></a>
+
                         </Tooltip>
                         <Tooltip title="Eliminar">
                             <a
@@ -908,6 +915,14 @@ function Embarque(props) {
         })
     }
 
+    function generarReporte(id, folio){
+        obtenerEmbarqueReporte(id).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Embarque " + folio;
+        })
+    }
     const handleChangeEntregaDD = (event) => {
         event.preventDefault();
         setEntregaDD(entregaDD => {

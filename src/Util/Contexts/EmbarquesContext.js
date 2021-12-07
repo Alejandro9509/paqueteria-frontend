@@ -14,6 +14,15 @@ function modificarEmbarques(id, params){
     return result
 }
 
+function obtenerEmbarqueReporte(id) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Embarque/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 function agregarEmbarques( params){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/Agregar`;
     let result;
@@ -111,4 +120,4 @@ function obtenerEmbarqueMoneda(valor, idMoneda, idGuia){
     return result
 }
 
-export {modificarEmbarques, agregarEmbarques, eliminarEmbarques, obtenerEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, cancelarEmbarque, obtenerEmbarqueCancelado, obtenerEmbarquesFiltro, obtenerEmbarqueMoneda}
+export {modificarEmbarques, agregarEmbarques, obtenerEmbarqueReporte, eliminarEmbarques, obtenerEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, cancelarEmbarque, obtenerEmbarqueCancelado, obtenerEmbarquesFiltro, obtenerEmbarqueMoneda}
