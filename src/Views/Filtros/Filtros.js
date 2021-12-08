@@ -74,7 +74,7 @@ function Filtros(props) {
                     props.listaResultado(respuesta.data)
                 })
             }else if (props.guia){
-                obtenerGuiasFiltro(0, 0,0, 0,target.value,0,0).then(respuesta => {
+                obtenerGuiasFiltro(0, 0,0, 0,target.value,0,0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else if (props.informe){
@@ -112,11 +112,11 @@ function Filtros(props) {
             }
         }else if (props.guia){
             if (filtros.folio.length > 0){
-                obtenerGuiasFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                obtenerGuiasFiltro(0, 0,0, 0,filtros.folio,0,0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else{
-                obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
+                obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado,filtros.clientePaga.id||0).then((respuesta) => {
                     props.listaResultado(respuesta.data)
                 })
             }
@@ -226,7 +226,7 @@ function Filtros(props) {
                         props.listaResultado(respuesta.data);
                     })
                 }else if (props.guia){
-                    obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                    obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
                         props.listaResultado(respuesta.data);
                     })
                 }else if (props.informe){
