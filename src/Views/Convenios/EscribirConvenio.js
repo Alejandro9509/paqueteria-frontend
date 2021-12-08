@@ -1088,13 +1088,13 @@ class EscribirConvenio extends Component {
                                     todosConceptos.length > 0 &&
                                     `${tarifaDetalles.m_sOrigen} - ${tarifaDetalles.m_sDestino}`
                                 }
+
                                 {
-                                    todosConceptos.length > 0 &&
+                                    todosConceptos.length > 0  && this.state.seleccionDetalles.tipoSeleccion === "Tarifa" &&
                                     <button className="btn btn-primary primary-btn" onClick={this.handleGuardarTarifa} disabled={consult}>
                                         Guardar tarifa
                                     </button>
                                 }
-
                             </div>
                             <div className="col-md-9 col-sm-12" >
                                 <div className="widget-wrap" style={{ margin: "0px", padding: "0px" }}>
@@ -1201,6 +1201,7 @@ class EscribirConvenio extends Component {
 
                                         { this.state.seleccionDetalles.tipoSeleccion === "Tarifa" &&
                                             <div>
+
                                                 {(tarifaDetalles.m_bPorRango || tarifaDetalles.m_bPorPesoVolumen) &&
                                                     <div>
                                                     <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
