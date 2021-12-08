@@ -63,6 +63,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Util/Contexts/GuiaContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Util/Contexts/InformesContext.js">
           <value>
             <set />
@@ -338,6 +343,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/CiudadesContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/ClientesContext.js">
           <value>
             <set />
@@ -349,6 +359,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/ConceptosFacturacionContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/ConveniosContext.js">
           <value>
             <set />
           </value>
@@ -373,6 +388,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/EmbalajesContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/EmbarquesContext.js">
           <value>
             <set />
@@ -389,6 +409,21 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/MensajesConetext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/MunicipiosContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/OperadoresContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/ProductosContext.js">
           <value>
             <set />
           </value>
@@ -1464,6 +1499,11 @@
           </value>
         </entry>
         <entry key="$APPLICATION_CONFIG_DIR$/consoles/db/f5746bf4-8842-4f3d-889c-20fece67adfe/console_8.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_CONFIG_DIR$/consoles/db/f5746bf4-8842-4f3d-889c-20fece67adfe/console_9.sql">
           <value>
             <set />
           </value>

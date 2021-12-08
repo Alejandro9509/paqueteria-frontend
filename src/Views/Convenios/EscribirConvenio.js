@@ -52,6 +52,7 @@ import CodigosPostalesZonas from "../ZonasOperativas/CodigosPostalesZonas";
 import ConceptosFacturacion from "../Tarifas/ConceptosFacturacion";
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
+import {obtenerConveniosId} from "../../Util/Contexts/ConveniosContext";
 
 const headers = API_HEADERS
 
@@ -492,10 +493,7 @@ class EscribirConvenio extends Component {
     }
 
     getConvenioById(idConvenio){
-        const url = `${process.env.REACT_APP_API_URL}/Convenios/GetById/${idConvenio}`;
-        console.log(url)
-        axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta)
+        obtenerConveniosId(idConvenio).then(respuesta => {
             this.setState({
                 idConvenio: respuesta.data.m_nIdConvenio,
                 cliente: respuesta.data.m_nIdCliente,

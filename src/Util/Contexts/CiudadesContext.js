@@ -42,7 +42,7 @@ function obtenerCiudades(){
 }
 
 function obtenerCiudadId(id){
-    const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetById/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Ciudades/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

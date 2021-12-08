@@ -119,7 +119,7 @@ export default function ProductosPrecios({dataList = [], onChangeList, consult,i
                                 disabled={state.agregar == "Consultar"}
                                 options={state.conceptos}
                                 getOptionLabel={(option) =>
-                                    option.m_sDescripcion
+                                    option.m_sDescripcion || ""
                                 }
                                 variant="outlined"
                                 style={{

@@ -7,7 +7,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControl,
+    FormControl, FormControlLabel,
     Grid,
     IconButton,
     Input,
@@ -67,6 +67,7 @@ import {
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {validarPermisos} from "../Util/Contexts/UsuarioContext";
 import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
+import Filtros from "./Filtros/Filtros";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -194,7 +195,7 @@ function Informes({history}) {
         },
         {
             headerName: "Fecha/Hora Elaboración",
-            field: "m_sFechayHora",
+            field: "m_sFechaHora",
             width: 200,
         },
         {
@@ -949,11 +950,7 @@ function Informes({history}) {
         });
     }
 
-    function getAllOperadores() {
-        obtenerOperadores().then((respuesta) => {
-            setDataOperadores(respuesta.data);
-        });
-    }
+
 
     function getAllEstatusInformes() {
         obtenerEstatusInforme().then((respuesta) => {
@@ -1131,12 +1128,12 @@ function Informes({history}) {
         //getAllGuias();
         getAllEstatusInformes();
         getAllSucursales();
-        getAllOperadores();
+        //getAllOperadores();
         //getFormatosImpresion();
         getAllCiudades();
         getAllUnidades();
         //getAllTipoUnidad();
-        getAllDataRutas();
+        //getAllDataRutas();
     }, []);
 
 
@@ -1322,6 +1319,13 @@ function Informes({history}) {
         }
     }
 
+    const setDataListado = (listado) => {
+        setData(listado)
+    }
+
+    const todasGuiasSeleccionadas = () => {
+        return dataGuias.length === dataGuias.filter((g) => g.select).length
+    }
 
     return (
         <div>
@@ -1596,7 +1600,7 @@ function Informes({history}) {
 
                                 <div className="row">
                                     <div className="col-md-12">
-                                        <Grid container spacing={2} alignItems="center">
+                                        {/*<Grid container spacing={2} alignItems="center">
 
                                         <Grid item xs={2}>
                                                 <TextField variant="outlined" margin="dense"
@@ -1754,29 +1758,29 @@ function Informes({history}) {
                                                     Limpiar filtros
                                                 </IconButton>
                                             </Grid>
-                                            </Grid>
-                                        </div>
+                                            </Grid>*/}
+                                        <Filtros
+                                            listaResultado={setDataListado}
+                                            informe={true}
+                                        />
                                     </div>
+                                </div>
 
                                     <div className="row" style={{height: state.height - 250, width: "100%"}}>
-                                        {data.length != 0 ? (
-                                            <DataGrid
-                                                localeText={dataGridLocaleText}
-                                                rows={data}
-                                                columns={columns}
-                                                density="compact"
-                                                pageSize={Math.floor((state.height - 310) / 30)}
-                                                getRowId={(row) => row.m_nIdInforme}
-                                                onRowSelected={(row) => {
-                                                    setState({
-                                                        ...state,
-                                                        IdInforme: row.data.m_nIdInforme,
-                                                    });
-                                                }}
-                                            />
-                                        ) : (
-                                            <div>No se encontró ningún registro</div>
-                                        )}
+                                        <DataGrid
+                                            localeText={dataGridLocaleText}
+                                            rows={data}
+                                            columns={columns}
+                                            density="compact"
+                                            pageSize={Math.floor((state.height - 310) / 30)}
+                                            getRowId={(row) => row.m_nIdInforme}
+                                            onRowSelected={(row) => {
+                                                setState({
+                                                    ...state,
+                                                    IdInforme: row.data.m_nIdInforme,
+                                                });
+                                            }}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -1824,7 +1828,7 @@ function Informes({history}) {
                                             <div className="widget-container margin-top-0">
                                                 <div className="widget-content">
                                                     <div
-                                                        className="widget-header block-header margin-bottom-0 clearfix">
+                                                        className="widget-header">
                                                         <div className="pull-left">
                                                             <h3>Información De Envio</h3>
                                                         </div>
@@ -2674,215 +2678,215 @@ function Informes({history}) {
                                                         </div>
                                                     </div>
 
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <div className="widget-wrap">
-                                                                <div
-                                                                    className="widget-header block-header margin-bottom-0 clearfix">
-                                                                    <div className="pull-left">
-                                                                        <h3>Asignar a un Viaje</h3>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="widget-container">
-                                                                    <div className="widget-content">
-                                                                        <div className="row">
-                                                                            <div className="col-md-12">
-                                                                                <form
-                                                                                    action="#"
-                                                                                    className="j-forms"
-                                                                                    noValidate
-                                                                                >
-                                                                                    <div className="form-content">
-                                                                                        {/*****************************************Viaje*************************************************/}
-                                                                                        <div className="row">
-                                                                                            <div
-                                                                                                className="col-sm-12 col-md-6 unit">
+                                                    {/*<div className="row">*/}
+                                                    {/*    <div className="col-md-12">*/}
+                                                    {/*        <div className="widget-wrap">*/}
+                                                    {/*            <div*/}
+                                                    {/*                className="widget-header block-header margin-bottom-0 clearfix">*/}
+                                                    {/*                <div className="pull-left">*/}
+                                                    {/*                    <h3>Asignar a un Viaje</h3>*/}
+                                                    {/*                </div>*/}
+                                                    {/*            </div>*/}
+                                                    {/*            <div className="widget-container">*/}
+                                                    {/*                <div className="widget-content">*/}
+                                                    {/*                    <div className="row">*/}
+                                                    {/*                        <div className="col-md-12">*/}
+                                                    {/*                            <form*/}
+                                                    {/*                                action="#"*/}
+                                                    {/*                                className="j-forms"*/}
+                                                    {/*                                noValidate*/}
+                                                    {/*                            >*/}
+                                                    {/*                                <div className="form-content">*/}
+                                                    {/*                                    /!*****************************************Viaje*************************************************!/*/}
+                                                    {/*                                    <div className="row">*/}
+                                                    {/*                                        <div*/}
+                                                    {/*                                            className="col-sm-12 col-md-6 unit">*/}
 
-                                                                                                <label
-                                                                                                    className="input select">
-                                                                                                    <FormControl
-                                                                                                        fullWidth
-                                                                                                        variant="outlined"
-                                                                                                        margin="dense">
-                                                                                                        <InputLabel
-                                                                                                            id="viajeLabel">Viaje</InputLabel>
-                                                                                                        <Select
-                                                                                                            labelId="viajeLabel"
-                                                                                                            label="Viaje"
-                                                                                                            className="form-control"
-                                                                                                            required
-                                                                                                            id="viaje"
-                                                                                                            //onSelect={handleSelectViaje()}
-                                                                                                        >
-                                                                                                            <option
-                                                                                                                value="0">
-                                                                                                                Seleccionar
-                                                                                                            </option>
-                                                                                                            {/*  {dataViajes.map((viaje) => (
-                                                      <option
-                                                        key={viaje.m_nIdViaje}
-                                                        value={viaje.m_nIdViaje}
-                                                      >
-                                                        {viaje.m_sFolioViaje}
-                                                      </option>
-                                                    ))} */}
-                                                                                                        </Select>
-                                                                                                    </FormControl>
-                                                                                                </label>
-                                                                                            </div>
+                                                    {/*                                            <label*/}
+                                                    {/*                                                className="input select">*/}
+                                                    {/*                                                <FormControl*/}
+                                                    {/*                                                    fullWidth*/}
+                                                    {/*                                                    variant="outlined"*/}
+                                                    {/*                                                    margin="dense">*/}
+                                                    {/*                                                    <InputLabel*/}
+                                                    {/*                                                        id="viajeLabel">Viaje</InputLabel>*/}
+                                                    {/*                                                    <Select*/}
+                                                    {/*                                                        labelId="viajeLabel"*/}
+                                                    {/*                                                        label="Viaje"*/}
+                                                    {/*                                                        className="form-control"*/}
+                                                    {/*                                                        required*/}
+                                                    {/*                                                        id="viaje"*/}
+                                                    {/*                                                        //onSelect={handleSelectViaje()}*/}
+                                                    {/*                                                    >*/}
+                                                    {/*                                                        <option*/}
+                                                    {/*                                                            value="0">*/}
+                                                    {/*                                                            Seleccionar*/}
+                                                    {/*                                                        </option>*/}
+                                                    {/*                                                        /!*  {dataViajes.map((viaje) => (*/}
+                                                    {/*  <option*/}
+                                                    {/*    key={viaje.m_nIdViaje}*/}
+                                                    {/*    value={viaje.m_nIdViaje}*/}
+                                                    {/*  >*/}
+                                                    {/*    {viaje.m_sFolioViaje}*/}
+                                                    {/*  </option>*/}
+                                                    {/*))} *!/*/}
+                                                    {/*                                                    </Select>*/}
+                                                    {/*                                                </FormControl>*/}
+                                                    {/*                                            </label>*/}
+                                                    {/*                                        </div>*/}
 
-                                                                                            {/*****************************************Ruta2*************************************************/}
-                                                                                            <div
-                                                                                                className="col-sm-12 col-md-6 unit">
+                                                    {/*                                        /!*****************************************Ruta2*************************************************!/*/}
+                                                    {/*                                        <div*/}
+                                                    {/*                                            className="col-sm-12 col-md-6 unit">*/}
 
-                                                                                                <div className="input">
-                                                                                                    <TextField
-                                                                                                        variant="outlined"
-                                                                                                        margin="dense"
-                                                                                                        label="Ruta"
-                                                                                                        className="form-control"
-                                                                                                        type="text"
-                                                                                                        value={state.ruta2}
-                                                                                                        id="ruta2"
-                                                                                                    />
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
+                                                    {/*                                            <div className="input">*/}
+                                                    {/*                                                <TextField*/}
+                                                    {/*                                                    variant="outlined"*/}
+                                                    {/*                                                    margin="dense"*/}
+                                                    {/*                                                    label="Ruta"*/}
+                                                    {/*                                                    className="form-control"*/}
+                                                    {/*                                                    type="text"*/}
+                                                    {/*                                                    value={state.ruta2}*/}
+                                                    {/*                                                    id="ruta2"*/}
+                                                    {/*                                                />*/}
+                                                    {/*                                            </div>*/}
+                                                    {/*                                        </div>*/}
+                                                    {/*                                    </div>*/}
 
-                                                                                        {/*****************************************Operador2*************************************************/}
-                                                                                        <div className="row">
-                                                                                            <div
-                                                                                                className="col-sm-12 col-md-12 unit">
+                                                    {/*                                    /!*****************************************Operador2*************************************************!/*/}
+                                                    {/*                                    <div className="row">*/}
+                                                    {/*                                        <div*/}
+                                                    {/*                                            className="col-sm-12 col-md-12 unit">*/}
 
-                                                                                                <div className="input">
-                                                                                                    <TextField
-                                                                                                        variant="outlined"
-                                                                                                        margin="dense"
-                                                                                                        label="Operador"
-                                                                                                        className="form-control"
-                                                                                                        type="text"
-                                                                                                        value={state.operador2}
-                                                                                                        id="operador2"
-                                                                                                    />
-                                                                                                </div>
-                                                                                            </div>
+                                                    {/*                                            <div className="input">*/}
+                                                    {/*                                                <TextField*/}
+                                                    {/*                                                    variant="outlined"*/}
+                                                    {/*                                                    margin="dense"*/}
+                                                    {/*                                                    label="Operador"*/}
+                                                    {/*                                                    className="form-control"*/}
+                                                    {/*                                                    type="text"*/}
+                                                    {/*                                                    value={state.operador2}*/}
+                                                    {/*                                                    id="operador2"*/}
+                                                    {/*                                                />*/}
+                                                    {/*                                            </div>*/}
+                                                    {/*                                        </div>*/}
 
-                                                                                            {/*****************************************Unidad2*************************************************/}
-                                                                                            <div
-                                                                                                className="col-sm-12 col-md-6 unit">
-                                                                                                <div className="input">
-                                                                                                    <TextField
-                                                                                                        variant="outlined"
-                                                                                                        margin="dense"
-                                                                                                        label="Unidad"
-                                                                                                        className="form-control"
-                                                                                                        type="text"
-                                                                                                        value={state.unidad2}
-                                                                                                        id="unidad2"
-                                                                                                    />
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
+                                                    {/*                                        /!*****************************************Unidad2*************************************************!/*/}
+                                                    {/*                                        <div*/}
+                                                    {/*                                            className="col-sm-12 col-md-6 unit">*/}
+                                                    {/*                                            <div className="input">*/}
+                                                    {/*                                                <TextField*/}
+                                                    {/*                                                    variant="outlined"*/}
+                                                    {/*                                                    margin="dense"*/}
+                                                    {/*                                                    label="Unidad"*/}
+                                                    {/*                                                    className="form-control"*/}
+                                                    {/*                                                    type="text"*/}
+                                                    {/*                                                    value={state.unidad2}*/}
+                                                    {/*                                                    id="unidad2"*/}
+                                                    {/*                                                />*/}
+                                                    {/*                                            </div>*/}
+                                                    {/*                                        </div>*/}
+                                                    {/*                                    </div>*/}
 
-                                                                                        {/*****************************************Remolque2*************************************************/}
-                                                                                        <div className="row">
-                                                                                            <div
-                                                                                                className="col-sm-12 col-md-6 unit">
+                                                    {/*                                    /!*****************************************Remolque2*************************************************!/*/}
+                                                    {/*                                    <div className="row">*/}
+                                                    {/*                                        <div*/}
+                                                    {/*                                            className="col-sm-12 col-md-6 unit">*/}
 
-                                                                                                <div className="input">
-                                                                                                    <Autocomplete
-                                                                                                        freeSolo
-                                                                                                        value={state.IdRemolque2}
-                                                                                                        onChange={(event, newValue) =>
-                                                                                                            setState({
-                                                                                                                ...state,
-                                                                                                                IdRemolque2: newValue,
-                                                                                                            })
-                                                                                                        }
-                                                                                                        id="IdRemolque2Viaje"
-                                                                                                        disableClearable
-                                                                                                        forcePopupIcon={false}
-                                                                                                        options={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
-                                                                                                        getOptionLabel={(option) =>
-                                                                                                            option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
-                                                                                                        }
-                                                                                                        variant="outlined"
-                                                                                                        style={{
-                                                                                                            transform: "translate(14px, 10px) scale(1) !important"
-                                                                                                        }}
-                                                                                                        renderInput={(params) => (
-                                                                                                            <div>
-                                                                                                                <TextField
-                                                                                                                    variant="outlined"
-                                                                                                                    label="Remolque 2"
-                                                                                                                    margin="dense"
-                                                                                                                    className="form-control"
-                                                                                                                    {...params}
-                                                                                                                    InputProps={{
-                                                                                                                        ...params.InputProps,
-                                                                                                                        style: {
-                                                                                                                            height: 24,
-                                                                                                                        },
-                                                                                                                        type: "search",
-                                                                                                                        disableUnderline: true,
-                                                                                                                        endAdornment: (
-                                                                                                                            <InputAdornment
-                                                                                                                                position="end">
-                                                                                                                                <IconButton
-                                                                                                                                    padding="0px"
-                                                                                                                                    style={{
-                                                                                                                                        paddingRight:
-                                                                                                                                            "0px",
-                                                                                                                                    }}
-                                                                                                                                    onClick={() => {
-                                                                                                                                        setState({
-                                                                                                                                            ...state,
-                                                                                                                                            identificadorModal:
-                                                                                                                                                "IdRemolque2",
-                                                                                                                                            tipoModal: 4,
-                                                                                                                                            openDialog: true,
-                                                                                                                                        });
-                                                                                                                                    }}
-                                                                                                                                >
-                                                                                                                                    <PageviewIcon
-                                                                                                                                        style={{
-                                                                                                                                            color:
-                                                                                                                                                "#F9A03E",
-                                                                                                                                            fontSize: 32,
-                                                                                                                                            paddingInlineEnd: 0,
-                                                                                                                                            paddingRight: 0,
-                                                                                                                                            paddingBlockEnd: 0,
-                                                                                                                                            paddingLeft: 0,
-                                                                                                                                            paddingBlock: 0,
-                                                                                                                                        }}
-                                                                                                                                    />
-                                                                                                                                </IconButton>
-                                                                                                                            </InputAdornment>
-                                                                                                                        ),
-                                                                                                                    }}
-                                                                                                                />
-                                                                                                            </div>
-                                                                                                        )}
-                                                                                                    />
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </form>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    {/*                                            <div className="input">*/}
+                                                    {/*                                                <Autocomplete*/}
+                                                    {/*                                                    freeSolo*/}
+                                                    {/*                                                    value={state.IdRemolque2}*/}
+                                                    {/*                                                    onChange={(event, newValue) =>*/}
+                                                    {/*                                                        setState({*/}
+                                                    {/*                                                            ...state,*/}
+                                                    {/*                                                            IdRemolque2: newValue,*/}
+                                                    {/*                                                        })*/}
+                                                    {/*                                                    }*/}
+                                                    {/*                                                    id="IdRemolque2Viaje"*/}
+                                                    {/*                                                    disableClearable*/}
+                                                    {/*                                                    forcePopupIcon={false}*/}
+                                                    {/*                                                    options={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}*/}
+                                                    {/*                                                    getOptionLabel={(option) =>*/}
+                                                    {/*                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""*/}
+                                                    {/*                                                    }*/}
+                                                    {/*                                                    variant="outlined"*/}
+                                                    {/*                                                    style={{*/}
+                                                    {/*                                                        transform: "translate(14px, 10px) scale(1) !important"*/}
+                                                    {/*                                                    }}*/}
+                                                    {/*                                                    renderInput={(params) => (*/}
+                                                    {/*                                                        <div>*/}
+                                                    {/*                                                            <TextField*/}
+                                                    {/*                                                                variant="outlined"*/}
+                                                    {/*                                                                label="Remolque 2"*/}
+                                                    {/*                                                                margin="dense"*/}
+                                                    {/*                                                                className="form-control"*/}
+                                                    {/*                                                                {...params}*/}
+                                                    {/*                                                                InputProps={{*/}
+                                                    {/*                                                                    ...params.InputProps,*/}
+                                                    {/*                                                                    style: {*/}
+                                                    {/*                                                                        height: 24,*/}
+                                                    {/*                                                                    },*/}
+                                                    {/*                                                                    type: "search",*/}
+                                                    {/*                                                                    disableUnderline: true,*/}
+                                                    {/*                                                                    endAdornment: (*/}
+                                                    {/*                                                                        <InputAdornment*/}
+                                                    {/*                                                                            position="end">*/}
+                                                    {/*                                                                            <IconButton*/}
+                                                    {/*                                                                                padding="0px"*/}
+                                                    {/*                                                                                style={{*/}
+                                                    {/*                                                                                    paddingRight:*/}
+                                                    {/*                                                                                        "0px",*/}
+                                                    {/*                                                                                }}*/}
+                                                    {/*                                                                                onClick={() => {*/}
+                                                    {/*                                                                                    setState({*/}
+                                                    {/*                                                                                        ...state,*/}
+                                                    {/*                                                                                        identificadorModal:*/}
+                                                    {/*                                                                                            "IdRemolque2",*/}
+                                                    {/*                                                                                        tipoModal: 4,*/}
+                                                    {/*                                                                                        openDialog: true,*/}
+                                                    {/*                                                                                    });*/}
+                                                    {/*                                                                                }}*/}
+                                                    {/*                                                                            >*/}
+                                                    {/*                                                                                <PageviewIcon*/}
+                                                    {/*                                                                                    style={{*/}
+                                                    {/*                                                                                        color:*/}
+                                                    {/*                                                                                            "#F9A03E",*/}
+                                                    {/*                                                                                        fontSize: 32,*/}
+                                                    {/*                                                                                        paddingInlineEnd: 0,*/}
+                                                    {/*                                                                                        paddingRight: 0,*/}
+                                                    {/*                                                                                        paddingBlockEnd: 0,*/}
+                                                    {/*                                                                                        paddingLeft: 0,*/}
+                                                    {/*                                                                                        paddingBlock: 0,*/}
+                                                    {/*                                                                                    }}*/}
+                                                    {/*                                                                                />*/}
+                                                    {/*                                                                            </IconButton>*/}
+                                                    {/*                                                                        </InputAdornment>*/}
+                                                    {/*                                                                    ),*/}
+                                                    {/*                                                                }}*/}
+                                                    {/*                                                            />*/}
+                                                    {/*                                                        </div>*/}
+                                                    {/*                                                    )}*/}
+                                                    {/*                                                />*/}
+                                                    {/*                                            </div>*/}
+                                                    {/*                                        </div>*/}
+                                                    {/*                                    </div>*/}
+                                                    {/*                                </div>*/}
+                                                    {/*                            </form>*/}
+                                                    {/*                        </div>*/}
+                                                    {/*                    </div>*/}
+                                                    {/*                </div>*/}
+                                                    {/*            </div>*/}
+                                                    {/*        </div>*/}
+                                                    {/*    </div>*/}
+                                                    {/*</div>*/}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="col-md-6">
                                         <div className="widget-wrap">
-                                            <div className="widget-header block-header margin-bottom-0 clearfix">
+                                            <div className="widget-header">
                                                 <div className="pull-left">
                                                     <h3>Detalles de Guias</h3>
                                                 </div>
@@ -2894,6 +2898,17 @@ function Informes({history}) {
                                                             {dataGuias.length !== 0 &&
                                                             <form className="j-forms" noValidate>
                                                                 <div className="form-content">
+                                                                    <FormControlLabel
+                                                                        checked={todasGuiasSeleccionadas()}
+                                                                        control={
+                                                                            <Checkbox
+                                                                                name="selecionarGuias"
+                                                                                onClick={(e) => setDataGuias(dataGuias.map(d => {d.select = e.target.checked ; return d;} ))}
+                                                                                color="primary"
+                                                                            />
+                                                                        }
+                                                                        label="Seleccionar todas"
+                                                                    />
                                                                     <div style={{
                                                                         padding: "10px",
                                                                         maxHeight: "500px",
@@ -2985,7 +3000,7 @@ function Informes({history}) {
                                                                                                                 variant="outlined"
                                                                                                                 margin="dense"
                                                                                                                 label="Total"
-                                                                                                                value={`$${value.m_xTotal}` }
+                                                                                                                value={`$${value.m_xTotal.toFixed(2)}` }
                                                                                                                 disabled="true"
                                                                                                                 className="form-control"
                                                                                                                 type="text"
@@ -3221,7 +3236,7 @@ function Informes({history}) {
                                                                             }}
                                                                         >
                                                                             Peso total :{" "}
-                                                                            {dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xTotal), 0))/100)}` } t
+                                                                            {dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xTotal), 0))/100).toFixed(2)}` } t
                                                                         </Grid>
 
                                                                     </Grid>

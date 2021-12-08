@@ -5,7 +5,7 @@ import { API_HEADERS } from "../../Constants";
 const headers = API_HEADERS
 
 function obtenerMunicipiosByIdEstado(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Municipios/GetByIdEstado/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Municipios/GetByIdEstado/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

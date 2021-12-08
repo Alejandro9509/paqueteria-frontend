@@ -74,6 +74,7 @@ import {obtenerEmbalajesId} from "../Util/Contexts/EmbalajesContext";
 import CambiarTipoCobro from "./Guia/CambiarTipoCobro";
 import Ocurre from "./Guia/Ocurre";
 import ConceptosFacturacionGuias from "./Tarifas/ConceptosFacturacionGuias";
+import Filtros from "./Filtros/Filtros";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -2126,6 +2127,10 @@ obtenerGuiaId(id).then(({data}) => {
         setConceptosAdicionales(newList)
     }
 
+    const setDataListado = (listado) => {
+        setData(listado)
+    }
+
     return (
         <div>
             <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido} open={state.openTipoCobro} dataTipoCobro={dataTipoCobro} close={() => setState({...state, openTipoCobro: false})}/>
@@ -2231,7 +2236,7 @@ obtenerGuiaId(id).then(({data}) => {
 
                                         <div className="row">
                                             <div className="col-md-12">
-                                                <Grid container spacing={2} alignItems="center">
+                                                {/*<Grid container spacing={2} alignItems="center">
 
                                                     <Grid item xs={2}>
                                                         <TextField variant="outlined" margin="dense"
@@ -2394,7 +2399,11 @@ obtenerGuiaId(id).then(({data}) => {
                                                             Limpiar filtros
                                                         </IconButton>
                                                     </Grid>
-                                                </Grid>
+                                                </Grid>*/}
+                                                <Filtros
+                                                    listaResultado={setDataListado}
+                                                    guia={true}
+                                                />
                                             </div>
                                         </div>
                                     </div>

@@ -909,7 +909,7 @@ function RemitenteDestinatario(props) {
                 disableClearable
                 forcePopupIcon={false}
                 options={props.dataCiudad}
-                getOptionLabel={(option) => option.m_sCiudad}
+                getOptionLabel={(option) => option.m_sCiudad || ""}
                 style={{
                   transform: "translate(14px, 10px) scale(1) !important",
                 }}
@@ -944,7 +944,7 @@ function RemitenteDestinatario(props) {
                 disableClearable
                 forcePopupIcon={false}
                 options={props.dataCiudad}
-                getOptionLabel={(option) => option.m_sCiudad}
+                getOptionLabel={(option) => option.m_sCiudad || ""}
                 variant="outlined"
                 style={{
                   transform: "translate(14px, 10px) scale(1) !important",

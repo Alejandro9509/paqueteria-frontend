@@ -13,6 +13,7 @@ import {Tooltip} from "@material-ui/core";
 import {confirmAlert} from "react-confirm-alert";
 import axios from "axios";
 import Noty from "noty";
+import {obtenerConvenios} from "../../Util/Contexts/ConveniosContext";
 
 window.jQuery = window.$ = $;
 
@@ -128,8 +129,7 @@ function Convenios(){
     }, [])
 
     const getAllConvenios = () => {
-        const url = `${process.env.REACT_APP_API_URL}/Convenios/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerConvenios().then(respuesta => {
             setListaConvenios(respuesta.data)
         });
     }
