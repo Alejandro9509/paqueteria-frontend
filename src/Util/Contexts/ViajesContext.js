@@ -52,6 +52,18 @@ function obtenerViajes(){
     );
     return result
 }
+function obtenerViajesByFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folio,Origen,Destino){
+    if (folio == ''){
+        folio = 0
+    }
+    const url = `${process.env.REACT_APP_API_URL}/Viajes/GetByFiltro/` +
+        fechaInicial + "/" + fechaFinal + "/" + sucursalListado + "/" + estatusListado;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
 
 function obtenerXML(id){
     const url = `${process.env.REACT_APP_API_URL}/Guia/GetXMLPermisionario/${id}`;
@@ -84,5 +96,5 @@ function obetenerViajeId( id){
 
 
 
-export {agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje,
+export {obtenerViajesByFiltro,agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje,
     obtenerViajes, obtenerViajesEstatus, obtenerXML}
