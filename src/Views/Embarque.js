@@ -611,9 +611,11 @@ function Embarque(props) {
     const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
     const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
     const [dataZonasTarifaEntregaDD, setDataZonasTarifaEntregaDD] = useState([])
+    const [dataConceptos, setDataConceptos] = useState([])
     const [state, setState] = React.useState({
         //==VARIABLES DE LISTADO==
         idEmbarque: 0,
+        idCotizacion: 0,
         fechaInicial: 0,
         fechaFinal: 0,
         sucursalListado: 0,
@@ -1219,6 +1221,17 @@ function Embarque(props) {
             params.m_sHoraCitaMaxima = state.horaCitaMaxima
         }
 
+        params.m_arrConceptos = dataConceptos.map(item => ({
+            m_nIdConceptoFacturacion: item.idConcepto,
+            m_cImporte: item.importe,
+            m_nIdImpuestoRetiene: item.retiene,
+            m_nIdImpuestoTraslada: item.traslada,
+            m_cImporteIva: item.importeIVA,
+            m_cImporteRetiene: item.importeRet,
+            m_c_Descuento: item.descuento
+        }))
+        params.m_nIdCotizacion = state.idCotizacion
+
         console.log(params)
         console.log(JSON.stringify(params))
 
@@ -1792,6 +1805,7 @@ function Embarque(props) {
             return {
                 ...state,
                 idEmbarque: duplicar ? 0 : respuesta.data.m_nIdEmbarque,
+                idCotizacion: respuesta.data.m_nIdCotizacion,
                 idEmbarqueRelacionado: duplicar ? respuesta.data.m_nIdEmbarque : 0,
                 idRecoleccion: duplicar ? 0 : respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.IdSucursal,
@@ -2749,6 +2763,18 @@ function Embarque(props) {
 
     const setDataListado = (listado) => {
         setData(listado)
+    }
+
+    const actualizarConceptos = (list) => {
+        setDataConceptos(list);
+    }
+    const saveIdCotizacion = (id) => {
+        setState(state => {
+            return{
+                ...state,
+                idCotizacion: id
+            }
+        });
     }
     return (
         <div>
@@ -4868,7 +4894,13 @@ function Embarque(props) {
                                     </div>
 
                                     <div className="row">
-                                        <Cotizador embarque={state} remitente={remitente} destinatario={destinatario} paquetes={dataPaquetes.map(p =>({
+                                        <Cotizador embarque={state}
+                                                   remitente={remitente}
+                                                   destinatario={destinatario}
+                                                   onChangeConceptosList={actualizarConceptos}
+                                                   conceptos={dataConceptos}
+                                                   saveIdCotizacion={saveIdCotizacion}
+                                                   paquetes={dataPaquetes.map(p =>({
                                             Tipo: p.m_nIdTipo,
                                             Peso: p.m_rPeso,
                                             Largo: p.m_rLargo,

@@ -46,6 +46,7 @@ class Cotizador extends Component {
             let ivaTraslada = []
             let ivaRetiene = []
             data.forEach((element) => {
+                this.props.saveIdCotizacion(element.m_nIdCotizacion)
                 conceptosCast.push({
                     id: Math.floor(Math.random() * 10000),
                     concepto: element,
@@ -56,22 +57,25 @@ class Cotizador extends Component {
                     importeIVA: element.m_cImporteIva,
                     importeRet: element.m_cImporteRetiene,
                     nombreConcepto: element.m_sConcepto,
-                    descuento: element.m_c_Descuento
+                    descuento: element.m_c_Descuento,
                 })
             })
+            this.props.saveIdCotizacion()
             ivaTraslada = getUniqueListBy(conceptosCast, "traslada").map(i => i.traslada);
             ivaRetiene = getUniqueListBy(conceptosCast, "retiene").map(i => i.retiene);
+            this.props.onChangeConceptosList(conceptosCast)
             this.setState({
-                conceptos: conceptosCast,
                 mostarConceptos: true,
                 ivaRetiene: ivaRetiene,
                 ivaTraslada: ivaTraslada
             })
+
         })
     }
 
     handleChangeListConceptos(newList) {
-        this.setState({conceptos: newList})
+        this.props.onChangeConceptosList(newList)
+        // this.setState({conceptos: newList})
     }
 
     render() {
@@ -85,7 +89,7 @@ class Cotizador extends Component {
                                 <ConceptosFacturacionGuias
                                     keys={0}
                                     disabled={false}
-                                    dataPaquetes={this.state.conceptos}
+                                    dataPaquetes={this.props.conceptos}
                                     onChangeList={this.handleChangeListConceptos}
                                     conceptosBase={this.state.conceptosBase}
                                     ivaTraslada={this.state.ivaTraslada}
