@@ -62,7 +62,7 @@ function Filtros(props) {
         })
         if (target.name && event.keyCode == 13){
             if (props.embarque){
-                obtenerEmbarquesFiltro(0, 0,0, 0,target.value,0,0).then(respuesta => {
+                obtenerEmbarquesFiltro(0, 0,0, 0,target.value,0,0,0).then(respuesta => {
                     if (respuesta.data == "Vacio") {
                         props.listaResultado([])
                     } else {
@@ -70,86 +70,33 @@ function Filtros(props) {
                     }
                 })
             }else if (props.recoleccion){
-                obtenerRecoleccionFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                obtenerRecoleccionFiltro(0, 0,0, 0,target.value,0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else if (props.guia){
-                obtenerGuiasFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                obtenerGuiasFiltro(0, 0,0, 0,target.value,0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else if (props.informe){
-                obtenerInformeFiltro(0, 0,filtros.folio, 0,0).then(respuesta => {
+                obtenerInformeFiltro(0, 0,target.value, 0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else if (props.viajes){
-                obtenerViajesByFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                obtenerViajesByFiltro(0, 0,0, 0,target.value,0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }
         }
-        /*if (target.name === "fechaInicial"){
-            obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    props.listaResultado([])
-                } else {
-                    props.listaResultado(respuesta.data)
-                }
-            })
-        }else if (target.name === "fechaFinal"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    props.listaResultado([])
-                } else {
-                    props.listaResultado(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "sucursalListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    props.listaResultado([])
-                } else {
-                    props.listaResultado(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "estatusListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    props.listaResultado([])
-                } else {
-                    props.listaResultado(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "OrigenListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    props.listaResultado([])
-                } else {
-                    props.listaResultado(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "DestinoListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    props.listaResultado([])
-                } else {
-                    props.listaResultado(respuesta.data)
-                }
-            })
-        }*/
     }
 
     const filtrar = () => {
         if (props.embarque){
             if (filtros.folio.length > 0){
-                obtenerEmbarquesFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                obtenerEmbarquesFiltro(0, 0,0, 0,filtros.folio,0,0, 0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else {
-                obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado, filtros.clientePaga.id||0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }
@@ -271,7 +218,7 @@ function Filtros(props) {
                 });
 
                 if (props.embarque){
-                    obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                    obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0, 0).then((respuesta) => {
                         props.listaResultado(respuesta.data);
                     })
                 }else if (props.recoleccion){
@@ -554,22 +501,22 @@ function Filtros(props) {
                         </FormControl>
                     </Grid>
                     }
-                    {/*{(props.embarque || props.recoleccion || props.guia) &&
+                    {(props.embarque || props.recoleccion || props.guia) &&
                     <Grid item xs>
                         <div className="input">
                             <TextField
                                 variant="outlined"
-                                label="Responsable de pago"
+                                label="Cliente"
                                 margin="dense"
                                 required
-                                value={filtros.clientePaga.m_sNombreFiscal}
+                                value={filtros.clientePaga.m_sNombreFiscal||''}
                                 placeholder={"No. Cliente: Nombre fiscal"}
                                 // InputLabelProps={{shrink: true}}
                                 onClick={()=>{setOpenDialog(true)}}
                             />
                         </div>
                     </Grid>
-                    }*/}
+                    }
                     <Grid item container xs>
                         <IconButton aria-label="delete" onClick={() => {
                             resetFiltros()
