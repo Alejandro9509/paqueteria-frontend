@@ -54,6 +54,7 @@ import {getUniqueListBy} from "../Util/Util";
 import DetalleInforme from "./Viajes/DetalleInforme";
 import {obtenerDetalleParadasIdInformes, obtenerDetalleParadasIdViaje} from "../Util/Contexts/DetalleParadasContext";
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
+import Filtros from "./Filtros/Filtros";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -743,6 +744,10 @@ function Viajes() {
         console.log(data);
     }
 
+    const setDataListado = (listado) => {
+        setData(listado)
+    }
+
     return (
         <div>
             {
@@ -916,135 +921,10 @@ function Viajes() {
                             <div className="widget-wrap">
                                 <div className="widget-content">
 
-                                    <div className="row" style={{paddingLeft: "8px"}}>
-                                        <form className="j-forms">
-                                            <div className="row" style={{display: "flex"}}>
-                                                <div className="col-sm-6 col-md-2 " style={{paddingLeft: "0px"}}>
-                                                    <div className="input">
-                                                        <TextField
-                                                            autoFocus
-                                                            type="date"
-                                                            margin="dense"
-                                                            label="Fecha Inicial"
-                                                            variant="outlined"
-                                                            className="form-control"
-                                                            InputLabelProps={{
-                                                                shrink: true,
-                                                            }}
-                                                            value={state.fechaInicial}
-                                                            onChange={handleFechaInicialFiltro}
-                                                            id="fechaInicial"
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="col-sm-6 col-md-2 " style={{paddingLeft: "0px"}}>
-                                                    <div className="input">
-                                                        <TextField
-                                                            autoFocus
-                                                            type="date"
-                                                            margin="dense"
-                                                            label="Fecha Final"
-                                                            variant="outlined"
-                                                            className="form-control"
-                                                            InputLabelProps={{
-                                                                shrink: true,
-                                                            }}
-                                                            value={state.fechaFinal}
-                                                            onChange={handleFechaFinalFiltro}
-                                                            id="fechaFinal"
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="col-sm-6 col-md-2 " style={{paddingLeft: "0px"}}>
-                                                    <label className="input select">
-                                                        <FormControl fullWidth variant="outlined" margin="dense">
-                                                            <InputLabel
-                                                                id="idSucursalAgregarLabel">Sucursal</InputLabel>
-                                                            <Select
-                                                                labelId="idSucursalAgregarLabel"
-                                                                className="form-control"
-                                                                required
-                                                                value={state.sucursalListado}
-                                                                onChange={handleSucursalFiltro}
-                                                                id="idSucursalAgregar"
-                                                                label="Sucursal"
-                                                            >
-                                                                <option value="0">Todas</option>
-                                                                {dataSucursal.map((sucursal) => (
-                                                                    <option
-                                                                        key={sucursal.m_nIdSucursal}
-                                                                        value={sucursal.m_nIdSucursal}
-                                                                    >
-                                                                        {sucursal.m_sSucursal}
-                                                                    </option>
-                                                                ))}
-                                                            </Select>
-                                                        </FormControl>
-                                                    </label>
-                                                </div>
-
-                                                <div className="col-sm-6 col-md-3 " style={{paddingLeft: "0px"}}>
-                                                    <label className="input select">
-                                                        <FormControl fullWidth variant="outlined" margin="dense">
-                                                            <InputLabel id="idEstatusViajeLabel">Estatus
-                                                                Viaje</InputLabel>
-                                                            <Select
-                                                                labelId="idEstatusViajeLabel"
-                                                                className="form-control"
-                                                                required
-                                                                value={state.estatusListado}
-                                                                onChange={handleEstatusFiltro}
-                                                                id="estatusListado"
-                                                                label="Estatus Viaje"
-                                                            >
-                                                                <option value="0">Todos</option>
-                                                                {dataEstatusViaje.map((estatus) => (
-                                                                    <option
-                                                                        key={estatus.m_nIdEstatusViaje}
-                                                                        value={estatus.m_nIdEstatusViaje}
-                                                                    >
-                                                                        {estatus.m_sEstatus}
-                                                                    </option>
-                                                                ))}
-                                                            </Select>
-                                                        </FormControl>
-                                                    </label>
-                                                </div>
-
-                                                <div className="col-sm-6 col-md-3 " style={{paddingLeft: "0px"}}>
-                                                    <label className="input select">
-                                                        <FormControl fullWidth variant="outlined" margin="dense">
-                                                            <InputLabel id="idEstatusDocumentoLabel">Estatus
-                                                                Documento</InputLabel>
-                                                            <Select
-                                                                labelId="idEstatusDocumentoLabel"
-                                                                className="form-control"
-                                                                required
-                                                                value={state.estatusDocumentoListado}
-                                                                onChange={handleEstatusDocumentoFiltro}
-                                                                id="estatusDocumentoListado"
-                                                                label="Estatus Documento"
-                                                            >
-                                                                <option value="0">Todos</option>
-                                                                {dataEstatusDocumento.map((estatus) => (
-                                                                    <option
-                                                                        key={estatus.m_nIdEstatusEmbarque}
-                                                                        value={estatus}
-                                                                    >
-                                                                        {estatus.m_sEstatus}
-                                                                    </option>
-                                                                ))}
-                                                            </Select>
-                                                        </FormControl>
-                                                    </label>
-                                                </div>
-
-
-                                            </div>
-                                        </form>
-                                    </div>
+                                    <Filtros
+                                        listaResultado={setDataListado}
+                                        viajes={true}
+                                    />
 
                                     <div className="row" style={{height: "400px", width: '100%'}}>
                                         <DataGrid
