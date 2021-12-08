@@ -32,6 +32,15 @@ function obtenerEstatusGuia(){
     return result
 }
 
+function obtenerEstatusViaje(){
+    const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
 function obtenerEstatusInforme(){
     const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoInformes`;
     let result;
@@ -95,4 +104,4 @@ function modificarEstatusUnidades(id, params){
 }
 
 
-export { obtenerEstatusDocumentos, obtenerEstatusEmbarque, obtenerEstatusGuia, obtenerEstatusInforme, obtenerEstatusRecoleccion, obtenerEstatusUnidades, agregarEstatusUnidades, modificarEstatusUnidades, obtenerEstatusUnidadesId, eliminarEstatusUnidades}
+export {obtenerEstatusViaje, obtenerEstatusDocumentos, obtenerEstatusEmbarque, obtenerEstatusGuia, obtenerEstatusInforme, obtenerEstatusRecoleccion, obtenerEstatusUnidades, agregarEstatusUnidades, modificarEstatusUnidades, obtenerEstatusUnidadesId, eliminarEstatusUnidades}

@@ -12,13 +12,14 @@ import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {
     obtenerEstatusEmbarque,
     obtenerEstatusGuia, obtenerEstatusInforme,
-    obtenerEstatusRecoleccion
+    obtenerEstatusRecoleccion, obtenerEstatusViaje
 } from "../../Util/Contexts/EstatusContext";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import {obtenerFechaFinal, obtenerFechaInicio} from "../../Util/Contexts/UtileriasContext";
 import {obtenerRecoleccionFiltro} from "../../Util/Contexts/RecoleccionContext";
 import {obtenerGuiasFiltro} from "../../Util/Contexts/GuiaContext";
 import {obtenerInformeFiltro} from "../../Util/Contexts/InformesContext";
+import {obtenerViajesByFiltro} from "../../Util/Contexts/ViajesContext";
 
 function Filtros(props) {
     const [dataSucursal, setDataSucursal] = React.useState([]);
@@ -147,6 +148,16 @@ function Filtros(props) {
                     props.listaResultado(respuesta.data)
                 })
             }
+        }else if (props.viajes){
+            if (filtros.folio.length > 0){
+                obtenerViajesByFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                    props.listaResultado(respuesta.data)
+                })
+            }else{
+                obtenerViajesByFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
+                    props.listaResultado(respuesta.data)
+                })
+            }
         }
 
     }
@@ -193,6 +204,10 @@ function Filtros(props) {
             obtenerEstatusInforme().then((respuesta) => {
                 setEstatus(respuesta.data);
             });
+        }else if (props.viajes){
+            obtenerEstatusViaje().then((respuesta) => {
+                setEstatus(respuesta.data);
+            });
         }
 
     }
@@ -231,6 +246,10 @@ function Filtros(props) {
                     })
                 }else if (props.informe){
                     obtenerInformeFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                        props.listaResultado(respuesta.data);
+                    })
+                }else if (props.viajes){
+                    obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
                         props.listaResultado(respuesta.data);
                     })
                 }
@@ -296,31 +315,33 @@ function Filtros(props) {
                     </FormControl>
 
                 </Grid>
-                <Grid item xs={2}>
-                    <FormControl className="input select" fullWidth variant="outlined">
-                        <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
-                        <Select
-                            labelId="sucursalListadoLabel"
-                            label="Sucursal"
-                            className="form-control"
-                            required
-                            value={filtros.sucursalListado}
-                            onChange={handleChangeFiltros}
-                            id="sucursalListado"
-                            name="sucursalListado"
-                        >
-                            <option value="0">Todas</option>
-                            {dataSucursal.map((sucursal) => (
-                                <option
-                                    key={sucursal.m_nIdSucursal}
-                                    value={sucursal.m_nIdSucursal}
-                                >
-                                    {sucursal.m_sSucursal}
-                                </option>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Grid>
+                {(props.embarque || props.recoleccion || props.guia || props.informe) &&
+                    <Grid item xs={2}>
+                        <FormControl className="input select" fullWidth variant="outlined">
+                            <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
+                            <Select
+                                labelId="sucursalListadoLabel"
+                                label="Sucursal"
+                                className="form-control"
+                                required
+                                value={filtros.sucursalListado}
+                                onChange={handleChangeFiltros}
+                                id="sucursalListado"
+                                name="sucursalListado"
+                            >
+                                <option value="0">Todas</option>
+                                {dataSucursal.map((sucursal) => (
+                                    <option
+                                        key={sucursal.m_nIdSucursal}
+                                        value={sucursal.m_nIdSucursal}
+                                    >
+                                        {sucursal.m_sSucursal}
+                                    </option>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                }
                 <Grid item xs={2}>
                     <FormControl className="input select" fullWidth variant="outlined">
                         <InputLabel id="idEstatusLabel">Estatus</InputLabel>
@@ -353,6 +374,11 @@ function Filtros(props) {
                             ))}
                             {props.informe && dataEstatus.map((estatus) => (
                                 <option key={estatus.m_nIdEstatusInforme} value={estatus.m_nIdEstatusInforme}>
+                                    {estatus.m_sEstatus}
+                                </option>
+                            ))}
+                            {props.viajes && dataEstatus.map((estatus) => (
+                                <option key={estatus.m_nIdEstatusViaje} value={estatus.m_nIdEstatusViaje}>
                                     {estatus.m_sEstatus}
                                 </option>
                             ))}
