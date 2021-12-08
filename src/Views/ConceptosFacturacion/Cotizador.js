@@ -4,7 +4,16 @@ import ConceptosFacturacionGuias from "../Tarifas/ConceptosFacturacionGuias";
 import {obtenerCotizacion} from "../../Util/Contexts/CotizadorContext";
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 import {getUniqueListBy} from "../../Util/Util";
+import Noty from "noty";
 
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000",
+    }).show();
+}
 class Cotizador extends Component {
     constructor(props) {
         super(props);
@@ -28,6 +37,10 @@ class Cotizador extends Component {
     }
 
     calcularTarifa() {
+        if (this.props.paquetes.length === 0){
+            showSuccess("¿Y los paquetes?")
+            return
+        }
         obtenerCotizacion(this.props.embarque, this.props.paquetes, this.props.remitente, this.props.destinatario).then(({data}) => {
             let conceptosCast = []
             let ivaTraslada = []
