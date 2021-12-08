@@ -46,7 +46,9 @@ class Cotizador extends Component {
             let ivaTraslada = []
             let ivaRetiene = []
             data.forEach((element) => {
-                this.props.saveIdCotizacion(element.m_nIdCotizacion)
+                if (element.m_nIdCotizacion){
+                    this.props.saveIdCotizacion(element.m_nIdCotizacion)
+                }
                 conceptosCast.push({
                     id: Math.floor(Math.random() * 10000),
                     concepto: element,

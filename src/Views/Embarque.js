@@ -772,6 +772,7 @@ function Embarque(props) {
         setDataEmbarqueConsulta(undefined)
         setDataPaquetes([])
         resetEntregaDD()
+        setDataConceptos([])
     }
 
     const [remitente, setRemitente] = useState({
@@ -2769,12 +2770,15 @@ function Embarque(props) {
         setDataConceptos(list);
     }
     const saveIdCotizacion = (id) => {
-        setState(state => {
-            return{
-                ...state,
-                idCotizacion: id
-            }
-        });
+        if (id){
+            setState(state => {
+                return{
+                    ...state,
+                    idCotizacion: id
+                }
+            });
+        }
+
     }
     return (
         <div>
