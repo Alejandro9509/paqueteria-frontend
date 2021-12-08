@@ -4097,6 +4097,7 @@ function Embarque(props) {
                                         }
 
                                     </div>
+
                                     <div className="widget-wrap" id="complementosSat">
                                         <ComplementosSAT
                                             dataList={dataComplementosSAT}
@@ -4867,7 +4868,7 @@ function Embarque(props) {
                                     </div>
 
                                     <div className="row">
-                                        <Cotizador embarque={state} remitente={remitente} paquetes={dataPaquetes.map(p =>({
+                                        <Cotizador embarque={state} remitente={remitente} destinatario={destinatario} paquetes={dataPaquetes.map(p =>({
                                             Tipo: p.m_nIdTipo,
                                             Peso: p.m_rPeso,
                                             Largo: p.m_rLargo,
@@ -4878,7 +4879,7 @@ function Embarque(props) {
                                             Activo: 1,
                                             ctd:p.m_nCantidad,
                                             IdProducto:p.m_nIdProducto
-                                        }))} destinatario={destinatario}/>
+                                        }))} />
                                     </div>
 
                                 </div>

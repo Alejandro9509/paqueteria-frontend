@@ -63,31 +63,33 @@ class Cotizador extends Component {
 
     render() {
         return (
-            <div className="widget-container">
-                <div className="widget-content">
-                    <div className="row">
-                        {
-                            this.state.mostarConceptos &&
-                            <ConceptosFacturacionGuias
-                                keys={0}
-                                disabled={false}
-                                dataPaquetes={this.state.conceptos}
-                                onChangeList={this.handleChangeListConceptos}
-                                conceptosBase={this.state.conceptosBase}
-                                ivaTraslada={this.state.ivaTraslada}
-                                ivaRetiene={this.state.ivaRetiene}
-                            />
-                        }
-                        <button
-                            type={"button"}
-                            className="btn btn-secondary secondary-btn"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                this.calcularTarifa()
-                            }}
-                        >
-                            Calcular Tarifa
-                        </button>
+            <div className="widget-wrap">
+                <div className="widget-container">
+                    <div className="widget-content">
+                        <div className="row">
+                            {
+                                this.state.mostarConceptos &&
+                                <ConceptosFacturacionGuias
+                                    keys={0}
+                                    disabled={false}
+                                    dataPaquetes={this.state.conceptos}
+                                    onChangeList={this.handleChangeListConceptos}
+                                    conceptosBase={this.state.conceptosBase}
+                                    ivaTraslada={this.state.ivaTraslada}
+                                    ivaRetiene={this.state.ivaRetiene}
+                                />
+                            }
+                            <button
+                                type={"button"}
+                                className="btn btn-secondary secondary-btn"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    this.calcularTarifa()
+                                }}
+                            >
+                                Calcular Tarifa
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
