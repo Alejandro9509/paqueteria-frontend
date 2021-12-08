@@ -21,7 +21,7 @@ import {
     usePagination,
 } from "react-table";
 import $ from "jquery";
-import {remove_array_element} from "../Util/Util";
+import {getUniqueListBy, remove_array_element} from "../Util/Util";
 import IconButton from "@material-ui/core/IconButton";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -1801,7 +1801,20 @@ function Embarque(props) {
                 }
             })
         })
+        let conceptosCast = []
+        conceptosCast = respuesta.data.m_arrConceptos.map(item => ({
+            id: Math.floor(Math.random() * 10000),
+            idConcepto: item.m_nIdConceptoFacturacion,
+            importe: item.m_cImporte,
+            retiene: item.m_nIdImpuestoRetiene,
+            traslada: item.m_nIdImpuestoTraslada,
+            importeIVA: item.m_cImporteIva,
+            importeRet: item.m_cImporteRetiene,
+            nombreConcepto: item.m_sConcepto,
+            descuento: item.m_c_Descuento
+        }))
 
+        setDataConceptos(conceptosCast)
         setState(state => {
             return {
                 ...state,

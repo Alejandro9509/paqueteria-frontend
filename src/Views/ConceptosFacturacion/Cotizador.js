@@ -36,6 +36,20 @@ class Cotizador extends Component {
         });
     }
 
+    componentDidUpdate(prevProps: Readonly<P>, prevState: Readonly<S>, snapshot: SS) {
+        if (prevProps.conceptos.length !== this.props.conceptos.length && this.props.conceptos.length > 0){
+            let ivaTraslada = []
+            let ivaRetiene = []
+            ivaTraslada = getUniqueListBy(this.props.conceptos, "traslada").map(i => i.traslada);
+            ivaRetiene = getUniqueListBy(this.props.conceptos, "retiene").map(i => i.retiene);
+            this.setState({
+                mostarConceptos: true,
+                ivaRetiene: ivaRetiene,
+                ivaTraslada: ivaTraslada
+            })
+        }
+    }
+
     calcularTarifa() {
         if (this.props.paquetes.length === 0){
             showSuccess("¿Y los paquetes?")
@@ -46,9 +60,7 @@ class Cotizador extends Component {
             let ivaTraslada = []
             let ivaRetiene = []
             data.forEach((element) => {
-                if (element.m_nIdCotizacion){
-                    this.props.saveIdCotizacion(element.m_nIdCotizacion)
-                }
+                this.props.saveIdCotizacion(element.m_nIdCotizacion)
                 conceptosCast.push({
                     id: Math.floor(Math.random() * 10000),
                     concepto: element,
@@ -62,7 +74,6 @@ class Cotizador extends Component {
                     descuento: element.m_c_Descuento,
                 })
             })
-            this.props.saveIdCotizacion()
             ivaTraslada = getUniqueListBy(conceptosCast, "traslada").map(i => i.traslada);
             ivaRetiene = getUniqueListBy(conceptosCast, "retiene").map(i => i.retiene);
             this.props.onChangeConceptosList(conceptosCast)
