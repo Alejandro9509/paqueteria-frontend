@@ -93,7 +93,7 @@ function obtenerInformesId(id){
     return result
 }
 
-function obtenerInformeFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioInforme,Origen,Destino) {
+function obtenerInformeFiltro(fechaInicial, fechaFinal,folioInforme,sucursarEmisora,sucursalReceptora) {
     if (folioInforme == ''){
         folioInforme = 0
     }
@@ -103,15 +103,11 @@ function obtenerInformeFiltro(fechaInicial, fechaFinal, sucursalListado, estatus
         "/" +
         fechaFinal +
         "/" +
-        sucursalListado +
+        folioInforme +
         "/" +
-        estatusListado +
+        sucursarEmisora +
         "/" +
-        folioInforme+
-        "/" +
-        Origen+
-        "/" +
-        Destino;
+        sucursalReceptora;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
