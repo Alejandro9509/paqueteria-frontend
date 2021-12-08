@@ -949,11 +949,7 @@ function Informes({history}) {
         });
     }
 
-    function getAllOperadores() {
-        obtenerOperadores().then((respuesta) => {
-            setDataOperadores(respuesta.data);
-        });
-    }
+
 
     function getAllEstatusInformes() {
         obtenerEstatusInforme().then((respuesta) => {
@@ -1131,12 +1127,12 @@ function Informes({history}) {
         //getAllGuias();
         getAllEstatusInformes();
         getAllSucursales();
-        getAllOperadores();
+        //getAllOperadores();
         //getFormatosImpresion();
         getAllCiudades();
         getAllUnidades();
         //getAllTipoUnidad();
-        getAllDataRutas();
+        //getAllDataRutas();
     }, []);
 
 

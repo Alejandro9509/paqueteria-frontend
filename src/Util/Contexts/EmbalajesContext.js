@@ -42,7 +42,7 @@ function obtenerEmbalajes(){
 }
 
 function obtenerEmbalajesId(id){
-    const url = `${process.env.REACT_APP_API_URL}/Embalaje/GetById/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embalajes/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
