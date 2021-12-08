@@ -471,7 +471,7 @@ function Filtros(props) {
                             </Select>
                         </FormControl>
                     </Grid>
-                    {(props.embarque || props.recoleccion || props.guia) &&
+                    {/*{(props.embarque || props.recoleccion || props.guia) &&
                     <Grid item xs>
                         <div className="input">
                             <TextField
@@ -486,7 +486,7 @@ function Filtros(props) {
                             />
                         </div>
                     </Grid>
-                    }
+                    }*/}
                     <Grid item container xs>
                         <IconButton aria-label="delete" onClick={() => {
                             resetFiltros()
