@@ -39,7 +39,9 @@ function Filtros(props) {
         folio: '',
         OrigenListado:0,
         DestinoListado:0,
-        clientePaga:''
+        clientePaga:'',
+        sucursalEmisora:0,
+        sucursalReceptora:0
     })
     const [openDialog, setOpenDialog] = useState(false);
 
@@ -59,13 +61,31 @@ function Filtros(props) {
             }
         })
         if (target.name && event.keyCode == 13){
-            obtenerEmbarquesFiltro(0, 0,0, 0,target.value,0,0).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    props.listaResultado([])
-                } else {
+            if (props.embarque){
+                obtenerEmbarquesFiltro(0, 0,0, 0,target.value,0,0).then(respuesta => {
+                    if (respuesta.data == "Vacio") {
+                        props.listaResultado([])
+                    } else {
+                        props.listaResultado(respuesta.data)
+                    }
+                })
+            }else if (props.recoleccion){
+                obtenerRecoleccionFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
-                }
-            })
+                })
+            }else if (props.guia){
+                obtenerGuiasFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                    props.listaResultado(respuesta.data)
+                })
+            }else if (props.informe){
+                obtenerInformeFiltro(0, 0,filtros.folio, 0,0).then(respuesta => {
+                    props.listaResultado(respuesta.data)
+                })
+            }else if (props.viajes){
+                obtenerViajesByFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                    props.listaResultado(respuesta.data)
+                })
+            }
         }
         /*if (target.name === "fechaInicial"){
             obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
@@ -155,11 +175,11 @@ function Filtros(props) {
             }
         }else if (props.informe){
             if (filtros.folio.length > 0){
-                obtenerInformeFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                obtenerInformeFiltro(0, 0,filtros.folio, 0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else{
-                obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
+                obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.folio,filtros.sucursalEmisora, filtros.sucursalReceptora).then((respuesta) => {
                     props.listaResultado(respuesta.data)
                 })
             }
@@ -188,7 +208,9 @@ function Filtros(props) {
                 folio: '',
                 OrigenListado:0,
                 DestinoListado:0,
-                clientePaga:''
+                clientePaga:'',
+                sucursalEmisora:0,
+                sucursalReceptora:0
             }
         })
     }
@@ -261,7 +283,7 @@ function Filtros(props) {
                         props.listaResultado(respuesta.data);
                     })
                 }else if (props.informe){
-                    obtenerInformeFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                    obtenerInformeFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0).then((respuesta) => {
                         props.listaResultado(respuesta.data);
                     })
                 }else if (props.viajes){
@@ -349,7 +371,7 @@ function Filtros(props) {
                         </FormControl>
 
                     </Grid>
-                    {(props.embarque || props.recoleccion || props.guia || props.informe) &&
+                    {(props.embarque || props.recoleccion || props.guia) &&
                     <Grid item xs>
                         <FormControl className="input select" fullWidth variant="outlined">
                             <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
@@ -376,6 +398,7 @@ function Filtros(props) {
                         </FormControl>
                     </Grid>
                     }
+                    {(props.embarque || props.recoleccion || props.guia) &&
                     <Grid item xs>
                         <FormControl className="input select" fullWidth variant="outlined">
                             <InputLabel id="idEstatusLabel">Estatus</InputLabel>
@@ -394,9 +417,10 @@ function Filtros(props) {
                                     <option key={estatus.m_nIdEstatusEmbarque} value={estatus.m_nIdEstatusEmbarque}>
                                         {estatus.m_sEstatus}
                                     </option>
-                                )) }
+                                ))}
                                 {props.recoleccion && dataEstatus.map((estatus) => (
-                                    <option key={estatus.m_nIdEstatusRecoleccion} value={estatus.m_nIdEstatusRecoleccion}
+                                    <option key={estatus.m_nIdEstatusRecoleccion}
+                                            value={estatus.m_nIdEstatusRecoleccion}
                                     >
                                         {estatus.m_sEstatus}
                                     </option>
@@ -419,8 +443,64 @@ function Filtros(props) {
                             </Select>
                         </FormControl>
                     </Grid>
+                    }
+                    {(props.informe) &&
+                    <Grid item xs>
+                        <FormControl className="input select" fullWidth variant="outlined">
+                            <InputLabel id="idSucusalLabel">Sucursal Emisora</InputLabel>
+                            <Select
+                                labelId="sucursalListadoLabel"
+                                label="Sucursal Emisora"
+                                className="form-control"
+                                required
+                                value={filtros.sucursalEmisora}
+                                onChange={handleChangeFiltros}
+                                id="sucursalEmisora"
+                                name="sucursalEmisora"
+                            >
+                                <option value="0">Todas</option>
+                                {dataSucursal.map((sucursal) => (
+                                    <option
+                                        key={sucursal.m_nIdSucursal}
+                                        value={sucursal.m_nIdSucursal}
+                                    >
+                                        {sucursal.m_sSucursal}
+                                    </option>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    }
+                    {(props.informe) &&
+                    <Grid item xs>
+                        <FormControl className="input select" fullWidth variant="outlined">
+                            <InputLabel id="idSucusalLabel">Sucursal Receptora</InputLabel>
+                            <Select
+                                labelId="sucursalListadoLabel"
+                                label="Sucursal"
+                                className="form-control"
+                                required
+                                value={filtros.sucursalReceptora}
+                                onChange={handleChangeFiltros}
+                                id="sucursalReceptora"
+                                name="sucursalReceptora"
+                            >
+                                <option value="0">Todas</option>
+                                {dataSucursal.map((sucursal) => (
+                                    <option
+                                        key={sucursal.m_nIdSucursal}
+                                        value={sucursal.m_nIdSucursal}
+                                    >
+                                        {sucursal.m_sSucursal}
+                                    </option>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    }
                 </Grid>
                 <Grid container spacing={2} item={12}>
+                    {(props.embarque || props.recoleccion || props.guia) &&
                     <Grid item xs>
                         <FormControl className="input select" fullWidth variant="outlined">
                             <InputLabel id="OrigenListado">Origen</InputLabel>
@@ -446,6 +526,8 @@ function Filtros(props) {
                             </Select>
                         </FormControl>
                     </Grid>
+                    }
+                    {(props.embarque || props.recoleccion || props.guia) &&
                     <Grid item xs>
                         <FormControl className="input select" fullWidth variant="outlined">
                             <InputLabel id="DestinoListado">Destino</InputLabel>
@@ -471,6 +553,7 @@ function Filtros(props) {
                             </Select>
                         </FormControl>
                     </Grid>
+                    }
                     {/*{(props.embarque || props.recoleccion || props.guia) &&
                     <Grid item xs>
                         <div className="input">
