@@ -70,7 +70,7 @@ function Filtros(props) {
                     }
                 })
             }else if (props.recoleccion){
-                obtenerRecoleccionFiltro(0, 0,0, 0,target.value,0,0).then(respuesta => {
+                obtenerRecoleccionFiltro(0, 0,0, 0,target.value,0,0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else if (props.guia){
@@ -102,11 +102,11 @@ function Filtros(props) {
             }
         }else if (props.recoleccion){
             if (filtros.folio.length > 0){
-                obtenerRecoleccionFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                obtenerRecoleccionFiltro(0, 0,0, 0,filtros.folio,0,0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else{
-                obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
+                obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado, filtros.clientePaga.id||0).then((respuesta) => {
                     props.listaResultado(respuesta.data)
                 })
             }
@@ -222,7 +222,7 @@ function Filtros(props) {
                         props.listaResultado(respuesta.data);
                     })
                 }else if (props.recoleccion){
-                    obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                    obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
                         props.listaResultado(respuesta.data);
                     })
                 }else if (props.guia){
@@ -326,7 +326,6 @@ function Filtros(props) {
                                 labelId="sucursalListadoLabel"
                                 label="Sucursal"
                                 className="form-control"
-                                required
                                 value={filtros.sucursalListado}
                                 onChange={handleChangeFiltros}
                                 id="sucursalListado"
@@ -399,7 +398,6 @@ function Filtros(props) {
                                 labelId="sucursalListadoLabel"
                                 label="Sucursal Emisora"
                                 className="form-control"
-                                required
                                 value={filtros.sucursalEmisora}
                                 onChange={handleChangeFiltros}
                                 id="sucursalEmisora"
@@ -426,7 +424,6 @@ function Filtros(props) {
                                 labelId="sucursalListadoLabel"
                                 label="Sucursal"
                                 className="form-control"
-                                required
                                 value={filtros.sucursalReceptora}
                                 onChange={handleChangeFiltros}
                                 id="sucursalReceptora"
@@ -508,7 +505,6 @@ function Filtros(props) {
                                 variant="outlined"
                                 label="Cliente"
                                 margin="dense"
-                                required
                                 value={filtros.clientePaga.m_sNombreFiscal||''}
                                 placeholder={"No. Cliente: Nombre fiscal"}
                                 // InputLabelProps={{shrink: true}}
