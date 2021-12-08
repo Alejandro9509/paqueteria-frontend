@@ -39,7 +39,9 @@ function Filtros(props) {
         folio: '',
         OrigenListado:0,
         DestinoListado:0,
-        clientePaga:''
+        clientePaga:'',
+        sucursalEmisora:0,
+        sucursalReceptora:0
     })
     const [openDialog, setOpenDialog] = useState(false);
 
@@ -59,107 +61,72 @@ function Filtros(props) {
             }
         })
         if (target.name && event.keyCode == 13){
-            obtenerEmbarquesFiltro(0, 0,0, 0,target.value,0,0).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    props.listaResultado([])
-                } else {
+            if (props.embarque){
+                obtenerEmbarquesFiltro(0, 0,0, 0,target.value,0,0,0).then(respuesta => {
+                    if (respuesta.data == "Vacio") {
+                        props.listaResultado([])
+                    } else {
+                        props.listaResultado(respuesta.data)
+                    }
+                })
+            }else if (props.recoleccion){
+                obtenerRecoleccionFiltro(0, 0,0, 0,target.value,0,0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
-                }
-            })
+                })
+            }else if (props.guia){
+                obtenerGuiasFiltro(0, 0,0, 0,target.value,0,0,0).then(respuesta => {
+                    props.listaResultado(respuesta.data)
+                })
+            }else if (props.informe){
+                obtenerInformeFiltro(0, 0,target.value, 0,0).then(respuesta => {
+                    props.listaResultado(respuesta.data)
+                })
+            }else if (props.viajes){
+                obtenerViajesByFiltro(0, 0,0, 0,target.value,0,0).then(respuesta => {
+                    props.listaResultado(respuesta.data)
+                })
+            }
         }
-        /*if (target.name === "fechaInicial"){
-            obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    props.listaResultado([])
-                } else {
-                    props.listaResultado(respuesta.data)
-                }
-            })
-        }else if (target.name === "fechaFinal"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    props.listaResultado([])
-                } else {
-                    props.listaResultado(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "sucursalListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    props.listaResultado([])
-                } else {
-                    props.listaResultado(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "estatusListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    props.listaResultado([])
-                } else {
-                    props.listaResultado(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "OrigenListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    props.listaResultado([])
-                } else {
-                    props.listaResultado(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "DestinoListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    props.listaResultado([])
-                } else {
-                    props.listaResultado(respuesta.data)
-                }
-            })
-        }*/
     }
 
     const filtrar = () => {
         if (props.embarque){
             if (filtros.folio.length > 0){
-                obtenerEmbarquesFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                obtenerEmbarquesFiltro(0, 0,0, 0,filtros.folio,0,0, 0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else {
-                obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
+                obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado, filtros.clientePaga.id||0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }
         }else if (props.recoleccion){
             if (filtros.folio.length > 0){
-                obtenerRecoleccionFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                obtenerRecoleccionFiltro(0, 0,0, 0,filtros.folio,0,0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else{
-                obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
+                obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado, filtros.clientePaga.id||0).then((respuesta) => {
                     props.listaResultado(respuesta.data)
                 })
             }
         }else if (props.guia){
             if (filtros.folio.length > 0){
-                obtenerGuiasFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                obtenerGuiasFiltro(0, 0,0, 0,filtros.folio,0,0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else{
-                obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
+                obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado,filtros.clientePaga.id||0).then((respuesta) => {
                     props.listaResultado(respuesta.data)
                 })
             }
         }else if (props.informe){
             if (filtros.folio.length > 0){
-                obtenerInformeFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                obtenerInformeFiltro(0, 0,filtros.folio, 0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else{
-                obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
+                obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.folio,filtros.sucursalEmisora, filtros.sucursalReceptora).then((respuesta) => {
                     props.listaResultado(respuesta.data)
                 })
             }
@@ -188,7 +155,9 @@ function Filtros(props) {
                 folio: '',
                 OrigenListado:0,
                 DestinoListado:0,
-                clientePaga:''
+                clientePaga:'',
+                sucursalEmisora:0,
+                sucursalReceptora:0
             }
         })
     }
@@ -249,19 +218,19 @@ function Filtros(props) {
                 });
 
                 if (props.embarque){
-                    obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                    obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0, 0).then((respuesta) => {
                         props.listaResultado(respuesta.data);
                     })
                 }else if (props.recoleccion){
-                    obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                    obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
                         props.listaResultado(respuesta.data);
                     })
                 }else if (props.guia){
-                    obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                    obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
                         props.listaResultado(respuesta.data);
                     })
                 }else if (props.informe){
-                    obtenerInformeFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                    obtenerInformeFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0).then((respuesta) => {
                         props.listaResultado(respuesta.data);
                     })
                 }else if (props.viajes){
@@ -349,7 +318,7 @@ function Filtros(props) {
                         </FormControl>
 
                     </Grid>
-                    {(props.embarque || props.recoleccion || props.guia || props.informe) &&
+                    {(props.embarque || props.recoleccion || props.guia) &&
                     <Grid item xs>
                         <FormControl className="input select" fullWidth variant="outlined">
                             <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
@@ -357,7 +326,6 @@ function Filtros(props) {
                                 labelId="sucursalListadoLabel"
                                 label="Sucursal"
                                 className="form-control"
-                                required
                                 value={filtros.sucursalListado}
                                 onChange={handleChangeFiltros}
                                 id="sucursalListado"
@@ -376,6 +344,7 @@ function Filtros(props) {
                         </FormControl>
                     </Grid>
                     }
+                    {(props.embarque || props.recoleccion || props.guia) &&
                     <Grid item xs>
                         <FormControl className="input select" fullWidth variant="outlined">
                             <InputLabel id="idEstatusLabel">Estatus</InputLabel>
@@ -394,9 +363,10 @@ function Filtros(props) {
                                     <option key={estatus.m_nIdEstatusEmbarque} value={estatus.m_nIdEstatusEmbarque}>
                                         {estatus.m_sEstatus}
                                     </option>
-                                )) }
+                                ))}
                                 {props.recoleccion && dataEstatus.map((estatus) => (
-                                    <option key={estatus.m_nIdEstatusRecoleccion} value={estatus.m_nIdEstatusRecoleccion}
+                                    <option key={estatus.m_nIdEstatusRecoleccion}
+                                            value={estatus.m_nIdEstatusRecoleccion}
                                     >
                                         {estatus.m_sEstatus}
                                     </option>
@@ -419,8 +389,62 @@ function Filtros(props) {
                             </Select>
                         </FormControl>
                     </Grid>
+                    }
+                    {(props.informe) &&
+                    <Grid item xs>
+                        <FormControl className="input select" fullWidth variant="outlined">
+                            <InputLabel id="idSucusalLabel">Sucursal Emisora</InputLabel>
+                            <Select
+                                labelId="sucursalListadoLabel"
+                                label="Sucursal Emisora"
+                                className="form-control"
+                                value={filtros.sucursalEmisora}
+                                onChange={handleChangeFiltros}
+                                id="sucursalEmisora"
+                                name="sucursalEmisora"
+                            >
+                                <option value="0">Todas</option>
+                                {dataSucursal.map((sucursal) => (
+                                    <option
+                                        key={sucursal.m_nIdSucursal}
+                                        value={sucursal.m_nIdSucursal}
+                                    >
+                                        {sucursal.m_sSucursal}
+                                    </option>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    }
+                    {(props.informe) &&
+                    <Grid item xs>
+                        <FormControl className="input select" fullWidth variant="outlined">
+                            <InputLabel id="idSucusalLabel">Sucursal Receptora</InputLabel>
+                            <Select
+                                labelId="sucursalListadoLabel"
+                                label="Sucursal"
+                                className="form-control"
+                                value={filtros.sucursalReceptora}
+                                onChange={handleChangeFiltros}
+                                id="sucursalReceptora"
+                                name="sucursalReceptora"
+                            >
+                                <option value="0">Todas</option>
+                                {dataSucursal.map((sucursal) => (
+                                    <option
+                                        key={sucursal.m_nIdSucursal}
+                                        value={sucursal.m_nIdSucursal}
+                                    >
+                                        {sucursal.m_sSucursal}
+                                    </option>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    }
                 </Grid>
                 <Grid container spacing={2} item={12}>
+                    {(props.embarque || props.recoleccion || props.guia) &&
                     <Grid item xs>
                         <FormControl className="input select" fullWidth variant="outlined">
                             <InputLabel id="OrigenListado">Origen</InputLabel>
@@ -446,6 +470,8 @@ function Filtros(props) {
                             </Select>
                         </FormControl>
                     </Grid>
+                    }
+                    {(props.embarque || props.recoleccion || props.guia) &&
                     <Grid item xs>
                         <FormControl className="input select" fullWidth variant="outlined">
                             <InputLabel id="DestinoListado">Destino</InputLabel>
@@ -471,22 +497,22 @@ function Filtros(props) {
                             </Select>
                         </FormControl>
                     </Grid>
-                    {/*{(props.embarque || props.recoleccion || props.guia) &&
+                    }
+                    {(props.embarque || props.recoleccion || props.guia) &&
                     <Grid item xs>
                         <div className="input">
                             <TextField
                                 variant="outlined"
-                                label="Responsable de pago"
+                                label="Cliente"
                                 margin="dense"
-                                required
-                                value={filtros.clientePaga.m_sNombreFiscal}
+                                value={filtros.clientePaga.m_sNombreFiscal||''}
                                 placeholder={"No. Cliente: Nombre fiscal"}
                                 // InputLabelProps={{shrink: true}}
                                 onClick={()=>{setOpenDialog(true)}}
                             />
                         </div>
                     </Grid>
-                    }*/}
+                    }
                     <Grid item container xs>
                         <IconButton aria-label="delete" onClick={() => {
                             resetFiltros()
