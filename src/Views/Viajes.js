@@ -45,16 +45,20 @@ import {
     agregarViajeLlegada,
     obetenerViajeId,
     obtenerViajes,
-    obtenerXML
+    obtenerXML, obtenerViajesByFiltro
 } from "../Util/Contexts/ViajesContext";
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import {obtenerInformesPorViaje} from "../Util/Contexts/InformesContext";
+import {obtenerInformeFiltro, obtenerInformesPorViaje} from "../Util/Contexts/InformesContext";
 import {getUniqueListBy} from "../Util/Util";
 import DetalleInforme from "./Viajes/DetalleInforme";
 import {obtenerDetalleParadasIdInformes, obtenerDetalleParadasIdViaje} from "../Util/Contexts/DetalleParadasContext";
 import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import Filtros from "./Filtros/Filtros";
+import {obtenerFechaFinal, obtenerFechaInicio} from "../Util/Contexts/UtileriasContext";
+import {obtenerEmbarquesFiltro} from "../Util/Contexts/EmbarquesContext";
+import {obtenerRecoleccionFiltro} from "../Util/Contexts/RecoleccionContext";
+import {obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -405,18 +409,22 @@ function Viajes() {
             window.location.replace("login");
             return;
         }
-        getAllData();
-        getAllSucursales();
-        getAllEstatusViaje();
-        getAllEstatusDocumento();
+        // getAllData();
+        // getAllSucursales();
+        // getAllEstatusViaje();
+        // getAllEstatusDocumento();
         getInventarioUnidades()
     }, []);
 
     function getAllData() {
-        obtenerViajes().then(respuesta => {
-            setData(respuesta.data)
-        });
-    };
+        obtenerFechaInicio().then((respuestaUno) => {
+            obtenerFechaFinal().then((respuestaDos) => {
+                obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
+                    setData(respuesta.data)
+                })
+            })
+        })
+    }
 
     function descargarXML(id, folio) {
         obtenerXML(id).then(({data}) => {
@@ -886,6 +894,7 @@ function Viajes() {
                         <li className="active">
                             <a onClick={(event) => {
                                 event.stopPropagation();
+                                getAllData()
                                 setState({...state, agregar: "Viaje", open: true});
                                 $('.nav-tabs li ').removeClass('active');
                                 $('.nav-tabs li').eq(0).addClass('active');
