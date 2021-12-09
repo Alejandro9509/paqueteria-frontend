@@ -52,12 +52,19 @@ function obtenerViajes(){
     );
     return result
 }
-function obtenerViajesByFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folio,Origen,Destino){
-    if (folio == ''){
+function obtenerViajesByFiltro(fechaInicial, fechaFinal, estatusListado, folio,Origen,Destino, operador) {
+    if (folio == '') {
         folio = 0
     }
-    const url = `${process.env.REACT_APP_API_URL}/Viajes/GetByFiltro/` +
-        fechaInicial + "/" + fechaFinal + "/" + sucursalListado + "/" + estatusListado;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Viajes/GetByFiltro`
+        + "/"+ fechaInicial
+        + "/" + fechaFinal
+        + "/" + estatusListado
+        + "/" + folio
+        + "/" + Origen
+        + "/" + Destino
+        + "/" + operador
+    ;
     let result;
     trackPromise(
         result =  axios.get(url,  { headers })
