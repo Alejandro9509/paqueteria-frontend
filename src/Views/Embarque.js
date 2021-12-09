@@ -108,6 +108,7 @@ import {obtenerInformeFiltro, obtenerInformeReporte} from "../Util/Contexts/Info
 import Filtros from "./Filtros/Filtros";
 import {obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
 import {obtenerViajesByFiltro} from "../Util/Contexts/ViajesContext";
+import Citas from "./Citas/Citas";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -700,6 +701,7 @@ function Embarque(props) {
         fechaCita: '',
         horaCitaMinima: '',
         horaCitaMaxima: '',
+        citaPendiente: false,
 
         //Paquetes/sobres
         paquetes: [],
@@ -721,7 +723,7 @@ function Embarque(props) {
         CreadoPor: localStorage.getItem("UsuarioId"),
         ModificadoPor: localStorage.getItem("UsuarioId"),
         height: window.innerHeight,
-
+        embarqueConGuia: false
     });
     //Limpia todos los campos. Se usa al pasar del listado a consultar o modificar un registro
     function limpiarCamposAgregar() {
@@ -757,6 +759,7 @@ function Embarque(props) {
                 fechaCita: '',
                 horaCitaMinima: '',
                 horaCitaMaxima: '',
+                citaPendiente: false,
 
                 //Paquetes/sobres
                 paquetes: [],
@@ -1219,9 +1222,12 @@ function Embarque(props) {
             params.m_sLongitudD = coordenadas ? coordenadas.lng : destinatario.longitudD
         }
         if (state.entregaConCita) {
-            params.m_sFechaCita = state.fechaCita
-            params.m_sHoraCitaMinima = state.horaCitaMinima
-            params.m_sHoraCitaMaxima = state.horaCitaMaxima
+            params.m_bCitaPendiente = state.citaPendiente
+            if (!state.citaPendiente){
+                params.m_sFechaCita = state.fechaCita
+                params.m_sHoraCitaMinima = state.horaCitaMinima
+                params.m_sHoraCitaMaxima = state.horaCitaMaxima
+            }
         }
 
         params.m_arrConceptos = dataConceptos.map(item => ({
@@ -1538,6 +1544,7 @@ function Embarque(props) {
             setState({
                 ...state,
                 agregar: "Modificar",
+                embarqueConGuia: data.find((o) => o.m_nIdEmbarque == id).m_sFolioGuia != null,
             });
             setDataParaConsultarModificar(respuesta, false)
         });
@@ -1844,6 +1851,7 @@ function Embarque(props) {
                 fechaCita: respuesta.data.m_sFechaCita,
                 horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
                 horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
+                citaPendiente: respuesta.data.m_bCitaPendiente,
 
                 //Paquetes/sobres
                 paquetes: respuesta.data.m_arrPaquetes,
@@ -2723,6 +2731,17 @@ function Embarque(props) {
         })
     }
 
+    const handleChangeCita = (data) => {
+        debugger
+        setState({
+            ...state,
+            fechaCita: data.fechaCita,
+            horaCitaMinima: data.horaCitaMinima,
+            horaCitaMaxima: data.horaCitaMaxima,
+            citaPendiente: data.citaPendiente
+        })
+    }
+
     const handleListPaquetesChange = (newList) => {
         setDataPaquetes(newList)
     }
@@ -3458,7 +3477,7 @@ function Embarque(props) {
                                                                         required
                                                                         onChange={handleChange}
                                                                         value={state.estatusEmbarque}
-                                                                        disabled={state.agregar === "Consultar"}
+                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                         id="estatusEmbarque"
                                                                         inputProps={{
                                                                             name: "estatusEmbarque"
@@ -3488,7 +3507,7 @@ function Embarque(props) {
                                                                         className="form-control"
                                                                         required
                                                                         value={state.moneda}
-                                                                        disabled={state.agregar === "Consultar"}
+                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                         onChange={handleChange}
                                                                         id="moneda"
                                                                         name="moneda"
@@ -3528,7 +3547,7 @@ function Embarque(props) {
                                                                                 tipoCambio: event.target.value,
                                                                             });
                                                                         }}
-                                                                        disabled={state.agregar === "Consultar"}
+                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                         id="tipoCambio"
                                                                     >
                                                                         <option value="0">Seleccionar</option>
@@ -3556,7 +3575,7 @@ function Embarque(props) {
                                                                         label={"Tipo Cobro"}
                                                                         className="form-control"
                                                                         value={state.tipoCobro}
-                                                                        disabled={state.agregar === "Consultar"}
+                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                         onChange={(event) => {
                                                                             event.preventDefault();
                                                                             setState({
@@ -3592,6 +3611,7 @@ function Embarque(props) {
                                                                                 label="Responsable de pago"
                                                                                 margin="dense"
                                                                                 required
+                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                                 value={state.clientePaga.m_sNombreFiscal}
                                                                                 error={state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito}
                                                                                 helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
@@ -3621,6 +3641,7 @@ function Embarque(props) {
                                                                             });
                                                                         }}
                                                                         variant="outlined"
+                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                     >
                                                                         {dataTiposSeguro.map((option) => (
                                                                             <option key={option.m_nIdTipoSeguro} value={option.m_nIdTipoSeguro}>
@@ -3636,7 +3657,7 @@ function Embarque(props) {
                                                                                className="form-control"
                                                                                type="number"
                                                                                required
-                                                                               disabled={state.agregar === "Consultar" || !state.aplicaSeguro}
+                                                                               disabled={state.agregar === "Consultar" || !state.aplicaSeguro || state.embarqueConGuia}
                                                                                label="Porcentaje de seguro"
                                                                                onChange={handleChange}
                                                                                value={state.porcentajeSeguro}
@@ -3654,7 +3675,7 @@ function Embarque(props) {
                                                                                className="form-control"
                                                                                type="number"
                                                                                required
-                                                                               disabled={(state.agregar === "Consultar") || !state.aplicaSeguro}
+                                                                               disabled={(state.agregar === "Consultar") || !state.aplicaSeguro || state.embarqueConGuia}
                                                                                label="Valor Declarado"
                                                                                onChange={(event) => {
                                                                                    event.preventDefault();
@@ -3948,13 +3969,11 @@ function Embarque(props) {
                                                 </div>
                                             </div>
                                         </div>*/}
-                                        { (state.agregar === "Agregar" || state.agregar === "Consultar" || state.agregar === "Modificar") &&
-                                            <Paquetes
-                                                dataPaquetes={dataPaquetes}
-                                                onChangeList={handleListPaquetesChange}
-                                                disabled={state.agregar === "Consultar" }
-                                            />
-                                        }
+                                        <Paquetes
+                                            dataPaquetes={dataPaquetes}
+                                            onChangeList={handleListPaquetesChange}
+                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia}
+                                        />
 
                                     </div>
 
@@ -3962,7 +3981,7 @@ function Embarque(props) {
                                         <ComplementosSAT
                                             dataList={dataComplementosSAT}
                                             onChangeList={handleListComplementosSATChange}
-                                            disabled={state.agregar === "Consultar"}
+                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                         />
                                     </div>
 
@@ -3980,7 +3999,7 @@ function Embarque(props) {
                                                                     <RemitentesDestinatarios
                                                                         remitente={true}
                                                                         componentePadre={"Embarque"}
-                                                                        consulta={state.agregar === "Consultar"}
+                                                                        consulta={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                         mostrarZonas={false}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}
@@ -4006,7 +4025,7 @@ function Embarque(props) {
                                                                     <RemitentesDestinatarios
                                                                         destinatario={true}
                                                                         componentePadre={"Embarque"}
-                                                                        consulta={state.agregar === "Consultar"}
+                                                                        consulta={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                         mostrarZonas={!(state.diferenteEntrega || state.entregaEnSucursal)}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}
@@ -4027,7 +4046,7 @@ function Embarque(props) {
                                                                             type="checkbox"
                                                                             checked={state.entregaEnSucursal}
                                                                             style={{height: "20px"}}
-                                                                            disabled={state.agregar === "Consultar"}
+                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                             id="entregaEnSucursal"
                                                                         />
                                                                         <i/>
@@ -4044,7 +4063,7 @@ function Embarque(props) {
                                                                             checked={state.diferenteEntrega}
                                                                             value={state.diferenteEntrega}
                                                                             style={{height: "20px"}}
-                                                                            disabled={state.agregar === "Consultar"}
+                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                             id="diferenteEntrega"
                                                                         />
                                                                         <i/>
@@ -4087,7 +4106,7 @@ function Embarque(props) {
                                                                         required={state.entregaEnSucursal}
                                                                         onChange={handleChangeSucursalEntrega}
                                                                         value={state.idSucursalEntrega}
-                                                                        disabled={state.agregar === "Consultar"}
+                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                         id="idSucursalEntrega"
                                                                         name="idSucursalEntrega"
                                                                         inputProps={{
@@ -4247,7 +4266,7 @@ function Embarque(props) {
                                                                                 onChange={handleChangeEntregaDD}
                                                                                 id="estadoEnt"
                                                                                 name="estadoEnt"
-                                                                                disabled={state.agregar === "Consultar"}
+                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                             >
                                                                                 {dataEstados.map((estado) => (
                                                                                     <option
@@ -4278,7 +4297,7 @@ function Embarque(props) {
                                                                                 // onSelect={handleClickCiudad}
                                                                                 id="municipioEnt"
                                                                                 name="municipioEnt"
-                                                                                disabled={state.agregar === "Consultar"}
+                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                                 InputProps={{name: "municipioEnt"}}
                                                                             >
                                                                                 {dataMunicipiosEntregaDD.map((municipio) => (
@@ -4298,7 +4317,7 @@ function Embarque(props) {
                                                                                 freeSolo
                                                                                 onChange={(event, newValue) => handleChangeAutocompleteEntregaDD("codigoPostalEnt", newValue)}
                                                                                 value={entregaDD.codigoPostalEnt}
-                                                                                disabled={state.agregar === "Consultar"}
+                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                                 id="codigoPostalEnt"
                                                                                 name="codigoPostalEnt"
                                                                                 disableClearable
@@ -4338,7 +4357,7 @@ function Embarque(props) {
                                                                                 disableClearable
                                                                                 forcePopupIcon={false}
                                                                                 options={dataZonasOperativasEntregaDD}
-                                                                                disabled={state.agregar === "Consultar"}
+                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                                 getOptionLabel={(option) => (
                                                                                     option ?
                                                                                         option.m_sCodigoZona || 'Código Postal sin zona asignada'
@@ -4371,7 +4390,7 @@ function Embarque(props) {
                                                                                 onChange={(event, newValue) => handleChangeAutocompleteEntregaDD("zonaTarifaEnt",newValue)}
                                                                                 forcePopupIcon={false}
                                                                                 options={dataZonasTarifaEntregaDD}
-                                                                                disabled={state.agregar === "Consultar"}
+                                                                                disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                                 getOptionLabel={(option) => (
                                                                                     option ?
                                                                                         option.m_sCodigoZona || 'Código Postal sin zona asignada'
@@ -4404,7 +4423,7 @@ function Embarque(props) {
                                                                                        type="text"
                                                                                        label="Domicilio"
                                                                                        value={entregaDD.domicilioEnt}
-                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                                        id="domicilioEnt"
                                                                                        name="domicilioEnt"
                                                                                        required={state.diferenteEntrega}
@@ -4420,7 +4439,7 @@ function Embarque(props) {
                                                                                        type="text"
                                                                                        label="Entregar En"
                                                                                        value={entregaDD.entregarEnEnt}
-                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                                        id="entregarEnEnt"
                                                                                        name="entregarEnEnt"
                                                                                        required={state.diferenteEntrega}
@@ -4436,7 +4455,7 @@ function Embarque(props) {
                                                                                        type="text"
                                                                                        label="Datos Adicionales para la Entrega"
                                                                                        value={entregaDD.datosAdicionalesEnt}
-                                                                                       disabled={state.agregar === "Consultar"}
+                                                                                       disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                                        id="datosAdicionalesEnt"
                                                                                        name="datosAdicionalesEnt"
                                                                                        required={state.diferenteEntrega}
@@ -4458,71 +4477,13 @@ function Embarque(props) {
                                     <div className="row">
                                         {state.entregaConCita &&
                                         <div className="widget-wrap" id="citaEntrega">
-                                            <div>
-                                                <div className="widget-header">
-                                                    <h2>Programar cita de la Entrega</h2>
-                                                </div>
-                                                <div className="widget-container">
-                                                    <div className="widget-content">
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <div className="col-sm-6 col-md-4  unit">
-
-                                                                    <div className="input">
-                                                                        <TextField
-                                                                            variant="outlined"
-                                                                            id="fechaCita"
-                                                                            label="Fecha de la cita"
-                                                                            type="date"
-                                                                            onChange={handleFechaCita}
-                                                                            value={state.fechaCita}
-                                                                            className={"form-control"}
-                                                                            disabled={state.agregar === "Consultar"}
-                                                                            InputLabelProps={{shrink: true,}}
-                                                                            required={state.entregaConCita}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-sm-6 col-md-4  unit">
-                                                                    <div className="input">
-                                                                        <TextField
-                                                                            variant="outlined"
-                                                                            id="horaMinima"
-                                                                            label="Hora mínima"
-                                                                            type="time"
-                                                                            value={state.horaCitaMinima}
-                                                                            onChange={handleHoraCitaMinima}
-                                                                            className={"form-control"}
-                                                                            disabled={state.agregar === "Consultar"}
-                                                                            InputLabelProps={{shrink: true,}}
-                                                                            inputProps={{step: 300,}}
-                                                                            required={state.entregaConCita}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-sm-6 col-md-4  unit">
-                                                                    <div className="input">
-                                                                        <TextField
-                                                                            variant="outlined"
-                                                                            id="horaMaxima"
-                                                                            label="Hora máxima"
-                                                                            type="time"
-                                                                            onChange={handleHoraCitaMaxima}
-                                                                            value={state.horaCitaMaxima}
-                                                                            className={"form-control"}
-                                                                            InputLabelProps={{shrink: true,}}
-                                                                            inputProps={{step: 300,}}
-                                                                            disabled={state.agregar === "Consultar"}
-                                                                            required={state.entregaConCita}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <Citas titulo={"Programar cita de la Entrega"}
+                                                   onDataChange={handleChangeCita}
+                                                   data={state}
+                                                   embarque={true}
+                                                   disabled={state.agregar === "Consultar"}
+                                                   required={state.entregaConCita}
+                                            />
                                         </div>
                                         }
                                     </div>

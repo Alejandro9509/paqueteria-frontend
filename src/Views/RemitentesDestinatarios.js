@@ -580,6 +580,7 @@ function RemitenteDestinatario(props) {
               margin="dense"
               variant="outlined"
               required
+              disabled={props.consulta}
               value={state.nombre}
               placeholder={"Alias (Nombre)"}
               InputLabelProps={{ shrink: true }}
@@ -598,7 +599,6 @@ function RemitenteDestinatario(props) {
                       style={{
                         paddingRight: "0px",
                       }}
-                      disabled={state.agregar === "Consultar"}
                       onClick={handleClickModal}
                     >
                       <SearchIcon
@@ -903,7 +903,7 @@ function RemitenteDestinatario(props) {
                   handleChangeAutocomplete("origen", newValue)
                 }
                 value={state.origen}
-                disabled={state.agregar === "Consultar"}
+                disabled={props.consulta}
                 id="origenRemitente"
                 name="origenRemitente"
                 disableClearable
