@@ -21,7 +21,7 @@ import {
     usePagination,
 } from "react-table";
 import $ from "jquery";
-import {remove_array_element} from "../Util/Util";
+import {getUniqueListBy, remove_array_element} from "../Util/Util";
 import IconButton from "@material-ui/core/IconButton";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -611,9 +611,11 @@ function Embarque(props) {
     const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
     const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
     const [dataZonasTarifaEntregaDD, setDataZonasTarifaEntregaDD] = useState([])
+    const [dataConceptos, setDataConceptos] = useState([])
     const [state, setState] = React.useState({
         //==VARIABLES DE LISTADO==
         idEmbarque: 0,
+        idCotizacion: 0,
         fechaInicial: 0,
         fechaFinal: 0,
         sucursalListado: 0,
@@ -770,6 +772,7 @@ function Embarque(props) {
         setDataEmbarqueConsulta(undefined)
         setDataPaquetes([])
         resetEntregaDD()
+        setDataConceptos([])
     }
 
     const [remitente, setRemitente] = useState({
@@ -1218,6 +1221,17 @@ function Embarque(props) {
             params.m_sHoraCitaMinima = state.horaCitaMinima
             params.m_sHoraCitaMaxima = state.horaCitaMaxima
         }
+
+        params.m_arrConceptos = dataConceptos.map(item => ({
+            m_nIdConceptoFacturacion: item.idConcepto,
+            m_cImporte: item.importe,
+            m_nIdImpuestoRetiene: item.retiene,
+            m_nIdImpuestoTraslada: item.traslada,
+            m_cImporteIva: item.importeIVA,
+            m_cImporteRetiene: item.importeRet,
+            m_c_Descuento: item.descuento
+        }))
+        params.m_nIdCotizacion = state.idCotizacion
 
         console.log(params)
         console.log(JSON.stringify(params))
@@ -1787,11 +1801,25 @@ function Embarque(props) {
                 }
             })
         })
+        let conceptosCast = []
+        conceptosCast = respuesta.data.m_arrConceptos.map(item => ({
+            id: Math.floor(Math.random() * 10000),
+            idConcepto: item.m_nIdConceptoFacturacion,
+            importe: item.m_cImporte,
+            retiene: item.m_nIdImpuestoRetiene,
+            traslada: item.m_nIdImpuestoTraslada,
+            importeIVA: item.m_cImporteIva,
+            importeRet: item.m_cImporteRetiene,
+            nombreConcepto: item.m_sConcepto,
+            descuento: item.m_c_Descuento
+        }))
 
+        setDataConceptos(conceptosCast)
         setState(state => {
             return {
                 ...state,
                 idEmbarque: duplicar ? 0 : respuesta.data.m_nIdEmbarque,
+                idCotizacion: respuesta.data.m_nIdCotizacion,
                 idEmbarqueRelacionado: duplicar ? respuesta.data.m_nIdEmbarque : 0,
                 idRecoleccion: duplicar ? 0 : respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.IdSucursal,
@@ -2749,6 +2777,21 @@ function Embarque(props) {
 
     const setDataListado = (listado) => {
         setData(listado)
+    }
+
+    const actualizarConceptos = (list) => {
+        setDataConceptos(list);
+    }
+    const saveIdCotizacion = (id) => {
+        if (id){
+            setState(state => {
+                return{
+                    ...state,
+                    idCotizacion: id
+                }
+            });
+        }
+
     }
     return (
         <div>
@@ -4097,6 +4140,7 @@ function Embarque(props) {
                                         }
 
                                     </div>
+
                                     <div className="widget-wrap" id="complementosSat">
                                         <ComplementosSAT
                                             dataList={dataComplementosSAT}
@@ -4867,7 +4911,13 @@ function Embarque(props) {
                                     </div>
 
                                     <div className="row">
-                                        <Cotizador embarque={state} remitente={remitente} paquetes={dataPaquetes.map(p =>({
+                                        <Cotizador embarque={state}
+                                                   remitente={remitente}
+                                                   destinatario={destinatario}
+                                                   onChangeConceptosList={actualizarConceptos}
+                                                   conceptos={dataConceptos}
+                                                   saveIdCotizacion={saveIdCotizacion}
+                                                   paquetes={dataPaquetes.map(p =>({
                                             Tipo: p.m_nIdTipo,
                                             Peso: p.m_rPeso,
                                             Largo: p.m_rLargo,
@@ -4878,7 +4928,7 @@ function Embarque(props) {
                                             Activo: 1,
                                             ctd:p.m_nCantidad,
                                             IdProducto:p.m_nIdProducto
-                                        }))} destinatario={destinatario}/>
+                                        }))} />
                                     </div>
 
                                 </div>

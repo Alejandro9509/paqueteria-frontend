@@ -11,17 +11,17 @@ function obtenerCotizacion( data, paquetes, remitente, destinatario) {
         IdOrigen: remitente.origenRemitente.m_nIdCiudad,
         IdDestino: destinatario.destinoDestinatario.m_nIdCiudad,
         IdEmbarque: data.idEmbarque,
-         IdRecoleccion: data.idRecoleccion,
+        IdRecoleccion: data.idRecoleccion,
         IdZonaEntrega: remitente.zonaTarifaRemitente.m_nIdZona,
         IdZonaRecoleccion: destinatario.zonaTarifaDestinatario.m_nIdZona,
         IdCliente: data.clientePaga.m_nIdCliente,
-         EntregaEnSucursal: data.entregaEnSucursal,
+        EntregaEnSucursal: data.entregaEnSucursal,
         IdSeguro: data.idTipoSeguro,
-         ValorDeclarado: data.valorDeclarado,
-         AplicaRecoleccion: data.idRecoleccion !== undefined,
+        ValorDeclarado: data.valorDeclarado,
+        AplicaRecoleccion: data.idRecoleccion !== undefined,
         AplicaSeguro: data.aplicaSeguro,
         PorcentajeSeguro: data.porcentajeSeguro,
-        arrPaquetesCotizacion: paquetes
+        paquetesCotizacion: paquetes
     }
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
