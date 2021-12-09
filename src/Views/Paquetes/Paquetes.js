@@ -12,7 +12,7 @@ import {DataGrid} from "@material-ui/data-grid";
 import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
-import {obtenerProductoById} from "../../Util/Contexts/ProductosContext";
+import {obtenerProductoById, obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import {obtenerEmbalajes} from "../../Util/Contexts/EmbalajesContext";
 import axios from "axios";
 import Recoleccion from "../Recoleccion";
@@ -145,7 +145,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
         {
             headerName: "Producto",
             field: "m_sProducto",
-            flex: 1,
+            width: 200,
         },
         {
             headerName: "Largo",
@@ -197,7 +197,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
         {
             headerName: "Descripcion",
             field: "m_sDescripcion",
-            flex: 1,
+            width: 100,
         },
         {
             headerName: "Cantidad",
@@ -209,7 +209,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
         {
             headerName: "Observaciones",
             field: "m_sObservaciones",
-            flex: 1,
+            width: 100,
         },
         {
             field: 'complementos',
@@ -555,8 +555,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
     }
 
     const getAllProductos = () => {
-        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
-        axios.get(url, {headers}).then(respuesta => {
+        obtenerProductos().then(respuesta => {
             setDataProductos(respuesta.data)
         });
     }
@@ -871,26 +870,34 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recole
                         </div>
                     }
 
+                    {
+                        dataPaquetes.length !== 0 &&
+                        (
+                        !disabled ?  <div className="row" style={{ height: 200, width: "100%"}}>
+                        <DataGrid
+                        localeText={dataGridLocaleText}
+                        density="compact"
+                        pageSize={10}
+                        columns={columnsPaquetes}
+                        rows={dataPaquetes}
+                        getRowId={(row) => row.m_nIdPaquete}
+                        />
+                        </div> : <div className="row" style={{ height: 200, width: "100%"}}>
+                        <DataGrid
+                        localeText={dataGridLocaleText}
+                        density="compact"
+                        pageSize={10}
+                        columns={columnsPaquetesConsulta}
+                        rows={dataPaquetes}
+                        getRowId={(row) => row.m_nIdPaquete}
+                        />
 
-                    {!disabled?  <div className="row" style={{ height: 200}}>
-                        <DataGrid
-                            localeText={dataGridLocaleText}
-                            density="compact"
-                            pageSize={10}
-                            columns={columnsPaquetes}
-                            rows={dataPaquetes}
-                            getRowId={(row) => row.m_nIdPaquete}
-                        />
-                    </div> : <div className="row" style={{ height: 200}}>
-                        <DataGrid
-                            localeText={dataGridLocaleText}
-                            density="compact"
-                            pageSize={10}
-                            columns={columnsPaquetesConsulta}
-                            rows={dataPaquetes}
-                            getRowId={(row) => row.m_nIdPaquete}
-                        />
-                    </div>}
+                        </div>
+                        )
+
+                    }
+
+
                 </div>
             </div>
         </div>

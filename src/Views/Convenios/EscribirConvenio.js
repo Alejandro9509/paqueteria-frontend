@@ -43,10 +43,16 @@ import {obtenerTarifaBy} from "../../Util/Contexts/TarifasContext";
 import DestinosTarifa from "../Tarifas/DestinosTarifa";
 import ProductosPrecios from "../Tarifas/ProductosPrecios";
 import {obtenerCliente} from "../../Util/Contexts/ClientesContext";
-import {obtenerByIdZonaTarifa, obtenerListadoZonaTarifa} from "../../Util/Contexts/ZonaTarifaContext";
+import {
+    obtenerByIdZonaTarifa,
+    obtenerByIdZonaTarifaSinCP,
+    obtenerListadoZonaTarifa
+} from "../../Util/Contexts/ZonaTarifaContext";
 import CodigosPostalesZonas from "../ZonasOperativas/CodigosPostalesZonas";
 import ConceptosFacturacion from "../Tarifas/ConceptosFacturacion";
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
+import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
+import {obtenerConveniosId} from "../../Util/Contexts/ConveniosContext";
 
 const headers = API_HEADERS
 
@@ -487,10 +493,7 @@ class EscribirConvenio extends Component {
     }
 
     getConvenioById(idConvenio){
-        const url = `${process.env.REACT_APP_API_URL}/Convenios/GetById/${idConvenio}`;
-        console.log(url)
-        axios.get(url, { headers }).then(respuesta => {
-            console.log(respuesta)
+        obtenerConveniosId(idConvenio).then(respuesta => {
             this.setState({
                 idConvenio: respuesta.data.m_nIdConvenio,
                 cliente: respuesta.data.m_nIdCliente,
@@ -630,7 +633,7 @@ class EscribirConvenio extends Component {
         }else{
             const zonas = []
             this.state.idsZonasSeleccionadas.forEach((idZona) => {
-                obtenerByIdZonaTarifa(idZona).then(respuesta => {
+                obtenerByIdZonaTarifaSinCP(idZona).then(respuesta => {
                     zonas.push(respuesta.data)
                     this.state.zonasSeleccionadas.push(respuesta.data)
                     if (zonas.length === this.state.idsZonasSeleccionadas.length){
@@ -652,8 +655,7 @@ class EscribirConvenio extends Component {
     }
 
     getAllProductos(){
-        const url = `${process.env.REACT_APP_API_URL}/Productos/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        obtenerProductos().then(respuesta => {
             this.setState({ dataProductos: respuesta.data, dataProductosTemp: respuesta.data, agregar: "Agregar" })
         });
     }
@@ -1065,7 +1067,7 @@ class EscribirConvenio extends Component {
                                                                 <Typography gutterBottom variant="h5" component="h2">
                                                                     {t.m_arrArProductos &&
                                                                         t.m_arrArProductos.map((p) => (
-                                                                            p.m_sDescripcion + ', '
+                                                                            p.m_nIdProducto+'-' + p.m_sDescripcion + ', '
                                                                     ))}
                                                                 </Typography>
                                                             </Grid>
@@ -1086,13 +1088,13 @@ class EscribirConvenio extends Component {
                                     todosConceptos.length > 0 &&
                                     `${tarifaDetalles.m_sOrigen} - ${tarifaDetalles.m_sDestino}`
                                 }
+
                                 {
-                                    todosConceptos.length > 0 &&
+                                    todosConceptos.length > 0  && this.state.seleccionDetalles.tipoSeleccion === "Tarifa" &&
                                     <button className="btn btn-primary primary-btn" onClick={this.handleGuardarTarifa} disabled={consult}>
                                         Guardar tarifa
                                     </button>
                                 }
-
                             </div>
                             <div className="col-md-9 col-sm-12" >
                                 <div className="widget-wrap" style={{ margin: "0px", padding: "0px" }}>
@@ -1199,6 +1201,7 @@ class EscribirConvenio extends Component {
 
                                         { this.state.seleccionDetalles.tipoSeleccion === "Tarifa" &&
                                             <div>
+
                                                 {(tarifaDetalles.m_bPorRango || tarifaDetalles.m_bPorPesoVolumen) &&
                                                     <div>
                                                     <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">

@@ -14,6 +14,15 @@ function modificarEmbarques(id, params){
     return result
 }
 
+function obtenerEmbarqueReporte(id) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Embarque/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 function agregarEmbarques( params){
     const url = `${process.env.REACT_APP_API_URL}/Embarques/Agregar`;
     let result;
@@ -42,12 +51,12 @@ function obtenerEmbarques(){
     return result
 }
 
-function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioEmbarque,Origen,Destino) {
+function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioEmbarque,Origen,Destino, idCliente) {
     if (folioEmbarque == ''){
         folioEmbarque = 0
     }
     const url =
-        `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
+        `${process.env.REACT_APP_REPORT_URL}/api/Embarque/GetByFiltro/` +
         fechaInicial +
         "/" +
         fechaFinal +
@@ -60,7 +69,9 @@ function obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estat
         "/" +
         Origen+
         "/" +
-        Destino;
+        Destino+
+        "/" +
+        idCliente;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -94,7 +105,7 @@ function obtenerEmbarqueCancelado(state){
     return result
 }
 function obtenerEmbarquesId(id){
-    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetById/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarque/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -111,4 +122,4 @@ function obtenerEmbarqueMoneda(valor, idMoneda, idGuia){
     return result
 }
 
-export {modificarEmbarques, agregarEmbarques, eliminarEmbarques, obtenerEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, cancelarEmbarque, obtenerEmbarqueCancelado, obtenerEmbarquesFiltro, obtenerEmbarqueMoneda}
+export {modificarEmbarques, agregarEmbarques, obtenerEmbarqueReporte, eliminarEmbarques, obtenerEmbarques, obtenerEmbarquesId, obtenerUltimoFolioEmbarques, cancelarEmbarque, obtenerEmbarqueCancelado, obtenerEmbarquesFiltro, obtenerEmbarqueMoneda}

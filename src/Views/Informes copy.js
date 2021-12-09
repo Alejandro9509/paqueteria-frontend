@@ -51,6 +51,7 @@ import { obtenerEstatusInforme } from "../Util/Contexts/EstatusContext";
 import { obtenerOperadores } from "../Util/Contexts/OperadoresContext";
 import { obtenerTipoUnidades } from "../Util/Contexts/TipoUnidadContext";
 import { obtenerUnidades } from "../Util/Contexts/UnidadesContext";
+import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -1510,8 +1511,7 @@ function Informes({ history }) {
     }
 
     function getAllSucursales() {
-        const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
+        obtenerSucursales().then((respuesta) => {
             setDataSucursal(respuesta.data);
         });
     }

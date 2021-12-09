@@ -409,7 +409,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                                     value={concepto.traslada}
                                     onChange={handleChangePaquetev2}
                                     name="traslada"
-                                    disabled={true}
                                 >
                                     <option key={0} value={0}>Selecciona</option>
                                     {state.impuestos.filter(i => i.m_nTIpoCalculo === 1).map((impuesto) => (
@@ -445,7 +444,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="retieneLabel">Retiene</InputLabel>
                                 <Select
-                                    disabled={true}
                                     labelId="retieneLabel"
                                     label="Retiene"
                                     className="form-control"

@@ -36,7 +36,7 @@ function eliminarOperadores(id, idEliminadoPor) {
 }
 
 function obtenerOperadores() {
-    const url = `${process.env.REACT_APP_API_URL}/Operadores/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Operadores/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

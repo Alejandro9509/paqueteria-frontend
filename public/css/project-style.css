@@ -1,8 +1,8 @@
 :root {
-  --font-size: 16px;
+  --font-size: 12px;
 }
 h2 {
-  font: normal normal normal 21px/21px Calibri;
+  font: normal normal normal 16px/17px Calibri;
   color: #707070;
   letter-spacing: 0.21px;
   padding: 5px;
@@ -326,7 +326,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 }
 
 ::-webkit-scrollbar {
-  width: 20px;
+  width: 5px;
+  height: 5px;
 }
 
 /* Track */

@@ -6,7 +6,7 @@ import { API_HEADERS } from "../../Constants";
 const headers = API_HEADERS
 
 async function obtenerFechaInicio(){
-    const url = `${process.env.REACT_APP_API_URL}/Utilerias/GetFechaInicio`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Utilerias/GetFechaInicio`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -17,7 +17,7 @@ async function obtenerFechaInicio(){
 }
 
 async function obtenerFechaFinal(){
-    const url = `${process.env.REACT_APP_API_URL}/Utilerias/GetFechaFinal`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Utilerias/GetFechaFinal`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

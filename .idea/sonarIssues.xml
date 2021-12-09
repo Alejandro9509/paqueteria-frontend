@@ -63,6 +63,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Util/Contexts/GuiaContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../lector-qr-paqueteria/src/Util/Contexts/InformesContext.js">
           <value>
             <set />
@@ -243,7 +248,42 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/public/css/bootstrap.css">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/public/css/common.css">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/public/css/components.css">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/public/css/layout.css">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/public/css/pages.css">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/public/css/project-style.css">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/public/css/style.css">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/public/css/widgets.css">
           <value>
             <set />
           </value>
@@ -293,7 +333,17 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Components/spinner/index.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Constants/index.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/CiudadesContext.js">
           <value>
             <set />
           </value>
@@ -303,12 +353,42 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/CodigoPostalContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/ConceptosFacturacionContext.js">
           <value>
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/ConveniosContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/CorteCajaContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/Cotizador.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/CotizadorContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/DetalleParadasContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/EmbalajesContext.js">
           <value>
             <set />
           </value>
@@ -329,6 +409,21 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/MensajesConetext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/MunicipiosContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/OperadoresContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/ProductosContext.js">
           <value>
             <set />
           </value>
@@ -354,6 +449,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Util/Contexts/UsuarioContext.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Util/Contexts/UtileriasContext.js">
           <value>
             <set />
           </value>
@@ -429,6 +529,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/Views/ConceptosFacturacion/ConceptosFacturacion.js">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/Views/ConceptosFacturacion/Cotizador.js">
           <value>
             <set />
           </value>
@@ -1383,6 +1488,26 @@
             <set />
           </value>
         </entry>
+        <entry key="$APPLICATION_CONFIG_DIR$/consoles/db/f5746bf4-8842-4f3d-889c-20fece67adfe/console_6.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_CONFIG_DIR$/consoles/db/f5746bf4-8842-4f3d-889c-20fece67adfe/console_7.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_CONFIG_DIR$/consoles/db/f5746bf4-8842-4f3d-889c-20fece67adfe/console_8.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_CONFIG_DIR$/consoles/db/f5746bf4-8842-4f3d-889c-20fece67adfe/console_9.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/a.sql">
           <value>
             <set />
@@ -1413,6 +1538,11 @@
             <set />
           </value>
         </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatPaquetesCotizadorAgregarPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatRemitentesDestinatariosPaginado.sql">
           <value>
             <set />
@@ -1428,12 +1558,27 @@
             <set />
           </value>
         </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatTarifasGetByOrigenDestinoTipoCotizacionPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatTarifasGetByOrigenDestinoTipoPQ.sql">
           <value>
             <set />
           </value>
         </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ObtenerFecha.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProEmbarqueGetListadoFiltroPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_ProEmbarqueModificarPQ.sql">
           <value>
             <set />
           </value>
@@ -1513,6 +1658,11 @@
             <set />
           </value>
         </entry>
+        <entry key="/ac2c184f/f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7_PRODUCCION_BD/schema/dbo/routine/usp_CatTarifasGetByOrigenDestinoTipoPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="/dummy.sql">
           <value>
             <set />
@@ -1528,12 +1678,22 @@
             <set />
           </value>
         </entry>
+        <entry key="f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatCotizacionAgregarPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatTarifaAgregarPQ.sql">
           <value>
             <set />
           </value>
         </entry>
         <entry key="f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatTarifaCobroAgregarPQ.sql">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="f5746bf4-8842-4f3d-889c-20fece67adfe/database/GMTERP_WEB_PQ_ADI880815DA7/schema/dbo/routine/usp_CatTarifasGetByOrigenDestinoTipoPQ.sql">
           <value>
             <set />
           </value>

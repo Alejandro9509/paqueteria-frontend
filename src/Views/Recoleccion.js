@@ -75,7 +75,7 @@ import {
     eliminarRecoleccion,
     obtenerRecoleccionId,
     obtenerRecoleccionFiltro,
-    obtenerRecoleccion
+    obtenerRecoleccion, obtenerRecoleccionReporte
 } from "../Util/Contexts/RecoleccionContext";
 import {obtenerTipoUnidades, obtenerTipoUnidadesId} from "../Util/Contexts/TipoUnidadContext";
 import {obtenerUnidades, obtenerUnidadesId, obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
@@ -100,6 +100,8 @@ import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasC
 import DialogTableClientes from "./Clientes/DialogTableClientes";
 import RemitentesDestinatarios from "./RemitentesDestinatarios";
 import ComplementosSAT from "./SAT/ComplementosSAT";
+import {obtenerInformeReporte} from "../Util/Contexts/InformesContext";
+import Filtros from "./Filtros/Filtros";
 
 let timer;
 
@@ -781,10 +783,8 @@ function Recoleccion() {
             m_nIdEmbarque: state.folioEmbarque,
             m_nIdGuia: state.folioGuia,
             m_nIdInforme: state.folioInforme,
-            m_dFecha: state.fechaHoraCreacion.split("T")[0],
-            m_tHora: state.fechaHoraCreacion.split("T")[1],
-            m_dFechaRegistro: state.fechaHoraRegistro.split("T")[0],
-            m_tHoraRegistro: state.fechaHoraRegistro.split("T")[1],
+            m_sFecha: state.fechaHoraRegistro.substr(0, 10),
+            m_sHora: state.fechaHoraRegistro.substr(state.fechaHoraRegistro.length - 5),
             m_nMoneda: state.moneda,
             m_rTipoCambio: state.tipoCambio,
             m_nIdTipoDeCobro: state.tipoCobro,
@@ -1177,7 +1177,7 @@ function Recoleccion() {
                     datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
                 }
             })
-            let estado = respuesta.data.m_nIdEstadoEntrega < 10 ? `0${respuesta.data.m_nIdEstadoEntrega}` : respuesta.data.m_nIdEstadoEntrega
+            let estado = respuesta.data.m_nIdEstadoEntrega < 10 ? `${respuesta.data.m_nIdEstadoEntrega}` : respuesta.data.m_nIdEstadoEntrega
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipiosEntregaDD(data)
             })
@@ -1324,8 +1324,7 @@ function Recoleccion() {
                 ...state,
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 folioRecoleccion: dataFolioRecoleccion.length !== 0 ? dataFolioRecoleccion[0].m_sFolioRecoleccion : "",
-                fechaHoraRegistro: `${new Date().getFullYear()}-${`${new Date().getMonth() +
-                1}`.padStart(2, 0)}-${`${new Date().getDate() + 1}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`,
+                fechaHoraRegistro: getCurrentDateTime()
 
             }
         });
@@ -1351,7 +1350,6 @@ function Recoleccion() {
                 sucursalListado: 0,
                 estatusListado: 0,
                 folioRecoleccion: '',
-                height: window.height,
                 agregar: "Agregar",
             }
         });
@@ -1402,10 +1400,13 @@ function Recoleccion() {
     }
 
     const handlePatrocinadorSelected = (row) => {
-        console.log(row)
-        setState((state)=>({
+        setState(() => ({
             ...state,
             clientePaga: row.data,
+            idTipoSeguro: row.data.m_bTieneSeguro ? row.data.m_nIdTipoSeguro : 5,
+            porcentajeSeguro: row.data.m_bTieneSeguro ? row.data.m_cPorcentajeSeguro : 0,
+            aplicaSeguro: row.data.m_bTieneSeguro,
+            tipoCobro: row.data.m_bSinCredito ? "10" : "11",
             openDialog: false,
         }))
     }
@@ -1540,6 +1541,7 @@ function Recoleccion() {
             }
         });
         setDataPaquetes([])
+        setDataComplementosSAT([])
         resetRecoleccionDD()
         resetEntregaDD()
         setDataRecoleccionConsulta(undefined)
@@ -1712,6 +1714,13 @@ function Recoleccion() {
                                onClick={() => (handleShowConsultar(row.row.m_nIdRecoleccion))}><i className="fa fa-eye"
                                                                                                   style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
+                        <Tooltip title="Reporte">
+                            <a  className="btn btn-default btn-xs"
+                                onClick={() => generarReporte(row.row.m_nIdRecoleccion, row.row.m_sFolioRecoleccion)}><i className="zmdi zmdi-file"
+                                                                                                                 style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+
                         <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
@@ -1741,6 +1750,11 @@ function Recoleccion() {
             width: 200,
         },
         {
+            headerName: "Folio Recolección",
+            field: "m_sFolioRecoleccion",
+            width: 150,
+        },
+        {
             headerName: "Estatus",
             field: "m_sEstatusRecoleccion",
             width: 125,
@@ -1766,8 +1780,8 @@ function Recoleccion() {
             width: 150,
         },
         {
-            headerName: "Folio",
-            field: "m_sFolioRecoleccion",
+            headerName: "Folio Embarque",
+            field: "m_sFolioEmbarque",
             width: 150,
         },
         {
@@ -1781,17 +1795,16 @@ function Recoleccion() {
             width: 125,
         },
         {
-            headerName: "Fecha/Hora Recolección",
-            field: "m_sFechaHoraDetalleRec",
-            width: 250,
-        },
-
-        {
             headerName: "Zona Recolección",
             field: "m_sZonaRecoleccion",
             width: 200,
         },
         {
+            headerName: "Fecha/Hora Recolección",
+            field: "m_sFechaHoraDetalleRec",
+            width: 250,
+        },
+        /*{
             headerName: "Operador",
             field: "m_sOperador",
             width: 250,
@@ -1800,7 +1813,7 @@ function Recoleccion() {
             headerName: "Unidad",
             field: "m_sUnidad",
             width: 125,
-        }
+        }*/
     ]);
 
     const columnsCP = React.useMemo(() => [
@@ -1879,6 +1892,14 @@ function Recoleccion() {
             accessor: "m_nIdTipoUnidad",
         }
     ]);
+    function generarReporte(id, folio){
+        obtenerRecoleccionReporte(id).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Recolección " + folio;
+        })
+    }
 
     const columnsUnidades = React.useMemo(() => [
         {
@@ -2007,7 +2028,7 @@ function Recoleccion() {
     }
 
     async function getAllTiposSeguro() {
-        axios.get(`${process.env.REACT_APP_API_URL}/TipoSeguros/GetListado`, {headers}).then(({data}) => {
+        axios.get(`${process.env.REACT_APP_REPORT_URL}/api/TipoSeguros/GetListado`, {headers}).then(({data}) => {
             setDataTiposSeguro(data)
         })
     }
@@ -2641,7 +2662,7 @@ function Recoleccion() {
     }
 
     if (redirect) {
-        if (data.find((o) => o.m_nIdRecoleccion === state.idRecoleccion).m_nIdEmbarque != 0) {
+        if (data.find((o) => o.m_nIdRecoleccion === state.idRecoleccion).m_sFolioEmbarque) {
             showSuccess("Recolección ya tiene Embarque")
         } else {
             return (
@@ -2704,6 +2725,10 @@ function Recoleccion() {
           openDialog: isVisible,
         });
       };
+
+    const setDataListado = (listado) => {
+        setData(listado)
+    }
     return (
         <div>
             {
@@ -3118,7 +3143,7 @@ function Recoleccion() {
                                 <div className="widget-content">
                                     <div className="row">
                                         <div className="col-md-12">
-                                            <Grid container spacing={2} alignItems="center">
+                                            {/*<Grid container spacing={2} alignItems="center">
                                                 <Grid item xs={2}>
                                                     <TextField variant="outlined" margin="dense"
                                                                onChange={handleChangeFiltros}
@@ -3276,7 +3301,11 @@ function Recoleccion() {
                                                         Limpiar filtros
                                                     </IconButton>
                                                 </Grid>
-                                            </Grid>
+                                            </Grid>*/}
+                                            <Filtros
+                                                listaResultado={setDataListado}
+                                                recoleccion={true}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -3288,7 +3317,6 @@ function Recoleccion() {
                                         components={{
                                             LoadingOverlay: CustomLoadingOverlay,
                                         }}
-                                        loading={data == undefined}
                                         rows={data}
                                         columns={columns}
                                         density="compact"
@@ -3341,7 +3369,6 @@ function Recoleccion() {
                                         <div className="widget-container">
                                             <div className="widget-content">
                                                 <div className="row ">
-                                                    <div className="col-md-12">
                                                         <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                             {" "}
                                                             <label className="input select">
@@ -3358,7 +3385,7 @@ function Recoleccion() {
                                                                         onChange={handleChange}
                                                                         id="idSucursalAgregar"
 
-                                                                        disabled="disabled"
+                                                                        disabled
                                                                     >
                                                                         {dataSucursal.map((sucursal) => (
                                                                             <option
@@ -3577,7 +3604,7 @@ function Recoleccion() {
                                                                             });
                                                                         }}
                                                                         id="tipoCobro"
-                                                                        InputProps={{
+                                                                        inputProps={{
                                                                             id: "tipoCobro",
                                                                             name: "tipoCobro"
                                                                         }}
@@ -3684,7 +3711,7 @@ function Recoleccion() {
                                                                 </div>
                                                             </Grid>
                                                         </Grid>
-                                                    </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -3709,7 +3736,6 @@ function Recoleccion() {
                                     </div>
 
                                     <div className="row ">
-                                        <div className="col-md-12">
                                             <div className="widget-wrap" id="remitenteDestinatario">
                                                 <div className="row">
                                                     <div className="col-md-6">
@@ -3833,7 +3859,6 @@ function Recoleccion() {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
 
                                     </div>
 
@@ -4252,7 +4277,7 @@ function Recoleccion() {
                                                                             id="municipioEnt"
                                                                             name="municipioEnt"
                                                                             disabled={state.agregar === "Consultar"}
-                                                                            InputProps={{name: "municipioEnt"}}
+                                                                            inputProps={{name: "municipioEnt"}}
                                                                         >
                                                                             {dataMunicipiosEntregaDD.map((municipio) => (
                                                                                 <option

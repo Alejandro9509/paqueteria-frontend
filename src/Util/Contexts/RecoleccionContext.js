@@ -14,6 +14,16 @@ function modificarRecoleccion(id, params) {
     return result
 }
 
+function obtenerRecoleccionReporte(id) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Recoleccion/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+
 function agregarRecoleccion(params) {
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Agregar`;
     let result;
@@ -68,12 +78,12 @@ function obtenerRecoleccionId(id) {
     return result
 }
 
-function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioRecoleccion,Origen,Destino) {
+function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioRecoleccion,Origen,Destino, idCliente) {
     if (folioRecoleccion == ''){
         folioRecoleccion = 0
     }
     const url =
-        `${process.env.REACT_APP_API_URL}/Recoleccion/GetByFiltro/` +
+        `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/GetByFiltro/` +
         fechaInicial +
         "/" +
         fechaFinal +
@@ -86,7 +96,9 @@ function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, est
         "/" +
         Origen+
         "/" +
-        Destino;
+        Destino+
+        "/" +
+        idCliente;
     let result;
     console.log('url filtro: ', url)
     trackPromise(
@@ -95,4 +107,4 @@ function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, est
     return result
 }
 
-export { modificarRecoleccion, agregarRecoleccion, eliminarRecoleccion, obtenerRecoleccionId, obtenerRecoleccion, obtenerRecoleccionCancelada, cancelarRecoleccion, obtenerRecoleccionFiltro }
+export { modificarRecoleccion, agregarRecoleccion, obtenerRecoleccionReporte, eliminarRecoleccion, obtenerRecoleccionId, obtenerRecoleccion, obtenerRecoleccionCancelada, cancelarRecoleccion, obtenerRecoleccionFiltro }

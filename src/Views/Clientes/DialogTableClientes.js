@@ -21,8 +21,8 @@ function DialogTableClientes(props) {
 //----------------------------->Atributos<----------------------------------------------------------------------------
 const columns = [
     {
-      headerName: "Id Cliente",
-      field: "m_nIdCliente",
+      headerName: "Num. Cliente",
+      field: "m_nNumeroCliente",
       width: 125,
     },
     {
@@ -62,7 +62,7 @@ function cargarDesdeServidor(pagina,registros){
             variant="standard"
             value={busqueda}
             onChange={(e) => setBusqueda( e.target.value)}
-            placeholder
+
             InputProps={{
                 endAdornment: <SearchIcon style={{
                     color: "#F9A03E",

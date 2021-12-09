@@ -119,7 +119,7 @@ export default function ProductosPrecios({dataList = [], onChangeList, consult,i
                                 disabled={state.agregar == "Consultar"}
                                 options={state.conceptos}
                                 getOptionLabel={(option) =>
-                                    option.m_sDescripcion
+                                   option ? option.m_nIdProducto+'-'+option.m_sDescripcion : ''
                                 }
                                 variant="outlined"
                                 style={{
@@ -291,7 +291,7 @@ export default function ProductosPrecios({dataList = [], onChangeList, consult,i
                             {
                                 dataList.map((c, index) => (
                                     <tr onDoubleClick={(e) => handleRowClick(e, index, c)}>
-                                        <td style={{textAlign: "left"}}>{c.m_sDescripcion}</td>
+                                        <td style={{textAlign: "left"}}>{c.m_nIdProducto+'-'+c.m_sDescripcion}</td>
                                         <td style={{textAlign: "left"}}>${parseFloat(c.m_cImporte).toFixed(2)}</td>
                                         {/*{mostrarRangos && <td style={{textAlign: "left"}}>{c.rangoMinimo} Kg</td>}
                                         {mostrarRangos && <td style={{textAlign: "left"}}>{c.rangoMaximo} Kg</td>}

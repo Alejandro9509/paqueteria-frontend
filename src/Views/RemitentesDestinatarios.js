@@ -130,10 +130,7 @@ function RemitenteDestinatario(props) {
         props.dataPadreConsulta.data.m_nIdRecoleccion > 0
       ) {
         if (props.remitente) {
-          let estado =
-            respuesta.data.m_nIdEstadoRemitente < 10
-              ? `0${respuesta.data.m_nIdEstadoRemitente}`
-              : respuesta.data.m_nIdEstadoRemitente;
+          let estado =`${respuesta.data.m_nIdEstadoRemitente}`
           obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(
             ({ data }) => {
               setState((state) => {
@@ -213,10 +210,7 @@ function RemitenteDestinatario(props) {
             );
           }
         } else if (props.destinatario) {
-          let estado =
-            respuesta.data.m_nIdEstadoDestinatario < 10
-              ? `0${respuesta.data.m_nIdEstadoDestinatario}`
-              : respuesta.data.m_nIdEstadoDestinatario;
+          let estado = `${respuesta.data.m_nIdEstadoDestinatario}`
           obtenerRemitentesDestinatariosId(
             respuesta.data.m_nIdDestinatario
           ).then(({ data }) => {
@@ -301,10 +295,7 @@ function RemitenteDestinatario(props) {
       ) {
         /**Si se van a mostrar datos de remitente*/
         if (props.remitente) {
-          let estado =
-            respuesta.data.m_nIdEstadoRemitente < 10
-              ? `0${respuesta.data.m_nIdEstadoRemitente}`
-              : respuesta.data.m_nIdEstadoRemitente;
+          let estado =`${respuesta.data.m_nIdEstadoRemitente}`
           obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(
             ({ data }) => {
               setState((state) => {
@@ -357,10 +348,7 @@ function RemitenteDestinatario(props) {
 
           /**Si se van a mostrar datos de destinatario*/
         } else if (props.destinatario) {
-          let estado =
-            respuesta.data.m_nIdEstadoDestinatario < 10
-              ? `0${respuesta.data.m_nIdEstadoDestinatario}`
-              : respuesta.data.m_nIdEstadoDestinatario;
+          let estado =  `${respuesta.data.m_nIdEstadoDestinatario}`;
           obtenerRemitentesDestinatariosId(
             respuesta.data.m_nIdDestinatario
           ).then(({ data }) => {
@@ -401,6 +389,7 @@ function RemitenteDestinatario(props) {
                 },
               };
             });
+            console.log(cp.data)
             obtenerZonaOperativaByIdCodigoPostal(cp.data.m_sCP).then(
               ({ data }) => {
                 setDataZonasOperativas(data);
@@ -920,7 +909,7 @@ function RemitenteDestinatario(props) {
                 disableClearable
                 forcePopupIcon={false}
                 options={props.dataCiudad}
-                getOptionLabel={(option) => option.m_sCiudad}
+                getOptionLabel={(option) => option.m_sCiudad || ""}
                 style={{
                   transform: "translate(14px, 10px) scale(1) !important",
                 }}
@@ -955,7 +944,7 @@ function RemitenteDestinatario(props) {
                 disableClearable
                 forcePopupIcon={false}
                 options={props.dataCiudad}
-                getOptionLabel={(option) => option.m_sCiudad}
+                getOptionLabel={(option) => option.m_sCiudad || ""}
                 variant="outlined"
                 style={{
                   transform: "translate(14px, 10px) scale(1) !important",
@@ -1010,7 +999,7 @@ function RemitenteDestinatario(props) {
                     required={
                       !state.diferenteEntrega && !state.entregaEnSucursal
                     }
-                    onClick={handleClickZona}
+                    onClick={() => handleClickZona()}
                     {...params}
                   />
                 )}

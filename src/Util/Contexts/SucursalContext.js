@@ -33,7 +33,7 @@ function eliminarSucursales(id, idEliminadoPor) {
 }
 
 function obtenerSucursales() {
-    const url = `${process.env.REACT_APP_API_URL}/Sucursales/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Sucursales/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

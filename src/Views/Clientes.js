@@ -1254,7 +1254,7 @@ function Clientes(props) {
                                                                     value={state.idGrupoCliente}
                                                                     id="idGrupoCliente"
                                                                     disableClearable
-                                                                    getOptionLabel={(option) => option.m_sGrupo}
+                                                                    getOptionLabel={(option) => option.m_sGrupo || ""}
                                                                     options={dataGrupoClientes}
                                                                     renderInput={(params) => (
                                                                         <TextField

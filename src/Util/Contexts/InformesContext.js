@@ -50,7 +50,7 @@ function eliminarInformes(id, idEliminadoPor){
 }
 
 function obtenerInformes(){
-    const url = `${process.env.REACT_APP_API_URL}/Informes/GetListadoSinViajes`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Informes/GetListadoSinViajes`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -85,7 +85,7 @@ function obtenerInformesDisponiblesViajes(idOrigen, idDestino, idRuta){
 }
 
 function obtenerInformesId(id){
-    const url = `${process.env.REACT_APP_API_URL}/Informes/GetById/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Informes/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -93,25 +93,21 @@ function obtenerInformesId(id){
     return result
 }
 
-function obtenerInformeFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, folioInforme,Origen,Destino) {
+function obtenerInformeFiltro(fechaInicial, fechaFinal,folioInforme,sucursarEmisora,sucursalReceptora) {
     if (folioInforme == ''){
         folioInforme = 0
     }
     const url =
-        `${process.env.REACT_APP_API_URL}/Informes/GetByFiltros/` +
+        `${process.env.REACT_APP_REPORT_URL}/api/Informes/GetByFiltro/` +
         fechaInicial +
         "/" +
         fechaFinal +
         "/" +
-        sucursalListado +
+        folioInforme +
         "/" +
-        estatusListado +
+        sucursarEmisora +
         "/" +
-        folioInforme+
-        "/" +
-        Origen+
-        "/" +
-        Destino;
+        sucursalReceptora;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

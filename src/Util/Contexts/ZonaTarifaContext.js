@@ -43,13 +43,21 @@ function obtenerListadoZonaTarifa() {
 }
 
 function obtenerByIdZonaTarifa(id) {
-    const url = `${process.env.REACT_APP_API_URL}/ZonaTarifa/GetById/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaTarifa/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
     );
     return result
 }
+
+function obtenerByIdZonaTarifaSinCP(id) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaTarifa/GetByIdSinCP/` + id;
+    let result;
+    trackPromise(result =  axios.get(url, { headers }));
+    return result
+}
+
 //Se va mandar el codigo postal porque surgio la necesidad
 function obtenerZonaTarifaByIdCodigoPostal(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaTarifa/GetByIdCodigoPostal/` + id;
@@ -60,4 +68,4 @@ function obtenerZonaTarifaByIdCodigoPostal(id) {
     return result
 }
 
-export {obtenerZonaTarifaByIdCodigoPostal, modificarZonaTarifa, obtenerByIdZonaTarifa, obtenerListadoZonaTarifa, eliminarZonaTarifa, agregarZonaTarifa}
+export {obtenerByIdZonaTarifaSinCP,obtenerZonaTarifaByIdCodigoPostal, modificarZonaTarifa, obtenerByIdZonaTarifa, obtenerListadoZonaTarifa, eliminarZonaTarifa, agregarZonaTarifa}

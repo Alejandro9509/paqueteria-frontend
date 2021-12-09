@@ -74,6 +74,7 @@ import {obtenerEmbalajesId} from "../Util/Contexts/EmbalajesContext";
 import CambiarTipoCobro from "./Guia/CambiarTipoCobro";
 import Ocurre from "./Guia/Ocurre";
 import ConceptosFacturacionGuias from "./Tarifas/ConceptosFacturacionGuias";
+import Filtros from "./Filtros/Filtros";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -175,7 +176,7 @@ function Guia(props) {
         folioInforme: "",
         tracking: "",
         fecha: "",
-        idEstatusGuia: '',
+        idEstatusGuia: 0,
         idMoneda: 0,
         idTipoTarifa: 2,
         tipoCambio: 0,
@@ -223,7 +224,7 @@ function Guia(props) {
         ],
         //Detalle de faturación
         idTipoCobro: 0,
-        idTipoServicio: '2',
+        idTipoServicio: 2,
         ValorDeclarado: "",
         porcentajeSeguro:'',
         //Conceptos de facturacion
@@ -866,6 +867,11 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
             width: 200,
         },
         {
+            headerName: "Folio Guia",
+            field: "m_nFolioGuia",
+            width: 125,
+        },
+        {
             headerName: "Estatus Guia",
             field: "m_sEstatusGuia",
             width: 200,
@@ -879,11 +885,6 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
             headerName: "Destino",
             field: "m_sCiudadDestino",
             width: 150,
-        },
-        {
-            headerName: "Folio Guia",
-            field: "m_nFolioGuia",
-            width: 125,
         },
         {
             headerName: "Tipo cobro",
@@ -963,21 +964,21 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
                 $('.nav-tabs li').eq(1).addClass('active');
                 $('.tab-content div ').removeClass('in show');
                 $('#Agregar').addClass('in show');
-                setDataMoneda(props.location.dataMoneda)
-                setDataSucursal(props.location.dataSucursal)
-                setDataTipoCobro(props.location.dataTipoCobro)
-                setDataTipoCambio(props.location.dataTipoCambio)
-                setDataCiudadF(props.location.dataCiudades)
+                // setDataMoneda(props.location.dataMoneda)
+                // setDataSucursal(props.location.dataSucursal)
+                // setDataTipoCobro(props.location.dataTipoCobro)
+                // setDataTipoCambio(props.location.dataTipoCambio)
+                // setDataCiudadF(props.location.dataCiudades)
             });
         }else{
             getAllData()
-            getAllCiudadesFiltro()
-            getAllDataSucursal()
-
-            getAllDataMoneda()
-            getAllDataTipoCobro()
-            getTipoCambio()
         }
+        getAllCiudadesFiltro()
+        getAllDataSucursal()
+        getAllDataSucursal()
+        getAllDataMoneda()
+        getAllDataTipoCobro()
+        getTipoCambio()
         getAllDataEstatusGuia()
         getUltimoFolioGuia()
         getAllDataTipoServicio()
@@ -1256,7 +1257,7 @@ obtenerGuiaId(id).then(({data}) => {
                 folioRelacionado: respuesta.m_sFolioEmbarqueRelacionado,
                 fecha: getCurrentDateTime(),
                 idEmbarqueRelacionado: respuesta.m_nIdEmbarqueRelacionado,
-                nombreRemitente: respuesta.data.m_sNOmbreRemitente,
+                nombreRemitente: respuesta.data.m_sNombreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
                 FolioGuiaRelacionada: respuesta.data.m_sFolioGuiaRelacionada,
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
@@ -1286,7 +1287,7 @@ obtenerGuiaId(id).then(({data}) => {
                 creadoEl: respuesta.data.m_dCreadoEl,
                 idEstatusGuia: 4,
                 idTipoServicio: 2,
-                tieneRecoleccion: respuesta.data.m_bEsRecolecta,
+                tieneRecoleccion: respuesta.data.m_bEsRecoleccion,
                 tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
                 tieneCitaRecoleccion: false,
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
@@ -1389,7 +1390,7 @@ obtenerGuiaId(id).then(({data}) => {
                 idEmbarque: 0,
                 folioInforme: "",
                 tracking: "",
-                idEstatusGuia: '',
+                idEstatusGuia: 0,
                 idMoneda: 1,
                 tipoCambio: 0,
                 //Remitente
@@ -1437,7 +1438,7 @@ obtenerGuiaId(id).then(({data}) => {
                 ],
                 //Detalle de faturación
                 idTipoCobro: 0,
-                idTipoServicio: '2',
+                idTipoServicio: 2,
                 ValorDeclarado: "",
                 //Conceptos de facturacion
                 conceptosAdicionales: [],
@@ -2132,6 +2133,10 @@ obtenerGuiaId(id).then(({data}) => {
         setConceptosAdicionales(newList)
     }
 
+    const setDataListado = (listado) => {
+        setData(listado)
+    }
+
     return (
         <div>
             <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido} open={state.openTipoCobro} dataTipoCobro={dataTipoCobro} close={() => setState({...state, openTipoCobro: false})}/>
@@ -2237,7 +2242,7 @@ obtenerGuiaId(id).then(({data}) => {
 
                                         <div className="row">
                                             <div className="col-md-12">
-                                                <Grid container spacing={2} alignItems="center">
+                                                {/*<Grid container spacing={2} alignItems="center">
 
                                                     <Grid item xs={2}>
                                                         <TextField variant="outlined" margin="dense"
@@ -2400,32 +2405,32 @@ obtenerGuiaId(id).then(({data}) => {
                                                             Limpiar filtros
                                                         </IconButton>
                                                     </Grid>
-                                                </Grid>
+                                                </Grid>*/}
+                                                <Filtros
+                                                    listaResultado={setDataListado}
+                                                    guia={true}
+                                                />
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="row" style={{height: state.height - 250, width: '100%'}}>
-                                        {data.length != 0 ? (
-                                            <DataGrid
-                                                localeText={dataGridLocaleText}
-                                                rows={data}
-                                                columns={columns}
-                                                density="compact"
-                                                pageSize={Math.floor((state.height - 310) / 30)}
-                                                getRowId={(row) => row.m_nIdGuia}
-                                                onRowSelected={(row) => {
-                                                    setState({
-                                                        ...state,
-                                                        idGuia: row.data.m_nIdGuia,
-                                                        cambioCobro: (row.data.m_nIdEstatusGuia === 14 || row.data.m_nIdEstatusGuia === 7) &&  row.data.m_nIdTipoCobro === 2,
-                                                        creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito
-                                                    })
-                                                }}
-                                            />
-                                        ) : (
-                                            <div>No se encontró ningún registro</div>
-                                        )}
+                                        <DataGrid
+                                            localeText={dataGridLocaleText}
+                                            rows={data}
+                                            columns={columns}
+                                            density="compact"
+                                            pageSize={Math.floor((state.height - 310) / 30)}
+                                            getRowId={(row) => row.m_nIdGuia}
+                                            onRowSelected={(row) => {
+                                                setState({
+                                                    ...state,
+                                                    idGuia: row.data.m_nIdGuia,
+                                                    cambioCobro: (row.data.m_nIdEstatusGuia === 14 || row.data.m_nIdEstatusGuia === 7) &&  row.data.m_nIdTipoCobro === 2,
+                                                    creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito
+                                                })
+                                            }}
+                                        />
                                     </div>
 
                                 </div>
@@ -2647,7 +2652,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                                             shrink: true,
                                                                         }}
                                                                     >
-                                                                        <option value=""></option>
+                                                                        <option key={0} value="0">Seleccionar</option>
                                                                         {dataEstatusGuia.filter(e => e.m_nIdEstatusGuia == 4).map(
                                                                             (estatusGuia) => (
                                                                                 <option
@@ -3304,7 +3309,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                         value={state.idTipoServicio}
 
                                                                                     >
-                                                                                        <option value=""></option>
+                                                                                        <option key={0} value="0">Seleccionar</option>
                                                                                         {dataTipoServicio.map(
                                                                                             (tipoServicio) => (
                                                                                                 <option
