@@ -1832,7 +1832,7 @@ function Embarque(props) {
                 moneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 tipoCobro: respuesta.data.m_nIdTIpoCobro,
-
+                idCotizacion: respuesta.data.m_nIdCotizacion,
                 valorDeclarado: respuesta.data.m_xValorDeclarado,
                 idTipoSeguro: respuesta.data.m_nIdTipoSeguro,
                 porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,

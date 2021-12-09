@@ -5,7 +5,7 @@ import { API_HEADERS } from "../../Constants";
 const headers = API_HEADERS
 
 function obtenerConvenios () {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Convenios/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Convenios/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -14,7 +14,7 @@ function obtenerConvenios () {
 }
 
 function obtenerConveniosId (id) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Convenios/GetById/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Convenios/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
