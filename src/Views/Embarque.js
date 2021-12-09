@@ -2021,7 +2021,7 @@ function Embarque(props) {
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
                 obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0, 0).then((respuesta) => {
-                    props.listaResultado(respuesta.data);
+                    setData(respuesta.data);
                 })
             })
         })
