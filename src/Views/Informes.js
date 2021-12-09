@@ -3579,7 +3579,7 @@ function Informes({history}) {
                                                                     id="IdUnidad"
                                                                     disableClearable
                                                                     forcePopupIcon={false}
-                                                                    options={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
+                                                                    options={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30 || g.m_nIdTipoUnidad === 7)}
                                                                     getOptionLabel={(option) =>
                                                                         option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                                     }
