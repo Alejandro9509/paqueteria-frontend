@@ -1400,10 +1400,13 @@ function Recoleccion() {
     }
 
     const handlePatrocinadorSelected = (row) => {
-        console.log(row)
-        setState((state)=>({
+        setState(() => ({
             ...state,
             clientePaga: row.data,
+            idTipoSeguro: row.data.m_bTieneSeguro ? row.data.m_nIdTipoSeguro : 5,
+            porcentajeSeguro: row.data.m_bTieneSeguro ? row.data.m_cPorcentajeSeguro : 0,
+            aplicaSeguro: row.data.m_bTieneSeguro,
+            tipoCobro: row.data.m_bSinCredito ? "10" : "11",
             openDialog: false,
         }))
     }

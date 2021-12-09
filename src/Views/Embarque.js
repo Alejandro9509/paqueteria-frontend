@@ -21,7 +21,7 @@ import {
     usePagination,
 } from "react-table";
 import $ from "jquery";
-import {remove_array_element} from "../Util/Util";
+import {getUniqueListBy, remove_array_element} from "../Util/Util";
 import IconButton from "@material-ui/core/IconButton";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -104,8 +104,10 @@ import RemitentesDestinatarios from "./RemitentesDestinatarios";
 import ComplementosSAT from "./SAT/ComplementosSAT";
 import DialogTableClientes from "./Clientes/DialogTableClientes";
 import Cotizador from "./ConceptosFacturacion/Cotizador";
-import {obtenerInformeReporte} from "../Util/Contexts/InformesContext";
+import {obtenerInformeFiltro, obtenerInformeReporte} from "../Util/Contexts/InformesContext";
 import Filtros from "./Filtros/Filtros";
+import {obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
+import {obtenerViajesByFiltro} from "../Util/Contexts/ViajesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -611,9 +613,11 @@ function Embarque(props) {
     const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
     const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
     const [dataZonasTarifaEntregaDD, setDataZonasTarifaEntregaDD] = useState([])
+    const [dataConceptos, setDataConceptos] = useState([])
     const [state, setState] = React.useState({
         //==VARIABLES DE LISTADO==
         idEmbarque: 0,
+        idCotizacion: 0,
         fechaInicial: 0,
         fechaFinal: 0,
         sucursalListado: 0,
@@ -770,6 +774,7 @@ function Embarque(props) {
         setDataEmbarqueConsulta(undefined)
         setDataPaquetes([])
         resetEntregaDD()
+        setDataConceptos([])
     }
 
     const [remitente, setRemitente] = useState({
@@ -1219,6 +1224,17 @@ function Embarque(props) {
             params.m_sHoraCitaMaxima = state.horaCitaMaxima
         }
 
+        params.m_arrConceptos = dataConceptos.map(item => ({
+            m_nIdConceptoFacturacion: item.idConcepto,
+            m_cImporte: item.importe,
+            m_nIdImpuestoRetiene: item.retiene,
+            m_nIdImpuestoTraslada: item.traslada,
+            m_cImporteIva: item.importeIVA,
+            m_cImporteRetiene: item.importeRet,
+            m_c_Descuento: item.descuento
+        }))
+        params.m_nIdCotizacion = state.idCotizacion
+
         console.log(params)
         console.log(JSON.stringify(params))
 
@@ -1229,7 +1245,7 @@ function Embarque(props) {
                     if (respuesta.data != "Modificado Exitosamente"){
                         return
                     }
-                    getAllEmbarque();
+                    //getAllEmbarque();
                     $('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
@@ -1247,7 +1263,7 @@ function Embarque(props) {
                         return
                     }
                     console.log(respuesta.data);
-                    getAllEmbarque();
+                    // getAllEmbarque();
                     $('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
@@ -1327,7 +1343,7 @@ function Embarque(props) {
                 eliminarEmbarques(id, state.CreadoPor)
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
-                        getAllEmbarque();
+                        // getAllEmbarque();
                     })
                     .catch((err) => {
                         showSuccess(err);
@@ -1349,7 +1365,7 @@ function Embarque(props) {
         };
         cancelarEmbarque(state, params).then((respuesta) => {
             showSuccess(respuesta.data);
-            getAllEmbarque()
+            // getAllEmbarque()
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(0).addClass('active');
             $('.tab-content div ').removeClass('in show');
@@ -1375,16 +1391,14 @@ function Embarque(props) {
 
     //Se checa si se entró a embarque por una recoleccion
     useEffect(async (value) => {
-        if (props.location.idRecoleccion === undefined) {
-            getDataParaListado()
-        } else {
-            // getDataParaEditar()
-            obtenerRecoleccionId(props.location.idRecoleccion)
-                .then((respuesta) => {
-                    console.log('Recoleccion: ', respuesta.data);
-                    setDataRecoleccionOnState(respuesta)
-                    setTabActiva(1)
-                })
+        if (props.location.idRecoleccion !== undefined) {
+        // getDataParaEditar()
+        obtenerRecoleccionId(props.location.idRecoleccion)
+            .then((respuesta) => {
+                console.log('Recoleccion: ', respuesta.data);
+                setDataRecoleccionOnState(respuesta)
+                setTabActiva(1)
+            })
         }
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
             showSuccess("Es necesario iniciar sesion para acceder a este proceso");
@@ -1787,11 +1801,25 @@ function Embarque(props) {
                 }
             })
         })
+        let conceptosCast = []
+        conceptosCast = respuesta.data.m_arrConceptos.map(item => ({
+            id: Math.floor(Math.random() * 10000),
+            idConcepto: item.m_nIdConceptoFacturacion,
+            importe: item.m_cImporte,
+            retiene: item.m_nIdImpuestoRetiene,
+            traslada: item.m_nIdImpuestoTraslada,
+            importeIVA: item.m_cImporteIva,
+            importeRet: item.m_cImporteRetiene,
+            nombreConcepto: item.m_sConcepto,
+            descuento: item.m_c_Descuento
+        }))
 
+        setDataConceptos(conceptosCast)
         setState(state => {
             return {
                 ...state,
                 idEmbarque: duplicar ? 0 : respuesta.data.m_nIdEmbarque,
+                idCotizacion: respuesta.data.m_nIdCotizacion,
                 idEmbarqueRelacionado: duplicar ? respuesta.data.m_nIdEmbarque : 0,
                 idRecoleccion: duplicar ? 0 : respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.IdSucursal,
@@ -1804,7 +1832,7 @@ function Embarque(props) {
                 moneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
                 tipoCobro: respuesta.data.m_nIdTIpoCobro,
-
+                idCotizacion: respuesta.data.m_nIdCotizacion,
                 valorDeclarado: respuesta.data.m_xValorDeclarado,
                 idTipoSeguro: respuesta.data.m_nIdTipoSeguro,
                 porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
@@ -1975,16 +2003,13 @@ function Embarque(props) {
 
     const getDataParaListado = () => {
 
-        getAllEmbarque();
-        getAllSucursales();
-        getAllEstatusEmbarque();
-        getAllCiudadesFiltro();
-
-
 
     }
 
     const getDataParaEditar = () => {
+        getAllSucursales();
+        getAllEstatusEmbarque();
+        getAllCiudadesFiltro();
         getAllTipoCobro();
         getAllTipoMoneda();
         getTipoCambio()
@@ -1994,33 +2019,12 @@ function Embarque(props) {
 
     async function getAllEmbarque() {
         obtenerFechaInicio().then((respuestaUno) => {
-
-
-
             obtenerFechaFinal().then((respuestaDos) => {
-
-                console.log(respuestaUno.data[0].Fecha)
-                console.log(respuestaDos.data[0].Fecha)
-
-
-                setDataFechaInicial(respuestaUno.data)
-                setDataFechaFinal(respuestaDos.data)
-                setFiltros(filtros => {
-                    return {
-                        ...filtros,
-                       fechaInicial: respuestaUno.data[0].Fecha,
-                       fechaFinal: respuestaDos.data[0].Fecha
-
-                    }
-                })
-
-                obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0, 0).then((respuesta) => {
                     setData(respuesta.data);
-        })
-
+                })
             })
-
-    })
+        })
     }
 
     /*function getFormatosImpresion() {
@@ -2750,6 +2754,21 @@ function Embarque(props) {
     const setDataListado = (listado) => {
         setData(listado)
     }
+
+    const actualizarConceptos = (list) => {
+        setDataConceptos(list);
+    }
+    const saveIdCotizacion = (id) => {
+        if (id){
+            setState(state => {
+                return{
+                    ...state,
+                    idCotizacion: id
+                }
+            });
+        }
+
+    }
     return (
         <div>
 
@@ -3248,164 +3267,6 @@ function Embarque(props) {
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in show"}>
 
                             <div className="widget-wrap">
-                                    {/*<Grid container spacing={2} alignItems="center">
-                                            <Grid item xs={2}>
-                                                <TextField variant="outlined" margin="dense"
-                                                           onChange={handleChangeFiltros}
-                                                           onKeyDown={handleChangeFiltros}
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Folio Embarque"
-                                                           id="folio"
-                                                           name="folio"
-                                                           value={filtros.folio}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <TextField
-                                                            autoFocus
-                                                            type="date"
-                                                            margin="dense"
-                                                            label="Fecha Inicial"
-                                                            variant="outlined"
-                                                            className="form-control"
-                                                            InputLabelProps={{shrink: true,}}
-                                                            value={filtros.fechaInicial}
-                                                            onChange={handleChangeFiltros}
-                                                            id="fechaInicial"
-                                                            name="fechaInicial"
-                                                        />
-                                                    </FormControl>
-                                                </Grid>
-                                            <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <TextField variant="outlined" margin="dense"
-                                                                   type="date"
-                                                                   className="form-control"
-                                                                   label="Fecha Final"
-                                                                   InputLabelProps={{
-                                                                       shrink: true,
-                                                                   }}
-                                                                   value={filtros.fechaFinal}
-                                                                   onChange={handleChangeFiltros}
-                                                                   id="fechaFinal"
-                                                                   name="fechaFinal"
-
-                                                        />
-                                                    </FormControl>
-
-                                                </Grid>
-                                            <Grid item xs={2}>
-                                                <FormControl className="input select" fullWidth variant="outlined">
-                                                    <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
-                                                    <Select
-                                                        labelId="sucursalListadoLabel"
-                                                        label="Sucursal"
-                                                        className="form-control"
-                                                        required
-                                                        value={filtros.sucursalListado}
-                                                        onChange={handleChangeFiltros}
-                                                        id="sucursalListado"
-                                                        name="sucursalListado"
-                                                    >
-                                                        <option value="0">Todas</option>
-                                                        {dataSucursal.map((sucursal) => (
-                                                            <option
-                                                                key={sucursal.m_nIdSucursal}
-                                                                value={sucursal.m_nIdSucursal}
-                                                            >
-                                                                {sucursal.m_sSucursal}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                <FormControl className="input select" fullWidth variant="outlined">
-                                                    <InputLabel id="idEstatusLabel">Estatus</InputLabel>
-                                                    <Select
-                                                        labelId="estatusListadoLabel"
-                                                        className="form-control"
-                                                        required
-                                                        label="Estatus"
-                                                        value={filtros.estatusListado}
-                                                        onChange={handleChangeFiltros}
-                                                        id="estatusListado"
-                                                        name="estatusListado"
-                                                    >
-                                                        <option value="0">Todos</option>
-                                                        {dataEstatusEmbarque.map((estatus) => (
-                                                            <option
-                                                                key={estatus.m_nIdEstatusEmbarque}
-                                                                value={estatus.m_nIdEstatusEmbarque}
-                                                            >
-                                                                {estatus.m_sEstatus}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="OrigenListado">Origen</InputLabel>
-                                                        <Select
-                                                            labelId="OrigenListado"
-                                                            className="form-control"
-                                                            required
-                                                            label="Origen"
-                                                            value={filtros.OrigenListado}
-                                                            onChange={handleChangeFiltros}
-                                                            id="OrigenListado"
-                                                            name="OrigenListado"
-                                                        >
-                                                            <option value="0">Todos</option>
-                                                            {dataCiudadF.map((ciudad) => (
-                                                                <option
-                                                                    key={ciudad.m_nIdCiudad}
-                                                                    value={ciudad.m_nIdCiudad}
-                                                                >
-                                                                    {ciudad.m_sCiudad}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                                <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="DestinoListado">Destino</InputLabel>
-                                                        <Select
-                                                            labelId="DestinoListado"
-                                                            className="form-control"
-                                                            required
-                                                            label="Destino"
-                                                            value={filtros.DestinoListado}
-                                                            onChange={handleChangeFiltros}
-                                                            id="DestinoListado"
-                                                            name="DestinoListado"
-                                                        >
-                                                            <option value="0">Todos</option>
-                                                            {dataCiudadF.map((ciudad) => (
-                                                                <option
-                                                                    key={ciudad.m_nIdCiudad}
-                                                                    value={ciudad.m_nIdCiudad}
-                                                                >
-                                                                    {ciudad.m_sCiudad}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                            <Grid item container xs={2}>
-                                                <IconButton aria-label="delete" onClick={() => {
-                                                    resetFiltros()
-                                                    getAllEmbarque()
-                                                }}>
-                                                    <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
-                                                    Limpiar filtros
-                                                </IconButton>
-                                            </Grid>
-                                        </Grid>*/}
                                 <Filtros
                                     listaResultado={setDataListado}
                                     embarque={true}
@@ -4097,6 +3958,7 @@ function Embarque(props) {
                                         }
 
                                     </div>
+
                                     <div className="widget-wrap" id="complementosSat">
                                         <ComplementosSAT
                                             dataList={dataComplementosSAT}
@@ -4583,206 +4445,6 @@ function Embarque(props) {
                                                                         </div>
                                                                     </div>
 
-
-
-
-                                                                    {/*<div className="col-sm-6 col-md-4  unit">
-                                                                    <label className="input select">
-                                                                        <FormControl fullWidth
-                                                                                     variant="outlined"
-                                                                                     margin="dense">
-                                                                            <InputLabel
-                                                                                id="ciudadEntregaLabel">Ciudad</InputLabel>
-                                                                            <Select
-                                                                                labelId="ciudadEntregaLabel"
-                                                                                label="Ciudad"
-                                                                                className="form-control"
-                                                                                required={state.diferenteEntrega}
-                                                                                value={state.ciudadEntrega}
-                                                                                disabled={state.agregar === "Consultar"}
-                                                                                onChange={handleChangeCiudadEntrega}
-                                                                                onClick={handleClickCiudad}
-                                                                                id="ciudadEntrega"
-                                                                            >
-                                                                                {dataCiudad.map((ciudad) => (
-                                                                                    <option
-                                                                                        key={ciudad.m_nIdCiudad}
-                                                                                        value={ciudad.m_nIdCiudad}
-                                                                                    >
-                                                                                        {ciudad.m_sCiudad}
-                                                                                    </option>
-                                                                                ))}
-                                                                            </Select>
-                                                                        </FormControl>
-                                                                        <i className="fa fa-arrow-down"/>
-                                                                    </label>
-                                                                </div>
-
-                                                                <div className="col-sm-6 col-md-4  unit">
-
-                                                                    <div className="input">
-                                                                        <Autocomplete
-                                                                            freeSolo
-                                                                            onChange={(event, newValue) =>
-                                                                                setState({
-                                                                                    ...state,
-                                                                                    codigoPostalEntrega: newValue,
-                                                                                })
-                                                                            }
-                                                                            value={state.codigoPostalEntrega}
-                                                                            id="codigoPostalEntrega"
-                                                                            disableClearable
-                                                                            options={dataCodigosPostalesEntrega.filter((cp) => cp.m_nIdCiudad == state.ciudadEntrega)}
-                                                                            disabled={state.agregar === "Consultar"}
-                                                                            getOptionLabel={(option) =>
-                                                                                option.m_sCP
-                                                                            }
-                                                                            required={state.diferenteEntrega}
-                                                                            variant="outlined"
-                                                                            style={{
-                                                                                transform: "translate(14px, 10px) scale(1) !important"
-                                                                            }}
-                                                                            renderInput={(params) => (
-                                                                                <div>
-                                                                                    <TextField
-                                                                                        variant="outlined"
-                                                                                        label="Código Postal"
-                                                                                        onClick={handleCodigoPostalEntregaClick}
-                                                                                        margin="dense"
-                                                                                        className="form-control"
-                                                                                        {...params}
-                                                                                        InputProps={{
-                                                                                            ...params.InputProps,
-                                                                                            style: {
-                                                                                                height: "33px",
-                                                                                                fontSize: "14px"
-                                                                                            },
-                                                                                            type: "search",
-                                                                                            disabled: state.agregar === "Consultar",
-                                                                                            disableUnderline: true,
-                                                                                            endAdornment: (
-                                                                                                <InputAdornment
-                                                                                                    position="end">
-                                                                                                    {" "}
-                                                                                                    <IconButton
-                                                                                                        style={{
-                                                                                                            paddingRight: "0px",
-                                                                                                        }}
-                                                                                                        disabled={state.agregar === "Consultar"}
-                                                                                                        onClick={() => {
-                                                                                                            setState({
-                                                                                                                ...state,
-                                                                                                                identificadorModal:
-                                                                                                                    "codigoPostalEntrega",
-                                                                                                                tipoModal: 9,
-                                                                                                                openDialog: true
-                                                                                                            });
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        <PageviewIcon
-                                                                                                            style={{
-                                                                                                                color: "#F9A03E",
-                                                                                                                fontSize: 32,
-                                                                                                            }}
-                                                                                                        />
-                                                                                                    </IconButton>{" "}
-                                                                                                </InputAdornment>
-                                                                                            ),
-                                                                                        }}
-                                                                                    />
-                                                                                </div>
-                                                                            )}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-
-                                                                <div className="col-sm-6 col-md-4 unit">
-                                                                    <label className="input select">
-                                                                        <FormControl fullWidth
-                                                                                     variant="outlined"
-                                                                                     margin="dense">
-                                                                            <InputLabel
-                                                                                id="zonaEntregaLabel">Zona</InputLabel>
-                                                                            <Select
-                                                                                labelId="zonaEntregaLabel"
-                                                                                label="Zona"
-                                                                                className="form-control"
-                                                                                required={state.diferenteEntrega}
-                                                                                value={state.zonaEntrega}
-                                                                                disabled={state.agregar === "Consultar"}
-                                                                                onChange={handleChangeZonaEntrega}
-                                                                                onClick={handleClickZona}
-                                                                                id="zonaEntrega"
-                                                                            >
-                                                                                <option value="">Selecciona
-                                                                                </option>
-
-                                                                                {dataZona.map((zona) => (
-                                                                                    <option
-                                                                                        key={zona.m_nIdZona}
-                                                                                        value={zona.m_nIdZona}
-                                                                                    >
-                                                                                        {zona.m_sDescripcion}
-                                                                                    </option>
-                                                                                ))}
-                                                                            </Select>
-                                                                        </FormControl>
-                                                                        <i className="fa fa-arrow-down"/>
-                                                                    </label>
-                                                                </div>
-
-                                                                <div className="col-sm-4 col-md-4 col-lg-4 unit">
-
-                                                                    <div className="input">
-                                                                        <TextField variant="outlined"
-                                                                                   margin="dense"
-                                                                                   onChange={handleChange}
-                                                                                   className="form-control"
-                                                                                   type="text"
-                                                                                   label="Domicilio"
-                                                                                   value={state.domicilioEntrega}
-                                                                                   disabled={state.agregar === "Consultar"}
-                                                                                   id="domicilioEntrega"
-                                                                                   required={state.diferenteEntrega}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-
-                                                                <div className="col-sm-4 col-md-4 col-lg-4 unit">
-
-                                                                    <div className="input">
-                                                                        <TextField variant="outlined"
-                                                                                   margin="dense"
-                                                                                   onChange={handleChange}
-                                                                                   className="form-control"
-                                                                                   type="text"
-                                                                                   label="Entrega En"
-                                                                                   value={state.entregaEn}
-                                                                                   disabled={state.agregar === "Consultar"}
-                                                                                   id="entregaEn"
-                                                                                   required={state.diferenteEntrega}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-
-                                                                <div className="col-sm-4 col-md-4 col-lg-4 unit">
-
-                                                                    <div className="input">
-                                                                        <TextField variant="outlined"
-                                                                                   margin="dense"
-                                                                                   onChange={handleChange}
-                                                                                   className="form-control"
-                                                                                   type="text"
-                                                                                   label="Datos Adicionales para la Entrega"
-                                                                                   value={
-                                                                                       state.datosAdicionalesEntrega
-                                                                                   }
-                                                                                   disabled={state.agregar === "Consultar"}
-                                                                                   id="datosAdicionalesEntrega"
-                                                                                   required={state.diferenteEntrega}
-                                                                        />
-                                                                    </div>
-                                                                </div>*/}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -4866,8 +4528,14 @@ function Embarque(props) {
                                         }
                                     </div>
 
-                                    {/*<div className="row">
-                                        <Cotizador embarque={state} remitente={remitente} paquetes={dataPaquetes.map(p =>({
+                                    <div className="row">
+                                        <Cotizador embarque={state}
+                                                   remitente={remitente}
+                                                   destinatario={destinatario}
+                                                   onChangeConceptosList={actualizarConceptos}
+                                                   conceptos={dataConceptos}
+                                                   saveIdCotizacion={saveIdCotizacion}
+                                                   paquetes={dataPaquetes.map(p =>({
                                             Tipo: p.m_nIdTipo,
                                             Peso: p.m_rPeso,
                                             Largo: p.m_rLargo,
@@ -4878,8 +4546,8 @@ function Embarque(props) {
                                             Activo: 1,
                                             ctd:p.m_nCantidad,
                                             IdProducto:p.m_nIdProducto
-                                        }))} destinatario={destinatario}/>
-                                    </div>*/}
+                                        }))} />
+                                    </div>
 
                                 </div>
                                 <div className="form-footer ol-md-12">

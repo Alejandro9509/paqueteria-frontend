@@ -131,7 +131,7 @@ function imprimirGuia(id) {
     return result
 }
 
-function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado,folioGuia,Origen,Destino) {
+function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado,folioGuia,Origen,Destino,idCliente) {
     if (folioGuia == ''){
         folioGuia = 0
     }
@@ -149,7 +149,9 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
         "/" +
         Origen+
         "/" +
-        Destino;
+        Destino+
+        "/" +
+        idCliente;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
