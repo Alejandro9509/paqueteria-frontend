@@ -104,8 +104,10 @@ import RemitentesDestinatarios from "./RemitentesDestinatarios";
 import ComplementosSAT from "./SAT/ComplementosSAT";
 import DialogTableClientes from "./Clientes/DialogTableClientes";
 import Cotizador from "./ConceptosFacturacion/Cotizador";
-import {obtenerInformeReporte} from "../Util/Contexts/InformesContext";
+import {obtenerInformeFiltro, obtenerInformeReporte} from "../Util/Contexts/InformesContext";
 import Filtros from "./Filtros/Filtros";
+import {obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
+import {obtenerViajesByFiltro} from "../Util/Contexts/ViajesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -1243,7 +1245,7 @@ function Embarque(props) {
                     if (respuesta.data != "Modificado Exitosamente"){
                         return
                     }
-                    getAllEmbarque();
+                    //getAllEmbarque();
                     $('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
@@ -1261,7 +1263,7 @@ function Embarque(props) {
                         return
                     }
                     console.log(respuesta.data);
-                    getAllEmbarque();
+                    // getAllEmbarque();
                     $('.nav-tabs li ').removeClass('active');
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
@@ -1341,7 +1343,7 @@ function Embarque(props) {
                 eliminarEmbarques(id, state.CreadoPor)
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
-                        getAllEmbarque();
+                        // getAllEmbarque();
                     })
                     .catch((err) => {
                         showSuccess(err);
@@ -1363,7 +1365,7 @@ function Embarque(props) {
         };
         cancelarEmbarque(state, params).then((respuesta) => {
             showSuccess(respuesta.data);
-            getAllEmbarque()
+            // getAllEmbarque()
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(0).addClass('active');
             $('.tab-content div ').removeClass('in show');
@@ -1389,16 +1391,14 @@ function Embarque(props) {
 
     //Se checa si se entró a embarque por una recoleccion
     useEffect(async (value) => {
-        if (props.location.idRecoleccion === undefined) {
-            getDataParaListado()
-        } else {
-            // getDataParaEditar()
-            obtenerRecoleccionId(props.location.idRecoleccion)
-                .then((respuesta) => {
-                    console.log('Recoleccion: ', respuesta.data);
-                    setDataRecoleccionOnState(respuesta)
-                    setTabActiva(1)
-                })
+        if (props.location.idRecoleccion !== undefined) {
+        // getDataParaEditar()
+        obtenerRecoleccionId(props.location.idRecoleccion)
+            .then((respuesta) => {
+                console.log('Recoleccion: ', respuesta.data);
+                setDataRecoleccionOnState(respuesta)
+                setTabActiva(1)
+            })
         }
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
             showSuccess("Es necesario iniciar sesion para acceder a este proceso");
@@ -2003,16 +2003,13 @@ function Embarque(props) {
 
     const getDataParaListado = () => {
 
-        getAllEmbarque();
-        getAllSucursales();
-        getAllEstatusEmbarque();
-        getAllCiudadesFiltro();
-
-
 
     }
 
     const getDataParaEditar = () => {
+        getAllSucursales();
+        getAllEstatusEmbarque();
+        getAllCiudadesFiltro();
         getAllTipoCobro();
         getAllTipoMoneda();
         getTipoCambio()
@@ -2022,33 +2019,12 @@ function Embarque(props) {
 
     async function getAllEmbarque() {
         obtenerFechaInicio().then((respuestaUno) => {
-
-
-
             obtenerFechaFinal().then((respuestaDos) => {
-
-                console.log(respuestaUno.data[0].Fecha)
-                console.log(respuestaDos.data[0].Fecha)
-
-
-                setDataFechaInicial(respuestaUno.data)
-                setDataFechaFinal(respuestaDos.data)
-                setFiltros(filtros => {
-                    return {
-                        ...filtros,
-                       fechaInicial: respuestaUno.data[0].Fecha,
-                       fechaFinal: respuestaDos.data[0].Fecha
-
-                    }
+                obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0, 0).then((respuesta) => {
+                    props.listaResultado(respuesta.data);
                 })
-
-                obtenerEmbarquesFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,filtros.sucursalListado,filtros.estatusListado,filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
-                    setData(respuesta.data);
-        })
-
             })
-
-    })
+        })
     }
 
     /*function getFormatosImpresion() {
@@ -3291,164 +3267,6 @@ function Embarque(props) {
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade" : "tab-pane fade in show"}>
 
                             <div className="widget-wrap">
-                                    {/*<Grid container spacing={2} alignItems="center">
-                                            <Grid item xs={2}>
-                                                <TextField variant="outlined" margin="dense"
-                                                           onChange={handleChangeFiltros}
-                                                           onKeyDown={handleChangeFiltros}
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Folio Embarque"
-                                                           id="folio"
-                                                           name="folio"
-                                                           value={filtros.folio}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <TextField
-                                                            autoFocus
-                                                            type="date"
-                                                            margin="dense"
-                                                            label="Fecha Inicial"
-                                                            variant="outlined"
-                                                            className="form-control"
-                                                            InputLabelProps={{shrink: true,}}
-                                                            value={filtros.fechaInicial}
-                                                            onChange={handleChangeFiltros}
-                                                            id="fechaInicial"
-                                                            name="fechaInicial"
-                                                        />
-                                                    </FormControl>
-                                                </Grid>
-                                            <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <TextField variant="outlined" margin="dense"
-                                                                   type="date"
-                                                                   className="form-control"
-                                                                   label="Fecha Final"
-                                                                   InputLabelProps={{
-                                                                       shrink: true,
-                                                                   }}
-                                                                   value={filtros.fechaFinal}
-                                                                   onChange={handleChangeFiltros}
-                                                                   id="fechaFinal"
-                                                                   name="fechaFinal"
-
-                                                        />
-                                                    </FormControl>
-
-                                                </Grid>
-                                            <Grid item xs={2}>
-                                                <FormControl className="input select" fullWidth variant="outlined">
-                                                    <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
-                                                    <Select
-                                                        labelId="sucursalListadoLabel"
-                                                        label="Sucursal"
-                                                        className="form-control"
-                                                        required
-                                                        value={filtros.sucursalListado}
-                                                        onChange={handleChangeFiltros}
-                                                        id="sucursalListado"
-                                                        name="sucursalListado"
-                                                    >
-                                                        <option value="0">Todas</option>
-                                                        {dataSucursal.map((sucursal) => (
-                                                            <option
-                                                                key={sucursal.m_nIdSucursal}
-                                                                value={sucursal.m_nIdSucursal}
-                                                            >
-                                                                {sucursal.m_sSucursal}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                <FormControl className="input select" fullWidth variant="outlined">
-                                                    <InputLabel id="idEstatusLabel">Estatus</InputLabel>
-                                                    <Select
-                                                        labelId="estatusListadoLabel"
-                                                        className="form-control"
-                                                        required
-                                                        label="Estatus"
-                                                        value={filtros.estatusListado}
-                                                        onChange={handleChangeFiltros}
-                                                        id="estatusListado"
-                                                        name="estatusListado"
-                                                    >
-                                                        <option value="0">Todos</option>
-                                                        {dataEstatusEmbarque.map((estatus) => (
-                                                            <option
-                                                                key={estatus.m_nIdEstatusEmbarque}
-                                                                value={estatus.m_nIdEstatusEmbarque}
-                                                            >
-                                                                {estatus.m_sEstatus}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="OrigenListado">Origen</InputLabel>
-                                                        <Select
-                                                            labelId="OrigenListado"
-                                                            className="form-control"
-                                                            required
-                                                            label="Origen"
-                                                            value={filtros.OrigenListado}
-                                                            onChange={handleChangeFiltros}
-                                                            id="OrigenListado"
-                                                            name="OrigenListado"
-                                                        >
-                                                            <option value="0">Todos</option>
-                                                            {dataCiudadF.map((ciudad) => (
-                                                                <option
-                                                                    key={ciudad.m_nIdCiudad}
-                                                                    value={ciudad.m_nIdCiudad}
-                                                                >
-                                                                    {ciudad.m_sCiudad}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                                <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="DestinoListado">Destino</InputLabel>
-                                                        <Select
-                                                            labelId="DestinoListado"
-                                                            className="form-control"
-                                                            required
-                                                            label="Destino"
-                                                            value={filtros.DestinoListado}
-                                                            onChange={handleChangeFiltros}
-                                                            id="DestinoListado"
-                                                            name="DestinoListado"
-                                                        >
-                                                            <option value="0">Todos</option>
-                                                            {dataCiudadF.map((ciudad) => (
-                                                                <option
-                                                                    key={ciudad.m_nIdCiudad}
-                                                                    value={ciudad.m_nIdCiudad}
-                                                                >
-                                                                    {ciudad.m_sCiudad}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                            <Grid item container xs={2}>
-                                                <IconButton aria-label="delete" onClick={() => {
-                                                    resetFiltros()
-                                                    getAllEmbarque()
-                                                }}>
-                                                    <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
-                                                    Limpiar filtros
-                                                </IconButton>
-                                            </Grid>
-                                        </Grid>*/}
                                 <Filtros
                                     listaResultado={setDataListado}
                                     embarque={true}
