@@ -32,7 +32,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-function Paquetes({dataPaquetes = [],onChangeList, disabled, tieneSeguro, recoleccion}) {
+function Paquetes({dataPaquetes = [],onChangeList, disabled}) {
     const [openDialog, setOpenDialog] = useState(false)
     const [row, setRow] = useState(0)
     const [dataComplemento, setDataComplemento] = useState({
