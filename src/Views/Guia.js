@@ -267,7 +267,10 @@ function Guia(props) {
         openDialog: false
 
     })
-
+const [tiempoTecleado, setTiempoTecleado] = useState(0)
+    useEffect(() => {
+        console.log(conceptosAdicionales.length)
+    }, [conceptosAdicionales])
 
 
 

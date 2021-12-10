@@ -41,9 +41,29 @@ function Filtros(props) {
         DestinoListado:0,
         clientePaga:'',
         sucursalEmisora:0,
-        sucursalReceptora:0
+        sucursalReceptora:0,
+        operador:0
     })
     const [openDialog, setOpenDialog] = useState(false);
+
+    const resetFiltros = () => {
+        setFiltros(filtros =>{
+            return {
+                ...filtros,
+                fechaInicial: 0,
+                fechaFinal: 0,
+                estatusListado:0,
+                sucursalListado: 0,
+                folio: '',
+                OrigenListado:0,
+                DestinoListado:0,
+                clientePaga:'',
+                sucursalEmisora:0,
+                sucursalReceptora:0,
+                operador:0
+            }
+        })
+    }
 
     useEffect(value => {
         getAllSucursales()
@@ -83,7 +103,7 @@ function Filtros(props) {
                     props.listaResultado(respuesta.data)
                 })
             }else if (props.viajes){
-                obtenerViajesByFiltro(0, 0,0, 0,target.value,0,0).then(respuesta => {
+                obtenerViajesByFiltro(0, 0,0, target.value,0,0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }
@@ -133,34 +153,16 @@ function Filtros(props) {
             }
         }else if (props.viajes){
             if (filtros.folio.length > 0){
-                obtenerViajesByFiltro(0, 0,0, 0,filtros.folio,0,0).then(respuesta => {
+                obtenerViajesByFiltro(0, 0,0, filtros.folio,0,0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
                 })
             }else{
-                obtenerViajesByFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then((respuesta) => {
+                obtenerViajesByFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado, filtros.operador).then((respuesta) => {
                     props.listaResultado(respuesta.data)
                 })
             }
         }
 
-    }
-
-    const resetFiltros = () => {
-        setFiltros(filtros =>{
-            return {
-                ...filtros,
-                fechaInicial: 0,
-                fechaFinal: 0,
-                estatusListado:0,
-                sucursalListado: 0,
-                folio: '',
-                OrigenListado:0,
-                DestinoListado:0,
-                clientePaga:'',
-                sucursalEmisora:0,
-                sucursalReceptora:0
-            }
-        })
     }
 
     async function getAllSucursales() {
@@ -345,7 +347,7 @@ function Filtros(props) {
                         </FormControl>
                     </Grid>
                     }
-                    {(props.embarque || props.recoleccion || props.guia) &&
+                    {(props.embarque || props.recoleccion || props.guia || props.viajes) &&
                     <Grid item xs>
                         <FormControl className="input select" fullWidth variant="outlined">
                             <InputLabel id="idEstatusLabel">Estatus</InputLabel>
@@ -445,7 +447,7 @@ function Filtros(props) {
                     }
                 </Grid>
                 <Grid container spacing={2} item={12}>
-                    {(props.embarque || props.recoleccion || props.guia) &&
+                    {(props.embarque || props.recoleccion || props.guia || props.viajes) &&
                     <Grid item xs>
                         <FormControl className="input select" fullWidth variant="outlined">
                             <InputLabel id="OrigenListado">Origen</InputLabel>
@@ -472,7 +474,7 @@ function Filtros(props) {
                         </FormControl>
                     </Grid>
                     }
-                    {(props.embarque || props.recoleccion || props.guia) &&
+                    {(props.embarque || props.recoleccion || props.guia || props.viajes) &&
                     <Grid item xs>
                         <FormControl className="input select" fullWidth variant="outlined">
                             <InputLabel id="DestinoListado">Destino</InputLabel>
@@ -514,6 +516,21 @@ function Filtros(props) {
                         </div>
                     </Grid>
                     }
+                    {/*{(props.viajes) &&
+                    <Grid item xs>
+                        <div className="input">
+                            <TextField
+                                variant="outlined"
+                                label="Operador"
+                                margin="dense"
+                                value={filtros.operador.m_sIdOperdor||''}
+                                placeholder={"Operador"}
+                                // InputLabelProps={{shrink: true}}
+                                onClick={()=>{setOpenDialog(true)}}
+                            />
+                        </div>
+                    </Grid>
+                    }*/}
                     <Grid item container xs>
                         <IconButton aria-label="delete" onClick={() => {
                             resetFiltros()
