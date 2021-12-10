@@ -409,11 +409,6 @@ function Viajes() {
             window.location.replace("login");
             return;
         }
-         getAllData();
-         alert("entro")
-        // getAllSucursales();
-        // getAllEstatusViaje();
-        // getAllEstatusDocumento();
         getInventarioUnidades()
     }, []);
 
