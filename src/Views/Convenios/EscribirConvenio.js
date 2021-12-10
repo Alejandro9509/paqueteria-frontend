@@ -43,7 +43,7 @@ import Noty from "noty";
 import {obtenerTarifaBy} from "../../Util/Contexts/TarifasContext";
 import DestinosTarifa from "../Tarifas/DestinosTarifa";
 import ProductosPrecios from "../Tarifas/ProductosPrecios";
-import {obtenerCliente} from "../../Util/Contexts/ClientesContext";
+import {obtenerCliente, obtenerClienteId} from "../../Util/Contexts/ClientesContext";
 import {
     obtenerByIdZonaTarifa,
     obtenerByIdZonaTarifaSinCP,
@@ -346,7 +346,7 @@ class EscribirConvenio extends Component {
     componentDidMount() {
         this.getAllImpuestos()
         this.castConceptos()
-        this.getAllClientes()
+       // this.getAllClientes()
         this.getAllTarifas()
         this.getAllProductos()
         this.getAllZonas()
@@ -488,6 +488,7 @@ class EscribirConvenio extends Component {
         if (prevProps.pantallaActiva == this.props.pantallaActiva && this.props.pantallaActiva === 2){
             if (prevState.cliente != this.state.cliente){
                 if (this.state.cliente != 0) {
+                    
                     this.getConvenioByIdCliente(this.state.cliente)
                 }
             }
@@ -498,14 +499,20 @@ class EscribirConvenio extends Component {
 
     getConvenioById(idConvenio){
         obtenerConveniosId(idConvenio).then(respuesta => {
-            this.setState({
+            console.log(respuesta)
+            obtenerClienteId(respuesta.data.m_nIdCliente).then(dataCliente=>{
+                console.log(dataCliente)
+                this.setState({
                 idConvenio: respuesta.data.m_nIdConvenio,
                 cliente: respuesta.data.m_nIdCliente,
+                nombreCliente: dataCliente.data.m_sNombreFiscal,
                 fechaVigencia: respuesta.data.m_sVigencia,
                 CuotaMensual:respuesta.data.m_xCuotaMensual,
                 tarifasSeleccionadas : respuesta.data.m_arrArTarifas,
                 zonasSeleccionadas : respuesta.data.m_arrArZonas
             })
+            })
+          
         });
     }
 
@@ -617,10 +624,10 @@ class EscribirConvenio extends Component {
     };
 
     handleClienteSelected = (row) =>{
-        console.log(row)
         this.setState({
             cliente:row.data.m_nIdCliente,
-            nombreCliente:row.data.m_sNombreFiscal
+            nombreCliente:row.data.m_sNombreFiscal,
+            openModal: false
         })
     }
 
@@ -820,7 +827,7 @@ class EscribirConvenio extends Component {
         console.log(params)
         console.log(JSON.stringify(params))
         const {idConvenio} = this.state
-        if (idConvenio == 0 || idConvenio == '' || idConvenio === undefined){
+    /*    if (idConvenio == 0 || idConvenio == '' || idConvenio === undefined){
             const url = `${process.env.REACT_APP_API_URL}/Convenios/Agregar`;
             axios.post(url, Object.assign({}, params),{ headers }).then(respuesta => {
                 console.log(respuesta)
@@ -834,7 +841,7 @@ class EscribirConvenio extends Component {
                 showSuccess(respuesta.data);
                 this.limpiarCampos()
             });
-        }
+        }*/
     }
 
     handleDuplicarTarifa = (e) => {
