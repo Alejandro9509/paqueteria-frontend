@@ -53,7 +53,14 @@ function obtenerUnidades() {
         );
     return result
 }
-
+function obtenerUnidadesUltimaMilla(id) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListadoUltimaMilla/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 function obtenerUnidadesId(id) {
     const url = `${process.env.REACT_APP_API_URL}/Unidad/GetById/` + id;
     let result;
@@ -90,4 +97,4 @@ function obtenerUnidadesTipo(id) {
     return result
 }
 
-export { cambiarOperadorUnidad, modificarUnidades, agregarUnidades, eliminarUnidades, obtenerUnidadesId, obtenerUnidades, validaCodigoUnidad, obtenerUnidadesTipo, obtenerEstatusUnidadeId }
+export { cambiarOperadorUnidad, obtenerUnidadesUltimaMilla, modificarUnidades, agregarUnidades, eliminarUnidades, obtenerUnidadesId, obtenerUnidades, validaCodigoUnidad, obtenerUnidadesTipo, obtenerEstatusUnidadeId }

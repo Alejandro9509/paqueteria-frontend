@@ -1596,7 +1596,20 @@ function Embarque(props) {
                 }
             })
         })
+        let conceptosCast = []
+        conceptosCast = respuesta.data.m_arrConceptos.map(item => ({
+            id: Math.floor(Math.random() * 10000),
+            idConcepto: item.m_nIdConceptoFacturacion,
+            importe: item.m_cImporte,
+            retiene: item.m_nIdImpuestoRetiene,
+            traslada: item.m_nIdImpuestoTraslada,
+            importeIVA: item.m_cImporteIva,
+            importeRet: item.m_cImporteRetiene,
+            nombreConcepto: item.m_sConcepto,
+            descuento: item.m_c_Descuento
+        }))
 
+        setDataConceptos(conceptosCast)
         if (respuesta.data.m_bEntregaDiferenteDomicilio) {
             setEntregaDD(entregaDD =>{
                 return {
@@ -1647,6 +1660,7 @@ function Embarque(props) {
                 ...state,
                 idRecoleccion: respuesta.data.m_nIdRecoleccion,
                 fechaHoraRegistro: getCurrentDateTime(),
+                idCotizacion: respuesta.data.m_nIdCotizacion,
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
                 folioEmbarque: respuesta.data.m_nFolioEmbarque,
@@ -1857,7 +1871,9 @@ function Embarque(props) {
     }
 
     const handleShowListado = (event) => {
-        event.stopPropagation();
+        if (event){
+            event.stopPropagation();
+        }
         limpiarCamposAgregar()
 
         setState(state => {
@@ -1869,6 +1885,7 @@ function Embarque(props) {
                 sucursalListado: 0,
                 estatusListado: 0,
                 folioRecoleccion: '',
+                embarqueConGuia: false
             }
         });
         getAllEmbarque();
@@ -4486,6 +4503,7 @@ function Embarque(props) {
                                                    destinatario={destinatario}
                                                    onChangeConceptosList={actualizarConceptos}
                                                    conceptos={dataConceptos}
+                                                   recoleccion={false}
                                                    saveIdCotizacion={saveIdCotizacion}
                                                    paquetes={dataPaquetes.map(p =>({
                                             Tipo: p.m_nIdTipo,

@@ -13,7 +13,7 @@ import {
     TableSortLabel, Grid,
     Link, Dialog, DialogActions, DialogContent, DialogTitle, Button
 } from "@material-ui/core";
-import {obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
+import {obtenerUnidades, obtenerUnidadesUltimaMilla} from "../../Util/Contexts/UnidadesContext";
 import {fade} from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -53,7 +53,7 @@ class UnidadesList extends Component {
     }
 
     getAllUnidades() {
-        obtenerUnidades().then(({data}) => {
+        obtenerUnidadesUltimaMilla(this.props.sucursalId).then(({data}) => {
             this.setState({unidades: data})
         })
     }
@@ -162,9 +162,6 @@ class UnidadesList extends Component {
 
                                 </TableCell>
                                 <TableCell
-                                    sortDirection={this.state.orderBy === "m_sDescripcion" ? this.state.order : false}
-                                    align="left">Capacidad</TableCell>
-                                <TableCell
                                     sortDirection={this.state.orderBy === "m_sTipoUnidad" ? this.state.order : false}
                                     align="left">Tipo Unidad</TableCell>
                                 <TableCell
@@ -190,10 +187,10 @@ class UnidadesList extends Component {
                                                 />
                                             </TableCell>
                                             <TableCell align="left"> {u.m_sCodigo} - {u.m_sDescripcion}</TableCell>
-                                            <TableCell align="left">{u.m_nCapacidad}</TableCell>
+
                                             <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
-                                            <TableCell align="left">{u.m_nIdOperador === null ? (
-                                                <Link onClick={() => this.props.reasignarOperador(u)}>Asignar</Link>) : u.m_sNombreOperador}</TableCell>
+                                            <TableCell align="left">{
+                                                <Link onClick={() => this.props.reasignarOperador(u)}>{u.m_nIdOperador === null ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell>
                                             <TableCell align="left">{u.m_sPlacas}</TableCell>
                                         </TableRow>
                                     )

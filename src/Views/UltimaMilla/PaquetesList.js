@@ -218,9 +218,9 @@ class PaquetesList extends Component {
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
                                 align="left">Tipo</TableCell>
-                            <TableCell
+                            {/*<TableCell
                                 sortDirection={this.state.orderBy === "m_sDomicilioDestinatario" ? this.state.order : false}
-                                align="left">Volumen</TableCell>
+                                align="left">Volumen</TableCell>*/}
 
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
@@ -267,7 +267,9 @@ class PaquetesList extends Component {
                                         </TableCell>
                                         <TableCell align="left">{u.m_sFolio}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? "Recolección" : "Entrega"}</TableCell>
+{/*
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_parrPaquetes.reduce((a, b) => +a + +b.m_rVolumen, 0) : u.m_arrPaquetes.reduce((a, b) => +a + +b.m_xVolumen, 0)}</TableCell>
+*/}
                                         <TableCell align="left">{u.m_sTipoCobro}</TableCell>
                                         <TableCell align="left">{u.m_sZona}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sNombreRemitente : u.m_sNombreDestinatario}</TableCell>

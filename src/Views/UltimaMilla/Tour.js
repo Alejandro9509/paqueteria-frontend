@@ -95,9 +95,9 @@ class Tour extends Component {
                                             <Grid item md={12}>
                                                 <Typography variant={"body1"} >{paquete.m_bEsRecoleccion ? paquete.m_sTelefonoRemitente : paquete.m_sTelefonoDestinatario}</Typography>
                                             </Grid>
-                                            <Grid item md={12}>
+                                           {/* <Grid item md={12}>
                                                 <Typography variant={"body1"} >No. Paquetes: {paquete.m_bEsRecoleccion ? paquete.m_parrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0) : paquete.m_arrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0)}</Typography>
-                                            </Grid>
+                                            </Grid>*/}
                                         </Grid>
 
                                     </Popup>

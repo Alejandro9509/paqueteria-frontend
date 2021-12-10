@@ -114,7 +114,7 @@ function obtenerEmbarquesId(id){
 }
 
 function obtenerEmbarqueMoneda(valor, idMoneda, idGuia){
-    const url = `${process.env.REACT_APP_API_URL}/Embarques/GetBySucursalMoneda/` + valor + "/" + idMoneda + "/" + idGuia;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarques/GetBySucursalMoneda/` + valor + "/" + idMoneda + "/" + idGuia;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

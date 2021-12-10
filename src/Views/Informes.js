@@ -978,19 +978,20 @@ function Informes({history}) {
     }
 
     useEffect(value => {
+        console.log(state.IdCiudadDestino)
         if (state.IdCiudadOrigen && state.IdCiudadDestino && state.agregar !== "Consultar") {
             getAllGuiasFrom();
 
         }
-        if (state.IdCiudadOrigen && state.IdCiudadDestino) {
-            getAllViajesOrigenDestino(
-                state.IdCiudadOrigen
-                    .m_nIdCiudad,
-                state.IdCiudadDestino
-                    .m_nIdCiudad
-            );
-        }
-    }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.IdRuta, state.agregar])
+        // if (state.IdCiudadOrigen && state.IdCiudadDestino) {
+        //     getAllViajesOrigenDestino(
+        //         state.IdCiudadOrigen
+        //             .m_nIdCiudad,
+        //         state.IdCiudadDestino
+        //             .m_nIdCiudad
+        //     );
+        // }
+    }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar])
 
     function handleShowAgregar() {
         setState({
@@ -1004,8 +1005,8 @@ function Informes({history}) {
             Color: "",
             IdOperador: 0,
             fechaHora: getCurrentDateTime(),
-            IdCiudadDestino: {},
-            IdCiudadOrigen: {},
+            IdCiudadDestino: null,
+            IdCiudadOrigen: null,
             sucursalEmisora: 0,
             sucursalReceptora: 0,
             IdRemolque1: null,
@@ -2548,15 +2549,6 @@ function Informes({history}) {
                                                                                                                         tipoModal: 1,
                                                                                                                         openDialog: true,
                                                                                                                     });
-                                                                                                                    getAllViajesOrigenDestino(
-                                                                                                                        state
-                                                                                                                            .IdCiudadOrigen
-                                                                                                                            .m_nIdCiudad,
-                                                                                                                        state
-                                                                                                                            .IdCiudadDestino
-                                                                                                                            .m_nIdCiudad
-                                                                                                                    );
-                                                                                                                    getAllGuiasFrom();
                                                                                                                 }}
                                                                                                             >
                                                                                                                 <PageviewIcon

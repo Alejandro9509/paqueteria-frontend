@@ -103,6 +103,7 @@ import ComplementosSAT from "./SAT/ComplementosSAT";
 import {obtenerInformeReporte} from "../Util/Contexts/InformesContext";
 import Filtros from "./Filtros/Filtros";
 import Citas from "./Citas/Citas";
+import Cotizador from "./ConceptosFacturacion/Cotizador";
 
 let timer;
 
@@ -156,7 +157,7 @@ function Recoleccion() {
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
     const [dataCiudadF, setDataCiudadF] = React.useState([]);
-
+    const [dataConceptos, setDataConceptos] = useState([])
     const [dataZona, setDataZona] = React.useState([]);
     const [dataFolioRecoleccion, SetDataFolioRecoleccion] = React.useState([]);
 
@@ -667,21 +668,23 @@ function Recoleccion() {
         }
 
         
-        getDataParaListado()
+        // getDataParaListado()
       
     }, []);
 
     const getDataParaListado = () => {
-       
+        // getAllSucursales();
     }
 
     const getDataParaEditar = () => {
+        getAllSucursales();
         getAllTipoCobro();
         getAllTipoMoneda();
         getTipoCambio()
         getAllCiudades()
         getAllTiposSeguro()
         getAllEstados()
+        getAllEstatusRecoleccion()
 
     }
 
@@ -905,7 +908,16 @@ function Recoleccion() {
                 params.m_sHoraCitaMaxima = state.horaCitaMaxima
             }
         }
-
+        params.m_arrConceptos = dataConceptos.map(item => ({
+            m_nIdConceptoFacturacion: item.idConcepto,
+            m_cImporte: item.importe,
+            m_nIdImpuestoRetiene: item.retiene,
+            m_nIdImpuestoTraslada: item.traslada,
+            m_cImporteIva: item.importeIVA,
+            m_cImporteRetiene: item.importeRet,
+            m_c_Descuento: item.descuento
+        }))
+        params.m_nIdCotizacion = state.idCotizacion
         console.log(params)
         console.log(JSON.stringify(params))
         if (state.idRecoleccion != 0) {
@@ -1223,6 +1235,20 @@ function Recoleccion() {
                 }
             })
         })
+        let conceptosCast = []
+        conceptosCast = respuesta.data.m_arrConceptos.map(item => ({
+            id: Math.floor(Math.random() * 10000),
+            idConcepto: item.m_nIdConceptoFacturacion,
+            importe: item.m_cImporte,
+            retiene: item.m_nIdImpuestoRetiene,
+            traslada: item.m_nIdImpuestoTraslada,
+            importeIVA: item.m_cImporteIva,
+            importeRet: item.m_cImporteRetiene,
+            nombreConcepto: item.m_sConcepto,
+            descuento: item.m_c_Descuento
+        }))
+
+        setDataConceptos(conceptosCast)
 
         setState(state => {
             return {
@@ -1233,6 +1259,7 @@ function Recoleccion() {
                 folioEmbarque: respuesta.data.m_nIdEmbarque,
                 valorDeclarado: respuesta.data.m_xValorDeclarado,
                 folioGuia: respuesta.data.m_nIdGuia,
+                idCotizacion: respuesta.data.m_nIdCotizacion,
                 folioInforme: respuesta.data.m_nIdInforme,
                 fechaHoraRegistro: respuesta.data.m_dFechaRegistro + "T" + respuesta.data.m_tHoraRegistro.slice(0, 5),
                 estatusRecoleccion: respuesta.data.m_nIdEstatusRecoleccion,
@@ -1702,6 +1729,7 @@ function Recoleccion() {
         {
             headerName: "Acciones",
             field: "",
+            width: 120,
             sortable: false, filterable: false,
             renderCell: (row) => {
                 return (
@@ -1999,6 +2027,9 @@ function Recoleccion() {
         obtenerMonedas().then((respuesta) => {
             setDataTipoMoneda(respuesta.data);
         });
+    }
+    const actualizarConceptos = (list) => {
+        setDataConceptos(list);
     }
 
     function getAllCiudades() {
@@ -2696,6 +2727,17 @@ function Recoleccion() {
         }
     }
 
+    const saveIdCotizacion = (id) => {
+        if (id){
+            setState(state => {
+                return{
+                    ...state,
+                    idCotizacion: id
+                }
+            });
+        }
+
+    }
     const handleListPaquetesChange = (newList) => {
         setDataPaquetes(newList)
     }
@@ -4574,6 +4616,28 @@ function Recoleccion() {
 
                                         </div>*/}
 
+                                    </div>
+
+                                    <div className="row">
+                                        <Cotizador embarque={state}
+                                                   remitente={remitente}
+                                                   destinatario={destinatario}
+                                                   onChangeConceptosList={actualizarConceptos}
+                                                   conceptos={dataConceptos}
+                                                   saveIdCotizacion={saveIdCotizacion}
+                                                   recoleccion={true}
+                                                   paquetes={dataPaquetes.map(p =>({
+                                                       Tipo: p.m_nIdTipo,
+                                                       Peso: p.m_rPeso,
+                                                       Largo: p.m_rLargo,
+                                                       Ancho: p.m_rAncho,
+                                                       Alto:p.m_rAlto,
+                                                       Volumen:p.m_rVolumen,
+                                                       IdTipoEmpaque:p.m_nIdTipoEmbalaje,
+                                                       Activo: 1,
+                                                       ctd:p.m_nCantidad,
+                                                       IdProducto:p.m_nIdProducto
+                                                   }))} />
                                     </div>
 
                                     <div className="form-footer col-md-12">

@@ -40,6 +40,7 @@ import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
 import MessageIcon from "@material-ui/icons/Message";
 import UpdateIcon from '@material-ui/icons/Update';
 import PaquetesPlaneacion from "./PaquetesPlaneacion";
+import {Autocomplete} from "@material-ui/lab";
 
 const useStyles = theme => ({
     search: {
@@ -234,7 +235,7 @@ class FiltersMap extends Component {
 
     asignarOperadorUnidad(event) {
         event.preventDefault()
-        cambiarOperadorUnidad(this.state.unidadSeleccionada, this.state.operadorSeleccionada).then(({data}) => {
+        cambiarOperadorUnidad(this.state.unidadSeleccionada, this.state.operadorSeleccionada.m_nIdOperador).then(({data}) => {
             this.setState({openUnidades: true, openOperadorDialog: false,unidadesSeleccionadas: []})
         })
     }
@@ -270,28 +271,27 @@ class FiltersMap extends Component {
                         <form onSubmit={this.asignarOperadorUnidad}>
                             <label className="input select" style={{width: "100%"}}>
                                 <FormControl fullWidth variant="outlined" margin="dense">
-                                    <InputLabel id="operadorListadoLabel">Operador</InputLabel>
-                                    <Select
+                                    <Autocomplete
                                         labelId="operadorListadoLabel"
-                                        label="Formato"
+                                        label="Operador"
                                         className="form-control"
                                         required
+                                        disableClearable
+                                        forcePopupIcon={false}
+                                        options={this.state.operadores}
                                         value={this.state.operadorSeleccionada}
-                                        onChange={(event) => this.setState({
-                                            operadorSeleccionada: event.target.value
-                                        })}
-                                        id="operador"
-                                        name="operador"
-                                    >
-                                        {this.state.operadores.map((operador) => (
-                                            <option
-                                                key={operador.m_nIdOperador}
-                                                value={operador.m_nIdOperador}
-                                            >
-                                                {operador.m_sNombreCompleto}
-                                            </option>
-                                        ))}
-                                    </Select>
+                                        onChange={(event, newValue) => {
+                                            this.setState({
+                                                operadorSeleccionada: event.target.value
+                                            })
+                                        }}
+                                        freeSolo
+                                        style={{
+                                            transform: "translate(14px, 10px) scale(1) !important"
+                                        }}
+                                        getOptionLabel={(option) => option.m_sNombreCompleto}
+                                        renderInput={(params) => <TextField {...params} margin="dense" label="Operador" variant="outlined" />}
+                                    />
                                 </FormControl>
                                 <i></i>
                             </label>
@@ -387,6 +387,7 @@ class FiltersMap extends Component {
                                 style={{
                                     backgroundColor: "white",
                                     margin: "1px",
+                                    maxWidth: "150px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
                                 label={this.state.zonasSeleccionada.length !== 0 ? this.state.zonasSeleccionada.map(z => z.m_sCodigoZona).join(", ") : "Zona"}
@@ -517,6 +518,7 @@ class FiltersMap extends Component {
                             disableTouchListener
                             title={
                                 <UnidadesList reasignarOperador={this.reasignarOperador}
+                                              sucursalId={this.state.sucursalSeleccionada ? this.state.sucursalSeleccionada.m_nIdSucursal : 0 }
                                               unidadesSeleccionadas={this.state.unidadesSeleccionadas}
                                               selectUnidades={this.selectUnidades}>
 

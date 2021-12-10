@@ -272,97 +272,6 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
         console.log(conceptosAdicionales.length)
     }, [conceptosAdicionales])
 
-    const handleChangeFiltros = (event) => {
-   
-        event.preventDefault()
-        const {target} = event
-        console.log(target.name)
-        setFiltros(filtros => {
-            return {
-                ...filtros,
-                [target.name]: target.value
-            }
-        })
-        if (target.name && event.keyCode == 13){
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,target.value,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        if (target.name === "fechaInicial") {
-            
-            obtenerGuiasFiltro(target.value, filtros.fechaFinal, filtros.sucursalListado, filtros.estatusListado, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-
-                }
-            })
-        } else if (target.name === "fechaFinal") {
-
-            obtenerGuiasFiltro(filtros.fechaInicial, target.value, filtros.sucursalListado, filtros.estatusListado, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-
-                }
-            })
-        } else if (target.name === "sucursalListado") {
-
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal, target.value, filtros.estatusListado, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        } else if (target.name === "estatusListado") {
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.sucursalListado, target.value, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-
-                }
-            })
-        }
-        else if (target.name === "OrigenListado"){
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "DestinoListado"){
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "folio"){
-            clearTimeout(tiempoTecleado)
-            setTiempoTecleado(setTimeout(function(){
-                 obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,target.value,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-            },1000))
-           
-        }
-    }
 
 
     function cargaDiv(indice, valor) {
@@ -970,11 +879,7 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
                 // setDataTipoCambio(props.location.dataTipoCambio)
                 // setDataCiudadF(props.location.dataCiudades)
             });
-        }else{
-            getAllData()
         }
-        getAllCiudadesFiltro()
-        getAllDataSucursal()
         getAllDataSucursal()
         getAllDataMoneda()
         getAllDataTipoCobro()
@@ -2209,9 +2114,9 @@ obtenerGuiaId(id).then(({data}) => {
                             </a>
                         </li>
                         {
-                            localStorage.getItem("Usuario") === 11 &&
+                            (localStorage.getItem("UsuarioId") === "11" || localStorage.getItem("UsuarioId") === "4")  &&
                             <li >
-                                <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled} onClick={() => setState({...state,openTipoCobro: true})}>
+                                <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled } onClick={() => setState({...state,openTipoCobro: true})}>
                                     <i className="fa fa-refresh"/> Cambiar Tipo Cobro
                                 </a>
                             </li>
@@ -2426,7 +2331,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                 setState({
                                                     ...state,
                                                     idGuia: row.data.m_nIdGuia,
-                                                    cambioCobro: (row.data.m_nIdEstatusGuia === 14 || row.data.m_nIdEstatusGuia === 7) &&  row.data.m_nIdTipoCobro === 2,
+                                                    cambioCobro: true,
                                                     creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito
                                                 })
                                             }}
