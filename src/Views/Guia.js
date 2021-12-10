@@ -269,94 +269,6 @@ function Guia(props) {
     })
 
 
-    const handleChangeFiltros = (event) => {
-   
-        event.preventDefault()
-        const {target} = event
-        console.log(target.name)
-        setFiltros(filtros => {
-            return {
-                ...filtros,
-                [target.name]: target.value
-            }
-        })
-        if (target.name && event.keyCode == 13){
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,target.value,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        if (target.name === "fechaInicial") {
-            
-            obtenerGuiasFiltro(target.value, filtros.fechaFinal, filtros.sucursalListado, filtros.estatusListado, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-
-                }
-            })
-        } else if (target.name === "fechaFinal") {
-
-            obtenerGuiasFiltro(filtros.fechaInicial, target.value, filtros.sucursalListado, filtros.estatusListado, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-
-                }
-            })
-        } else if (target.name === "sucursalListado") {
-
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal, target.value, filtros.estatusListado, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        } else if (target.name === "estatusListado") {
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.sucursalListado, target.value, filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-
-                }
-            })
-        }
-        else if (target.name === "OrigenListado"){
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "DestinoListado"){
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "folio"){
-
-            obtenerGuiasFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,target.value,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-    }
 
 
     function cargaDiv(indice, valor) {
@@ -964,11 +876,7 @@ function Guia(props) {
                 // setDataTipoCambio(props.location.dataTipoCambio)
                 // setDataCiudadF(props.location.dataCiudades)
             });
-        }else{
-            getAllData()
         }
-        getAllCiudadesFiltro()
-        getAllDataSucursal()
         getAllDataSucursal()
         getAllDataMoneda()
         getAllDataTipoCobro()

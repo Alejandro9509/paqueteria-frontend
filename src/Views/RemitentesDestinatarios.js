@@ -231,8 +231,8 @@ function RemitenteDestinatario(props) {
                 correo: respuesta.data.m_sCorreoDestinatario,
                 telefono: respuesta.data.m_sTelefonoDestinatario,
                 contacto: respuesta.data.m_sContactoDestinatario,
-                latitudD: data.m_sLatitudD || "",
-                longitudD: data.m_sLongitudD || "",
+                latitud: data.m_sLatitud || "",
+                longitud: data.m_sLongitud || "",
               };
             });
           });

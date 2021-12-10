@@ -55,7 +55,7 @@ class Cotizador extends Component {
             showSuccess("¿Y los paquetes?")
             return
         }
-        obtenerCotizacion(this.props.embarque, this.props.paquetes, this.props.remitente, this.props.destinatario).then(({data}) => {
+        obtenerCotizacion(this.props.embarque, this.props.paquetes, this.props.remitente, this.props.destinatario,this.props.recoleccion).then(({data}) => {
             let conceptosCast = []
             let ivaTraslada = []
             let ivaRetiene = []

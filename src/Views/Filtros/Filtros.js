@@ -53,6 +53,7 @@ function Filtros(props) {
     },[])
 
     const handleChangeFiltros = (event) => {
+        event.preventDefault()
         const {target} = event
         setFiltros(filtros => {
             return {
