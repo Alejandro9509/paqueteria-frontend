@@ -123,11 +123,7 @@ function Guia(props) {
 
     const [data, setData] = React.useState([])
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
-    const [dataCiudadF, setDataCiudadF] = React.useState([]);
-    const [dataFormatos, setFormatosImpresion] = React.useState([]);
 
-    const [dataFolioGuia, SetDataFolioGuia] = React.useState([]);
-    const [fileUploaded, setFileUploaded] = React.useState([])
     const [stepActive, setStepActive] = React.useState(1);
     //Listado de sucursales. Se usa en listado y agregar.
     const [dataSucursal, setDataSucursal] = React.useState([])
@@ -138,20 +134,10 @@ function Guia(props) {
     const [dataEmbarque, setDataEmbarque] = React.useState([])
 
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
-    const [totalPaquetes, setTotalPaquetes] = useState(0)
     const [showDialogOcurre, setShowDialogOcurre] = useState(false)
     const [dataOcurre, setDataOcurre] = useState()
     const [conceptosAdicionales, setConceptosAdicionales] = useState([])
     const [dataConceptosBase, setDataConceptosBase] = useState([])
-    const [filtros, setFiltros] = useState({
-        fechaInicial: 0,
-        fechaFinal: 0,
-        estatusListado:0,
-        sucursalListado: 0,
-        folio: '',
-        OrigenListado:0,
-        DestinoListado:0,
-    })
     const [dataPaquetes, setDataPaquetes] = useState([])
     const [state, setState] = React.useState({
         //VARIABLES PARA LISTADO DE GUIAS
@@ -176,8 +162,8 @@ function Guia(props) {
         folioInforme: "",
         tracking: "",
         fecha: "",
-        idEstatusGuia: 0,
-        idMoneda: 0,
+        idEstatusGuia: 4,
+        idMoneda: 1,
         idTipoTarifa: 2,
         tipoCambio: 0,
         //Remitente
@@ -267,29 +253,14 @@ function Guia(props) {
         openDialog: false
 
     })
-const [tiempoTecleado, setTiempoTecleado] = useState(0)
+
     useEffect(() => {
         console.log(conceptosAdicionales.length)
     }, [conceptosAdicionales])
 
-
-
     function cargaDiv(indice, valor) {
         //	showSuccess(indice);
         $("#idBarra" + indice).barcode(valor, "code128");
-    }
-
-    const resetFiltros = () => {
-        setFiltros({
-            fechaInicial: 0,
-            fechaFinal: 0,
-            estatusListado: 0,
-            sucursalListado: 0,
-            folio: '',
-            OrigenListado:0,
-            DestinoListado:0,
-
-        })
     }
 
     const handleAceptar = (e) => {
@@ -326,11 +297,7 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
         if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
             agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
-                //window.location.reload();
-                //let resp = respuesta.data;
-                //let vGuia = resp.substring(resp.indexOf(":") + 2);
                 handleShowListado()
-                //getImpresion(vGuia);
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
@@ -338,13 +305,13 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
         } else {
             modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
+                showSuccess('Guia modificada')
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
             });
-            showSuccess('Guia modificada')
-            limpiarCamposAgregar()
+
         }
     }
 
@@ -370,77 +337,6 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
             showSuccess(err)
         });
     }
-
-    function getUltimoFolioGuia() {
-        ultimoFolioGuia().then((respuesta) => {
-            SetDataFolioGuia(respuesta.data);
-        });
-    }
-
-    async function getImpresion(id) {
-        //showSuccess (state.nGuiaId);
-        //if (state.muestraPaquetes === true) return;
-        imprimirGuia(id).then(respuesta => {
-            setState({
-                ...state,
-                paquetesI: [],
-                // muestraPaquetes:true
-            });
-            const paquetesTemp = state.paquetesI;
-            for (var i = 0; i < respuesta.data.length; i++) {
-
-
-                paquetesTemp.push({
-
-                    CiudadOrigen: respuesta.data[i].m_sCiudadOrigen,
-                    Remitente: respuesta.data[i].m_sNOmbreRemitente,
-                    CiudadRemitente: respuesta.data[i].m_sCiudadRemitente,
-                    RFC: respuesta.data[i].m_sRFCRemitente,
-                    Direccion: respuesta.data[i].m_sDomicilioRemitente,
-                    Zona: respuesta.data[i].m_sZonaRemitente,
-                    CP: respuesta.data[i].m_nIdCodigoPostalRemitente,
-                    Telefono: respuesta.data[i].m_sTelefonoRemitente,
-                    CiudadDestino: respuesta.data[i].m_sCiudadDestino,
-                    RFCDestinatario: respuesta.data[i].m_sRFCDestinatario,
-                    DireccionDestinatario: respuesta.data[i].m_sDomicilioDestinatario,
-                    ZonaDestinatario: respuesta.data[i].m_sZonaDestino,
-                    CPDestinatario: respuesta.data[i].m_nIdCodigoPostalDestinatario,
-                    CiudadDestinatario: respuesta.data[i].m_sCiudadDestinatario,
-                    TelefonoDestinatario: respuesta.data[i].m_sTelefonoDestinatario,
-                    FolioPaquete: respuesta.data[i].m_sFolioPaquete,
-                    Cantidad: respuesta.data[i].m_nCantidadPaquete,
-                    Descripcion: respuesta.data[i].m_sDescripcionPaquete,
-                    Destinatario: respuesta.data[i].m_sNombreDestinatario,
-                    PaqueteCant: respuesta.data[i].m_nCantidadPaquete,
-                    DescripcionPaquete: respuesta.data[i].m_sDescripcionPaquete,
-                    RfcFiscal: respuesta.data[i].m_sRfcFiscal,
-                    NombreFiscal: respuesta.data[i].m_sNombreFiscal,
-                    Telefonos: respuesta.data[i].m_sTelefonos,
-                    Colonia: respuesta.data[i].m_sColonia,
-                    Calle: respuesta.data[i].m_sCalle
-                });
-            }
-            paquetesTemp.splice(0, 1);
-            setState({
-                ...state,
-                paquetesI: paquetesTemp,
-                // muestraPaquetes:true
-            });
-            $("#Imprimir").click();
-        });
-    };
-
-    function getFormatosImpresion() {
-        obtenerFormatosImpresion().then(respuesta => {
-            setFormatosImpresion(respuesta.data)
-        });
-    };
-
-    function getTipoCambio() {
-        obtenerTipoCambio().then(respuesta => {
-            setDataTipoCambio(respuesta.data)
-        });
-    };
 
     function handleEliminar(id) {
         var derecho;
@@ -524,8 +420,6 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_arrClsDetalle)
-
-        setTotalPaquetes(totalCantidad)
 
         const conceptosAdicionalesAux = []
 
@@ -646,6 +540,7 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
     //Prepara campos para agregar guia
     function handleShowAgregar() {
         limpiarCamposAgregar()
+        getDataParaEditar()
         setState(state => {
             return {
                 ...state,
@@ -658,7 +553,6 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
-        //getImpresion(38);
     }
 
     const handleShowListado = () => {
@@ -666,11 +560,6 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
         setState(state => {
             return {
                 ...state,
-                fechaInicial: 0,
-                fechaFinal: 0,
-                sucursalListado: 0,
-                estatusListado: 0,
-                folioGuia: '',
                 height: window.height,
                 agregar: "Agregar",
             }
@@ -880,16 +769,7 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
                 // setDataCiudadF(props.location.dataCiudades)
             });
         }
-        getAllDataSucursal()
-        getAllDataMoneda()
-        getAllDataTipoCobro()
-        getTipoCambio()
-        getAllDataEstatusGuia()
-        getUltimoFolioGuia()
-        getAllDataTipoServicio()
-        cargaEmbarqueMoneda(1)
-        getAllDataTipoPago()
-        getAllConceptos()
+
     }, []);
 
 
@@ -998,88 +878,24 @@ obtenerGuiaId(id).then(({data}) => {
     async function getAllData() {
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
-                setFiltros(filtros => {
-                    return {
-                        ...filtros,
-                        fechaInicial: respuestaUno.data[0].Fecha,
-                        fechaFinal: respuestaDos.data[0].Fecha
-
-                    }
-                })
-                obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, filtros.sucursalListado, filtros.estatusListado, filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
                     setData(respuesta.data);
                 })
-
             })
-
         })
     }
 
-    async function getAllCiudadesFiltro() {
-        obtenerCiudades().then((respuesta) => {
-            setDataCiudadF(respuesta.data);
-        });
-    }
-
     const getAllConceptos = () => {
+        if (dataConceptosBase.length > 0) {
+            return
+        }
         obtenerConceptosFacturacion().then(respuesta => {
             setDataConceptosBase(respuesta.data);
         });
     }
 
-    function addConcepto(data) {
-        var conceptosAdicionalesAux = [...conceptosAdicionales]
-        var ivaTraslada = []
-        var ivaRetiene = []
-        conceptosAdicionalesAux = [...conceptosAdicionales].filter(c => c.idConcepto !== data.concepto.m_nIdConceptosFacturacion)
-
-        conceptosAdicionalesAux.push({
-            id: Math.floor(Math.random() * 10000),
-            idConcepto: data.concepto.m_nIdConceptosFacturacion,
-            concepto: data.concepto,
-            importe: data.importe,
-            retiene: data.retiene,
-            traslada: data.traslada,
-            importeRet: data.importeRet,
-            importeIVA: data.importeIVA,
-            rangoMinimo: data.rangoMinimo,
-            rangoMaximo: data.rangoMaximo,
-            tipoCalculo: data.tipoCalculo,
-            nombreConcepto: data.concepto.m_sConcepto,
-            agregadoDesde: data.agregadoDesde,
-            descuento: data.descuento
-
-        })
-        ivaTraslada = getUniqueListBy(conceptosAdicionalesAux, "traslada").map(i => i.traslada);
-        ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
-        setState({
-            ...state,
-            ivaRetiene: ivaRetiene,
-            ivaTraslada: ivaTraslada
-        })
-
-        setConceptosAdicionales(conceptosAdicionalesAux)
-    }
-
-    const filtrarConceptoAdicional = (c, item) => {
-        let valid = c.idConcepto === item.idConcepto
-            && c.importe === item.importe
-            && c.importeRet === item.importeRet
-            && c.retiene === item.retiene
-            && c.traslada === item.traslada
-            && c.importeIVA === item.importeIVA;
-        return !valid
-    }
-
-    function removeConcepto(item) {
-        console.log("editar")
-        const newArrayConceptos = [...conceptosAdicionales].filter(c => filtrarConceptoAdicional(c, item))
-        console.log(newArrayConceptos)
-        //setConceptosAdicionales( newArrayConceptos)
-    }
-
     const handleUpload = (e) => {
-        e.preventDefault();
+        /*e.preventDefault();
         var files = e.target.files, f = files[0];
         var reader = new FileReader();
         console.log(e.target.files)
@@ -1090,18 +906,12 @@ obtenerGuiaId(id).then(({data}) => {
             const wsname = readedData.SheetNames[0];
             const ws = readedData.Sheets[wsname];
 
-            /* Convert array to json*/
+            /!* Convert array to json*!/
             const dataParse = XLSX.utils.sheet_to_json(ws, {header: 1});
             console.log("dataParse : " + dataParse)
             setFileUploaded(dataParse);
         };
-        reader.readAsBinaryString(f)
-    }
-
-    async function getAllDataSucursal() {
-        obtenerSucursales().then(respuesta => {
-            setDataSucursal(respuesta.data)
-        });
+        reader.readAsBinaryString(f)*/
     }
 
     /**Recibe el id de embarque para obtener sus datos del servidor y mostrarlos en pantalla*/
@@ -1146,9 +956,6 @@ obtenerGuiaId(id).then(({data}) => {
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_arrPaquetes)
-
-        setTotalPaquetes(totalCantidad)
-
 
         setState(state => {
             return {
@@ -1355,35 +1162,79 @@ obtenerGuiaId(id).then(({data}) => {
                 tieneCitaEntrega: false,
             }
         })
-        setTotalPaquetes(0)
         setConceptosAdicionales([])
     }
 
+    const getDataParaEditar = () =>{
+        getAllDataSucursal()
+        getAllDataMoneda()
+        getAllDataTipoCobro()
+        getTipoCambio()
+        getAllDataEstatusGuia()
+        getAllDataTipoServicio()
+        cargaEmbarqueMoneda(1)
+        getAllDataTipoPago()
+        getAllConceptos()
+    }
+
+    async function getTipoCambio() {
+        if (dataTipoCambio.length > 0) {
+            return
+        }
+        obtenerTipoCambio().then(respuesta => {
+            setDataTipoCambio(respuesta.data)
+        });
+    };
+
+    async function getAllDataSucursal() {
+        if (dataSucursal.length > 0) {
+            return
+        }
+        obtenerSucursales().then(respuesta => {
+            setDataSucursal(respuesta.data)
+        });
+    }
+
     async function getAllDataMoneda() {
+        if (dataMoneda.length > 0) {
+            return
+        }
         obtenerMonedas().then(respuesta => {
             setDataMoneda(respuesta.data)
         });
     };
 
     async function getAllDataTipoCobro() {
+        if (dataTipoCobro.length > 0) {
+            return
+        }
         obtenerTipoCobro().then(respuesta => {
             setDataTipoCobro(respuesta.data)
         });
     };
 
     async function getAllDataTipoPago() {
+        if (dataTipoPago.length > 0) {
+            return
+        }
         axios.get(`${process.env.REACT_APP_API_URL}/TiposPago/GetListado`, {headers}).then(({data}) => {
             setDataTipoPago(data)
         });
     };
 
     async function getAllDataTipoServicio() {
+        if (dataTipoServicio.length > 0) {
+            return
+        }
         obtenerTipoServicio().then(respuesta => {
             setDataTipoServicio(respuesta.data)
         });
     };
 
     async function getAllDataEstatusGuia() {
+        if (dataEstatusGuia.length > 0) {
+            return
+        }
         obtenerEstatusGuia().then(respuesta => {
             setDataEstatusGuia(respuesta.data)
         });
@@ -1997,30 +1848,6 @@ obtenerGuiaId(id).then(({data}) => {
         })
 
 
-    }
-
-    const handleFechaOcurre = (event) => {
-        event.preventDefault()
-        setDataOcurre({
-            ...dataOcurre,
-            fechaOcurre: event.target.value,
-        })
-    }
-
-    const handleHoraOcurre = (event) => {
-        event.preventDefault()
-        setDataOcurre({
-            ...dataOcurre,
-            horaOcurre: event.target.value,
-        })
-    }
-
-    const handleChangeDataOcurre = (event) => {
-        event.preventDefault()
-        setDataOcurre({
-            ...dataOcurre,
-            [event.target.name]: event.target.value,
-        })
     }
 
     const handleListPaquetesChange = (newList) => {
