@@ -56,7 +56,7 @@ function obtenerViajesByFiltro(fechaInicial, fechaFinal, estatusListado, folio,O
     if (folio == '') {
         folio = 0
     }
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Viajes/GetByFiltro`
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/GetByFiltro`
         + "/"+ fechaInicial
         + "/" + fechaFinal
         + "/" + estatusListado
