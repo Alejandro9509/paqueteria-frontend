@@ -92,12 +92,18 @@ function ComplementosSAT(props) {
 
         return (
             <div>
-                <IconButton color="primary" size="small" aria-label="save" onClick={handleOpenClick}>
-                    <EditIcon fontSize="large" />
-                </IconButton>
-                <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
-                    <DeleteIcon fontSize="large" />
-                </IconButton>
+                {
+                    !props.disabled &&
+                    <IconButton color="primary" size="small" aria-label="save" onClick={handleOpenClick}>
+                        <EditIcon fontSize="large" />
+                    </IconButton>
+                }
+                {
+                    !props.disabled &&
+                    <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
+                        <DeleteIcon fontSize="large"/>
+                    </IconButton>
+                }
             </div>
         );
     }
