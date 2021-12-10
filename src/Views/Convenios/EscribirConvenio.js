@@ -34,6 +34,7 @@ import ConceptosAdicionalesManiobra from "../Tarifas/ConceptosAdicionalesManiobr
 import ConceptosAdicionalesEntrega from "../Tarifas/ConceptosAdicionalesEntrega";
 import ConceptosAdicionalesRecoleccion from "../Tarifas/ConceptosAdicionalesRecoleccion";
 import ProductosTarifa from "../Tarifas/ProductosTarifa";
+import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {API_HEADERS, dataGridLocaleText} from "../../Constants";
 import {DataGrid} from "@material-ui/data-grid";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
@@ -101,6 +102,7 @@ class EscribirConvenio extends Component {
             // precioM3: props.edit ? props.select.m_cPrecioM3 : "",
             disabled: true,
             cliente: '',
+            nombreCliente:'',
             CuotaMensual:0,
             fechaVigencia: '',
             dataClientes: [],
@@ -268,6 +270,8 @@ class EscribirConvenio extends Component {
         this.removeConceptoRecoleccion = this.removeConceptoRecoleccion.bind(this)
         this.handleChangeChecboxTiposCobro = this.handleChangeChecboxTiposCobro.bind(this)
         this.handleChangeChecboxTiposServicio = this.handleChangeChecboxTiposServicio.bind(this)
+        this.dialogVisible = this.dialogVisible.bind(this)
+        this.handleClienteSelected = this.handleClienteSelected.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
         this.castConceptos = this.castConceptos.bind(this)
         this.filtrarConceptoAdicional = this.filtrarConceptoAdicional.bind(this)
@@ -612,6 +616,20 @@ class EscribirConvenio extends Component {
         })
     };
 
+    handleClienteSelected = (row) =>{
+        console.log(row)
+        this.setState({
+            cliente:row.data.m_nIdCliente,
+            nombreCliente:row.data.m_sNombreFiscal
+        })
+    }
+
+     dialogVisible = (isVisible) => {
+        this.setState({
+            openModal: isVisible,
+        });
+      };
+
     handleConfirmTarifas = (event) => {
         event.preventDefault()
 
@@ -762,6 +780,7 @@ class EscribirConvenio extends Component {
         this.setState({
             idConvenio: 0,
             cliente: '',
+            nombreCliente:'',
             CuotaMensual:'',
             fechaVigencia: '',
             tarifasSeleccionadas : [],
@@ -913,7 +932,7 @@ class EscribirConvenio extends Component {
     render() {
         const { disabled, todosConceptos, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, openDialog,
             columnsTarifas, dataTarifas, height, tarifasSeleccionadas, tarifaDetalles, dataProductosTemp,dataProductosSeleccionados, columnsProductos,
-            cliente, fechaVigencia,CuotaMensual, cardStyle} = this.state
+            cliente,nombreCliente, fechaVigencia,CuotaMensual, cardStyle} = this.state
         let { consult, edit} = this.props
 
         return (
@@ -948,8 +967,23 @@ class EscribirConvenio extends Component {
                         </Button>
 
                     </DialogActions>
+                                                {  /*AQUI COMIENZA EL MODAL DE CLIENTES*/}
+                
+                   
                 </Dialog>
-
+                <Dialog
+                open={this.state.openModal}
+                onClose={() => this.setState({ openModal: false})}
+                fullWidth maxWidth="md"
+            >   
+             {this.state.tipoModal == "Clientes" &&
+                     <DialogContent>
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <DialogTableClientes dialogVisible={this.dialogVisible} handlePatrocinadorSelected={this.handleClienteSelected}/>
+                    </div>
+                    </DialogContent>
+                    }
+                </Dialog>
                 <form className="j-forms" onSubmit={this.onSubmit}>
                     <div className="main-container" style={{ marginLeft: "0px", padding: "0px" }}>
                         <div className="row">
@@ -959,22 +993,30 @@ class EscribirConvenio extends Component {
                                         <div className="row">
                                             <Grid container spacing={1}>
                                                 <Grid item xs={12}>
-                                                    <label className="input select" style={{ width: "100%" }}>
-                                                        <FormControl fullWidth variant="outlined" margin="dense">
-                                                            <InputLabel id="clienteLabel">Cliente</InputLabel>
-                                                            <Select
-                                                                native
+                                                    <label className="input" style={{ width: "100%" }}>
+                                         
+                                                            <TextField
+                                                           
                                                                 labelId="clienteLabel"
                                                                 label="Cliente"
+                                                                margin="dense"
                                                                 disabled={consult}
                                                                 className="form-control"
                                                                 required
-                                                                onChange={this.handleChange}
-                                                                value={cliente}
+                                                                placeholder={"Cliente"}
+                                                                value={nombreCliente}
                                                                 name="cliente"
                                                                 id="cliente"
-                                                            >
-                                                                <option aria-label={"Seleccionar"} value={""}/>
+                                                                variant="outlined"
+                                                                InputLabelProps={{shrink: true,}}
+                                                                onClick={(e)=>{
+                                                                    this.setState({
+                                                                        openModal: true,
+                                                                        tipoModal:"Clientes"
+                                                                    })
+                                                                    }} 
+                                                            /> 
+                                                               {/* <option aria-label={"Seleccionar"} value={""}/>
                                                                 {this.state.dataClientes.map((c) => (
                                                                     <option
                                                                         key={c.m_nIdCliente}
@@ -983,8 +1025,8 @@ class EscribirConvenio extends Component {
                                                                         {c.m_sNombreFiscal}
                                                                     </option>
                                                                 ))}
-                                                            </Select>
-                                                        </FormControl>
+                                                            </TextField>*/}
+                                                       
                                                     </label>
                                                 </Grid>
                                                 <Grid item xs={12}>

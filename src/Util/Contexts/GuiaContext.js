@@ -58,7 +58,7 @@ function obtenerGuia() {
     return result
 }
 function obtenerGuiaUltimaMilla(zonasIds, tipoServicio) {
-    const url = `${process.env.REACT_APP_API_URL}/GetGuiasUltimaMilla`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetUltimaMilla`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, {zonas: zonasIds.join(","), tipoServicio: tipoServicio}), { headers })
