@@ -493,6 +493,7 @@ function Recoleccion() {
             datosAdicionalesEnt: ''
         })
     }
+
     const handleChangeEntregaDD = (event) => {
         event.preventDefault();
         setEntregaDD(entregaDD => {
@@ -671,11 +672,6 @@ function Recoleccion() {
     }, []);
 
     const getDataParaListado = () => {
-        
-        getAllData();
-        getAllSucursales();
-        getAllEstatusRecoleccion();
-        getAllCiudadesFiltro();
        
     }
 
@@ -1361,7 +1357,6 @@ function Recoleccion() {
             }
         });
         getAllData();
-        getAllSucursales()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1954,19 +1949,9 @@ function Recoleccion() {
     async function getAllData() {
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
-                setDataFechaInicial(respuestaUno.data)
-                setDataFechaFinal(respuestaDos.data)
-                setFiltros(filtros => {
-                    return {
-                        ...filtros,
-                        fechaInicial: respuestaUno.data[0].Fecha,
-                        fechaFinal: respuestaDos.data[0].Fecha
-                    }
-                })
-                obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, filtros.sucursalListado, filtros.estatusListado, filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
                     setData(respuesta.data);
                 })
-
             })
 
         })

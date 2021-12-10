@@ -1251,11 +1251,7 @@ function Embarque(props) {
                     if (respuesta.data != "Modificado Exitosamente"){
                         return
                     }
-                    //getAllEmbarque();
-                    $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(0).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');
+                    handleShowListado();
                 })
                 .catch((err) => {
                     console.log(err);
@@ -1269,11 +1265,7 @@ function Embarque(props) {
                         return
                     }
                     console.log(respuesta.data);
-                    // getAllEmbarque();
-                    $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(0).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');
+                    handleShowListado();
                 })
                 .catch((err) => {
                     console.log(err);
