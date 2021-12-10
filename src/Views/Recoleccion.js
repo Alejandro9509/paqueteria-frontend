@@ -673,7 +673,7 @@ function Recoleccion() {
     }, []);
 
     const getDataParaListado = () => {
-       
+        getAllSucursales();
     }
 
     const getDataParaEditar = () => {
