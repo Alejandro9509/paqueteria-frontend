@@ -1885,6 +1885,7 @@ function Embarque(props) {
                 sucursalListado: 0,
                 estatusListado: 0,
                 folioRecoleccion: '',
+                embarqueConGuia: false
             }
         });
         getAllEmbarque();
