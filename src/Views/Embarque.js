@@ -1871,7 +1871,9 @@ function Embarque(props) {
     }
 
     const handleShowListado = (event) => {
-        event.stopPropagation();
+        if (event){
+            event.stopPropagation();
+        }
         limpiarCamposAgregar()
 
         setState(state => {
