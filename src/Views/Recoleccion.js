@@ -668,21 +668,23 @@ function Recoleccion() {
         }
 
         
-        getDataParaListado()
+        // getDataParaListado()
       
     }, []);
 
     const getDataParaListado = () => {
-        getAllSucursales();
+        // getAllSucursales();
     }
 
     const getDataParaEditar = () => {
+        getAllSucursales();
         getAllTipoCobro();
         getAllTipoMoneda();
         getTipoCambio()
         getAllCiudades()
         getAllTiposSeguro()
         getAllEstados()
+        getAllEstatusRecoleccion()
 
     }
 
