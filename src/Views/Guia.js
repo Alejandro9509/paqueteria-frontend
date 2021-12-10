@@ -2116,7 +2116,7 @@ obtenerGuiaId(id).then(({data}) => {
                         {
                             (localStorage.getItem("UsuarioId") === "11" || localStorage.getItem("UsuarioId") === "4")  &&
                             <li >
-                                <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled} onClick={() => setState({...state,openTipoCobro: true})}>
+                                <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled } onClick={() => setState({...state,openTipoCobro: true})}>
                                     <i className="fa fa-refresh"/> Cambiar Tipo Cobro
                                 </a>
                             </li>
@@ -2331,7 +2331,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                 setState({
                                                     ...state,
                                                     idGuia: row.data.m_nIdGuia,
-                                                    cambioCobro: (row.data.m_nIdEstatusGuia === 14 || row.data.m_nIdEstatusGuia === 7) &&  row.data.m_nIdTipoCobro === 2,
+                                                    cambioCobro: true,
                                                     creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito
                                                 })
                                             }}
