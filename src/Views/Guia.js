@@ -2114,7 +2114,7 @@ obtenerGuiaId(id).then(({data}) => {
                             </a>
                         </li>
                         {
-                            (localStorage.getItem("UsuarioId") === 11 || localStorage.getItem("UsuarioId") === 4)  &&
+                            (localStorage.getItem("UsuarioId") === "11" || localStorage.getItem("UsuarioId") === "4")  &&
                             <li >
                                 <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled} onClick={() => setState({...state,openTipoCobro: true})}>
                                     <i className="fa fa-refresh"/> Cambiar Tipo Cobro
