@@ -146,11 +146,11 @@ function Guia(props) {
     const [filtros, setFiltros] = useState({
         fechaInicial: 0,
         fechaFinal: 0,
-        estatusListado:0,
+        estatusListado: 0,
         sucursalListado: 0,
         folio: '',
-        OrigenListado:0,
-        DestinoListado:0,
+        OrigenListado: 0,
+        DestinoListado: 0,
     })
     const [dataPaquetes, setDataPaquetes] = useState([])
     const [state, setState] = React.useState({
@@ -226,7 +226,7 @@ function Guia(props) {
         idTipoCobro: 0,
         idTipoServicio: 2,
         ValorDeclarado: "",
-        porcentajeSeguro:'',
+        porcentajeSeguro: '',
         //Conceptos de facturacion
         conceptosAdicionales: [],
         ivaTraslada: [],
@@ -267,11 +267,10 @@ function Guia(props) {
         openDialog: false
 
     })
-const [tiempoTecleado, setTiempoTecleado] = useState(0)
+    const [tiempoTecleado, setTiempoTecleado] = useState(0)
     useEffect(() => {
         console.log(conceptosAdicionales.length)
     }, [conceptosAdicionales])
-
 
 
     function cargaDiv(indice, valor) {
@@ -286,8 +285,8 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
             estatusListado: 0,
             sucursalListado: 0,
             folio: '',
-            OrigenListado:0,
-            DestinoListado:0,
+            OrigenListado: 0,
+            DestinoListado: 0,
 
         })
     }
@@ -514,14 +513,14 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
             p.m_sUnidad = p.m_sUnidadSAT
             p.m_nProducto = p.m_sProductoSAT
             totalCantidad += parseInt(p.ctd)
-            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+            obtenerProductoById(p.m_nIdProducto).then(({data}) => {
                 p["producto"] = data
                 p.m_sProducto = data.m_sDescripcion
             })
             obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
                 p.m_sTipoEmbalaje = data.m_sNombre
             })
-            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_arrClsDetalle)
 
@@ -617,7 +616,7 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
                 usuarioCancela: respuesta.data.m_nUsuarioCancelacion != 0 ? respuesta.data.m_nUsuarioCancelacion : localStorage.getItem("Usuario"),
                 folioGuia: respuesta.data.m_nFolioGuia,
                 sucursalCancelacion: respuesta.data.m_sSucursal,
-                fechaCancelado:  today.getFullYear() + "/" + (today.getMonth() + 1) + "/" +  today.getDate() ,
+                fechaCancelado: today.getFullYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate(),
                 estatusGuia: respuesta.data.m_sEstatusGuia,
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion
             })
@@ -692,7 +691,7 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
             }
         });
 
-        if (event.target.name === "idTipoTarifa" && state.idEmbarque > 0 && state.idEmbarque !== undefined && state.paquetes !== undefined){
+        if (event.target.name === "idTipoTarifa" && state.idEmbarque > 0 && state.idEmbarque !== undefined && state.paquetes !== undefined) {
             obtenerTarifasPorEmbarque(state.idEmbarque, event.target.value)
         }
     };
@@ -936,57 +935,61 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
                  })
              })
          })*/
-obtenerGuiaId(id).then(({data}) => {
-    var guia = data
-    guia.m_arrClsDetalle.forEach(async (p, index) => {
-        if (p.ctd >= 10) {
-            confirmAlert({
-                title: 'Confirmación',
-                message: '¿Está segura(o) que desea imprimir ' + p.ctd + ' etiqueta(s)?',
-                buttons: [
-                    {
-                        label: 'Yes',
-                        onClick: async () => {
-                            for (let i = 0; i < p.ctd; i++) {
-                                console.log('guia: ', guia)
-                                console.log('paquete: ', p)
-                                console.log('index: ', i + 1)
-                                console.log(i + 1 + ' de ' + p.ctd)
-                                var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+        obtenerGuiaId(id).then(({data}) => {
+            var guia = data
+            var totalEtiquetas = guia.m_arrClsDetalle.reduce((a, b) => +a + +b.ctd, 0)
+            if (totalEtiquetas >= 10) {
+                confirmAlert({
+                    title: 'Confirmación',
+                    message: '¿Está segura(o) que desea imprimir ' + totalEtiquetas + ' etiqueta(s)?',
+                    buttons: [
+                        {
+                            label: 'Yes',
+                            onClick: async () => {
+                                guia.m_arrClsDetalle.forEach(async (p, index) => {
+                                    for (let i = 0; i < p.ctd; i++) {
+                                        console.log('guia: ', guia)
+                                        console.log('paquete: ', p)
+                                        console.log('index: ', i + 1)
+                                        console.log(i + 1 + ' de ' + p.ctd)
+                                        //var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                                        console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                    }
+                                })
                             }
+                        },
+                        {
+                            label: 'No'
                         }
-                    },
-                    {
-                        label: 'No'
+                    ]
+                });
+            } else {
+                guia.m_arrClsDetalle.forEach(async (p, index) => {
+                    for (let i = 0; i < p.ctd; i++) {
+                        console.log('guia: ', guia)
+                        console.log('paquete: ', p)
+                        console.log('index: ', i + 1)
+                        console.log(i + 1 + ' de ' + p.ctd)
+                        // var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                        console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
                     }
-                ]
-            });
-        }else {
-            for (let i = 0; i < p.ctd; i++) {
-                console.log('guia: ', guia)
-                console.log('paquete: ', p)
-                console.log('index: ', i + 1)
-                console.log(i + 1 + ' de ' + p.ctd)
-                var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                })
             }
 
-        }
-        // console.log(contadorPaquetesTotales)
-        // console.log([Array(contadorPaquetesTotales).keys()])
+
+            // console.log(contadorPaquetesTotales)
+            // console.log([Array(contadorPaquetesTotales).keys()])
 
 
-        /*[Array(contadorPaquetesTotales).keys()].forEach((i, count) => {
-            console.log('guia: ', guia)
-            console.log('paquete: ', p)
-            console.log('index: ', count+1)
-            selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, count), undefined, errorCallback);
-        })*/
+            /*[Array(contadorPaquetesTotales).keys()].forEach((i, count) => {
+                console.log('guia: ', guia)
+                console.log('paquete: ', p)
+                console.log('index: ', count+1)
+                selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, count), undefined, errorCallback);
+            })*/
 
-    })
 
-})
+        })
 
 
     }
@@ -1136,14 +1139,14 @@ obtenerGuiaId(id).then(({data}) => {
             p.m_sUnidad = p.m_sUnidadSAT
             p.m_nProducto = p.m_sProductoSAT
             totalCantidad += parseInt(p.ctd)
-            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+            obtenerProductoById(p.m_nIdProducto).then(({data}) => {
                 p["producto"] = data
                 p.m_sProducto = data.m_sDescripcion
             })
             obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
                 p.m_sTipoEmbalaje = data.m_sNombre
             })
-            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_arrPaquetes)
 
@@ -1970,7 +1973,7 @@ obtenerGuiaId(id).then(({data}) => {
 
     const mostrarDialogoOcurre = (event, id) => {
         event.stopPropagation();
-        obtenerGuiaId(id).then (({data}) => {
+        obtenerGuiaId(id).then(({data}) => {
             var guia = data
             if (guia.m_nIdEstatusGuia == 7) {
                 if (!guia.m_nClienteBloqueado) {
@@ -2044,7 +2047,9 @@ obtenerGuiaId(id).then(({data}) => {
 
     return (
         <div>
-            <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido} open={state.openTipoCobro} dataTipoCobro={dataTipoCobro} close={() => setState({...state, openTipoCobro: false})}/>
+            <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido}
+                              open={state.openTipoCobro} dataTipoCobro={dataTipoCobro}
+                              close={() => setState({...state, openTipoCobro: false})}/>
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
@@ -2054,8 +2059,11 @@ obtenerGuiaId(id).then(({data}) => {
                 {showDialogOcurre && <p style={{marginTop: '30px', marginLeft: '30px'}}>Ocurre</p>}
                 {
                     dataOcurre &&
-                        <Ocurre handleEntregaOcurre={handleEntregaOcurre} closeOcurre={() => {setState({...state, openDialog: false});
-                            setShowDialogOcurre(false)}} dataTipoPago={dataTipoPago} dataOcurre={dataOcurre} dataTipoCobro={dataTipoCobro} showDialogOcurre={showDialogOcurre}/>
+                    <Ocurre handleEntregaOcurre={handleEntregaOcurre} closeOcurre={() => {
+                        setState({...state, openDialog: false});
+                        setShowDialogOcurre(false)
+                    }} dataTipoPago={dataTipoPago} dataOcurre={dataOcurre} dataTipoCobro={dataTipoCobro}
+                            showDialogOcurre={showDialogOcurre}/>
                 }
 
             </Dialog>
@@ -2114,9 +2122,10 @@ obtenerGuiaId(id).then(({data}) => {
                             </a>
                         </li>
                         {
-                            (localStorage.getItem("UsuarioId") === "11" || localStorage.getItem("UsuarioId") === "4")  &&
-                            <li >
-                                <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled } onClick={() => setState({...state,openTipoCobro: true})}>
+                            (localStorage.getItem("UsuarioId") === "11" || localStorage.getItem("UsuarioId") === "4") &&
+                            <li>
+                                <a className={(state.idGuia !== 0 && state.cambioCobro) ? "" : classes.disabled}
+                                   onClick={() => setState({...state, openTipoCobro: true})}>
                                     <i className="fa fa-refresh"/> Cambiar Tipo Cobro
                                 </a>
                             </li>
@@ -2501,7 +2510,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                             </div>
                                                         </Grid>
                                                     </Grid>
-                                                    <Grid container spacing={2} style={{marginBottom:'15px'}}>
+                                                    <Grid container spacing={2} style={{marginBottom: '15px'}}>
                                                         <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
@@ -2540,7 +2549,8 @@ obtenerGuiaId(id).then(({data}) => {
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
-                                                                    <InputLabel id="idEstatusGuiaLabel"> Estatus de la Guia</InputLabel>
+                                                                    <InputLabel id="idEstatusGuiaLabel"> Estatus de la
+                                                                        Guia</InputLabel>
                                                                     <Select
                                                                         native
                                                                         labelId="idEstatusGuiaLabel"
@@ -2610,7 +2620,8 @@ obtenerGuiaId(id).then(({data}) => {
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
-                                                                    <InputLabel id="tipoCambioLabel">Tipo de Cambio</InputLabel>
+                                                                    <InputLabel id="tipoCambioLabel">Tipo de
+                                                                        Cambio</InputLabel>
                                                                     <Select
                                                                         native
                                                                         labelId="tipoCambioLabel"
@@ -3214,7 +3225,9 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                         value={state.idTipoServicio}
 
                                                                                     >
-                                                                                        <option key={0} value="0">Seleccionar</option>
+                                                                                        <option key={0}
+                                                                                                value="0">Seleccionar
+                                                                                        </option>
                                                                                         {dataTipoServicio.map(
                                                                                             (tipoServicio) => (
                                                                                                 <option
@@ -3248,14 +3261,17 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                            id="ValorDeclarado"
                                                                                            name="ValorDeclarado"
                                                                                            InputProps={{
-                                                                                               startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                                                                               startAdornment:
+                                                                                                   <InputAdornment
+                                                                                                       position="start">$</InputAdornment>,
                                                                                            }}
                                                                                 />
                                                                             </div>
                                                                         </Grid>
                                                                         <Grid item xs>
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
                                                                                            className="form-control"
                                                                                            type="number"
                                                                                            disabled={state.agregar === "Consultar" || !state.aplicaSeguro}
@@ -3265,7 +3281,9 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                            placeholder="%"
                                                                                            name="porcentajeSeguro"
                                                                                            InputProps={{
-                                                                                               endAdornment: <InputAdornment position="start">%</InputAdornment>,
+                                                                                               endAdornment:
+                                                                                                   <InputAdornment
+                                                                                                       position="start">%</InputAdornment>,
                                                                                            }}
                                                                                 />
                                                                             </div>
@@ -3566,7 +3584,6 @@ obtenerGuiaId(id).then(({data}) => {
 
     );
 }
-
 
 
 export default Guia;

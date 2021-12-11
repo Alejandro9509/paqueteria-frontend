@@ -54,7 +54,7 @@ import {obtenerCiudades} from "../Util/Contexts/CiudadesContext";
 import {obtenerEstatusInforme} from "../Util/Contexts/EstatusContext";
 import {obtenerGuia, obtenerGuiaPendientes, obtenerGuiaReporte, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
 import {obtenerOperadores} from "../Util/Contexts/OperadoresContext";
-import {obtenerUnidades, obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
+import {obtenerUnidades, obtenerUnidadesInforme, obtenerUnidadesTipo} from "../Util/Contexts/UnidadesContext";
 import {obtenerRutas} from "../Util/Contexts/RutasContext";
 import {
     agregarInformes,
@@ -945,7 +945,7 @@ function Informes({history}) {
       }
      */
     function getAllUnidades() {
-        obtenerUnidades().then((respuesta) => {
+        obtenerUnidadesInforme().then((respuesta) => {
             setDataUnidades(respuesta.data);
         });
     }
@@ -1435,14 +1435,14 @@ function Informes({history}) {
                                 </button>
                             </div>
 
-                            {dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30).length != 0 ? (
+                            {dataUnidades.length != 0 ? (
                                 <TableUnidad
                                     select={
                                         state[state.identificadorModal] &&
                                         state[state.identificadorModal].m_nIdUnidad
                                     }
                                     columns={columnsUnidades}
-                                    data={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
+                                    data={dataUnidades}
                                     identificadorModal={state.identificadorModal}
                                 />
                             ) : (
@@ -2230,7 +2230,7 @@ function Informes({history}) {
                                                                                     id="IdRemolque1"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
-                                                                                    options={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
+                                                                                    options={dataUnidades}
                                                                                     getOptionLabel={(option) =>
                                                                                         option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                                                     }
@@ -2254,40 +2254,6 @@ function Informes({history}) {
                                                                                                     },
                                                                                                     type: "search",
                                                                                                     disableUnderline: true,
-                                                                                                    endAdornment: (
-                                                                                                        <InputAdornment
-                                                                                                            position="end">
-                                                                                                            <IconButton
-                                                                                                                padding="0px"
-                                                                                                                style={{
-                                                                                                                    paddingRight:
-                                                                                                                        "0px",
-                                                                                                                }}
-                                                                                                                onClick={() => {
-                                                                                                                    setState({
-                                                                                                                        ...state,
-                                                                                                                        identificadorModal:
-                                                                                                                            "IdRemolque1",
-                                                                                                                        tipoModal: 4,
-                                                                                                                        openDialog: true,
-                                                                                                                    });
-                                                                                                                }}
-                                                                                                            >
-                                                                                                                <PageviewIcon
-                                                                                                                    style={{
-                                                                                                                        color:
-                                                                                                                            "#F9A03E",
-                                                                                                                        fontSize: 32,
-                                                                                                                        paddingInlineEnd: 0,
-                                                                                                                        paddingRight: 0,
-                                                                                                                        paddingBlockEnd: 0,
-                                                                                                                        paddingLeft: 0,
-                                                                                                                        paddingBlock: 0,
-                                                                                                                    }}
-                                                                                                                />
-                                                                                                            </IconButton>
-                                                                                                        </InputAdornment>
-                                                                                                    ),
                                                                                                 }}
                                                                                             />
                                                                                         </div>
@@ -2328,7 +2294,7 @@ function Informes({history}) {
                                                                                     id="IdRemolque2"
                                                                                     disableClearable
                                                                                     forcePopupIcon={false}
-                                                                                    options={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
+                                                                                    options={dataUnidades}
                                                                                     getOptionLabel={(option) =>
                                                                                         option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                                                     }
@@ -2351,40 +2317,6 @@ function Informes({history}) {
                                                                                                     },
                                                                                                     type: "search",
                                                                                                     disableUnderline: true,
-                                                                                                    endAdornment: (
-                                                                                                        <InputAdornment
-                                                                                                            position="end">
-                                                                                                            <IconButton
-                                                                                                                padding="0px"
-                                                                                                                style={{
-                                                                                                                    paddingRight:
-                                                                                                                        "0px",
-                                                                                                                }}
-                                                                                                                onClick={() => {
-                                                                                                                    setState({
-                                                                                                                        ...state,
-                                                                                                                        identificadorModal:
-                                                                                                                            "IdRemolque2",
-                                                                                                                        tipoModal: 4,
-                                                                                                                        openDialog: true,
-                                                                                                                    });
-                                                                                                                }}
-                                                                                                            >
-                                                                                                                <PageviewIcon
-                                                                                                                    style={{
-                                                                                                                        color:
-                                                                                                                            "#F9A03E",
-                                                                                                                        fontSize: 32,
-                                                                                                                        paddingInlineEnd: 0,
-                                                                                                                        paddingRight: 0,
-                                                                                                                        paddingBlockEnd: 0,
-                                                                                                                        paddingLeft: 0,
-                                                                                                                        paddingBlock: 0,
-                                                                                                                    }}
-                                                                                                                />
-                                                                                                            </IconButton>
-                                                                                                        </InputAdornment>
-                                                                                                    ),
                                                                                                 }}
                                                                                             />
                                                                                         </div>
@@ -2450,40 +2382,6 @@ function Informes({history}) {
                                                                                                     },
                                                                                                     type: "search",
                                                                                                     disableUnderline: true,
-                                                                                                    endAdornment: (
-                                                                                                        <InputAdornment
-                                                                                                            position="end">
-                                                                                                            <IconButton
-                                                                                                                padding="0px"
-                                                                                                                style={{
-                                                                                                                    paddingRight:
-                                                                                                                        "0px",
-                                                                                                                }}
-                                                                                                                onClick={() => {
-                                                                                                                    setState({
-                                                                                                                        ...state,
-                                                                                                                        identificadorModal:
-                                                                                                                            "IdCiudadOrigen",
-                                                                                                                        tipoModal: 1,
-                                                                                                                        openDialog: true,
-                                                                                                                    });
-                                                                                                                }}
-                                                                                                            >
-                                                                                                                <PageviewIcon
-                                                                                                                    style={{
-                                                                                                                        color:
-                                                                                                                            "#F9A03E",
-                                                                                                                        fontSize: 32,
-                                                                                                                        paddingInlineEnd: 0,
-                                                                                                                        paddingRight: 0,
-                                                                                                                        paddingBlockEnd: 0,
-                                                                                                                        paddingLeft: 0,
-                                                                                                                        paddingBlock: 0,
-                                                                                                                    }}
-                                                                                                                />
-                                                                                                            </IconButton>
-                                                                                                        </InputAdornment>
-                                                                                                    ),
                                                                                                 }}
                                                                                             />
                                                                                         </div>
@@ -2532,40 +2430,6 @@ function Informes({history}) {
                                                                                                     },
                                                                                                     type: "search",
                                                                                                     disableUnderline: true,
-                                                                                                    endAdornment: (
-                                                                                                        <InputAdornment
-                                                                                                            position="end">
-                                                                                                            <IconButton
-                                                                                                                padding="0px"
-                                                                                                                style={{
-                                                                                                                    paddingRight:
-                                                                                                                        "0px",
-                                                                                                                }}
-                                                                                                                onClick={() => {
-                                                                                                                    setState({
-                                                                                                                        ...state,
-                                                                                                                        identificadorModal:
-                                                                                                                            "IdCiudadDestino",
-                                                                                                                        tipoModal: 1,
-                                                                                                                        openDialog: true,
-                                                                                                                    });
-                                                                                                                }}
-                                                                                                            >
-                                                                                                                <PageviewIcon
-                                                                                                                    style={{
-                                                                                                                        color:
-                                                                                                                            "#F9A03E",
-                                                                                                                        fontSize: 32,
-                                                                                                                        paddingInlineEnd: 0,
-                                                                                                                        paddingRight: 0,
-                                                                                                                        paddingBlockEnd: 0,
-                                                                                                                        paddingLeft: 0,
-                                                                                                                        paddingBlock: 0,
-                                                                                                                    }}
-                                                                                                                />
-                                                                                                            </IconButton>
-                                                                                                        </InputAdornment>
-                                                                                                    ),
                                                                                                 }}
                                                                                             />
                                                                                         </div>
@@ -3431,40 +3295,6 @@ function Informes({history}) {
                                                                                     type: "search",
                                                                                     disabled: state.agregar == "Consultar",
                                                                                     disableUnderline: true,
-                                                                                    endAdornment: (
-                                                                                        <InputAdornment position="end">
-                                                                                            <IconButton
-                                                                                                padding="0px"
-                                                                                                style={{
-                                                                                                    paddingRight: "0px",
-                                                                                                }}
-                                                                                                disabled={
-                                                                                                    state.agregar == "Consultar"
-                                                                                                }
-                                                                                                onClick={() => {
-                                                                                                    setState({
-                                                                                                        ...state,
-                                                                                                        identificadorModal:
-                                                                                                            "IdCiudadOrigen",
-                                                                                                        tipoModal: 1,
-                                                                                                        openDialog: true,
-                                                                                                    });
-                                                                                                }}
-                                                                                            >
-                                                                                                <PageviewIcon
-                                                                                                    style={{
-                                                                                                        color: "#F9A03E",
-                                                                                                        fontSize: 32,
-                                                                                                        paddingInlineEnd: 0,
-                                                                                                        paddingRight: 0,
-                                                                                                        paddingBlockEnd: 0,
-                                                                                                        paddingLeft: 0,
-                                                                                                        paddingBlock: 0,
-                                                                                                    }}
-                                                                                                />
-                                                                                            </IconButton>
-                                                                                        </InputAdornment>
-                                                                                    ),
                                                                                 }}
                                                                             />
                                                                         </div>
@@ -3514,40 +3344,6 @@ function Informes({history}) {
                                                                                     value: state.destinoRemitente,
                                                                                     disabled: state.agregar == "Consultar",
                                                                                     disableUnderline: true,
-                                                                                    endAdornment: (
-                                                                                        <InputAdornment position="end">
-                                                                                            <IconButton
-                                                                                                padding="0px"
-                                                                                                style={{
-                                                                                                    paddingRight: "0px",
-                                                                                                }}
-                                                                                                disabled={
-                                                                                                    state.agregar == "Consultar"
-                                                                                                }
-                                                                                                onClick={() => {
-                                                                                                    setState({
-                                                                                                        ...state,
-                                                                                                        identificadorModal:
-                                                                                                            "IdCiudadDestino",
-                                                                                                        tipoModal: 1,
-                                                                                                        openDialog: true,
-                                                                                                    });
-                                                                                                }}
-                                                                                            >
-                                                                                                <PageviewIcon
-                                                                                                    style={{
-                                                                                                        color: "#F9A03E",
-                                                                                                        fontSize: 32,
-                                                                                                        paddingInlineEnd: 0,
-                                                                                                        paddingRight: 0,
-                                                                                                        paddingBlockEnd: 0,
-                                                                                                        paddingLeft: 0,
-                                                                                                        paddingBlock: 0,
-                                                                                                    }}
-                                                                                                />
-                                                                                            </IconButton>
-                                                                                        </InputAdornment>
-                                                                                    ),
                                                                                 }}
                                                                             />
                                                                         </div>
@@ -3571,7 +3367,7 @@ function Informes({history}) {
                                                                     id="IdUnidad"
                                                                     disableClearable
                                                                     forcePopupIcon={false}
-                                                                    options={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30 || g.m_nIdTipoUnidad === 7)}
+                                                                    options={dataUnidades}
                                                                     getOptionLabel={(option) =>
                                                                         option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                                     }
@@ -3650,7 +3446,7 @@ function Informes({history}) {
                                                                     id="remolqueSecundario"
                                                                     disableClearable
                                                                     forcePopupIcon={false}
-                                                                    options={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
+                                                                    options={dataUnidades}
                                                                     getOptionLabel={(option) =>
                                                                         option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                                     }
