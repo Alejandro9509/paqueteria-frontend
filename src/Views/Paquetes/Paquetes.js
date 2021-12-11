@@ -574,9 +574,12 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null}) {
         });
     }
     const getProductosByConvenioCliente = () => {
-        obtenerProductosByConvenioCliente(cliente.m_nIdCliente).then(respuesta => {
-            setDataProductos(respuesta.data)
-        });
+        if (cliente.m_nIdCliente){
+            obtenerProductosByConvenioCliente(cliente.m_nIdCliente).then(respuesta => {
+                setDataProductos(respuesta.data)
+            });
+        }
+
     }
 
     const handleAceptar = (data)=>{
