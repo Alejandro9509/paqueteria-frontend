@@ -574,7 +574,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null}) {
         });
     }
     const getProductosByConvenioCliente = () => {
-        obtenerProductosByConvenioCliente(cliente.id).then(respuesta => {
+        obtenerProductosByConvenioCliente(cliente.m_nIdCliente).then(respuesta => {
             setDataProductos(respuesta.data)
         });
     }
