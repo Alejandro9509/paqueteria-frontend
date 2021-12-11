@@ -78,7 +78,7 @@ function obtenerProductos(){
     return result
 }
 function obtenerProductosByConvenioCliente(idCliente){
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Productos/GetByConvenioCliente/${idCliente}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/GetByConvenioCliente/${idCliente}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
