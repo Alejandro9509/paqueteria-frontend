@@ -77,6 +77,14 @@ function obtenerProductos(){
     );
     return result
 }
+function obtenerProductosByConvenioCliente(idCliente){
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Productos/GetByConvenioCliente/${idCliente}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 
 /*function obtenerCodigosPostalesPorCiudad(id){
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/${id}`;
@@ -86,4 +94,4 @@ function obtenerProductos(){
     );
     return result
 }*/
-export {obtenerProductoById,obtenerProductos}
+export {obtenerProductoById,obtenerProductos,obtenerProductosByConvenioCliente}
