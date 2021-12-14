@@ -111,15 +111,6 @@ function Informes({history}) {
     const [dataUnidades, setDataUnidades] = React.useState([]);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
-    const [dataViajes, setDataViajes] = React.useState([]);
-    const [dataCiudadF, setDataCiudadF] = React.useState([]);
-    const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
-    const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
-    function getAllDataRutas() {
-        obtenerRutas().then((respuesta) => {
-            setDataRutas(respuesta.data);
-        });
-    }
 
     const handleChange = (event) => {
         setState({
@@ -365,8 +356,8 @@ function Informes({history}) {
         DerechoBorrar: 151,
         EstatusInforme: 5,
         IdViaje: {},
-        sucursalEmisora: 0,
-        sucursalReceptora: 0,
+        sucursalEmisora: null,
+        sucursalReceptora: null,
         IdOperador: null,
         IdRemolque1: null,
         IdRemolque2: null,
@@ -400,6 +391,64 @@ function Informes({history}) {
         Informes: [],
         indexCubicar: 0,
     });
+
+    const getEmptyState = () => {
+        setState({
+            showPopUp: false,
+            identificadorModal: "",
+            openDialog: false,
+            viaje: {},
+            agregar: "Agregar",
+            height: window.innerHeight,
+
+            ruta2: "",
+            operador2: "",
+            unidad2: "",
+            remolque2: "",
+
+            tipoModal: 0,
+            IdInforme: 0,
+            FolioInforme: 0,
+            fechaHora: '',
+            DerechoBorrar: 151,
+            EstatusInforme: 5,
+            IdViaje: {},
+            sucursalEmisora: null,
+            sucursalReceptora: null,
+            IdOperador: null,
+            IdRemolque1: null,
+            IdRemolque2: null,
+            PlacasRemolque1: "",
+            PlacasRemolque2: "",
+            PlacasDolly: "",
+            IdTipoUnidad: {},
+            IdCiudadDestino: null,
+            IdCiudadOrigen: null,
+            IdRuta: 0,
+            IdSucursal: localStorage.getItem("Sucursal"),
+            CreadoPor: localStorage.getItem("UsuarioId"),
+            ModificadoPor: localStorage.getItem("UsuarioId"),
+            usuarioCancelacion: "",
+            estatusCancelacion: "",
+            Guias: [
+                {
+                    m_nIdGuia: 0,
+                    m_nFolioGuia: "",
+                    m_sEstatusGuia: "",
+                    m_cValorDeclarado: "",
+                    m_sCiudadDestinatario: "",
+                    tipoServicio: "",
+                    observaciones: "",
+                },
+            ],
+            FechaCancelacion: "",
+            motivoCancelacion: "",
+            sucursalCancelacion: {},
+            sePuedeCancelar: false,
+            Informes: [],
+            indexCubicar: 0,
+        })
+    }
 
     const getCurrentDateTime = () => {
         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
@@ -443,11 +492,7 @@ function Informes({history}) {
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
-                    getAllData();
-                    $('.nav-tabs li ').removeClass('active');
-                    $('.nav-tabs li').eq(0).addClass('active');
-                    $('.tab-content div ').removeClass('in show');
-                    $('#Listado').addClass('in show');
+                    handleShowListado()
                 })
                 .catch((err) => {
                     console.log(err);
@@ -825,8 +870,6 @@ function Informes({history}) {
         );
     }
 
-    const headers = API_HEADERS
-
     function cubicarAccion(e) {
         e.preventDefault();
         getAllGuiasFrom(true);
@@ -936,44 +979,52 @@ function Informes({history}) {
         });
     }
 
-    /*   function getAllTipoUnidad() {
-        const url = `${process.env.REACT_APP_API_URL}/TiposUnidades/GetListado`;
-        axios.get(url, { headers }).then((respuesta) => {
-          setDataTipoUnidad(respuesta.data);
-          getAllUnidades(respuesta.data[0].m_nIdTipoUnidad);
-        });
-      }
-     */
+    useEffect((value) => {
+        if (
+            localStorage.getItem("UsuarioId") === null ||
+            localStorage.getItem("UsuarioId") <= 0
+        ) {
+            showSuccess("Es necesario iniciar sesion para acceder a este proceso");
+            window.location.replace("login");
+            return;
+        }
+    }, []);
+
+    const getDataParaListado = () => {
+        getAllData();
+    }
+
+    const getDataParaEditar = () => {
+        getAllEstatusInformes();
+        getAllSucursales();
+        getAllCiudades();
+        getAllUnidades();
+    }
+
     function getAllUnidades() {
+        if (dataUnidades > 0){
+            return
+        }
         obtenerUnidadesInforme().then((respuesta) => {
             setDataUnidades(respuesta.data);
         });
     }
 
-
-
     function getAllEstatusInformes() {
+        if (dataEstatusInformes > 0){
+            return
+        }
         obtenerEstatusInforme().then((respuesta) => {
             setEstatusInformes(respuesta.data);
         });
     }
 
     function getAllSucursales() {
+        if (dataSucursal > 0){
+            return
+        }
         obtenerSucursales().then((respuesta) => {
             setDataSucursal(respuesta.data);
-        });
-    }
-    async function getAllCiudadesFiltro() {
-        obtenerCiudades().then((respuesta) => {
-            setDataCiudadF(respuesta.data);
-        });
-    }
-
-
-    function getAllViajesOrigenDestino(origen, destino) {
-        const url = `${API_BASE_URL}/Informes/GetViajes/` + origen + `/` + destino;
-        axios.get(url, {headers}).then((respuesta) => {
-            setDataViajes(respuesta.data);
         });
     }
 
@@ -983,17 +1034,20 @@ function Informes({history}) {
             getAllGuiasFrom();
 
         }
-        // if (state.IdCiudadOrigen && state.IdCiudadDestino) {
-        //     getAllViajesOrigenDestino(
-        //         state.IdCiudadOrigen
-        //             .m_nIdCiudad,
-        //         state.IdCiudadDestino
-        //             .m_nIdCiudad
-        //     );
-        // }
     }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar])
 
+    const handleShowListado = () =>{
+        // event.stopPropagation();
+        getDataParaListado()
+        setState({...state, agregar: "Agregar"});
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
+    }
+
     function handleShowAgregar() {
+        getDataParaEditar()
         setState({
             ...state,
             agregar: "Agregar",
@@ -1007,8 +1061,8 @@ function Informes({history}) {
             fechaHora: getCurrentDateTime(),
             IdCiudadDestino: null,
             IdCiudadOrigen: null,
-            sucursalEmisora: 0,
-            sucursalReceptora: 0,
+            sucursalEmisora: null,
+            sucursalReceptora: null,
             IdRemolque1: null,
             IdRemolque2: null,
             IdTipoUnidad: {},
@@ -1027,10 +1081,7 @@ function Informes({history}) {
     }
 
     function handleShowModificar(id) {
-        $('.nav-tabs li ').removeClass('active');
-        $('.nav-tabs li').eq(1).addClass('active');
-        $('.tab-content div ').removeClass('in show');
-        $('#Agregar').addClass('in show');
+        handleShowAgregar()
         obtenerInformesId(id).then(({data}) => {
             data.m_arrClsProGuia.forEach(g => g.select = true)
             setState({
@@ -1059,10 +1110,7 @@ function Informes({history}) {
     }
 
     function handleShowConsultar(id) {
-        $('.nav-tabs li ').removeClass('active');
-        $('.nav-tabs li').eq(1).addClass('active');
-        $('.tab-content div ').removeClass('in show');
-        $('#Agregar').addClass('in show');
+        handleShowAgregar()
         obtenerInformesId(id).then(({data}) => {
             console.log(data.m_arrClsProGuia)
             data.m_arrClsProGuia.forEach(g => g.select = true)
@@ -1116,73 +1164,19 @@ function Informes({history}) {
             });
     }
 
-    useEffect((value) => {
-        if (
-            localStorage.getItem("UsuarioId") === null ||
-            localStorage.getItem("UsuarioId") <= 0
-        ) {
-            showSuccess("Es necesario iniciar sesion para acceder a este proceso");
-            window.location.replace("login");
-            return;
-        }
-        getAllData();
-        //getAllGuias();
-        getAllEstatusInformes();
-        getAllSucursales();
-        //getAllOperadores();
-        //getFormatosImpresion();
-        getAllCiudades();
-        getAllUnidades();
-        //getAllTipoUnidad();
-        //getAllDataRutas();
-    }, []);
 
 
-
-    
+    /**Obtiene el listado inicial de informes*/
     async function getAllData() {
-        obtenerFechaInicio().then((respuestaUno) => { 
-
-
-            
-            obtenerFechaFinal().then((respuestaDos) => { 
-
-                console.log(respuestaUno.data[0].Fecha)
-                console.log(respuestaDos.data[0].Fecha)
-
-
-                setDataFechaInicial(respuestaUno.data)
-                    setDataFechaFinal(respuestaDos.data)
-                setFiltros(filtros => {
-                    return {
-                        ...filtros,
-                       fechaInicial: respuestaUno.data[0].Fecha,
-                       fechaFinal: respuestaDos.data[0].Fecha
-
-                    }
+        obtenerFechaInicio().then((respuestaUno) => {
+            obtenerFechaFinal().then((respuestaDos) => {
+                obtenerInformeFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, 0, 0, 0).then((respuesta) => {
+                    respuesta.data.forEach((i) => i.remolqueCompleto = i.m_nIdentificador + " - " + i.m_sRemolque1)
+                    setData(respuesta.data);
                 })
-
-
-
-
-                obtenerInformeFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,filtros.sucursalListado,filtros.estatusListado,filtros.folioInformeListado, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
-                    respuesta.data.forEach((i) => i.remolqueCompleto = i.m_nIdentificador + " - " +  i.m_sRemolque1)
-                     setData(respuesta.data);
-        })
-      
             })
-      
-    })
+        })
     }
-
-
-
-    // function getAllData() {
-    //     obtenerInformes().then((respuesta) => {
-    //         respuesta.data.forEach((i) => i.remolqueCompleto = i.m_nIdentificador + " - " +  i.m_sRemolque1)
-    //         setData(respuesta.data);
-    //     });
-    // }
 
     function openSection(index) {
         // closeSeccions();
@@ -1211,113 +1205,6 @@ function Informes({history}) {
             },
             200
         );
-    }
-
-    //Maneja filtrado de listado informe
-    const handleFolioInformeFiltro = async (event) => {
-        if(event.keyCode == 13) {
-            let value = event.target.value
-            if (event.target.value == '') {
-                value = 0
-            }
-            setState({
-                ...state,
-                folioInformeListado: event.target.value,
-            })
-            obtenerInformeFiltro(value).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-    }
-
-    const [filtros, setFiltros] = useState({
-        fechaInicial: 0,
-        fechaFinal: 0,
-        estatusListado:0,
-        sucursalListado: 0,
-        folioInformeListado: '',
-        OrigenListado:0,
-        DestinoListado:0,
-    })
-
-    const resetFiltros = () => {
-        setFiltros({
-            fechaInicial: 0,
-            fechaFinal: 0,
-            estatusListado:0,
-            sucursalListado: 0,
-            folioInformeListado: '',
-            OrigenListado:0,
-            DestinoListado:0,
-        })
-    }
-
-    const handleChangeFiltros = (event) => {
-        event.preventDefault()
-        const {target} = event
-        setFiltros(filtros => {
-            return {
-                ...filtros,
-                [target.name]: target.value
-            }
-        })
-        if (target.name === "fechaInicial"){
-            obtenerInformeFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folioInformeListado,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }else if (target.name === "fechaFinal"){
-            obtenerInformeFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folioInformeListado,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "sucursalListado"){
-            obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folioInformeListado,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "estatusListado"){
-            obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folioInformeListado,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "OrigenListado"){
-            obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folioInformeListado,target.value,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "DestinoListado"){
-            obtenerInformeFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folioInformeListado,filtros.OrigenListado,target.value).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
     }
 
     const setDataListado = (listado) => {
@@ -1533,14 +1420,7 @@ function Informes({history}) {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a onClick={(event) => {
-                                event.stopPropagation();
-                                setState({...state, agregar: "Agregar"});
-                                $('.nav-tabs li ').removeClass('active');
-                                $('.nav-tabs li').eq(0).addClass('active');
-                                $('.tab-content div ').removeClass('in show');
-                                $('#Listado').addClass('in show');
-                            }}>
+                            <a onClick={handleShowListado}>
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
@@ -1920,7 +1800,7 @@ function Informes({history}) {
                                                                         <label className="input select">
                                                                             <FormControl fullWidth
                                                                                          variant="outlined"
-                                                                                         margin="dense">
+                                                                                         margin="dense" required>
                                                                                 <InputLabel
                                                                                     id="sucursalEmisoraLabel">Oficina
                                                                                     Emisora</InputLabel>
@@ -1959,7 +1839,7 @@ function Informes({history}) {
                                                                         <label className="input select">
                                                                             <FormControl fullWidth
                                                                                          variant="outlined"
-                                                                                         margin="dense">
+                                                                                         margin="dense" required>
                                                                                 <InputLabel
                                                                                     id="sucursalReceptoraLabel">Oficina
                                                                                     Receptora</InputLabel>
