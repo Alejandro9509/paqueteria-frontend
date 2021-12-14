@@ -185,6 +185,7 @@ function Guia(props) {
         telefonoRemitente: "",
         contactoRemitente: "",
         origenRemitente: "",
+        zonaTarifaRemitente: '',
         //Destinatario
         sNombreDestinatario: "",
         sRFCDestinatario: "",
@@ -195,6 +196,7 @@ function Guia(props) {
         sTelefonoDestinatario: "",
         sContactoDestinatario: "",
         CiudadDestino: "",
+        zonaTarifaDestinatario: '',
         //Paquetes/sobres
         paquetes: [
             {
@@ -494,6 +496,8 @@ function Guia(props) {
                 sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 CiudadDestino: respuesta.data.m_sCiudadDestino,
                 codigoPostalDestinatario: respuesta.data.m_sCodigoPostalDestinatario,
+                zonaTarifaRemitente: respuesta.data.m_sZonaTarifaRecoleccion,
+                zonaTarifaDestinatario: respuesta.data.m_sZonaTarifaEntrega,
 
                 agregar: label,
                 ValorDeclarado: respuesta.data.m_cValorDeclarado,
@@ -1018,6 +1022,9 @@ function Guia(props) {
                 tieneCitaRecoleccion: false,
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
 
+                zonaTarifaRemitente: respuesta.data.m_sZonaTarifaRecoleccion,
+                zonaTarifaDestinatario: respuesta.data.m_sZonaTarifaEntrega,
+
             }
         })
         obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, state.idTipoTarifa)
@@ -1054,53 +1061,6 @@ function Guia(props) {
                 }
             })
             setConceptosAdicionales(conceptosCast)
-            // debugger
-            /*if (tarifa.data.length != 0) {
-                let pesoTotal = 0
-                let pesoKg = 0
-                let pesoVolumetrico = 0
-                paquetesTemp.forEach((p) => {
-                    pesoKg = pesoKg + p.peso * p.cdt
-                    //xPesoVolumetrico += (clPaquete.m_xAlto * clPaquete.m_xLargo * clPaquete.m_xAncho)* 0.0005
-                    pesoVolumetrico = (p.alto * p.ancho * p.largo) * p.cdt * 0.0005
-                })
-                if (pesoKg > pesoVolumetrico) {
-                    pesoTotal = pesoKg
-                } else {
-                    pesoTotal = pesoVolumetrico
-                }
-
-                tarifa.data[0].m_arrArConceptos.forEach(element => {
-                    conceptosTemp.push({
-                        concepto: element,
-                        idConcepto: element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeIVA: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoTraslada).m_xPorcentaje / 100) * element.m_cImporte,
-                        importeRet: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoRetiene).m_xPorcentaje / 100) * element.m_cImporte,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo
-                    })
-                })
-                ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
-                ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
-
-                setState(state => {
-                    return {
-                        ...state,
-                        fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-                        conceptosAdicionales: conceptosTemp,
-                        ivaRetiene: ivaRetiene,
-                        ivaTraslada: ivaTraslada
-                    }
-                })
-                obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal, paquetesTemp)
-            } else {
-                showSuccess("No se encontró tarifa con las caracteristicas especificadas")
-            }*/
         })
     }
 
@@ -1174,6 +1134,8 @@ function Guia(props) {
                 tieneEntregaDomicilio: false,
                 tieneCitaRecoleccion: false,
                 tieneCitaEntrega: false,
+                zonaTarifaRemitente: '',
+                zonaTarifaDestinatario: '',
             }
         })
         setConceptosAdicionales([])
@@ -1331,184 +1293,6 @@ function Guia(props) {
         }, 200);
 
     }
-
-    //objeto de paquetes
-    const framesPaquete = state.paquetes.map((p, index) => {
-        return (
-            <div key={`paquete${index}`} style={{padding: "10px"}}>
-
-                <div className="col-xs-6 col-sm-4 col-md-12 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].producto}
-                                   placeholder="Producto"
-                                   label={"Producto"}
-                                   name="producto"
-                                   disabled={true}
-                                   InputLabelProps={{
-                                       shrink: true,
-                                   }}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Peso"
-                                   value={state.paquetes[index].peso}
-                                   placeholder="Peso"
-                                   name="peso"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   label="Largo"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].largo}
-                                   placeholder="Largo"
-                                   name="largo"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Ancho"
-                                   value={state.paquetes[index].ancho}
-                                   placeholder="Ancho"
-                                   name="ancho"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Alto"
-                                   value={state.paquetes[index].alto}
-                                   placeholder="Alto"
-                                   name="alto"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Volumen"
-                                   value={state.paquetes[index].volumen}
-                                   placeholder="Volumen"
-                                   name="volumen"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Tipo de Embalaje"
-                                   value={state.paquetes[index].tipoEmbalaje}
-                                   placeholder="Tipo de Embarje"
-                                   name="tipoEmbalaje"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Valor Declarado"
-                                   value={state.paquetes[index].valorDeclarado}
-                                   placeholder="Valor Declarado"
-                                   name="valorDeclarado"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-6 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Descripción"
-                                   value={state.paquetes[index].descripcionPaquete}
-                                   placeholder="Descripción"
-                                   name="descripcionPaquete"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-2 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Ctd"
-                                   value={state.paquetes[index].ctd}
-                                   placeholder="Ctd"
-                                   name="ctd"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-12 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Observaciones"
-                                   value={state.paquetes[index].observacionesPaquete}
-                                   placeholder="Observaciones"
-                                   name="observacionesPaquete"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-
-            </div>
-        );
-    });
 
     const framesPaqueteImp = state.paquetesI.map((p, index) => {
         return (
@@ -1788,29 +1572,6 @@ function Guia(props) {
         );
     });
 
-    const framesSobres = state.sobres.map((p, index) => {
-        return (
-            <div key={`sobre${index}`}>
-                <div className="col-sm-12 col-md-12 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   className="form-control"
-                                   label="Descripcion"
-                                   onChange={event => (handleChangeSobre(event, index))}
-                                   id="descripcionSobre"
-                                   name="descripcionSobre"
-                                   read="true"
-                                   disabled={true}
-                                   value={state.sobres[index].descripcionSobre}
-                        />
-                    </div>
-                </div>
-
-
-            </div>
-        );
-    });
-
     function closeSeccions() {
         //Cerrar todas las seciones
         var $section = $(".widget-toggle")
@@ -1994,170 +1755,6 @@ function Guia(props) {
 
                                         <div className="row">
                                             <div className="col-md-12">
-                                                {/*<Grid container spacing={2} alignItems="center">
-
-                                                    <Grid item xs={2}>
-                                                        <TextField variant="outlined" margin="dense"
-                                                                   onChange={handleChangeFiltros}
-                                                                   onKeyDown={handleChangeFiltros}
-                                                                   className="form-control"
-                                                                   type="text"
-                                                                   label="Folio Guía"
-                                                                   id="folio"
-                                                                   name="folio"
-                                                                   value={filtros.folio}
-                                                        />
-                                                    </Grid>
-                                                    <Grid item xs={2}>
-                                                        <FormControl className="input select" fullWidth
-                                                                     variant="outlined">
-                                                            <TextField
-                                                                autoFocus
-                                                                type="date"
-                                                                margin="dense"
-                                                                label="Fecha Inicial"
-                                                                variant="outlined"
-                                                                className="form-control"
-                                                                InputLabelProps={{shrink: true,}}
-                                                                value={filtros.fechaInicial}
-                                                                onChange={handleChangeFiltros}
-                                                                id="fechaInicial"
-                                                                name="fechaInicial"
-                                                            />
-                                                        </FormControl>
-                                                    </Grid>
-                                                    <Grid item xs={2}>
-                                                        <FormControl className="input select" fullWidth
-                                                                     variant="outlined">
-                                                            <TextField variant="outlined" margin="dense"
-                                                                       type="date"
-                                                                       className="form-control"
-                                                                       label="Fecha Final"
-                                                                       InputLabelProps={{
-                                                                           shrink: true,
-                                                                       }}
-                                                                       value={filtros.fechaFinal}
-                                                                       onChange={handleChangeFiltros}
-                                                                       id="fechaFinal"
-                                                                       name="fechaFinal"
-
-                                                            />
-                                                        </FormControl>
-
-                                                    </Grid>
-                                                    <Grid item xs={2}>
-                                                        <FormControl className="input select" fullWidth
-                                                                     variant="outlined">
-                                                            <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
-                                                            <Select
-                                                                labelId="sucursalListadoLabel"
-                                                                label="Sucursal"
-                                                                className="form-control"
-                                                                required
-                                                                value={filtros.sucursalListado}
-                                                                onChange={handleChangeFiltros}
-                                                                id="sucursalListado"
-                                                                name="sucursalListado"
-                                                            >
-                                                                <option value="0">Todas</option>
-                                                                {dataSucursal.map((sucursal) => (
-                                                                    <option
-                                                                        key={sucursal.m_nIdSucursal}
-                                                                        value={sucursal.m_nIdSucursal}
-                                                                    >
-                                                                        {sucursal.m_sSucursal}
-                                                                    </option>
-                                                                ))}
-                                                            </Select>
-                                                        </FormControl>
-                                                    </Grid>
-                                                    <Grid item xs={2}>
-                                                        <FormControl className="input select" fullWidth
-                                                                     variant="outlined">
-                                                            <InputLabel id="idEstatusLabel">Estatus</InputLabel>
-                                                            <Select
-                                                                labelId="estatusListadoLabel"
-                                                                className="form-control"
-                                                                required
-                                                                label="Estatus"
-                                                                value={filtros.estatusListado}
-                                                                onChange={handleChangeFiltros}
-                                                                id="estatusListado"
-                                                                name="estatusListado"
-                                                            >
-                                                                <option value="0">Todos</option>
-                                                                {dataEstatusGuia.map((estatus) => (
-                                                                    <option
-                                                                        key={estatus.m_nIdEstatusGuia}
-                                                                        value={estatus.m_nIdEstatusGuia}
-                                                                    >
-                                                                        {estatus.m_sEstatus}
-                                                                    </option>
-                                                                ))}
-                                                            </Select>
-                                                        </FormControl>
-                                                    </Grid>
-                                                    <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="OrigenListado">Origen</InputLabel>
-                                                        <Select
-                                                            labelId="OrigenListado"
-                                                            className="form-control"
-                                                            required
-                                                            label="Origen"
-                                                            value={filtros.OrigenListado}
-                                                            onChange={handleChangeFiltros}
-                                                            id="OrigenListado"
-                                                            name="OrigenListado"
-                                                        >
-                                                            <option value="0">Todos</option>
-                                                            {dataCiudadF.map((ciudad) => (
-                                                                <option
-                                                                    key={ciudad.m_nIdCiudad}
-                                                                    value={ciudad.m_nIdCiudad}
-                                                                >
-                                                                    {ciudad.m_sCiudad}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                                <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="DestinoListado">Destino</InputLabel>
-                                                        <Select
-                                                            labelId="DestinoListado"
-                                                            className="form-control"
-                                                            required
-                                                            label="Destino"
-                                                            value={filtros.DestinoListado}
-                                                            onChange={handleChangeFiltros}
-                                                            id="DestinoListado"
-                                                            name="DestinoListado"
-                                                        >
-                                                            <option value="0">Todos</option>
-                                                            {dataCiudadF.map((ciudad) => (
-                                                                <option
-                                                                    key={ciudad.m_nIdCiudad}
-                                                                    value={ciudad.m_nIdCiudad}
-                                                                >
-                                                                    {ciudad.m_sCiudad}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                                    <Grid item container xs={2}>
-                                                        <IconButton aria-label="delete" onClick={() => {
-                                                            resetFiltros()
-                                                            getAllData()
-                                                        }}>
-                                                            <RestartAltIcon fontSize={"large"}
-                                                                            style={{marginRight: '10px'}}/>
-                                                            Limpiar filtros
-                                                        </IconButton>
-                                                    </Grid>
-                                                </Grid>*/}
                                                 <Filtros
                                                     listaResultado={setDataListado}
                                                     guia={true}
@@ -2630,28 +2227,6 @@ function Guia(props) {
                                                                                            InputLabelProps={{
                                                                                                shrink: true,
                                                                                            }}
-                                                                                           label="Ciudad"
-                                                                                           value={state.ciudadRemitente}
-                                                                                           readOnly={state.agregar == "Consultar"}
-                                                                                           id="ciudadRemitente"
-                                                                                           name="ciudadRemitente"
-                                                                                           disabled="disabled"
-                                                                                />
-
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div className="col-md-4 unit">
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense"
-                                                                                           onChange={handleChange}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           InputLabelProps={{
-                                                                                               shrink: true,
-                                                                                           }}
                                                                                            label="Correo Electrónico"
                                                                                            value={state.correoRemitente}
                                                                                            readOnly={state.agregar == "Consultar"}
@@ -2701,6 +2276,28 @@ function Guia(props) {
                                                                                            name="contactoRemitente"
                                                                                            disabled="disabled"
                                                                                 />
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div className="col-md-4 unit">
+
+                                                                            <div className="input">
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Zona Tarifa"
+                                                                                           value={state.zonaTarifaRemitente}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="zonaTarifaRemitente"
+                                                                                           name="zonaTarifaRemitente"
+                                                                                           disabled="disabled"
+                                                                                />
+
                                                                             </div>
                                                                         </div>
 
@@ -2827,25 +2424,6 @@ function Guia(props) {
                                                                                            InputLabelProps={{
                                                                                                shrink: true,
                                                                                            }}
-                                                                                           label="Ciudad"
-                                                                                           value={state.ciudadDestinatario}
-                                                                                           readOnly={state.agregar == "Consultar"}
-                                                                                           id="ciudadDestinatario"
-                                                                                           disabled="disabled"
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div className="col-md-4 unit">
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense"
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           InputLabelProps={{
-                                                                                               shrink: true,
-                                                                                           }}
                                                                                            label="Correo Electrónico"
                                                                                            value={state.sCorreoDestinatario}
                                                                                            readOnly={state.agregar == "Consultar"}
@@ -2888,6 +2466,25 @@ function Guia(props) {
                                                                                            value={state.sContactoDestinatario}
                                                                                            readOnly={state.agregar == "Consultar"}
                                                                                            id="sContactoDestinatario"
+                                                                                           disabled="disabled"
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div className="col-md-4 unit">
+
+                                                                            <div className="input">
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Zona Tarifa"
+                                                                                           value={state.zonaTarifaDestinatario}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="zonaTarifaDestinatario"
                                                                                            disabled="disabled"
                                                                                 />
                                                                             </div>

@@ -12,7 +12,11 @@ import {DataGrid} from "@material-ui/data-grid";
 import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
-import {obtenerProductoById, obtenerProductos} from "../../Util/Contexts/ProductosContext";
+import {
+    obtenerProductoById,
+    obtenerProductos,
+    obtenerProductosByConvenioCliente
+} from "../../Util/Contexts/ProductosContext";
 import {obtenerEmbalajes} from "../../Util/Contexts/EmbalajesContext";
 import axios from "axios";
 import Recoleccion from "../Recoleccion";
@@ -32,7 +36,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-function Paquetes({dataPaquetes = [],onChangeList, disabled}) {
+function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null}) {
     const [openDialog, setOpenDialog] = useState(false)
     const [row, setRow] = useState(0)
     const [dataComplemento, setDataComplemento] = useState({
@@ -341,9 +345,15 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled}) {
 
     useEffect(value => {
         getAllEmbalajes()
-        //getAllSATServicios()
-        //getAllSATUnidades()
     }, [])
+
+    useEffect(value => {
+        if (cliente !== null){
+            getProductosByConvenioCliente()
+        }else{
+            getAllProductos()
+        }
+    }, [cliente])
 
     const validarPaquetes = (paquete) => {
         if (paquete.m_nIdTipo == 1){
@@ -546,9 +556,13 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled}) {
     }
 
     const handleClickProducto = () => {
-        if (dataProductos.length === 0 ){
-            getAllProductos()
-        }
+        /*if (dataProductos.length === 0 ){
+            if (cliente !== null){
+                getProductosByConvenioCliente()
+            }else{
+                getAllProductos()
+            }
+        }*/
         if (dataEmbalaje.length === 0 ) {
             getAllEmbalajes()
         }
@@ -558,6 +572,14 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled}) {
         obtenerProductos().then(respuesta => {
             setDataProductos(respuesta.data)
         });
+    }
+    const getProductosByConvenioCliente = () => {
+        if (cliente.m_nIdCliente){
+            obtenerProductosByConvenioCliente(cliente.m_nIdCliente).then(respuesta => {
+                setDataProductos(respuesta.data)
+            });
+        }
+
     }
 
     const handleAceptar = (data)=>{

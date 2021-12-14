@@ -3615,6 +3615,7 @@ function Recoleccion() {
                                             dataPaquetes={dataPaquetes}
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                            cliente={state.clientePaga}
                                         />
                                     </div>
                                     <div className="widget-wrap" id="complementosSat">
