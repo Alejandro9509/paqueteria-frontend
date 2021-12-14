@@ -260,7 +260,7 @@ async function searchLocationGuia(city, address, postalCode) {
 }
 
 
-function searchLocationWeb(city, address, subdistrict, number) {
+function searchLocationWeb(city, address, subdistrict, number, code) {
     var result;
     trackPromise(
         result = new Promise((resolve, reject) => {
@@ -270,7 +270,9 @@ function searchLocationWeb(city, address, subdistrict, number) {
                     "city": city,
                     "street": address,
                     "subdistrict": subdistrict,
-                    "houseNumber": number
+                    "houseNumber": number,
+                    "postalCode" : code
+
                 }
             }, (location) => {
                 if (location) {
@@ -322,8 +324,10 @@ function agregarRuta(idUltimaMilla, tour, data) {
     }
     tour.unidades.forEach((u) => {
         var tempTour = tour.tour.tours.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
+        console.log(tour)
         var guias = tour.paquetes.filter((p, index) => tempTour.trips[0].stops.find((s, i) => parseInt(s.tasks[0].orderId) === p.index) != null)
         guias = ordenarGuiasPorRuta(tempTour, guias)
+        console.log(guias)
         ultimaMillaObject.rutas.push({
             idOperador: u.m_nIdOperador,
             idUnidad: u.m_nIdUnidad,
