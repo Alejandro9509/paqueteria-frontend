@@ -188,9 +188,9 @@ function Filtros(props) {
                 setEstatus(respuesta.data);
             });
         }else if (props.informe){
-            obtenerEstatusInforme().then((respuesta) => {
+            /*obtenerEstatusInforme().then((respuesta) => {
                 setEstatus(respuesta.data);
-            });
+            });*/
         }else if (props.viajes){
             obtenerEstatusViaje().then((respuesta) => {
                 setEstatus(respuesta.data);

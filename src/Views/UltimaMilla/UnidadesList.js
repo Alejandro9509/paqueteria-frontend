@@ -190,7 +190,7 @@ class UnidadesList extends Component {
 
                                             <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
                                             <TableCell align="left">{
-                                                <Link onClick={() => this.props.reasignarOperador(u)}>{u.m_nIdOperador === null ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell>
+                                                <Link onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell>
                                             <TableCell align="left">{u.m_sPlacas}</TableCell>
                                         </TableRow>
                                     )

@@ -165,8 +165,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
     }
 
     const validarPaquetes = (paquete) => {
-
-        return true
+        return paquete.idConcepto !== 0
     }
 
     const addPaquetev2 = (event) => {
@@ -179,7 +178,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
 
             onChangeList(dataPaquetes)
         }else{
-            showSuccess("Rellene los campos obligatorios.")
+            showSuccess("No se pueden agregar conceptos vacíos.")
         }
     }
 
@@ -317,9 +316,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                                 forcePopupIcon={false}
                                 disabled={disabled}
                                 options={conceptosBase}
-                                getOptionLabel={(option) =>
-                                    option.m_sConcepto
-                                }
+                                getOptionLabel={(option) => option.m_sConcepto}
                                 variant="outlined"
                                 style={{transform: "translate(14px, 10px) scale(1) !important"}}
                                 renderInput={(params) => (
@@ -330,6 +327,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                                             label="Concepto"
                                             className="form-control"
                                             margin="dense"
+                                            required
                                         />
                                     </div>
                                 )}
