@@ -5,6 +5,8 @@ import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
@@ -18,6 +20,8 @@ import {
     obtenerSATUnidades,
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import SearchIcon from "@material-ui/icons/Search";
 const headers = API_HEADERS
 
 function showSuccess(mensaje) {
@@ -33,27 +37,25 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
     function RowMenuCell(props) {
         const { api, id } = props;
 
+        const handleEditClick = (event) => {
+            event.stopPropagation();
+            let row = dataPaquetes.filter((p) => p.id === id)[0];
+            handleEditConcepto(row);
+        };
+
         const handleDeleteClick = (event) => {
             event.stopPropagation();
-            console.log("id==>", id);
-            let row = dataPaquetes.filter((p) => p.id == id)[0];
-            console.log(row);
-            handlePaqueteClick(row);
-            // api.updateRows([{ id, _action: 'delete' }]);
+            let row = dataPaquetes.filter((p) => p.id === id)[0];
+            handleDeleteConcepto(row);
         };
 
         return (
             <div>
-                {/*<IconButton
-              color="primary"
-              size="small"
-              aria-label="save"
-              onClick={handleOpenClick}
-            >
-              <SaveIcon fontSize="large" />
-            </IconButton>*/}
-                <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
+                <IconButton color="inherit" size="small" aria-label="delete" onClick={handleEditClick}>
                     <EditIcon fontSize="large" />
+                </IconButton>
+                <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
+                    <DeleteIcon fontSize="large" />
                 </IconButton>
             </div>
         );
@@ -96,8 +98,15 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
 
         },
         {
+            headerName: "Importe Original",
+            field: "importeInicial",
+            type:'number',
+            width: 150,
+            valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
+        },
+        {
             field: 'complementos',
-            headerName: 'Complementos',
+            headerName: 'Acciones',
             renderCell: RowMenuCell,
             sortable: false,
             width: 90,
@@ -118,6 +127,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         concepto: null,
         idConcepto: 0,
         importe: 0,
+        importeInicial: 0,
         nombreConcepto: "",
         importeRet: "0",
         retiene: 0,
@@ -137,6 +147,30 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         tiposCalculo: [],
         columns: []
     })
+
+    const resetPaquete = () =>{
+        setConcepto(concepto => {
+            return {
+                ...concepto,
+                id:Math.floor(Math.random() * 10000),
+                concepto: null,
+                idConcepto: 0,
+                importe: 0,
+                importeInicial: 0,
+                nombreConcepto: "",
+                importeRet: "0",
+                retiene: 0,
+                traslada: 0,
+                importeIVA: "0",
+                rangoMinimo: 0,
+                rangoMaximo: 0,
+                tipoCalculo: 0,
+                tipoMedida: 0,
+                descuento: 0,
+                agregadoDesde: keys
+            }
+        })
+    }
 
     useEffect(value => {
         if (state.impuestos.length === 0 ){
@@ -182,33 +216,37 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         }
     }
 
-    const handlePaqueteClick = (data) =>{
+    /**Reacciona al hacer clic en editar concepto*/
+    const handleEditConcepto = (data) =>{
         if(!disabled){
             onChangeList(dataPaquetes.filter((i) => i.id != data.id))
-            /*if (dataProductos.length === 0 ){
-                obtenerProductoById(data.m_nIdProducto).then((respuesta) =>{
-                    data.producto = respuesta.data
-                    data.m_sProducto = respuesta.data.m_sDescripcion
-                })
-            }else if (data.m_nIdProducto){
-                data.producto = dataProductos.find((i) => i.m_nIdProducto == data.m_nIdProducto)
-                data.m_sProducto = data.producto.m_sDescripcion
-            }*/
             console.log(data)
             setConcepto(data)
         }
 
     }
 
-    const calcularDescuento = (event) => {
-        if (event.keyCode == 13){
-            calcularImpuestos(concepto.traslada, concepto.retiene, concepto.importe - (concepto.importe * (concepto.descuento/100)))
+    /**Reacciona al hacer clic en eliminar concepto*/
+    const handleDeleteConcepto = (data) =>{
+        if(!disabled){
+            onChangeList(dataPaquetes.filter((i) => i.id != data.id))
         }
+
+    }
+
+    const calcularDescuento = (event) => {
+        setConcepto(concepto=>{
+            return {
+                ...concepto,
+                importeInicial: parseFloat(concepto.importe).toFixed(2)
+            }
+        })
+        calcularImpuestos(concepto.traslada, concepto.retiene, concepto.importe - (concepto.importe * (concepto.descuento/100)))
     }
 
     const calcularImpuestos = (traslada, retiene, importe) => {
         setConcepto(concepto => {
-            return { ...concepto,retiene: retiene, importe: importe, traslada: traslada }
+            return { ...concepto,retiene: retiene, importe: parseFloat(importe).toFixed(2), traslada: traslada }
         })
         if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) != null) {
             const impuesto = state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada))
@@ -217,7 +255,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                     ...concepto,
                     importeIVA: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2),
                     retiene: retiene,
-                    importe: importe,
+                    importe: parseFloat(importe).toFixed(2),
                     traslada: traslada
                 }
             })
@@ -229,7 +267,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                     ...concepto,
                     importeRet: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2),
                     retiene: retiene,
-                    importe: importe,
+                    importe: parseFloat(importe).toFixed(2),
                     traslada: traslada
                 }
             })
@@ -253,29 +291,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
             })
         }
     };
-
-    const resetPaquete = () =>{
-        setConcepto(concepto => {
-            return {
-                ...concepto,
-                id:Math.floor(Math.random() * 10000),
-                concepto: null,
-                idConcepto: 0,
-                importe: 0,
-                nombreConcepto: "",
-                importeRet: "0",
-                retiene: 0,
-                traslada: 0,
-                importeIVA: "0",
-                rangoMinimo: 0,
-                rangoMaximo: 0,
-                tipoCalculo: 0,
-                tipoMedida: 0,
-                descuento: 0,
-                agregadoDesde: keys
-            }
-        })
-    }
 
     /**Al seleccionar un concepto del listado del autocomplete*/
     const handleConceptoClick = (event, newValue) => {
@@ -516,8 +531,37 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                                        min="0"
                                        value={concepto.descuento}
                                        name="descuento"
-                                       helperText={"Presione enter una vez escrito el porcentaje para aplicar el cálculo."}
-                                       onKeyDown={calcularDescuento}
+                                       helperText={`Importe inicial: ${concepto.importeInicial}`}
+                                       InputProps={{
+                                           style: {
+                                               height: "33px",
+                                               fontSize: "14px",
+                                           },
+                                           type: "search",
+                                           disableUnderline: true,
+                                           endAdornment: (
+                                               <InputAdornment position="end">
+                                                   <IconButton
+                                                       padding="0px"
+                                                       style={{paddingRight: "0px",}}
+                                                       onClick={calcularDescuento}
+                                                   >
+                                                       <ArrowForwardIcon
+                                                           style={{
+                                                               color: "#F9A03E",
+                                                               fontSize: 32,
+                                                               paddingInlineEnd: 0,
+                                                               paddingRight: 0,
+                                                               paddingBlockEnd: 0,
+                                                               paddingLeft: 0,
+                                                               paddingBlock: 0,
+                                                               cursor:"pointer"
+                                                           }}
+                                                       />
+                                                   </IconButton>
+                                               </InputAdornment>
+                                           ),
+                                       }}
                             />
                         </div>
                     </Grid>
