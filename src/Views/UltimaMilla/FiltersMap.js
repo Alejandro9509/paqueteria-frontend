@@ -280,11 +280,11 @@ class FiltersMap extends Component {
                                         forcePopupIcon={false}
                                         options={this.state.operadores}
                                         value={this.state.operadorSeleccionada}
-                                        onChange={(event, newValue) => {
+                                        onChange={(event, newValue) =>
                                             this.setState({
-                                                operadorSeleccionada: event.target.value
+                                                operadorSeleccionada: newValue
                                             })
-                                        }}
+                                        }
                                         freeSolo
                                         style={{
                                             transform: "translate(14px, 10px) scale(1) !important"
