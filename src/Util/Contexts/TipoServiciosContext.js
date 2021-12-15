@@ -33,7 +33,7 @@ function eliminarTipoServicio(id, idEliminadoPor) {
 }
 
 function obtenerTipoServicio() {
-    const url = `${process.env.REACT_APP_API_URL}/TipoServicio/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/TipoServicio/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
