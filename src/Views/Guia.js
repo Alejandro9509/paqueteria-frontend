@@ -123,11 +123,7 @@ function Guia(props) {
 
     const [data, setData] = React.useState([])
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
-    const [dataCiudadF, setDataCiudadF] = React.useState([]);
-    const [dataFormatos, setFormatosImpresion] = React.useState([]);
 
-    const [dataFolioGuia, SetDataFolioGuia] = React.useState([]);
-    const [fileUploaded, setFileUploaded] = React.useState([])
     const [stepActive, setStepActive] = React.useState(1);
     //Listado de sucursales. Se usa en listado y agregar.
     const [dataSucursal, setDataSucursal] = React.useState([])
@@ -138,7 +134,6 @@ function Guia(props) {
     const [dataEmbarque, setDataEmbarque] = React.useState([])
 
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
-    const [totalPaquetes, setTotalPaquetes] = useState(0)
     const [showDialogOcurre, setShowDialogOcurre] = useState(false)
     const [dataOcurre, setDataOcurre] = useState()
     const [conceptosAdicionales, setConceptosAdicionales] = useState([])
@@ -146,11 +141,11 @@ function Guia(props) {
     const [filtros, setFiltros] = useState({
         fechaInicial: 0,
         fechaFinal: 0,
-        estatusListado:0,
+        estatusListado: 0,
         sucursalListado: 0,
         folio: '',
-        OrigenListado:0,
-        DestinoListado:0,
+        OrigenListado: 0,
+        DestinoListado: 0,
     })
     const [dataPaquetes, setDataPaquetes] = useState([])
     const [state, setState] = React.useState({
@@ -176,8 +171,8 @@ function Guia(props) {
         folioInforme: "",
         tracking: "",
         fecha: "",
-        idEstatusGuia: 0,
-        idMoneda: 0,
+        idEstatusGuia: 4,
+        idMoneda: 1,
         idTipoTarifa: 2,
         tipoCambio: 0,
         //Remitente
@@ -190,6 +185,7 @@ function Guia(props) {
         telefonoRemitente: "",
         contactoRemitente: "",
         origenRemitente: "",
+        zonaTarifaRemitente: '',
         //Destinatario
         sNombreDestinatario: "",
         sRFCDestinatario: "",
@@ -200,6 +196,7 @@ function Guia(props) {
         sTelefonoDestinatario: "",
         sContactoDestinatario: "",
         CiudadDestino: "",
+        zonaTarifaDestinatario: '',
         //Paquetes/sobres
         paquetes: [
             {
@@ -226,7 +223,7 @@ function Guia(props) {
         idTipoCobro: 0,
         idTipoServicio: 2,
         ValorDeclarado: "",
-        porcentajeSeguro:'',
+        porcentajeSeguro: '',
         //Conceptos de facturacion
         conceptosAdicionales: [],
         ivaTraslada: [],
@@ -267,29 +264,15 @@ function Guia(props) {
         openDialog: false
 
     })
-const [tiempoTecleado, setTiempoTecleado] = useState(0)
+
     useEffect(() => {
         console.log(conceptosAdicionales.length)
     }, [conceptosAdicionales])
 
 
-
     function cargaDiv(indice, valor) {
         //	showSuccess(indice);
         $("#idBarra" + indice).barcode(valor, "code128");
-    }
-
-    const resetFiltros = () => {
-        setFiltros({
-            fechaInicial: 0,
-            fechaFinal: 0,
-            estatusListado: 0,
-            sucursalListado: 0,
-            folio: '',
-            OrigenListado:0,
-            DestinoListado:0,
-
-        })
     }
 
     const handleAceptar = (e) => {
@@ -326,11 +309,7 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
         if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
             agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
-                //window.location.reload();
-                //let resp = respuesta.data;
-                //let vGuia = resp.substring(resp.indexOf(":") + 2);
                 handleShowListado()
-                //getImpresion(vGuia);
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
@@ -338,13 +317,13 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
         } else {
             modificarGuia(state.idGuia, params).then(respuesta => {
                 showSuccess(respuesta.data)
+                showSuccess('Guia modificada')
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
             });
-            showSuccess('Guia modificada')
-            limpiarCamposAgregar()
+
         }
     }
 
@@ -370,77 +349,6 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
             showSuccess(err)
         });
     }
-
-    function getUltimoFolioGuia() {
-        ultimoFolioGuia().then((respuesta) => {
-            SetDataFolioGuia(respuesta.data);
-        });
-    }
-
-    async function getImpresion(id) {
-        //showSuccess (state.nGuiaId);
-        //if (state.muestraPaquetes === true) return;
-        imprimirGuia(id).then(respuesta => {
-            setState({
-                ...state,
-                paquetesI: [],
-                // muestraPaquetes:true
-            });
-            const paquetesTemp = state.paquetesI;
-            for (var i = 0; i < respuesta.data.length; i++) {
-
-
-                paquetesTemp.push({
-
-                    CiudadOrigen: respuesta.data[i].m_sCiudadOrigen,
-                    Remitente: respuesta.data[i].m_sNOmbreRemitente,
-                    CiudadRemitente: respuesta.data[i].m_sCiudadRemitente,
-                    RFC: respuesta.data[i].m_sRFCRemitente,
-                    Direccion: respuesta.data[i].m_sDomicilioRemitente,
-                    Zona: respuesta.data[i].m_sZonaRemitente,
-                    CP: respuesta.data[i].m_nIdCodigoPostalRemitente,
-                    Telefono: respuesta.data[i].m_sTelefonoRemitente,
-                    CiudadDestino: respuesta.data[i].m_sCiudadDestino,
-                    RFCDestinatario: respuesta.data[i].m_sRFCDestinatario,
-                    DireccionDestinatario: respuesta.data[i].m_sDomicilioDestinatario,
-                    ZonaDestinatario: respuesta.data[i].m_sZonaDestino,
-                    CPDestinatario: respuesta.data[i].m_nIdCodigoPostalDestinatario,
-                    CiudadDestinatario: respuesta.data[i].m_sCiudadDestinatario,
-                    TelefonoDestinatario: respuesta.data[i].m_sTelefonoDestinatario,
-                    FolioPaquete: respuesta.data[i].m_sFolioPaquete,
-                    Cantidad: respuesta.data[i].m_nCantidadPaquete,
-                    Descripcion: respuesta.data[i].m_sDescripcionPaquete,
-                    Destinatario: respuesta.data[i].m_sNombreDestinatario,
-                    PaqueteCant: respuesta.data[i].m_nCantidadPaquete,
-                    DescripcionPaquete: respuesta.data[i].m_sDescripcionPaquete,
-                    RfcFiscal: respuesta.data[i].m_sRfcFiscal,
-                    NombreFiscal: respuesta.data[i].m_sNombreFiscal,
-                    Telefonos: respuesta.data[i].m_sTelefonos,
-                    Colonia: respuesta.data[i].m_sColonia,
-                    Calle: respuesta.data[i].m_sCalle
-                });
-            }
-            paquetesTemp.splice(0, 1);
-            setState({
-                ...state,
-                paquetesI: paquetesTemp,
-                // muestraPaquetes:true
-            });
-            $("#Imprimir").click();
-        });
-    };
-
-    function getFormatosImpresion() {
-        obtenerFormatosImpresion().then(respuesta => {
-            setFormatosImpresion(respuesta.data)
-        });
-    };
-
-    function getTipoCambio() {
-        obtenerTipoCambio().then(respuesta => {
-            setDataTipoCambio(respuesta.data)
-        });
-    };
 
     function handleEliminar(id) {
         var derecho;
@@ -514,18 +422,16 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
             p.m_sUnidad = p.m_sUnidadSAT
             p.m_nProducto = p.m_sProductoSAT
             totalCantidad += parseInt(p.ctd)
-            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+            obtenerProductoById(p.m_nIdProducto).then(({data}) => {
                 p["producto"] = data
                 p.m_sProducto = data.m_sDescripcion
             })
             obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
                 p.m_sTipoEmbalaje = data.m_sNombre
             })
-            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_arrClsDetalle)
-
-        setTotalPaquetes(totalCantidad)
 
         const conceptosAdicionalesAux = []
 
@@ -590,6 +496,8 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
                 sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 CiudadDestino: respuesta.data.m_sCiudadDestino,
                 codigoPostalDestinatario: respuesta.data.m_sCodigoPostalDestinatario,
+                zonaTarifaRemitente: respuesta.data.m_sZonaTarifaRecoleccion,
+                zonaTarifaDestinatario: respuesta.data.m_sZonaTarifaEntrega,
 
                 agregar: label,
                 ValorDeclarado: respuesta.data.m_cValorDeclarado,
@@ -617,7 +525,7 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
                 usuarioCancela: respuesta.data.m_nUsuarioCancelacion != 0 ? respuesta.data.m_nUsuarioCancelacion : localStorage.getItem("Usuario"),
                 folioGuia: respuesta.data.m_nFolioGuia,
                 sucursalCancelacion: respuesta.data.m_sSucursal,
-                fechaCancelado:  today.getFullYear() + "/" + (today.getMonth() + 1) + "/" +  today.getDate() ,
+                fechaCancelado: today.getFullYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate(),
                 estatusGuia: respuesta.data.m_sEstatusGuia,
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion
             })
@@ -646,6 +554,7 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
     //Prepara campos para agregar guia
     function handleShowAgregar() {
         limpiarCamposAgregar()
+        getDataParaEditar()
         setState(state => {
             return {
                 ...state,
@@ -658,7 +567,6 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
-        //getImpresion(38);
     }
 
     const handleShowListado = () => {
@@ -666,11 +574,6 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
         setState(state => {
             return {
                 ...state,
-                fechaInicial: 0,
-                fechaFinal: 0,
-                sucursalListado: 0,
-                estatusListado: 0,
-                folioGuia: '',
                 height: window.height,
                 agregar: "Agregar",
             }
@@ -692,7 +595,7 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
             }
         });
 
-        if (event.target.name === "idTipoTarifa" && state.idEmbarque > 0 && state.idEmbarque !== undefined && state.paquetes !== undefined){
+        if (event.target.name === "idTipoTarifa" && state.idEmbarque > 0 && state.idEmbarque !== undefined && state.paquetes !== undefined) {
             obtenerTarifasPorEmbarque(state.idEmbarque, event.target.value)
         }
     };
@@ -880,16 +783,7 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
                 // setDataCiudadF(props.location.dataCiudades)
             });
         }
-        getAllDataSucursal()
-        getAllDataMoneda()
-        getAllDataTipoCobro()
-        getTipoCambio()
-        getAllDataEstatusGuia()
-        getUltimoFolioGuia()
-        getAllDataTipoServicio()
-        cargaEmbarqueMoneda(1)
-        getAllDataTipoPago()
-        getAllConceptos()
+
     }, []);
 
 
@@ -936,57 +830,61 @@ const [tiempoTecleado, setTiempoTecleado] = useState(0)
                  })
              })
          })*/
-obtenerGuiaId(id).then(({data}) => {
-    var guia = data
-    guia.m_arrClsDetalle.forEach(async (p, index) => {
-        if (p.ctd >= 10) {
-            confirmAlert({
-                title: 'Confirmación',
-                message: '¿Está segura(o) que desea imprimir ' + p.ctd + ' etiqueta(s)?',
-                buttons: [
-                    {
-                        label: 'Yes',
-                        onClick: async () => {
-                            for (let i = 0; i < p.ctd; i++) {
-                                console.log('guia: ', guia)
-                                console.log('paquete: ', p)
-                                console.log('index: ', i + 1)
-                                console.log(i + 1 + ' de ' + p.ctd)
-                                var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+        obtenerGuiaId(id).then(({data}) => {
+            var guia = data
+            var totalEtiquetas = guia.m_arrClsDetalle.reduce((a, b) => +a + +b.ctd, 0)
+            if (totalEtiquetas >= 10) {
+                confirmAlert({
+                    title: 'Confirmación',
+                    message: '¿Está segura(o) que desea imprimir ' + totalEtiquetas + ' etiqueta(s)?',
+                    buttons: [
+                        {
+                            label: 'Yes',
+                            onClick: async () => {
+                                guia.m_arrClsDetalle.forEach(async (p, index) => {
+                                    for (let i = 0; i < p.ctd; i++) {
+                                        console.log('guia: ', guia)
+                                        console.log('paquete: ', p)
+                                        console.log('index: ', i + 1)
+                                        console.log(i + 1 + ' de ' + p.ctd)
+                                        //var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                                        console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                                    }
+                                })
                             }
+                        },
+                        {
+                            label: 'No'
                         }
-                    },
-                    {
-                        label: 'No'
+                    ]
+                });
+            } else {
+                guia.m_arrClsDetalle.forEach(async (p, index) => {
+                    for (let i = 0; i < p.ctd; i++) {
+                        console.log('guia: ', guia)
+                        console.log('paquete: ', p)
+                        console.log('index: ', i + 1)
+                        console.log(i + 1 + ' de ' + p.ctd)
+                        // var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
+                        console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
                     }
-                ]
-            });
-        }else {
-            for (let i = 0; i < p.ctd; i++) {
-                console.log('guia: ', guia)
-                console.log('paquete: ', p)
-                console.log('index: ', i + 1)
-                console.log(i + 1 + ' de ' + p.ctd)
-                var result = await selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, i), undefined, errorCallback);
-                console.log(TICKET_ZABRA_TAMPLATE(guia, p, i))
+                })
             }
 
-        }
-        // console.log(contadorPaquetesTotales)
-        // console.log([Array(contadorPaquetesTotales).keys()])
+
+            // console.log(contadorPaquetesTotales)
+            // console.log([Array(contadorPaquetesTotales).keys()])
 
 
-        /*[Array(contadorPaquetesTotales).keys()].forEach((i, count) => {
-            console.log('guia: ', guia)
-            console.log('paquete: ', p)
-            console.log('index: ', count+1)
-            selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, count), undefined, errorCallback);
-        })*/
+            /*[Array(contadorPaquetesTotales).keys()].forEach((i, count) => {
+                console.log('guia: ', guia)
+                console.log('paquete: ', p)
+                console.log('index: ', count+1)
+                selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, count), undefined, errorCallback);
+            })*/
 
-    })
 
-})
+        })
 
 
     }
@@ -998,88 +896,24 @@ obtenerGuiaId(id).then(({data}) => {
     async function getAllData() {
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
-                setFiltros(filtros => {
-                    return {
-                        ...filtros,
-                        fechaInicial: respuestaUno.data[0].Fecha,
-                        fechaFinal: respuestaDos.data[0].Fecha
-
-                    }
-                })
-                obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha, filtros.sucursalListado, filtros.estatusListado, filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
+                obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
                     setData(respuesta.data);
                 })
-
             })
-
         })
     }
 
-    async function getAllCiudadesFiltro() {
-        obtenerCiudades().then((respuesta) => {
-            setDataCiudadF(respuesta.data);
-        });
-    }
-
     const getAllConceptos = () => {
+        if (dataConceptosBase.length > 0) {
+            return
+        }
         obtenerConceptosFacturacion().then(respuesta => {
             setDataConceptosBase(respuesta.data);
         });
     }
 
-    function addConcepto(data) {
-        var conceptosAdicionalesAux = [...conceptosAdicionales]
-        var ivaTraslada = []
-        var ivaRetiene = []
-        conceptosAdicionalesAux = [...conceptosAdicionales].filter(c => c.idConcepto !== data.concepto.m_nIdConceptosFacturacion)
-
-        conceptosAdicionalesAux.push({
-            id: Math.floor(Math.random() * 10000),
-            idConcepto: data.concepto.m_nIdConceptosFacturacion,
-            concepto: data.concepto,
-            importe: data.importe,
-            retiene: data.retiene,
-            traslada: data.traslada,
-            importeRet: data.importeRet,
-            importeIVA: data.importeIVA,
-            rangoMinimo: data.rangoMinimo,
-            rangoMaximo: data.rangoMaximo,
-            tipoCalculo: data.tipoCalculo,
-            nombreConcepto: data.concepto.m_sConcepto,
-            agregadoDesde: data.agregadoDesde,
-            descuento: data.descuento
-
-        })
-        ivaTraslada = getUniqueListBy(conceptosAdicionalesAux, "traslada").map(i => i.traslada);
-        ivaRetiene = getUniqueListBy(conceptosAdicionales, "retiene").map(i => i.retiene);
-        setState({
-            ...state,
-            ivaRetiene: ivaRetiene,
-            ivaTraslada: ivaTraslada
-        })
-
-        setConceptosAdicionales(conceptosAdicionalesAux)
-    }
-
-    const filtrarConceptoAdicional = (c, item) => {
-        let valid = c.idConcepto === item.idConcepto
-            && c.importe === item.importe
-            && c.importeRet === item.importeRet
-            && c.retiene === item.retiene
-            && c.traslada === item.traslada
-            && c.importeIVA === item.importeIVA;
-        return !valid
-    }
-
-    function removeConcepto(item) {
-        console.log("editar")
-        const newArrayConceptos = [...conceptosAdicionales].filter(c => filtrarConceptoAdicional(c, item))
-        console.log(newArrayConceptos)
-        //setConceptosAdicionales( newArrayConceptos)
-    }
-
     const handleUpload = (e) => {
-        e.preventDefault();
+        /*e.preventDefault();
         var files = e.target.files, f = files[0];
         var reader = new FileReader();
         console.log(e.target.files)
@@ -1090,18 +924,12 @@ obtenerGuiaId(id).then(({data}) => {
             const wsname = readedData.SheetNames[0];
             const ws = readedData.Sheets[wsname];
 
-            /* Convert array to json*/
+            /!* Convert array to json*!/
             const dataParse = XLSX.utils.sheet_to_json(ws, {header: 1});
             console.log("dataParse : " + dataParse)
             setFileUploaded(dataParse);
         };
-        reader.readAsBinaryString(f)
-    }
-
-    async function getAllDataSucursal() {
-        obtenerSucursales().then(respuesta => {
-            setDataSucursal(respuesta.data)
-        });
+        reader.readAsBinaryString(f)*/
     }
 
     /**Recibe el id de embarque para obtener sus datos del servidor y mostrarlos en pantalla*/
@@ -1136,19 +964,16 @@ obtenerGuiaId(id).then(({data}) => {
             p.m_sUnidad = p.m_sUnidadSAT
             p.m_nProducto = p.m_sProductoSAT
             totalCantidad += parseInt(p.ctd)
-            obtenerProductoById(p.m_nIdProducto).then(({data}) =>{
+            obtenerProductoById(p.m_nIdProducto).then(({data}) => {
                 p["producto"] = data
                 p.m_sProducto = data.m_sDescripcion
             })
             obtenerEmbalajesId(p.m_nIdTipoEmbalaje).then(({data}) => {
                 p.m_sTipoEmbalaje = data.m_sNombre
             })
-            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
+            p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_arrPaquetes)
-
-        setTotalPaquetes(totalCantidad)
-
 
         setState(state => {
             return {
@@ -1197,6 +1022,9 @@ obtenerGuiaId(id).then(({data}) => {
                 tieneCitaRecoleccion: false,
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
 
+                zonaTarifaRemitente: respuesta.data.m_sZonaTarifaRecoleccion,
+                zonaTarifaDestinatario: respuesta.data.m_sZonaTarifaEntrega,
+
             }
         })
         obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, state.idTipoTarifa)
@@ -1233,53 +1061,6 @@ obtenerGuiaId(id).then(({data}) => {
                 }
             })
             setConceptosAdicionales(conceptosCast)
-            // debugger
-            /*if (tarifa.data.length != 0) {
-                let pesoTotal = 0
-                let pesoKg = 0
-                let pesoVolumetrico = 0
-                paquetesTemp.forEach((p) => {
-                    pesoKg = pesoKg + p.peso * p.cdt
-                    //xPesoVolumetrico += (clPaquete.m_xAlto * clPaquete.m_xLargo * clPaquete.m_xAncho)* 0.0005
-                    pesoVolumetrico = (p.alto * p.ancho * p.largo) * p.cdt * 0.0005
-                })
-                if (pesoKg > pesoVolumetrico) {
-                    pesoTotal = pesoKg
-                } else {
-                    pesoTotal = pesoVolumetrico
-                }
-
-                tarifa.data[0].m_arrArConceptos.forEach(element => {
-                    conceptosTemp.push({
-                        concepto: element,
-                        idConcepto: element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeIVA: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoTraslada).m_xPorcentaje / 100) * element.m_cImporte,
-                        importeRet: (element.arClsDetalle.find(i => i.m_nIdImpuesto === element.m_nIdImpuestoRetiene).m_xPorcentaje / 100) * element.m_cImporte,
-                        rangoMinimo: element.m_xnRangoMinimo,
-                        rangoMaximo: element.m_xnRangoMaximo,
-                        nombreConcepto: element.m_sConcepto,
-                        tipoCalculo: element.m_nIdTipoCalculo
-                    })
-                })
-                ivaTraslada = getUniqueListBy(conceptosTemp, "traslada").map(i => i.traslada);
-                ivaRetiene = getUniqueListBy(conceptosTemp, "retiene").map(i => i.retiene);
-
-                setState(state => {
-                    return {
-                        ...state,
-                        fecha: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
-                        conceptosAdicionales: conceptosTemp,
-                        ivaRetiene: ivaRetiene,
-                        ivaTraslada: ivaTraslada
-                    }
-                })
-                obtenerConceptosByTarifa(tarifa.data[0].m_nIdTarifa, pesoTotal, paquetesTemp)
-            } else {
-                showSuccess("No se encontró tarifa con las caracteristicas especificadas")
-            }*/
         })
     }
 
@@ -1353,37 +1134,83 @@ obtenerGuiaId(id).then(({data}) => {
                 tieneEntregaDomicilio: false,
                 tieneCitaRecoleccion: false,
                 tieneCitaEntrega: false,
+                zonaTarifaRemitente: '',
+                zonaTarifaDestinatario: '',
             }
         })
-        setTotalPaquetes(0)
         setConceptosAdicionales([])
     }
 
+    const getDataParaEditar = () =>{
+        getAllDataSucursal()
+        getAllDataMoneda()
+        getAllDataTipoCobro()
+        getTipoCambio()
+        getAllDataEstatusGuia()
+        getAllDataTipoServicio()
+        cargaEmbarqueMoneda(1)
+        getAllDataTipoPago()
+        getAllConceptos()
+    }
+
+    async function getTipoCambio() {
+        if (dataTipoCambio.length > 0) {
+            return
+        }
+        obtenerTipoCambio().then(respuesta => {
+            setDataTipoCambio(respuesta.data)
+        });
+    };
+
+    async function getAllDataSucursal() {
+        if (dataSucursal.length > 0) {
+            return
+        }
+        obtenerSucursales().then(respuesta => {
+            setDataSucursal(respuesta.data)
+        });
+    }
+
     async function getAllDataMoneda() {
+        if (dataMoneda.length > 0) {
+            return
+        }
         obtenerMonedas().then(respuesta => {
             setDataMoneda(respuesta.data)
         });
     };
 
     async function getAllDataTipoCobro() {
+        if (dataTipoCobro.length > 0) {
+            return
+        }
         obtenerTipoCobro().then(respuesta => {
             setDataTipoCobro(respuesta.data)
         });
     };
 
     async function getAllDataTipoPago() {
+        if (dataTipoPago.length > 0) {
+            return
+        }
         axios.get(`${process.env.REACT_APP_API_URL}/TiposPago/GetListado`, {headers}).then(({data}) => {
             setDataTipoPago(data)
         });
     };
 
     async function getAllDataTipoServicio() {
+        if (dataTipoServicio.length > 0) {
+            return
+        }
         obtenerTipoServicio().then(respuesta => {
             setDataTipoServicio(respuesta.data)
         });
     };
 
     async function getAllDataEstatusGuia() {
+        if (dataEstatusGuia.length > 0) {
+            return
+        }
         obtenerEstatusGuia().then(respuesta => {
             setDataEstatusGuia(respuesta.data)
         });
@@ -1466,184 +1293,6 @@ obtenerGuiaId(id).then(({data}) => {
         }, 200);
 
     }
-
-    //objeto de paquetes
-    const framesPaquete = state.paquetes.map((p, index) => {
-        return (
-            <div key={`paquete${index}`} style={{padding: "10px"}}>
-
-                <div className="col-xs-6 col-sm-4 col-md-12 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].producto}
-                                   placeholder="Producto"
-                                   label={"Producto"}
-                                   name="producto"
-                                   disabled={true}
-                                   InputLabelProps={{
-                                       shrink: true,
-                                   }}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Peso"
-                                   value={state.paquetes[index].peso}
-                                   placeholder="Peso"
-                                   name="peso"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   label="Largo"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   value={state.paquetes[index].largo}
-                                   placeholder="Largo"
-                                   name="largo"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Ancho"
-                                   value={state.paquetes[index].ancho}
-                                   placeholder="Ancho"
-                                   name="ancho"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Alto"
-                                   value={state.paquetes[index].alto}
-                                   placeholder="Alto"
-                                   name="alto"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Volumen"
-                                   value={state.paquetes[index].volumen}
-                                   placeholder="Volumen"
-                                   name="volumen"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Tipo de Embalaje"
-                                   value={state.paquetes[index].tipoEmbalaje}
-                                   placeholder="Tipo de Embarje"
-                                   name="tipoEmbalaje"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-4 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Valor Declarado"
-                                   value={state.paquetes[index].valorDeclarado}
-                                   placeholder="Valor Declarado"
-                                   name="valorDeclarado"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-6 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Descripción"
-                                   value={state.paquetes[index].descripcionPaquete}
-                                   placeholder="Descripción"
-                                   name="descripcionPaquete"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-2 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Ctd"
-                                   value={state.paquetes[index].ctd}
-                                   placeholder="Ctd"
-                                   name="ctd"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-                <div className="col-xs-6 col-sm-4 col-md-12 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   onChange={(event) => handleChangePaquete(event, index)}
-                                   className="form-control"
-                                   type="text"
-                                   label="Observaciones"
-                                   value={state.paquetes[index].observacionesPaquete}
-                                   placeholder="Observaciones"
-                                   name="observacionesPaquete"
-                                   disabled={true}
-                        />
-                    </div>
-                </div>
-
-
-            </div>
-        );
-    });
 
     const framesPaqueteImp = state.paquetesI.map((p, index) => {
         return (
@@ -1923,29 +1572,6 @@ obtenerGuiaId(id).then(({data}) => {
         );
     });
 
-    const framesSobres = state.sobres.map((p, index) => {
-        return (
-            <div key={`sobre${index}`}>
-                <div className="col-sm-12 col-md-12 unit">
-                    <div className="input">
-                        <TextField variant="outlined" margin="dense"
-                                   className="form-control"
-                                   label="Descripcion"
-                                   onChange={event => (handleChangeSobre(event, index))}
-                                   id="descripcionSobre"
-                                   name="descripcionSobre"
-                                   read="true"
-                                   disabled={true}
-                                   value={state.sobres[index].descripcionSobre}
-                        />
-                    </div>
-                </div>
-
-
-            </div>
-        );
-    });
-
     function closeSeccions() {
         //Cerrar todas las seciones
         var $section = $(".widget-toggle")
@@ -1970,7 +1596,7 @@ obtenerGuiaId(id).then(({data}) => {
 
     const mostrarDialogoOcurre = (event, id) => {
         event.stopPropagation();
-        obtenerGuiaId(id).then (({data}) => {
+        obtenerGuiaId(id).then(({data}) => {
             var guia = data
             if (guia.m_nIdEstatusGuia == 7) {
                 if (!guia.m_nClienteBloqueado) {
@@ -1999,30 +1625,6 @@ obtenerGuiaId(id).then(({data}) => {
 
     }
 
-    const handleFechaOcurre = (event) => {
-        event.preventDefault()
-        setDataOcurre({
-            ...dataOcurre,
-            fechaOcurre: event.target.value,
-        })
-    }
-
-    const handleHoraOcurre = (event) => {
-        event.preventDefault()
-        setDataOcurre({
-            ...dataOcurre,
-            horaOcurre: event.target.value,
-        })
-    }
-
-    const handleChangeDataOcurre = (event) => {
-        event.preventDefault()
-        setDataOcurre({
-            ...dataOcurre,
-            [event.target.name]: event.target.value,
-        })
-    }
-
     const handleListPaquetesChange = (newList) => {
         setDataPaquetes(newList)
     }
@@ -2044,7 +1646,9 @@ obtenerGuiaId(id).then(({data}) => {
 
     return (
         <div>
-            <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido} open={state.openTipoCobro} dataTipoCobro={dataTipoCobro} close={() => setState({...state, openTipoCobro: false})}/>
+            <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido}
+                              open={state.openTipoCobro} dataTipoCobro={dataTipoCobro}
+                              close={() => setState({...state, openTipoCobro: false})}/>
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
@@ -2054,8 +1658,11 @@ obtenerGuiaId(id).then(({data}) => {
                 {showDialogOcurre && <p style={{marginTop: '30px', marginLeft: '30px'}}>Ocurre</p>}
                 {
                     dataOcurre &&
-                        <Ocurre handleEntregaOcurre={handleEntregaOcurre} closeOcurre={() => {setState({...state, openDialog: false});
-                            setShowDialogOcurre(false)}} dataTipoPago={dataTipoPago} dataOcurre={dataOcurre} dataTipoCobro={dataTipoCobro} showDialogOcurre={showDialogOcurre}/>
+                    <Ocurre handleEntregaOcurre={handleEntregaOcurre} closeOcurre={() => {
+                        setState({...state, openDialog: false});
+                        setShowDialogOcurre(false)
+                    }} dataTipoPago={dataTipoPago} dataOcurre={dataOcurre} dataTipoCobro={dataTipoCobro}
+                            showDialogOcurre={showDialogOcurre}/>
                 }
 
             </Dialog>
@@ -2114,9 +1721,10 @@ obtenerGuiaId(id).then(({data}) => {
                             </a>
                         </li>
                         {
-                            (localStorage.getItem("UsuarioId") === "11" || localStorage.getItem("UsuarioId") === "4")  &&
-                            <li >
-                                <a className={(state.idGuia !== 0  && state.cambioCobro) ? "" : classes.disabled } onClick={() => setState({...state,openTipoCobro: true})}>
+                            (localStorage.getItem("UsuarioId") === "11" || localStorage.getItem("UsuarioId") === "4") &&
+                            <li>
+                                <a className={(state.idGuia !== 0 && state.cambioCobro) ? "" : classes.disabled}
+                                   onClick={() => setState({...state, openTipoCobro: true})}>
                                     <i className="fa fa-refresh"/> Cambiar Tipo Cobro
                                 </a>
                             </li>
@@ -2147,170 +1755,6 @@ obtenerGuiaId(id).then(({data}) => {
 
                                         <div className="row">
                                             <div className="col-md-12">
-                                                {/*<Grid container spacing={2} alignItems="center">
-
-                                                    <Grid item xs={2}>
-                                                        <TextField variant="outlined" margin="dense"
-                                                                   onChange={handleChangeFiltros}
-                                                                   onKeyDown={handleChangeFiltros}
-                                                                   className="form-control"
-                                                                   type="text"
-                                                                   label="Folio Guía"
-                                                                   id="folio"
-                                                                   name="folio"
-                                                                   value={filtros.folio}
-                                                        />
-                                                    </Grid>
-                                                    <Grid item xs={2}>
-                                                        <FormControl className="input select" fullWidth
-                                                                     variant="outlined">
-                                                            <TextField
-                                                                autoFocus
-                                                                type="date"
-                                                                margin="dense"
-                                                                label="Fecha Inicial"
-                                                                variant="outlined"
-                                                                className="form-control"
-                                                                InputLabelProps={{shrink: true,}}
-                                                                value={filtros.fechaInicial}
-                                                                onChange={handleChangeFiltros}
-                                                                id="fechaInicial"
-                                                                name="fechaInicial"
-                                                            />
-                                                        </FormControl>
-                                                    </Grid>
-                                                    <Grid item xs={2}>
-                                                        <FormControl className="input select" fullWidth
-                                                                     variant="outlined">
-                                                            <TextField variant="outlined" margin="dense"
-                                                                       type="date"
-                                                                       className="form-control"
-                                                                       label="Fecha Final"
-                                                                       InputLabelProps={{
-                                                                           shrink: true,
-                                                                       }}
-                                                                       value={filtros.fechaFinal}
-                                                                       onChange={handleChangeFiltros}
-                                                                       id="fechaFinal"
-                                                                       name="fechaFinal"
-
-                                                            />
-                                                        </FormControl>
-
-                                                    </Grid>
-                                                    <Grid item xs={2}>
-                                                        <FormControl className="input select" fullWidth
-                                                                     variant="outlined">
-                                                            <InputLabel id="idSucusalLabel">Sucursal</InputLabel>
-                                                            <Select
-                                                                labelId="sucursalListadoLabel"
-                                                                label="Sucursal"
-                                                                className="form-control"
-                                                                required
-                                                                value={filtros.sucursalListado}
-                                                                onChange={handleChangeFiltros}
-                                                                id="sucursalListado"
-                                                                name="sucursalListado"
-                                                            >
-                                                                <option value="0">Todas</option>
-                                                                {dataSucursal.map((sucursal) => (
-                                                                    <option
-                                                                        key={sucursal.m_nIdSucursal}
-                                                                        value={sucursal.m_nIdSucursal}
-                                                                    >
-                                                                        {sucursal.m_sSucursal}
-                                                                    </option>
-                                                                ))}
-                                                            </Select>
-                                                        </FormControl>
-                                                    </Grid>
-                                                    <Grid item xs={2}>
-                                                        <FormControl className="input select" fullWidth
-                                                                     variant="outlined">
-                                                            <InputLabel id="idEstatusLabel">Estatus</InputLabel>
-                                                            <Select
-                                                                labelId="estatusListadoLabel"
-                                                                className="form-control"
-                                                                required
-                                                                label="Estatus"
-                                                                value={filtros.estatusListado}
-                                                                onChange={handleChangeFiltros}
-                                                                id="estatusListado"
-                                                                name="estatusListado"
-                                                            >
-                                                                <option value="0">Todos</option>
-                                                                {dataEstatusGuia.map((estatus) => (
-                                                                    <option
-                                                                        key={estatus.m_nIdEstatusGuia}
-                                                                        value={estatus.m_nIdEstatusGuia}
-                                                                    >
-                                                                        {estatus.m_sEstatus}
-                                                                    </option>
-                                                                ))}
-                                                            </Select>
-                                                        </FormControl>
-                                                    </Grid>
-                                                    <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="OrigenListado">Origen</InputLabel>
-                                                        <Select
-                                                            labelId="OrigenListado"
-                                                            className="form-control"
-                                                            required
-                                                            label="Origen"
-                                                            value={filtros.OrigenListado}
-                                                            onChange={handleChangeFiltros}
-                                                            id="OrigenListado"
-                                                            name="OrigenListado"
-                                                        >
-                                                            <option value="0">Todos</option>
-                                                            {dataCiudadF.map((ciudad) => (
-                                                                <option
-                                                                    key={ciudad.m_nIdCiudad}
-                                                                    value={ciudad.m_nIdCiudad}
-                                                                >
-                                                                    {ciudad.m_sCiudad}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                                <Grid item xs={2}>
-                                                    <FormControl className="input select" fullWidth variant="outlined">
-                                                        <InputLabel id="DestinoListado">Destino</InputLabel>
-                                                        <Select
-                                                            labelId="DestinoListado"
-                                                            className="form-control"
-                                                            required
-                                                            label="Destino"
-                                                            value={filtros.DestinoListado}
-                                                            onChange={handleChangeFiltros}
-                                                            id="DestinoListado"
-                                                            name="DestinoListado"
-                                                        >
-                                                            <option value="0">Todos</option>
-                                                            {dataCiudadF.map((ciudad) => (
-                                                                <option
-                                                                    key={ciudad.m_nIdCiudad}
-                                                                    value={ciudad.m_nIdCiudad}
-                                                                >
-                                                                    {ciudad.m_sCiudad}
-                                                                </option>
-                                                            ))}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                                    <Grid item container xs={2}>
-                                                        <IconButton aria-label="delete" onClick={() => {
-                                                            resetFiltros()
-                                                            getAllData()
-                                                        }}>
-                                                            <RestartAltIcon fontSize={"large"}
-                                                                            style={{marginRight: '10px'}}/>
-                                                            Limpiar filtros
-                                                        </IconButton>
-                                                    </Grid>
-                                                </Grid>*/}
                                                 <Filtros
                                                     listaResultado={setDataListado}
                                                     guia={true}
@@ -2501,7 +1945,7 @@ obtenerGuiaId(id).then(({data}) => {
                                                             </div>
                                                         </Grid>
                                                     </Grid>
-                                                    <Grid container spacing={2} style={{marginBottom:'15px'}}>
+                                                    <Grid container spacing={2} style={{marginBottom: '15px'}}>
                                                         <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
@@ -2540,7 +1984,8 @@ obtenerGuiaId(id).then(({data}) => {
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
-                                                                    <InputLabel id="idEstatusGuiaLabel"> Estatus de la Guia</InputLabel>
+                                                                    <InputLabel id="idEstatusGuiaLabel"> Estatus de la
+                                                                        Guia</InputLabel>
                                                                     <Select
                                                                         native
                                                                         labelId="idEstatusGuiaLabel"
@@ -2610,7 +2055,8 @@ obtenerGuiaId(id).then(({data}) => {
                                                             <label className="input select">
                                                                 <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
-                                                                    <InputLabel id="tipoCambioLabel">Tipo de Cambio</InputLabel>
+                                                                    <InputLabel id="tipoCambioLabel">Tipo de
+                                                                        Cambio</InputLabel>
                                                                     <Select
                                                                         native
                                                                         labelId="tipoCambioLabel"
@@ -2781,28 +2227,6 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                            InputLabelProps={{
                                                                                                shrink: true,
                                                                                            }}
-                                                                                           label="Ciudad"
-                                                                                           value={state.ciudadRemitente}
-                                                                                           readOnly={state.agregar == "Consultar"}
-                                                                                           id="ciudadRemitente"
-                                                                                           name="ciudadRemitente"
-                                                                                           disabled="disabled"
-                                                                                />
-
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div className="col-md-4 unit">
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense"
-                                                                                           onChange={handleChange}
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           InputLabelProps={{
-                                                                                               shrink: true,
-                                                                                           }}
                                                                                            label="Correo Electrónico"
                                                                                            value={state.correoRemitente}
                                                                                            readOnly={state.agregar == "Consultar"}
@@ -2852,6 +2276,28 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                            name="contactoRemitente"
                                                                                            disabled="disabled"
                                                                                 />
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div className="col-md-4 unit">
+
+                                                                            <div className="input">
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           onChange={handleChange}
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Zona Tarifa"
+                                                                                           value={state.zonaTarifaRemitente}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="zonaTarifaRemitente"
+                                                                                           name="zonaTarifaRemitente"
+                                                                                           disabled="disabled"
+                                                                                />
+
                                                                             </div>
                                                                         </div>
 
@@ -2978,25 +2424,6 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                            InputLabelProps={{
                                                                                                shrink: true,
                                                                                            }}
-                                                                                           label="Ciudad"
-                                                                                           value={state.ciudadDestinatario}
-                                                                                           readOnly={state.agregar == "Consultar"}
-                                                                                           id="ciudadDestinatario"
-                                                                                           disabled="disabled"
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div className="col-md-4 unit">
-
-                                                                            <div className="input">
-                                                                                <TextField variant="outlined"
-                                                                                           margin="dense"
-                                                                                           className="form-control"
-                                                                                           type="text"
-                                                                                           InputLabelProps={{
-                                                                                               shrink: true,
-                                                                                           }}
                                                                                            label="Correo Electrónico"
                                                                                            value={state.sCorreoDestinatario}
                                                                                            readOnly={state.agregar == "Consultar"}
@@ -3039,6 +2466,25 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                            value={state.sContactoDestinatario}
                                                                                            readOnly={state.agregar == "Consultar"}
                                                                                            id="sContactoDestinatario"
+                                                                                           disabled="disabled"
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div className="col-md-4 unit">
+
+                                                                            <div className="input">
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
+                                                                                           className="form-control"
+                                                                                           type="text"
+                                                                                           InputLabelProps={{
+                                                                                               shrink: true,
+                                                                                           }}
+                                                                                           label="Zona Tarifa"
+                                                                                           value={state.zonaTarifaDestinatario}
+                                                                                           readOnly={state.agregar == "Consultar"}
+                                                                                           id="zonaTarifaDestinatario"
                                                                                            disabled="disabled"
                                                                                 />
                                                                             </div>
@@ -3214,7 +2660,9 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                         value={state.idTipoServicio}
 
                                                                                     >
-                                                                                        <option key={0} value="0">Seleccionar</option>
+                                                                                        <option key={0}
+                                                                                                value="0">Seleccionar
+                                                                                        </option>
                                                                                         {dataTipoServicio.map(
                                                                                             (tipoServicio) => (
                                                                                                 <option
@@ -3248,14 +2696,17 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                            id="ValorDeclarado"
                                                                                            name="ValorDeclarado"
                                                                                            InputProps={{
-                                                                                               startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                                                                               startAdornment:
+                                                                                                   <InputAdornment
+                                                                                                       position="start">$</InputAdornment>,
                                                                                            }}
                                                                                 />
                                                                             </div>
                                                                         </Grid>
                                                                         <Grid item xs>
                                                                             <div className="input">
-                                                                                <TextField variant="outlined" margin="dense"
+                                                                                <TextField variant="outlined"
+                                                                                           margin="dense"
                                                                                            className="form-control"
                                                                                            type="number"
                                                                                            disabled={state.agregar === "Consultar" || !state.aplicaSeguro}
@@ -3265,7 +2716,9 @@ obtenerGuiaId(id).then(({data}) => {
                                                                                            placeholder="%"
                                                                                            name="porcentajeSeguro"
                                                                                            InputProps={{
-                                                                                               endAdornment: <InputAdornment position="start">%</InputAdornment>,
+                                                                                               endAdornment:
+                                                                                                   <InputAdornment
+                                                                                                       position="start">%</InputAdornment>,
                                                                                            }}
                                                                                 />
                                                                             </div>
@@ -3566,7 +3019,6 @@ obtenerGuiaId(id).then(({data}) => {
 
     );
 }
-
 
 
 export default Guia;

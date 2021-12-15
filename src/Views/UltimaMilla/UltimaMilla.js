@@ -151,7 +151,7 @@ class UltimaMilla extends Component {
     }
 
     async changeMapLocation(location) {
-        searchLocationWeb(location.m_sMunicipio, location.m_sCalle, location.m_sColonia, location.m_sNoExterior).then((data) => {
+        searchLocationWeb(location.m_sMunicipio, location.m_sCalle, location.m_sColonia, location.m_sNoExterior, location.m_sCodigoPostal).then((data) => {
             if (data) {
                 this.setState({lat: data.y, lng: data.x})
                 this.state.map.setView([data.y, data.x], 14)
@@ -212,6 +212,8 @@ class UltimaMilla extends Component {
                         }
                     }
                     results.tours.map(t => t.color = randomColor(10))
+
+                    console.log(guias)
                     this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
                 }
             })

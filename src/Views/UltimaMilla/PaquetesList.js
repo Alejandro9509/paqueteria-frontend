@@ -102,6 +102,7 @@ class PaquetesList extends Component {
     };
 
     handleClick(event, row) {
+        console.log(row)
         const selectedIndex = this.props.paquetesSeleccionadas.map(u => u.m_nId).indexOf(row.m_nId);
         let newSelected = [];
 
@@ -117,6 +118,7 @@ class PaquetesList extends Component {
                 this.props.paquetesSeleccionadas.slice(selectedIndex + 1),
             );
         }
+        console.log(newSelected)
         this.props.selectPaquetes(newSelected)
     };
 
@@ -253,7 +255,6 @@ class PaquetesList extends Component {
                         {
                             this.stableSort(this.state.paquetes, this.getComparator(this.state.order, this.state.orderBy)).map((u, index) => {
                                 const isItemSelected = isSelected(u.m_nId);
-                                console.log(isItemSelected)
                                 const labelId = `enhanced-table-checkbox-${index}`;
                                 return (
                                     <TableRow>

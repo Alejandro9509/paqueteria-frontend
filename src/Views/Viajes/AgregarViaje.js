@@ -958,7 +958,7 @@ class AgregarViaje extends Component {
                                                     disableClearable
                                                     disabled={this.props.consult}
                                                     forcePopupIcon={false}
-                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
+                                                    options={this.state.dataUnidades && this.state.dataUnidades}
                                                     getOptionLabel={(option) =>
                                                         `${option.m_sCodigo} - ${option.m_sDescripcion}`
                                                     }
@@ -1071,7 +1071,7 @@ class AgregarViaje extends Component {
                                                     disableClearable
                                                     disabled={this.props.consult}
                                                     forcePopupIcon={false}
-                                                    options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}
+                                                    options={this.state.dataUnidades && this.state.dataUnidades}
                                                     getOptionLabel={(option) =>
                                                         `${option.m_sCodigo} - ${option.m_sDescripcion}`
                                                     }
@@ -1184,7 +1184,7 @@ class AgregarViaje extends Component {
                                                 disableClearable
                                                 disabled={this.props.consult}
                                                 forcePopupIcon={false}
-                                                options={this.state.dataUnidades && this.state.dataUnidades.filter((g) => g.m_nIdTipoUnidad === 28)}
+                                                options={this.state.dataUnidades && this.state.dataUnidades}
                                                 getOptionLabel={(option) =>
                                                     option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                 }

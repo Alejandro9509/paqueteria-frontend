@@ -77,6 +77,14 @@ function obtenerProductos(){
     );
     return result
 }
+function obtenerProductosByConvenioCliente(idCliente){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Productos/GetByConvenioCliente/${idCliente}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 
 function modificarProducto(idProducto,params){
     const url = `${process.env.REACT_APP_API_URL}/Productos/Modificar/${idProducto}`;
@@ -103,4 +111,4 @@ function  agregarProducto(params){
     );
     return result
 }*/
-export {obtenerProductoById,obtenerProductos,modificarProducto,agregarProducto}
+export {obtenerProductoById,obtenerProductos,modificarProducto,agregarProducto,obtenerProductosByConvenioCliente}
