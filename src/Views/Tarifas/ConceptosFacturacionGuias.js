@@ -32,6 +32,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,keys, conceptosBase=[],ivaRetiene, ivaTraslada}) {
 
     function RowMenuCell(props) {
@@ -145,7 +146,10 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         ivaTraslada: [],
         ivaRetiene: [],
         tiposCalculo: [],
-        columns: []
+        columns: [],
+        aplicarDescuento: false,
+        descuentoPorConcepto: false,
+        descuentoPorTotal: false,
     })
 
     const resetPaquete = () =>{
