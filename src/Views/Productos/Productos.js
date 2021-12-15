@@ -1,216 +1,574 @@
-import React from 'react';
+import React, { useEffect } from "react";
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import {DataGrid} from "@material-ui/data-grid";
-import {FormControl, InputLabel, Select, TextField, Tooltip} from "@material-ui/core";
-import {confirmAlert} from "react-confirm-alert";
-import {dataGridLocaleText} from "../../Constants";
+import { DataGrid } from "@material-ui/data-grid";
+import Noty from "noty";
+import {
+  FormControl,
+  Grid,
+  InputLabel,
+  Select,
+  TextField,
+  Tooltip,
+} from "@material-ui/core";
+import { confirmAlert } from "react-confirm-alert";
+import { dataGridLocaleText } from "../../Constants";
+import { obtenerEmbalajes } from "../../Util/Contexts/EmbalajesContext";
+import $ from "jquery";
+import {
+  obtenerProductos,
+  obtenerProductoById,
+  agregarProducto,
+  modificarProducto
+} from "../../Util/Contexts/ProductosContext";
+function showSuccess(mensaje) {
+  new Noty({
+    type: "information",
+    layout: "topCenter",
+    text: mensaje,
+    timeout: "3000",
+  }).show();
+}
 
-function Productos(){
+function Productos() {
+  /*-=---------------------------------------------Variables------------------------------------------------=-*/
+  const [state, setState] = React.useState({
+    agregar: "Agregar",
+    height: window.innerHeight,
+  });
+  const [form, setForm] = React.useState({
+    Descripcion: "",
+    Largo: "",
+    Ancho: "",
+    Alto: "",
+    Peso: "",
+    Volumen: "",
+    IdTipoEmbalaje: "",
+    Embalaje: "",
+    Activo: false,
+    IdProducto: "",
+    NoProducto: "",
+  });
+  const [productos, setProductos] = React.useState([]);
+  const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
+  const columns = React.useMemo(() => [
+    {
+      headerName: "Acciones",
+      soportable: false,
+      filterable: false,
+      field: "",
+      renderCell: (row) => {
+        return (
+          <div>
+            <Tooltip title={"Modificar"}>
+              <a
+                href={"#Agregar"}
+                role={"tab"}
+                data-toggle={"tab"}
+                onClick={() => handleShowModificar(row.row)}
+                className={"btn btn-default btn-xs"}
+              >
+                <i
+                  className={"fa fa-pencil-square-o"}
+                  style={{ color: "#F9A03E" }}
+                />
+              </a>
+            </Tooltip>
+            <Tooltip title={"Consultar"}>
+              <a
+                href={"#Agregar"}
+                data-toggle={"tab"}
+                className={"btn btn-default btn-xs"}
+                onClick={() => handleShowConsultar(row.row)}
+              >
+                <i className={"fa fa-eye"} style={{ color: "#F9A03E" }} />
+              </a>
+            </Tooltip>
+            <Tooltip title={"Eliminar"}>
+              <a
+                href="#"
+                className="btn btn-default btn-xs"
+                onClick={() =>
+                  confirmAlert({
+                    title: "Confirmar Eliminar",
+                    message: "Está seguro de eliminar Condición?",
+                    buttons: [
+                      {
+                        label: "Si",
+                        onClick: () => handleEliminar(row.row),
+                      },
+                      {
+                        label: "No",
+                      },
+                    ],
+                  })
+                }
+              >
+                <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
+              </a>
+            </Tooltip>
+          </div>
+        );
+      },
+    },
+    {
+      headerName: "IdProducto",
+      field: "m_nIdProducto",
+      width: 100,
+    },
+    {
+      headerName: "Descripción",
+      field: "m_sDescripcion",
+      width: 300,
+    },
+    {
+      headerName: "IdTipoEmbalaje",
+      field: "m_nIdEmbalaje",
+      width: 150,
+    },
+    {
+      headerName: "Embalaje",
+      field: "m_sEmbalaje",
+      width: 300,
+    },
+    {
+      headerName: "Activo",
+      field: "m_bActivo",
+      width: 300,
+    },
+  ]);
 
-    const [state, setState] = React.useState({
-        agregar: "Agregar",
-        height: window. innerHeight,
-        descripcion : "",
+  /*-=---------------------------------------------Handlers------------------------------------------------------=-*/
+  function handleShowAgregar() {
+    setState({
+      ...state,
+      agregar: "Agregar",
     });
+    $(".nav-tabs li ").removeClass("active");
+    $(".nav-tabs li").eq(1).addClass("active");
+    $(".tab-content div ").removeClass("in show");
+    $("#Agregar").addClass("in show");
+  }
 
-    const [data, setData] = React.useState([
-        {
-            id: 0,
-            descripcion: "Descripción uno",
-        },
-        {
-            id: 1,
-            descripcion: "Desctipcion Dos",
-        }
-    ])
-    const columns = React.useMemo(() => [
-        {
-            headerName: "Acciones",
-            soportable: false, filterable: false,
-            field: "",
-            renderCell: (row) => {
-                return(
-                    <div>
-                        <Tooltip title={"Agregar"}>
-                            <a href={"#Agregar"}
-                               role={"tab"}
-                               data-toggle={"tab"}
-                               onClick={() => (handleShowModificar(row.row))}
-                               className={"btn btn-default btn-xs"}>
-                                <i className={"fa fa-pencil-square-o"}
-                                   style={{ color: "#F9A03E" }}/>
-                            </a>
-                        </Tooltip>
-                        <Tooltip title={"Consultar"}>
-                            <a href={"#Agregar"}
-                               role={"tab"}
-                               data-toggle={"tab"}
-                               className={"btn btn-default btn-xs"}
-                               onClick={() => (handleShowModificar(row.row))}>
-                                <i className={"fa fa-eye"} style={{ color: "#F9A03E" }} />
-                            </a>
-                        </Tooltip>
-                        <Tooltip title={"Eliminar"}>
-                            <a href="#"
-                               className="btn btn-default btn-xs"
-                               onClick={() => confirmAlert({
-                                   title: 'Confirmar Eliminar',
-                                   message: 'Está seguro de eliminar Condición?',
-                                   buttons: [
-                                       {
-                                           label: 'Si',
-                                           onClick: () => handleEliminar(row.row)
-                                       },
-                                       {
-                                           label: 'No',
-                                       }
-                                   ]
-                               })}>
-                                <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
-                            </a>
-                        </Tooltip>
-                    </div>
-                )
-            }
-        },
-        {
-            headerName: "ID",
-            field: "id",
-            width: 100,
-        },
-        {
-            headerName: "Descripción",
-            field: "descripcion",
-            width: 400,
-        },
-    ]);
+  function handleShowModificar(row) {
+    setState({
+      ...state,
+      agregar: "Modificar",
+    });
+    getProductoById(row.m_nIdProducto);
+    $(".nav-tabs li ").removeClass("active");
+    $(".nav-tabs li").eq(1).addClass("active");
+    $(".tab-content div ").removeClass("in show");
+    $("#Agregar").addClass("in show");
+  }
 
-    function handleShowAgregar(){
-     setState({
-         ...state,
-         agregar: "Agregar",
-     });
+  function handleEliminar(row) {
+  }
+
+  function handleShowConsultar(row) {
+    setState({
+      ...state,
+      agregar: "Consultar",
+    });
+    getProductoById(row.m_nIdProducto);
+    $(".nav-tabs li ").removeClass("active");
+    $(".nav-tabs li").eq(1).addClass("active");
+    $(".tab-content div ").removeClass("in show");
+    $("#Agregar").addClass("in show");
+  }
+  const handleShowListado = (event) => {
+    if (event) {
+      event.stopPropagation();
     }
+    setState({
+      ...state,
+      agregar: "Agregar",
+    });
+    getAllProductos();
+    limpiarCamposAgregar();
+    $(".nav-tabs li ").removeClass("active");
+    $(".nav-tabs li").eq(0).addClass("active");
+    $(".tab-content div ").removeClass("in show");
+    $("#Listado").addClass("in show");
+  };
+  const handleAceptar = (e) => {
+    e.preventDefault();
 
-    function handleShowModificar(row){
-        console.log(row)
-        setState({
-            ...state,
-            descripcion: row.descripcion,
-        })
-    }
-
-    function handleEliminar(row){
-        console.log(row)
-    }
-
-    const handleAceptar = (e) => {
-        console.log("submit")
+    let params = {
+      Descripcion: form.Descripcion,
+      Largo: form.Largo,
+      Ancho: form.Ancho,
+      Alto: form.Alto,
+      Peso: form.Peso,
+      IdTipoEmbalaje: form.IdTipoEmbalaje,
+      Embalaje: form.Embalaje,
+      Activo: form.Activo,
+      NoProducto: form.IdProducto,
     };
-    const handleChange = (e) => {
-        setState({
-            ...state,
-            [e.target.id]: e.target.value
+console.log(params)
+     if (form.IdProducto != 0) {
+      modificarProducto(form.IdProducto, params)
+        .then((respuesta) => {
+          showSuccess("Modificado Exitosamente");
+          handleShowListado();
+        })
+        .catch((err) => {
+          console.log(err);
+          showSuccess("El Usuario no tiene derecho para modificar");
+        });
+    } else {
+      agregarProducto(params)
+        .then((respuesta) => {
+          showSuccess("Agregado Exitosamente");
+          console.log(respuesta.data);
+          handleShowListado();
+        })
+        .catch((err) => {
+          console.log(err);
+          showSuccess(err);
         });
     }
+    console.log("submit", params);
+  };
 
-    return(
-        <div>
-            <header className="topbar clearfix">
-                <Cabecera titulo="Condiciones de recepción y entrega" >
-                    <div className="page-header">
-                        <ul className="list-page-breadcrumb">
-                            <li>
-                                <a href="/Catalogos" className="color-mapeo">
-                                    Catálogos <i className="zmdi zmdi-chevron-right" />
-                                </a>
-                            </li>
-                            <li className="active-page">Condiciones de eeception y entrega</li>
-                        </ul>
-                    </div>
-                </Cabecera>
-            </header>
-            {/*Leftbar Start Here*/}
-            <aside className="iconic-leftbar">
-                <BarraLateralIzquierda />
-            </aside>
-            {/*Leftbar End Here*/}
-            <section className={"main-container"}>
-                <div className={"content-fluid"}>
-                    <ul className={"nav navStatica nav-tabs"}>
-                        <li className={"active"}>
-                            <a data-toggle={"tab"} href={"#Listado"}>
-                                <i className={"fa fa-list"}/> Listado
-                            </a>
-                        </li>
-                        <li>
-                            <a data-toggle={"tab"} href={"#Agregar"} onClick={handleShowAgregar}>
-                                <i className={"fa fa-plus-circle"}/> {state.agregar}
-                            </a>
-                        </li>
-                    </ul>
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.id]: e.target.value,
+    });
+    if (e.target.name == "IdTipoEmbalaje") {
+      setForm((embalaje) => {
+        return {
+          ...embalaje,
+          Embalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == e.target.value)
+            .m_sNombre,
+          IdTipoEmbalaje: e.target.value,
+        };
+      });
+    }
+  };
+  const handleChecked = (e) => {
+    setForm({
+      ...form,
+      [e.target.id]: e.target.checked,
+    });
+  };
 
-                    <div className={"row"} className={"tab-content"}>
-                        <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
-                            <div className="widget-wrap">
-                                <div className="widget-content">
-                                    <div className={"row"} style={{height: state.height -250, width: '100%'}}>
-                                        <DataGrid columns={columns} rows={data}
-                                                  locateText={dataGridLocaleText}
-                                                  density={"compact"}
-                                                  pageSize={Math.floor((state.height - 310) / 30)}/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="widget-wrap" id="Agregar" className="tab-pane fade">
-                            <div className="widget-wrap">
-                                <div className="widget-content">
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <form className="j-forms" onSubmit={handleAceptar}>
-                                                <div className="form-content">
-                                                    <div className="row">
-                                                        <div className="col-xs-6 col-sm-3 col-md-2-5 col-lg-2-5 unit">
-                                                            <div className="input">
-                                                                <TextField variant="outlined" margin="dense" label="Descripción"
-                                                                           onChange={handleChange}
-                                                                           className="form-control"
-                                                                           type="text"
-                                                                           maxLength="50"
-                                                                           required
-                                                                           value={state.descripcion}
-                                                                           placeholder={state.descripcion}
-                                                                           id="descripcion"
-                                                                           maxLength="50"/>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row">
-                                                        <div className="form-footer" className="col-sm-6 col-md-5 unit">
-                                                            <button href="#Listado"
-                                                                    role="tab"
-                                                                    data-toggle="tab"
-                                                                    data-layout="topCenter"
-                                                                    data-type="information"
-                                                                    className="btn btn-secondary secondary-btn"> Cancelar</button>
-                                                            <button type="submit"
-                                                                    className="btn btn-primary primary-btn">Aceptar</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  const limpiarCamposAgregar = (e) => {
+    setForm((producto) => {
+      return {
+        ...producto,
+        Descripcion: "",
+        Largo: "",
+        Ancho: "",
+        Peso: "",
+        Alto:"",
+        Volumen: "",
+        IdTipoEmbalaje: "",
+        Embalaje: "",
+        Activo: false,
+        IdProducto: "",
+        NoProducto: "",
+      };
+    });
+  };
+  //--=-----------------------------------------Servicios--------------------------------------------------------=-*/
+  function getAllEmbalajes() {
+    obtenerEmbalajes().then((respuesta) => {
+      setDataEmbalaje(respuesta.data);
+    });
+  }
+  function getAllProductos() {
+    obtenerProductos().then((respuesta) => {
+      setProductos(respuesta.data);
+    });
+  }
+  function getProductoById(id) {
+    obtenerProductoById(id).then((respuesta) => {
+
+        console.log(respuesta)
+      setForm((form) => {
+        return {
+          ...form,
+          Descripcion: respuesta.data.m_sDescripcion,
+          Largo: respuesta.data.m_xLargo,
+          Ancho: respuesta.data.m_xAncho,
+          Peso: respuesta.data.m_xPeso,
+          Alto:respuesta.data.m_xAlto,
+          Volumen: respuesta.data.m_xLargo * respuesta.data.m_xAncho * respuesta.data.m_xAlto,
+          IdTipoEmbalaje: respuesta.data.m_nIdEmbalaje,
+          Embalaje: respuesta.data.m_sEmbalaje,
+          Activo: respuesta.data.m_bActivo,
+          IdProducto: respuesta.data.m_nIdProducto,
+          NoProducto: respuesta.data.m_nNoProducto,
+        };
+      });
+    });
+  }
+  /*--=---------------------------------------Hooks useEffect-------------------------------------------------=--*/
+  useEffect((value) => {
+    getAllEmbalajes();
+    if (productos.length != 0) {
+      return;
+    } else {
+      getAllProductos();
+    }
+    //getAllSATServicios()
+    //getAllSATUnidades()
+  }, []);
+
+  return (
+    <div>
+      <header className="topbar clearfix">
+        <Cabecera titulo="Productos"></Cabecera>
+      </header>
+      {/*Leftbar Start Here*/}
+      <aside className="iconic-leftbar">
+        <BarraLateralIzquierda />
+      </aside>
+      {/*Leftbar End Here*/}
+      <section className={"main-container"}>
+        <div className={"content-fluid"}>
+          <ul className={"nav navStatica nav-tabs"}>
+            <li className={"active"}>
+              <a data-toggle={"tab"} onClick={handleShowListado}>
+                <i className={"fa fa-list"} /> Listado
+              </a>
+            </li>
+            <li>
+              <a data-toggle={"tab"} onClick={handleShowAgregar}>
+                <i className={"fa fa-plus-circle"} /> {state.agregar}
+              </a>
+            </li>
+          </ul>
+
+          <div className={"row"} className={"tab-content"}>
+            {/*Seccion de Listado*/}
+            <div className="widget-wrap tab-pane fade in show" id="Listado">
+              <div className="widget-wrap">
+                <div className="widget-content">
+                  <div
+                    className={"row"}
+                    style={{ height: state.height - 250, width: "100%" }}
+                  >
+                    <DataGrid
+                      columns={columns}
+                      rows={productos}
+                      locateText={dataGridLocaleText}
+                      pagination
+                      getRowId={(row) => row.m_nIdProducto}
+                      pageSize={20}
+                    />
+                  </div>
                 </div>
-            </section>
+              </div>
+            </div>
+
+            {/*Seccion de Agregar,Consultar y Modificar*/}
+            <div className="widget-wrap tab-pane fade" id="Agregar">
+              <div className="widget-wrap">
+                <div className="widget-content">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <form className="j-forms" onSubmit={handleAceptar}>
+                        <div className="form-content">
+                          <Grid container spacing={1}>
+                            <Grid item xs={2}>
+                              <div className="input">
+                                <TextField
+                                  variant="outlined"
+                                  margin="dense"
+                                  label="Descripción"
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  maxLength="50"
+                                  required
+                                  readOnly={state.agregar == "Consultar"}
+                                  value={form.Descripcion}
+                                  placeholder={form.Descripcion}
+                                  id="Descripcion"
+                                />
+                              </div>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <div className="input">
+                                <TextField
+                                  variant="outlined"
+                                  margin="dense"
+                                  className="form-control"
+                                  type="text"
+                                  onChange={handleChange}
+                                  value={form.Largo}
+                                  label="Largo"
+                                  readOnly={state.agregar == "Consultar"}
+                                  placeholder="cms"
+                                  name="Largo"
+                                  id="Largo"
+                                />
+                              </div>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <div className="input">
+                                <TextField
+                                  variant="outlined"
+                                  margin="dense"
+                                  className="form-control"
+                                  type="text"
+                                  onChange={handleChange}
+                                  label="Ancho"
+                                  readOnly={state.agregar == "Consultar"}
+                                  value={form.Ancho}
+                                  placeholder="cms"
+                                  name="Ancho"
+                                  id="Ancho"
+                                />
+                              </div>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <div className="input">
+                                <TextField
+                                  variant="outlined"
+                                  margin="dense"
+                                  className="form-control"
+                                  type="text"
+                                  onChange={handleChange}
+                                  value={form.Alto}
+                                  label="Alto"
+                                  readOnly={state.agregar == "Consultar"}
+                                  placeholder="cms"
+                                  name="Alto"
+                                  id="Alto"
+                                />
+                              </div>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <div className="input">
+                                <TextField
+                                  variant="outlined"
+                                  margin="dense"
+                                  className="form-control"
+                                  type="text"
+                                  onChange={handleChange}
+                                  label="Peso"
+                                  readOnly={state.agregar == "Consultar"}
+                                  value={form.Peso}
+                                  placeholder="kg"
+                                  name="Peso"
+                                  id="Peso"
+                                />
+                              </div>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <div className="input">
+                                <TextField
+                                  variant="outlined"
+                                  margin="dense"
+                                  onChange={handleChange}
+                                  className="form-control"
+                                  type="text"
+                                  value={form.Volumen}
+                                  label="Volumen"
+                                  readOnly={state.agregar == "Consultar"}
+                                  placeholder="cm3"
+                                  name="Volumen"
+                                  id="Volumen"
+                                />
+                              </div>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <label className="input select">
+                                <FormControl
+                                  fullWidth
+                                  variant="outlined"
+                                  margin="dense"
+                                >
+                                  <InputLabel id="m_nIdTipoEmbalajeLabel">
+                                    Embalaje
+                                  </InputLabel>
+                                  <Select
+                                    label="Embalaje"
+                                    labelId="m_nIdTipoEmbalajeLabel"
+                                    className="form-control"
+                                    value={form.IdTipoEmbalaje}
+                                    id="IdTipoEmbalaje"
+                                    name="IdTipoEmbalaje"
+                                    onChange={handleChange}
+                                    readOnly={state.agregar == "Consultar"}
+                                  >
+                                    {dataEmbalaje.map((embalaje) => (
+                                      <option
+                                        key={embalaje.m_nIdEmbalaje}
+                                        value={embalaje.m_nIdEmbalaje}
+                                      >
+                                        {embalaje.m_sNombre}
+                                      </option>
+                                    ))}
+                                  </Select>
+                                </FormControl>
+                                <i className="fa fa-arrow-down" />
+                              </label>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <Grid container>
+                                <Grid item xs={12}>
+                                  <label className="label">Estatus</label>
+                                </Grid>
+                                <Grid item xs={2}>
+                                  <input
+                                    native
+                                    className="form-control col-sm"
+                                    type="checkbox"
+                                    onChange={handleChecked}
+                                    checked={form.Activo}
+                                    style={{ height: "20px" }}
+                                    id="Activo"
+                                    name="Activo"
+                                    disabled={state.agregar == "Consultar"}
+                                  />
+                                  <i />
+                                </Grid>
+                                <Grid item xs={4}>
+                                  <label
+                                    className="checkbox"
+                                    style={{ padding: "10px 0 0px 3px" }}
+                                  >
+                                    Activo
+                                  </label>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <div className="form-footer">
+                                <button
+                                  onClick={handleShowListado}
+                                  className="btn btn-secondary secondary-btn"
+                                  disabled={state.agregar == "Consultar"}
+                                >
+                                  Cancelar
+                                </button>
+                                <button
+                                  type="submit"
+                                  className="btn btn-primary primary-btn"
+                                  disabled={state.agregar == "Consultar"}
+                                >
+                                  Aceptar
+                                </button>
+                              </div>
+                            </Grid>
+                          </Grid>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    )
+      </section>
+    </div>
+  );
 }
 
 export default Productos;
