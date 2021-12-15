@@ -1,5 +1,16 @@
 import React, {useEffect, useState} from "react";
-import {FormControl, Grid, InputLabel, Select} from "@material-ui/core";
+import {
+    Card, CardActionArea,
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    Grid,
+    InputLabel,
+    Paper,
+    Radio,
+    RadioGroup,
+    Select
+} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
@@ -147,9 +158,8 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         ivaRetiene: [],
         tiposCalculo: [],
         columns: [],
-        aplicarDescuento: false,
-        descuentoPorConcepto: false,
-        descuentoPorTotal: false,
+        aplicaDescuento: false,
+        aplicarDescuentoA: 'Concepto',
     })
 
     const resetPaquete = () =>{
@@ -239,13 +249,22 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
     }
 
     const calcularDescuento = (event) => {
-        setConcepto(concepto=>{
-            return {
-                ...concepto,
-                importeInicial: parseFloat(concepto.importe).toFixed(2)
-            }
-        })
-        calcularImpuestos(concepto.traslada, concepto.retiene, concepto.importe - (concepto.importe * (concepto.descuento/100)))
+        debugger
+        if (state.aplicarDescuentoA === "Concepto"){
+            setConcepto(concepto=>{
+                return {
+                    ...concepto,
+                    importeInicial: parseFloat(concepto.importe).toFixed(2)
+                }
+            })
+            calcularImpuestos(concepto.traslada, concepto.retiene, concepto.importe - (concepto.importe * (concepto.descuento/100)))
+        }else if (state.aplicarDescuentoA === "Total"){
+            dataPaquetes.forEach(item => {
+                item.importe = item.importe * (concepto.descuento/100)
+            })
+            onChangeList(dataPaquetes)
+        }
+
     }
 
     const calcularImpuestos = (traslada, retiene, importe) => {
@@ -286,6 +305,20 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
             calcularImpuestos(event.target.value, concepto.retiene, concepto.importe)
         } else if (event.target.name === "retiene") {
             calcularImpuestos(concepto.traslada, event.target.value, concepto.importe)
+        } else if(event.target.name === "aplicaDescuento") {
+            setState(state => {
+                return {
+                    ...state,
+                    [event.target.name]: event.target.checked
+                }
+            })
+        } else if(event.target.name === "aplicarDescuentoA") {
+            setState(state => {
+                return {
+                    ...state,
+                    [event.target.name]: event.target.value
+                }
+            })
         } else {
             setConcepto(concepto => {
                 return {
@@ -346,60 +379,12 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                                             label="Concepto"
                                             className="form-control"
                                             margin="dense"
-                                            required
                                         />
                                     </div>
                                 )}
                             />
                         </div>
                     </Grid>
-                    {/*<Grid item xs={2}>
-                        <label className="input select" style={{ width: "100%" }}>
-                            <FormControl fullWidth variant="outlined" margin="dense">
-                                <InputLabel id="tipoLabel">Medida</InputLabel>
-                                <Select
-                                    labelId="tipoMedidaLabel"
-                                    label="Medida"
-                                    className="form-control"
-                                    onChange={handleChangePaquetev2}
-                                    name="tipoMedida"
-                                    value={concepto.tipoMedida}
-                                >
-                                    <option key={0} value={0}>Selecciona</option>
-                                    <option key={1} value={1}>Kg</option>
-                                    <option key={2} value={2}>Toneladas</option>
-                                    <option key={3} value={3}>Piezas</option>
-
-                                </Select>
-                            </FormControl>
-                        </label>
-                    </Grid>*/}
-                    {/*<Grid item xs={2}>
-                        <div className="input">
-                            <TextField variant="outlined" margin="dense"
-                                       onChange={handleChangePaquetev2}
-                                       className="form-control"
-                                       type="number"
-                                       label="Min"
-                                       style={{textAlign: "right"}}
-                                       value={concepto.rangoMinimo}
-                                       name="rangoMinimo"
-                            />
-                        </div>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <div className="input">
-                            <TextField variant="outlined" margin="dense"
-                                       onChange={handleChangePaquetev2}
-                                       className="form-control"
-                                       type="number"
-                                       label="Max"
-                                       style={{textAlign: "right"}}
-                                       value={concepto.rangoMaximo}
-                                       name="rangoMaximo"
-                            />
-                        </div>
-                    </Grid>*/}
                     <Grid item xs>
                         <div className="input">
                             <TextField variant="outlined" margin="dense"
@@ -497,82 +482,84 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             />
                         </div>
                     </Grid>
-
-                    {/*<Grid item xs={2}>
-                        <label className="input select" style={{width: "100%"}}>
-                            <FormControl fullWidth variant="outlined" margin="dense">
-                                <InputLabel id="tipoLabel">Tipo Cálculo</InputLabel>
-                                <Select
-                                    labelId="tipoLabel"
-                                    label="Tipo Cálculo"
-                                    className="form-control"
+                    <Grid item xs>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={state.aplicaDescuento}
                                     onChange={handleChangePaquetev2}
-                                    name="tipoCalculo"
-                                    value={concepto.tipoCalculo}
-                                >
-                                    <option key={0} value={0}>Selecciona</option>
-                                    {state.tiposCalculo.map((t) =>
-                                        (t.m_nIdTarifaTipoCalculo == 3 ? concepto.tipoMedida == 3 &&
-                                            <option key={t.m_nIdTarifaTipoCalculo}
-                                                    value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>
-                                            : <option key={t.m_nIdTarifaTipoCalculo}
-                                                      value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>))
-                                    }
-                                </Select>
-                            </FormControl>
-                        </label>
-                    </Grid>*/}
-
-                    <Grid item xs>
-                        <div className="input">
-                            <TextField variant="outlined" margin="dense"
-                                       onChange={handleChangePaquetev2}
-                                       className="form-control"
-                                       type="number"
-                                       style={{textAlign: "right"}}
-                                       label="Porcentaje Descuento"
-                                       step="1"
-                                       min="0"
-                                       value={concepto.descuento}
-                                       name="descuento"
-                                       helperText={`Importe inicial: ${concepto.importeInicial}`}
-                                       InputProps={{
-                                           style: {
-                                               height: "33px",
-                                               fontSize: "14px",
-                                           },
-                                           type: "search",
-                                           disableUnderline: true,
-                                           endAdornment: (
-                                               <InputAdornment position="end">
-                                                   <IconButton
-                                                       padding="0px"
-                                                       style={{paddingRight: "0px",}}
-                                                       onClick={calcularDescuento}
-                                                   >
-                                                       <ArrowForwardIcon
-                                                           style={{
-                                                               color: "#F9A03E",
-                                                               fontSize: 32,
-                                                               paddingInlineEnd: 0,
-                                                               paddingRight: 0,
-                                                               paddingBlockEnd: 0,
-                                                               paddingLeft: 0,
-                                                               paddingBlock: 0,
-                                                               cursor:"pointer"
-                                                           }}
-                                                       />
-                                                   </IconButton>
-                                               </InputAdornment>
-                                           ),
-                                       }}
-                            />
-                        </div>
+                                    name="aplicaDescuento"
+                                    color="primary"
+                                />
+                            }
+                            label="Agregar descuento"
+                        />
                     </Grid>
-                    <Grid item xs>
-                        <IconButton onClick={addPaquetev2} style={{ padding: "0px" }}>
+                    {state.aplicaDescuento &&
+                    <Grid item container spacing={1}>
+                        <RadioGroup aria-label="gender" name="aplicarDescuentoA" value={state.aplicarDescuentoA} onChange={handleChangePaquetev2}>
+                            <FormControlLabel value="Concepto" control={<Radio />} label="Aplicar a concepto" />
+                            <FormControlLabel value="Total" control={<Radio />} label="Aplicar a total" />
+                        </RadioGroup>
+                        <Grid item xs={2}>
+                            <div className="input">
+                                <TextField variant="outlined" margin="dense"
+                                           onChange={handleChangePaquetev2}
+                                           className="form-control"
+                                           type="number"
+                                           style={{textAlign: "right"}}
+                                           label="Porcentaje Descuento"
+                                           step="1"
+                                           min="0"
+                                           value={concepto.descuento}
+                                           name="descuento"
+                                           helperText={`Importe inicial: ${concepto.importeInicial}`}
+                                           InputProps={{
+                                               style: {
+                                                   height: "33px",
+                                                   fontSize: "14px",
+                                               },
+                                               type: "search",
+                                               disableUnderline: true,
+                                               endAdornment: (
+                                                   <InputAdornment position="end">
+                                                       <IconButton
+                                                           padding="0px"
+                                                           style={{paddingRight: "0px",}}
+                                                           onClick={calcularDescuento}
+                                                           disabled={!(concepto.descuento.length > 0 && concepto.descuento > 0)}
+                                                       >
+                                                           <ArrowForwardIcon
+                                                               style={{
+                                                                   color: "#F9A03E",
+                                                                   fontSize: 32,
+                                                                   paddingInlineEnd: 0,
+                                                                   paddingRight: 0,
+                                                                   paddingBlockEnd: 0,
+                                                                   paddingLeft: 0,
+                                                                   paddingBlock: 0,
+                                                                   cursor:"pointer"
+                                                               }}
+                                                           />
+                                                       </IconButton>
+                                                   </InputAdornment>
+                                               ),
+                                           }}
+                                />
+                            </div>
+                        </Grid>
+                    </Grid>
+                    }
+                    <Grid item container xs={12}>
+                        {/*<IconButton onClick={addPaquetev2} style={{ padding: "0px" }}>
                             <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
-                        </IconButton>
+                        </IconButton>*/}
+                        {/*<Paper onClick={addPaquetev2} style={{width:'100%', height:'50px',backgroundColor: "green"}}/>*/}
+                        <Card style={{backgroundColor: "green",width:'100%',fontSize: "large", textAlign:'center', color:'white'}}>
+                            <CardActionArea onClick={addPaquetev2} style={{height:'30px'}}>
+                                Agregar concepto
+                            </CardActionArea>
+                        </Card>
                     </Grid>
                 </Grid>
             </div>
