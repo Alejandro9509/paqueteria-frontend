@@ -86,6 +86,23 @@ function obtenerProductosByConvenioCliente(idCliente){
     return result
 }
 
+function modificarProducto(idProducto,params){
+    const url = `${process.env.REACT_APP_API_URL}/Productos/Modificar/${idProducto}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+        );
+    return result
+}
+
+function  agregarProducto(params){
+    const url = `${process.env.REACT_APP_API_URL}/Productos/Agregar`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, params), { headers })
+        );
+    return result
+}
 /*function obtenerCodigosPostalesPorCiudad(id){
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/${id}`;
     let result;
@@ -94,4 +111,4 @@ function obtenerProductosByConvenioCliente(idCliente){
     );
     return result
 }*/
-export {obtenerProductoById,obtenerProductos,obtenerProductosByConvenioCliente}
+export {obtenerProductoById,obtenerProductos,modificarProducto,agregarProducto,obtenerProductosByConvenioCliente}
