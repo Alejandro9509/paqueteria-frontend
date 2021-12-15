@@ -327,7 +327,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                                             label="Concepto"
                                             className="form-control"
                                             margin="dense"
-                                            required
                                         />
                                     </div>
                                 )}
