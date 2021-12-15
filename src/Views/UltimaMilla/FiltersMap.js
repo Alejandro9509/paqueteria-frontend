@@ -214,7 +214,9 @@ class FiltersMap extends Component {
     }
 
     reasignarOperador(unidad) {
+        console.log(unidad)
         obtenerOperadores().then(({data}) => {
+
             this.setState({
                 operadores: data,
                 unidadSeleccionada: unidad.m_nIdUnidad,
@@ -235,7 +237,7 @@ class FiltersMap extends Component {
 
     asignarOperadorUnidad(event) {
         event.preventDefault()
-        cambiarOperadorUnidad(this.state.unidadSeleccionada, this.state.operadorSeleccionada.m_nIdOperador).then(({data}) => {
+        cambiarOperadorUnidad(this.state.unidadSeleccionada,this.state.operadorSeleccionada.m_nIdOperador).then(({data}) => {
             this.setState({openUnidades: true, openOperadorDialog: false,unidadesSeleccionadas: []})
         })
     }
