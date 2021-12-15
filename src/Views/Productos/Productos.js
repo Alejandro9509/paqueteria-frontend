@@ -184,7 +184,6 @@ function Productos() {
       ...state,
       agregar: "Agregar",
     });
-    getAllProductos();
     limpiarCamposAgregar();
     $(".nav-tabs li ").removeClass("active");
     $(".nav-tabs li").eq(0).addClass("active");
@@ -228,6 +227,11 @@ console.log(params)
           showSuccess(err);
         });
     }
+    getAllProductos();
+    $(".nav-tabs li ").removeClass("active");
+    $(".nav-tabs li").eq(0).addClass("active");
+    $(".tab-content div ").removeClass("in show");
+    $("#Listado").addClass("in show");
     console.log("submit", params);
   };
 
@@ -307,8 +311,14 @@ console.log(params)
   }
   /*--=---------------------------------------Hooks useEffect-------------------------------------------------=--*/
   useEffect((value) => {
-    getAllEmbalajes();
+
+    if(dataEmbalaje.length!=0){
+      return;
+    }  else{
+        getAllEmbalajes();
+    }
     if (productos.length != 0) {
+      console.log(productos.length != 0)
       return;
     } else {
       getAllProductos();
@@ -329,20 +339,16 @@ console.log(params)
       {/*Leftbar End Here*/}
       <section className={"main-container"}>
         <div className={"content-fluid"}>
-          <ul className={"nav navStatica nav-tabs"}>
+          <ul className={"nav nav-tabs"} >
             <li className={"active"}>
-              <a data-toggle={"tab"} onClick={handleShowListado}>
-                <i className={"fa fa-list"} /> Listado
-              </a>
+              <a data-toggle={"tab"} onClick={handleShowListado}><i className={"fa fa-list"} /> Listado</a>
             </li>
             <li>
-              <a data-toggle={"tab"} onClick={handleShowAgregar}>
-                <i className={"fa fa-plus-circle"} /> {state.agregar}
-              </a>
+              <a data-toggle={"tab"} onClick={handleShowAgregar}><i className={"fa fa-plus-circle"} /> {state.agregar}</a>
             </li>
           </ul>
 
-          <div className={"row"} className={"tab-content"}>
+          <div className={"row tab-content"} >
             {/*Seccion de Listado*/}
             <div className="widget-wrap tab-pane fade in show" id="Listado">
               <div className="widget-wrap">
@@ -366,37 +372,31 @@ console.log(params)
 
             {/*Seccion de Agregar,Consultar y Modificar*/}
             <div className="widget-wrap tab-pane fade" id="Agregar">
-              <div className="widget-wrap">
-                <div className="widget-content">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <form className="j-forms" onSubmit={handleAceptar}>
-                        <div className="form-content">
-                          <Grid container spacing={1}>
+            <form className="j-forms" onSubmit={handleAceptar}>
+                      <Grid container spacing={1}>
                             <Grid item xs={2}>
-                              <div className="input">
+                           
                                 <TextField
                                   variant="outlined"
                                   margin="dense"
                                   label="Descripción"
                                   onChange={handleChange}
-                                  className="form-control"
                                   type="text"
                                   maxLength="50"
                                   required
                                   readOnly={state.agregar == "Consultar"}
                                   value={form.Descripcion}
-                                  placeholder={form.Descripcion}
+                                  placeholder="Descripcion"
                                   id="Descripcion"
+                                  name="Descripcion"
                                 />
-                              </div>
+                              
                             </Grid>
                             <Grid item xs={2}>
-                              <div className="input">
+                             
                                 <TextField
                                   variant="outlined"
                                   margin="dense"
-                                  className="form-control"
                                   type="text"
                                   onChange={handleChange}
                                   value={form.Largo}
@@ -406,14 +406,13 @@ console.log(params)
                                   name="Largo"
                                   id="Largo"
                                 />
-                              </div>
+                           
                             </Grid>
                             <Grid item xs={2}>
-                              <div className="input">
+                             
                                 <TextField
                                   variant="outlined"
                                   margin="dense"
-                                  className="form-control"
                                   type="text"
                                   onChange={handleChange}
                                   label="Ancho"
@@ -423,14 +422,13 @@ console.log(params)
                                   name="Ancho"
                                   id="Ancho"
                                 />
-                              </div>
+                         
                             </Grid>
                             <Grid item xs={2}>
-                              <div className="input">
+                        
                                 <TextField
                                   variant="outlined"
                                   margin="dense"
-                                  className="form-control"
                                   type="text"
                                   onChange={handleChange}
                                   value={form.Alto}
@@ -440,14 +438,13 @@ console.log(params)
                                   name="Alto"
                                   id="Alto"
                                 />
-                              </div>
+                           
                             </Grid>
                             <Grid item xs={2}>
-                              <div className="input">
+                           
                                 <TextField
                                   variant="outlined"
                                   margin="dense"
-                                  className="form-control"
                                   type="text"
                                   onChange={handleChange}
                                   label="Peso"
@@ -457,15 +454,14 @@ console.log(params)
                                   name="Peso"
                                   id="Peso"
                                 />
-                              </div>
+                            
                             </Grid>
                             <Grid item xs={2}>
-                              <div className="input">
+                       
                                 <TextField
                                   variant="outlined"
                                   margin="dense"
                                   onChange={handleChange}
-                                  className="form-control"
                                   type="text"
                                   value={form.Volumen}
                                   label="Volumen"
@@ -474,7 +470,7 @@ console.log(params)
                                   name="Volumen"
                                   id="Volumen"
                                 />
-                              </div>
+                     
                             </Grid>
                             <Grid item xs={2}>
                               <label className="input select">
@@ -489,7 +485,6 @@ console.log(params)
                                   <Select
                                     label="Embalaje"
                                     labelId="m_nIdTipoEmbalajeLabel"
-                                    className="form-control"
                                     value={form.IdTipoEmbalaje}
                                     id="IdTipoEmbalaje"
                                     name="IdTipoEmbalaje"
@@ -516,8 +511,7 @@ console.log(params)
                                 </Grid>
                                 <Grid item xs={2}>
                                   <input
-                                    native
-                                    className="form-control col-sm"
+                                    className="col-sm"
                                     type="checkbox"
                                     onChange={handleChecked}
                                     checked={form.Activo}
@@ -557,12 +551,7 @@ console.log(params)
                               </div>
                             </Grid>
                           </Grid>
-                        </div>
                       </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
