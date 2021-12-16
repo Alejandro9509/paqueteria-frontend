@@ -344,14 +344,19 @@ class EscribirConvenio extends Component {
     }
 
     componentDidMount() {
+        this.getAllData()
+    }
+
+    getAllData() {
         this.getAllImpuestos()
         this.castConceptos()
-       // this.getAllClientes()
+        // this.getAllClientes()
         this.getAllTarifas()
         this.getAllProductos()
         this.getAllZonas()
         this.getAllConceptos()
     }
+
 
     getAllConceptos() {
         obtenerConceptosFacturacion().then(respuesta => {this.setState({ dataConceptosBase: respuesta.data })});
@@ -476,6 +481,13 @@ class EscribirConvenio extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.pantallaActiva !== this.props.pantallaActiva && this.props.pantallaActiva === 1){
             this.limpiarCampos()
+            this.getAllImpuestos()
+            this.castConceptos()
+            // this.getAllClientes()
+            this.getAllTarifas()
+            this.getAllProductos()
+            this.getAllZonas()
+            this.getAllConceptos()
         }
 
         if (prevProps.pantallaActiva !== this.props.pantallaActiva && this.props.pantallaActiva === 3) {
@@ -810,6 +822,7 @@ class EscribirConvenio extends Component {
             seleccionDetalles: {tipoSeleccion:null},
             conceptosZona:[]
         })
+
     }
 
     onSubmit = (e) => {
@@ -944,40 +957,44 @@ class EscribirConvenio extends Component {
 
         return (
             <div>
-                <Dialog
-                    fullWidth={true}
-                    maxWidth={'xl'}
-                    open={openDialog}
-                    onClose={this.handleShowDialog}
-                    aria-labelledby="max-width-dialog-title"
-                >
-                    <DialogContent>
-                        <div style={{ display: 'flex', height: '800px' }}>
-                            <DataGrid
-                                localeText={dataGridLocaleText}
-                                rows={this.state.dataRequerida === "Tarifas" ? dataTarifas : this.state.dataZonas}
-                                columns={this.state.dataRequerida === "Tarifas" ? columnsTarifas: this.state.columnsZonas}
-                                density="compact"
-                                pageSize={Math.floor((height - 310) / 30)}
-                                getRowId={(row) => this.state.dataRequerida === "Tarifas" ? row.m_nIdTarifa : row.m_nIdZona}
-                                checkboxSelection
-                                onSelectionModelChange={(e) => this.handleTarifasSeleccionadas(e)}
-                            />
-                        </div>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleShowDialog} color="primary">
-                            Close
-                        </Button>
-                        <Button onClick={this.handleConfirmTarifas} color="primary" autoFocus>
-                            Aceptar
-                        </Button>
+                {
+                    openDialog &&
+                    <Dialog
+                        fullWidth={true}
+                        maxWidth={'xl'}
+                        open={openDialog}
+                        onClose={this.handleShowDialog}
+                        aria-labelledby="max-width-dialog-title"
+                    >
+                        <DialogContent>
+                            <div style={{ display: 'flex', height: '800px' }}>
+                                <DataGrid
+                                    localeText={dataGridLocaleText}
+                                    rows={this.state.dataRequerida === "Tarifas" ? dataTarifas : this.state.dataZonas}
+                                    columns={this.state.dataRequerida === "Tarifas" ? columnsTarifas: this.state.columnsZonas}
+                                    density="compact"
+                                    pageSize={Math.floor((height - 310) / 30)}
+                                    getRowId={(row) => this.state.dataRequerida === "Tarifas" ? row.m_nIdTarifa : row.m_nIdZona}
+                                    checkboxSelection
+                                    onSelectionModelChange={(e) => this.handleTarifasSeleccionadas(e)}
+                                />
+                            </div>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.handleShowDialog} color="primary">
+                                Close
+                            </Button>
+                            <Button onClick={this.handleConfirmTarifas} color="primary" autoFocus>
+                                Aceptar
+                            </Button>
 
-                    </DialogActions>
-                                                {  /*AQUI COMIENZA EL MODAL DE CLIENTES*/}
-                
-                   
-                </Dialog>
+                        </DialogActions>
+                        {  /*AQUI COMIENZA EL MODAL DE CLIENTES*/}
+
+
+                    </Dialog>
+                }
+
                 <Dialog
                 open={this.state.openModal}
                 onClose={() => this.setState({ openModal: false})}

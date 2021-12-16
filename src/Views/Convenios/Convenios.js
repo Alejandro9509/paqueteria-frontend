@@ -291,11 +291,13 @@ function Convenios(){
                                     $('#Listado').addClass('in show');
                                 }}></CrearTarifa>
                             }*/}
-                            <EscribirConvenio
-                                select={convenioSeleccionado}
-                                consult={consult}
-                                pantallaActiva={pantallaActiva}
-                            />
+
+                                <EscribirConvenio
+                                    select={convenioSeleccionado}
+                                    consult={consult}
+                                    pantallaActiva={pantallaActiva}
+                                />
+
 
                         </div>
                     </div>
