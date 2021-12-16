@@ -22,7 +22,7 @@ import EstatusInformePage from './Views/EstatusInforme';
 import EstatusDocumentoPage from './Views/EstatusDocumento';
 import ConceptosFacturacionPage from './Views/ConceptosFacturacion/ConceptosFacturacion';
 import TarifasPage from './Views/Tarifas/Tarifas';
-import ParametrosConfiguracionPage from './Views/ParametrosConfiguracion/ParametrosConfiguracion';
+import ParametrosConfiguracionPage from './Views/ParametrosConfiguracion/ParametrosConfiguracion2';
 import ClasificacionViajePage from './Views/ClasificacionViajes/ClasificacionViaje';
 import PlantillaCorreo from './Views/PlantillaCorreo';
 import CondicionesRecepcionEntrega from './Views/CondicionesRecepcionEntrega/CondicionesRecepcionEntrega';
