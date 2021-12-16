@@ -827,7 +827,7 @@ class EscribirConvenio extends Component {
         console.log(params)
         console.log(JSON.stringify(params))
         const {idConvenio} = this.state
-    /*    if (idConvenio == 0 || idConvenio == '' || idConvenio === undefined){
+        if (idConvenio == 0 || idConvenio == '' || idConvenio === undefined){
             const url = `${process.env.REACT_APP_API_URL}/Convenios/Agregar`;
             axios.post(url, Object.assign({}, params),{ headers }).then(respuesta => {
                 console.log(respuesta)
@@ -841,7 +841,7 @@ class EscribirConvenio extends Component {
                 showSuccess(respuesta.data);
                 this.limpiarCampos()
             });
-        }*/
+        }
     }
 
     handleDuplicarTarifa = (e) => {
