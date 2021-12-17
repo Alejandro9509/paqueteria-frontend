@@ -411,6 +411,21 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                     </div>
                     <div className="col-md-12 col-sm-12"
                          style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
+                        <div style={{margin: "5px", padding: "5px"}}>Descuento</div>
+                        <div style={{
+                            margin: "4px",
+                            padding: "4px",
+                            marginRight: "15px",
+                            backgroundColor: "white",
+                            backgroundClip: "border-box",
+                            borderStyle: "solid",
+                            borderColor: "gray",
+                            minWidth: "230px",
+                            textAlign: "right"
+                        }}> ${parseFloat(dataPaquetes.reduce((total, arg) => total + parseFloat(arg.descuento), 0)).toFixed(2)}</div>
+                    </div>
+                    <div className="col-md-12 col-sm-12"
+                         style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
 
                         <div style={{
                             margin: "4px",
@@ -428,7 +443,8 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                                     state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto :
                                     "" :
                                 ""} `} ${parseFloat(dataPaquetes.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br/>
-                            </div>))} {ivaRetiene.map(t => (
+                            </div>))}
+                            {ivaRetiene.map(t => (
                             <div>{`${state.impuestos.length !== 0 ?
                                 `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ?
                                     state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto :
@@ -450,9 +466,10 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             minWidth: "230px",
                             textAlign: "right"
                         }}> ${parseFloat(
-                            dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importe), 0) +
-                            dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)-
-                            dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importeRet), 0)
+                            dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importe), 0)
+                            + dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)
+                            - dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importeRet), 0)
+                            - dataPaquetes.reduce((total, arg) => total + parseFloat(arg.descuento), 0)
                         ).toFixed(2)}</div>
                     </div>
                 </div>
