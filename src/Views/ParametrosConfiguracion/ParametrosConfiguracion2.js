@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
+import Noty from "noty";
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import { Box, Checkbox, FormControl, InputLabel, Select, TextField, Typography } from "@material-ui/core";
+import { Box, Button, Checkbox, FormControl, InputLabel, Select, TextField, Typography } from "@material-ui/core";
 import {obtenerEstatusRecoleccion,
      obtenerEstatusEmbarque,
      obtenerEstatusGuia,
@@ -9,6 +10,16 @@ import {obtenerEstatusRecoleccion,
      obtenerEstatusViaje} from "../../Util/Contexts/EstatusContext";
 import {obtenerMonedas} from "../../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../../Util/Contexts/TipoCambioContext";
+import {obtenerParametrosConfiguracion,modificarParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
+
+function showSuccess(mensaje) {
+  new Noty({
+      type: "information",
+      layout: "topCenter",
+      text: mensaje,
+      timeout: "3000",
+  }).show();
+}
 function ParametrosConfiguracion2() {
     //--------------------------------------------------VARIABLES--------------------------------------------------------
 const [dataEstatusRecoleccion, setEstatusRecoleccion] = React.useState([]);
@@ -28,7 +39,7 @@ const [configuraciones, setConfiguraciones] = React.useState({
 
     estatusGuia:4,
 
-    tipoTarifa:0, 
+    tipoTarifa:1, 
     cobroCargaDescarga:false,
     esCobro:false,
     costoCita:"",
@@ -51,7 +62,29 @@ const [configuraciones, setConfiguraciones] = React.useState({
                     [event.target.name]:event.target.checked
             }
         });};
+    function onSubmit(){
+      let params={
+        EstatusRecoleccion:configuraciones.estatusRecoleccion,
+      	EstatusEmbarque:configuraciones.estatusEmbarque,
+	      MonedaEmbarque:configuraciones.monedaPredeterminadaEmbarque,
+	      TipoCambioEmbarque:configuraciones.tipoCambioEmbarque,
+	      EstatusGuia:configuraciones.estatusGuia,
+      	TipoTarifaTarifas:configuraciones.tipoTarifa,
+	      CobroCitaTarifas:configuraciones.esCobro? configuraciones.costoCita:0,
+      	CobroCargaDescargaTarifa:configuraciones.cobroCargaDescarga,
+      	esCobro:configuraciones.esCobro
+      }
 
+      modificarParametrosConfiguracion(params)
+      .then((respuesta) => {
+          showSuccess("Modificado exitosamente");
+          getParametrosConfiguracion()
+      })
+      .catch((err) => {
+          console.log(err);
+          showSuccess(err);
+      });
+    }
     //--------------------------------------------------SERVICIOS--------------------------------------------------------
     async function getAllEstatusRecoleccion() {
             obtenerEstatusRecoleccion().then((respuesta) => {
@@ -65,7 +98,7 @@ const [configuraciones, setConfiguraciones] = React.useState({
         });
 }
     async function getAllEstatusGuia() {
-        obtenerEstatusGuia().then((respuesta) => {console.log(respuesta)
+        obtenerEstatusGuia().then((respuesta) => {
             setEstatusGuia(respuesta.data);
         });
 }
@@ -80,10 +113,33 @@ const [configuraciones, setConfiguraciones] = React.useState({
         setTipoCambioEmbarque(respuesta.data)
     });
 }
+    async function getParametrosConfiguracion(){
+      obtenerParametrosConfiguracion().then(respuesta=>{
+        console.log(respuesta)
+        setConfiguraciones((config)=>{
+          return{
+            ...config,
+            estatusRecoleccion:respuesta.data.EstatusRecoleccion, 
+            estatusEmbarque:respuesta.data.EstatusEmbarque,
+            monedaPredeterminadaEmbarque:respuesta.data.MonedaEmbarque,
+            tipoCambioEmbarque:respuesta.data.TipoCambioEmbarque,
+            tipoCobroEmbarque:"",
+
+            estatusGuia:respuesta.data.EstatusGuia,
+
+            tipoTarifa:respuesta.data.TipoTarifaTarifas, 
+            cobroCargaDescarga:respuesta.data.CobroCargaDescargaTarifa,
+            esCobro:respuesta.data.esCobro,
+            costoCita:respuesta.data.CobroCitaTarifas || 0,
+                 }
+        })
+      })
+    }
 
 
 //--------------------------------------------------USE EFFECTS--------------------------------------------------------
     useEffect(value => {
+        getParametrosConfiguracion()
         getAllEstatusRecoleccion() 
         getAllEstatusEmbarque()
         getAllTipoMoneda()
@@ -115,7 +171,7 @@ const [configuraciones, setConfiguraciones] = React.useState({
           <Box display="flex" justifyContent="flex-start"  m={1} p={1} bgcolor="background.paper" flexDirection="column">
 
             {/*RECOLECCION*/}
-            <Box p={1} bgcolor="grey.300" >
+            <Box p={1}  >
             <Box display="flex" p={1} my={0.5} bgcolor="background.paper" flexDirection="column">
              <h2>Recolección</h2>
              <Box width="40%" bgcolor="grey.500" p={1} my={0.5} display="flex">
@@ -149,7 +205,7 @@ const [configuraciones, setConfiguraciones] = React.useState({
              </Box>
             </Box>
             {/*EMBARQUE*/}
-            <Box p={1} bgcolor="grey.300" >
+            <Box p={1}  >
               <h2>Embarque</h2>
                 <Box display="flex" p={1} my={0.5} bgcolor="background.paper" flexDirection="column">
                   <Box width="40%" bgcolor="grey.500" p={1} my={0.5} display="flex">
@@ -163,6 +219,7 @@ const [configuraciones, setConfiguraciones] = React.useState({
                                 labelId="estatusEmbarqueLabel"
                                 className="form-control"
                                 required
+                                onChange={handleChange}
                                 value={configuraciones.estatusEmbarque}
                                 label="Estatus"
                                 id="estatusEmbarque"
@@ -190,8 +247,10 @@ const [configuraciones, setConfiguraciones] = React.useState({
                                 <Select
                                     labelId={"idMonedaLabel"}
                                     label={"Moneda"}
+                                    name="monedaPredeterminadaEmbarque"
                                     className="form-control"
                                     required
+                                    onChange={handleChange}
                                     value={configuraciones.monedaPredeterminadaEmbarque}
                                        id="monedaPredeterminadaEmbarque"
                                        name="monedaPredeterminadaEmbarque"
@@ -228,8 +287,10 @@ const [configuraciones, setConfiguraciones] = React.useState({
                             labelId="tipoCambioLabel"
                             label="Tipo de Cambio"
                             className="form-control"
+                            name="tipoCambioEmbarque"
                             value={configuraciones.tipoCambioEmbarque}
                             id="tipoCambioEmbarque"
+                            onChange={handleChange}
                           >
                              {dataTipoCambioEmbarque.map((cambio) => (
                                   <option
@@ -251,7 +312,7 @@ const [configuraciones, setConfiguraciones] = React.useState({
                 </Box>
             </Box>
             {/*GUIAS*/}
-            <Box p={1} bgcolor="grey.300" >
+            <Box p={1} >
              <Box display="flex" p={1} my={0.5} bgcolor="background.paper" flexDirection="column">
               <h2>Guias</h2>
                 <Box width="40%" bgcolor="grey.500" p={1} my={0.5} display="flex">
@@ -269,6 +330,7 @@ const [configuraciones, setConfiguraciones] = React.useState({
                                 label="Estatus"
                                 id="estatusGuia"
                                 name="estatusGuia"
+                                onChange={handleChange}
                             >
                                 {dataEstatusGuia.map((estatus) => (
                                     <option key={estatus.m_nIdEstatusGuia} value={estatus.m_nIdEstatusGuia}>
@@ -282,7 +344,7 @@ const [configuraciones, setConfiguraciones] = React.useState({
                 </Box>
               </Box>
             {/*TARIFAS*/}
-            <Box p={1} bgcolor="grey.300" >
+            <Box p={1} >
             <Box display="flex" p={1} my={0.5} bgcolor="background.paper" flexDirection="column">
               <h2>Tarifas</h2>
                 <Box display="flex" p={1} my={0.5} bgcolor="background.paper" flexDirection="column">
@@ -298,8 +360,9 @@ const [configuraciones, setConfiguraciones] = React.useState({
                                  native
                                  label="Tipo de Tarifa"
                                  className="form-control"
-                                 name="idTipoTarifa"
+                                 name="tipoTarifa"
                                  read="true"
+                                 onChange={handleChange}
                                  value={configuraciones.tipoTarifa}
                               >
                                 <option value="1">Por peso o volumen</option>
@@ -326,6 +389,7 @@ const [configuraciones, setConfiguraciones] = React.useState({
                                       label="Costo($) "
                                       className="form-control"
                                       type="text"
+                                      disabled={!configuraciones.esCobro}
                                       onChange={handleChange}
                                       value={configuraciones.costoCita}
                                       name="costoCita"
@@ -352,9 +416,15 @@ const [configuraciones, setConfiguraciones] = React.useState({
                   </Box>
                 </Box>
             </Box>
-            </Box>
-          </Box>
+            </Box> 
 
+            <Box margin={"0 auto"}>
+             <Button variant="contained" color="primary" style={{width:"100px"}} onClick={onSubmit}>
+              Modificar
+             </Button>    
+             </Box>
+          </Box>
+               
         </div>
       </section>
     </div>
