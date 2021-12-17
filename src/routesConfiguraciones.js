@@ -1,3 +1,4 @@
+import React from 'react';
 import DepartamentoPage from './Views/Departamento';
 import MonedaPage from './Views/Moneda';
 import TipoCambio from './Views/TipoCambio';
