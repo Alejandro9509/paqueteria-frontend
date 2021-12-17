@@ -1,3 +1,5 @@
+import React from 'react';
+
 import DepartamentoPage from './Views/Departamento';
 import ClientePage from './Views/Clientes';
 import EmbalajesPage from './Views/Embalajes';

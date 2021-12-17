@@ -54,6 +54,7 @@ import ConceptosFacturacion from "../Tarifas/ConceptosFacturacion";
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import {obtenerConveniosId} from "../../Util/Contexts/ConveniosContext";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const headers = API_HEADERS
 
@@ -287,6 +288,8 @@ class EscribirConvenio extends Component {
         this.removeConceptoV2 = this.removeConceptoV2.bind(this)
         this.getAllConceptos = this.getAllConceptos.bind(this)
         this.guardarZonaTarifa = this.guardarZonaTarifa.bind(this)
+        this.handleDeleteTarifa = this.handleDeleteTarifa.bind(this)
+        this.handleDeleteZona = this.handleDeleteZona.bind(this)
     }
 
     castConceptos(){
@@ -344,14 +347,19 @@ class EscribirConvenio extends Component {
     }
 
     componentDidMount() {
+        this.getAllData()
+    }
+
+    getAllData() {
         this.getAllImpuestos()
         this.castConceptos()
-       // this.getAllClientes()
+        // this.getAllClientes()
         this.getAllTarifas()
         this.getAllProductos()
         this.getAllZonas()
         this.getAllConceptos()
     }
+
 
     getAllConceptos() {
         obtenerConceptosFacturacion().then(respuesta => {this.setState({ dataConceptosBase: respuesta.data })});
@@ -476,6 +484,13 @@ class EscribirConvenio extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.pantallaActiva !== this.props.pantallaActiva && this.props.pantallaActiva === 1){
             this.limpiarCampos()
+            this.getAllImpuestos()
+            this.castConceptos()
+            // this.getAllClientes()
+            this.getAllTarifas()
+            this.getAllProductos()
+            this.getAllZonas()
+            this.getAllConceptos()
         }
 
         if (prevProps.pantallaActiva !== this.props.pantallaActiva && this.props.pantallaActiva === 3) {
@@ -644,6 +659,7 @@ class EscribirConvenio extends Component {
             const tarifas = []
             this.state.idsTarifasSeleccionadas.forEach((idTarifa) => {
                 obtenerTarifaBy(idTarifa).then(respuesta=> {
+                    respuesta.data.m_nIdTarifaConvenio = Math.floor(Math.random() * 10000)
                     tarifas.push(respuesta.data)
                     this.state.tarifasSeleccionadas.push(respuesta.data)
                     if (tarifas.length === this.state.idsTarifasSeleccionadas.length){
@@ -659,6 +675,7 @@ class EscribirConvenio extends Component {
             const zonas = []
             this.state.idsZonasSeleccionadas.forEach((idZona) => {
                 obtenerByIdZonaTarifaSinCP(idZona).then(respuesta => {
+                    respuesta.data.m_nIdZonaConvenio = Math.floor(Math.random() * 10000)
                     zonas.push(respuesta.data)
                     this.state.zonasSeleccionadas.push(respuesta.data)
                     if (zonas.length === this.state.idsZonasSeleccionadas.length){
@@ -810,6 +827,7 @@ class EscribirConvenio extends Component {
             seleccionDetalles: {tipoSeleccion:null},
             conceptosZona:[]
         })
+
     }
 
     onSubmit = (e) => {
@@ -827,7 +845,7 @@ class EscribirConvenio extends Component {
         console.log(params)
         console.log(JSON.stringify(params))
         const {idConvenio} = this.state
-    /*    if (idConvenio == 0 || idConvenio == '' || idConvenio === undefined){
+        if (idConvenio == 0 || idConvenio == '' || idConvenio === undefined){
             const url = `${process.env.REACT_APP_API_URL}/Convenios/Agregar`;
             axios.post(url, Object.assign({}, params),{ headers }).then(respuesta => {
                 console.log(respuesta)
@@ -841,7 +859,7 @@ class EscribirConvenio extends Component {
                 showSuccess(respuesta.data);
                 this.limpiarCampos()
             });
-        }*/
+        }
     }
 
     handleDuplicarTarifa = (e) => {
@@ -916,6 +934,9 @@ class EscribirConvenio extends Component {
 
         return(
             <Card style={{marginBottom: '10px'}}>
+                <IconButton aria-label="delete" style={{alignItems: 'right'}} onClick={(e) => this.handleDeleteZona(e, item)}>
+                    <DeleteIcon />
+                </IconButton>
                 <CardActionArea onClick={(e) => this.handleCardClick(e, item, "Zona")}>
                     <CardContent>
                         <Grid container>
@@ -936,6 +957,19 @@ class EscribirConvenio extends Component {
         )
     }
 
+    handleDeleteTarifa(event, tarifa){
+        const newArray = this.state.tarifasSeleccionadas.filter(item => item.m_nIdTarifaConvenio !== tarifa.m_nIdTarifaConvenio)
+        this.setState({
+            tarifasSeleccionadas: newArray
+        })
+    }
+    handleDeleteZona(event, tarifa){
+        const newArray = this.state.zonasSeleccionadas.filter(item => item.m_nIdZonaConvenio !== tarifa.m_nIdZonaConvenio)
+        this.setState({
+            zonasSeleccionadas: newArray
+        })
+    }
+
     render() {
         const { disabled, todosConceptos, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, openDialog,
             columnsTarifas, dataTarifas, height, tarifasSeleccionadas, tarifaDetalles, dataProductosTemp,dataProductosSeleccionados, columnsProductos,
@@ -944,40 +978,44 @@ class EscribirConvenio extends Component {
 
         return (
             <div>
-                <Dialog
-                    fullWidth={true}
-                    maxWidth={'xl'}
-                    open={openDialog}
-                    onClose={this.handleShowDialog}
-                    aria-labelledby="max-width-dialog-title"
-                >
-                    <DialogContent>
-                        <div style={{ display: 'flex', height: '800px' }}>
-                            <DataGrid
-                                localeText={dataGridLocaleText}
-                                rows={this.state.dataRequerida === "Tarifas" ? dataTarifas : this.state.dataZonas}
-                                columns={this.state.dataRequerida === "Tarifas" ? columnsTarifas: this.state.columnsZonas}
-                                density="compact"
-                                pageSize={Math.floor((height - 310) / 30)}
-                                getRowId={(row) => this.state.dataRequerida === "Tarifas" ? row.m_nIdTarifa : row.m_nIdZona}
-                                checkboxSelection
-                                onSelectionModelChange={(e) => this.handleTarifasSeleccionadas(e)}
-                            />
-                        </div>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleShowDialog} color="primary">
-                            Close
-                        </Button>
-                        <Button onClick={this.handleConfirmTarifas} color="primary" autoFocus>
-                            Aceptar
-                        </Button>
+                {
+                    openDialog &&
+                    <Dialog
+                        fullWidth={true}
+                        maxWidth={'xl'}
+                        open={openDialog}
+                        onClose={this.handleShowDialog}
+                        aria-labelledby="max-width-dialog-title"
+                    >
+                        <DialogContent>
+                            <div style={{ display: 'flex', height: '800px' }}>
+                                <DataGrid
+                                    localeText={dataGridLocaleText}
+                                    rows={this.state.dataRequerida === "Tarifas" ? dataTarifas : this.state.dataZonas}
+                                    columns={this.state.dataRequerida === "Tarifas" ? columnsTarifas: this.state.columnsZonas}
+                                    density="compact"
+                                    pageSize={Math.floor((height - 310) / 30)}
+                                    getRowId={(row) => this.state.dataRequerida === "Tarifas" ? row.m_nIdTarifa : row.m_nIdZona}
+                                    checkboxSelection
+                                    onSelectionModelChange={(e) => this.handleTarifasSeleccionadas(e)}
+                                />
+                            </div>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.handleShowDialog} color="primary">
+                                Close
+                            </Button>
+                            <Button onClick={this.handleConfirmTarifas} color="primary" autoFocus>
+                                Aceptar
+                            </Button>
 
-                    </DialogActions>
-                                                {  /*AQUI COMIENZA EL MODAL DE CLIENTES*/}
-                
-                   
-                </Dialog>
+                        </DialogActions>
+                        {  /*AQUI COMIENZA EL MODAL DE CLIENTES*/}
+
+
+                    </Dialog>
+                }
+
                 <Dialog
                 open={this.state.openModal}
                 onClose={() => this.setState({ openModal: false})}
@@ -1100,10 +1138,13 @@ class EscribirConvenio extends Component {
 
                                 </div>
                                 <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-
+                                    {/*Listado de tarjetas de tarifas*/}
                                     {
                                         tarifasSeleccionadas.map((t) => (
                                             <Card style={{marginBottom: '10px'}}>
+                                                <IconButton aria-label="delete" style={{alignItems: 'right'}} onClick={(e) => this.handleDeleteTarifa(e, t)}>
+                                                    <DeleteIcon />
+                                                </IconButton>
                                                 <CardActionArea onClick={(e) => this.handleCardClick(e, t, "Tarifa")}>
                                                     <CardContent>
                                                         <Grid container>
@@ -1126,7 +1167,7 @@ class EscribirConvenio extends Component {
                                             </Card>
                                         ))
                                     }
-
+                                    {/*Listado de tarjetas de tarifas por zona*/}
                                     {
                                         this.state.zonasSeleccionadas.map((item) => this.cardZona(item))
                                     }
