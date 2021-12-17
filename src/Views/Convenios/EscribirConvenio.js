@@ -54,6 +54,7 @@ import ConceptosFacturacion from "../Tarifas/ConceptosFacturacion";
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import {obtenerConveniosId} from "../../Util/Contexts/ConveniosContext";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const headers = API_HEADERS
 
@@ -287,6 +288,8 @@ class EscribirConvenio extends Component {
         this.removeConceptoV2 = this.removeConceptoV2.bind(this)
         this.getAllConceptos = this.getAllConceptos.bind(this)
         this.guardarZonaTarifa = this.guardarZonaTarifa.bind(this)
+        this.handleDeleteTarifa = this.handleDeleteTarifa.bind(this)
+        this.handleDeleteZona = this.handleDeleteZona.bind(this)
     }
 
     castConceptos(){
@@ -656,6 +659,7 @@ class EscribirConvenio extends Component {
             const tarifas = []
             this.state.idsTarifasSeleccionadas.forEach((idTarifa) => {
                 obtenerTarifaBy(idTarifa).then(respuesta=> {
+                    respuesta.data.m_nIdTarifaConvenio = Math.floor(Math.random() * 10000)
                     tarifas.push(respuesta.data)
                     this.state.tarifasSeleccionadas.push(respuesta.data)
                     if (tarifas.length === this.state.idsTarifasSeleccionadas.length){
@@ -671,6 +675,7 @@ class EscribirConvenio extends Component {
             const zonas = []
             this.state.idsZonasSeleccionadas.forEach((idZona) => {
                 obtenerByIdZonaTarifaSinCP(idZona).then(respuesta => {
+                    respuesta.data.m_nIdZonaConvenio = Math.floor(Math.random() * 10000)
                     zonas.push(respuesta.data)
                     this.state.zonasSeleccionadas.push(respuesta.data)
                     if (zonas.length === this.state.idsZonasSeleccionadas.length){
@@ -929,6 +934,9 @@ class EscribirConvenio extends Component {
 
         return(
             <Card style={{marginBottom: '10px'}}>
+                <IconButton aria-label="delete" style={{alignItems: 'right'}} onClick={(e) => this.handleDeleteZona(e, item)}>
+                    <DeleteIcon />
+                </IconButton>
                 <CardActionArea onClick={(e) => this.handleCardClick(e, item, "Zona")}>
                     <CardContent>
                         <Grid container>
@@ -947,6 +955,19 @@ class EscribirConvenio extends Component {
                 </CardActionArea>
             </Card>
         )
+    }
+
+    handleDeleteTarifa(event, tarifa){
+        const newArray = this.state.tarifasSeleccionadas.filter(item => item.m_nIdTarifaConvenio !== tarifa.m_nIdTarifaConvenio)
+        this.setState({
+            tarifasSeleccionadas: newArray
+        })
+    }
+    handleDeleteZona(event, tarifa){
+        const newArray = this.state.zonasSeleccionadas.filter(item => item.m_nIdZonaConvenio !== tarifa.m_nIdZonaConvenio)
+        this.setState({
+            zonasSeleccionadas: newArray
+        })
     }
 
     render() {
@@ -1117,10 +1138,13 @@ class EscribirConvenio extends Component {
 
                                 </div>
                                 <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-
+                                    {/*Listado de tarjetas de tarifas*/}
                                     {
                                         tarifasSeleccionadas.map((t) => (
                                             <Card style={{marginBottom: '10px'}}>
+                                                <IconButton aria-label="delete" style={{alignItems: 'right'}} onClick={(e) => this.handleDeleteTarifa(e, t)}>
+                                                    <DeleteIcon />
+                                                </IconButton>
                                                 <CardActionArea onClick={(e) => this.handleCardClick(e, t, "Tarifa")}>
                                                     <CardContent>
                                                         <Grid container>
@@ -1143,7 +1167,7 @@ class EscribirConvenio extends Component {
                                             </Card>
                                         ))
                                     }
-
+                                    {/*Listado de tarjetas de tarifas por zona*/}
                                     {
                                         this.state.zonasSeleccionadas.map((item) => this.cardZona(item))
                                     }
