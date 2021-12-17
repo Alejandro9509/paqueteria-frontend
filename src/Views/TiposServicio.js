@@ -13,7 +13,8 @@ import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
 import { agregarTipoServicio, eliminarTipoServicio, modificarTipoServicio, obtenerTipoServicio, obtenerTipoServicioId } from "../Util/Contexts/TipoServiciosContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
-
+import $ from "jquery";
+window.jQuery = window.$ = $;
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -45,7 +46,7 @@ function TiposServicio() {
         DiasHabiles: 0,
         DerechoBorrar: 84,
         Costo: 0,
-        Activo: 0,
+        Activo: false,
         agregar: "Agregar",
         height: window.innerHeight,
         CreadoPor: localStorage.getItem("UsuarioId"),
@@ -55,6 +56,7 @@ function TiposServicio() {
 
 
     const handleAceptar = (e) => {
+        console.log(e)
         e.preventDefault()
         var params = {
             "Descripcion": state.Descripcion,
@@ -68,7 +70,7 @@ function TiposServicio() {
         if (state.IdTipoServicio != 0) {
             modificarTipoServicio(state.IdTipoServicio, params).then(respuesta => {
                 showSuccess(respuesta.data)
-                getAllData();
+                handleShowListado()
             }).catch(err => {
                 console.log(err)
                 showSuccess("err")
@@ -76,7 +78,7 @@ function TiposServicio() {
         } else {
             agregarTipoServicio(params).then(respuesta => {
                 showSuccess(respuesta.data)
-                getAllData();
+                handleShowListado()
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
@@ -122,19 +124,10 @@ function TiposServicio() {
                 Costo: respuesta.data.m_cCosto
             })
         });
-    }
-
-    function handleShowAgregar() {
-        setState({
-            ...state,
-            agregar: "Agregar",
-            showPopUp: true,
-            IdTipoServicio: 0,
-            Costo: 0,
-            Descripcion: "",
-            DiasHabiles: 0,
-            Activo: 0
-        })
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
     }
 
     const handleChange = event => {
@@ -161,11 +154,13 @@ function TiposServicio() {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTipoServicio))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a onClick={() => (handleShowModificar(row.row.m_nIdTipoServicio))}
+                               className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
+                                                                     style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdTipoServicio))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                            <a className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdTipoServicio))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
@@ -333,9 +328,9 @@ function TiposServicio() {
                                         className={state.IdTipoServicio === row.original.m_nIdTipoServicio ? classes.seleccionado : classes.noSeleccionado}>
                                         <td>
                                             <div>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdTipoServicio))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.original.m_nIdTipoServicio))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
-                                                <a href="#" className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdTipoServicio))}><i className="zmdi zmdi-delete" style={{ color: "#F9A03E" }} /></a>
+                                                <a onClick={() => (handleShowModificar(row.original.m_nIdTipoServicio))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                                                <a onClick={() => (handleShowModificar(row.original.m_nIdTipoServicio))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                                                <a className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdTipoServicio))}><i className="zmdi zmdi-delete" style={{ color: "#F9A03E" }} /></a>
                                             </div>
                                         </td>
                                         {row.cells.map(cell => {
@@ -351,6 +346,33 @@ function TiposServicio() {
                 </table>
             </div>
         )
+    }
+
+    const handleShowListado = (event) => {
+        if (event){
+            event.stopPropagation();
+        }
+        getAllData()
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
+    }
+    const handleShowAgregar = () => {
+        setState({
+            ...state,
+            agregar: "Agregar",
+            showPopUp: true,
+            IdTipoServicio: 0,
+            Costo: 0,
+            Descripcion: "",
+            DiasHabiles: 0,
+            Activo: 0
+        })
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
     }
 
     return (
@@ -383,12 +405,12 @@ function TiposServicio() {
                 <div className="container-fluid">
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" href="#Listado">
+                            <a onClick={(event) => handleShowListado(event)}>
                                 <i className="fa fa-list" /> Listado
-            </a>
+                            </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                            <a onClick={() => handleShowAgregar()}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
@@ -397,35 +419,31 @@ function TiposServicio() {
                     </ul>
 
                     <div className="row" className="tab-content">
-                        <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
+                        <div id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                                        {data.length != 0 ? (
-                                            <DataGrid
-                                                localeText={dataGridLocaleText}
-                                                rows={data}
-                                                columns={columns}
-                                                density="compact"
-                                                pageSize={Math.floor((state.height - 310) / 30)}
-                                                getRowId={(row) => row.m_nIdTipoServicio}
-                                                onRowSelected={(row) => {
-                                                    setState({
-                                                        ...state,
-                                                        IdTipoServicio: row.data.m_nIdTipoServicio
-                                                    })
-                                                }}
-                                            />
-                                        ) : (
-                                            <div>No se encontró ningún registro</div>
-                                        )}
+                                        <DataGrid
+                                            localeText={dataGridLocaleText}
+                                            rows={data}
+                                            columns={columns}
+                                            density="compact"
+                                            pageSize={Math.floor((state.height - 310) / 30)}
+                                            getRowId={(row) => row.m_nIdTipoServicio}
+                                            onRowSelected={(row) => {
+                                                setState({
+                                                    ...state,
+                                                    IdTipoServicio: row.data.m_nIdTipoServicio
+                                                })
+                                            }}
+                                        />
                                     </div>
 
                                 </div>
                             </div>
                         </div>
 
-                        <div className="widget-wrap" id="Agregar" className="tab-pane fade">
+                        <div id="Agregar" className="tab-pane fade">
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row">
@@ -435,28 +453,30 @@ function TiposServicio() {
                                                     {/*****************************************Descripcion************************************************************/}
                                                     <div className="col-sm-12 col-md-6 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Descripción"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                maxLength="50"
-                                                                required
-                                                                placeholder={state.Descripcion}
-                                                                id="Descripcion"
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       label="Descripción"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       maxLength="50"
+                                                                       required
+                                                                       value={state.Descripcion}
+                                                                       id="Descripcion"
                                                             />
                                                         </div>
                                                     </div>
                                                     {/*****************************************Dias Habiles************************************************************/}
                                                     <div className="col-sm-12 col-md-6 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Dias Habiles"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="number"
-                                                                min="0"
-                                                                step="1"
-                                                                placeholder={state.DiasHabiles}
-                                                                id="DiasHabiles"
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       label="Dias Habiles"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="number"
+                                                                       min="0"
+                                                                       step="1"
+                                                                       value={state.DiasHabiles}
+                                                                       id="DiasHabiles"
                                                             />
                                                         </div>
                                                     </div>
@@ -465,11 +485,11 @@ function TiposServicio() {
                                                         <div className="inline-group">
                                                             <label className="checkbox">
                                                                 <input
-                                                                    checked={state.activo}
+                                                                    checked={state.Activo}
                                                                     onChange={(e) =>
                                                                         setState({
                                                                             ...state,
-                                                                            activo: e.target.checked,
+                                                                            Activo: e.target.checked,
                                                                         })
                                                                     }
                                                                     native
@@ -477,9 +497,9 @@ function TiposServicio() {
                                                                     type="checkbox"
                                                                     id="activo"
                                                                 />
-                                                                <i />
-                                                            Activo
-                            </label>
+                                                                <i/>
+                                                                Activo
+                                                            </label>
 
                                                         </div>
                                                     </div>
@@ -488,14 +508,14 @@ function TiposServicio() {
                                                     <div className="col-sm-12 col-md-12 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense" label="Costo"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="number"
-                                                                min="0"
-                                                                step="0.01"
-                                                                required
-                                                                placeholder={state.Costo}
-                                                                id="Costo"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="number"
+                                                                       min="0"
+                                                                       step="0.01"
+                                                                       required
+                                                                       value={state.Costo}
+                                                                       id="Costo"
                                                             />
                                                         </div>
                                                     </div>
@@ -504,10 +524,12 @@ function TiposServicio() {
                                                 </div>
                                                 <br></br>
                                                 <div className="form-footer" className="col-md-12">
-                                                    <button href="#Listado" role="tab" data-toggle="tab" data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
-                                                    >
-                                                        Cancelar</button>
-                                                    <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                                                    <button className="btn btn-secondary secondary-btn">
+                                                        Cancelar
+                                                    </button>
+                                                    <button type={'submit'}
+                                                            className="btn btn-primary primary-btn">Aceptar
+                                                    </button>
                                                 </div>
                                             </form>
                                         </div>
@@ -532,7 +554,7 @@ function TiposServicio() {
                                                 <br></br>
                                                 <div className="form-footer" className="col-md-12">
                                                     <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                                                    <button href="#Listado" role="tab" data-toggle="tab" data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"
+                                                    <button className="btn btn-secondary secondary-btn"
                                                     >
                                                         Cancelar</button>
                                                     <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
