@@ -48,6 +48,7 @@ function Productos() {
     Activo: false,
     IdProducto: "",
     NoProducto: "",
+    predeterminado: false
   });
   const [productos, setProductos] = React.useState([]);
   const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
@@ -62,8 +63,6 @@ function Productos() {
           <div>
             <Tooltip title={"Modificar"}>
               <a
-                href={"#Agregar"}
-                role={"tab"}
                 data-toggle={"tab"}
                 onClick={() => handleShowModificar(row.row)}
                 className={"btn btn-default btn-xs"}
@@ -76,25 +75,23 @@ function Productos() {
             </Tooltip>
             <Tooltip title={"Consultar"}>
               <a
-                href={"#Agregar"}
-                data-toggle={"tab"}
+
                 className={"btn btn-default btn-xs"}
                 onClick={() => handleShowConsultar(row.row)}
               >
                 <i className={"fa fa-eye"} style={{ color: "#F9A03E" }} />
               </a>
             </Tooltip>
-            <Tooltip title={"Eliminar"}>
+            {/*<Tooltip title={"Eliminar"}>
               <a
-                href="#"
                 className="btn btn-default btn-xs"
                 onClick={() =>
                   confirmAlert({
                     title: "Confirmar Eliminar",
-                    message: "Está seguro de eliminar Condición?",
+                    message: "Está seguro de eliminar el producto?",
                     buttons: [
                       {
-                        label: "Si",
+                        label: "Sí",
                         onClick: () => handleEliminar(row.row),
                       },
                       {
@@ -106,7 +103,7 @@ function Productos() {
               >
                 <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
               </a>
-            </Tooltip>
+            </Tooltip>*/}
           </div>
         );
       },
@@ -122,19 +119,23 @@ function Productos() {
       width: 300,
     },
     {
-      headerName: "IdTipoEmbalaje",
-      field: "m_nIdEmbalaje",
-      width: 150,
-    },
-    {
       headerName: "Embalaje",
       field: "m_sEmbalaje",
       width: 300,
     },
     {
+      headerName: "Predeterminado",
+      field: "m_bPredeterminado",
+      width: 300,
+      valueFormatter: (params) => params.value ? "Sí" : "No",
+
+    },
+    {
       headerName: "Activo",
       field: "m_bActivo",
       width: 300,
+      valueFormatter: (params) => params.value ? "Sí" : "No",
+
     },
   ]);
 
@@ -163,6 +164,7 @@ function Productos() {
   }
 
   function handleEliminar(row) {
+
   }
 
   function handleShowConsultar(row) {
@@ -189,7 +191,14 @@ function Productos() {
     $(".nav-tabs li").eq(0).addClass("active");
     $(".tab-content div ").removeClass("in show");
     $("#Listado").addClass("in show");
+    getAllProductos()
   };
+
+  useEffect(value => {
+    if (form.Largo && form.Ancho && form.Alto) {
+      setForm({...form, Volumen : form.Largo * form.Ancho * form.Alto})
+    }
+  }, [form.Largo, form.Ancho, form.Alto])
   const handleAceptar = (e) => {
     e.preventDefault();
 
@@ -203,6 +212,7 @@ function Productos() {
       Embalaje: form.Embalaje,
       Activo: form.Activo,
       NoProducto: form.IdProducto,
+      predeterminado: form.predeterminado
     };
 console.log(params)
      if (form.IdProducto != 0) {
@@ -251,6 +261,8 @@ console.log(params)
       });
     }
   };
+
+
   const handleChecked = (e) => {
     setForm({
       ...form,
@@ -303,6 +315,7 @@ console.log(params)
           IdTipoEmbalaje: respuesta.data.m_nIdEmbalaje,
           Embalaje: respuesta.data.m_sEmbalaje,
           Activo: respuesta.data.m_bActivo,
+          predeterminado: respuesta.data.m_bPredeterminado,
           IdProducto: respuesta.data.m_nIdProducto,
           NoProducto: respuesta.data.m_nNoProducto,
         };
@@ -341,10 +354,10 @@ console.log(params)
         <div className={"content-fluid"}>
           <ul className={"nav nav-tabs"} >
             <li className={"active"}>
-              <a data-toggle={"tab"} onClick={handleShowListado}><i className={"fa fa-list"} /> Listado</a>
+              <a d onClick={handleShowListado}><i className={"fa fa-list"} /> Listado</a>
             </li>
             <li>
-              <a data-toggle={"tab"} onClick={handleShowAgregar}><i className={"fa fa-plus-circle"} /> {state.agregar}</a>
+              <a  onClick={handleShowAgregar}><i className={"fa fa-plus-circle"} /> {state.agregar}</a>
             </li>
           </ul>
 
@@ -532,6 +545,31 @@ console.log(params)
                                 </Grid>
                               </Grid>
                             </Grid>
+                        <Grid item xs={2}>
+                          <Grid container>
+                            <Grid item xs={2}>
+                              <input
+                                  className="col-sm"
+                                  type="checkbox"
+                                  onChange={handleChecked}
+                                  checked={form.predeterminado}
+                                  style={{ height: "20px" }}
+                                  id="predeterminado"
+                                  name="predeterminado"
+                                  disabled={state.agregar == "Consultar"}
+                              />
+                              <i />
+                            </Grid>
+                            <Grid item xs={4}>
+                              <label
+                                  className="checkbox"
+                                  style={{ padding: "10px 0 0px 3px" }}
+                              >
+                                Predeterminado
+                              </label>
+                            </Grid>
+                          </Grid>
+                        </Grid>
                             <Grid item xs={2}>
                               <div className="form-footer">
                                 <button

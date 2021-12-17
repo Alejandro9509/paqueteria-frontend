@@ -130,13 +130,21 @@ class UltimaMilla extends Component {
                     data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
                 } else {
                     if (data.m_nIdUltimaMilla === this.state.ultimaMilla.m_nIdUltimaMilla) {
-                        data.m_arrClsParadaUltimaMilla.forEach(t => t.color = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla)  ? this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla).color : randomColor(10))
+                        data.m_arrClsParadaUltimaMilla.forEach(t => t.color = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla) ? this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(u => u.m_nIdParadaUltimaMilla === t.m_nIdParadaUltimaMilla).color : randomColor(10))
                     } else {
                         data.m_arrClsParadaUltimaMilla.forEach(t => t.color = randomColor(10))
                     }
                 }
                 console.log(data)
-                this.setState({mostrarRuta: true,modoEdicion: false, ultimaMilla: data, idSucursal: idSucursal, fechaUltimaMilla: date, zonasIds: zonas, tipoBusqueda: tipoBusqueda })
+                this.setState({
+                    mostrarRuta: true,
+                    modoEdicion: false,
+                    ultimaMilla: data,
+                    idSucursal: idSucursal,
+                    fechaUltimaMilla: date,
+                    zonasIds: zonas,
+                    tipoBusqueda: tipoBusqueda
+                })
                 actualizar = false
             } else {
                 actualizar = false
@@ -159,14 +167,16 @@ class UltimaMilla extends Component {
         })
 
     }
-    refreshFilterUltimaMilla(date, idSucursal, zonas, tipoBusqueda){
-        actualizar=true
+
+    refreshFilterUltimaMilla(date, idSucursal, zonas, tipoBusqueda) {
+        actualizar = true
         if (this.interval) {
             clearInterval(this.interval);
         }
         this.getFechaUltimaMilla(date, idSucursal, zonas, tipoBusqueda)
     }
-    refreshUltimaMilla(){
+
+    refreshUltimaMilla() {
         this.setState({ultimaMilla: null})
         this.getFechaUltimaMilla(this.state.fechaUltimaMilla, this.state.idSucursal, this.state.zonasIds, this.state.tipoBusqueda)
     }
@@ -177,19 +187,23 @@ class UltimaMilla extends Component {
 
     guardarRuta() {
         if (this.state.ultimaMilla) {
-            agregarRuta(this.state.ultimaMilla.m_nIdUltimaMilla,this.state.tour, this.state.filtros).then((data) => {
-                showSuccess("Se guardo la información con éxito")
-                actualizar = true
-                this.setState({tour: null})
-                this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.filtros.tipoBusqueda))
-            })
-        }else {
-            agregarRuta(0,this.state.tour, this.state.filtros).then((data) => {
-                showSuccess("Se guardo la información con éxito")
-                actualizar = true
-                this.setState({tour: null})
-                this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.filtros.tipoBusqueda))
-            })
+            if (this.state.tour) {
+                agregarRuta(this.state.ultimaMilla.m_nIdUltimaMilla, this.state.tour, this.state.filtros).then((data) => {
+                    showSuccess("Se guardo la información con éxito")
+                    actualizar = true
+                    this.setState({tour: null})
+                    this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.filtros.tipoBusqueda))
+                })
+            }
+        } else {
+            if (this.state.tour) {
+                agregarRuta(0, this.state.tour, this.state.filtros).then((data) => {
+                    showSuccess("Se guardo la información con éxito")
+                    actualizar = true
+                    this.setState({tour: null})
+                    this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.filtros.tipoBusqueda))
+                })
+            }
         }
     }
 
@@ -332,14 +346,15 @@ class UltimaMilla extends Component {
                                                 changeConfiguration={this.changeConfiguration}
                                                 searchLocation={this.searchLocation} generarRuta={this.generarRuta}
                                                 guardarRuta={this.guardarRuta}
-                                                cambiarModo={(value) => this.setState({modoPlaneacion: value })}
+                                                cambiarModo={(value) => this.setState({modoPlaneacion: value})}
                                                 guardarFiltros={(data) => this.setState({filtros: data})}
                                                 changeMapLocation={this.changeMapLocation} data={this.state}/>
                                 }
 
                                 {
                                     this.state.tour && this.state.tour.tour.tours.map(t =>
-                                        <Tour tourReport={this.state.tour.tour} tour={t} data={this.state} paquetes={this.state.tour.paquetes}/>
+                                        <Tour tourReport={this.state.tour.tour} tour={t} data={this.state}
+                                              paquetes={this.state.tour.paquetes}/>
                                     )
                                 }
                                 {
@@ -364,7 +379,11 @@ class UltimaMilla extends Component {
                                 }
                                 {
                                     !this.state.modoEdicion && this.state.ultimaMilla && (this.state.fullScreen === false || this.state.resumenFullscreen) &&
-                                    <DetalleParadas refresh={this.refreshUltimaMilla} fecha={this.state.fechaUltimaMilla} filtros={{zonasSeleccionada: this.state.zonasIds, tipoBusqueda: this.state.tipoBusqueda}} tour={this.state.ultimaMilla}/>
+                                    <DetalleParadas refresh={this.refreshUltimaMilla}
+                                                    fecha={this.state.fechaUltimaMilla} filtros={{
+                                        zonasSeleccionada: this.state.zonasIds,
+                                        tipoBusqueda: this.state.tipoBusqueda
+                                    }} tour={this.state.ultimaMilla}/>
                                 }
                                 {/*{*/}
                                 {/*    (this.state.tour || this.state.ultimaMilla) &&*/}
