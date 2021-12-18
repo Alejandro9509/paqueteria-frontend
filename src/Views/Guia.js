@@ -619,6 +619,10 @@ function Guia(props) {
             sobres: sobres
         });
     };
+    const currencyFormatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
 
     const columns = React.useMemo(() => [
         {
@@ -714,6 +718,13 @@ function Guia(props) {
             width: 125,
 
         },*/
+        {
+            headerName: "Total",
+            field: "m_cTotal",
+            width: 125,
+            valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
+
+        },
         {
             headerName: "Cliente",
             field: "m_sCliente",
