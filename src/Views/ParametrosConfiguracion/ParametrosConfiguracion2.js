@@ -11,6 +11,16 @@ import {obtenerEstatusRecoleccion,
 import {obtenerMonedas} from "../../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../../Util/Contexts/TipoCambioContext";
 import {obtenerParametrosConfiguracion,modificarParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
+import { makeStyles } from '@material-ui/core/styles';
+//-------------------------------------------STYLES---------------------------------------------------------------------
+const useStyles = makeStyles({
+  subtitulo:{
+    font: "normal normal normal 16px/17px Calibri",
+    color: "black",
+    letterSpacing: "0.21px",
+    padding: "5px",
+  },
+});
 
 function showSuccess(mensaje) {
   new Noty({
@@ -20,7 +30,10 @@ function showSuccess(mensaje) {
       timeout: "3000",
   }).show();
 }
+
 function ParametrosConfiguracion2() {
+const classes = useStyles();
+
     //--------------------------------------------------VARIABLES--------------------------------------------------------
 const [dataEstatusRecoleccion, setEstatusRecoleccion] = React.useState([]);
 const [dataEstatusEmbarque, setEstatusEmbarque] = React.useState([]);
@@ -172,13 +185,13 @@ const [configuraciones, setConfiguraciones] = React.useState({
 
             {/*RECOLECCION*/}
             <Box p={1}  >
-            <Box display="flex" p={1} my={0.5} bgcolor="background.paper" flexDirection="column">
-             <h2>Recolección</h2>
-             <Box width="40%" bgcolor="grey.500" p={1} my={0.5} display="flex">
-             <Box width="40%" bgcolor="grey.300" p={1} my={0.5}>
-               <h2>Estatus por defecto</h2>
+            <Box display="flex" p={1} my={0.5}flexDirection="column">
+             <h2 className={classes.subtitulo}>Recolección</h2>
+             <Box width="40%"  p={1} my={0.5} display="flex">
+             <Box width="40%"  p={1} my={0.5}>
+               <div className={classes.subtitulo}>Estatus por defecto</div>
              </Box>
-             <Box width="60%" bgcolor="grey.300" p={1} my={0.5}>
+             <Box width="60%"  p={1} my={0.5}>
                   <FormControl fullWidth variant="outlined" width="25%">
                             <InputLabel id="idRecoleccionLabel">Estatus</InputLabel>
                             <Select
@@ -206,13 +219,13 @@ const [configuraciones, setConfiguraciones] = React.useState({
             </Box>
             {/*EMBARQUE*/}
             <Box p={1}  >
-              <h2>Embarque</h2>
+              <h2 className={classes.subtitulo}>Embarque</h2>
                 <Box display="flex" p={1} my={0.5} bgcolor="background.paper" flexDirection="column">
-                  <Box width="40%" bgcolor="grey.500" p={1} my={0.5} display="flex">
-                     <Box width="40%" bgcolor="grey.300" p={1} my={0.5}>
-                        <h2>Estatus por defecto</h2>
+                  <Box width="40%" p={1} my={0.5} display="flex">
+                     <Box width="40%" p={1} my={0.5}>
+                        <div  className={classes.subtitulo}>Estatus por defecto</div >
                      </Box>
-                     <Box width="60%" bgcolor="grey.300" p={1} my={0.5}>
+                     <Box width="60%" p={1} my={0.5}>
                   <FormControl fullWidth variant="outlined" width="25%">
                             <InputLabel id="idEmbarqueLabel">Estatus</InputLabel>
                             <Select
@@ -236,11 +249,11 @@ const [configuraciones, setConfiguraciones] = React.useState({
                </FormControl> 
             </Box>
                   </Box>
-                  <Box width="40%" bgcolor="grey.500" p={1} my={0.5} display="flex">
-                     <Box width="40%" bgcolor="grey.300" p={1} my={0.5}>
-                        <h2>Modenada predeterminada</h2>
+                  <Box width="40%" p={1} my={0.5} display="flex">
+                     <Box width="40%"  p={1} my={0.5}>
+                        <div  className={classes.subtitulo}>Modenada predeterminada</div >
                      </Box>
-                     <Box width="60%" bgcolor="grey.300" p={1} my={0.5}>
+                     <Box width="60%"  p={1} my={0.5}>
                      <FormControl fullWidth variant="outlined"
                                 margin="dense">
                                 <InputLabel id="idMonedaLabel">Moneda</InputLabel>
@@ -271,11 +284,11 @@ const [configuraciones, setConfiguraciones] = React.useState({
 
                      </Box>
                   </Box>
-                  <Box width="40%" bgcolor="grey.500" p={1} my={0.5} display="flex">
-                     <Box width="40%" bgcolor="grey.300" p={1} my={0.5}>
-                        <h2>Tipo de cambio por defecto</h2>
+                  <Box width="40%" p={1} my={0.5} display="flex">
+                     <Box width="40%" p={1} my={0.5}>
+                        <div  className={classes.subtitulo}>Tipo de cambio por defecto</div >
                      </Box>
-                     <Box width="60%" bgcolor="grey.300" p={1} my={0.5}>
+                     <Box width="60%" p={1} my={0.5}>
         
                      <FormControl fullWidth 
                         variant="outlined"
@@ -304,22 +317,22 @@ const [configuraciones, setConfiguraciones] = React.useState({
                     </FormControl>
                          </Box>
                   </Box>
-                  <Box width="40%" bgcolor="grey.500" p={1} my={0.5} display="flex">
+                {/* <Box width="40%" bgcolor="grey.500" p={1} my={0.5} display="flex">
                      <Box width="40%" bgcolor="grey.300" p={1} my={0.5}>
                         <h2>Tipos de cobro</h2>
                      </Box>
-                  </Box>
+                  </Box>*/} 
                 </Box>
             </Box>
             {/*GUIAS*/}
             <Box p={1} >
              <Box display="flex" p={1} my={0.5} bgcolor="background.paper" flexDirection="column">
-              <h2>Guias</h2>
-                <Box width="40%" bgcolor="grey.500" p={1} my={0.5} display="flex">
-                     <Box width="40%" bgcolor="grey.300" p={1} my={0.5}>
-               <h2>Estatus por defecto</h2>
+              <h2 className={classes.subtitulo}>Guias</h2>
+                <Box width="40%" p={1} my={0.5} display="flex">
+                     <Box width="40%" p={1} my={0.5}>
+               <div  className={classes.subtitulo}>Estatus por defecto</div >
                      </Box>
-                     <Box width="60%" bgcolor="grey.300" p={1} my={0.5}>
+                     <Box width="60%" p={1} my={0.5}>
                      <FormControl fullWidth variant="outlined" width="25%">
                             <InputLabel id="idGuiaLabel">Estatus</InputLabel>
                             <Select
@@ -346,13 +359,13 @@ const [configuraciones, setConfiguraciones] = React.useState({
             {/*TARIFAS*/}
             <Box p={1} >
             <Box display="flex" p={1} my={0.5} bgcolor="background.paper" flexDirection="column">
-              <h2>Tarifas</h2>
-                <Box display="flex" p={1} my={0.5} bgcolor="background.paper" flexDirection="column">
-                  <Box width="40%" bgcolor="grey.500" p={1} my={0.5} display="flex">
-                     <Box width="40%" bgcolor="grey.300" p={1} my={0.5}>
-                        <h2>Tipo de tarifa por defecto</h2>
+              <h2 className={classes.subtitulo}>Tarifas</h2>
+                <Box display="flex" p={1} my={0.5} flexDirection="column">
+                  <Box width="40%" p={1} my={0.5} display="flex">
+                     <Box width="40%" p={1} my={0.5}>
+                        <div  className={classes.subtitulo}>Tipo de tarifa por defecto</div  >
                       </Box>
-                      <Box width="60%" bgcolor="grey.300" p={1} my={0.5}>
+                      <Box width="60%"  p={1} my={0.5}>
                       <FormControl fullWidth variant="outlined"
                               margin="dense" required>
                              <InputLabel> Tipo de Tarifa</InputLabel>
@@ -372,11 +385,11 @@ const [configuraciones, setConfiguraciones] = React.useState({
                           </FormControl>
                     </Box>
                   </Box>
-                  <Box width="40%" bgcolor="grey.500" p={1} my={0.5} display="flex">
-                     <Box width="40%" bgcolor="grey.300" p={1} my={0.5}>
-                        <h2>Cobro de cita</h2>
+                  <Box width="40%" p={1} my={0.5} display="flex">
+                     <Box width="40%" p={1} my={0.5}>
+                        <div  className={classes.subtitulo}>Cobro de cita</div >
                      </Box>
-                     <Box width="60%" bgcolor="grey.300" p={1} my={0.5} display="flex">
+                     <Box width="60%" p={1} my={0.5} display="flex">
                      <Checkbox
                           checked={configuraciones.esCobro}
                           onChange={handleChecked}
@@ -399,11 +412,11 @@ const [configuraciones, setConfiguraciones] = React.useState({
                                                         
                      </Box>
                   </Box>
-                  <Box width="40%" bgcolor="grey.500" p={1} my={0.5} display="flex">
-                     <Box width="60%" bgcolor="grey.300" p={1} my={0.5}>
-                        <h2>Cobro carga y descarga</h2>
+                  <Box width="40%" p={1} my={0.5} display="flex">
+                     <Box width="60%" p={1} my={0.5}>
+                        <div className={classes.subtitulo}>Cobro carga y descarga</div >
                      </Box>
-                     <Box width="40%" bgcolor="grey.300" p={1} my={0.5}>
+                     <Box width="40%"  p={1} my={0.5}>
                      <Checkbox
                           checked={configuraciones.cobroCargaDescarga}
                           onChange={handleChecked}
