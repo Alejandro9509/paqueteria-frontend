@@ -252,17 +252,17 @@ class EscribirConvenio extends Component {
         this.handleChange = this.handleChange.bind(this)
         this.handleTabChange = this.handleTabChange.bind(this)
         this.addConcepto = this.addConcepto.bind(this)
-        this.removeConceptoAdicional = this.removeConceptoAdicional.bind(this)
+        /*this.removeConceptoAdicional = this.removeConceptoAdicional.bind(this)
         this.removeConceptoManiobra = this.removeConceptoManiobra.bind(this)
         this.removeConceptoEntrega = this.removeConceptoEntrega.bind(this)
-        this.removeConceptoRecoleccion = this.removeConceptoRecoleccion.bind(this)
+        this.removeConceptoRecoleccion = this.removeConceptoRecoleccion.bind(this)*/
         this.handleChangeChecboxTiposCobro = this.handleChangeChecboxTiposCobro.bind(this)
         this.handleChangeChecboxTiposServicio = this.handleChangeChecboxTiposServicio.bind(this)
         this.dialogVisible = this.dialogVisible.bind(this)
         this.handleClienteSelected = this.handleClienteSelected.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
         this.castConceptos = this.castConceptos.bind(this)
-        this.filtrarConceptoAdicional = this.filtrarConceptoAdicional.bind(this)
+        // this.filtrarConceptoAdicional = this.filtrarConceptoAdicional.bind(this)
         this.getAllClientes = this.getAllClientes.bind(this)
         this.handleShowDialog = this.handleShowDialog.bind(this)
         this.getAllTarifas = this.getAllTarifas.bind(this)
@@ -378,46 +378,16 @@ class EscribirConvenio extends Component {
 
     //Metodo agregar para listado de conceptos entrega
     addConcepto(data) {
-        const { conceptosRecoleccion, todosConceptos,conceptosAdicionales, conceptosManiobra, conceptosEntrega } = this.state
-        let ivaTraslada = [];
-        let ivaRetiene = [];
-        const concept = {
-            id: data.id,
-            idConcepto : data.concepto.m_nIdConceptosFacturacion,
-            concepto: data.concepto,
-            importe: data.importe,
-            retiene: data.retiene,
-            traslada: data.traslada,
-            importeRet: data.importeRet,
-            importeIVA: data.importeIVA,
-            rangoMinimo: data.rangoMinimo,
-            rangoMaximo: data.rangoMaximo,
-            nombreConcepto: data.concepto.m_sConcepto,
-            tipoCalculo: data.tipoCalculo,
-            agregadoDesde: data.agregadoDesde,
-            tipoMedida: data.tipoMedida
-        }
-        todosConceptos.push(concept)
+        const {todosConceptos } = this.state
+
+        data.idConcepto = data.concepto.m_nIdConceptosFacturacion
+        data.nombreConcepto = data.concepto.m_sConcepto
+        todosConceptos.push(data)
         this.setState({ todosConceptos: todosConceptos })
-        /*ivaTraslada = getUniqueListBy(todosConceptos, "traslada").map(i => i.traslada);
-        ivaRetiene = getUniqueListBy(todosConceptos, "retiene").map(i => i.retiene);
-        if (data.agregadoDesde == 0){
-            conceptosAdicionales.push(concept)
-            this.setState({ conceptosAdicionales: conceptosAdicionales, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }else if (data.agregadoDesde == 1){
-            conceptosManiobra.push(concept)
-            this.setState({ conceptosManiobra: conceptosManiobra, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }else if (data.agregadoDesde == 2){
-            conceptosEntrega.push(concept)
-            this.setState({ conceptosEntrega: conceptosEntrega, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }else if (data.agregadoDesde == 3){
-            conceptosRecoleccion.push(concept)
-            this.setState({ conceptosRecoleccion: conceptosRecoleccion, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }*/
 
     }
 
-    filtrarConceptoAdicional(c, item){
+    /*filtrarConceptoAdicional(c, item){
         let valid =  c.idConcepto == item.idConcepto
             && c.importe == item.importe
             && c.importeRet == item.importeRet
@@ -425,8 +395,8 @@ class EscribirConvenio extends Component {
             && c.traslada == item.traslada
             && c.importeIVA == item.importeIVA
         return !valid
-    }
-
+    }*/
+/*
     filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item){
         let valid =  c.idConcepto == item.idConcepto
             && c.importe == item.importe
@@ -438,14 +408,12 @@ class EscribirConvenio extends Component {
             && c.rangoMaximo == item.rangoMaximo
             && c.tipoCalculo == item.tipoCalculo
         return !valid
-    }
+    }*/
     //Metodo remover para listado de conceptos adicionales
     removeConcepto(item) {
-        const {todosConceptos } = this.state
-        const newArrayTodosConceptos = todosConceptos.filter(c => c.id !== item.id)
-        this.setState({ todosConceptos: newArrayTodosConceptos })
+        this.setState({ todosConceptos: this.state.todosConceptos.filter(c => c.id !== item.id) })
     }
-    //Metodo remover para listado de conceptos adicionales
+    /*//Metodo remover para listado de conceptos adicionales
     removeConceptoAdicional(item) {
         const { conceptosAdicionales, todosConceptos } = this.state
         const newArrayConceptos = conceptosAdicionales.filter(c => this.filtrarConceptoAdicional(c, item))
@@ -472,7 +440,7 @@ class EscribirConvenio extends Component {
         const newArrayConceptos = conceptosRecoleccion.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
         const newArrayTodosConceptos = todosConceptos.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
         this.setState({ conceptosRecoleccion: newArrayConceptos, todosConceptos: newArrayTodosConceptos })
-    }
+    }*/
 
     componentWillUnmount() {
 
