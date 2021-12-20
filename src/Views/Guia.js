@@ -276,6 +276,11 @@ function Guia(props) {
     }
 
     const handleAceptar = (e) => {
+
+        if (conceptosAdicionales.length === 0) {
+            showSuccess("No se puede guardar una guia sin conceptos.");
+            return
+        }
         e.preventDefault()
         let params = {
             "TIpoCambio": state.tipoCambio,
