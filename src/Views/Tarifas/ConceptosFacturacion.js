@@ -34,6 +34,7 @@ import {DataGrid} from "@material-ui/data-grid";
 import SaveIcon from "@material-ui/icons/Save";
 import EditIcon from "@material-ui/icons/Edit";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
+import DeleteIcon from "@material-ui/icons/Delete";
 const headers = API_HEADERS
 
 /**Props usadas:
@@ -246,6 +247,10 @@ export default function ConceptosFacturacion(props) {
         }
     }
 
+    const handleDeleteClick = (item) => {
+        removeConcepto(item)
+    };
+
     /**Se definen las columnas que se van a mostrar*/
     const definirColumnas = () => {
         const {mostrarImpuestos, mostrarDescuento, mostrarRangos, mostrarConcepto, mostrarTipoMedida, mostrarTipoCalculo} = props
@@ -360,6 +365,9 @@ export default function ConceptosFacturacion(props) {
                         <div>
                             <IconButton color="inherit" size="small" aria-label="delete" onClick={() => handleRowClick(row.row)}>
                                 <EditIcon fontSize="large" />
+                            </IconButton>
+                            <IconButton color="inherit" size="small" aria-label="delete" onClick={() => handleDeleteClick(row.row)}>
+                                <DeleteIcon fontSize="large" />
                             </IconButton>
                         </div>
                     )
