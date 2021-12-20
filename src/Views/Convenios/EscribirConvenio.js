@@ -53,7 +53,7 @@ import CodigosPostalesZonas from "../ZonasOperativas/CodigosPostalesZonas";
 import ConceptosFacturacion from "../Tarifas/ConceptosFacturacion";
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
-import {obtenerConveniosId} from "../../Util/Contexts/ConveniosContext";
+import {agregarConvenio, modificarConvenio, obtenerConveniosId} from "../../Util/Contexts/ConveniosContext";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 const headers = API_HEADERS
@@ -810,16 +810,14 @@ class EscribirConvenio extends Component {
         console.log(params)
         console.log(JSON.stringify(params))
         const {idConvenio} = this.state
-        if (idConvenio == 0 || idConvenio == '' || idConvenio === undefined){
-            const url = `${process.env.REACT_APP_API_URL}/Convenios/Agregar`;
-            axios.post(url, Object.assign({}, params),{ headers }).then(respuesta => {
+        if (idConvenio === 0 || idConvenio === '' || idConvenio === undefined){
+            agregarConvenio(params).then(respuesta => {
                 console.log(respuesta)
                 showSuccess(respuesta.data);
                 this.limpiarCampos()
             });
         }else{
-            const url = `${process.env.REACT_APP_API_URL}/Convenios/Modificar/${idConvenio}`;
-            axios.put(url, Object.assign({}, params),{ headers }).then(respuesta => {
+            modificarConvenio(idConvenio, params).then(respuesta => {
                 console.log(respuesta)
                 showSuccess(respuesta.data);
                 this.limpiarCampos()
