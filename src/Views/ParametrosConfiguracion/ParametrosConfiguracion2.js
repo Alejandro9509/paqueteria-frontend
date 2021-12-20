@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Noty from "noty";
 import Cabecera from "../../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
-import { Box, Button, Checkbox, FormControl, InputLabel, Select, TextField, Typography } from "@material-ui/core";
+import { Box, Button, Checkbox, FormControl, InputLabel, Paper, Select, Tab, Tabs, TextField, Typography } from "@material-ui/core";
 import {obtenerEstatusRecoleccion,
      obtenerEstatusEmbarque,
      obtenerEstatusGuia,
@@ -12,6 +12,7 @@ import {obtenerMonedas} from "../../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../../Util/Contexts/TipoCambioContext";
 import {obtenerParametrosConfiguracion,modificarParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import { makeStyles } from '@material-ui/core/styles';
+import { TabContext, TabPanel } from "@material-ui/lab";
 //-------------------------------------------STYLES---------------------------------------------------------------------
 const useStyles = makeStyles({
   subtitulo:{
@@ -19,7 +20,7 @@ const useStyles = makeStyles({
     color: "black",
     letterSpacing: "0.21px",
     padding: "5px",
-  },
+  },  
 });
 
 function showSuccess(mensaje) {
@@ -41,6 +42,9 @@ const [dataMonedaEmbarque, setMonedaEmbarque] = useState([])
 const [dataTipoCambioEmbarque, setTipoCambioEmbarque] = useState([])
 const [dataEstatusGuia, setEstatusGuia] = useState([])
 const [datatipoTarifa, setTipoTarifa] = useState([])
+const [value, setValue] = React.useState(2);
+
+ 
     //variables de valores por defecto
 const [configuraciones, setConfiguraciones] = React.useState({
     estatusRecoleccion:1,
@@ -97,7 +101,10 @@ const [configuraciones, setConfiguraciones] = React.useState({
           console.log(err);
           showSuccess(err);
       });
-    }
+    } 
+    const handleTab = (event, newValue) => {
+    setValue(newValue);
+  };
     //--------------------------------------------------SERVICIOS--------------------------------------------------------
     async function getAllEstatusRecoleccion() {
             obtenerEstatusRecoleccion().then((respuesta) => {
@@ -160,6 +167,7 @@ const [configuraciones, setConfiguraciones] = React.useState({
         getAllEstatusGuia()
     },[])
   return (
+
     <div>
       <header className="topbar clearfix">
         <Cabecera titulo="Parametros Configuración">
@@ -178,47 +186,28 @@ const [configuraciones, setConfiguraciones] = React.useState({
       <aside className="iconic-leftbar">
         <BarraLateralIzquierda />
       </aside>
-
+      <TabContext value={value}>
+       <Paper square >
+            <Tabs
+              value={value}
+              indicatorColor="primary"
+              textColor="primary"
+              onChange={handleTab}
+              centered
+            >
+      <Tab label="Embarque" value="1" />
+      <Tab label="Recoleccion" value="2" />
+      <Tab label="Guia" value="3" />
+      <Tab label="Tarifas" value="4" />
+          </Tabs>
+    
+      </Paper>
       <section className="main-container">
         <div className="container-fluid" style={{width:"70%"}}>
-          <Box display="flex" justifyContent="flex-start"  m={1} p={1} bgcolor="background.paper" flexDirection="column">
-
-            {/*RECOLECCION*/}
-            <Box p={1}  >
-            <Box display="flex" p={1} my={0.5}flexDirection="column">
-             <h2 className={classes.subtitulo}>Recolección</h2>
-             <Box width="40%"  p={1} my={0.5} display="flex">
-             <Box width="40%"  p={1} my={0.5}>
-               <div className={classes.subtitulo}>Estatus por defecto</div>
-             </Box>
-             <Box width="60%"  p={1} my={0.5}>
-                  <FormControl fullWidth variant="outlined" width="25%">
-                            <InputLabel id="idRecoleccionLabel">Estatus</InputLabel>
-                            <Select
-                                labelId="estatusRecoleccionLabel"
-                                className="form-control"
-                                required
-                                value={configuraciones.estatusRecoleccion}
-                                label="Estatus"
-                                id="estatusRecoleccion"
-                                name="estatusRecoleccion"
-                                onChange={handleChange}
-                            >
-                                {dataEstatusRecoleccion.map((estatus) => (
-                                    <option key={estatus.m_nIdEstatusRecoleccion}
-                                            value={estatus.m_nIdEstatusRecoleccion}
-                                    >
-                                        {estatus.m_sEstatus}
-                                    </option>
-                                ))}
-                            </Select>
-               </FormControl> 
-            </Box>
-             </Box>
-             </Box>
-            </Box>
-            {/*EMBARQUE*/}
-            <Box p={1}  >
+        <Box display="flex" justifyContent="flex-start"  m={1} p={1} bgcolor="background.paper" flexDirection="column">
+               
+         <TabPanel value="1">
+           <Box p={1}>
               <h2 className={classes.subtitulo}>Embarque</h2>
                 <Box display="flex" p={1} my={0.5} bgcolor="background.paper" flexDirection="column">
                   <Box width="40%" p={1} my={0.5} display="flex">
@@ -323,9 +312,53 @@ const [configuraciones, setConfiguraciones] = React.useState({
                      </Box>
                   </Box>*/} 
                 </Box>
+                <Box margin={"0 auto"}>
+             <Button variant="contained" color="primary" style={{width:"100px"}} onClick={onSubmit}>
+              Modificar
+             </Button>    
+             </Box>
+            </Box></TabPanel>
+          <TabPanel value="2">
+            <Box p={1}>
+            <Box display="flex" p={1} my={0.5}flexDirection="column">
+             <h2 className={classes.subtitulo}>Recolección</h2>
+             <Box width="40%"  p={1} my={0.5} display="flex">
+             <Box width="40%"  p={1} my={0.5}>
+               <div className={classes.subtitulo}>Estatus por defecto</div>
+             </Box>
+             <Box width="60%"  p={1} my={0.5}>
+                  <FormControl fullWidth variant="outlined" width="25%">
+                            <InputLabel id="idRecoleccionLabel">Estatus</InputLabel>
+                            <Select
+                                labelId="estatusRecoleccionLabel"
+                                className="form-control"
+                                required
+                                value={configuraciones.estatusRecoleccion}
+                                label="Estatus"
+                                id="estatusRecoleccion"
+                                name="estatusRecoleccion"
+                                onChange={handleChange}
+                            >
+                                {dataEstatusRecoleccion.map((estatus) => (
+                                    <option key={estatus.m_nIdEstatusRecoleccion}
+                                            value={estatus.m_nIdEstatusRecoleccion}
+                                    >
+                                        {estatus.m_sEstatus}
+                                    </option>
+                                ))}
+                            </Select>
+               </FormControl> 
             </Box>
-            {/*GUIAS*/}
-            <Box p={1} >
+             </Box>
+             </Box>
+             <Box margin={"0 auto"}>
+             <Button variant="contained" color="primary" style={{width:"100px"}} onClick={onSubmit}>
+              Modificar
+             </Button>    
+             </Box>
+            </Box></TabPanel>
+          <TabPanel value="3">
+            <Box p={1}>
              <Box display="flex" p={1} my={0.5} bgcolor="background.paper" flexDirection="column">
               <h2 className={classes.subtitulo}>Guias</h2>
                 <Box width="40%" p={1} my={0.5} display="flex">
@@ -355,8 +388,13 @@ const [configuraciones, setConfiguraciones] = React.useState({
                     </Box>
                   </Box>
                 </Box>
-              </Box>
-            {/*TARIFAS*/}
+                <Box margin={"0 auto"}>
+             <Button variant="contained" color="primary" style={{width:"100px"}} onClick={onSubmit}>
+              Modificar
+             </Button>    
+             </Box>
+            </Box></TabPanel> 
+          <TabPanel value="4">
             <Box p={1} >
             <Box display="flex" p={1} my={0.5} bgcolor="background.paper" flexDirection="column">
               <h2 className={classes.subtitulo}>Tarifas</h2>
@@ -436,12 +474,24 @@ const [configuraciones, setConfiguraciones] = React.useState({
               Modificar
              </Button>    
              </Box>
+        
+            </TabPanel>
           </Box>
+          </div>
+      </section>
+      
+      </TabContext>
+      <section className="main-container">
+        <div className="container-fluid" style={{width:"70%"}}>
+ 
                
         </div>
       </section>
     </div>
+
   );
 }
+
+
 
 export default ParametrosConfiguracion2;
