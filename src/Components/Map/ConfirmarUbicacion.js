@@ -35,7 +35,7 @@ class ConfirmarUbicacion extends Component {
     componentDidMount() {
         if (this.props.direccion) {
 console.log(this.props.direccion)
-            obtenerUbicacion(this.props.direccion.municipioTexto, this.props.direccion.calleRemitente, this.props.recoleccion ? this.props.direccion.coloniaRemitente : this.props.direccion.coloniaDestinatario, this.props.recoleccion ? this.props.direccion.codigoPostalRemitente.m_sCP : this.props.direccion.codigoPostalDestinatario.m_sCP).then((coordenadas) => {
+            obtenerUbicacion(this.props.direccion.municipioTexto, this.props.recoleccion ? this.props.direccion.calleRemitente : this.props.direccion.calleDestinatario, this.props.recoleccion ? this.props.direccion.coloniaRemitente : this.props.direccion.coloniaDestinatario,this.props.recoleccion ?  this.props.direccion.numeroIntRemitente : this.props.direccion.numeroIntDestinatario, this.props.recoleccion ? this.props.direccion.codigoPostalRemitente.m_sCP : this.props.direccion.codigoPostalDestinatario.m_sCP).then((coordenadas) => {
                 this.setState({coordenadas: {lat: coordenadas.y, lng: coordenadas.x}})
                 this.state.map.setView([coordenadas.y, coordenadas.x], 18)
             })

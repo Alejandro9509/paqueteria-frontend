@@ -597,7 +597,7 @@ class FiltersMap extends Component {
 
                         <Tooltip title={this.props.data.modoPlaneacion ? "Guardar ruta" : "Enviar ruta a operadores"}>
                             <IconButton
-                                onClick={() => this.props.guardarRuta()}
+                                onClick={() => {this.setState({unidadesSeleccionadas:[],paquetesSeleccionadas: []});this.props.guardarRuta()}}
                                 style={{
                                     backgroundColor: "white",
                                     margin: "1px",
