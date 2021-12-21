@@ -70,7 +70,7 @@ function Convenios(){
         {
             headerName: "No. Cliente",
             field: 'm_nNumeroCliente',
-            width: 100,
+            width: 150,
         },
         {
             headerName: "Cliente",
