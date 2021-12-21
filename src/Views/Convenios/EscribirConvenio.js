@@ -22,7 +22,7 @@ import {
     CardContent,
     CardActions,
     CardHeader,
-    IconButton, Grid, CardActionArea, Menu, MenuItem
+    IconButton, Grid, CardActionArea, Menu, MenuItem, ButtonBase
 } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SvgIcon from "@material-ui/core/SvgIcon";
@@ -53,7 +53,8 @@ import CodigosPostalesZonas from "../ZonasOperativas/CodigosPostalesZonas";
 import ConceptosFacturacion from "../Tarifas/ConceptosFacturacion";
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
-import {obtenerConveniosId} from "../../Util/Contexts/ConveniosContext";
+import {agregarConvenio, modificarConvenio, obtenerConveniosId} from "../../Util/Contexts/ConveniosContext";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const headers = API_HEADERS
 
@@ -83,23 +84,10 @@ class EscribirConvenio extends Component {
             conceptosEntrega: [],
             conceptosRecoleccion: [],
             impuestos: [],
-            // tiposCobroSeleccionado: props.edit ? props.select.m_arrArCobros : [],
-            // tiposServicioSeleccionado: props.edit ? props.select.m_arrArServicios : [],
             tiposCobroAll: false,
             tiposServicioAll: false,
-            // activo: true,
-            // porPesoOVolumen: props.edit ? props.select.m_bPorPesoVolumen : true,
-            // porRangos: props.edit ? props.select.m_bPorRango : false,
-            // unidadPeso: props.edit ? props.select.m_sUnidadPeso : "Kg",
-            // factorConversion: props.edit ? props.select.m_nFactorConversion : 1,
             ivaTraslada: [],
             ivaRetiene: [],
-            // sucursal: props.edit ? props.select.m_nIdSucursal : "0",
-            // destino: props.edit ? props.select.m_nIdDestino : "0",
-            // precioFlete: props.edit ? props.select.m_cFleteMinimo : "",
-            // precioMinimo: props.edit ? props.select.m_cMontoMinimo : "",
-            // precioKilo: props.edit ? props.select.m_cPrecioKilo : "",
-            // precioM3: props.edit ? props.select.m_cPrecioM3 : "",
             disabled: true,
             cliente: '',
             nombreCliente:'',
@@ -264,17 +252,17 @@ class EscribirConvenio extends Component {
         this.handleChange = this.handleChange.bind(this)
         this.handleTabChange = this.handleTabChange.bind(this)
         this.addConcepto = this.addConcepto.bind(this)
-        this.removeConceptoAdicional = this.removeConceptoAdicional.bind(this)
+        /*this.removeConceptoAdicional = this.removeConceptoAdicional.bind(this)
         this.removeConceptoManiobra = this.removeConceptoManiobra.bind(this)
         this.removeConceptoEntrega = this.removeConceptoEntrega.bind(this)
-        this.removeConceptoRecoleccion = this.removeConceptoRecoleccion.bind(this)
+        this.removeConceptoRecoleccion = this.removeConceptoRecoleccion.bind(this)*/
         this.handleChangeChecboxTiposCobro = this.handleChangeChecboxTiposCobro.bind(this)
         this.handleChangeChecboxTiposServicio = this.handleChangeChecboxTiposServicio.bind(this)
         this.dialogVisible = this.dialogVisible.bind(this)
         this.handleClienteSelected = this.handleClienteSelected.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
         this.castConceptos = this.castConceptos.bind(this)
-        this.filtrarConceptoAdicional = this.filtrarConceptoAdicional.bind(this)
+        // this.filtrarConceptoAdicional = this.filtrarConceptoAdicional.bind(this)
         this.getAllClientes = this.getAllClientes.bind(this)
         this.handleShowDialog = this.handleShowDialog.bind(this)
         this.getAllTarifas = this.getAllTarifas.bind(this)
@@ -287,6 +275,9 @@ class EscribirConvenio extends Component {
         this.removeConceptoV2 = this.removeConceptoV2.bind(this)
         this.getAllConceptos = this.getAllConceptos.bind(this)
         this.guardarZonaTarifa = this.guardarZonaTarifa.bind(this)
+        this.handleDeleteTarifa = this.handleDeleteTarifa.bind(this)
+        this.handleDeleteZona = this.handleDeleteZona.bind(this)
+        this.removeConcepto = this.removeConcepto.bind(this)
     }
 
     castConceptos(){
@@ -301,6 +292,7 @@ class EscribirConvenio extends Component {
             let ivaTraslada = []
             let ivaRetiene = []
             const concept = {
+                id: Math.floor(Math.random() * 10000),
                 idConcepto : element.m_nIdConceptosFacturacion,
                 importe: element.m_cImporte,
                 retiene: element.m_nIdImpuestoRetiene,
@@ -315,7 +307,7 @@ class EscribirConvenio extends Component {
                 tipoMedida: element.m_nIdTipoMedida
             }
             todosConceptos.push(concept)
-            if (element.m_nIdAgregadoDesde == 0){
+            /*if (element.m_nIdAgregadoDesde == 0){
                 conceptosAdicionales.push(concept)
             }else if (element.m_nIdAgregadoDesde == 1){
                 conceptosManiobra.push(concept)
@@ -323,11 +315,11 @@ class EscribirConvenio extends Component {
                 conceptosEntrega.push(concept)
             }else if (element.m_nIdAgregadoDesde == 3){
                 conceptosRecoleccion.push(concept)
-            }
-
+            }*/
+/*
             ivaTraslada = getUniqueListBy(todosConceptos, "traslada").map(i => i.traslada);
-            ivaRetiene = getUniqueListBy(todosConceptos, "retiene").map(i => i.retiene);
-            this.setState({ todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
+            ivaRetiene = getUniqueListBy(todosConceptos, "retiene").map(i => i.retiene);*/
+            this.setState({ todosConceptos: todosConceptos/*, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada*/ })
         })
 
     }
@@ -386,44 +378,16 @@ class EscribirConvenio extends Component {
 
     //Metodo agregar para listado de conceptos entrega
     addConcepto(data) {
-        const { conceptosRecoleccion, todosConceptos,conceptosAdicionales, conceptosManiobra, conceptosEntrega } = this.state
-        let ivaTraslada = [];
-        let ivaRetiene = [];
-        const concept = {
-            idConcepto : data.concepto.m_nIdConceptosFacturacion,
-            concepto: data.concepto,
-            importe: data.importe,
-            retiene: data.retiene,
-            traslada: data.traslada,
-            importeRet: data.importeRet,
-            importeIVA: data.importeIVA,
-            rangoMinimo: data.rangoMinimo,
-            rangoMaximo: data.rangoMaximo,
-            nombreConcepto: data.concepto.m_sConcepto,
-            tipoCalculo: data.tipoCalculo,
-            agregadoDesde: data.agregadoDesde,
-            tipoMedida: data.tipoMedida
-        }
-        todosConceptos.push(concept)
-        ivaTraslada = getUniqueListBy(todosConceptos, "traslada").map(i => i.traslada);
-        ivaRetiene = getUniqueListBy(todosConceptos, "retiene").map(i => i.retiene);
-        if (data.agregadoDesde == 0){
-            conceptosAdicionales.push(concept)
-            this.setState({ conceptosAdicionales: conceptosAdicionales, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }else if (data.agregadoDesde == 1){
-            conceptosManiobra.push(concept)
-            this.setState({ conceptosManiobra: conceptosManiobra, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }else if (data.agregadoDesde == 2){
-            conceptosEntrega.push(concept)
-            this.setState({ conceptosEntrega: conceptosEntrega, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }else if (data.agregadoDesde == 3){
-            conceptosRecoleccion.push(concept)
-            this.setState({ conceptosRecoleccion: conceptosRecoleccion, todosConceptos: todosConceptos, ivaRetiene: ivaRetiene, ivaTraslada: ivaTraslada })
-        }
+        const {todosConceptos } = this.state
+
+        data.idConcepto = data.concepto.m_nIdConceptosFacturacion
+        data.nombreConcepto = data.concepto.m_sConcepto
+        todosConceptos.push(data)
+        this.setState({ todosConceptos: todosConceptos })
 
     }
 
-    filtrarConceptoAdicional(c, item){
+    /*filtrarConceptoAdicional(c, item){
         let valid =  c.idConcepto == item.idConcepto
             && c.importe == item.importe
             && c.importeRet == item.importeRet
@@ -431,8 +395,8 @@ class EscribirConvenio extends Component {
             && c.traslada == item.traslada
             && c.importeIVA == item.importeIVA
         return !valid
-    }
-
+    }*/
+/*
     filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item){
         let valid =  c.idConcepto == item.idConcepto
             && c.importe == item.importe
@@ -444,8 +408,12 @@ class EscribirConvenio extends Component {
             && c.rangoMaximo == item.rangoMaximo
             && c.tipoCalculo == item.tipoCalculo
         return !valid
-    }
+    }*/
     //Metodo remover para listado de conceptos adicionales
+    removeConcepto(item) {
+        this.setState({ todosConceptos: this.state.todosConceptos.filter(c => c.id !== item.id) })
+    }
+    /*//Metodo remover para listado de conceptos adicionales
     removeConceptoAdicional(item) {
         const { conceptosAdicionales, todosConceptos } = this.state
         const newArrayConceptos = conceptosAdicionales.filter(c => this.filtrarConceptoAdicional(c, item))
@@ -472,7 +440,7 @@ class EscribirConvenio extends Component {
         const newArrayConceptos = conceptosRecoleccion.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
         const newArrayTodosConceptos = todosConceptos.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
         this.setState({ conceptosRecoleccion: newArrayConceptos, todosConceptos: newArrayTodosConceptos })
-    }
+    }*/
 
     componentWillUnmount() {
 
@@ -656,6 +624,7 @@ class EscribirConvenio extends Component {
             const tarifas = []
             this.state.idsTarifasSeleccionadas.forEach((idTarifa) => {
                 obtenerTarifaBy(idTarifa).then(respuesta=> {
+                    respuesta.data.m_nIdTarifaConvenio = Math.floor(Math.random() * 10000)
                     tarifas.push(respuesta.data)
                     this.state.tarifasSeleccionadas.push(respuesta.data)
                     if (tarifas.length === this.state.idsTarifasSeleccionadas.length){
@@ -671,6 +640,7 @@ class EscribirConvenio extends Component {
             const zonas = []
             this.state.idsZonasSeleccionadas.forEach((idZona) => {
                 obtenerByIdZonaTarifaSinCP(idZona).then(respuesta => {
+                    respuesta.data.m_nIdZonaConvenio = Math.floor(Math.random() * 10000)
                     zonas.push(respuesta.data)
                     this.state.zonasSeleccionadas.push(respuesta.data)
                     if (zonas.length === this.state.idsZonasSeleccionadas.length){
@@ -714,7 +684,7 @@ class EscribirConvenio extends Component {
     handleGuardarTarifa = (e) => {
         e.preventDefault()
         this.state.tarifasSeleccionadas.forEach((t) => {
-            if (t.m_nIdTarifa == this.state.tarifaDetalles.m_nIdTarifa){
+            if (t.m_nIdTarifaConvenio === this.state.tarifaDetalles.m_nIdTarifaConvenio){
                 t.m_arrArConceptos.length = 0
                 this.state.todosConceptos.forEach((c) => {
                     t.m_arrArConceptos.push({
@@ -840,16 +810,14 @@ class EscribirConvenio extends Component {
         console.log(params)
         console.log(JSON.stringify(params))
         const {idConvenio} = this.state
-        if (idConvenio == 0 || idConvenio == '' || idConvenio === undefined){
-            const url = `${process.env.REACT_APP_API_URL}/Convenios/Agregar`;
-            axios.post(url, Object.assign({}, params),{ headers }).then(respuesta => {
+        if (idConvenio === 0 || idConvenio === '' || idConvenio === undefined){
+            agregarConvenio(params).then(respuesta => {
                 console.log(respuesta)
                 showSuccess(respuesta.data);
                 this.limpiarCampos()
             });
         }else{
-            const url = `${process.env.REACT_APP_API_URL}/Convenios/Modificar/${idConvenio}`;
-            axios.put(url, Object.assign({}, params),{ headers }).then(respuesta => {
+            modificarConvenio(idConvenio, params).then(respuesta => {
                 console.log(respuesta)
                 showSuccess(respuesta.data);
                 this.limpiarCampos()
@@ -897,7 +865,7 @@ class EscribirConvenio extends Component {
 
     guardarZonaTarifa(){
         this.state.zonasSeleccionadas.forEach(item => {
-            if (item.m_nIdZona === this.state.seleccionDetalles.m_nIdZona){
+            if (item.m_nIdZonaConvenio === this.state.seleccionDetalles.m_nIdZonaConvenio){
                 const conceptos = []
                 this.state.conceptosZona.forEach(element => {
                     let concepto = {
@@ -929,6 +897,9 @@ class EscribirConvenio extends Component {
 
         return(
             <Card style={{marginBottom: '10px'}}>
+                <IconButton aria-label="delete" style={{alignItems: 'right'}} onClick={(e) => this.handleDeleteZona(e, item)}>
+                    <DeleteIcon />
+                </IconButton>
                 <CardActionArea onClick={(e) => this.handleCardClick(e, item, "Zona")}>
                     <CardContent>
                         <Grid container>
@@ -949,11 +920,45 @@ class EscribirConvenio extends Component {
         )
     }
 
+    botonesGuardar(){
+        return(
+            <div className="row">
+                <Grid container spacing={1} direction={"row-reverse"}>
+                    <Grid item xs={2}>
+                        <Button fullWidth variant="contained" color={"primary"} onClick={this.handleGuardarTarifa} disabled={this.props.consult}>
+                            Guardar cambios a tarifa
+                        </Button>
+
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Button fullWidth variant="outlined" onClick={this.onSubmit} color="primary" disabled={this.props.consult}>
+                            Guardar convenio
+                        </Button>
+                    </Grid>
+
+                </Grid>
+            </div>
+        )
+    }
+
+    handleDeleteTarifa(event, tarifa){
+        const newArray = this.state.tarifasSeleccionadas.filter(item => item.m_nIdTarifaConvenio !== tarifa.m_nIdTarifaConvenio)
+        this.setState({
+            tarifasSeleccionadas: newArray
+        })
+    }
+    handleDeleteZona(event, tarifa){
+        const newArray = this.state.zonasSeleccionadas.filter(item => item.m_nIdZonaConvenio !== tarifa.m_nIdZonaConvenio)
+        this.setState({
+            zonasSeleccionadas: newArray
+        })
+    }
+
     render() {
-        const { disabled, todosConceptos, conceptosAdicionales, conceptosManiobra, conceptosEntrega, conceptosRecoleccion, openDialog,
-            columnsTarifas, dataTarifas, height, tarifasSeleccionadas, tarifaDetalles, dataProductosTemp,dataProductosSeleccionados, columnsProductos,
-            cliente,nombreCliente, fechaVigencia,CuotaMensual, cardStyle} = this.state
-        let { consult, edit} = this.props
+        const { todosConceptos, conceptosAdicionales, conceptosManiobra, conceptosEntrega, openDialog,
+            columnsTarifas, dataTarifas, height, tarifasSeleccionadas, tarifaDetalles, dataProductosTemp,
+            dataProductosSeleccionados, nombreCliente, fechaVigencia,CuotaMensual,seleccionDetalles} = this.state
+        let { consult} = this.props
 
         return (
             <div>
@@ -1008,7 +1013,7 @@ class EscribirConvenio extends Component {
                     </DialogContent>
                     }
                 </Dialog>
-                <form className="j-forms" onSubmit={this.onSubmit}>
+                <form className="j-forms">
                     <div className="main-container" style={{ marginLeft: "0px", padding: "0px" }}>
                         <div className="row">
                             <div className="col-md-3 col-sm-12">
@@ -1039,17 +1044,7 @@ class EscribirConvenio extends Component {
                                                                         tipoModal:"Clientes"
                                                                     })
                                                                     }} 
-                                                            /> 
-                                                               {/* <option aria-label={"Seleccionar"} value={""}/>
-                                                                {this.state.dataClientes.map((c) => (
-                                                                    <option
-                                                                        key={c.m_nIdCliente}
-                                                                        value={c.m_nIdCliente}
-                                                                    >
-                                                                        {c.m_sNombreFiscal}
-                                                                    </option>
-                                                                ))}
-                                                            </TextField>*/}
+                                                            />
                                                        
                                                     </label>
                                                 </Grid>
@@ -1088,19 +1083,14 @@ class EscribirConvenio extends Component {
                                                 </label>
                                             </Grid>
                                                 <Grid item xs={12}>
-                                                    <button className="btn btn-primary primary-btn" onClick={(event) => this.handleShowDialog(event,"Tarifas")} disabled={consult}>
+                                                    <Button variant="outlined" color="primary" fullWidth onClick={(event) => this.handleShowDialog(event,"Tarifas")} disabled={consult}>
                                                         Seleccionar tarifas
-                                                    </button>
+                                                    </Button>
                                                 </Grid>
                                                 <Grid item xs={12}>
-                                                    <button className="btn btn-primary primary-btn" onClick={(event) => this.handleShowDialog(event,"Zonas")} disabled={consult}>
+                                                    <Button variant="outlined" color="primary" fullWidth onClick={(event) => this.handleShowDialog(event,"Zonas")} disabled={consult}>
                                                         Seleccionar zonas
-                                                    </button>
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    <button type="submit" className="btn btn-primary primary-btn" disabled={consult}>
-                                                        Guardar convenio
-                                                    </button>
+                                                    </Button>
                                                 </Grid>
                                             </Grid>
                                         </div>
@@ -1117,23 +1107,30 @@ class EscribirConvenio extends Component {
 
                                 </div>
                                 <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-
+                                    {/*Listado de tarjetas de tarifas*/}
                                     {
                                         tarifasSeleccionadas.map((t) => (
                                             <Card style={{marginBottom: '10px'}}>
+                                                <IconButton aria-label="delete" style={{alignItems: 'right'}} onClick={(e) => this.handleDeleteTarifa(e, t)}>
+                                                    <DeleteIcon />
+                                                </IconButton>
                                                 <CardActionArea onClick={(e) => this.handleCardClick(e, t, "Tarifa")}>
                                                     <CardContent>
                                                         <Grid container>
                                                             <Grid item xs={12}>
                                                                 <Typography variant="body2" color="textSecondary" component="p">
-                                                                    {t.m_sOrigen} - {t.m_sDestino}
+                                                                    {
+                                                                        `${
+                                                                            t.m_sOrigen + " - " + t.m_arrArDestinos.map(i => (i.m_sCiudad + ', '))
+                                                                        }`
+                                                                    }
                                                                 </Typography>
                                                             </Grid>
                                                             <Grid item xs={12}>
                                                                 <Typography gutterBottom variant="h5" component="h2">
                                                                     {t.m_arrArProductos &&
                                                                         t.m_arrArProductos.map((p) => (
-                                                                            p.m_nIdProducto+'-' + p.m_sDescripcion + ', '
+                                                                            p.m_nNoProducto+' - ' + p.m_sDescripcion + ', '
                                                                     ))}
                                                                 </Typography>
                                                             </Grid>
@@ -1143,173 +1140,169 @@ class EscribirConvenio extends Component {
                                             </Card>
                                         ))
                                     }
-
+                                    {/*Listado de tarjetas de tarifas por zona*/}
                                     {
                                         this.state.zonasSeleccionadas.map((item) => this.cardZona(item))
                                     }
                                 </div>
                             </div>
                             <div className="col-md-9 col-sm-12" >
-                                {
-                                    todosConceptos.length > 0 &&
-                                    `${tarifaDetalles.m_sOrigen} - ${tarifaDetalles.m_sDestino}`
-                                }
+                                <Card className>
+                                    <CardContent>
+                                        <Typography variant="overline" color="textSecondary" gutterBottom>
+                                            Detalles de la tarifa
+                                        </Typography>
+                                        <Typography variant="h2" component="h2" gutterBottom>
+                                            {
+                                                `${
+                                                    seleccionDetalles.tipoSeleccion === null ? "Seleccione una tarifa" :
+                                                    seleccionDetalles.tipoSeleccion === "Tarifa" ?
+                                                    seleccionDetalles.m_sCodigo :
+                                                    seleccionDetalles.m_sCodigoZona
+                                                }`
+                                            }
+                                        </Typography>
+                                        <Typography variant="overline" color="textSecondary" gutterBottom>
+                                            {
+                                                `${
+                                                    seleccionDetalles.tipoSeleccion === null ? "" :
+                                                    seleccionDetalles.tipoSeleccion === "Tarifa" ?
+                                                    seleccionDetalles.m_sOrigen +" - "+ seleccionDetalles.m_arrArDestinos.map(i => (i.m_sCiudad+ ', ')) :
+                                                    seleccionDetalles.m_sEstado
+                                                }`
+                                            }
+                                            <br />
+                                            {
+                                                `${
+                                                    seleccionDetalles.tipoSeleccion === null ? "" :
+                                                    seleccionDetalles.tipoSeleccion === "Tarifa" ?
+                                                        seleccionDetalles.m_bPorPesoVolumen ? "Tarifa por Peso Volumen" :
+                                                        seleccionDetalles.m_bPorRango ? "Tarifa por Rango" :
+                                                        seleccionDetalles.m_bPorRegion ? "Tarifa por Region" : "" 
+                                                        : ""
+                                                }`
+                                            }
+                                            <br/>
+                                            {
+                                                `${
+                                                    seleccionDetalles.tipoSeleccion === null ? "" :
+                                                        seleccionDetalles.tipoSeleccion === "Tarifa" ?
+                                                            seleccionDetalles.m_arrArProductos &&
+                                                            seleccionDetalles.m_arrArProductos.map((p) => (
+                                                                p.m_nNoProducto+' - ' + p.m_sDescripcion + ', '
+                                                            ))
+                                                            : ""
+                                                }`
+                                            }
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
 
-                                {
+                                {/*{
                                     todosConceptos.length > 0  && this.state.seleccionDetalles.tipoSeleccion === "Tarifa" &&
-                                    <button className="btn btn-primary primary-btn" onClick={this.handleGuardarTarifa} disabled={consult}>
-                                        Guardar tarifa
-                                    </button>
-                                }
+                                        <Grid container item direction={"row-reverse"}>
+                                            <Button variant="contained" color={"primary"} onClick={this.handleGuardarTarifa} disabled={consult}>
+                                                Guardar cambios a tarifa
+                                            </Button>
+                                        </Grid>
+                                }*/}
                             </div>
                             <div className="col-md-9 col-sm-12" >
                                 <div className="widget-wrap" style={{ margin: "0px", padding: "0px" }}>
                                     <div className="widget-content">
-
-                                        {/*{(tarifaDetalles.m_bPorRango || tarifaDetalles.m_bPorPesoVolumen) &&
-                                            <div>
-                                                <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
-                                                    <Tab label="Concetos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
-                                                    <Tab label="Maniobras" {...this.a11yProps(1)} />
-                                                    <Tab label="Entrega" {...this.a11yProps(2)} />
-                                                    <Tab label="Recolección" {...this.a11yProps(3)}/>
-                                                    <Tab label="Productos" {...this.a11yProps(4)}/>
-                                                </Tabs>
-
-                                                <TabPanel value={this.state.tab} index={0}>
-                                                    <ConceptosAdicionales consult={consult}
-                                                                          select={tarifaDetalles}
-                                                                          conceptosAdicionales={conceptosAdicionales}
-                                                                          addConcepto={this.addConcepto}
-                                                                          removeConcepto={this.removeConceptoAdicional}
-                                                                          ivaRetiene={this.state.ivaRetiene}
-                                                                          ivaTraslada={this.state.ivaTraslada}
-                                                                          mostrarRangos={false}/>
-                                                </TabPanel>
-                                                <TabPanel value={this.state.tab} index={1}>
-                                                    <ConceptosAdicionalesManiobra consult={consult}
-                                                                                  select={tarifaDetalles}
-                                                                                  conceptosAdicionales={conceptosManiobra}
-                                                                                  addConcepto={this.addConcepto}
-                                                                                  removeConcepto={this.removeConceptoManiobra}
-                                                                                  ivaRetiene={this.state.ivaRetiene}
-                                                                                  ivaTraslada={this.state.ivaTraslada}
-                                                    />
-                                                </TabPanel>
-                                                <TabPanel value={this.state.tab} index={2}>
-                                                    el filtrado por agregadoDesde está demas
-                                                    <ConceptosAdicionalesEntrega consult={consult}
-                                                                                 select={tarifaDetalles}
-                                                                                 conceptosAdicionales={conceptosEntrega}
-                                                                                 addConcepto={this.addConcepto}
-                                                                                 removeConcepto={this.removeConceptoEntrega}
-                                                                                 ivaRetiene={this.state.ivaRetiene}
-                                                                                 ivaTraslada={this.state.ivaTraslada}
-                                                    />
-                                                </TabPanel>
-                                                <TabPanel value={this.state.tab} index={3}>
-                                                el filtrado por agregadoDesde está demas
-                                                <ConceptosAdicionalesRecoleccion consult={consult}
-                                                                                 select={tarifaDetalles}
-                                                                                 conceptosAdicionales={conceptosRecoleccion}
-                                                                                 addConcepto={this.addConcepto}
-                                                                                 removeConcepto={this.removeConceptoRecoleccion}
-                                                                                 ivaRetiene={this.state.ivaRetiene}
-                                                                                 ivaTraslada={this.state.ivaTraslada}
-                                                                                 />
-                                            </TabPanel>
-                                                <TabPanel value={this.state.tab} index={3}>
-                                                    <ProductosTarifa
-                                                        productos={dataProductosTemp}
-                                                        productosSeleccionados={dataProductosSeleccionados}
-                                                        actualizarProductos={this.actualizarProductos}
-                                                        consult={consult}
-                                                    />
-
-                                                </TabPanel>
-                                            </div>
-                                        }
-                                        {
-                                            tarifaDetalles.m_bPorRegion &&
-                                            <div>
-                                                <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
-                                                    <Tab label="Productos" {...this.a11yProps(0)}/>
-                                                    <Tab label="Conceptos de Facturación" {...this.a11yProps(1)}/>
-
-                                                </Tabs>
-
-                                                <TabPanel value={this.state.tab} index={0}>
-                                                    <ProductosPrecios
-                                                        dataList={dataProductosSeleccionados}
-                                                        onChangeList={this.actualizarProductos}
-                                                        mostrarRangos={false}
-                                                        consult={consult}
-                                                        ivaRetiene={this.state.ivaRetiene}
-                                                        ivaTraslada={this.state.ivaTraslada}
-                                                    />
-                                                </TabPanel>
-                                                <TabPanel value={this.state.tab} index={1}>
-                                                    <ConceptosAdicionales consult={consult}
-                                                                          select={tarifaDetalles}
-                                                                          conceptosAdicionales={conceptosAdicionales}
-                                                                          addConcepto={this.addConcepto}
-                                                                          removeConcepto={this.removeConceptoAdicional}
-                                                                          ivaRetiene={this.state.ivaRetiene}
-                                                                          ivaTraslada={this.state.ivaTraslada}
-                                                                          mostrarRangos={false}
-                                                                          porRegion={true}
-                                                    />
-
-                                                </TabPanel>
-
-                                            </div>
-                                        }*/}
 
                                         { this.state.seleccionDetalles.tipoSeleccion === "Tarifa" &&
                                             <div>
 
                                                 {(tarifaDetalles.m_bPorRango || tarifaDetalles.m_bPorPesoVolumen) &&
                                                     <div>
-                                                    <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
-                                                        <Tab label="Concetos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
-                                                        <Tab label="Maniobras" {...this.a11yProps(1)} />
-                                                        <Tab label="Entrega" {...this.a11yProps(2)} />
-                                                        {/*<Tab label="Recolección" {...this.a11yProps(3)}/>*/}
-                                                        <Tab label="Productos" {...this.a11yProps(4)}/>
-                                                    </Tabs>
-
-                                                    <TabPanel value={this.state.tab} index={0}>
-                                                        <ConceptosAdicionales consult={consult}
+                                                        <div className="widget-container">
+                                                            <div className="widget-content">
+                                                                <Box sx={{ width: '100%' }}>
+                                                                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                                                        <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
+                                                                            <Tab label="Concetos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
+                                                                            <Tab label="Maniobras" {...this.a11yProps(1)} />
+                                                                            <Tab label="Entrega" {...this.a11yProps(2)} />
+                                                                            {/*<Tab label="Recolección" {...this.a11yProps(3)}/>*/}
+                                                                            <Tab label="Productos" {...this.a11yProps(4)}/>
+                                                                        </Tabs>
+                                                                    </Box>
+                                                                    <TabPanel value={this.state.tab} index={0}>
+                                                                        {/*<ConceptosAdicionales consult={consult}
                                                                               select={tarifaDetalles}
                                                                               conceptosAdicionales={conceptosAdicionales}
                                                                               addConcepto={this.addConcepto}
                                                                               removeConcepto={this.removeConceptoAdicional}
                                                                               ivaRetiene={this.state.ivaRetiene}
                                                                               ivaTraslada={this.state.ivaTraslada}
-                                                                              mostrarRangos={false}/>
-                                                    </TabPanel>
-                                                    <TabPanel value={this.state.tab} index={1}>
-                                                        <ConceptosAdicionalesManiobra consult={consult}
+                                                                              mostrarRangos={false}/>*/}
+                                                                        <ConceptosFacturacion
+                                                                            consulta={consult}
+                                                                            dataList={todosConceptos.filter(item => item.agregadoDesde === 0)}
+                                                                            // onChangeList={this.handleChangeListConceptos}
+                                                                            mostrarRangos={true}
+                                                                            mostrarImpuestos={true}
+                                                                            mostrarDescuento={false}
+                                                                            mostrarTipoMedida={true}
+                                                                            mostrarTipoCalculo={true}
+                                                                            conceptosBase={this.state.dataConceptosBase}
+                                                                            keys={0}
+                                                                            agregarConcepto={this.addConcepto}
+                                                                            eliminarConcepto={this.removeConcepto}
+                                                                        />
+                                                                    </TabPanel>
+                                                                    <TabPanel value={this.state.tab} index={1}>
+                                                                        {/*<ConceptosAdicionalesManiobra consult={consult}
                                                                                       select={tarifaDetalles}
                                                                                       conceptosAdicionales={conceptosManiobra}
                                                                                       addConcepto={this.addConcepto}
                                                                                       removeConcepto={this.removeConceptoManiobra}
                                                                                       ivaRetiene={this.state.ivaRetiene}
                                                                                       ivaTraslada={this.state.ivaTraslada}
-                                                        />
-                                                    </TabPanel>
-                                                    <TabPanel value={this.state.tab} index={2}>
-                                                        {/*el filtrado por agregadoDesde está demas*/}
-                                                        <ConceptosAdicionalesEntrega consult={consult}
+
+                                                        />*/}
+                                                                        <ConceptosFacturacion
+                                                                            consulta={consult}
+                                                                            dataList={todosConceptos.filter(item => item.agregadoDesde === 1)}
+                                                                            // onChangeList={this.handleChangeListConceptos}
+                                                                            mostrarRangos={true}
+                                                                            mostrarImpuestos={true}
+                                                                            mostrarDescuento={false}
+                                                                            mostrarTipoMedida={true}
+                                                                            mostrarTipoCalculo={true}
+                                                                            conceptosBase={this.state.dataConceptosBase}
+                                                                            keys={1}
+                                                                            agregarConcepto={this.addConcepto}
+                                                                            eliminarConcepto={this.removeConcepto}
+                                                                        />
+                                                                    </TabPanel>
+                                                                    <TabPanel value={this.state.tab} index={2}>
+                                                                        {/*el filtrado por agregadoDesde está demas*/}
+                                                                        {/*<ConceptosAdicionalesEntrega consult={consult}
                                                                                      select={tarifaDetalles}
                                                                                      conceptosAdicionales={conceptosEntrega}
                                                                                      addConcepto={this.addConcepto}
                                                                                      removeConcepto={this.removeConceptoEntrega}
                                                                                      ivaRetiene={this.state.ivaRetiene}
                                                                                      ivaTraslada={this.state.ivaTraslada}
-                                                        />
-                                                    </TabPanel>
-                                                    {/*<TabPanel value={this.state.tab} index={3}>
+                                                        />*/}
+                                                                        <ConceptosFacturacion
+                                                                            consulta={consult}
+                                                                            dataList={todosConceptos.filter(item => item.agregadoDesde === 2)}
+                                                                            // onChangeList={this.handleChangeListConceptos}
+                                                                            mostrarRangos={true}
+                                                                            mostrarImpuestos={true}
+                                                                            mostrarDescuento={false}
+                                                                            mostrarTipoMedida={true}
+                                                                            mostrarTipoCalculo={true}
+                                                                            conceptosBase={this.state.dataConceptosBase}
+                                                                            keys={2}
+                                                                            agregarConcepto={this.addConcepto}
+                                                                            eliminarConcepto={this.removeConcepto}
+                                                                        />
+                                                                    </TabPanel>
+                                                                    {/*<TabPanel value={this.state.tab} index={3}>
                                                 el filtrado por agregadoDesde está demas
                                                 <ConceptosAdicionalesRecoleccion consult={consult}
                                                                                  select={tarifaDetalles}
@@ -1320,38 +1313,53 @@ class EscribirConvenio extends Component {
                                                                                  ivaTraslada={this.state.ivaTraslada}
                                                                                  />
                                             </TabPanel>*/}
-                                                    <TabPanel value={this.state.tab} index={3}>
-                                                        <ProductosTarifa
-                                                            productos={dataProductosTemp}
-                                                            productosSeleccionados={dataProductosSeleccionados}
-                                                            actualizarProductos={this.actualizarProductos}
-                                                            consult={consult}
-                                                        />
+                                                                    <TabPanel value={this.state.tab} index={3}>
+                                                                        <ProductosTarifa
+                                                                            productos={dataProductosTemp}
+                                                                            productosSeleccionados={dataProductosSeleccionados}
+                                                                            actualizarProductos={this.actualizarProductos}
+                                                                            consult={consult}
+                                                                        />
 
-                                                    </TabPanel>
+                                                                    </TabPanel>
+                                                                </Box>
+                                                            </div>
+                                                        </div>
                                                 </div>
+
                                                 }
                                                 {
                                                     tarifaDetalles.m_bPorRegion &&
                                                     <div>
-                                                        <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
-                                                            <Tab label="Productos" {...this.a11yProps(0)}/>
-                                                            <Tab label="Conceptos de Facturación" {...this.a11yProps(1)}/>
+                                                        <div className="widget-container">
+                                                            <div className="widget-content">
+                                                                <Box sx={{width: '100%'}}>
+                                                                    <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
+                                                                        <Tabs value={this.state.tab}
+                                                                              onChange={this.handleTabChange}
+                                                                              aria-label="simple tabs example"
+                                                                              variant="scrollable" scrollButtons="auto">
+                                                                            <Tab
+                                                                                label="Productos" {...this.a11yProps(0)}/>
+                                                                            <Tab
+                                                                                label="Conceptos de Facturación" {...this.a11yProps(1)}/>
 
-                                                        </Tabs>
+                                                                        </Tabs>
+                                                                    </Box>
 
-                                                        <TabPanel value={this.state.tab} index={0}>
-                                                            <ProductosPrecios
-                                                                dataList={dataProductosSeleccionados}
-                                                                onChangeList={this.actualizarProductos}
-                                                                mostrarRangos={false}
-                                                                consult={consult}
-                                                                ivaRetiene={this.state.ivaRetiene}
-                                                                ivaTraslada={this.state.ivaTraslada}
-                                                            />
-                                                        </TabPanel>
-                                                        <TabPanel value={this.state.tab} index={1}>
-                                                            <ConceptosAdicionales consult={consult}
+
+                                                                    <TabPanel value={this.state.tab} index={0}>
+                                                                        <ProductosPrecios
+                                                                            dataList={dataProductosSeleccionados}
+                                                                            onChangeList={this.actualizarProductos}
+                                                                            mostrarRangos={false}
+                                                                            consult={consult}
+                                                                            ivaRetiene={this.state.ivaRetiene}
+                                                                            ivaTraslada={this.state.ivaTraslada}
+                                                                        />
+                                                                    </TabPanel>
+                                                                    <TabPanel value={this.state.tab} index={1}>
+                                                                        {/*<ConceptosAdicionales consult={consult}
                                                                                   select={tarifaDetalles}
                                                                                   conceptosAdicionales={conceptosAdicionales}
                                                                                   addConcepto={this.addConcepto}
@@ -1360,19 +1368,37 @@ class EscribirConvenio extends Component {
                                                                                   ivaTraslada={this.state.ivaTraslada}
                                                                                   mostrarRangos={false}
                                                                                   porRegion={true}
-                                                            />
+                                                            />*/}
 
-                                                        </TabPanel>
+                                                                        <ConceptosFacturacion
+                                                                            consulta={consult}
+                                                                            dataList={todosConceptos.filter(item => item.agregadoDesde === 0)}
+                                                                            // onChangeList={this.handleChangeListConceptos}
+                                                                            mostrarRangos={true}
+                                                                            mostrarImpuestos={true}
+                                                                            mostrarDescuento={false}
+                                                                            mostrarTipoMedida={true}
+                                                                            mostrarTipoCalculo={true}
+                                                                            conceptosBase={this.state.dataConceptosBase}
+                                                                            keys={0}
+                                                                            agregarConcepto={this.addConcepto}
+                                                                            eliminarConcepto={this.removeConcepto}
+                                                                        />
 
+                                                                    </TabPanel>
+                                                                </Box>
+                                                            </div>
+                                                        </div>
                                                     </div>
+                                                }
+                                                {
+                                                    todosConceptos.length > 0  && this.state.seleccionDetalles.tipoSeleccion === "Tarifa" &&
+                                                    this.botonesGuardar()
                                                 }
                                             </div>
                                         }
                                         { this.state.seleccionDetalles.tipoSeleccion === "Zona" &&
                                             <div>
-                                                <div className="widget-header">
-                                                    <h2>{this.state.seleccionDetalles.m_sCodigoZona}</h2>
-                                                </div>
                                                 <div className="widget-container">
                                                     <div className="widget-content">
                                                         <Box sx={{ width: '100%' }}>
@@ -1385,13 +1411,6 @@ class EscribirConvenio extends Component {
                                                             <TabPanel value={this.state.tab} index={0}>
                                                                 <div className="widget-container">
                                                                     <div className="widget-content">
-                                                                        {/*<ConceptosAdicionalesRecoleccion consult={consult}
-                                                                                                         select={{}}
-                                                                                                         conceptosAdicionales={this.state.conceptosZona.filter(i => i.agregadoDesde == 3)}
-                                                                                                         addConcepto={this.addConcepto}
-                                                                                                         removeConcepto={this.removeConcepto}
-                                                                                                         ivaRetiene={this.state.ivaRetiene}
-                                                                                                         ivaTraslada={this.state.ivaTraslada}/>*/}
                                                                         <ConceptosFacturacion
                                                                             consulta={consult}
                                                                             dataList={this.state.conceptosZona.filter(i => i.agregadoDesde === 3)}
@@ -1413,13 +1432,6 @@ class EscribirConvenio extends Component {
                                                             <TabPanel value={this.state.tab} index={1}>
                                                                 <div className="widget-container">
                                                                     <div className="widget-content">
-                                                                        {/*<ConceptosAdicionalesEntrega consult={consult}
-                                                                                                     select={{}}
-                                                                                                     conceptosAdicionales={this.state.conceptosZona.filter(i => i.agregadoDesde == 2)}
-                                                                                                     addConcepto={this.addConcepto}
-                                                                                                     removeConcepto={this.removeConcepto}
-                                                                                                     ivaRetiene={this.state.ivaRetiene}
-                                                                                                     ivaTraslada={this.state.ivaTraslada}/>*/}
                                                                         <ConceptosFacturacion
                                                                             consulta={consult}
                                                                             dataList={this.state.conceptosZona.filter(i => i.agregadoDesde === 2)}
@@ -1443,9 +1455,9 @@ class EscribirConvenio extends Component {
                                                 <div className="row">
                                                     <Grid container spacing={2}>
                                                         <Grid item xs={12}>
-                                                            <button onClick={this.guardarZonaTarifa} type={"button"} className="btn btn-primary primary-btn">
-                                                                Guardar tarifa
-                                                            </button>
+                                                            <Button variant={"contained"} color={"primary"} onClick={this.guardarZonaTarifa} type={"button"} className="btn btn-primary primary-btn">
+                                                                Guardar cambios a tarifa
+                                                            </Button>
                                                         </Grid>
 
                                                     </Grid>

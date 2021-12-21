@@ -1,10 +1,23 @@
 import React, {useEffect, useState} from "react";
-import {FormControl, Grid, InputLabel, Select} from "@material-ui/core";
+import {
+    Card, CardActionArea,
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    Grid,
+    InputLabel,
+    Paper,
+    Radio,
+    RadioGroup,
+    Select
+} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
@@ -18,6 +31,9 @@ import {
     obtenerSATUnidades,
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import SearchIcon from "@material-ui/icons/Search";
+import DialogoNuevoConcepto from "./DialogoNuevoConcepto";
 const headers = API_HEADERS
 
 function showSuccess(mensaje) {
@@ -28,32 +44,31 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,keys, conceptosBase=[],ivaRetiene, ivaTraslada}) {
 
     function RowMenuCell(props) {
         const { api, id } = props;
 
+        const handleEditClick = (event) => {
+            event.stopPropagation();
+            let row = dataPaquetes.filter((p) => p.id === id)[0];
+            handleEditConcepto(row);
+        };
+
         const handleDeleteClick = (event) => {
             event.stopPropagation();
-            console.log("id==>", id);
-            let row = dataPaquetes.filter((p) => p.id == id)[0];
-            console.log(row);
-            handlePaqueteClick(row);
-            // api.updateRows([{ id, _action: 'delete' }]);
+            let row = dataPaquetes.filter((p) => p.id === id)[0];
+            handleDeleteConcepto(row);
         };
 
         return (
             <div>
-                {/*<IconButton
-              color="primary"
-              size="small"
-              aria-label="save"
-              onClick={handleOpenClick}
-            >
-              <SaveIcon fontSize="large" />
-            </IconButton>*/}
-                <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
+                <IconButton color="inherit" size="small" aria-label="delete" onClick={handleEditClick}>
                     <EditIcon fontSize="large" />
+                </IconButton>
+                <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
+                    <DeleteIcon fontSize="large" />
                 </IconButton>
             </div>
         );
@@ -92,12 +107,12 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
             field: "descuento",
             type:'number',
             width: 150,
-            valueFormatter: ({ value }) => `${value}%`,
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
 
         },
         {
             field: 'complementos',
-            headerName: 'Complementos',
+            headerName: 'Acciones',
             renderCell: RowMenuCell,
             sortable: false,
             width: 90,
@@ -118,6 +133,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         concepto: null,
         idConcepto: 0,
         importe: 0,
+        importeInicial: 0,
         nombreConcepto: "",
         importeRet: "0",
         retiene: 0,
@@ -135,8 +151,34 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         ivaTraslada: [],
         ivaRetiene: [],
         tiposCalculo: [],
-        columns: []
+        columns: [],
+        aplicaDescuento: false,
+        aplicarDescuentoA: 'Concepto',
     })
+
+    const resetPaquete = () =>{
+        setConcepto(concepto => {
+            return {
+                ...concepto,
+                id:Math.floor(Math.random() * 10000),
+                concepto: null,
+                idConcepto: 0,
+                importe: 0,
+                importeInicial: 0,
+                nombreConcepto: "",
+                importeRet: "0",
+                retiene: 0,
+                traslada: 0,
+                importeIVA: "0",
+                rangoMinimo: 0,
+                rangoMaximo: 0,
+                tipoCalculo: 0,
+                tipoMedida: 0,
+                descuento: 0,
+                agregadoDesde: keys
+            }
+        })
+    }
 
     useEffect(value => {
         if (state.impuestos.length === 0 ){
@@ -168,10 +210,10 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
         return paquete.idConcepto !== 0
     }
 
-    const addPaquetev2 = (event) => {
-        console.log(concepto)
-        let paq = concepto
-        if (validarPaquetes(paq)){
+    const addPaquetev2 = (data) => {
+        console.log(data)
+        let paq = data
+        /*if (validarPaquetes(paq)){
 
             dataPaquetes.push(paq);
             resetPaquete()
@@ -179,36 +221,65 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
             onChangeList(dataPaquetes)
         }else{
             showSuccess("No se pueden agregar conceptos vacíos.")
+        }*/
+        const arraynew = []
+        if (dataPaquetes.find(item => item.id === data.id)){
+            dataPaquetes.forEach(item => {
+                if (item.id === data.id){
+                    item = data
+                }
+                arraynew.push(item)
+            })
+        }else{
+            dataPaquetes.push(paq);
+            dataPaquetes.forEach(item => {
+                arraynew.push(item)
+            })
         }
+        onChangeList(arraynew)
+
     }
 
-    const handlePaqueteClick = (data) =>{
+    /**Reacciona al hacer clic en editar concepto*/
+    const handleEditConcepto = (data) =>{
         if(!disabled){
-            onChangeList(dataPaquetes.filter((i) => i.id != data.id))
-            /*if (dataProductos.length === 0 ){
-                obtenerProductoById(data.m_nIdProducto).then((respuesta) =>{
-                    data.producto = respuesta.data
-                    data.m_sProducto = respuesta.data.m_sDescripcion
-                })
-            }else if (data.m_nIdProducto){
-                data.producto = dataProductos.find((i) => i.m_nIdProducto == data.m_nIdProducto)
-                data.m_sProducto = data.producto.m_sDescripcion
-            }*/
+            // onChangeList(dataPaquetes.filter((i) => i.id != data.id))
             console.log(data)
             setConcepto(data)
         }
 
     }
 
-    const calcularDescuento = (event) => {
-        if (event.keyCode == 13){
-            calcularImpuestos(concepto.traslada, concepto.retiene, concepto.importe - (concepto.importe * (concepto.descuento/100)))
+    /**Reacciona al hacer clic en eliminar concepto*/
+    const handleDeleteConcepto = (data) =>{
+        if(!disabled){
+            onChangeList(dataPaquetes.filter((i) => i.id != data.id))
         }
+
+    }
+
+    const calcularDescuento = (event) => {
+        debugger
+        if (state.aplicarDescuentoA === "Concepto"){
+            setConcepto(concepto=>{
+                return {
+                    ...concepto,
+                    importeInicial: parseFloat(concepto.importe).toFixed(2)
+                }
+            })
+            calcularImpuestos(concepto.traslada, concepto.retiene, concepto.importe - (concepto.importe * (concepto.descuento/100)))
+        }else if (state.aplicarDescuentoA === "Total"){
+            dataPaquetes.forEach(item => {
+                item.importe = item.importe * (concepto.descuento/100)
+            })
+            onChangeList(dataPaquetes)
+        }
+
     }
 
     const calcularImpuestos = (traslada, retiene, importe) => {
         setConcepto(concepto => {
-            return { ...concepto,retiene: retiene, importe: importe, traslada: traslada }
+            return { ...concepto,retiene: retiene, importe: parseFloat(importe).toFixed(2), traslada: traslada }
         })
         if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) != null) {
             const impuesto = state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada))
@@ -217,7 +288,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                     ...concepto,
                     importeIVA: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2),
                     retiene: retiene,
-                    importe: importe,
+                    importe: parseFloat(importe).toFixed(2),
                     traslada: traslada
                 }
             })
@@ -229,7 +300,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                     ...concepto,
                     importeRet: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2),
                     retiene: retiene,
-                    importe: importe,
+                    importe: parseFloat(importe).toFixed(2),
                     traslada: traslada
                 }
             })
@@ -244,6 +315,20 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
             calcularImpuestos(event.target.value, concepto.retiene, concepto.importe)
         } else if (event.target.name === "retiene") {
             calcularImpuestos(concepto.traslada, event.target.value, concepto.importe)
+        } else if(event.target.name === "aplicaDescuento") {
+            setState(state => {
+                return {
+                    ...state,
+                    [event.target.name]: event.target.checked
+                }
+            })
+        } else if(event.target.name === "aplicarDescuentoA") {
+            setState(state => {
+                return {
+                    ...state,
+                    [event.target.name]: event.target.value
+                }
+            })
         } else {
             setConcepto(concepto => {
                 return {
@@ -253,29 +338,6 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
             })
         }
     };
-
-    const resetPaquete = () =>{
-        setConcepto(concepto => {
-            return {
-                ...concepto,
-                id:Math.floor(Math.random() * 10000),
-                concepto: null,
-                idConcepto: 0,
-                importe: 0,
-                nombreConcepto: "",
-                importeRet: "0",
-                retiene: 0,
-                traslada: 0,
-                importeIVA: "0",
-                rangoMinimo: 0,
-                rangoMaximo: 0,
-                tipoCalculo: 0,
-                tipoMedida: 0,
-                descuento: 0,
-                agregadoDesde: keys
-            }
-        })
-    }
 
     /**Al seleccionar un concepto del listado del autocomplete*/
     const handleConceptoClick = (event, newValue) => {
@@ -304,228 +366,13 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
     return(
         <div>
             <div className="row">
-                <Grid container spacing={1}>
-                    <Grid item xs>
-                        <div className="input">
-                            <Autocomplete
-                                value={concepto.concepto}
-                                freeSolo
-                                onChange={(event, newValue) => handleConceptoClick(event, newValue)}
-                                id="concepto"
-                                disableClearable
-                                forcePopupIcon={false}
-                                disabled={disabled}
-                                options={conceptosBase}
-                                getOptionLabel={(option) => option.m_sConcepto}
-                                variant="outlined"
-                                style={{transform: "translate(14px, 10px) scale(1) !important"}}
-                                renderInput={(params) => (
-                                    <div>
-                                        <TextField
-                                            {...params}
-                                            variant="outlined"
-                                            label="Concepto"
-                                            className="form-control"
-                                            margin="dense"
-                                        />
-                                    </div>
-                                )}
-                            />
-                        </div>
-                    </Grid>
-                    {/*<Grid item xs={2}>
-                        <label className="input select" style={{ width: "100%" }}>
-                            <FormControl fullWidth variant="outlined" margin="dense">
-                                <InputLabel id="tipoLabel">Medida</InputLabel>
-                                <Select
-                                    labelId="tipoMedidaLabel"
-                                    label="Medida"
-                                    className="form-control"
-                                    onChange={handleChangePaquetev2}
-                                    name="tipoMedida"
-                                    value={concepto.tipoMedida}
-                                >
-                                    <option key={0} value={0}>Selecciona</option>
-                                    <option key={1} value={1}>Kg</option>
-                                    <option key={2} value={2}>Toneladas</option>
-                                    <option key={3} value={3}>Piezas</option>
-
-                                </Select>
-                            </FormControl>
-                        </label>
-                    </Grid>*/}
-                    {/*<Grid item xs={2}>
-                        <div className="input">
-                            <TextField variant="outlined" margin="dense"
-                                       onChange={handleChangePaquetev2}
-                                       className="form-control"
-                                       type="number"
-                                       label="Min"
-                                       style={{textAlign: "right"}}
-                                       value={concepto.rangoMinimo}
-                                       name="rangoMinimo"
-                            />
-                        </div>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <div className="input">
-                            <TextField variant="outlined" margin="dense"
-                                       onChange={handleChangePaquetev2}
-                                       className="form-control"
-                                       type="number"
-                                       label="Max"
-                                       style={{textAlign: "right"}}
-                                       value={concepto.rangoMaximo}
-                                       name="rangoMaximo"
-                            />
-                        </div>
-                    </Grid>*/}
-                    <Grid item xs>
-                        <div className="input">
-                            <TextField variant="outlined" margin="dense"
-                                       onChange={handleChangePaquetev2}
-                                       className="form-control"
-                                       type="number"
-                                       label="Importe"
-                                       style={{textAlign: "right"}}
-                                       step="1"
-                                       min="0"
-                                       value={concepto.importe}
-                                       name="importe"
-                            />
-                        </div>
-                    </Grid>
-                    <Grid item xs>
-                        <label className="input select" style={{width: "100%"}}>
-                            <FormControl fullWidth variant="outlined" margin="dense">
-                                <InputLabel id="trasladaLabel">Traslada</InputLabel>
-                                <Select
-                                    labelId="trasladaLabel"
-                                    label="Traslada"
-                                    className="form-control"
-                                    value={concepto.traslada}
-                                    onChange={handleChangePaquetev2}
-                                    name="traslada"
-                                >
-                                    <option key={0} value={0}>Selecciona</option>
-                                    {state.impuestos.filter(i => i.m_nTIpoCalculo === 1).map((impuesto) => (
-                                        <option
-                                            key={impuesto.m_nIdImpuesto}
-                                            value={impuesto.m_nIdImpuesto}
-                                        >
-                                            {impuesto.m_sImpuesto}
-                                        </option>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </label>
-                    </Grid>
-                    <Grid item xs>
-                        <div className="input">
-                            <TextField variant="outlined" margin="dense"
-                                       onChange={handleChangePaquetev2}
-                                       className="form-control"
-                                       type="number"
-                                       style={{textAlign: "right"}}
-                                       disabled
-                                       label="Importe IVA"
-                                       step="1"
-                                       min="0"
-                                       value={concepto.importeIVA}
-                                       name="importeIVA"
-                            />
-                        </div>
-                    </Grid>
-                    <Grid item xs>
-                        <label className="input select" style={{width: "100%"}}>
-                            <FormControl fullWidth variant="outlined" margin="dense">
-                                <InputLabel id="retieneLabel">Retiene</InputLabel>
-                                <Select
-                                    labelId="retieneLabel"
-                                    label="Retiene"
-                                    className="form-control"
-                                    onChange={handleChangePaquetev2}
-                                    name="retiene"
-                                    value={concepto.retiene}
-                                >
-                                    <option key={0} value={0}>Selecciona</option>
-                                    {state.impuestos.filter(i => i.m_nTIpoCalculo === 2).map((impuesto) => (
-                                        <option
-                                            key={impuesto.m_nIdImpuesto}
-                                            value={impuesto.m_nIdImpuesto}
-                                        >
-                                            {impuesto.m_sImpuesto}
-                                        </option>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </label>
-                    </Grid>
-                    <Grid item xs>
-                        <div className="input">
-                            <TextField variant="outlined" margin="dense"
-                                       onChange={handleChangePaquetev2}
-                                       className="form-control"
-                                       type="number"
-                                       style={{textAlign: "right"}}
-                                       disabled
-                                       label="Importe Ret"
-                                       step="1"
-                                       min="0"
-                                       value={concepto.importeRet}
-                                       name="importeRet"
-                            />
-                        </div>
-                    </Grid>
-
-                    {/*<Grid item xs={2}>
-                        <label className="input select" style={{width: "100%"}}>
-                            <FormControl fullWidth variant="outlined" margin="dense">
-                                <InputLabel id="tipoLabel">Tipo Cálculo</InputLabel>
-                                <Select
-                                    labelId="tipoLabel"
-                                    label="Tipo Cálculo"
-                                    className="form-control"
-                                    onChange={handleChangePaquetev2}
-                                    name="tipoCalculo"
-                                    value={concepto.tipoCalculo}
-                                >
-                                    <option key={0} value={0}>Selecciona</option>
-                                    {state.tiposCalculo.map((t) =>
-                                        (t.m_nIdTarifaTipoCalculo == 3 ? concepto.tipoMedida == 3 &&
-                                            <option key={t.m_nIdTarifaTipoCalculo}
-                                                    value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>
-                                            : <option key={t.m_nIdTarifaTipoCalculo}
-                                                      value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>))
-                                    }
-                                </Select>
-                            </FormControl>
-                        </label>
-                    </Grid>*/}
-
-                    <Grid item xs>
-                        <div className="input">
-                            <TextField variant="outlined" margin="dense"
-                                       onChange={handleChangePaquetev2}
-                                       className="form-control"
-                                       type="number"
-                                       style={{textAlign: "right"}}
-                                       label="Porcentaje Descuento"
-                                       step="1"
-                                       min="0"
-                                       value={concepto.descuento}
-                                       name="descuento"
-                                       helperText={"Presione enter una vez escrito el porcentaje para aplicar el cálculo."}
-                                       onKeyDown={calcularDescuento}
-                            />
-                        </div>
-                    </Grid>
-                    <Grid item xs>
-                        <IconButton onClick={addPaquetev2} style={{ padding: "0px" }}>
-                            <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
-                        </IconButton>
-                    </Grid>
-                </Grid>
+                <DialogoNuevoConcepto
+                    agregarConcepto={addPaquetev2}
+                    concepto={concepto}
+                    conceptosBase={conceptosBase}
+                    keys={keys}
+                    resetPaquete={resetPaquete}
+                />
             </div>
 
             <div className="row">
@@ -564,6 +411,21 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                     </div>
                     <div className="col-md-12 col-sm-12"
                          style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
+                        <div style={{margin: "5px", padding: "5px"}}>Descuento</div>
+                        <div style={{
+                            margin: "4px",
+                            padding: "4px",
+                            marginRight: "15px",
+                            backgroundColor: "white",
+                            backgroundClip: "border-box",
+                            borderStyle: "solid",
+                            borderColor: "gray",
+                            minWidth: "230px",
+                            textAlign: "right"
+                        }}> ${parseFloat(dataPaquetes.reduce((total, arg) => total + parseFloat(arg.descuento), 0)).toFixed(2)}</div>
+                    </div>
+                    <div className="col-md-12 col-sm-12"
+                         style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
 
                         <div style={{
                             margin: "4px",
@@ -581,7 +443,8 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                                     state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto :
                                     "" :
                                 ""} `} ${parseFloat(dataPaquetes.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br/>
-                            </div>))} {ivaRetiene.map(t => (
+                            </div>))}
+                            {ivaRetiene.map(t => (
                             <div>{`${state.impuestos.length !== 0 ?
                                 `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ?
                                     state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto :
@@ -603,9 +466,10 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             minWidth: "230px",
                             textAlign: "right"
                         }}> ${parseFloat(
-                            dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importe), 0) +
-                            dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)-
-                            dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importeRet), 0)
+                            dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importe), 0)
+                            + dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)
+                            - dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importeRet), 0)
+                            - dataPaquetes.reduce((total, arg) => total + parseFloat(arg.descuento), 0)
                         ).toFixed(2)}</div>
                     </div>
                 </div>

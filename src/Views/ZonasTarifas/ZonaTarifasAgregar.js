@@ -212,6 +212,7 @@ function ZonaTarifasAgregar({idZona, consult}) {
                                                 <div className="widget-container">
                                                     <div className="widget-content">
                                                         <CodigosPostalesZonas
+                                                            tarifa={true}
                                                             seleccion={selec}
                                                             onChange={handleDataCodigosPostalesChange}
                                                             consult={consult}/>

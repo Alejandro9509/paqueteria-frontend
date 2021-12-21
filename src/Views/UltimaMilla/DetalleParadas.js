@@ -73,6 +73,7 @@ class DetalleParadas extends Component {
         this.onSubmitOrdenarPaquetes = this.onSubmitOrdenarPaquetes.bind(this)
         this.onSubmitBorrarPaquete = this.onSubmitBorrarPaquete.bind(this)
         this.confirmDeleteParada = this.confirmDeleteParada.bind(this)
+       // this.confirmUbicacionParada = this.confirmUbicacionParada.bind(this)
     }
 
 
@@ -119,6 +120,16 @@ class DetalleParadas extends Component {
             ]
         });
     }
+    /*confirmUbicacionParada(id,esRecoleccion, data) {
+       this.setState({
+           showConfirmarUbicacion: true,
+           direccion: esRecoleccion ?
+               {municipioTexto: , calleRemitente: data.m_sCalleRemitente,coloniaRemitente:data.m_sColoniaRemitente, numeroIntRemitente: , codigoPostalRemitente:{m_sCP: data.m_sCodigoPostalRemitente}}
+               :
+               {municipioTexto: , calleDestinatario: data.m_sCalleDestinatario,coloniaDestinatario:data.m_sColoniaDestinatario, numeroIntDestinatario: , codigoPostalDestinatario:{m_sCP: data.m_sCodigoPostalDestinatario}}
+
+       })
+    }*/
 
     onSubmitBorrarPaquete(idParada, idGuia, esRecoleccion) {
         eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion).then(({data}) => {
@@ -506,7 +517,7 @@ class DetalleParadas extends Component {
                                                                                                             <Tooltip
                                                                                                                 title={"Cambiar ubicación"}>
                                                                                                                 <GpsFixedIcon
-                                                                                                                    onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
+                                                                                                                    onClick={() => this.confirmUbicacionParada( g.m_nId, g.m_bEsRecoleccion, g)}
                                                                                                                     fontSize="default"/>
                                                                                                             </Tooltip>
                                                                                                         </IconButton>*/}

@@ -34,7 +34,7 @@ import {useHistory, Redirect} from 'react-router-dom';
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import RestartAltIcon from '@material-ui/icons/Refresh';
-
+import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import Noty from 'noty';
 import {
     Button, Chip,
@@ -685,9 +685,21 @@ function Recoleccion() {
         getAllTiposSeguro()
         getAllEstados()
         getAllEstatusRecoleccion()
-
+        
     }
-
+    async function getParametrosConfiguracion(){
+        obtenerParametrosConfiguracion().then(respuesta=>{
+          console.log(respuesta)
+          setState((config)=>{
+            return{
+              ...config,
+              estatusRecoleccion:respuesta.data.EstatusRecoleccion, 
+              moneda:respuesta.data.MonedaEmbarque,
+              tipoCambio:respuesta.data.TipoCambioEmbarque
+                   }
+          })
+        })
+      }
     const handleClickRemitenteDestinatario = (event) => {
         event.preventDefault()
         if (dataRemitenteDestinatario.length === 0) {
@@ -1348,6 +1360,7 @@ function Recoleccion() {
         setIsAgregar(false);
         event.stopPropagation()
         getDataParaEditar()
+        getParametrosConfiguracion()
         limpiarInputsAgregar()
         setState(state => {
             return {

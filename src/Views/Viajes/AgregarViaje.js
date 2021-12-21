@@ -118,6 +118,7 @@ class AgregarViaje extends Component {
         this.handleDollyFiltro = this.handleDollyFiltro.bind(this);
         this.handleAgregarInforme = this.handleAgregarInforme.bind(this);
         this.handleEliminarInforme = this.handleEliminarInforme.bind(this);
+        this.handleClearData = this.handleClearData.bind(this);
 
     }
 
@@ -212,6 +213,7 @@ class AgregarViaje extends Component {
                     $('.tab-content div ').removeClass('in show');
                     $('#Listado').addClass('in show');
                     this.props.reload()
+                    this.handleClearData()
                 })
                 .catch((err) => {
                     // console.log(err);
@@ -226,6 +228,7 @@ class AgregarViaje extends Component {
                     $('.tab-content div ').removeClass('in show');
                     $('#Listado').addClass('in show');
                     this.props.reload()
+                    this.handleClearData()
                 })
                 .catch((err) => {
                     console.log(err);
@@ -235,6 +238,41 @@ class AgregarViaje extends Component {
 
 
     };
+
+    handleClearData(){
+        this.setState({
+            id: 0,
+            origen: "",
+            destino: "",
+            IdRemolque1: null,
+            IdRemolque2: null,
+            IdDolly: null,
+            idRuta: {},
+            idCiudadOrigen: {},
+            idCiudadDestino: {},
+            dataInformesPorAsignar: [],
+            dataInformesAsignados: [],
+            dataInformesSeleccionados: [],
+            showPopUp: false,
+            showDialog: false,
+            tipoModal: 0,
+            idSucursalAgregar: localStorage.getItem("Sucursal"),
+            folioViaje: "",
+            viajeCliente: "",
+            fechaHoraCreacion: this.getCurrentDateTime(),
+            fechaHoraRegistro: this.getCurrentDateTime(),
+            candadoOficial: "",
+            identificadorViaje: "",
+            estatusListado: '8',
+            CreadoPor: localStorage.getItem("UsuarioId"),
+            ModificadoPor: localStorage.getItem("UsuarioId"),
+            placasDolly: "",
+            placasRemolque1: "",
+            placasRemolque2: "",
+            idInforme: 0,
+            asignacionEquipo: {},
+        })
+    }
 
     handleSelectCP(id, dobleClick, e) {
         clearTimeout(timer);
@@ -394,10 +432,15 @@ class AgregarViaje extends Component {
     }
 
     handleAgregarInforme(id) {
-        var arrayInformesAsignados = this.state.dataInformesAsignados
-        var informeAsignar = this.state.dataInformesPorAsignar.find(i => i.m_nIdInforme === id)
-        arrayInformesAsignados.push(informeAsignar)
-        this.setState({dataInformesAsignados: arrayInformesAsignados})
+        if (this.state.dataInformesAsignados.find(i => i.m_nIdInforme === id) === undefined){
+            var arrayInformesAsignados = this.state.dataInformesAsignados
+            var informeAsignar = this.state.dataInformesPorAsignar.find(i => i.m_nIdInforme === id)
+            arrayInformesAsignados.push(informeAsignar)
+            this.setState({dataInformesAsignados: arrayInformesAsignados})
+        }else{
+            showSuccess("El informe ya se encuentra en el viaje.")
+        }
+
     }
 
     handleEliminarInforme(id) {
