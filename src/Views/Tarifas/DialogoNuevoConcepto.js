@@ -175,7 +175,7 @@ export default function DialogoNuevoConcepto(props) {
 
     const calcularImpuestos = (traslada, retiene, importe) => {
         setConcepto(concepto => {
-            return { ...concepto,retiene: retiene, importe: parseFloat(importe).toFixed(2), traslada: traslada }
+            return { ...concepto,retiene: retiene, importe: importe, traslada: traslada }
         })
         if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) != null) {
             const impuesto = state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada))
@@ -184,7 +184,7 @@ export default function DialogoNuevoConcepto(props) {
                     ...concepto,
                     importeIVA: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2),
                     retiene: retiene,
-                    importe: parseFloat(importe).toFixed(2),
+                    importe: importe,
                     traslada: traslada
                 }
             })
@@ -196,7 +196,7 @@ export default function DialogoNuevoConcepto(props) {
                     ...concepto,
                     importeRet: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2),
                     retiene: retiene,
-                    importe: parseFloat(importe).toFixed(2),
+                    importe: importe,
                     traslada: traslada
                 }
             })
