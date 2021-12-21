@@ -535,6 +535,8 @@ function RemitenteDestinatario(props) {
                     colonia: row.data.m_sColonia || "No especificado",
                     latitud: row.data.m_sLatitud,
                     longitud: row.data.m_sLongitud,
+                    origen: zonaTarifa.data.length !== 0  ? {m_nIdCiudad: zonaTarifa.data[0].m_nIdSucursal, m_sCiudad: zonaTarifa.data[0].m_sSucursal} : null,
+                    destino: zonaTarifa.data.length !== 0  ? {m_nIdCiudad: zonaTarifa.data[0].m_nIdSucursal, m_sCiudad: zonaTarifa.data[0].m_sSucursal} : null,
                     openDialog: false,
                     zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
                     zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null

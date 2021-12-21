@@ -6,12 +6,13 @@ import {obtenerEstadosPais} from "../../Util/Contexts/EstadosContext";
 import CPTransferList from "./CPTransferList";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {obtenerCodigosPostalesPorEstadoMunicipio} from "../../Util/Contexts/CodigoPostalContext";
+import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 
 function not(a, b) {
     return a.filter((value) => b.find(v => v.m_nIdCP == value.m_nIdCP) === undefined);
 }
 
-function CodigosPostalesZonas({seleccion, onChange,consult}) {
+function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
     const [state, setState] = useState({
         idSucursal: localStorage.getItem("Sucursal"),
         idZona: '',
@@ -58,9 +59,16 @@ function CodigosPostalesZonas({seleccion, onChange,consult}) {
     }, [state])
 
     const getAllSucursales = () => {
-        obtenerSucursales().then((respuesta) => {
-            setDataSucursal(respuesta.data);
-        });
+        if (tarifa ) {
+            obtenerCiudades().then((respuesta) => {
+                setDataSucursal(respuesta.data);
+            });
+        }else {
+            obtenerSucursales().then((respuesta) => {
+                setDataSucursal(respuesta.data);
+            });
+        }
+
     }
 
     const getAllEstados = () => {
@@ -151,30 +159,60 @@ function CodigosPostalesZonas({seleccion, onChange,consult}) {
                         </div>
                     </Grid>
                     <Grid item xs={3}>
-                        <FormControl className="input select" fullWidth variant="outlined" margin="dense">
-                            <InputLabel
-                                id="idSucursalLabel">Sucursal</InputLabel>
-                            <Select
-                                fullWidth
-                                labelId="idSucursalLabel"
-                                label="Sucursal"
-                                className="form-control"
-                                required
-                                value={state.idSucursal}
-                                onChange={handleChangeState}
-                                id="idSucursal"
-                                name="idSucursal"
-                            >
-                                {dataSucursal.map((sucursal) => (
-                                    <option
-                                        key={sucursal.m_nIdSucursal}
-                                        value={sucursal.m_nIdSucursal}
+                        {
+                            tarifa ? (
+                                <FormControl className="input select" fullWidth variant="outlined" margin="dense">
+                                    <InputLabel
+                                        id="idSucursalLabel">Destino</InputLabel>
+                                    <Select
+                                        fullWidth
+                                        labelId="idSucursalLabel"
+                                        label="Sucursal"
+                                        className="form-control"
+                                        required
+                                        value={state.idSucursal}
+                                        onChange={handleChangeState}
+                                        id="idSucursal"
+                                        name="idSucursal"
                                     >
-                                        {sucursal.m_sSucursal}
-                                    </option>
-                                ))}
-                            </Select>
-                        </FormControl>
+                                        {dataSucursal.map((sucursal) => (
+                                            <option
+                                                key={sucursal.m_nIdCiudad}
+                                                value={sucursal.m_nIdCiudad}
+                                            >
+                                                {sucursal.m_sCiudad}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            ) : (
+                                <FormControl className="input select" fullWidth variant="outlined" margin="dense">
+                                    <InputLabel
+                                        id="idSucursalLabel">Sucursal</InputLabel>
+                                    <Select
+                                        fullWidth
+                                        labelId="idSucursalLabel"
+                                        label="Sucursal"
+                                        className="form-control"
+                                        required
+                                        value={state.idSucursal}
+                                        onChange={handleChangeState}
+                                        id="idSucursal"
+                                        name="idSucursal"
+                                    >
+                                        {dataSucursal.map((sucursal) => (
+                                            <option
+                                                key={sucursal.m_nIdSucursal}
+                                                value={sucursal.m_nIdSucursal}
+                                            >
+                                                {sucursal.m_sSucursal}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )
+                        }
+
                     </Grid>
                     <Grid item xs={2}>
                         <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
