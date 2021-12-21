@@ -684,7 +684,7 @@ class EscribirConvenio extends Component {
     handleGuardarTarifa = (e) => {
         e.preventDefault()
         this.state.tarifasSeleccionadas.forEach((t) => {
-            if (t.m_nIdTarifa == this.state.tarifaDetalles.m_nIdTarifa){
+            if (t.m_nIdTarifaConvenio === this.state.tarifaDetalles.m_nIdTarifaConvenio){
                 t.m_arrArConceptos.length = 0
                 this.state.todosConceptos.forEach((c) => {
                     t.m_arrArConceptos.push({
@@ -865,7 +865,7 @@ class EscribirConvenio extends Component {
 
     guardarZonaTarifa(){
         this.state.zonasSeleccionadas.forEach(item => {
-            if (item.m_nIdZona === this.state.seleccionDetalles.m_nIdZona){
+            if (item.m_nIdZonaConvenio === this.state.seleccionDetalles.m_nIdZonaConvenio){
                 const conceptos = []
                 this.state.conceptosZona.forEach(element => {
                     let concepto = {
