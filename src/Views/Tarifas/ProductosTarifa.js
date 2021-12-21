@@ -128,7 +128,7 @@ export default function ProductosTarifa({productos = [], productosSeleccionados 
                                     inputProps={{ 'aria-labelledby': labelId }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={value.m_nIdProducto+'-'+value.m_sDescripcion} />
+                            <ListItemText id={labelId} primary={value.m_nNoProducto+' - '+value.m_sDescripcion} />
                         </ListItem>
                     );
                 })}

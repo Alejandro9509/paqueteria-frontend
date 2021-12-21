@@ -22,4 +22,21 @@ function obtenerConveniosId (id) {
     return result
 }
 
-export {obtenerConvenios, obtenerConveniosId}
+function agregarConvenio (params) {
+    const url = `${process.env.REACT_APP_API_URL}/Convenios/Agregar`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, params),{ headers })
+    );
+    return result
+}
+function modificarConvenio (idConvenio, params) {
+    const url = `${process.env.REACT_APP_API_URL}/Convenios/Modificar/${idConvenio}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params),{ headers })
+    );
+    return result
+}
+
+export {modificarConvenio,agregarConvenio, obtenerConvenios, obtenerConveniosId}
