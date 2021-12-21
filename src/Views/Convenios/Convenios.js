@@ -68,14 +68,9 @@ function Convenios(){
             }
         },
         {
-            headerName: "ID Convenio",
-            field: 'm_nIdConvenio',
-            width: 200,
-        },
-        {
-            headerName: "ID Cliente",
-            field: 'm_nIdCliente',
-            width: 200,
+            headerName: "No. Cliente",
+            field: 'm_nNumeroCliente',
+            width: 100,
         },
         {
             headerName: "Cliente",

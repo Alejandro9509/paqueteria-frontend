@@ -1130,7 +1130,7 @@ class EscribirConvenio extends Component {
                                                                 <Typography gutterBottom variant="h5" component="h2">
                                                                     {t.m_arrArProductos &&
                                                                         t.m_arrArProductos.map((p) => (
-                                                                            p.m_nIdProducto+'-' + p.m_sDescripcion + ', '
+                                                                            p.m_nNoProducto+' - ' + p.m_sDescripcion + ', '
                                                                     ))}
                                                                 </Typography>
                                                             </Grid>
@@ -1189,7 +1189,7 @@ class EscribirConvenio extends Component {
                                                         seleccionDetalles.tipoSeleccion === "Tarifa" ?
                                                             seleccionDetalles.m_arrArProductos &&
                                                             seleccionDetalles.m_arrArProductos.map((p) => (
-                                                                p.m_nIdProducto+'-' + p.m_sDescripcion + ', '
+                                                                p.m_nNoProducto+' - ' + p.m_sDescripcion + ', '
                                                             ))
                                                             : ""
                                                 }`
