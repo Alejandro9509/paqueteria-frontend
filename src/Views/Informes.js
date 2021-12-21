@@ -988,10 +988,15 @@ function Informes({history}) {
             window.location.replace("login");
             return;
         }
+        getAllEstatusInformes();
+        getAllSucursales();
+        getAllCiudades();
+        getAllUnidades();
     }, []);
 
     const getDataParaListado = () => {
-        getAllData();
+       // getAllData();
+
     }
 
     const getDataParaEditar = () => {
@@ -1047,7 +1052,6 @@ function Informes({history}) {
     }
 
     function handleShowAgregar() {
-        getDataParaEditar()
         setState({
             ...state,
             agregar: "Agregar",
