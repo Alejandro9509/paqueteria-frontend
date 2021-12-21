@@ -33,8 +33,8 @@ function eliminarCorte(id, idEliminadoPor) {
 }
 
 
-function obtenerCortes() {
-    const url = `${process.env.REACT_APP_API_URL}/CorteCaja/GetListado`;
+function obtenerTarifas() {
+    const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -51,4 +51,4 @@ function obtenerTarifaBy(id) {
     return result
 }
 
-export { obtenerTarifaBy }
+export { obtenerTarifaBy,obtenerTarifas}
