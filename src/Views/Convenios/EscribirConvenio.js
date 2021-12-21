@@ -917,7 +917,7 @@ class EscribirConvenio extends Component {
         return(
             <div className="row">
                 <Grid container spacing={1} direction={"row-reverse"}>
-                    <Grid item xs={2}>
+                    <Grid item xs={3}>
                         <Button fullWidth variant="contained" color={"primary"} onClick={this.handleGuardarTarifa} disabled={this.props.consult}>
                             Guardar cambios a tarifa
                         </Button>
@@ -1446,10 +1446,15 @@ class EscribirConvenio extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="row">
-                                                    <Grid container spacing={2}>
-                                                        <Grid item xs={12}>
-                                                            <Button variant={"contained"} color={"primary"} onClick={this.guardarZonaTarifa} type={"button"} className="btn btn-primary primary-btn">
+                                                    <Grid container spacing={2} direction={"row-reverse"}>
+                                                        <Grid item xs={3}>
+                                                            <Button fullWidth variant={"contained"} color={"primary"} onClick={this.guardarZonaTarifa} type={"button"}>
                                                                 Guardar cambios a tarifa
+                                                            </Button>
+                                                        </Grid>
+                                                        <Grid item xs={2}>
+                                                            <Button fullWidth variant="outlined" onClick={this.onSubmit} color="primary" disabled={this.props.consult}>
+                                                                Guardar convenio
                                                             </Button>
                                                         </Grid>
 
