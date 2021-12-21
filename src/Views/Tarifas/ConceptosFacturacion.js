@@ -270,7 +270,7 @@ export default function ConceptosFacturacion(props) {
                     headerName: "Medida",
                     field: "tipoMedida",
                     width: 100,
-                    valueFormatter: ({ value }) => `${value == 1 ? "Kg" : value == 2 ? "Tons" : value == 3 ? "Piezas" : ""}`,
+                    valueFormatter: ({ value }) => `${value == 1 ? "Kg" : value == 2 ? "Tons" : value == 3 ? "Piezas" : value == 4 ? "Rangos" : ""}`,
                 },
             )
         }
@@ -433,6 +433,7 @@ export default function ConceptosFacturacion(props) {
                                     <option key={1} value={1}>Kg</option>
                                     <option key={2} value={2}>Toneladas</option>
                                     <option key={3} value={3}>Piezas</option>
+                                    <option key={3} value={4}>Rangos</option>
 
                                 </Select>
                             </FormControl>
@@ -590,7 +591,7 @@ export default function ConceptosFacturacion(props) {
                                 >
                                     <option key={0} value={0}>Selecciona</option>
                                     {state.tiposCalculo.map((t) =>
-                                        (t.m_nIdTarifaTipoCalculo == 3 ? concepto.tipoMedida == 3 &&
+                                        (t.m_nIdTarifaTipoCalculo == 3 ? (concepto.tipoMedida == 3 || concepto.tipoMedida == 4) &&
                                             <option key={t.m_nIdTarifaTipoCalculo}
                                                     value={t.m_nIdTarifaTipoCalculo}>{t.m_sTarifaTipoCalculo}</option>
                                             : <option key={t.m_nIdTarifaTipoCalculo}
