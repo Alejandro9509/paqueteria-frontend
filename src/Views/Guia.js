@@ -75,6 +75,7 @@ import CambiarTipoCobro from "./Guia/CambiarTipoCobro";
 import Ocurre from "./Guia/Ocurre";
 import ConceptosFacturacionGuias from "./Tarifas/ConceptosFacturacionGuias";
 import Filtros from "./Filtros/Filtros";
+import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -269,6 +270,19 @@ function Guia(props) {
         console.log(conceptosAdicionales.length)
     }, [conceptosAdicionales])
 
+    async function getParametrosConfiguracion(){
+        obtenerParametrosConfiguracion().then(respuesta=>{
+            console.log(respuesta)
+            setState(state=>{
+                return{
+                    ...state,
+                    estatusGuia:respuesta.data.EstatusGuia,
+                    idTipoTarifa: respuesta.data.TipoTarifaTarifas,
+                    idMoneda: respuesta.data.MonedaEmbarque
+                }
+            })
+        })
+    }
 
     function cargaDiv(indice, valor) {
         //	showSuccess(indice);
@@ -1168,6 +1182,7 @@ function Guia(props) {
         cargaEmbarqueMoneda(1)
         getAllDataTipoPago()
         getAllConceptos()
+        getParametrosConfiguracion()
     }
 
     async function getTipoCambio() {
