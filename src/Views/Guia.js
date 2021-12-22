@@ -50,7 +50,7 @@ import {
     modificarGuia,
     agregarGuia,
     imprimirGuia,
-    obtenerGuiaReporte, entregaOcurreGuia, cambiarTipoCobro
+    obtenerGuiaReporte, entregaOcurreGuia, cambiarTipoCobro,obtenerValidacionGuia
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -380,17 +380,25 @@ function Guia(props) {
     }
 
     function handleShowModificar(id) {
-        obtenerGuiaId(id).then(respuesta => {
-            cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-
-            setDataGuiaParaConsultarModificar(respuesta, "Modificar")
-            $('.nav-tabs li ').removeClass('active');
-            $('.nav-tabs li').eq(1).addClass('active');
-            $('.tab-content div ').removeClass('in show');
-            $('#Agregar').addClass('in show');
-        }).catch(function (err) {
-            console.log(err.data)
-        });
+        obtenerValidacionGuia(id).then(respuesta=>{
+            if(respuesta.data.valor){//Entrega un 1 si la guia es modificable
+                obtenerGuiaId(id).then(respuesta => {
+                    cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)     
+                    setDataGuiaParaConsultarModificar(respuesta, "Modificar")
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(1).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Agregar').addClass('in show');
+                }).catch(function (err) {
+                    console.log(err.data)
+                });
+            }else{
+                showSuccess("No se puede editar esta guia")
+            }
+        }).catch(function (err){
+            console.log("Error al ejecutar el query"+err.data)
+        })
+      
     }
 
     function handleShowConsultar(id) {

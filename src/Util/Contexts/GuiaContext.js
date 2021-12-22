@@ -177,6 +177,16 @@ function obtenerGuiasFiltroCorteCaja(fecha, destino, idMoneda, idTipoPago) {
     return result
 }
 
+function obtenerValidacionGuia(id){
+    
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Guias/ValidacionById/`+id
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
 export { obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
     obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,
-    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro}
+    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia}
