@@ -92,6 +92,14 @@ function cambiarEstatusGuia(idGuia, estatus) {
     );
     return result
 }
+function actualizarCoordenadasGuia(idGuia, latitud, longitud) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/ActualizarCoordenadas/${idGuia}/${latitud}/${longitud}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, {}), { headers })
+    );
+    return result
+}
 
 function obtenerGuiaPendientes(idOrigen, idDestino) {
     const url = `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
@@ -186,6 +194,6 @@ function obtenerGuiasFiltroCorteCaja(fecha, destino, idMoneda, idTipoPago) {
     return result
 }
 
-export {cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
+export {actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
     obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,
     obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro}
