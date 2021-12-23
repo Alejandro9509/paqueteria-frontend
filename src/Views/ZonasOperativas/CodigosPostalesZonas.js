@@ -14,7 +14,7 @@ function not(a, b) {
 
 function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
     const [state, setState] = useState({
-        idSucursal: localStorage.getItem("Sucursal"),
+        idSucursal: '',
         idZona: '',
         codigoZona: '',
         idEstado: '',
@@ -36,7 +36,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
         setState(state => {
             return {
                 idZona: seleccion.m_nIdZona ? seleccion.m_nIdZona : 0,
-                idSucursal: seleccion.m_nIdSucursal ? seleccion.m_nIdSucursal: localStorage.getItem("Sucursal"),
+                idSucursal: seleccion.m_nIdSucursal ? seleccion.m_nIdSucursal: '',
                 codigoZona: seleccion.m_sCodigoZona ? seleccion.m_sCodigoZona : '',
                 idEstado: seleccion.m_sIdEstado ? seleccion.m_sIdEstado: '',
                 estado: seleccion.m_sEstado ? seleccion.m_sEstado : '',
@@ -161,7 +161,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                     <Grid item xs={3}>
                         {
                             tarifa ? (
-                                <FormControl className="input select" fullWidth variant="outlined" margin="dense">
+                                <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
                                     <InputLabel
                                         id="idSucursalLabel">Destino</InputLabel>
                                     <Select

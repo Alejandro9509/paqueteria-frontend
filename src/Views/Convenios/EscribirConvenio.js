@@ -40,7 +40,7 @@ import {DataGrid} from "@material-ui/data-grid";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import Noty from "noty";
-import {obtenerTarifaBy} from "../../Util/Contexts/TarifasContext";
+import {obtenerTarifaBy, obtenerTarifas} from "../../Util/Contexts/TarifasContext";
 import DestinosTarifa from "../Tarifas/DestinosTarifa";
 import ProductosPrecios from "../Tarifas/ProductosPrecios";
 import {obtenerCliente, obtenerClienteId} from "../../Util/Contexts/ClientesContext";
@@ -55,6 +55,7 @@ import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturac
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import {agregarConvenio, modificarConvenio, obtenerConveniosId} from "../../Util/Contexts/ConveniosContext";
 import DeleteIcon from "@material-ui/icons/Delete";
+import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
 
 const headers = API_HEADERS
 
@@ -73,6 +74,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
 class EscribirConvenio extends Component {
     constructor(props) {
         super(props);
@@ -247,7 +249,8 @@ class EscribirConvenio extends Component {
             idsZonasSeleccionadas:[],
             zonasSeleccionadas: [],
             seleccionDetalles: {tipoSeleccion:null},
-            conceptosZona:[]
+            conceptosZona:[],
+            dataConceptosBase:[]
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleTabChange = this.handleTabChange.bind(this)
@@ -263,7 +266,6 @@ class EscribirConvenio extends Component {
         this.onSubmit = this.onSubmit.bind(this)
         this.castConceptos = this.castConceptos.bind(this)
         // this.filtrarConceptoAdicional = this.filtrarConceptoAdicional.bind(this)
-        this.getAllClientes = this.getAllClientes.bind(this)
         this.handleShowDialog = this.handleShowDialog.bind(this)
         this.getAllTarifas = this.getAllTarifas.bind(this)
         this.getAllProductos = this.getAllProductos.bind(this)
@@ -342,7 +344,6 @@ class EscribirConvenio extends Component {
     getAllData() {
         this.getAllImpuestos()
         this.castConceptos()
-        // this.getAllClientes()
         this.getAllTarifas()
         this.getAllProductos()
         this.getAllZonas()
@@ -351,22 +352,20 @@ class EscribirConvenio extends Component {
 
 
     getAllConceptos() {
+        if(this.state.dataConceptosBase.length > 0){
+            return
+        }
         obtenerConceptosFacturacion().then(respuesta => {this.setState({ dataConceptosBase: respuesta.data })});
     }
 
     getAllImpuestos() {
-        const url = `${process.env.REACT_APP_API_URL}/Impuestos/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        if(this.state.impuestos.length > 0){
+            return
+        }
+        obtenerImpuestos().then(respuesta => {
             this.setState({ impuestos: respuesta.data })
         });
     };
-
-    getAllClientes() {
-        // showSuccess('recuerda habilitar peticion')
-        obtenerCliente().then((respuesta) => {
-            this.setState({ dataClientes: respuesta.data });
-        });
-    }
 
     handleChange(event) {
         event.preventDefault()
@@ -451,7 +450,6 @@ class EscribirConvenio extends Component {
             this.limpiarCampos()
             this.getAllImpuestos()
             this.castConceptos()
-            // this.getAllClientes()
             this.getAllTarifas()
             this.getAllProductos()
             this.getAllZonas()
@@ -524,11 +522,6 @@ class EscribirConvenio extends Component {
             CuotaMensual:'',
             tarifasSeleccionadas : [],
             todosConceptos: [],
-            conceptosAdicionales: [],
-            conceptosManiobra: [],
-            conceptosEntrega: [],
-            conceptosRecoleccion: [],
-            impuestos: [],
             ivaTraslada: [],
             ivaRetiene: [],
             tarifaDetalles: {m_arrArConceptos:[]},
@@ -655,13 +648,18 @@ class EscribirConvenio extends Component {
     };
 
     getAllTarifas() {
-        const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetListado`;
-        axios.get(url, { headers }).then(respuesta => {
+        if(this.state.dataTarifas.length > 0){
+            return
+        }
+        obtenerTarifas().then(respuesta => {
             this.setState({ dataTarifas: respuesta.data, agregar: "Agregar" })
         });
     }
 
     getAllProductos(){
+        if(this.state.dataProductos.length > 0){
+            return
+        }
         obtenerProductos().then(respuesta => {
             this.setState({ dataProductos: respuesta.data, dataProductosTemp: respuesta.data, agregar: "Agregar" })
         });
@@ -774,18 +772,10 @@ class EscribirConvenio extends Component {
             fechaVigencia: '',
             tarifasSeleccionadas : [],
             todosConceptos: [],
-            conceptosAdicionales: [],
-            conceptosManiobra: [],
-            conceptosEntrega: [],
-            conceptosRecoleccion: [],
-            impuestos: [],
-            ivaTraslada: [],
-            ivaRetiene: [],
             tarifaDetalles: {m_arrArConceptos:[]},
             idsTarifasSeleccionadas: [],
             dataProductosSeleccionados:[],
             dataProductosTemp:this.state.dataProductos,
-            dataZonas:[],
             dataRequerida:"",
             idsZonasSeleccionadas:[],
             zonasSeleccionadas: [],
@@ -843,6 +833,9 @@ class EscribirConvenio extends Component {
     }
 
     getAllZonas = () => {
+        if(this.state.dataZonas.length > 0){
+            return
+        }
         obtenerListadoZonaTarifa().then(({data}) => {
             this.setState({ dataZonas: data, agregar: "Agregar" })
         })
@@ -924,7 +917,7 @@ class EscribirConvenio extends Component {
         return(
             <div className="row">
                 <Grid container spacing={1} direction={"row-reverse"}>
-                    <Grid item xs={2}>
+                    <Grid item xs={3}>
                         <Button fullWidth variant="contained" color={"primary"} onClick={this.handleGuardarTarifa} disabled={this.props.consult}>
                             Guardar cambios a tarifa
                         </Button>
@@ -1453,10 +1446,15 @@ class EscribirConvenio extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="row">
-                                                    <Grid container spacing={2}>
-                                                        <Grid item xs={12}>
-                                                            <Button variant={"contained"} color={"primary"} onClick={this.guardarZonaTarifa} type={"button"} className="btn btn-primary primary-btn">
+                                                    <Grid container spacing={2} direction={"row-reverse"}>
+                                                        <Grid item xs={3}>
+                                                            <Button fullWidth variant={"contained"} color={"primary"} onClick={this.guardarZonaTarifa} type={"button"}>
                                                                 Guardar cambios a tarifa
+                                                            </Button>
+                                                        </Grid>
+                                                        <Grid item xs={2}>
+                                                            <Button fullWidth variant="outlined" onClick={this.onSubmit} color="primary" disabled={this.props.consult}>
+                                                                Guardar convenio
                                                             </Button>
                                                         </Grid>
 

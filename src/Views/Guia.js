@@ -50,7 +50,7 @@ import {
     modificarGuia,
     agregarGuia,
     imprimirGuia,
-    obtenerGuiaReporte, entregaOcurreGuia, cambiarTipoCobro
+    obtenerGuiaReporte, entregaOcurreGuia, cambiarTipoCobro, cambiarEstatusGuia,obtenerValidacionGuia
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -75,6 +75,8 @@ import CambiarTipoCobro from "./Guia/CambiarTipoCobro";
 import Ocurre from "./Guia/Ocurre";
 import ConceptosFacturacionGuias from "./Tarifas/ConceptosFacturacionGuias";
 import Filtros from "./Filtros/Filtros";
+import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
+import CambiarEstatus from "./Guia/CambiarEstatus";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -269,6 +271,19 @@ function Guia(props) {
         console.log(conceptosAdicionales.length)
     }, [conceptosAdicionales])
 
+    async function getParametrosConfiguracion(){
+        obtenerParametrosConfiguracion().then(respuesta=>{
+            console.log(respuesta)
+            setState(state=>{
+                return{
+                    ...state,
+                    estatusGuia:respuesta.data.EstatusGuia,
+                    idTipoTarifa: respuesta.data.TipoTarifaTarifas,
+                    idMoneda: respuesta.data.MonedaEmbarque
+                }
+            })
+        })
+    }
 
     function cargaDiv(indice, valor) {
         //	showSuccess(indice);
@@ -379,18 +394,28 @@ function Guia(props) {
         });
     }
 
-    function handleShowModificar(id) {
-        obtenerGuiaId(id).then(respuesta => {
-            cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)
-
-            setDataGuiaParaConsultarModificar(respuesta, "Modificar")
-            $('.nav-tabs li ').removeClass('active');
-            $('.nav-tabs li').eq(1).addClass('active');
-            $('.tab-content div ').removeClass('in show');
-            $('#Agregar').addClass('in show');
-        }).catch(function (err) {
-            console.log(err.data)
-        });
+    function handleShowModificar(id,folioGuia) {
+        obtenerValidacionGuia(id).then(respuesta=>{
+            console.log(respuesta)
+            if(respuesta.data.valor){//Entrega un 1 si la guia no es modificable
+                let {valores} = respuesta.data
+            showSuccess(`La Guía ${folioGuia} no se puede editar debido a que está relacionada a la factura  ${valores.Serie}-${valores.Folio}`)
+            }else{            
+                obtenerGuiaId(id).then(respuesta => {         
+                    cargaEmbarqueModificar(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, id)     
+                    setDataGuiaParaConsultarModificar(respuesta, "Modificar")
+                    $('.nav-tabs li ').removeClass('active');
+                    $('.nav-tabs li').eq(1).addClass('active');
+                    $('.tab-content div ').removeClass('in show');
+                    $('#Agregar').addClass('in show');
+                }).catch(function (err) {
+                    console.log(err.data)
+                });
+            }
+        }).catch(function (err){
+            console.log("Error al ejecutar el query"+err.data)
+        })
+      
     }
 
     function handleShowConsultar(id) {
@@ -408,6 +433,7 @@ function Guia(props) {
     }
 
     const setDataGuiaParaConsultarModificar = (respuesta, label) => {
+        getDataParaEditar()
         console.log('Guia datos:', respuesta.data)
 
         let totalCantidad = 0
@@ -640,7 +666,7 @@ function Guia(props) {
                     <div>
                         <Tooltip title="Modificar">
                             <a data-toggle="tab"
-                               onClick={() => (handleShowModificar(row.row.m_nIdGuia))}
+                               onClick={() => (handleShowModificar(row.row.m_nIdGuia,row.row.m_nFolioGuia))}
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>
 
@@ -1168,6 +1194,7 @@ function Guia(props) {
         cargaEmbarqueMoneda(1)
         getAllDataTipoPago()
         getAllConceptos()
+        getParametrosConfiguracion()
     }
 
     async function getTipoCambio() {
@@ -1653,6 +1680,13 @@ function Guia(props) {
         })
     }
 
+    const cambiarEstaus = (estatus) => {
+        cambiarEstatusGuia(state.idGuia, estatus).then(({data}) => {
+            showSuccess(data)
+            getAllData()
+        })
+    }
+
     const handleChangeListConceptos = (newList) => {
         setConceptosAdicionales(newList)
     }
@@ -1666,6 +1700,9 @@ function Guia(props) {
             <CambiarTipoCobro submit={(id) => cambiarCobro(id)} creditoVencido={state.creditoVencido}
                               open={state.openTipoCobro} dataTipoCobro={dataTipoCobro}
                               close={() => setState({...state, openTipoCobro: false})}/>
+            <CambiarEstatus submit={(id) => cambiarEstaus(id)}
+                              open={state.openCambiarEstatus} dataEstatusGuia={dataEstatusGuia}
+                              close={() => setState({...state, openCambiarEstatus: false})}/>
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
@@ -1746,6 +1783,15 @@ function Guia(props) {
                                 </a>
                             </li>
                         }
+                        <li>
+                            <a className={(state.idGuia !== 0 && state.cambioCobro) ? "" : classes.disabled}
+                               onClick={() => {
+                                   getAllDataEstatusGuia()
+                                   setState({...state, openCambiarEstatus: true})
+                               }}>
+                                <i className="fa fa-refresh"/> Cambiar Estatus
+                            </a>
+                        </li>
 
                         <li>
                             <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}
