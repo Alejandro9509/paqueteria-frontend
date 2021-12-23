@@ -38,11 +38,11 @@ const classes = useStyles();
     //--------------------------------------------------VARIABLES--------------------------------------------------------
 const [dataEstatusRecoleccion, setEstatusRecoleccion] = React.useState([]);
 const [dataEstatusEmbarque, setEstatusEmbarque] = React.useState([]);
-const [dataMonedaEmbarque, setMonedaEmbarque] = useState([])
-const [dataTipoCambioEmbarque, setTipoCambioEmbarque] = useState([])
-const [dataEstatusGuia, setEstatusGuia] = useState([])
-const [datatipoTarifa, setTipoTarifa] = useState([])
-const [value, setValue] = React.useState(2);
+const [dataMonedaEmbarque, setMonedaEmbarque] = React.useState([])
+const [dataTipoCambioEmbarque, setTipoCambioEmbarque] = React.useState([])
+const [dataEstatusGuia, setEstatusGuia] = React.useState([])
+const [datatipoTarifa, setTipoTarifa] = React.useState([])
+const [value, setValue] = React.useState('1');
 
  
     //variables de valores por defecto
@@ -103,6 +103,8 @@ const [configuraciones, setConfiguraciones] = React.useState({
       });
     } 
     const handleTab = (event, newValue) => {
+      console.log(event)
+      console.log(newValue)
     setValue(newValue);
   };
     //--------------------------------------------------SERVICIOS--------------------------------------------------------
@@ -188,6 +190,7 @@ const [configuraciones, setConfiguraciones] = React.useState({
       </aside>
       <TabContext value={value}>
        <Paper square >
+         
             <Tabs
               value={value}
               indicatorColor="primary"
