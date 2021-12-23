@@ -50,7 +50,7 @@ console.log(this.props.direccion)
     }
 
     confirmarUbicacion(e) {
-        this.props.confirmarUbicacion(this.state.coordenadas, e)
+        this.props.confirmarUbicacion(this.state.coordenadas, e, this.props.direccion.idGuia?this.props.direccion.idGuia:0, this.props.recoleccion)
     }
 
      buscarDireccion(e){
