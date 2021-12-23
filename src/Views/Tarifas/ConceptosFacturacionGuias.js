@@ -34,6 +34,7 @@ import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import SearchIcon from "@material-ui/icons/Search";
 import DialogoNuevoConcepto from "./DialogoNuevoConcepto";
+import {getUniqueListBy} from "../../Util/Util";
 const headers = API_HEADERS
 
 function showSuccess(mensaje) {
@@ -437,19 +438,19 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             borderColor: "gray",
                             minWidth: "230px",
                             textAlign: "right"
-                        }}>  {ivaTraslada.map(t => (
+                        }}>  {getUniqueListBy(dataPaquetes, "traslada").map(t => (
                             <div>{`${state.impuestos.length !== 0 ?
-                                state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ?
-                                    state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto :
+                                state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t.traslada)) ?
+                                    state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t.traslada)).m_sImpuesto :
                                     "" :
-                                ""} `} ${parseFloat(dataPaquetes.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br/>
+                                ""} `} ${parseFloat(dataPaquetes.filter(c => c.traslada === t.traslada).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br/>
                             </div>))}
-                            {ivaRetiene.map(t => (
+                            {getUniqueListBy(dataPaquetes, "retiene").map(t => (
                             <div>{`${state.impuestos.length !== 0 ?
-                                `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ?
-                                    state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto :
+                                `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t.retiene)) ?
+                                    state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t.retiene)).m_sImpuesto :
                                     ""}` :
-                                ""} `} ${parseFloat(dataPaquetes.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br/>
+                                ""} `} ${parseFloat(dataPaquetes.filter(c => c.retiene === t.retiene).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br/>
                             </div>))} </div>
                     </div>
                     <div className="col-md-12 col-sm-12"
