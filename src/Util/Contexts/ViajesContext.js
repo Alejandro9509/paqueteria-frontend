@@ -80,6 +80,30 @@ function obtenerXML(id){
     );
     return result
 }
+function obtenerCFDI(id){
+    const url = `${process.env.REACT_APP_API_URL}/Guias/GetCFDITraslada/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
+function obtenerReporteCFDI(id){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDI/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
+function obtenerReporteCFDIViaje(id){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIViaje/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
 
 function obtenerViajesEstatus(idEstatus){
     const url = `${process.env.REACT_APP_API_URL}/Viajes/GetListadoEstatus/${idEstatus}`;
@@ -104,4 +128,4 @@ function obetenerViajeId( id){
 
 
 export {obtenerViajesByFiltro,agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje,
-    obtenerViajes, obtenerViajesEstatus, obtenerXML}
+    obtenerViajes, obtenerViajesEstatus, obtenerXML,obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje}

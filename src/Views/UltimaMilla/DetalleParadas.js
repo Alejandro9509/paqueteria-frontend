@@ -29,7 +29,10 @@ import {PieChart} from 'react-minimal-pie-chart';
 import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
 import AgregarPaqueteUltimaMilla from "./AgregarPaqueteUltimaMilla";
 import PaquetesList from "./PaquetesList";
-import {obtenerGuiaUltimaMilla} from "../../Util/Contexts/GuiaContext";
+import {
+    actualizarCoordenadasGuia,
+    obtenerGuiaUltimaMilla
+} from "../../Util/Contexts/GuiaContext";
 import {
     eliminarPaqueteUltimaMilla, obtenerUltimaMillaReporte,
     ordenarParada,
@@ -39,6 +42,7 @@ import Noty from "noty";
 import {obtenerCorteReporte} from "../../Util/Contexts/CorteCajaContext";
 import {InsertDriveFile} from "@material-ui/icons";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
+import {actualizarCoordenadasRecoleccion} from "../../Util/Contexts/RecoleccionContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -73,7 +77,8 @@ class DetalleParadas extends Component {
         this.onSubmitOrdenarPaquetes = this.onSubmitOrdenarPaquetes.bind(this)
         this.onSubmitBorrarPaquete = this.onSubmitBorrarPaquete.bind(this)
         this.confirmDeleteParada = this.confirmDeleteParada.bind(this)
-       // this.confirmUbicacionParada = this.confirmUbicacionParada.bind(this)
+       this.confirmUbicacionParada = this.confirmUbicacionParada.bind(this)
+       this.confirmarUbicacion = this.confirmarUbicacion.bind(this)
     }
 
 
@@ -120,16 +125,44 @@ class DetalleParadas extends Component {
             ]
         });
     }
-    /*confirmUbicacionParada(id,esRecoleccion, data) {
+    confirmUbicacionParada(id,esRecoleccion, data) {
+        console.log(id)
+        console.log(esRecoleccion)
+        console.log(data)
+
+        const domicilioRecoleccion = data.m_bRecoleccionDiferenteDomicilio ? data.m_sDomicilioDetalleRecoleccion : data.m_sDomicilioRemitente
+        const domicilioEntrega = data.m_bEntregaDiferenteDomicilio ? data.m_sDomicilioDetalleEntrega : data.m_sDomicilioDestinatario
+
+        const direccion = esRecoleccion ?
+            {
+                idGuia: id,
+                nombreRemitente: data.m_sNombreRemitente,
+                municipioTexto: data.m_bRecoleccionDiferenteDomicilio ? '': '',
+                calleRemitente: data.m_bRecoleccionDiferenteDomicilio ? '': data.m_sCalleRemitente,
+                coloniaRemitente: data.m_bRecoleccionDiferenteDomicilio ? '': data.m_sColoniaRemitente,
+                numeroIntRemitente: data.m_bRecoleccionDiferenteDomicilio ? '': '',
+                codigoPostalRemitente: data.m_bRecoleccionDiferenteDomicilio ? {m_sCP: ''}: {m_sCP: data.m_sCodigoPostalRemitente},
+                domicilioRemitente: domicilioRecoleccion,
+            }
+            :
+            {
+                idGuia: id,
+                nombreDestinatario: data.m_sNombreDestinatario,
+                municipioTexto: data.m_bEntregaDiferenteDomicilio ? '' : '',
+                calleDestinatario: data.m_bEntregaDiferenteDomicilio ? '' : data.m_sCalleDestinatario,
+                coloniaDestinatario: data.m_bEntregaDiferenteDomicilio ? '' : data.m_sColoniaDestinatario,
+                numeroIntDestinatario: data.m_bEntregaDiferenteDomicilio ? '' : '',
+                codigoPostalDestinatario: data.m_bEntregaDiferenteDomicilio ? {m_sCP: ''} : {m_sCP: data.m_sCodigoPostalDestinatario},
+                domicilioDestinatario: domicilioEntrega,
+            }
        this.setState({
+           titulo: 'parada',
            showConfirmarUbicacion: true,
-           direccion: esRecoleccion ?
-               {municipioTexto: , calleRemitente: data.m_sCalleRemitente,coloniaRemitente:data.m_sColoniaRemitente, numeroIntRemitente: , codigoPostalRemitente:{m_sCP: data.m_sCodigoPostalRemitente}}
-               :
-               {municipioTexto: , calleDestinatario: data.m_sCalleDestinatario,coloniaDestinatario:data.m_sColoniaDestinatario, numeroIntDestinatario: , codigoPostalDestinatario:{m_sCP: data.m_sCodigoPostalDestinatario}}
+           direccion: direccion,
+           recoleccion: esRecoleccion,
 
        })
-    }*/
+    }
 
     onSubmitBorrarPaquete(idParada, idGuia, esRecoleccion) {
         eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion).then(({data}) => {
@@ -154,7 +187,23 @@ class DetalleParadas extends Component {
         })
     }
 
-    confirmarUbicacion(coordenadas) {
+    confirmarUbicacion(coordenadas,e,idGuia, esRecoleccion) {
+        console.log(coordenadas.lat)
+        console.log(coordenadas.lng)
+        if (esRecoleccion){
+            actualizarCoordenadasRecoleccion(idGuia,coordenadas.lat,coordenadas.lng).then((respuesta) => {
+                showSuccess(respuesta.data)
+                this.props.refresh()
+            })
+        }else{
+            actualizarCoordenadasGuia(idGuia,coordenadas.lat,coordenadas.lng).then((respuesta) => {
+                showSuccess(respuesta.data)
+                this.props.refresh()
+            })
+        }
+        this.setState({
+            showConfirmarUbicacion: false,
+        })
 
     }
 
@@ -182,8 +231,8 @@ class DetalleParadas extends Component {
                     this.state.showConfirmarUbicacion &&
                     <ConfirmarUbicacion confirmarUbicacion={this.confirmarUbicacion} open={this.state.showConfirmarUbicacion}
                                         titulo={this.state.titulo}
-                                        recoleccion={true}
-                                        direccion={this.state.ubicación}>
+                                        recoleccion={this.state.recoleccion}
+                                        direccion={this.state.direccion}>
                     </ConfirmarUbicacion>
                 }
                 {
@@ -512,7 +561,7 @@ class DetalleParadas extends Component {
                                                                                                                     fontSize="default"/>
                                                                                                             </Tooltip>
                                                                                                         </IconButton>
-                                                                                                        {/*<IconButton
+                                                                                                        <IconButton
                                                                                                             aria-label="delete">
                                                                                                             <Tooltip
                                                                                                                 title={"Cambiar ubicación"}>
@@ -520,7 +569,7 @@ class DetalleParadas extends Component {
                                                                                                                     onClick={() => this.confirmUbicacionParada( g.m_nId, g.m_bEsRecoleccion, g)}
                                                                                                                     fontSize="default"/>
                                                                                                             </Tooltip>
-                                                                                                        </IconButton>*/}
+                                                                                                        </IconButton>
                                                                                                         <IconButton
                                                                                                             aria-label="delete">
                                                                                                             <Tooltip

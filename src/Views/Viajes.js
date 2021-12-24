@@ -45,7 +45,7 @@ import {
     agregarViajeLlegada,
     obetenerViajeId,
     obtenerViajes,
-    obtenerXML, obtenerViajesByFiltro
+    obtenerXML, obtenerViajesByFiltro, obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje
 } from "../Util/Contexts/ViajesContext";
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -58,7 +58,7 @@ import Filtros from "./Filtros/Filtros";
 import {obtenerFechaFinal, obtenerFechaInicio} from "../Util/Contexts/UtileriasContext";
 import {obtenerEmbarquesFiltro} from "../Util/Contexts/EmbarquesContext";
 import {obtenerRecoleccionFiltro} from "../Util/Contexts/RecoleccionContext";
-import {obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
+import {obtenerGuiaReporte, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -326,6 +326,12 @@ function Viajes() {
                                                                                             style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
+                        <Tooltip title="Generar CFDI">
+                            <a href="#" className="btn btn-default btn-xs"
+                               onClick={() => (generarCFDI(row.row.m_nIdViaje, row.row.m_sFolioViaje))}><i className="zmdi zmdi-file-text"
+                                                                                                            style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
                         <Tooltip title="Descargar XML">
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => (descargarXML(row.row.m_nIdViaje, row.row.m_sFolioViaje))}><i className="zmdi zmdi-download"
@@ -438,6 +444,19 @@ function Viajes() {
         })
 
     }
+
+    function generarCFDI(id, folio) {
+        obtenerCFDI(id).then((result) => {
+            obtenerReporteCFDIViaje(id).then(({data}) => {
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "CFDI_ " + folio;
+            })
+        })
+
+    }
+
 
 
     const headers = API_HEADERS

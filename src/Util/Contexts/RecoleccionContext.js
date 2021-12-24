@@ -41,6 +41,14 @@ function cancelarRecoleccion(id, params) {
         );
     return result
 }
+function actualizarCoordenadasRecoleccion(idRecoleccion, latitud, longitud) {
+    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/ActualizarCoordenadas/${idRecoleccion}/${latitud}/${longitud}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, {}), { headers })
+    );
+    return result
+}
 
 function eliminarRecoleccion(id, idEliminadoPor) {
     const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Eliminar/` + id + `/${idEliminadoPor}`;
@@ -107,4 +115,4 @@ function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, est
     return result
 }
 
-export { modificarRecoleccion, agregarRecoleccion, obtenerRecoleccionReporte, eliminarRecoleccion, obtenerRecoleccionId, obtenerRecoleccion, obtenerRecoleccionCancelada, cancelarRecoleccion, obtenerRecoleccionFiltro }
+export {actualizarCoordenadasRecoleccion, modificarRecoleccion, agregarRecoleccion, obtenerRecoleccionReporte, eliminarRecoleccion, obtenerRecoleccionId, obtenerRecoleccion, obtenerRecoleccionCancelada, cancelarRecoleccion, obtenerRecoleccionFiltro }

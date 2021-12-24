@@ -84,6 +84,23 @@ function cambiarTipoCobro(idGuia, tipoCobro) {
     return result
 }
 
+function cambiarEstatusGuia(idGuia, estatus) {
+    const url = `${process.env.REACT_APP_API_URL}/Guias/CambiarEstatusGuia/${idGuia}/${estatus}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, {}), { headers })
+    );
+    return result
+}
+function actualizarCoordenadasGuia(idGuia, latitud, longitud) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/ActualizarCoordenadas/${idGuia}/${latitud}/${longitud}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, {}), { headers })
+    );
+    return result
+}
+
 function obtenerGuiaPendientes(idOrigen, idDestino) {
     const url = `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
         idOrigen +
@@ -177,6 +194,16 @@ function obtenerGuiasFiltroCorteCaja(fecha, destino, idMoneda, idTipoPago) {
     return result
 }
 
-export { obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
+function obtenerValidacionGuia(id){
+    
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Guias/ValidacionById/`+id
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export {actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
     obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,
-    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro}
+    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia}
