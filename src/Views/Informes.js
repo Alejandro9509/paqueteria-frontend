@@ -68,6 +68,7 @@ import {obtenerSucursales} from "../Util/Contexts/SucursalContext";
 import {validarPermisos} from "../Util/Contexts/UsuarioContext";
 import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
 import Filtros from "./Filtros/Filtros";
+import SeleccionarRuta from "./Rutas/SeleccionarRuta";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -1044,6 +1045,7 @@ function Informes({history}) {
     const handleShowListado = () =>{
         // event.stopPropagation();
         getDataParaListado()
+        getEmptyState()
         setState({...state, agregar: "Agregar"});
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
@@ -1070,7 +1072,7 @@ function Informes({history}) {
             IdRemolque1: null,
             IdRemolque2: null,
             IdTipoUnidad: {},
-            IdRuta: {},
+            IdRuta: 0,
             IdEstatusInforme: "5",
             PlacasRemolque1: "",
             PlacasRemolque2: "",
@@ -1101,7 +1103,7 @@ function Informes({history}) {
                 IdRemolque1: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
                 IdRemolque2: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque2),
                 IdTipoUnidad: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdDolly),
-                IdRuta: null,
+                IdRuta: 0,
                 IdEstatusInforme: dataEstatusInformes.find(c => c.m_nIdEstatusInforme === data.m_nIdEstatusInforme),
                 PlacasRemolque1: data.m_sPlacasRemolque1,
                 PlacasRemolque2: data.m_sPlacasRemolque2,
@@ -1130,7 +1132,7 @@ function Informes({history}) {
                 IdRemolque1: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
                 IdRemolque2: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque2),
                 IdTipoUnidad: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdDolly),
-                IdRuta: dataRutas.find(c => c.m_nIdRuta === data.m_nIdRuta),
+                IdRuta: 0,
                 IdEstatusInforme: dataEstatusInformes.find(c => c.m_nIdEstatusInforme === data.m_nIdEstatusInforme),
                 PlacasRemolque1: data.m_sPlacasRemolque1,
                 PlacasRemolque2: data.m_sPlacasRemolque2,
@@ -1217,6 +1219,13 @@ function Informes({history}) {
 
     const todasGuiasSeleccionadas = () => {
         return dataGuias.length === dataGuias.filter((g) => g.select).length
+    }
+
+    const handleChangeRuta = (idRuta) => {
+        setState( {
+            ...state,
+            IdRuta: idRuta,
+        })
     }
 
     return (
@@ -2322,305 +2331,23 @@ function Informes({history}) {
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    {/*****************************************Ruta*************************************************/}
-                                                                    {/*<div className="row">
-                                                                        <div className="col-sm-12 col-md-12 unit">
-                                                                              <input class="form-control" type="text" placeholder="Enter a letter" id="list-autocomplete" name="list-autocomplete"/>
-                                                                            <div className="input">
-                                                                                <Autocomplete
-                                                                                    freeSolo
-                                                                                    onChange={(event, newValue) =>
-                                                                                        setState({
-                                                                                            ...state,
-                                                                                            IdRuta: newValue,
-                                                                                        })
-                                                                                    }
-                                                                                    value={state.IdRuta}
-                                                                                    id="idRuta"
-                                                                                    disableClearable
-                                                                                    forcePopupIcon={false}
-                                                                                    options={dataRutas}
-                                                                                    getOptionLabel={(option) =>
-                                                                                        option.m_sDescripcion
-                                                                                    }
-                                                                                    variant="outlined"
-                                                                                    style={{
-                                                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                                                    }}
-                                                                                    renderInput={(params) => (
-                                                                                        <div>
-                                                                                            <TextField
-                                                                                                variant="outlined"
-                                                                                                label="Ruta"
-                                                                                                margin="dense"
-                                                                                                className="form-control"
-                                                                                                {...params}
-                                                                                                InputProps={{
-                                                                                                    ...params.InputProps,
-                                                                                                    style: {
-                                                                                                        height: 24,
-                                                                                                    },
-                                                                                                    type: "search",
-                                                                                                    disableUnderline: true,
-                                                                                                    endAdornment: (
-                                                                                                        <InputAdornment
-                                                                                                            position="end">
-                                                                                                            <IconButton
-                                                                                                                padding="0px"
-                                                                                                                style={{
-                                                                                                                    paddingRight:
-                                                                                                                        "0px",
-                                                                                                                }}
-                                                                                                                onClick={() => {
-                                                                                                                    setState({
-                                                                                                                        ...state,
-                                                                                                                        identificadorModal:
-                                                                                                                            "IdRuta",
-                                                                                                                        tipoModal: 1,
-                                                                                                                        openDialog: true,
-                                                                                                                    });
-                                                                                                                    getAllViajesOrigenDestino(
-                                                                                                                        state
-                                                                                                                            .IdCiudadOrigen
-                                                                                                                            .m_nIdCiudad,
-                                                                                                                        state
-                                                                                                                            .IdCiudadDestino
-                                                                                                                            .m_nIdCiudad
-                                                                                                                    );
-                                                                                                                    getAllGuiasFrom();
-                                                                                                                }}
-                                                                                                            >
-                                                                                                                <PageviewIcon
-                                                                                                                    style={{
-                                                                                                                        color:
-                                                                                                                            "#F9A03E",
-                                                                                                                        fontSize: 32,
-                                                                                                                        paddingInlineEnd: 0,
-                                                                                                                        paddingRight: 0,
-                                                                                                                        paddingBlockEnd: 0,
-                                                                                                                        paddingLeft: 0,
-                                                                                                                        paddingBlock: 0,
-                                                                                                                    }}
-                                                                                                                />
-                                                                                                            </IconButton>
-                                                                                                        </InputAdornment>
-                                                                                                    ),
-                                                                                                }}
-                                                                                            />
-                                                                                        </div>
-                                                                                    )}
-                                                                                />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>*/}
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    {/*<div className="row">*/}
-                                                    {/*    <div className="col-md-12">*/}
-                                                    {/*        <div className="widget-wrap">*/}
-                                                    {/*            <div*/}
-                                                    {/*                className="widget-header block-header margin-bottom-0 clearfix">*/}
-                                                    {/*                <div className="pull-left">*/}
-                                                    {/*                    <h3>Asignar a un Viaje</h3>*/}
-                                                    {/*                </div>*/}
-                                                    {/*            </div>*/}
-                                                    {/*            <div className="widget-container">*/}
-                                                    {/*                <div className="widget-content">*/}
-                                                    {/*                    <div className="row">*/}
-                                                    {/*                        <div className="col-md-12">*/}
-                                                    {/*                            <form*/}
-                                                    {/*                                action="#"*/}
-                                                    {/*                                className="j-forms"*/}
-                                                    {/*                                noValidate*/}
-                                                    {/*                            >*/}
-                                                    {/*                                <div className="form-content">*/}
-                                                    {/*                                    /!*****************************************Viaje*************************************************!/*/}
-                                                    {/*                                    <div className="row">*/}
-                                                    {/*                                        <div*/}
-                                                    {/*                                            className="col-sm-12 col-md-6 unit">*/}
-
-                                                    {/*                                            <label*/}
-                                                    {/*                                                className="input select">*/}
-                                                    {/*                                                <FormControl*/}
-                                                    {/*                                                    fullWidth*/}
-                                                    {/*                                                    variant="outlined"*/}
-                                                    {/*                                                    margin="dense">*/}
-                                                    {/*                                                    <InputLabel*/}
-                                                    {/*                                                        id="viajeLabel">Viaje</InputLabel>*/}
-                                                    {/*                                                    <Select*/}
-                                                    {/*                                                        labelId="viajeLabel"*/}
-                                                    {/*                                                        label="Viaje"*/}
-                                                    {/*                                                        className="form-control"*/}
-                                                    {/*                                                        required*/}
-                                                    {/*                                                        id="viaje"*/}
-                                                    {/*                                                        //onSelect={handleSelectViaje()}*/}
-                                                    {/*                                                    >*/}
-                                                    {/*                                                        <option*/}
-                                                    {/*                                                            value="0">*/}
-                                                    {/*                                                            Seleccionar*/}
-                                                    {/*                                                        </option>*/}
-                                                    {/*                                                        /!*  {dataViajes.map((viaje) => (*/}
-                                                    {/*  <option*/}
-                                                    {/*    key={viaje.m_nIdViaje}*/}
-                                                    {/*    value={viaje.m_nIdViaje}*/}
-                                                    {/*  >*/}
-                                                    {/*    {viaje.m_sFolioViaje}*/}
-                                                    {/*  </option>*/}
-                                                    {/*))} *!/*/}
-                                                    {/*                                                    </Select>*/}
-                                                    {/*                                                </FormControl>*/}
-                                                    {/*                                            </label>*/}
-                                                    {/*                                        </div>*/}
-
-                                                    {/*                                        /!*****************************************Ruta2*************************************************!/*/}
-                                                    {/*                                        <div*/}
-                                                    {/*                                            className="col-sm-12 col-md-6 unit">*/}
-
-                                                    {/*                                            <div className="input">*/}
-                                                    {/*                                                <TextField*/}
-                                                    {/*                                                    variant="outlined"*/}
-                                                    {/*                                                    margin="dense"*/}
-                                                    {/*                                                    label="Ruta"*/}
-                                                    {/*                                                    className="form-control"*/}
-                                                    {/*                                                    type="text"*/}
-                                                    {/*                                                    value={state.ruta2}*/}
-                                                    {/*                                                    id="ruta2"*/}
-                                                    {/*                                                />*/}
-                                                    {/*                                            </div>*/}
-                                                    {/*                                        </div>*/}
-                                                    {/*                                    </div>*/}
-
-                                                    {/*                                    /!*****************************************Operador2*************************************************!/*/}
-                                                    {/*                                    <div className="row">*/}
-                                                    {/*                                        <div*/}
-                                                    {/*                                            className="col-sm-12 col-md-12 unit">*/}
-
-                                                    {/*                                            <div className="input">*/}
-                                                    {/*                                                <TextField*/}
-                                                    {/*                                                    variant="outlined"*/}
-                                                    {/*                                                    margin="dense"*/}
-                                                    {/*                                                    label="Operador"*/}
-                                                    {/*                                                    className="form-control"*/}
-                                                    {/*                                                    type="text"*/}
-                                                    {/*                                                    value={state.operador2}*/}
-                                                    {/*                                                    id="operador2"*/}
-                                                    {/*                                                />*/}
-                                                    {/*                                            </div>*/}
-                                                    {/*                                        </div>*/}
-
-                                                    {/*                                        /!*****************************************Unidad2*************************************************!/*/}
-                                                    {/*                                        <div*/}
-                                                    {/*                                            className="col-sm-12 col-md-6 unit">*/}
-                                                    {/*                                            <div className="input">*/}
-                                                    {/*                                                <TextField*/}
-                                                    {/*                                                    variant="outlined"*/}
-                                                    {/*                                                    margin="dense"*/}
-                                                    {/*                                                    label="Unidad"*/}
-                                                    {/*                                                    className="form-control"*/}
-                                                    {/*                                                    type="text"*/}
-                                                    {/*                                                    value={state.unidad2}*/}
-                                                    {/*                                                    id="unidad2"*/}
-                                                    {/*                                                />*/}
-                                                    {/*                                            </div>*/}
-                                                    {/*                                        </div>*/}
-                                                    {/*                                    </div>*/}
-
-                                                    {/*                                    /!*****************************************Remolque2*************************************************!/*/}
-                                                    {/*                                    <div className="row">*/}
-                                                    {/*                                        <div*/}
-                                                    {/*                                            className="col-sm-12 col-md-6 unit">*/}
-
-                                                    {/*                                            <div className="input">*/}
-                                                    {/*                                                <Autocomplete*/}
-                                                    {/*                                                    freeSolo*/}
-                                                    {/*                                                    value={state.IdRemolque2}*/}
-                                                    {/*                                                    onChange={(event, newValue) =>*/}
-                                                    {/*                                                        setState({*/}
-                                                    {/*                                                            ...state,*/}
-                                                    {/*                                                            IdRemolque2: newValue,*/}
-                                                    {/*                                                        })*/}
-                                                    {/*                                                    }*/}
-                                                    {/*                                                    id="IdRemolque2Viaje"*/}
-                                                    {/*                                                    disableClearable*/}
-                                                    {/*                                                    forcePopupIcon={false}*/}
-                                                    {/*                                                    options={dataUnidades.filter((g) => g.m_nIdTipoUnidad === 12 || g.m_nIdTipoUnidad === 30)}*/}
-                                                    {/*                                                    getOptionLabel={(option) =>*/}
-                                                    {/*                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""*/}
-                                                    {/*                                                    }*/}
-                                                    {/*                                                    variant="outlined"*/}
-                                                    {/*                                                    style={{*/}
-                                                    {/*                                                        transform: "translate(14px, 10px) scale(1) !important"*/}
-                                                    {/*                                                    }}*/}
-                                                    {/*                                                    renderInput={(params) => (*/}
-                                                    {/*                                                        <div>*/}
-                                                    {/*                                                            <TextField*/}
-                                                    {/*                                                                variant="outlined"*/}
-                                                    {/*                                                                label="Remolque 2"*/}
-                                                    {/*                                                                margin="dense"*/}
-                                                    {/*                                                                className="form-control"*/}
-                                                    {/*                                                                {...params}*/}
-                                                    {/*                                                                InputProps={{*/}
-                                                    {/*                                                                    ...params.InputProps,*/}
-                                                    {/*                                                                    style: {*/}
-                                                    {/*                                                                        height: 24,*/}
-                                                    {/*                                                                    },*/}
-                                                    {/*                                                                    type: "search",*/}
-                                                    {/*                                                                    disableUnderline: true,*/}
-                                                    {/*                                                                    endAdornment: (*/}
-                                                    {/*                                                                        <InputAdornment*/}
-                                                    {/*                                                                            position="end">*/}
-                                                    {/*                                                                            <IconButton*/}
-                                                    {/*                                                                                padding="0px"*/}
-                                                    {/*                                                                                style={{*/}
-                                                    {/*                                                                                    paddingRight:*/}
-                                                    {/*                                                                                        "0px",*/}
-                                                    {/*                                                                                }}*/}
-                                                    {/*                                                                                onClick={() => {*/}
-                                                    {/*                                                                                    setState({*/}
-                                                    {/*                                                                                        ...state,*/}
-                                                    {/*                                                                                        identificadorModal:*/}
-                                                    {/*                                                                                            "IdRemolque2",*/}
-                                                    {/*                                                                                        tipoModal: 4,*/}
-                                                    {/*                                                                                        openDialog: true,*/}
-                                                    {/*                                                                                    });*/}
-                                                    {/*                                                                                }}*/}
-                                                    {/*                                                                            >*/}
-                                                    {/*                                                                                <PageviewIcon*/}
-                                                    {/*                                                                                    style={{*/}
-                                                    {/*                                                                                        color:*/}
-                                                    {/*                                                                                            "#F9A03E",*/}
-                                                    {/*                                                                                        fontSize: 32,*/}
-                                                    {/*                                                                                        paddingInlineEnd: 0,*/}
-                                                    {/*                                                                                        paddingRight: 0,*/}
-                                                    {/*                                                                                        paddingBlockEnd: 0,*/}
-                                                    {/*                                                                                        paddingLeft: 0,*/}
-                                                    {/*                                                                                        paddingBlock: 0,*/}
-                                                    {/*                                                                                    }}*/}
-                                                    {/*                                                                                />*/}
-                                                    {/*                                                                            </IconButton>*/}
-                                                    {/*                                                                        </InputAdornment>*/}
-                                                    {/*                                                                    ),*/}
-                                                    {/*                                                                }}*/}
-                                                    {/*                                                            />*/}
-                                                    {/*                                                        </div>*/}
-                                                    {/*                                                    )}*/}
-                                                    {/*                                                />*/}
-                                                    {/*                                            </div>*/}
-                                                    {/*                                        </div>*/}
-                                                    {/*                                    </div>*/}
-                                                    {/*                                </div>*/}
-                                                    {/*                            </form>*/}
-                                                    {/*                        </div>*/}
-                                                    {/*                    </div>*/}
-                                                    {/*                </div>*/}
-                                                    {/*            </div>*/}
-                                                    {/*        </div>*/}
-                                                    {/*    </div>*/}
-                                                    {/*</div>*/}
                                                 </div>
+                                            </div>
+
+                                            <div className="row">
+                                                <SeleccionarRuta
+                                                    IdRuta={state.IdRuta}
+                                                    IdOrigen={state.IdCiudadOrigen.m_nIdCiudad}
+                                                    IdDestino={state.IdCiudadDestino.m_nIdCiudad}
+                                                    IdCliente={0}
+                                                    disabled={state.agregar === "Consultar"}
+                                                    onChangeRuta={handleChangeRuta}
+                                                />
                                             </div>
                                         </div>
                                     </div>
