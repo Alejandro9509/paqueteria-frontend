@@ -48,7 +48,7 @@ export default function SeleccionarRuta(props){
             setDataTrayectos([])
             getRutasByOrigenDestino(props.IdOrigen, props.IdDestino, props.IdCliente)
         }
-    },[props.IdOrigen, props.IdDestino])
+    },[props.IdOrigen, props.IdDestino, props.IdCliente])
 
     useEffect(() => {
         if (props.IdRuta === 0){

@@ -1256,7 +1256,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-      if (state.idEmbarque != 0) {
+      /*if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1283,7 +1283,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
     };
 
     function handleSelectCP(id, cp) {
@@ -2008,6 +2008,7 @@ function Embarque(props) {
     }
 
     const handlePatrocinadorSelected = (row) => {
+        console.log(row)
         setState(() => ({
             ...state,
             clientePaga: row.data,
@@ -4008,9 +4009,9 @@ function Embarque(props) {
                                         <div className="widget-wrap">
                                             <SeleccionarRuta
                                                 IdRuta={state.idRuta}
-                                                IdOrigen={remitente.origenRemitente.m_nIdCiudad}
-                                                IdDestino={destinatario.destinoDestinatario.m_nIdCiudad}
-                                                IdCliente={state.clientePaga.id}
+                                                IdOrigen={remitente.origenRemitente ? remitente.origenRemitente.m_nIdCiudad : ''}
+                                                IdDestino={destinatario.destinoDestinatario ? destinatario.destinoDestinatario.m_nIdCiudad : '' }
+                                                IdCliente={state.clientePaga.m_nIdCliente}
                                                 disabled={state.agregar === "Consultar"}
                                                 onChangeRuta={handleChangeRuta}
                                             />
