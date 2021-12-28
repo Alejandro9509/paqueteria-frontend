@@ -12,6 +12,14 @@ function modificarInformes(id, params){
         );
     return result
 }
+function obtenerXMLCFDI(id){
+    const url = `${process.env.REACT_APP_API_URL}/Informes/GetXMLCFDI/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
 
 function obtenerInformeReporte(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Informe/${id}`;
@@ -117,4 +125,4 @@ function obtenerInformeFiltro(fechaInicial, fechaFinal,folioInforme,sucursarEmis
 
 
 export {modificarInformes, agregarInformes, eliminarInformes, obtenerInformes, obtenerInformesId, cancelarInformes, obtenerInformesDisponiblesViajes, obtenerInformesPorViaje,obtenerInformeFiltro,
-    obtenerInformeReporte, obtenerInformesEstatus}
+    obtenerInformeReporte, obtenerInformesEstatus,obtenerXMLCFDI}

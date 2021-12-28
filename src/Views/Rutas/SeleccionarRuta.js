@@ -69,7 +69,14 @@ export default function SeleccionarRuta(props){
             })
         }else{
             obtenerRutasByOrigenDestinoCliente(idCliente, idOrigen, idDestino).then(({data}) => {
-                setDataRutas(data)
+                if(data.length !== 0 ) {
+                    setDataRutas(data)
+                }else {
+                    obtenerRutasByOrigenDestinoPublicoGeneral(idOrigen, idDestino).then(({data}) => {
+                        setDataRutas(data)
+                    })
+                }
+
             })
         }
 
