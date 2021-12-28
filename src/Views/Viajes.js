@@ -234,13 +234,16 @@ function Viajes() {
                                                                                             style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
+                        {
+                            row.row.EsPermisionario && row.row.m_bUnidadPermisionario &&
+                            <Tooltip title="Descargar XML">
+                                <a href="#" className="btn btn-default btn-xs"
+                                   onClick={() => (descargarXML(row.row.m_nIdViaje, row.row.m_sFolioViaje))}><i className="zmdi zmdi-download"
+                                                                                                                style={{color: "#F9A03E"}}/></a>
 
-                        <Tooltip title="Descargar XML">
-                            <a href="#" className="btn btn-default btn-xs"
-                               onClick={() => (descargarXML(row.row.m_nIdViaje, row.row.m_sFolioViaje))}><i className="zmdi zmdi-download"
-                                                                                       style={{color: "#F9A03E"}}/></a>
+                            </Tooltip>
+                        }
 
-                        </Tooltip>
                         <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => (handleEliminar(row.row.m_nIdViaje))}><i className="zmdi zmdi-delete"
@@ -481,18 +484,26 @@ function Viajes() {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Generar CFDI">
-                            <a href="#" className="btn btn-default btn-xs"
-                               onClick={() => (generarCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-file-text"
-                                                                                                               style={{color: "#F9A03E"}}/></a>
+                        {
+                            !viajeSeleccionado.m_bEsPermisionario &&
+                            <Tooltip title="Generar CFDI">
+                                <a href="#" className="btn btn-default btn-xs"
+                                   onClick={() => (generarCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-file-text"
+                                                                                                                                             style={{color: "#F9A03E"}}/></a>
 
-                        </Tooltip>
-                        <Tooltip title="Descargar XML">
-                            <a href="#" className="btn btn-default btn-xs"
-                               onClick={() => (descargarXMLCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-download"
-                                                                                                            style={{color: "#F9A03E"}}/></a>
+                            </Tooltip>
+                        }
+                        {
+                            !viajeSeleccionado.m_bEsPermisionario &&
+                            <Tooltip title="Descargar XML">
+                                <a href="#" className="btn btn-default btn-xs"
+                                   onClick={() => (descargarXMLCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-download"
+                                                                                                                                                  style={{color: "#F9A03E"}}/></a>
 
-                        </Tooltip>
+                            </Tooltip>
+                        }
+
+
                     </div>
                 )
             }
