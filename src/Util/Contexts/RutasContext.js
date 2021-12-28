@@ -132,4 +132,30 @@ function calcularCosto(data) {
     return result
 }
 
-export { modificarRutas, agregarRutas, eliminarRutas, obtenerRutasId, obtenerRutas, obtenerRutasOrigenes, calcularCosto }
+
+function obtenerRutasByOrigenDestinoCliente(idCliente, idOrigen, idDestino) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Rutas/GetByIdClienteOrigenDestino/${idCliente}/${idOrigen}/${idDestino}`;
+    let result;
+    trackPromise(
+        result = axios.get(url, { headers })
+    );
+    return result
+}
+function obtenerRutasByOrigenDestinoPublicoGeneral(idOrigen, idDestino) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Rutas/GetByOrigenDestino/${idOrigen}/${idDestino}`;
+    let result;
+    trackPromise(
+        result = axios.get(url, { headers })
+    );
+    return result
+}
+function obtenerTrayectosByRuta(idRuta) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Rutas/GetTrayectosRuta/${idRuta}`;
+    let result;
+    trackPromise(
+        result = axios.get(url, { headers })
+    );
+    return result
+}
+
+export { modificarRutas, agregarRutas, eliminarRutas, obtenerRutasId, obtenerRutas, obtenerRutasOrigenes, calcularCosto,obtenerRutasByOrigenDestinoCliente,obtenerTrayectosByRuta,obtenerRutasByOrigenDestinoPublicoGeneral }
