@@ -1248,6 +1248,10 @@ function Embarque(props) {
         }))
         params.m_nIdCotizacion = state.idCotizacion
 
+        if (state.idRuta === 0 ){
+            showSuccess("Seleccione una ruta.")
+            return;
+        }
         params.m_nIdRuta = state.idRuta
         console.log(params)
         console.log(JSON.stringify(params))
