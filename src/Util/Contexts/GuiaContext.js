@@ -196,7 +196,7 @@ function obtenerGuiasFiltroCorteCaja(fecha, destino, idMoneda, idTipoPago) {
 
 function obtenerValidacionGuia(id){
     
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Guias/ValidacionById/`+id
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guias/ValidacionById/`+id
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
