@@ -109,6 +109,7 @@ import Filtros from "./Filtros/Filtros";
 import {obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
 import {obtenerViajesByFiltro} from "../Util/Contexts/ViajesContext";
 import Citas from "./Citas/Citas";
+import SeleccionarRuta from "./Rutas/SeleccionarRuta";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -714,6 +715,9 @@ function Embarque(props) {
         countSobres: 1,
         countPaquetes: 1,
 
+        //Ruta
+        idRuta: 0,
+
         DerechoBorrar: 139,
         identificadorModal: "",
         tipoModal: 0,
@@ -771,6 +775,9 @@ function Embarque(props) {
                 ],
                 countSobres: 1,
                 countPaquetes: 1,
+
+                //Rutas
+                idRuta: 0,
                 height: window.innerHeight,
             }
         })
@@ -1241,6 +1248,7 @@ function Embarque(props) {
         }))
         params.m_nIdCotizacion = state.idCotizacion
 
+        params.m_nIdRuta = state.idRuta
         console.log(params)
         console.log(JSON.stringify(params))
 
@@ -1858,6 +1866,9 @@ function Embarque(props) {
                 horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
                 horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
                 citaPendiente: respuesta.data.m_bCitaPendiente,
+
+                //Ruta
+                idRuta: respuesta.data.m_nIdRuta,
 
                 //Paquetes/sobres
                 paquetes: respuesta.data.m_arrPaquetes,
@@ -2796,6 +2807,14 @@ function Embarque(props) {
         }
 
     }
+
+    const handleChangeRuta = (idRuta) => {
+        setState( {
+            ...state,
+            idRuta: idRuta,
+        })
+    }
+
     return (
         <div>
 
@@ -3979,6 +3998,19 @@ function Embarque(props) {
                                                 </div>
                                             </div>
                                         </div>*/}
+                                    </div>
+
+                                    <div className="row">
+                                        <div className="widget-wrap">
+                                            <SeleccionarRuta
+                                                IdRuta={state.idRuta}
+                                                IdOrigen={remitente.origenRemitente.m_nIdCiudad}
+                                                IdDestino={destinatario.destinoDestinatario.m_nIdCiudad}
+                                                IdCliente={state.clientePaga.id}
+                                                disabled={state.agregar === "Consultar"}
+                                                onChangeRuta={handleChangeRuta}
+                                            />
+                                        </div>
                                     </div>
 
                                     <div className="row">

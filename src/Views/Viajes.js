@@ -49,7 +49,7 @@ import {
 } from "../Util/Contexts/ViajesContext";
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import {obtenerInformeFiltro, obtenerInformesPorViaje} from "../Util/Contexts/InformesContext";
+import {obtenerInformeFiltro, obtenerInformesPorViaje, obtenerXMLCFDI} from "../Util/Contexts/InformesContext";
 import {getUniqueListBy} from "../Util/Util";
 import DetalleInforme from "./Viajes/DetalleInforme";
 import {obtenerDetalleParadasIdInformes, obtenerDetalleParadasIdViaje} from "../Util/Contexts/DetalleParadasContext";
@@ -68,7 +68,14 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-
+function showError(mensaje) {
+    new Noty({
+        type: "warning",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "8000"
+    }).show()
+}
 const styles = {
     seleccionado: {
         backgroundColor: "#FCC88F",
@@ -109,12 +116,7 @@ function Viajes() {
 
     })
 
-    function getAllEstatusViaje() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
-        axios.get(url, {headers}).then((respuesta) => {
-            setEstatusViaje(respuesta.data);
-        });
-    }
+
 
     function getAllEstatusDocumento() {
         obtenerEstatusDocumentos().then((respuesta) => {
@@ -128,38 +130,7 @@ function Viajes() {
         });
     }
 
-    const handleAceptar = (e) => {
-        e.preventDefault()
-        // var params = {
-        //
-        //   "Codigo": state.codigoDepartamento,
-        //   "Descripcion": state.descripcionDepartamento,
-        //
-        //   "CreadoPor": state.CreadoPor,
-        //   "ModificadoPor": state.ModificadoPor
-        // }
-        // console.log(params)
-        // if (state.idDepartamento != 0) {
-        //   const url = `${process.env.REACT_APP_API_URL}/Departamento/Modificar/` + state.idDepartamento;
-        //   axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-        //     showSuccess(respuesta.data)
-        //     getAllData()
-        //   }).catch(err => {
-        //     console.log(err)
-        //     showSuccess("err")
-        //   });
-        // } else {
-        //   const url = `${process.env.REACT_APP_API_URL}/Departamento/Agregar`;
-        //   axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-        //     showSuccess(respuesta.data)
-        //     getAllData()
-        //   }).catch(err => {
-        //     console.log(err)
-        //     showSuccess(err)
-        //   });
-        // }
 
-    }
 
     function handleEliminar(id) {
         // var derecho;
@@ -237,72 +208,9 @@ function Viajes() {
         $('#Agregar').addClass('in show');
     }
 
-    const handleChange = event => {
-        console.log(event.target.id + " : " + event.target.value)
-        setState({
-            ...state,
-            [event.target.id]: event.target.value
-        });
-    };
 
-    async function getViajesByFiltro(fechaInicial, fechaFinal, sucursal, estatus) {
-        const url = `${process.env.REACT_APP_API_URL}/Viajes/GetByFiltro/` +
-            fechaInicial + "/" + fechaFinal + "/" + sucursal + "/" + estatus;
-        await axios.get(url, {headers}).then(respuesta => {
-            setData(respuesta.data)
-        })
-        console.log(url)
-    }
 
-    const handleFechaInicialFiltro = async (event) => {
-        setState({
-            ...state,
-            fechaInicial: event.target.value,
-        })
-        await getViajesByFiltro(event.target.value, state.fechaFinal, state.sucursalListado, state.estatusDocumentoListado)
-    }
 
-    const handleFechaFinalFiltro = async (event) => {
-        setState({
-            ...state,
-            fechaFinal: event.target.value,
-        })
-        await getViajesByFiltro(state.fechaInicial, event.target.value, state.sucursalListado, state.estatusDocumentoListado)
-
-    }
-
-    const handleSucursalFiltro = async (event) => {
-        console.log(event.target.value)
-        setState({
-            ...state,
-            sucursalListado: event.target.value,
-        })
-        await getViajesByFiltro(state.fechaInicial, state.fechaFinal, event.target.value, state.estatusDocumentoListado)
-    }
-
-    const handleEstatusFiltro = async (event) => {
-        event.preventDefault()
-        console.log(event.target.value)
-        setState({
-            ...state,
-            estatusListado: event.target.value,
-        })
-        // const url = `${process.env.REACT_APP_API_URL}/Embarques/GetByFiltro/` +
-        //     state.fechaInicial + "/" + state.fechaFinal + "/" + state.sucursalListado + "/" + event.target.value;
-        // await axios.get(url, { headers }).then(respuesta => {
-        //     setData(respuesta.data)
-        // })
-        // console.log(url)
-    }
-
-    const handleEstatusDocumentoFiltro = async (event) => {
-        setState({
-            ...state,
-            estatusDocumentoListado: event.target.value,
-        })
-        await getViajesByFiltro(state.fechaInicial, state.fechaFinal, state.sucursalListado, event.target.value)
-
-    }
 
     const columns = React.useMemo(() => [
         {
@@ -326,18 +234,16 @@ function Viajes() {
                                                                                             style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Generar CFDI">
-                            <a href="#" className="btn btn-default btn-xs"
-                               onClick={() => (generarCFDI(row.row.m_nIdViaje, row.row.m_sFolioViaje))}><i className="zmdi zmdi-file-text"
-                                                                                                            style={{color: "#F9A03E"}}/></a>
+                        {
+                            row.row.EsPermisionario && row.row.m_bUnidadPermisionario &&
+                            <Tooltip title="Descargar XML">
+                                <a href="#" className="btn btn-default btn-xs"
+                                   onClick={() => (descargarXML(row.row.m_nIdViaje, row.row.m_sFolioViaje))}><i className="zmdi zmdi-download"
+                                                                                                                style={{color: "#F9A03E"}}/></a>
 
-                        </Tooltip>
-                        <Tooltip title="Descargar XML">
-                            <a href="#" className="btn btn-default btn-xs"
-                               onClick={() => (descargarXML(row.row.m_nIdViaje, row.row.m_sFolioViaje))}><i className="zmdi zmdi-download"
-                                                                                       style={{color: "#F9A03E"}}/></a>
+                            </Tooltip>
+                        }
 
-                        </Tooltip>
                         <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => (handleEliminar(row.row.m_nIdViaje))}><i className="zmdi zmdi-delete"
@@ -415,7 +321,7 @@ function Viajes() {
             window.location.replace("login");
             return;
         }
-        getInventarioUnidades()
+        //getInventarioUnidades()
     }, []);
 
     function getAllData() {
@@ -444,7 +350,27 @@ function Viajes() {
         })
 
     }
+    function descargarXMLCFDI(id, folio) {
+        obtenerXMLCFDI(id).then(({data}) => {
+            var filename = folio+".xml";
+            var pom = document.createElement('a');
+            var bb = new Blob([data], {type: 'text/plain'});
+            pom.setAttribute('href', window.URL.createObjectURL(bb));
+            pom.setAttribute('download', filename);
 
+            pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
+            pom.draggable = true;
+            pom.classList.add('dragout');
+
+            pom.click();
+        }).catch((error) => {
+            if (error.response){
+                showError(error.response.data)
+            }
+
+        })
+
+    }
     function generarCFDI(id, folio) {
         obtenerCFDI(id).then((result) => {
             obtenerReporteCFDIViaje(id).then(({data}) => {
@@ -453,13 +379,14 @@ function Viajes() {
                 pdfWindow.document.body.style.margin = "0px";
                 pdfWindow.document.title = "CFDI_ " + folio;
             })
+        }).catch((error) => {
+            if (error.response){
+                showError(error.response.data)
+            }
         })
 
     }
 
-
-
-    const headers = API_HEADERS
 
 
     /**DISPONIBILIDAD DE EQUIPO*/
@@ -535,9 +462,6 @@ function Viajes() {
     });
 
 
-    function updateEquipoData(equipo) {
-        //TODO: Integrar servicio de cambiar disponibilidad de equipo
-    }
 
     const showActualizarDispEquipo = (equipo) => {
         setEquipoSelected(equipo)
@@ -552,6 +476,38 @@ function Viajes() {
     /**DETALLE DE PARADAS*/
 
     const columnsParadas = [
+        {
+            headerName: "Acciones",
+            sortable: false, filterable: false,
+            field: "",
+            width: 150,
+            renderCell: (row) => {
+                return (
+                    <div>
+                        {
+                            !viajeSeleccionado.m_bEsPermisionario &&
+                            <Tooltip title="Generar CFDI">
+                                <a href="#" className="btn btn-default btn-xs"
+                                   onClick={() => (generarCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-file-text"
+                                                                                                                                             style={{color: "#F9A03E"}}/></a>
+
+                            </Tooltip>
+                        }
+                        {
+                            !viajeSeleccionado.m_bEsPermisionario &&
+                            <Tooltip title="Descargar XML">
+                                <a href="#" className="btn btn-default btn-xs"
+                                   onClick={() => (descargarXMLCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-download"
+                                                                                                                                                  style={{color: "#F9A03E"}}/></a>
+
+                            </Tooltip>
+                        }
+
+
+                    </div>
+                )
+            }
+        },
         {
             headerName: "Folio Informe",
             field: "m_clsInforme",
@@ -622,13 +578,13 @@ function Viajes() {
             setParadasListado(arrayInformes);
         });
     }
-
+/*
     function getInventarioUnidades() {
         const url = `${process.env.REACT_APP_API_URL}/InventarioUnidades/GetListado`;
         axios.get(url, {headers}).then(({data}) => {
             setEquipoListado(data)
         });
-    }
+    }*/
 
 
     const showSalidaDialog = (data) => {
@@ -798,7 +754,7 @@ function Viajes() {
                 </Dialog>
             }
 
-            <Dialog open={eventOptions.showDispEquipoDialog}
+            {/*<Dialog open={eventOptions.showDispEquipoDialog}
                     onClose={closeActualizarDispEquipo}
                     fullWidth={true}
                     maxWidth={'sm'}>
@@ -814,7 +770,7 @@ function Viajes() {
                         </DialogActions>
                     </ActualizarDiponibilidadEquipo>
                 </DialogContent>
-            </Dialog>
+            </Dialog>*/}
             {
                 paradaData &&
                 <Dialog open={eventOptions.showSalidaParadasDialog}
@@ -950,7 +906,7 @@ function Viajes() {
                                         viajes={true}
                                     />
 
-                                    <div className="row" style={{height: "400px", width: '100%'}}>
+                                    <div className="row" style={{height: "300px", width: '100%'}}>
                                         <DataGrid
                                             localeText={dataGridLocaleText}
                                             rows={data}
@@ -971,15 +927,15 @@ function Viajes() {
                             </div>
                             <div className="row">
 
-
-                                <div className="col-md-6">
+                                <div className="widget-wrap" style={{height: "300px", width: '100%', overflow: "auto"}}>
+                                    <div className="widget-content">
+                                <div className="col-md-12">
                                     <div style={{color: '#717171', marginBottom: "10px", fontSize: "18px"}}>Detalle de
                                         Paradas
                                     </div>
-                                    <div className="widget-wrap">
-                                        <div className="widget-content">
+
                                             <div className="row"
-                                                 style={{height: "400px", width: '100%', overflow: "auto"}}>
+                                                 >
                                                 <List>
                                                     {
                                                         paradasListado.map((p, index) => {
@@ -1057,6 +1013,7 @@ function Viajes() {
                                         </div>
                                     </div>
                                 </div>
+{/*
                                 <div className="col-md-6">
                                     <div style={{
                                         color: '#717171',
@@ -1084,6 +1041,7 @@ function Viajes() {
                                         </div>
                                     </div>
                                 </div>
+*/}
                             </div>
 
                         </div>
@@ -1098,46 +1056,7 @@ function Viajes() {
 
                         </div>
 
-                        <div className="widget-wrap" id="Importar" className="tab-pane fade">
-                            <div className="widget-wrap">
-                                <div className="widget-content">
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <form className="j-forms">
-                                                <div className="form-content">
-                                                    <div className="col-sm-12 col-md-12 unit">
-                                                        <label className="label">
-                                                            Importar
-                                                        </label>
-                                                        <div className="input">
-                                                            <input
-                                                                //onChange={handleUpload}
-                                                                className="form-control"
-                                                                type="file"
-                                                                placeholder="some text"
-                                                                id="importar"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <br></br>
-                                                <div className="form-footer" className="col-md-12">
-                                                    <button className="btn btn-default btn-block ex-noty"
-                                                            data-layout="topCenter" data-type="information">Notificación
-                                                    </button>
-                                                    <button data-layout="topCenter" data-type="information"
-                                                            className="btn btn-secondary secondary-btn"> Cancelar
-                                                    </button>
-                                                    <button onClick={handleAceptar}
-                                                            className="btn btn-primary primary-btn">Aceptar
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
 
                     </div>
                 </div>
