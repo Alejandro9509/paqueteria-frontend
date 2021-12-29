@@ -15,6 +15,7 @@ import {
     Typography, Tooltip, Popper, Paper, FormControl, InputLabel, Select
 } from "@material-ui/core";
 import {confirmAlert} from 'react-confirm-alert'; // Import
+import DescriptionIcon from '@material-ui/icons/Description';
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -34,7 +35,7 @@ import {
     obtenerGuiaUltimaMilla
 } from "../../Util/Contexts/GuiaContext";
 import {
-    eliminarPaqueteUltimaMilla, obtenerUltimaMillaReporte,
+    eliminarPaqueteUltimaMilla, obtenerCFDI, obtenerUltimaMillaReporte,
     ordenarParada,
     remplazarPaqueteUltimaMilla
 } from "../../Util/Contexts/UltimaMillaContext";
@@ -43,7 +44,16 @@ import {obtenerCorteReporte} from "../../Util/Contexts/CorteCajaContext";
 import {InsertDriveFile} from "@material-ui/icons";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 import {actualizarCoordenadasRecoleccion} from "../../Util/Contexts/RecoleccionContext";
+import { obtenerReporteCFDIViaje} from "../../Util/Contexts/ViajesContext";
 
+function showError(mensaje) {
+    new Noty({
+        type: "warning",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "8000"
+    }).show()
+}
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -77,13 +87,15 @@ class DetalleParadas extends Component {
         this.onSubmitOrdenarPaquetes = this.onSubmitOrdenarPaquetes.bind(this)
         this.onSubmitBorrarPaquete = this.onSubmitBorrarPaquete.bind(this)
         this.confirmDeleteParada = this.confirmDeleteParada.bind(this)
-       this.confirmUbicacionParada = this.confirmUbicacionParada.bind(this)
-       this.confirmarUbicacion = this.confirmarUbicacion.bind(this)
+        this.confirmUbicacionParada = this.confirmUbicacionParada.bind(this)
+        this.confirmarUbicacion = this.confirmarUbicacion.bind(this)
+        this.generarCFDI = this.generarCFDI.bind(this)
+
     }
 
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a,b) => +a + b.m_arrClsProGuia.reduce((c,d) => +c + d.m_nEstatusUlimaMilla, 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a,b) => +a + b.m_arrClsProGuia.reduce((c,d) => +c + d.m_nEstatusUlimaMilla, 0), 0)) {
+        if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0)) {
             this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla})
         }
     }
@@ -124,6 +136,22 @@ class DetalleParadas extends Component {
                 }
             ]
         });
+    }
+
+    generarCFDI(id,esRecoleccion, folio) {
+        obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
+            obtenerReporteCFDIViaje(id).then(({data}) => {
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "CFDI_ " + folio;
+            })
+        }).catch((error) => {
+            if (error.response){
+                showError(error.response.data)
+            }
+        })
+
     }
     confirmUbicacionParada(id,esRecoleccion, data) {
         console.log(id)
@@ -567,6 +595,15 @@ class DetalleParadas extends Component {
                                                                                                                 title={"Cambiar ubicación"}>
                                                                                                                 <GpsFixedIcon
                                                                                                                     onClick={() => this.confirmUbicacionParada( g.m_nId, g.m_bEsRecoleccion, g)}
+                                                                                                                    fontSize="default"/>
+                                                                                                            </Tooltip>
+                                                                                                        </IconButton>
+                                                                                                        <IconButton
+                                                                                                            aria-label="delete">
+                                                                                                            <Tooltip
+                                                                                                                title={"Generar CFDI Traslada"}>
+                                                                                                                <DescriptionIcon
+                                                                                                                    onClick={() => this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
                                                                                                                     fontSize="default"/>
                                                                                                             </Tooltip>
                                                                                                         </IconButton>

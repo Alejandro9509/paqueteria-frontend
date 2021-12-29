@@ -2342,8 +2342,8 @@ function Informes({history}) {
                                             <div className="row">
                                                 <SeleccionarRuta
                                                     IdRuta={state.IdRuta}
-                                                    IdOrigen={state.IdCiudadOrigen.m_nIdCiudad}
-                                                    IdDestino={state.IdCiudadDestino.m_nIdCiudad}
+                                                    IdOrigen={state.IdCiudadOrigen ? state.IdCiudadOrigen.m_nIdCiudad : ''}
+                                                    IdDestino={state.IdCiudadDestino ? state.IdCiudadDestino.m_nIdCiudad : ''}
                                                     IdCliente={0}
                                                     disabled={state.agregar === "Consultar"}
                                                     onChangeRuta={handleChangeRuta}

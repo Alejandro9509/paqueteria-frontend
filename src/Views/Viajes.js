@@ -234,15 +234,6 @@ function Viajes() {
                                                                                             style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        {
-                            row.row.EsPermisionario && row.row.m_bUnidadPermisionario &&
-                            <Tooltip title="Descargar XML">
-                                <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarXML(row.row.m_nIdViaje, row.row.m_sFolioViaje))}><i className="zmdi zmdi-download"
-                                                                                                                style={{color: "#F9A03E"}}/></a>
-
-                            </Tooltip>
-                        }
 
                         <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs"
@@ -485,7 +476,17 @@ function Viajes() {
                 return (
                     <div>
                         {
-                            !viajeSeleccionado.m_bEsPermisionario &&
+                            viajeSeleccionado.EsPermisionario && viajeSeleccionado.m_bUnidadPermisionario &&
+                            <Tooltip title="Descargar XML">
+                                <a href="#" className="btn btn-default btn-xs"
+                                   onClick={() => (descargarXML(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-download"
+                                                                                                                style={{color: "#F9A03E"}}/></a>
+
+                            </Tooltip>
+                        }
+
+                        {
+                            !viajeSeleccionado.m_bUnidadPermisionario &&
                             <Tooltip title="Generar CFDI">
                                 <a href="#" className="btn btn-default btn-xs"
                                    onClick={() => (generarCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-file-text"
@@ -494,7 +495,7 @@ function Viajes() {
                             </Tooltip>
                         }
                         {
-                            !viajeSeleccionado.m_bEsPermisionario &&
+                            !viajeSeleccionado.m_bUnidadPermisionario &&
                             <Tooltip title="Descargar XML">
                                 <a href="#" className="btn btn-default btn-xs"
                                    onClick={() => (descargarXMLCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-download"
