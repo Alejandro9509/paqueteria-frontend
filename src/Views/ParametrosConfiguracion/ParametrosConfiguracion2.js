@@ -59,26 +59,21 @@ function ParametrosConfiguracion2() {
     const [dataTipoCambioEmbarque, setTipoCambioEmbarque] = React.useState([])
     const [dataEstatusGuia, setEstatusGuia] = React.useState([])
     const [datatipoTarifa, setTipoTarifa] = React.useState([])
-    const [value, setValue] = React.useState('1');
+    const [tabIndex, setTabIndex] = React.useState('1');
 
 
     //variables de valores por defecto
     const [configuraciones, setConfiguraciones] = React.useState({
-        estatusRecoleccion: 1,
-
-        estatusEmbarque: 15,
-        monedaPredeterminadaEmbarque: 1,
-        tipoCambioEmbarque: 26,
+        estatusRecoleccion: 0,
+        estatusEmbarque: 0,
+        monedaPredeterminadaEmbarque: 0,
+        tipoCambioEmbarque: 0,
         tipoCobroEmbarque: 0,
-
-        estatusGuia: 4,
-
-        tipoTarifa: 1,
+        estatusGuia: 0,
+        tipoTarifa: 0,
         cobroCargaDescarga: false,
-        esCobro: false,
-        costoCita: "",
-
-
+        cobrarCita: false,
+        costoCita: "0",
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -106,9 +101,9 @@ function ParametrosConfiguracion2() {
             TipoCambioEmbarque: configuraciones.tipoCambioEmbarque,
             EstatusGuia: configuraciones.estatusGuia,
             TipoTarifaTarifas: configuraciones.tipoTarifa,
-            CobroCitaTarifas: configuraciones.esCobro ? configuraciones.costoCita : 0,
+            CobroCitaTarifas: configuraciones.cobrarCita ? configuraciones.costoCita : 0,
             CobroCargaDescargaTarifa: configuraciones.cobroCargaDescarga,
-            esCobro: configuraciones.esCobro
+            esCobro: configuraciones.cobrarCita
         }
 
         modificarParametrosConfiguracion(params)
@@ -123,9 +118,7 @@ function ParametrosConfiguracion2() {
     }
 
     const handleTab = (event, newValue) => {
-        console.log(event)
-        console.log(newValue)
-        setValue(newValue);
+        setTabIndex(newValue);
     };
 
     //--------------------------------------------------SERVICIOS--------------------------------------------------------
@@ -176,7 +169,7 @@ function ParametrosConfiguracion2() {
 
                     tipoTarifa: respuesta.data.TipoTarifaTarifas,
                     cobroCargaDescarga: respuesta.data.CobroCargaDescargaTarifa,
-                    esCobro: respuesta.data.esCobro,
+                    cobrarCita: respuesta.data.esCobro,
                     costoCita: respuesta.data.CobroCitaTarifas || 0,
                 }
             })
@@ -213,11 +206,11 @@ function ParametrosConfiguracion2() {
             <aside className="iconic-leftbar">
                 <BarraLateralIzquierda/>
             </aside>
-            <TabContext value={value}>
+            <TabContext value={tabIndex}>
                 <Paper square>
 
                     <Tabs
-                        value={value}
+                        value={tabIndex}
                         indicatorColor="primary"
                         textColor="primary"
                         onChange={handleTab}
@@ -465,18 +458,18 @@ function ParametrosConfiguracion2() {
                                                 </Box>
                                                 <Box width="60%" p={1} my={0.5} display="flex">
                                                     <Checkbox
-                                                        checked={configuraciones.esCobro}
+                                                        checked={configuraciones.cobrarCita}
                                                         onChange={handleChecked}
                                                         color="primary"
                                                         style={{transform: "scale(2)"}}
                                                         inputProps={{'aria-label': 'primary checkbox'}}
-                                                        name="esCobro"
+                                                        name="cobrarCita"
                                                     />
                                                     <TextField variant="outlined" margin="dense"
                                                                label="Costo($) "
                                                                className="form-control"
                                                                type="text"
-                                                               disabled={!configuraciones.esCobro}
+                                                               disabled={!configuraciones.cobrarCita}
                                                                onChange={handleChange}
                                                                value={configuraciones.costoCita}
                                                                name="costoCita"
