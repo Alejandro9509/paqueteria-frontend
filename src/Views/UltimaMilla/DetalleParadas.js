@@ -587,7 +587,7 @@ class DetalleParadas extends Component {
                                                                                                 style={{borderBottom: "none"}}
                                                                                                 align="left">
                                                                                                 {
-                                                                                                    g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 &&
+                                                                                                    true &&
                                                                                                     <ButtonGroup
                                                                                                         size="small"
                                                                                                         disableElevation
