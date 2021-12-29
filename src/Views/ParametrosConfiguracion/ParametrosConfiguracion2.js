@@ -391,8 +391,8 @@ function ParametrosConfiguracion2() {
                                                     >
                                                         {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((cambio) => (
                                                             <option
-                                                                key={cambio.m_nCodigo}
-                                                                value={cambio.m_nCodigo}
+                                                                key={cambio.m_nIdTipoCobro}
+                                                                value={cambio.m_nIdTipoCobro}
                                                             >
                                                                 {cambio.m_sDescripcion}
                                                             </option>
