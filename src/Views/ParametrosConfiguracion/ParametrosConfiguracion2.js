@@ -94,7 +94,7 @@ const [configuraciones, setConfiguraciones] = React.useState({
 
       modificarParametrosConfiguracion(params)
       .then((respuesta) => {
-          showSuccess("Modificado exitosamente");
+          showSuccess(respuesta.data);
           getParametrosConfiguracion()
       })
       .catch((err) => {
