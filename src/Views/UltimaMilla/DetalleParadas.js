@@ -35,7 +35,11 @@ import {
     obtenerGuiaUltimaMilla
 } from "../../Util/Contexts/GuiaContext";
 import {
-    eliminarPaqueteUltimaMilla, obtenerCFDI, obtenerUltimaMillaReporte,
+    eliminarPaqueteUltimaMilla,
+    obtenerCFDI,
+    obtenerReporteCFDIGuia,
+    obtenerReporteCFDIRecoleccion,
+    obtenerUltimaMillaReporte,
     ordenarParada,
     remplazarPaqueteUltimaMilla
 } from "../../Util/Contexts/UltimaMillaContext";
@@ -140,12 +144,23 @@ class DetalleParadas extends Component {
 
     generarCFDI(id,esRecoleccion, folio) {
         obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
-            obtenerReporteCFDIViaje(id).then(({data}) => {
-                let pdfWindow = window.open("");
-                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-                pdfWindow.document.body.style.margin = "0px";
-                pdfWindow.document.title = "CFDI_ " + folio;
-            })
+            if (esRecoleccion){
+                obtenerReporteCFDIRecoleccion(id).then(({data}) => {
+                    console.log(data)
+                    let pdfWindow = window.open("");
+                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                    pdfWindow.document.body.style.margin = "0px";
+                    pdfWindow.document.title = "CFDI_ " + folio;
+                })
+            }else{
+                obtenerReporteCFDIGuia(id).then(({data}) => {
+                    let pdfWindow = window.open("");
+                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                    pdfWindow.document.body.style.margin = "0px";
+                    pdfWindow.document.title = "CFDI_ " + folio;
+                })
+            }
+
         }).catch((error) => {
             if (error.response){
                 showError(error.response.data)

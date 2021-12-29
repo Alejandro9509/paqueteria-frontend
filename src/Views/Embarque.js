@@ -110,6 +110,7 @@ import {obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
 import {obtenerViajesByFiltro} from "../Util/Contexts/ViajesContext";
 import Citas from "./Citas/Citas";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
+import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -616,6 +617,23 @@ function Embarque(props) {
     const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
     const [dataZonasTarifaEntregaDD, setDataZonasTarifaEntregaDD] = useState([])
     const [dataConceptos, setDataConceptos] = useState([])
+    //variables de valores por defecto
+    const [configuraciones, setConfiguraciones] = React.useState({
+        estatusRecoleccion: 0,
+        estatusEmbarque: 0,
+        monedaPredeterminadaEmbarque: 0,
+        tipoCambioEmbarque: 0,
+        estatusGuia: 0,
+        tipoTarifa: 0,
+        cobroCargaDescarga: false,
+        cobrarCita: false,
+        costoCita: "0",
+        detectarTipoCobro: false,
+        tipoCobro:0,
+        limpiarProducto: false,
+        idsTiposCobroSeleccionArray: [],
+        idsTiposCobroSeleccionString: ''
+    })
     const [state, setState] = React.useState({
         //==VARIABLES DE LISTADO==
         idEmbarque: 0,
@@ -740,14 +758,14 @@ function Embarque(props) {
                 folioEmbarque: '',
                 folioGuia: '',
                 folioInforme: '',
-                tipoCambio: '24',
-                tipoCobro: '10',
+                tipoCambio: '',
+                tipoCobro: '',
                 clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
                 idEmbarque: 0,
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 fechaHoraRegistro: getCurrentDateTime(),
-                moneda: 1,
-                estatusEmbarque: 16,
+                moneda: '',
+                estatusEmbarque: 0,
                 valorDeclarado: 0,
                 idTipoSeguro: 5,
                 porcentajeSeguro: 0,
@@ -785,6 +803,22 @@ function Embarque(props) {
         setDataPaquetes([])
         resetEntregaDD()
         setDataConceptos([])
+        setConfiguraciones({
+            estatusRecoleccion: 0,
+            estatusEmbarque: 0,
+            monedaPredeterminadaEmbarque: 0,
+            tipoCambioEmbarque: 0,
+            estatusGuia: 0,
+            tipoTarifa: 0,
+            cobroCargaDescarga: false,
+            cobrarCita: false,
+            costoCita: "0",
+            detectarTipoCobro: false,
+            tipoCobro:0,
+            limpiarProducto: false,
+            idsTiposCobroSeleccionArray: [],
+            idsTiposCobroSeleccionString: ''
+        })
     }
 
     const [remitente, setRemitente] = useState({
@@ -2015,7 +2049,7 @@ function Embarque(props) {
             idTipoSeguro: row.data.m_bTieneSeguro ? row.data.m_nIdTipoSeguro : 5,
             porcentajeSeguro: row.data.m_bTieneSeguro ? row.data.m_cPorcentajeSeguro : 0,
             aplicaSeguro: row.data.m_bTieneSeguro,
-            tipoCobro: row.data.m_bSinCredito ? "10" : "11",
+            tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
             openDialog: false,
         }))
     }
@@ -2047,6 +2081,43 @@ function Embarque(props) {
         getTipoCambio()
         getAllTiposSeguro()
         getAllEstados()
+        getParametrosConfiguracion()
+    }
+
+    async function getParametrosConfiguracion(){
+
+        obtenerParametrosConfiguracion().then(respuesta=>{
+            console.log(respuesta)
+
+            setState((config)=>{
+                return{
+                    ...config,
+                    estatusEmbarque:respuesta.data.EstatusEmbarque,
+                    moneda:respuesta.data.MonedaEmbarque,
+                    tipoCambio:respuesta.data.TipoCambioEmbarque,
+                    tipoCobro: respuesta.data.TipoCobro
+                }
+            })
+            setConfiguraciones((config) => {
+                return {
+                    ...config,
+                    estatusRecoleccion: respuesta.data.EstatusRecoleccion,
+                    estatusEmbarque: respuesta.data.EstatusEmbarque,
+                    monedaPredeterminadaEmbarque: respuesta.data.MonedaEmbarque,
+                    tipoCambioEmbarque: respuesta.data.TipoCambioEmbarque,
+                    estatusGuia: respuesta.data.EstatusGuia,
+                    tipoTarifa: respuesta.data.TipoTarifaTarifas,
+                    cobroCargaDescarga: respuesta.data.CobroCargaDescargaTarifa,
+                    cobrarCita: respuesta.data.esCobro,
+                    costoCita: respuesta.data.CobroCitaTarifas || 0,
+                    detectarTipoCobro: respuesta.data.DetectarTipoCobro,
+                    limpiarProducto: respuesta.data.LimpiarProducto,
+                    tipoCobro: respuesta.data.TipoCobro,
+                    idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
+                    idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
+                }
+            })
+        })
     }
 
     async function getAllEmbarque() {
@@ -2819,6 +2890,15 @@ function Embarque(props) {
             idRuta: idRuta,
         })
     }
+    const handleChangeTipoSeguro = (event) => {
+        setState({
+            ...state,
+            idTipoSeguro: event.target.value,
+            porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
+            aplicaSeguro: (event.target.value === 3) || (event.target.value === 4),
+            valorDeclarado: 0
+        });
+    }
 
     return (
         <div>
@@ -3015,134 +3095,6 @@ function Embarque(props) {
                             </DialogActions>
                         </div>
                     )}
-                    {/*{state.tipoModal === 2 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        history.push("/Operador");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
-
-                            {dataOperador.length != 0 ? (
-                                <TableOperadores
-                                    object={state}
-                                    select={
-                                        state[state.identificadorModal] &&
-                                        state[state.identificadorModal].m_nIdOperador
-                                    }
-                                    columns={columnsOperadores}
-                                    data={dataOperador}
-                                    identificadorModal={state.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}*/}
-                    {/*{state.tipoModal === 3 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        history.push("/TipoUnidad");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
-                            {dataTipoUnidad.length != 0 ? (
-                                <TableTipoUnidad
-                                    object={state}
-                                    select={
-                                        state[state.identificadorModal] &&
-                                        state[state.identificadorModal].m_nIdTipoUnidad
-                                    }
-                                    columns={columnsTipoUnidades}
-                                    data={dataTipoUnidad}
-                                    identificadorModal={state.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}*/}
-                    {/*{state.tipoModal === 4 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        history.push("/Unidades");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
-
-                            {dataUnidad.length != 0 ? (
-                                <TableUnidad
-                                    object={state}
-                                    select={
-                                        state[state.identificadorModal] &&
-                                        state[state.identificadorModal].m_nIdUnidad
-                                    }
-                                    columns={columnsUnidades}
-                                    data={dataUnidad}
-                                    identificadorModal={state.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}*/}
                     {state.tipoModal === 5 && (
                         <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
@@ -3623,8 +3575,7 @@ function Embarque(props) {
                                                                             name: "tipoCobro"
                                                                         }}
                                                                     >
-                                                                        {dataTipoCobro.filter(d => filtrarTipoCobro(d)).map((tipoCobro) => (
-                                                                            tipoCobro.valid &&
+                                                                        {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((tipoCobro) => (
                                                                             <option
                                                                                 key={tipoCobro.m_nIdTipoCobro}
                                                                                 value={tipoCobro.m_nIdTipoCobro}
@@ -3665,15 +3616,7 @@ function Embarque(props) {
                                                                         required
                                                                         label="Tipo seguro"
                                                                         value={state.idTipoSeguro}
-                                                                        onChange={(event) => {
-                                                                            event.preventDefault();
-                                                                            setState({
-                                                                                ...state,
-                                                                                idTipoSeguro: event.target.value,
-                                                                                porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
-                                                                                aplicaSeguro: (event.target.value === 3) || (event.target.value === 4)
-                                                                            });
-                                                                        }}
+                                                                        onChange={handleChangeTipoSeguro}
                                                                         variant="outlined"
                                                                         disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                     >
@@ -3904,105 +3847,6 @@ function Embarque(props) {
                                             </div>
 
 
-                                        {/*<div className="widget-wrap col-md-5" id="paquetesSobres">
-                                            <div className="row">
-                                                <div className="col-md-6">
-                                                    <form className="j-forms">
-                                                        <div className="form-content">
-                                                            <h2>Número de Paquetes</h2>
-
-                                                            <a
-                                                                className="btn"
-                                                                style={{
-                                                                    margin: "5px",
-                                                                    backgroundColor: "#F9A03E",
-                                                                    color: "white",
-                                                                }}
-                                                                onClick={() => removePaquete()}
-                                                                disabled={state.agregar === "Consultar"}
-                                                            >
-                                                                <i className="zmdi zmdi-minus"></i>
-                                                            </a>
-                                                            <input
-                                                                type="number"
-                                                                value={state.paquetes.length}
-                                                                style={{width: "40px", textAlign: "center"}}
-                                                            />
-                                                            <a
-                                                                className="btn"
-                                                                style={{
-                                                                    margin: "5px",
-                                                                    backgroundColor: "#F9A03E",
-                                                                    color: "white",
-                                                                }}
-                                                                onClick={() => addPaquete()}
-                                                                disabled={state.agregar === "Consultar"}
-                                                            >
-                                                                <i className="zmdi zmdi-plus"></i>
-                                                            </a>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <h2>Número de Sobres</h2>
-                                                    <a
-                                                        className="btn"
-                                                        style={{
-                                                            margin: "10px",
-                                                            backgroundColor: "#F9A03E",
-                                                            color: "white",
-                                                        }}
-                                                        onClick={() => removeSobre()}
-                                                        disabled={state.agregar === "Consultar"}
-                                                    >
-                                                        <i className="zmdi zmdi-minus"></i>
-                                                    </a>
-                                                    <input
-                                                        type="number"
-                                                        value={state.sobres.length}
-                                                        style={{width: "40px", textAlign: "center"}}
-                                                    />
-
-                                                    <a
-                                                        className="btn"
-                                                        style={{
-                                                            margin: "10px",
-                                                            backgroundColor: "#F9A03E",
-                                                            color: "white",
-                                                        }}
-                                                        onClick={() => addSobre()}
-                                                        disabled={state.agregar === "Consultar"}
-                                                    >
-                                                        <i className="zmdi zmdi-plus"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-
-                                            <div className="widget-container">
-                                                <div className="widget-content">
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <form className="j-forms">
-                                                                <div className="form-content">
-                                                                    <Carousel
-                                                                        className={classes.paqueteCarrusel}
-                                                                        widgets={[IndicatorDots, Buttons]}
-                                                                        frames={framesPaquete}
-                                                                    ></Carousel>
-                                                                    <h2>Número total de elementos: {totalPaquetes}</h2>
-
-                                                                    <Carousel
-                                                                        className={classes.sobreCarrusel}
-                                                                        widgets={[IndicatorDots, Buttons]}
-                                                                        frames={framesSobre}
-                                                                    ></Carousel>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>*/}
                                     </div>
 
                                     <div className="row">
