@@ -333,6 +333,7 @@ function agregarRuta(idUltimaMilla, tour, data) {
             idUnidad: u.m_nIdUnidad,
             guias: guias.map((g, index) => {
                 var tourReport = tour.tour.tourReports.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
+                var distance = tourReport.legReports[index].distance
                 var reportTime = tourReport.tourEvents.find(t => t.eventTypes[0] === "SERVICE" && g.index === parseInt(t.orderId))
                 var date = new Date(reportTime.startTime)
                 var userTimezoneOffset = date.getTimezoneOffset() * 60000;
@@ -344,6 +345,7 @@ function agregarRuta(idUltimaMilla, tour, data) {
                     lng: g.lng,
                     orden: index + 1,
                     horaEstimada: time,
+                    kilometros:distance/1000,
                     esRecoleccion: g.m_bEsRecoleccion
                 })
             })
@@ -471,8 +473,27 @@ function obtenerCFDI(id,esRecolecion, IdSucursal){
     );
     return result
 }
+
+function obtenerReporteCFDIGuia(id){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIGuia/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
+function obtenerReporteCFDIRecoleccion(id){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIRecoleccion/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
 export {
     obtenerCFDI,
+    obtenerReporteCFDIGuia,
+    obtenerReporteCFDIRecoleccion,
     obtenerUltimaMillaReporte,
     obtenerRutas,
     obtenerGuiasUbicacion,
