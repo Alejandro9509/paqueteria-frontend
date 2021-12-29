@@ -463,8 +463,16 @@ function obtenerUltimaMillaReporte(id) {
     return result
 }
 
-
+function obtenerCFDI(id,esRecolecion, IdSucursal){
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetCFDITraslada/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
 export {
+    obtenerCFDI,
     obtenerUltimaMillaReporte,
     obtenerRutas,
     obtenerGuiasUbicacion,

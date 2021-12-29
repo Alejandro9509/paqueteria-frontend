@@ -382,7 +382,8 @@ class UltimaMilla extends Component {
                                     <DetalleParadas refresh={this.refreshUltimaMilla}
                                                     fecha={this.state.fechaUltimaMilla} filtros={{
                                         zonasSeleccionada: this.state.zonasIds,
-                                        tipoBusqueda: this.state.tipoBusqueda
+                                        tipoBusqueda: this.state.tipoBusqueda,
+                                        idSucursal: this.state.idSucursal
                                     }} tour={this.state.ultimaMilla}/>
                                 }
                                 {/*{*/}
