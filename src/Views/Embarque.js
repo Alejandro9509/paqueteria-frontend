@@ -2819,6 +2819,15 @@ function Embarque(props) {
             idRuta: idRuta,
         })
     }
+    const handleChangeTipoSeguro = (event) => {
+        setState({
+            ...state,
+            idTipoSeguro: event.target.value,
+            porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
+            aplicaSeguro: (event.target.value === 3) || (event.target.value === 4),
+            valorDeclarado: 0
+        });
+    }
 
     return (
         <div>
@@ -3015,134 +3024,6 @@ function Embarque(props) {
                             </DialogActions>
                         </div>
                     )}
-                    {/*{state.tipoModal === 2 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        history.push("/Operador");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
-
-                            {dataOperador.length != 0 ? (
-                                <TableOperadores
-                                    object={state}
-                                    select={
-                                        state[state.identificadorModal] &&
-                                        state[state.identificadorModal].m_nIdOperador
-                                    }
-                                    columns={columnsOperadores}
-                                    data={dataOperador}
-                                    identificadorModal={state.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}*/}
-                    {/*{state.tipoModal === 3 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        history.push("/TipoUnidad");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
-                            {dataTipoUnidad.length != 0 ? (
-                                <TableTipoUnidad
-                                    object={state}
-                                    select={
-                                        state[state.identificadorModal] &&
-                                        state[state.identificadorModal].m_nIdTipoUnidad
-                                    }
-                                    columns={columnsTipoUnidades}
-                                    data={dataTipoUnidad}
-                                    identificadorModal={state.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}*/}
-                    {/*{state.tipoModal === 4 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        history.push("/Unidades");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
-
-                            {dataUnidad.length != 0 ? (
-                                <TableUnidad
-                                    object={state}
-                                    select={
-                                        state[state.identificadorModal] &&
-                                        state[state.identificadorModal].m_nIdUnidad
-                                    }
-                                    columns={columnsUnidades}
-                                    data={dataUnidad}
-                                    identificadorModal={state.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setState({...state, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}*/}
                     {state.tipoModal === 5 && (
                         <div className="row" style={{backgroundColor: "#FFFFFF"}}>
                             <div align="right">
@@ -3665,15 +3546,7 @@ function Embarque(props) {
                                                                         required
                                                                         label="Tipo seguro"
                                                                         value={state.idTipoSeguro}
-                                                                        onChange={(event) => {
-                                                                            event.preventDefault();
-                                                                            setState({
-                                                                                ...state,
-                                                                                idTipoSeguro: event.target.value,
-                                                                                porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
-                                                                                aplicaSeguro: (event.target.value === 3) || (event.target.value === 4)
-                                                                            });
-                                                                        }}
+                                                                        onChange={handleChangeTipoSeguro}
                                                                         variant="outlined"
                                                                         disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                     >
