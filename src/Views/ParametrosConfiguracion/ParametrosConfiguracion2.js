@@ -6,7 +6,7 @@ import {
     Box,
     Button,
     Checkbox,
-    FormControl,
+    FormControl, Grid,
     InputLabel,
     Paper,
     Select,
@@ -30,6 +30,9 @@ import {
 } from "../../Util/Contexts/ParametrosConfiguracionContext";
 import {makeStyles} from '@material-ui/core/styles';
 import {TabContext, TabPanel} from "@material-ui/lab";
+import {DataGrid} from "@material-ui/data-grid";
+import {dataGridLocaleText} from "../../Constants";
+import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
 //-------------------------------------------STYLES---------------------------------------------------------------------
 const useStyles = makeStyles({
     subtitulo: {
@@ -57,9 +60,18 @@ function ParametrosConfiguracion2() {
     const [dataEstatusEmbarque, setEstatusEmbarque] = React.useState([]);
     const [dataMonedaEmbarque, setMonedaEmbarque] = React.useState([])
     const [dataTipoCambioEmbarque, setTipoCambioEmbarque] = React.useState([])
+    const [dataTipoCobro, setTipoCobro] = React.useState([])
     const [dataEstatusGuia, setEstatusGuia] = React.useState([])
     const [datatipoTarifa, setTipoTarifa] = React.useState([])
     const [tabIndex, setTabIndex] = React.useState('1');
+    const [selectionModel, setSelectionModel] = React.useState([]);
+    const columnasTipoCobro = [
+        {
+            headerName: "Descripción",
+            field: 'm_sDescripcion',
+            width: 200,
+        }
+    ]
 
 
     //variables de valores por defecto
@@ -68,12 +80,16 @@ function ParametrosConfiguracion2() {
         estatusEmbarque: 0,
         monedaPredeterminadaEmbarque: 0,
         tipoCambioEmbarque: 0,
-        tipoCobroEmbarque: 0,
         estatusGuia: 0,
         tipoTarifa: 0,
         cobroCargaDescarga: false,
         cobrarCita: false,
         costoCita: "0",
+        detectarTipoCobro: false,
+        tipoCobro:0,
+        limpiarProducto: false,
+        idsTiposCobroSeleccionArray: [],
+        idsTiposCobroSeleccionString: ''
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -101,9 +117,13 @@ function ParametrosConfiguracion2() {
             TipoCambioEmbarque: configuraciones.tipoCambioEmbarque,
             EstatusGuia: configuraciones.estatusGuia,
             TipoTarifaTarifas: configuraciones.tipoTarifa,
-            CobroCitaTarifas: configuraciones.cobrarCita ? configuraciones.costoCita : 0,
+            CostoCitaTarifas: configuraciones.cobrarCita ? configuraciones.costoCita : 0,
             CobroCargaDescargaTarifa: configuraciones.cobroCargaDescarga,
-            esCobro: configuraciones.cobrarCita
+            CobrarCita: configuraciones.cobrarCita,
+            DetectarTipoCobro: configuraciones.detectarTipoCobro,
+            LimpiarProducto: configuraciones.limpiarProducto,
+            TipoCobro: configuraciones.tipoCobro,
+            TiposCobroActivos: configuraciones.idsTiposCobroSeleccionString
         }
 
         modificarParametrosConfiguracion(params)
@@ -117,8 +137,43 @@ function ParametrosConfiguracion2() {
             });
     }
 
+    async function getParametrosConfiguracion() {
+        obtenerParametrosConfiguracion().then(respuesta => {
+            console.log(respuesta)
+            setConfiguraciones((config) => {
+                return {
+                    ...config,
+                    estatusRecoleccion: respuesta.data.EstatusRecoleccion,
+                    estatusEmbarque: respuesta.data.EstatusEmbarque,
+                    monedaPredeterminadaEmbarque: respuesta.data.MonedaEmbarque,
+                    tipoCambioEmbarque: respuesta.data.TipoCambioEmbarque,
+                    estatusGuia: respuesta.data.EstatusGuia,
+                    tipoTarifa: respuesta.data.TipoTarifaTarifas,
+                    cobroCargaDescarga: respuesta.data.CobroCargaDescargaTarifa,
+                    cobrarCita: respuesta.data.esCobro,
+                    costoCita: respuesta.data.CobroCitaTarifas || 0,
+                    detectarTipoCobro: respuesta.data.DetectarTipoCobro,
+                    limpiarProducto: respuesta.data.LimpiarProducto,
+                    tipoCobro: respuesta.data.TipoCobro,
+                    idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
+                    idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
+                }
+            })
+        })
+    }
+
     const handleTab = (event, newValue) => {
         setTabIndex(newValue);
+    };
+
+    const handleTiposCobroSeleccionados = (e) => {
+        setConfiguraciones((config) => {
+            return {
+                ...config,
+                idsTiposCobroSeleccionArray: e.selectionModel,
+                idsTiposCobroSeleccionString: e.selectionModel.join(),
+            }
+        })
     };
 
     //--------------------------------------------------SERVICIOS--------------------------------------------------------
@@ -153,28 +208,13 @@ function ParametrosConfiguracion2() {
         });
     }
 
-    async function getParametrosConfiguracion() {
-        obtenerParametrosConfiguracion().then(respuesta => {
-            console.log(respuesta)
-            setConfiguraciones((config) => {
-                return {
-                    ...config,
-                    estatusRecoleccion: respuesta.data.EstatusRecoleccion,
-                    estatusEmbarque: respuesta.data.EstatusEmbarque,
-                    monedaPredeterminadaEmbarque: respuesta.data.MonedaEmbarque,
-                    tipoCambioEmbarque: respuesta.data.TipoCambioEmbarque,
-                    tipoCobroEmbarque: "",
-
-                    estatusGuia: respuesta.data.EstatusGuia,
-
-                    tipoTarifa: respuesta.data.TipoTarifaTarifas,
-                    cobroCargaDescarga: respuesta.data.CobroCargaDescargaTarifa,
-                    cobrarCita: respuesta.data.esCobro,
-                    costoCita: respuesta.data.CobroCitaTarifas || 0,
-                }
-            })
-        })
+    async function getTipoCobro() {
+        obtenerTipoCobro().then(respuesta => {
+            setTipoCobro(respuesta.data)
+        });
     }
+
+
 
 
 //--------------------------------------------------USE EFFECTS--------------------------------------------------------
@@ -184,6 +224,7 @@ function ParametrosConfiguracion2() {
         getAllEstatusEmbarque()
         getAllTipoMoneda()
         getTipoCambio()
+        getTipoCobro()
         getAllEstatusGuia()
     }, [])
     return (
@@ -278,7 +319,6 @@ function ParametrosConfiguracion2() {
                                                         onChange={handleChange}
                                                         value={configuraciones.monedaPredeterminadaEmbarque}
                                                         id="monedaPredeterminadaEmbarque"
-                                                        name="monedaPredeterminadaEmbarque"
                                                         InputProps={{
                                                             name: "monedaPredeterminadaEmbarque"
                                                         }}
@@ -329,11 +369,89 @@ function ParametrosConfiguracion2() {
                                                 </FormControl>
                                             </Box>
                                         </Box>
-                                        {/* <Box width="40%" bgcolor="grey.500" p={1} my={0.5} display="flex">
-                     <Box width="40%" bgcolor="grey.300" p={1} my={0.5}>
-                        <h2>Tipos de cobro</h2>
-                     </Box>
-                  </Box>*/}
+                                        <Box width="40%" p={1} my={0.5} display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Tipo de cobro por defecto</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5}>
+
+                                                <FormControl fullWidth
+                                                             variant="outlined"
+                                                             required
+                                                             margin="dense">
+                                                    <InputLabel id="tipoCobroLabel">Tipo de Cobro</InputLabel>
+                                                    <Select
+                                                        labelId="tipoCambioLabel"
+                                                        label="Tipo de Cobro"
+                                                        className="form-control"
+                                                        name="tipoCobro"
+                                                        value={configuraciones.tipoCobro}
+                                                        id="tipoCobro"
+                                                        onChange={handleChange}
+                                                    >
+                                                        {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((cambio) => (
+                                                            <option
+                                                                key={cambio.m_nCodigo}
+                                                                value={cambio.m_nCodigo}
+                                                            >
+                                                                {cambio.m_sDescripcion}
+                                                            </option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" p={1} my={0.5} display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <h2>Detectar tipo de cobro de cliente</h2>
+                                            </Box>
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <Checkbox
+                                                    checked={configuraciones.detectarTipoCobro}
+                                                    onChange={handleChecked}
+                                                    color="primary"
+                                                    style={{transform: "scale(2)"}}
+                                                    inputProps={{'aria-label': 'primary checkbox'}}
+                                                    name="detectarTipoCobro"
+                                                />
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" p={1} my={0.5} display="flex">
+                                            <Box width="40%"  p={1} my={0.5}>
+                                                <h2>Tipos de cobro a mostrar</h2>
+                                            </Box>
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div style={{ display: 'flex', height: '100%' }}>
+                                                    <DataGrid
+                                                        localeText={dataGridLocaleText}
+                                                        rows={dataTipoCobro}
+                                                        columns={columnasTipoCobro}
+                                                        density="compact"
+                                                        getRowId={(row) => row.m_nCodigo}
+                                                        checkboxSelection
+                                                        hideFooter
+                                                        autoHeight {...{dataSet:'Commodity', rowLength: 4, maxColumns: 6}}
+                                                        onSelectionModelChange={handleTiposCobroSeleccionados}
+                                                        selectionModel={configuraciones.idsTiposCobroSeleccionArray}
+                                                    />
+                                                </div>
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" p={1} my={0.5} display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <h2>Limpiar producto al crear</h2>
+                                            </Box>
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <Checkbox
+                                                    checked={configuraciones.limpiarProducto}
+                                                    onChange={handleChecked}
+                                                    color="primary"
+                                                    style={{transform: "scale(2)"}}
+                                                    inputProps={{'aria-label': 'primary checkbox'}}
+                                                    name="limpiarProducto"
+                                                />
+                                            </Box>
+                                        </Box>
                                     </Box>
                                     <Box margin={"0 auto"}>
                                         <Button variant="contained" color="primary" style={{width: "100px"}}
