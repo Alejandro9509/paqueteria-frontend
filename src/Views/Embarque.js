@@ -3299,7 +3299,7 @@ function Embarque(props) {
                         <div id="Agregar"
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
 
-                            <form className="j-forms row" onSubmit={handleAceptar}>
+                            <form className="j-forms row" >
                                 <div className="form-content">
                                     <div
                                         className="wizard-breadcrumb number-style"
@@ -4270,8 +4270,8 @@ function Embarque(props) {
                                                         >
                                                             Cancelar
                                                         </button>
-                                                        <button
-                                                            type="submit"
+                                                        <button type={"submit"}
+                                                            onClick={handleAceptar}
                                                             className="btn btn-primary primary-btn"
                                                         >
                                                             Aceptar
