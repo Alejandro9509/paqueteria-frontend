@@ -357,8 +357,8 @@ function Informes({history}) {
         DerechoBorrar: 151,
         EstatusInforme: 5,
         IdViaje: {},
-        sucursalEmisora: null,
-        sucursalReceptora: null,
+        sucursalEmisora: '',
+        sucursalReceptora: '',
         IdOperador: null,
         IdRemolque1: null,
         IdRemolque2: null,
@@ -415,8 +415,8 @@ function Informes({history}) {
                 DerechoBorrar: 151,
                 EstatusInforme: 5,
                 IdViaje: {},
-                sucursalEmisora: null,
-                sucursalReceptora: null,
+                sucursalEmisora: '',
+                sucursalReceptora: '',
                 IdOperador: null,
                 IdRemolque1: null,
                 IdRemolque2: null,
@@ -996,10 +996,11 @@ function Informes({history}) {
             window.location.replace("login");
             return;
         }
-        getAllEstatusInformes();
+       /* getAllEstatusInformes();
         getAllSucursales();
         getAllCiudades();
-        getAllUnidades();
+        getAllUnidades();*/
+        getDataParaEditar()
     }, []);
 
     const getDataParaListado = () => {
@@ -1050,10 +1051,8 @@ function Informes({history}) {
     }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar])
 
     const handleShowListado = () =>{
-        // event.stopPropagation();
         getDataParaListado()
         getEmptyState()
-        setState({...state, agregar: "Agregar"});
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1061,32 +1060,8 @@ function Informes({history}) {
     }
 
     function handleShowAgregar() {
-        /*setState({
-            ...state,
-            /!*agregar: "Agregar",
-            showPopUp: true,
-            IdInforme: 0,
-            IdGrupoUnidad: 0,
-            Codigo: 0,
-            GrupoUnidad: "",
-            Color: "",
-            IdOperador: 0,*!/
-            fechaHora: getCurrentDateTime(),
-            /!*IdCiudadDestino: null,
-            IdCiudadOrigen: null,
-            sucursalEmisora: null,
-            sucursalReceptora: null,
-            IdRemolque1: null,
-            IdRemolque2: null,
-            IdTipoUnidad: {},
-            IdRuta: 0,
-            IdEstatusInforme: "5",
-            PlacasRemolque1: "",
-            PlacasRemolque2: "",
-            PlacasDolly: "",
-            FolioInforme: "",*!/
-        });*/
         getEmptyState()
+        // getDataParaEditar()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1098,30 +1073,10 @@ function Informes({history}) {
         handleShowAgregar()
         obtenerInformesId(id).then(({data}) => {
             data.m_arrClsProGuia.forEach(g => g.select = true)
-            setState({
-                ...state,
-                IdInforme: id,
-                guiasInforme: data.m_arrClsProGuia,
-                fechaHora: getCurrentDateTime(),
-                IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
-                IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadOrigen),
-                //IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
-                sucursalEmisora: data.m_nIdSucursalEmisora,
-                sucursalReceptora: data.m_nIdSucursalReceptora,
-                IdRemolque1: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
-                IdRemolque2: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque2),
-                IdTipoUnidad: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdDolly),
-                IdRuta: 0,
-                IdEstatusInforme: dataEstatusInformes.find(c => c.m_nIdEstatusInforme === data.m_nIdEstatusInforme),
-                PlacasRemolque1: data.m_sPlacasRemolque1,
-                PlacasRemolque2: data.m_sPlacasRemolque2,
-                PlacasDolly: data.m_sPlacasDolly,
-                FolioInforme: data.m_sFolioInforme,
-                EstatusInforme: data.m_nIdEstatusInforme,
-                agregar: "Modificar"
-            });
+            setDataParaModificarConsultar(data,"Modificar")
         });
     }
+
 
     function handleShowConsultar(id) {
         handleShowAgregar()
@@ -1129,12 +1084,19 @@ function Informes({history}) {
             console.log(data.m_arrClsProGuia)
             data.m_arrClsProGuia.forEach(g => g.select = true)
             setDataGuias(data.m_arrClsProGuia)
-            setState({
+            setDataParaModificarConsultar(data, "Consultar")
+        });
+    }
+
+    const setDataParaModificarConsultar = (data,accion) => {
+        setState(state => {
+            return {
                 ...state,
                 fechaHora: getCurrentDateTime(),
+                IdInforme: data.m_nIdInforme,
+                guiasInforme: data.m_arrClsProGuia,
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
-                IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
-                IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
+                IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadOrigen),
                 sucursalEmisora: data.m_nIdSucursalEmisora,
                 sucursalReceptora: data.m_nIdSucursalReceptora,
                 IdRemolque1: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
@@ -1147,9 +1109,8 @@ function Informes({history}) {
                 PlacasDolly: data.m_sPlacasDolly,
                 FolioInforme: data.m_sFolioInforme,
                 EstatusInforme: data.m_nIdEstatusInforme,
-                agregar: "Consultar"
-            });
-
+                agregar: accion
+            }
         });
     }
 
@@ -1177,8 +1138,6 @@ function Informes({history}) {
                 showSuccess(err);
             });
     }
-
-
 
     /**Obtiene el listado inicial de informes*/
     async function getAllData() {
