@@ -102,7 +102,6 @@ function Informes({history}) {
     const classes = useStyles();
     const [stepActive, setStepActive] = React.useState(1);
     const [data, setData] = React.useState([]);
-    const [dataRutas, setDataRutas] = React.useState([]);
     const [guias, setGuias] = React.useState([]);
     const [informes, setInformes] = React.useState([]);
     const [dataSucursal, setDataSucursal] = React.useState([]);
@@ -242,27 +241,12 @@ function Informes({history}) {
         })
     }
 
-    /*function getAllGuias() {
-        obtenerGuia().then((respuesta) => {
-            setGuias(respuesta.data);
-        });
-    }
-
-    function handleSelectViaje(event) {
-        event.preventDefault()
-        state.ruta2 = state.viaje.m_sRuta;
-        state.operador2 = state.viaje.m_sNombreCompletoOperador;
-        state.unidad2 = state.viaje.m_sTipoUnidad;
-        state.remolque2 = state.viaje.m_sDescripcionUnidad;
-    }*/
-
     function handleSelectDatos(id, cp) {
         setState({
             ...state,
             [state.identificadorModal]: id,
         });
     }
-
 
     const columnsCiudades = React.useMemo(() => [
         {
@@ -519,12 +503,6 @@ function Informes({history}) {
                 });
         }
     };
-/*
-    function getFormatosImpresion() {
-        obtenerFormatosImpresion().then(respuesta => {
-            setFormatosImpresion(respuesta.data)
-        });
-    };*/
 
     function showAgregarFromCubicar(index) {
         setState({
@@ -943,9 +921,6 @@ function Informes({history}) {
                         let arr = []
                         arr = arr.concat(state.guiasInforme)
                         arr = arr.concat(respuesta.data)
-                        // respuesta.data = respuesta.data.concat(state.guiasInforme)
-                        // console.log(state.guiasInforme)
-                        // setDataGuias(respuesta.data);
                         setDataGuias(arr);
                     }else {
                         setDataGuias(respuesta.data);
@@ -996,10 +971,6 @@ function Informes({history}) {
             window.location.replace("login");
             return;
         }
-       /* getAllEstatusInformes();
-        getAllSucursales();
-        getAllCiudades();
-        getAllUnidades();*/
         getDataParaEditar()
     }, []);
 
@@ -1061,7 +1032,6 @@ function Informes({history}) {
 
     function handleShowAgregar() {
         getEmptyState()
-        // getDataParaEditar()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1186,13 +1156,6 @@ function Informes({history}) {
 
     const todasGuiasSeleccionadas = () => {
         return dataGuias.length === dataGuias.filter((g) => g.select).length
-    }
-
-    const handleChangeRuta = (idRuta) => {
-        setState( {
-            ...state,
-            IdRuta: idRuta,
-        })
     }
 
     return (
