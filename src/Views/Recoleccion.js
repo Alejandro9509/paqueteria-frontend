@@ -172,6 +172,23 @@ function Recoleccion() {
     const [dataOperador, setDataOperador] = React.useState([]);
     const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
     const [dataUnidad, setDataUnidad] = React.useState([]);
+    //variables de valores por defecto
+    const [configuraciones, setConfiguraciones] = React.useState({
+        estatusRecoleccion: 0,
+        estatusEmbarque: 0,
+        monedaPredeterminadaEmbarque: 0,
+        tipoCambioEmbarque: 0,
+        estatusGuia: 0,
+        tipoTarifa: 0,
+        cobroCargaDescarga: false,
+        cobrarCita: false,
+        costoCita: "0",
+        detectarTipoCobro: false,
+        tipoCobro:0,
+        limpiarProducto: false,
+        idsTiposCobroSeleccionArray: [],
+        idsTiposCobroSeleccionString: ''
+    })
     const [state, setState] = React.useState({
         // ===VARIABLES DE LISTADO===
         idRecoleccion: 0,
@@ -687,19 +704,40 @@ function Recoleccion() {
         getAllEstatusRecoleccion()
         
     }
-    async function getParametrosConfiguracion(){
-        obtenerParametrosConfiguracion().then(respuesta=>{
-          console.log(respuesta)
-          setState((config)=>{
-            return{
-              ...config,
-              estatusRecoleccion:respuesta.data.EstatusRecoleccion, 
-              moneda:respuesta.data.MonedaEmbarque,
-              tipoCambio:respuesta.data.TipoCambioEmbarque
-                   }
-          })
+
+    async function getParametrosConfiguracion() {
+        obtenerParametrosConfiguracion().then(respuesta => {
+            console.log(respuesta)
+            setState((config) => {
+                return {
+                    ...config,
+                    estatusRecoleccion: respuesta.data.EstatusRecoleccion,
+                    moneda: respuesta.data.MonedaEmbarque,
+                    tipoCambio: respuesta.data.TipoCambioEmbarque,
+                    tipoCobro: respuesta.data.TipoCobro
+                }
+            })
+            setConfiguraciones((config) => {
+                return {
+                    ...config,
+                    estatusRecoleccion: respuesta.data.EstatusRecoleccion,
+                    estatusEmbarque: respuesta.data.EstatusEmbarque,
+                    monedaPredeterminadaEmbarque: respuesta.data.MonedaEmbarque,
+                    tipoCambioEmbarque: respuesta.data.TipoCambioEmbarque,
+                    estatusGuia: respuesta.data.EstatusGuia,
+                    tipoTarifa: respuesta.data.TipoTarifaTarifas,
+                    cobroCargaDescarga: respuesta.data.CobroCargaDescargaTarifa,
+                    cobrarCita: respuesta.data.esCobro,
+                    costoCita: respuesta.data.CobroCitaTarifas || 0,
+                    detectarTipoCobro: respuesta.data.DetectarTipoCobro,
+                    limpiarProducto: respuesta.data.LimpiarProducto,
+                    tipoCobro: respuesta.data.TipoCobro,
+                    idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
+                    idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
+                }
+            })
         })
-      }
+    }
     const handleClickRemitenteDestinatario = (event) => {
         event.preventDefault()
         if (dataRemitenteDestinatario.length === 0) {
@@ -3513,8 +3551,7 @@ function Recoleccion() {
                                                                             name: "tipoCobro"
                                                                         }}
                                                                     >
-                                                                        {dataTipoCobro.filter(d => filtrarTipoCobro(d)).map((tipoCobro) => (
-                                                                            tipoCobro.valid &&
+                                                                        {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((tipoCobro) => (
                                                                             <option
                                                                                 key={tipoCobro.m_nIdTipoCobro}
                                                                                 value={tipoCobro.m_nIdTipoCobro}
