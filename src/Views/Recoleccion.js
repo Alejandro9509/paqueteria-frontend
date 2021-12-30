@@ -702,21 +702,24 @@ function Recoleccion() {
         getAllTiposSeguro()
         getAllEstados()
         getAllEstatusRecoleccion()
+        getParametrosConfiguracion()
         
     }
 
     async function getParametrosConfiguracion() {
         obtenerParametrosConfiguracion().then(respuesta => {
             console.log(respuesta)
-            setState((config) => {
-                return {
-                    ...config,
-                    estatusRecoleccion: respuesta.data.EstatusRecoleccion,
-                    moneda: respuesta.data.MonedaEmbarque,
-                    tipoCambio: respuesta.data.TipoCambioEmbarque,
-                    tipoCobro: respuesta.data.TipoCobro
-                }
-            })
+            if (state.agregar === "Agregar"){
+                setState((config) => {
+                    return {
+                        ...config,
+                        estatusRecoleccion: respuesta.data.EstatusRecoleccion,
+                        moneda: respuesta.data.MonedaEmbarque,
+                        tipoCambio: respuesta.data.TipoCambioEmbarque,
+                        tipoCobro: respuesta.data.TipoCobro
+                    }
+                })
+            }
             setConfiguraciones((config) => {
                 return {
                     ...config,
@@ -1102,7 +1105,6 @@ function Recoleccion() {
 
     function handleShowModificar(id) {
         setIsModificar(true);
-        getDataParaEditar()
         obtenerRecoleccionId(id).then((respuesta) => {
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(1).addClass('active');
@@ -1124,7 +1126,6 @@ function Recoleccion() {
 
     function handleShowConsultar(id) {
         setIsAgregar(false);
-        getDataParaEditar()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1398,7 +1399,6 @@ function Recoleccion() {
         setIsAgregar(false);
         event.stopPropagation()
         getDataParaEditar()
-        getParametrosConfiguracion()
         limpiarInputsAgregar()
         setState(state => {
             return {
