@@ -37,7 +37,7 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
-function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null}) {
+function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,LimpiarProducto = false}) {
     const [openDialog, setOpenDialog] = useState(false)
     const [row, setRow] = useState(0)
     const [dataComplemento, setDataComplemento] = useState({
@@ -525,6 +525,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null}) {
                     paquete={paquete}
                     resetPaquete={resetPaquete}
                     cliente={cliente}
+                    LimpiarProducto={LimpiarProducto}
                 />
             </div>
 

@@ -23,17 +23,12 @@ export default function DialogoNuevoPaquete(props) {
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
     const [dataProductos, setDataProductos] = useState([])
     const [state, setState] = useState({
-        impuestos: [],
-        ivaTraslada: [],
-        ivaRetiene: [],
-        tiposCalculo: [],
-        columns: [],
-        aplicaDescuento: false,
-        aplicarDescuentoA: 'Concepto',
+        agregarMas: false
     })
 
     const [paquete, setPaquete] = useState({
         m_nIdPaquete: Math.floor(Math.random() * 10000),
+        producto: null,
         m_rPeso: "",
         m_rLargo: "",
         m_rAncho: "",
@@ -55,7 +50,7 @@ export default function DialogoNuevoPaquete(props) {
         setPaquete(paquete => {
             return {
                 ...paquete,
-                producto: null,
+                producto: props.LimpiarProducto ? null : paquete.producto,
                 m_nIdPaquete: Math.floor(Math.random() * 10000),
                 m_rPeso: "",
                 m_rLargo: "",
@@ -68,7 +63,7 @@ export default function DialogoNuevoPaquete(props) {
                 m_sObservaciones: "",
                 m_cyValorDeclarado: "0",
                 m_nIdTipo: 2,
-                m_nIdProducto:'',
+                m_nIdProducto: props.LimpiarProducto ? '' : paquete.m_nIdProducto,
                 m_sTipo: "Paquete",
                 m_sClaveSATProducto:'',
                 m_sClaveSATUnidad:'',
@@ -96,10 +91,17 @@ export default function DialogoNuevoPaquete(props) {
     const handleAceptar = (e) => {
         e.preventDefault()
         if (paquete.producto !== null){
-            handleClose()
-            console.log(paquete)
-            props.agregar(paquete)
-            resetPaquete()
+            if (state.agregarMas){
+                console.log(paquete)
+                props.agregar(paquete)
+                resetPaquete()
+            }else{
+                handleClose()
+                console.log(paquete)
+                props.agregar(paquete)
+                resetPaquete()
+            }
+
         }
 
     }
@@ -203,6 +205,15 @@ export default function DialogoNuevoPaquete(props) {
                 }
             })
         }
+    };
+
+    const handleChecked = (event) => {
+        setState((state) => {
+            return {
+                ...state,
+                [event.target.name]: event.target.checked
+            }
+        });
     };
 
     const handleClickProducto = () => {
@@ -427,14 +438,23 @@ export default function DialogoNuevoPaquete(props) {
                                 </div>
                             </Grid>
                             }
-                            {/*<Grid item xs={1}>
-                                <IconButton onClick={addPaquetev2} style={{padding: "0px"}} disabled={props.disabled}>
-                                    <AddBoxIcon style={{fill: "green", fontSize: "xx-large"}}/>
-                                </IconButton>
-                                <IconButton onClick={removePaquetev2} style={{padding: "0px"}} disabled={props.disabled}>
-                                    <DeleteIcon style={{fill: "red", fontSize: "xx-large"}}/>
-                                </IconButton>
-                            </Grid>*/}
+                            <Grid item xs={12}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={state.agregarMas}
+                                            onChange={handleChecked}
+                                            color="primary"
+                                            style={{transform: "scale(1.5)"}}
+                                            inputProps={{'aria-label': 'primary checkbox'}}
+                                            name="agregarMas"
+                                        />
+                                    }
+                                    label="Agregar más paquetes"
+                                    labelPlacement="end"
+                                />
+
+                            </Grid>
                         </Grid>
 
                     </DialogContent>
