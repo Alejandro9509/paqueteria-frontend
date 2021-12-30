@@ -1436,7 +1436,6 @@ function Embarque(props) {
     //Se checa si se entró a embarque por una recoleccion
     useEffect(async (value) => {
         if (props.location.idRecoleccion !== undefined) {
-        // getDataParaEditar()
         obtenerRecoleccionId(props.location.idRecoleccion)
             .then((respuesta) => {
                 console.log('Recoleccion: ', respuesta.data);
@@ -2088,16 +2087,17 @@ function Embarque(props) {
 
         obtenerParametrosConfiguracion().then(respuesta=>{
             console.log(respuesta)
-
-            setState((config)=>{
-                return{
-                    ...config,
-                    estatusEmbarque:respuesta.data.EstatusEmbarque,
-                    moneda:respuesta.data.MonedaEmbarque,
-                    tipoCambio:respuesta.data.TipoCambioEmbarque,
-                    tipoCobro: respuesta.data.TipoCobro
-                }
-            })
+            if (state.agregar === "Agregar") {
+                setState((config) => {
+                    return {
+                        ...config,
+                        estatusEmbarque: respuesta.data.EstatusEmbarque,
+                        moneda: respuesta.data.MonedaEmbarque,
+                        tipoCambio: respuesta.data.TipoCambioEmbarque,
+                        tipoCobro: respuesta.data.TipoCobro
+                    }
+                })
+            }
             setConfiguraciones((config) => {
                 return {
                     ...config,
