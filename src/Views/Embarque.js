@@ -3679,6 +3679,9 @@ function Embarque(props) {
                                     </div>
 
                                     <div className="widget-wrap" id="paquetesSobres">
+                                        <div className="widget-header">
+                                            <h2>Paquetes</h2>
+                                        </div>
                                         <Paquetes
                                             dataPaquetes={dataPaquetes}
                                             onChangeList={handleListPaquetesChange}

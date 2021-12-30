@@ -26,6 +26,7 @@ import {
     obtenerSATServicios,
     obtenerSATUnidades,
 } from "../../Util/Contexts/ConceptosFacturacionContext";
+import DialogoNuevoPaquete from "./DialogoNuevoPaquete";
 const headers = API_HEADERS
 
 function showSuccess(mensaje) {
@@ -53,90 +54,51 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null}) {
 
     function RowMenuCell(props) {
         const { api, id } = props;
-        setRow(id);
 
         const handleDeleteClick = (event) => {
-          event.stopPropagation();
-          console.log("id==>", id);
-          let row = dataPaquetes.filter((p) => p.m_nIdPaquete == id)[0];
-          console.log(row);
-          handlePaqueteClick(row);
-          // api.updateRows([{ id, _action: 'delete' }]);
+            event.stopPropagation();
+            console.log()
+            let row = dataPaquetes.find((p) => p.m_nIdPaquete === id);
+            console.log(row)
+            if (row){
+                handleDelete(row);
+            }
+
         };
 
-        const handleOpenClick = (event) => {
-          event.stopPropagation();
-            if (dataSAT.length === 0 ) {
-                getAllSATServicios()
-            }
-            if (dataSATUnidades.length === 0 ) {
-                getAllSATUnidades()
-            }
-            if (dataSATEmbalajes.length === 0 ) {
-                getAllSATEmbalajes()
+        const handleEditClick = (event) => {
+            event.stopPropagation();
+            let row = dataPaquetes.find((p) => p.m_nIdPaquete === id);
+            console.log(row)
+            if (row){
+                handleEdit(row);
             }
 
-          let row = dataPaquetes.filter((p) => p.m_nIdPaquete == id)[0];
-            setDataComplemento({
-                claveProducto: row.m_nClaveSATProducto||'',
-                claveUnidad: row.m_nClaveSATUnidad||'',
-                UnidadSAT: row.m_sUnidadSAT||'',
-                ProductoSAT: row.m_sProductoSAT||'',
-                embalajeSAT: row.m_sEmbalajeSAT||'',
-                claveEmbalaje:row.m_sClaveEmbalaje||''
-            });
-          console.log(row);
-          setOpenDialog(true);
         };
 
         return (
           <div>
-            {/*<IconButton
-              color="primary"
-              size="small"
-              aria-label="save"
-              onClick={handleOpenClick}
-            >
-              <SaveIcon fontSize="large" />
-            </IconButton>*/}
-            <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
-              <EditIcon fontSize="large" />
-            </IconButton>
+              <IconButton color="inherit" size="small" aria-label="delete" onClick={handleEditClick}>
+                  <EditIcon fontSize="large"/>
+              </IconButton>
+              <IconButton color="inherit" size="small" aria-label="delete" onClick={handleDeleteClick}>
+                  <DeleteIcon fontSize="large"/>
+              </IconButton>
           </div>
         );
     }
 
-    function RowMenuCellConsulta(props) {
-        const { api, id } = props;
-        setRow(id);
+    const handleEdit = (data) =>{
+        if(!disabled){
+            console.log(data)
+            setPaquete(data)
+        }
+    }
 
-        const handleOpenClick = (event) => {
-          event.stopPropagation();
-          let row = dataPaquetes.filter((p) => p.m_nIdPaquete == id)[0];
-          console.log(row);
-            setDataComplemento({
-                claveProducto: row.m_sClaveSATProducto,
-                claveUnidad: row.m_sClaveSATUnidad,
-                UnidadSAT: row.m_nUnidadSAT,
-                ProductoSAT: row.m_nProductoSAT,
-                embalajeSAT:row.m_sEmbalajeSAT,
-                claveEmbalaje:row.m_sClaveEmbalaje
-            });
-
-          setOpenDialog(true);
-        };
-        return (
-          <div>
-            {/*<IconButton
-              color="primary"
-              size="small"
-              aria-label="save"
-              onClick={handleOpenClick}
-            >
-              <SaveIcon fontSize="large" />
-            </IconButton>*/}
-          </div>
-        );
+    const handleDelete = (data) =>{
+        if(!disabled){
+            onChangeList(dataPaquetes.filter((i) => i.m_nIdPaquete != data.m_nIdPaquete))
+        }
     }
 
     const columnsPaquetes = React.useMemo(() => [
@@ -229,95 +191,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null}) {
         }
     ]);
 
-    const columnsPaquetesConsulta = React.useMemo(() => [
-        {
-            headerName: "Tipo",
-            field: "m_sTipo",
-            minWidth: 100,
-            width: 100,
-        },
-        {
-            headerName: "Producto",
-            field: "m_sProducto",
-            flex: 1,
-        },
-        {
-            headerName: "Largo",
-            field: "m_rLargo",
-            type:'number',
-            valueFormatter: ({ value }) => `${value}cm`,
-            width: 90,
-        },
-        {
-            headerName: "Ancho",
-            field: "m_rAncho",
-            type:'number',
-            valueFormatter: ({ value }) => `${value}cm`,
-            width: 90,
-        },
-        {
-            headerName: "Alto",
-            field: "m_rAlto",
-            type:'number',
-            valueFormatter: ({ value }) => `${value}cm`,
-            width: 90,
-        },
-        {
-            headerName: "Peso",
-            field: "m_rPeso",
-            type:'number',
-            valueFormatter: ({ value }) => `${value}kg`,
-            width: 90,
-        },
-        {
-            headerName: "Volumen",
-            field: "m_rVolumen",
-            type:'number',
-            valueFormatter: ({ value }) => `${value}cm3`,
-            width: 120,
-        },
-        {
-            headerName: "Embalaje",
-            field: "m_sTipoEmbalaje",
-            width: 130,
-        },
-        /*{
-            headerName: "Valor",
-            field: "m_cyValorDeclarado",
-            type:'number',
-            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
-            width: 90,
-        },*/
-        {
-            headerName: "Descripcion",
-            field: "m_sDescripcion",
-            flex: 1,
-        },
-        {
-            headerName: "Cantidad",
-            field: "m_nCantidad",
-            type:'number',
-            valueFormatter: ({ value }) => `${value}pz`,
-            width: 90,
-        },
-        {
-            headerName: "Observaciones",
-            field: "m_sObservaciones",
-            flex: 1,
-        },
-        {
-            field: 'complementos',
-            headerName: 'Complementos',
-            renderCell: RowMenuCellConsulta,
-            sortable: false,
-            width: 90,
-            headerAlign: 'center',
-            filterable: false,
-            align: 'center',
-            disableColumnMenu: true,
-            disableReorder: true,
-        }
-    ]);
     const currencyFormatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -325,6 +198,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null}) {
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
     const [dataProductos, setDataProductos] = useState([])
     const [paquete, setPaquete] = useState({
+        producto:null,
         m_nIdPaquete: 0,
         m_rPeso: "",
         m_rLargo: "",
@@ -387,23 +261,36 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null}) {
         }
     }
 
-    const addPaquetev2 = (event) => {
-        event.preventDefault()
-        event.stopPropagation()
-        console.log(paquete)
-        let paq = paquete
-        if (validarPaquetes(paq)){
+    const addPaquetev2 = (data) => {
+
+        console.log(data)
+        let paq = data
+        /*if (validarPaquetes(paq)){
             paq.m_nIdPaquete = paq.m_nIdPaquete != 0 ? paq.m_nIdPaquete : dataPaquetes.length + 1
-            /*paq.m_cyValorDeclarado = paq.m_cyValorDeclarado ? paq.m_cyValorDeclarado : 0
+            /!*paq.m_cyValorDeclarado = paq.m_cyValorDeclarado ? paq.m_cyValorDeclarado : 0
             if (paq.m_cyValorDeclarado === 0 && tieneSeguro){
                 showSuccess("El campo de valor declarado es necesario para el seguro.")
                 return
-            }*/
-            dataPaquetes.push(paq);
-            resetPaquete()
+            }*!/
 
-            onChangeList(dataPaquetes)
+        }*/
+        const arraynew = []
+        if (dataPaquetes.find(item => item.m_nIdPaquete === data.m_nIdPaquete)){
+            dataPaquetes.forEach(item => {
+                if (item.m_nIdPaquete === data.m_nIdPaquete){
+                    item = data
+                }
+                arraynew.push(item)
+            })
+        }else{
+            dataPaquetes.push(paq);
+            dataPaquetes.forEach(item => {
+                arraynew.push(item)
+            })
         }
+        /*dataPaquetes.push(paq);
+        resetPaquete()*/
+        onChangeList(arraynew)
     }
 
     const removePaquetev2 = (event) => {
@@ -631,32 +518,20 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null}) {
 
     return(
         <div>
-            <Dialog open={openDialog} fullWidth maxWidth="lg" >
-                <DialogTitle>Complemeto Carta Porte</DialogTitle>
-                <DialogContent>
-                    {
-                        openDialog &&
-                        <CrearConcepto handleAceptar={handleAceptar} dialogVisible={dialogVisible} consulta={disabled}
-                                       dataComplemento={dataComplemento} dataSAT={dataSAT}
-                                       dataSATUnidades={dataSATUnidades}
-                                       dataSATEmbalajes={dataSATEmbalajes}
-                                       onChangeData={handleChangeComplementoSat}
-                        />
-
-                    }
-                </DialogContent>
-            </Dialog>
-            <Grid container>
-                <Grid item xs={6}>
-                    <div className="widget-header">
-                        <h2>Paquetes y sobres</h2>
-                    </div>
-                </Grid>
-            </Grid>
+            <div className="row">
+                <DialogoNuevoPaquete
+                    disabled={disabled || !cliente.m_nIdCliente}
+                    agregar={addPaquetev2}
+                    paquete={paquete}
+                    resetPaquete={resetPaquete}
+                    cliente={cliente}
+                />
+            </div>
 
             <div className="widget-container">
                 <div className="widget-content">
-                    { !disabled &&
+
+                    {/*{ !disabled &&
                         <div className="row">
                             <Grid container spacing={1}>
                                 <Grid item xs={2}>
@@ -818,22 +693,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null}) {
                                     </label>
                                 </Grid>
                                 }
-                                {/*{paquete.m_nIdTipo != 1 &&
-                            <Grid item xs={2}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
-                                               onChange={(event) => handleChangePaquetev2(event)}
-                                               className="form-control"
-                                               type="text"
-                                               label="Valor Declarado"
-                                               value={paquete.m_cyValorDeclarado}
-                                               disabled={disabled}
-                                               placeholder="$"
-                                               name="m_cyValorDeclarado"
-                                    />
-                                </div>
-                            </Grid>
-                            }*/}
                                 <Grid item xs={5}>
                                     <div className="input">
                                         <TextField variant="outlined" margin="dense"
@@ -890,31 +749,21 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null}) {
                                 </Grid>
                             </Grid>
                         </div>
-                    }
+                    }*/}
 
                     {
                         dataPaquetes.length !== 0 &&
                         (
-                        !disabled ?  <div className="row" style={{ height: 200, width: "100%"}}>
-                        <DataGrid
-                        localeText={dataGridLocaleText}
-                        density="compact"
-                        pageSize={10}
-                        columns={columnsPaquetes}
-                        rows={dataPaquetes}
-                        getRowId={(row) => row.m_nIdPaquete}
-                        />
-                        </div> : <div className="row" style={{ height: 200, width: "100%"}}>
-                        <DataGrid
-                        localeText={dataGridLocaleText}
-                        density="compact"
-                        pageSize={10}
-                        columns={columnsPaquetesConsulta}
-                        rows={dataPaquetes}
-                        getRowId={(row) => row.m_nIdPaquete}
-                        />
-
-                        </div>
+                            <div className="row" style={{height: 200, width: "100%"}}>
+                                <DataGrid
+                                    localeText={dataGridLocaleText}
+                                    density="compact"
+                                    pageSize={10}
+                                    columns={columnsPaquetes}
+                                    rows={dataPaquetes}
+                                    getRowId={(row) => row.m_nIdPaquete}
+                                />
+                            </div>
                         )
 
                     }
