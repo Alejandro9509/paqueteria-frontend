@@ -13,9 +13,15 @@ import IconButton from "@material-ui/core/IconButton";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import {obtenerImpuestosByConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
+import AddBoxIcon from "@material-ui/icons/AddBox";
+import DeleteIcon from "@material-ui/icons/Delete";
+import {obtenerEmbalajes} from "../../Util/Contexts/EmbalajesContext";
+import {obtenerProductos, obtenerProductosByConvenioCliente} from "../../Util/Contexts/ProductosContext";
 
 export default function DialogoNuevoPaquete(props) {
     const [open, setOpen] = React.useState(false);
+    const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
+    const [dataProductos, setDataProductos] = useState([])
     const [state, setState] = useState({
         impuestos: [],
         ivaTraslada: [],
@@ -25,56 +31,58 @@ export default function DialogoNuevoPaquete(props) {
         aplicaDescuento: false,
         aplicarDescuentoA: 'Concepto',
     })
-    const [concepto, setConcepto] = useState({
-        id:Math.floor(Math.random() * 10000),
-        concepto: null,
-        idConcepto: 0,
-        importe: 0,
-        importeInicial: 0,
-        nombreConcepto: "",
-        importeRet: "0",
-        retiene: 0,
-        traslada: 0,
-        importeIVA: "0",
-        rangoMinimo: 0,
-        rangoMaximo: 0,
-        tipoCalculo: 0,
-        tipoMedida: 0,
-        descuento: 0,
-        agregadoDesde: props.keys
+
+    const [paquete, setPaquete] = useState({
+        m_nIdPaquete: Math.floor(Math.random() * 10000),
+        m_rPeso: "",
+        m_rLargo: "",
+        m_rAncho: "",
+        m_rAlto: "",
+        m_rVolumen: "",
+        m_nIdTipoEmbalaje: "",
+        m_sDescripcion: "",
+        m_nCantidad: "",
+        m_sObservaciones: "",
+        m_cyValorDeclarado: "0",
+        m_nIdTipo: 2,
+        m_nIdProducto:'',
+        m_sTipo: "Paquete",
+        m_sClaveSATProducto:'',
+        m_sClaveSATUnidad:'',
     })
 
     const resetPaquete = () =>{
-        setConcepto(concepto => {
+        setPaquete(paquete => {
             return {
-                ...concepto,
-                id:Math.floor(Math.random() * 10000),
-                concepto: null,
-                idConcepto: 0,
-                importe: 0,
-                importeInicial: 0,
-                nombreConcepto: "",
-                importeRet: "0",
-                retiene: 0,
-                traslada: 0,
-                importeIVA: "0",
-                rangoMinimo: 0,
-                rangoMaximo: 0,
-                tipoCalculo: 0,
-                tipoMedida: 0,
-                descuento: 0,
-                agregadoDesde: props.keys
+                ...paquete,
+                producto: null,
+                m_nIdPaquete: Math.floor(Math.random() * 10000),
+                m_rPeso: "",
+                m_rLargo: "",
+                m_rAncho: "",
+                m_rAlto: "",
+                m_rVolumen: "",
+                m_nIdTipoEmbalaje: "",
+                m_sDescripcion: "",
+                m_nCantidad: "",
+                m_sObservaciones: "",
+                m_cyValorDeclarado: "0",
+                m_nIdTipo: 2,
+                m_nIdProducto:'',
+                m_sTipo: "Paquete",
+                m_sClaveSATProducto:'',
+                m_sClaveSATUnidad:'',
             }
         })
         props.resetPaquete()
     }
 
     useEffect(() => {
-        if (props.concepto.idConcepto !== 0){
-            setConcepto(props.concepto)
+        if (props.paquete.m_nIdPaquete !== 0){
+            setPaquete(props.paquete)
             setOpen(true);
         }
-    }, [props.concepto])
+    }, [props.paquete])
 
     const handleClickOpen = () => {
         resetPaquete()
@@ -85,11 +93,12 @@ export default function DialogoNuevoPaquete(props) {
         setOpen(false);
     };
 
-    const handleAceptar = () => {
-        if (concepto.concepto !== null){
+    const handleAceptar = (e) => {
+        e.preventDefault()
+        if (paquete.producto !== null){
             handleClose()
-            console.log(concepto)
-            props.agregarConcepto(concepto)
+            console.log(paquete)
+            props.agregar(paquete)
             resetPaquete()
         }
 
@@ -100,283 +109,332 @@ export default function DialogoNuevoPaquete(props) {
         handleClose()
     }
 
-
-
     useEffect(value => {
-        if (state.impuestos.length === 0 ){
-            getAllImpuestos()
-        }
-        /*if (state.tiposCalculo.length === 0 ){
-            getAlTiposCalculo()
-        }*/
+        getAllEmbalajes()
     }, [])
 
-    const getAllImpuestos = () => {
-        obtenerImpuestos().then(respuesta => {
-            setState(state =>{
-                return { ...state, impuestos: respuesta.data }
-            })
-        });
-    };
+    useEffect(value => {
+        if (props.cliente !== null){
+            getProductosByConvenioCliente()
+        }else{
+            getAllProductos()
+        }
+    }, [props.cliente])
 
-    /**Al seleccionar un concepto del listado del autocomplete*/
-    const handleConceptoClick = (event, newValue) => {
-        obtenerImpuestosByConceptosFacturacion(newValue.m_nIdConceptosFacturacion).then(respuesta => {
-            newValue.arClsDetalle = respuesta.data
-            if (respuesta.data.length > 0){
-                setConcepto(concepto =>{
-                    return {
-                        ...concepto,
-                        concepto: newValue,
-                        idConcepto: newValue.m_nIdConceptosFacturacion,
-                        importe: newValue.m_cImporte || 0,
-                        nombreConcepto: newValue.m_sConcepto,
-                        importeRet: newValue.m_cImporteRetiene || 0,
-                        retiene: respuesta.data.find(i => i.m_bPredeterminado && !i.m_bTrasladado).m_nIdImpuesto,
-                        traslada: respuesta.data.find(i => i.m_bPredeterminado && i.m_bTrasladado).m_nIdImpuesto,
-                        importeIVA: newValue.m_cImporteIva || 0
-                    }
-                })
-            }
-        });
+    const getAllEmbalajes = () => {
+        if (dataEmbalaje.length === 0){
+            obtenerEmbalajes().then((respuesta) => {
+                setDataEmbalaje(respuesta.data);
+            });
+        }
+    }
+
+    const getAllProductos = () => {
+        if (dataProductos.length === 0){
+            obtenerProductos().then(respuesta => {
+                setDataProductos(respuesta.data)
+            });
+        }
+    }
+
+    const getProductosByConvenioCliente = () => {
+        if (props.cliente.m_nIdCliente){
+            obtenerProductosByConvenioCliente(props.cliente.m_nIdCliente).then(respuesta => {
+                setDataProductos(respuesta.data)
+            });
+        }
+
     }
 
     const handleChangePaquetev2 = (event) => {
-        event.preventDefault()
-        if (event.target.name === "importe") {
-            calcularImpuestos(concepto.traslada, concepto.retiene, event.target.value)
-        } else if (event.target.name === "traslada") {
-            calcularImpuestos(event.target.value, concepto.retiene, concepto.importe)
-        } else if (event.target.name === "retiene") {
-            calcularImpuestos(concepto.traslada, event.target.value, concepto.importe)
-        } else if(event.target.name === "aplicaDescuento") {
-            setState(state => {
+        setPaquete(paquete => {
+            return {
+                ...paquete,
+                [event.target.name]: event.target.value,
+                m_rVolumen: paquete.m_rLargo * paquete.m_rAlto * paquete.m_rAncho,
+            }
+        })
+        if (event.target.name == "m_nIdTipoEmbalaje"){
+            setPaquete(paquete => {
                 return {
-                    ...state,
-                    [event.target.name]: event.target.checked
+                    ...paquete,
+                    m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == event.target.value).m_sNombre,
                 }
             })
-        } else if(event.target.name === "aplicarDescuentoA") {
-            setState(state => {
+        }
+        if (event.target.name == "m_nIdTipo"){
+            setPaquete(paquete => {
                 return {
-                    ...state,
-                    [event.target.name]: event.target.value
-                }
-            })
-        } else {
-            setConcepto(concepto => {
-                return {
-                    ...concepto,
-                    [event.target.name]: event.target.value
+                    ...paquete,
+                    m_sTipo: event.target.value == 1 ? "Sobre" : "Paquete",
                 }
             })
         }
     };
 
-    const calcularImpuestos = (traslada, retiene, importe) => {
-        setConcepto(concepto => {
-            return { ...concepto,retiene: retiene, importe: importe, traslada: traslada }
-        })
-        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada)) != null) {
-            const impuesto = state.impuestos.find(i => i.m_nIdImpuesto === parseInt(traslada))
-            setConcepto(concepto=>{
-                return {
-                    ...concepto,
-                    importeIVA: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2),
-                    retiene: retiene,
-                    importe: importe,
-                    traslada: traslada
+    const handleChangePaqueteProductov2 = (event, newValue) => {
+        if (newValue){
+            setPaquete(paquete =>{
+                return{
+                    ...paquete,
+                    producto: newValue,
+                    m_nIdProducto: newValue.m_nIdProducto || 0,
+                    m_rLargo: newValue.m_xLargo,
+                    m_rAlto: newValue.m_xAlto,
+                    m_rAncho: newValue.m_xAncho,
+                    m_rPeso: newValue.m_xPeso,
+                    m_nIdTipoEmbalaje: newValue.m_nIdEmbalaje,
+                    m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == newValue.m_nIdEmbalaje).m_sNombre,
+                    m_sDescripcion: newValue.m_nIdProducto== 1 ? "" : newValue.m_sDescripcion,
+                    m_sProducto: newValue.m_sDescripcion
+                }
+            })
+            setPaquete(paquete =>{
+                return{
+                    ...paquete,
+                    m_rVolumen: paquete.m_rLargo * paquete.m_rAlto * paquete.m_rAncho
+                }})
+        }else{
+            setPaquete(paquete =>{
+                return{
+                    ...paquete,
+                    producto: null,
+                    m_nIdProducto:  0,
                 }
             })
         }
-        if (state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene)) != null) {
-            const impuesto = state.impuestos.find(i => i.m_nIdImpuesto === parseInt(retiene))
-            setConcepto(concepto=>{
-                return {
-                    ...concepto,
-                    importeRet: parseFloat((parseFloat(impuesto.m_nPorcentaje) / 100) * parseFloat(importe)).toFixed(2),
-                    retiene: retiene,
-                    importe: importe,
-                    traslada: traslada
-                }
-            })
-        }
-    }
+    };
 
-    const calcularDescuento = (event) => {
-        if (state.aplicarDescuentoA === "Concepto"){
-            setConcepto(concepto=>{
-                return {
-                    ...concepto,
-                    importeInicial: parseFloat(concepto.importe).toFixed(2)
-                }
-            })
-            calcularImpuestos(concepto.traslada, concepto.retiene, concepto.importe - (concepto.importe * (concepto.descuento/100)))
-        }else if (state.aplicarDescuentoA === "Total"){
-            /*dataPaquetes.forEach(item => {
-                item.importe = item.importe * (concepto.descuento/100)
-            })
-            onChangeList(dataPaquetes)*/
-        }
-
+    const handleClickProducto = () => {
+        getAllEmbalajes()
     }
 
     return (
         <div>
-            <Button variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'right'}}>
+            <Button variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'right'}} disabled={props.disabled}>
                 Agregar paquete
             </Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title"
                     fullWidth
                     maxWidth={'sm'}>
-                <DialogTitle id="form-dialog-title">Agregar concepto de facturación</DialogTitle>
+                <DialogTitle id="form-dialog-title">Agregar Paquete</DialogTitle>
                 <form>
                     <DialogContent>
 
                         <Grid container spacing={1}>
+
                             <Grid item xs={6}>
+                                <label className="input select" style={{width: "100%"}}>
+                                    <FormControl fullWidth variant="outlined" margin="dense" required>
+                                        <InputLabel id="m_nIdTipoEmbalajeLabel">Tipo de paquete</InputLabel>
+                                        <Select
+                                            label="Tipo de paquete"
+                                            labelId="m_nIdTipoLabel"
+                                            className="form-control"
+                                            value={paquete.m_nIdTipo}
+                                            disabled={props.disabled}
+                                            onChange={(event) => handleChangePaquetev2(event)}
+                                            id="m_nIdTipo"
+                                            name="m_nIdTipo"
+                                        >
+                                            <option key={2} value={2}>
+                                                Paquete
+                                            </option>
+                                            <option key={1} value={1}>
+                                                Sobre
+                                            </option>
+                                        </Select>
+                                    </FormControl>
+                                </label>
+                            </Grid>
+                            {paquete.m_nIdTipo != 1 &&
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField variant="outlined" margin="dense"
+                                               onChange={(event) => handleChangePaquetev2(event)}
+                                               className="form-control"
+                                               type="text"
+                                               label="Ctd"
+                                               value={paquete.m_nCantidad}
+                                               disabled={props.disabled}
+                                               placeholder="Ctd"
+                                               name="m_nCantidad"
+                                    />
+                                </div>
+                            </Grid>
+                            }
+                            {paquete.m_nIdTipo != 1 &&
+                            <Grid item xs={12}>
                                 <div className="input">
                                     <Autocomplete
-                                        value={concepto.concepto}
+                                        value={paquete.producto}
                                         freeSolo
-                                        onChange={(event, newValue) => handleConceptoClick(event, newValue)}
-                                        id="concepto"
-                                        disableClearable
+                                        onChange={(event, newValue) => handleChangePaqueteProductov2(event, newValue)}
+                                        // disableClearable
                                         forcePopupIcon={false}
-                                        options={props.conceptosBase}
-                                        getOptionLabel={(option) => option.m_sConcepto}
+                                        options={dataProductos}
+                                        disabled={props.disabled}
+                                        getOptionLabel={(option) => `${option.m_nNoProducto}-${option.m_sDescripcion}`}
                                         variant="outlined"
-                                        fullWidth
-                                        required
+                                        name={"producto"}
                                         style={{transform: "translate(14px, 10px) scale(1) !important"}}
-                                        renderInput={(params) => (
-                                            <div>
-                                                <TextField
-                                                    {...params}
-                                                    variant="outlined"
-                                                    label="Concepto"
-                                                    className="form-control"
-                                                    margin="dense"
-                                                    fullWidth
-                                                    required
-                                                />
-                                            </div>
-                                        )}
+                                        renderInput={(params) =>
+                                            <TextField
+                                                variant="outlined"
+                                                label="Producto"
+                                                margin="dense"
+                                                onClick={handleClickProducto}
+                                                {...params}
+                                            />
+                                        }
                                     />
                                 </div>
                             </Grid>
+                            }
+                            {paquete.m_nIdTipo != 1 &&
                             <Grid item xs={6}>
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
-                                               onChange={handleChangePaquetev2}
+                                               onChange={(event) => handleChangePaquetev2(event)}
                                                className="form-control"
-                                               type="number"
-                                               label="Importe"
-                                               style={{textAlign: "right"}}
-                                               step="1"
-                                               min="0"
-                                               value={concepto.importe}
-                                               name="importe"
+                                               type="text"
+                                               value={paquete.m_rLargo}
+                                               label="Largo"
+                                               disabled={props.disabled}
+                                               placeholder="cms"
+                                               name="m_rLargo"
                                     />
                                 </div>
                             </Grid>
+                            }
+                            {paquete.m_nIdTipo != 1 &&
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField variant="outlined" margin="dense"
+                                               onChange={(event) => handleChangePaquetev2(event)}
+                                               className="form-control"
+                                               type="text"
+                                               label="Ancho"
+                                               value={paquete.m_rAncho}
+                                               disabled={props.disabled}
+                                               placeholder="cms"
+                                               name="m_rAncho"
+                                    />
+                                </div>
+                            </Grid>
+                            }
+                            {paquete.m_nIdTipo != 1 &&
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField variant="outlined" margin="dense"
+                                               onChange={(event) => handleChangePaquetev2(event)}
+                                               className="form-control"
+                                               type="text"
+                                               value={paquete.m_rAlto}
+                                               label="Alto"
+                                               disabled={props.disabled}
+                                               placeholder="cms"
+                                               name="m_rAlto"
+                                    />
+                                </div>
+                            </Grid>
+                            }
+                            {paquete.m_nIdTipo != 1 &&
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField variant="outlined" margin="dense"
+                                               onChange={(event) => handleChangePaquetev2(event)}
+                                               className="form-control"
+                                               type="text"
+                                               label="Peso"
+                                               value={paquete.m_rPeso}
+                                               disabled={props.disabled}
+                                               placeholder="kg"
+                                               name="m_rPeso"
+                                    />
+                                </div>
+                            </Grid>
+                            }
+                            {paquete.m_nIdTipo != 1 &&
+                            <Grid item xs={6}>
+                                <div className="input">
+                                    <TextField variant="outlined" margin="dense"
+                                        // onChange={(event) => handleChangePaquete(event, index)}
+                                               className="form-control"
+                                               type="text"
+                                               value={paquete.m_rVolumen}
+                                               label="Volumen"
+                                               disabled
+                                               placeholder="cm3"
+                                               name="m_rVolumen"
+                                    />
+                                </div>
+                            </Grid>
+                            }
+                            {paquete.m_nIdTipo != 1 &&
                             <Grid item xs={6}>
                                 <label className="input select" style={{width: "100%"}}>
                                     <FormControl fullWidth variant="outlined" margin="dense">
-                                        <InputLabel id="trasladaLabel">Traslada</InputLabel>
+                                        <InputLabel id="m_nIdTipoEmbalajeLabel">Embalaje</InputLabel>
                                         <Select
-                                            labelId="trasladaLabel"
-                                            label="Traslada"
+                                            label="Embalaje"
+                                            labelId="m_nIdTipoEmbalajeLabel"
                                             className="form-control"
-                                            value={concepto.traslada}
-                                            onChange={handleChangePaquetev2}
-                                            name="traslada"
+                                            value={paquete.m_nIdTipoEmbalaje}
+                                            disabled={props.disabled}
+                                            onChange={(event) => handleChangePaquetev2(event)}
+                                            id="m_nIdTipoEmbalaje"
+                                            name="m_nIdTipoEmbalaje"
                                         >
-                                            <option key={0} value={0}>Selecciona</option>
-                                            {state.impuestos.filter(i => i.m_nTIpoCalculo === 1).map((impuesto) => (
-                                                <option
-                                                    key={impuesto.m_nIdImpuesto}
-                                                    value={impuesto.m_nIdImpuesto}
-                                                >
-                                                    {impuesto.m_sImpuesto}
+                                            {dataEmbalaje.map((embalaje) => (
+                                                <option key={embalaje.m_nIdEmbalaje} value={embalaje.m_nIdEmbalaje}>
+                                                    {embalaje.m_sNombre}
                                                 </option>
                                             ))}
                                         </Select>
                                     </FormControl>
                                 </label>
                             </Grid>
-                            <Grid item xs={6}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
-                                               onChange={handleChangePaquetev2}
-                                               className="form-control"
-                                               type="number"
-                                               style={{textAlign: "right"}}
-                                               disabled
-                                               label="Importe IVA"
-                                               step="1"
-                                               min="0"
-                                               value={concepto.importeIVA}
-                                               name="importeIVA"
-                                    />
-                                </div>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <label className="input select" style={{width: "100%"}}>
-                                    <FormControl fullWidth variant="outlined" margin="dense">
-                                        <InputLabel id="retieneLabel">Retiene</InputLabel>
-                                        <Select
-                                            labelId="retieneLabel"
-                                            label="Retiene"
-                                            className="form-control"
-                                            onChange={handleChangePaquetev2}
-                                            name="retiene"
-                                            value={concepto.retiene}
-                                        >
-                                            <option key={0} value={0}>Selecciona</option>
-                                            {state.impuestos.filter(i => i.m_nTIpoCalculo === 2).map((impuesto) => (
-                                                <option
-                                                    key={impuesto.m_nIdImpuesto}
-                                                    value={impuesto.m_nIdImpuesto}
-                                                >
-                                                    {impuesto.m_sImpuesto}
-                                                </option>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </label>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <div className="input">
-                                    <TextField variant="outlined" margin="dense"
-                                               onChange={handleChangePaquetev2}
-                                               className="form-control"
-                                               type="number"
-                                               style={{textAlign: "right"}}
-                                               disabled
-                                               label="Importe Ret"
-                                               step="1"
-                                               min="0"
-                                               value={concepto.importeRet}
-                                               name="importeRet"
-                                    />
-                                </div>
-                            </Grid>
+                            }
                             <Grid item xs={12}>
-                                <TextField variant="outlined" margin="dense"
-                                           onChange={handleChangePaquetev2}
-                                           className="form-control"
-                                           type="number"
-                                           style={{textAlign: "right"}}
-                                           label="Descuento ($)"
-                                           step="1"
-                                           min="0"
-                                           value={concepto.descuento}
-                                           name="descuento"
-                                />
+                                <div className="input">
+                                    <TextField variant="outlined" margin="dense"
+                                               onChange={(event) => handleChangePaquetev2(event)}
+                                               className="form-control"
+                                               type="text"
+                                               label="Descripción"
+                                               value={paquete.m_sDescripcion}
+                                               disabled={props.disabled}
+                                               placeholder="Descripción"
+                                               name="m_sDescripcion"
+                                    />
+                                </div>
                             </Grid>
 
-
+                            {paquete.m_nIdTipo != 1 &&
+                            <Grid item xs={12}>
+                                <div className="input">
+                                    <TextField variant="outlined" margin="dense"
+                                               onChange={(event) => handleChangePaquetev2(event)}
+                                               className="form-control"
+                                               type="text"
+                                               label="Observaciones"
+                                               value={paquete.m_sObservaciones}
+                                               disabled={props.disabled}
+                                               placeholder="Observaciones"
+                                               name="m_sObservaciones"
+                                    />
+                                </div>
+                            </Grid>
+                            }
+                            {/*<Grid item xs={1}>
+                                <IconButton onClick={addPaquetev2} style={{padding: "0px"}} disabled={props.disabled}>
+                                    <AddBoxIcon style={{fill: "green", fontSize: "xx-large"}}/>
+                                </IconButton>
+                                <IconButton onClick={removePaquetev2} style={{padding: "0px"}} disabled={props.disabled}>
+                                    <DeleteIcon style={{fill: "red", fontSize: "xx-large"}}/>
+                                </IconButton>
+                            </Grid>*/}
                         </Grid>
 
                     </DialogContent>
