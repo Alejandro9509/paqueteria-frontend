@@ -90,6 +90,13 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
 
     const columnsPaquetes = React.useMemo(() => [
         {
+            headerName: "Cantidad",
+            field: "m_nCantidad",
+            type:'number',
+            valueFormatter: ({ value }) => `${value}pz`,
+            width: 90,
+        },
+        {
             headerName: "Tipo",
             field: "m_sTipo",
             minWidth: 100,
@@ -99,6 +106,18 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
             headerName: "Producto",
             field: "m_sProducto",
             width: 200,
+        },
+        {
+            headerName: "Embalaje",
+            field: "m_sTipoEmbalaje",
+            width: 130,
+        },
+        {
+            headerName: "Peso",
+            field: "m_rPeso",
+            type:'number',
+            valueFormatter: ({ value }) => `${value}kg`,
+            width: 90,
         },
         {
             headerName: "Largo",
@@ -122,13 +141,6 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
             width: 90,
         },
         {
-            headerName: "Peso",
-            field: "m_rPeso",
-            type:'number',
-            valueFormatter: ({ value }) => `${value}kg`,
-            width: 90,
-        },
-        {
             headerName: "Volumen",
             field: "m_rVolumen",
             type:'number',
@@ -136,28 +148,9 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
             width: 120,
         },
         {
-            headerName: "Embalaje",
-            field: "m_sTipoEmbalaje",
-            width: 130,
-        },
-        /*{
-            headerName: "Valor",
-            field: "m_cyValorDeclarado",
-            type:'number',
-            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
-            width: 90,
-        },*/
-        {
             headerName: "Descripcion",
             field: "m_sDescripcion",
             width: 100,
-        },
-        {
-            headerName: "Cantidad",
-            field: "m_nCantidad",
-            type:'number',
-            valueFormatter: ({ value }) => `${value}pz`,
-            width: 90,
         },
         {
             headerName: "Observaciones",
