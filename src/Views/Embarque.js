@@ -3299,7 +3299,7 @@ function Embarque(props) {
                         <div id="Agregar"
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
 
-                            <form className="j-forms row" onSubmit={handleAceptar}>
+                            <form className="j-forms row" >
                                 <div className="form-content">
                                     <div
                                         className="wizard-breadcrumb number-style"
@@ -3679,11 +3679,15 @@ function Embarque(props) {
                                     </div>
 
                                     <div className="widget-wrap" id="paquetesSobres">
+                                        <div className="widget-header">
+                                            <h2>Paquetes</h2>
+                                        </div>
                                         <Paquetes
                                             dataPaquetes={dataPaquetes}
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                             cliente={state.clientePaga}
+                                            LimpiarProducto={configuraciones.limpiarProducto}
                                         />
 
                                     </div>
@@ -4266,8 +4270,8 @@ function Embarque(props) {
                                                         >
                                                             Cancelar
                                                         </button>
-                                                        <button
-                                                            type="submit"
+                                                        <button type={"submit"}
+                                                            onClick={handleAceptar}
                                                             className="btn btn-primary primary-btn"
                                                         >
                                                             Aceptar
