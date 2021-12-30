@@ -102,7 +102,6 @@ function Informes({history}) {
     const classes = useStyles();
     const [stepActive, setStepActive] = React.useState(1);
     const [data, setData] = React.useState([]);
-    const [dataRutas, setDataRutas] = React.useState([]);
     const [guias, setGuias] = React.useState([]);
     const [informes, setInformes] = React.useState([]);
     const [dataSucursal, setDataSucursal] = React.useState([]);
@@ -242,27 +241,12 @@ function Informes({history}) {
         })
     }
 
-    function getAllGuias() {
-        obtenerGuia().then((respuesta) => {
-            setGuias(respuesta.data);
-        });
-    }
-
-    function handleSelectViaje(event) {
-        event.preventDefault()
-        state.ruta2 = state.viaje.m_sRuta;
-        state.operador2 = state.viaje.m_sNombreCompletoOperador;
-        state.unidad2 = state.viaje.m_sTipoUnidad;
-        state.remolque2 = state.viaje.m_sDescripcionUnidad;
-    }
-
     function handleSelectDatos(id, cp) {
         setState({
             ...state,
             [state.identificadorModal]: id,
         });
     }
-
 
     const columnsCiudades = React.useMemo(() => [
         {
@@ -357,8 +341,8 @@ function Informes({history}) {
         DerechoBorrar: 151,
         EstatusInforme: 5,
         IdViaje: {},
-        sucursalEmisora: null,
-        sucursalReceptora: null,
+        sucursalEmisora: '',
+        sucursalReceptora: '',
         IdOperador: null,
         IdRemolque1: null,
         IdRemolque2: null,
@@ -394,61 +378,64 @@ function Informes({history}) {
     });
 
     const getEmptyState = () => {
-        setState({
-            showPopUp: false,
-            identificadorModal: "",
-            openDialog: false,
-            viaje: {},
-            agregar: "Agregar",
-            height: window.innerHeight,
+        setState(state => {
+            return{
+                ...state,
+                showPopUp: false,
+                identificadorModal: "",
+                openDialog: false,
+                viaje: {},
+                agregar: "Agregar",
+                height: window.innerHeight,
+                fechaHora: getCurrentDateTime(),
+                ruta2: "",
+                operador2: "",
+                unidad2: "",
+                remolque2: "",
 
-            ruta2: "",
-            operador2: "",
-            unidad2: "",
-            remolque2: "",
-
-            tipoModal: 0,
-            IdInforme: 0,
-            FolioInforme: 0,
-            fechaHora: '',
-            DerechoBorrar: 151,
-            EstatusInforme: 5,
-            IdViaje: {},
-            sucursalEmisora: null,
-            sucursalReceptora: null,
-            IdOperador: null,
-            IdRemolque1: null,
-            IdRemolque2: null,
-            PlacasRemolque1: "",
-            PlacasRemolque2: "",
-            PlacasDolly: "",
-            IdTipoUnidad: {},
-            IdCiudadDestino: null,
-            IdCiudadOrigen: null,
-            IdRuta: 0,
-            IdSucursal: localStorage.getItem("Sucursal"),
-            CreadoPor: localStorage.getItem("UsuarioId"),
-            ModificadoPor: localStorage.getItem("UsuarioId"),
-            usuarioCancelacion: "",
-            estatusCancelacion: "",
-            Guias: [
-                {
-                    m_nIdGuia: 0,
-                    m_nFolioGuia: "",
-                    m_sEstatusGuia: "",
-                    m_cValorDeclarado: "",
-                    m_sCiudadDestinatario: "",
-                    tipoServicio: "",
-                    observaciones: "",
-                },
-            ],
-            FechaCancelacion: "",
-            motivoCancelacion: "",
-            sucursalCancelacion: {},
-            sePuedeCancelar: false,
-            Informes: [],
-            indexCubicar: 0,
+                tipoModal: 0,
+                IdInforme: 0,
+                FolioInforme: 0,
+                DerechoBorrar: 151,
+                EstatusInforme: 5,
+                IdViaje: {},
+                sucursalEmisora: '',
+                sucursalReceptora: '',
+                IdOperador: null,
+                IdRemolque1: null,
+                IdRemolque2: null,
+                PlacasRemolque1: "",
+                PlacasRemolque2: "",
+                PlacasDolly: "",
+                IdTipoUnidad: {},
+                IdCiudadDestino: null,
+                IdCiudadOrigen: null,
+                IdRuta: 0,
+                IdSucursal: localStorage.getItem("Sucursal"),
+                CreadoPor: localStorage.getItem("UsuarioId"),
+                ModificadoPor: localStorage.getItem("UsuarioId"),
+                usuarioCancelacion: "",
+                estatusCancelacion: "",
+                Guias: [
+                    {
+                        m_nIdGuia: 0,
+                        m_nFolioGuia: "",
+                        m_sEstatusGuia: "",
+                        m_cValorDeclarado: "",
+                        m_sCiudadDestinatario: "",
+                        tipoServicio: "",
+                        observaciones: "",
+                    },
+                ],
+                FechaCancelacion: "",
+                motivoCancelacion: "",
+                sucursalCancelacion: {},
+                sePuedeCancelar: false,
+                Informes: [],
+                indexCubicar: 0,
+            }
         })
+        setDataGuias([])
     }
 
     const getCurrentDateTime = () => {
@@ -489,6 +476,7 @@ function Informes({history}) {
         };
         console.log(params)
         console.log(JSON.stringify(params))
+        // handleShowListado()
         if (state.IdInforme !== 0) {
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
@@ -506,8 +494,7 @@ function Informes({history}) {
                     if (state.cuibicar && state.indexCubicar < informes.length) {
                         showAgregarFromCubicar(state.indexCubicar++)
                     } else {
-                        getAllData();
-                        handleShowAgregar()
+                        handleShowListado()
                     }
 
                 })
@@ -515,12 +502,6 @@ function Informes({history}) {
                     showSuccess(err);
                 });
         }
-    };
-
-    function getFormatosImpresion() {
-        obtenerFormatosImpresion().then(respuesta => {
-            setFormatosImpresion(respuesta.data)
-        });
     };
 
     function showAgregarFromCubicar(index) {
@@ -937,9 +918,10 @@ function Informes({history}) {
             obtenerGuiaPendientes(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad).then((respuesta) => {
                 if (respuesta.data !== "Vacio") {
                     if (state.agregar ==="Modificar"){
-                        respuesta.data = respuesta.data.concat(state.guiasInforme)
-                        console.log(state.guiasInforme)
-                        setDataGuias(respuesta.data);
+                        let arr = []
+                        arr = arr.concat(state.guiasInforme)
+                        arr = arr.concat(respuesta.data)
+                        setDataGuias(arr);
                     }else {
                         setDataGuias(respuesta.data);
 
@@ -989,14 +971,11 @@ function Informes({history}) {
             window.location.replace("login");
             return;
         }
-        getAllEstatusInformes();
-        getAllSucursales();
-        getAllCiudades();
-        getAllUnidades();
+        getDataParaEditar()
     }, []);
 
     const getDataParaListado = () => {
-       // getAllData();
+       getAllData();
 
     }
 
@@ -1043,10 +1022,8 @@ function Informes({history}) {
     }, [state.IdCiudadOrigen, state.IdCiudadDestino, state.agregar])
 
     const handleShowListado = () =>{
-        // event.stopPropagation();
         getDataParaListado()
         getEmptyState()
-        setState({...state, agregar: "Agregar"});
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1054,31 +1031,7 @@ function Informes({history}) {
     }
 
     function handleShowAgregar() {
-        setState({
-            ...state,
-            agregar: "Agregar",
-            showPopUp: true,
-            IdInforme: 0,
-            IdGrupoUnidad: 0,
-            Codigo: 0,
-            GrupoUnidad: "",
-            Color: "",
-            IdOperador: 0,
-            fechaHora: getCurrentDateTime(),
-            IdCiudadDestino: null,
-            IdCiudadOrigen: null,
-            sucursalEmisora: null,
-            sucursalReceptora: null,
-            IdRemolque1: null,
-            IdRemolque2: null,
-            IdTipoUnidad: {},
-            IdRuta: 0,
-            IdEstatusInforme: "5",
-            PlacasRemolque1: "",
-            PlacasRemolque2: "",
-            PlacasDolly: "",
-            FolioInforme: "",
-        });
+        getEmptyState()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1090,30 +1043,10 @@ function Informes({history}) {
         handleShowAgregar()
         obtenerInformesId(id).then(({data}) => {
             data.m_arrClsProGuia.forEach(g => g.select = true)
-            setState({
-                ...state,
-                IdInforme: id,
-                guiasInforme: data.m_arrClsProGuia,
-                fechaHora: getCurrentDateTime(),
-                IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
-                IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadOrigen),
-                //IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
-                sucursalEmisora: data.m_nIdSucursalEmisora,
-                sucursalReceptora: data.m_nIdSucursalReceptora,
-                IdRemolque1: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
-                IdRemolque2: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque2),
-                IdTipoUnidad: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdDolly),
-                IdRuta: 0,
-                IdEstatusInforme: dataEstatusInformes.find(c => c.m_nIdEstatusInforme === data.m_nIdEstatusInforme),
-                PlacasRemolque1: data.m_sPlacasRemolque1,
-                PlacasRemolque2: data.m_sPlacasRemolque2,
-                PlacasDolly: data.m_sPlacasDolly,
-                FolioInforme: data.m_sFolioInforme,
-                EstatusInforme: data.m_nIdEstatusInforme,
-                agregar: "Modificar"
-            });
+            setDataParaModificarConsultar(data,"Modificar")
         });
     }
+
 
     function handleShowConsultar(id) {
         handleShowAgregar()
@@ -1121,12 +1054,19 @@ function Informes({history}) {
             console.log(data.m_arrClsProGuia)
             data.m_arrClsProGuia.forEach(g => g.select = true)
             setDataGuias(data.m_arrClsProGuia)
-            setState({
+            setDataParaModificarConsultar(data, "Consultar")
+        });
+    }
+
+    const setDataParaModificarConsultar = (data,accion) => {
+        setState(state => {
+            return {
                 ...state,
                 fechaHora: getCurrentDateTime(),
+                IdInforme: data.m_nIdInforme,
+                guiasInforme: data.m_arrClsProGuia,
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
-                IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
-                IdOperador: dataOperadores.find(c => c.m_nIdOperador === data.m_nIdOperador),
+                IdCiudadOrigen: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadOrigen),
                 sucursalEmisora: data.m_nIdSucursalEmisora,
                 sucursalReceptora: data.m_nIdSucursalReceptora,
                 IdRemolque1: dataUnidades.find(c => c.m_nIdUnidad === data.m_nIdRemolque1),
@@ -1139,9 +1079,8 @@ function Informes({history}) {
                 PlacasDolly: data.m_sPlacasDolly,
                 FolioInforme: data.m_sFolioInforme,
                 EstatusInforme: data.m_nIdEstatusInforme,
-                agregar: "Consultar"
-            });
-
+                agregar: accion
+            }
         });
     }
 
@@ -1169,8 +1108,6 @@ function Informes({history}) {
                 showSuccess(err);
             });
     }
-
-
 
     /**Obtiene el listado inicial de informes*/
     async function getAllData() {
@@ -1219,13 +1156,6 @@ function Informes({history}) {
 
     const todasGuiasSeleccionadas = () => {
         return dataGuias.length === dataGuias.filter((g) => g.select).length
-    }
-
-    const handleChangeRuta = (idRuta) => {
-        setState( {
-            ...state,
-            IdRuta: idRuta,
-        })
     }
 
     return (
@@ -1685,7 +1615,7 @@ function Informes({history}) {
                         <div id="Agregar" className="tab-pane fade ">
                             {/*INICIO DE ESTRUCTURA */}
 
-                            <form className="j-forms row" onSubmit={handleAceptar}>
+                            <form className="j-forms row">
                                 {/*Inicio de ejemplo*/}
                                 <div className="form-content">
                                     {/* start steps */}
@@ -2338,17 +2268,6 @@ function Informes({history}) {
 
                                                 </div>
                                             </div>
-
-                                            <div className="row">
-                                                <SeleccionarRuta
-                                                    IdRuta={state.IdRuta}
-                                                    IdOrigen={state.IdCiudadOrigen ? state.IdCiudadOrigen.m_nIdCiudad : ''}
-                                                    IdDestino={state.IdCiudadDestino ? state.IdCiudadDestino.m_nIdCiudad : ''}
-                                                    IdCliente={0}
-                                                    disabled={state.agregar === "Consultar"}
-                                                    onChangeRuta={handleChangeRuta}
-                                                />
-                                            </div>
                                         </div>
                                     </div>
                                     <div className="col-md-6">
@@ -2736,6 +2655,7 @@ function Informes({history}) {
                                     </button>
                                     <button
                                         type="submit"
+                                        onClick={handleAceptar}
                                         className="btn btn-primary primary-btn"
                                         disabled={state.agregar == "Consultar"}
                                     >
