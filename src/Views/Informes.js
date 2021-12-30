@@ -242,7 +242,7 @@ function Informes({history}) {
         })
     }
 
-    function getAllGuias() {
+    /*function getAllGuias() {
         obtenerGuia().then((respuesta) => {
             setGuias(respuesta.data);
         });
@@ -254,7 +254,7 @@ function Informes({history}) {
         state.operador2 = state.viaje.m_sNombreCompletoOperador;
         state.unidad2 = state.viaje.m_sTipoUnidad;
         state.remolque2 = state.viaje.m_sDescripcionUnidad;
-    }
+    }*/
 
     function handleSelectDatos(id, cp) {
         setState({
@@ -394,61 +394,64 @@ function Informes({history}) {
     });
 
     const getEmptyState = () => {
-        setState({
-            showPopUp: false,
-            identificadorModal: "",
-            openDialog: false,
-            viaje: {},
-            agregar: "Agregar",
-            height: window.innerHeight,
+        setState(state => {
+            return{
+                ...state,
+                showPopUp: false,
+                identificadorModal: "",
+                openDialog: false,
+                viaje: {},
+                agregar: "Agregar",
+                height: window.innerHeight,
+                fechaHora: getCurrentDateTime(),
+                ruta2: "",
+                operador2: "",
+                unidad2: "",
+                remolque2: "",
 
-            ruta2: "",
-            operador2: "",
-            unidad2: "",
-            remolque2: "",
-
-            tipoModal: 0,
-            IdInforme: 0,
-            FolioInforme: 0,
-            fechaHora: '',
-            DerechoBorrar: 151,
-            EstatusInforme: 5,
-            IdViaje: {},
-            sucursalEmisora: null,
-            sucursalReceptora: null,
-            IdOperador: null,
-            IdRemolque1: null,
-            IdRemolque2: null,
-            PlacasRemolque1: "",
-            PlacasRemolque2: "",
-            PlacasDolly: "",
-            IdTipoUnidad: {},
-            IdCiudadDestino: null,
-            IdCiudadOrigen: null,
-            IdRuta: 0,
-            IdSucursal: localStorage.getItem("Sucursal"),
-            CreadoPor: localStorage.getItem("UsuarioId"),
-            ModificadoPor: localStorage.getItem("UsuarioId"),
-            usuarioCancelacion: "",
-            estatusCancelacion: "",
-            Guias: [
-                {
-                    m_nIdGuia: 0,
-                    m_nFolioGuia: "",
-                    m_sEstatusGuia: "",
-                    m_cValorDeclarado: "",
-                    m_sCiudadDestinatario: "",
-                    tipoServicio: "",
-                    observaciones: "",
-                },
-            ],
-            FechaCancelacion: "",
-            motivoCancelacion: "",
-            sucursalCancelacion: {},
-            sePuedeCancelar: false,
-            Informes: [],
-            indexCubicar: 0,
+                tipoModal: 0,
+                IdInforme: 0,
+                FolioInforme: 0,
+                DerechoBorrar: 151,
+                EstatusInforme: 5,
+                IdViaje: {},
+                sucursalEmisora: null,
+                sucursalReceptora: null,
+                IdOperador: null,
+                IdRemolque1: null,
+                IdRemolque2: null,
+                PlacasRemolque1: "",
+                PlacasRemolque2: "",
+                PlacasDolly: "",
+                IdTipoUnidad: {},
+                IdCiudadDestino: null,
+                IdCiudadOrigen: null,
+                IdRuta: 0,
+                IdSucursal: localStorage.getItem("Sucursal"),
+                CreadoPor: localStorage.getItem("UsuarioId"),
+                ModificadoPor: localStorage.getItem("UsuarioId"),
+                usuarioCancelacion: "",
+                estatusCancelacion: "",
+                Guias: [
+                    {
+                        m_nIdGuia: 0,
+                        m_nFolioGuia: "",
+                        m_sEstatusGuia: "",
+                        m_cValorDeclarado: "",
+                        m_sCiudadDestinatario: "",
+                        tipoServicio: "",
+                        observaciones: "",
+                    },
+                ],
+                FechaCancelacion: "",
+                motivoCancelacion: "",
+                sucursalCancelacion: {},
+                sePuedeCancelar: false,
+                Informes: [],
+                indexCubicar: 0,
+            }
         })
+        setDataGuias([])
     }
 
     const getCurrentDateTime = () => {
@@ -489,6 +492,7 @@ function Informes({history}) {
         };
         console.log(params)
         console.log(JSON.stringify(params))
+        // handleShowListado()
         if (state.IdInforme !== 0) {
             modificarInformes(state.IdInforme, params)
                 .then((respuesta) => {
@@ -506,8 +510,7 @@ function Informes({history}) {
                     if (state.cuibicar && state.indexCubicar < informes.length) {
                         showAgregarFromCubicar(state.indexCubicar++)
                     } else {
-                        getAllData();
-                        handleShowAgregar()
+                        handleShowListado()
                     }
 
                 })
@@ -516,12 +519,12 @@ function Informes({history}) {
                 });
         }
     };
-
+/*
     function getFormatosImpresion() {
         obtenerFormatosImpresion().then(respuesta => {
             setFormatosImpresion(respuesta.data)
         });
-    };
+    };*/
 
     function showAgregarFromCubicar(index) {
         setState({
@@ -937,9 +940,13 @@ function Informes({history}) {
             obtenerGuiaPendientes(state.IdCiudadOrigen.m_nIdCiudad, state.IdCiudadDestino.m_nIdCiudad).then((respuesta) => {
                 if (respuesta.data !== "Vacio") {
                     if (state.agregar ==="Modificar"){
-                        respuesta.data = respuesta.data.concat(state.guiasInforme)
-                        console.log(state.guiasInforme)
-                        setDataGuias(respuesta.data);
+                        let arr = []
+                        arr = arr.concat(state.guiasInforme)
+                        arr = arr.concat(respuesta.data)
+                        // respuesta.data = respuesta.data.concat(state.guiasInforme)
+                        // console.log(state.guiasInforme)
+                        // setDataGuias(respuesta.data);
+                        setDataGuias(arr);
                     }else {
                         setDataGuias(respuesta.data);
 
@@ -996,7 +1003,7 @@ function Informes({history}) {
     }, []);
 
     const getDataParaListado = () => {
-       // getAllData();
+       getAllData();
 
     }
 
@@ -1054,18 +1061,18 @@ function Informes({history}) {
     }
 
     function handleShowAgregar() {
-        setState({
+        /*setState({
             ...state,
-            agregar: "Agregar",
+            /!*agregar: "Agregar",
             showPopUp: true,
             IdInforme: 0,
             IdGrupoUnidad: 0,
             Codigo: 0,
             GrupoUnidad: "",
             Color: "",
-            IdOperador: 0,
+            IdOperador: 0,*!/
             fechaHora: getCurrentDateTime(),
-            IdCiudadDestino: null,
+            /!*IdCiudadDestino: null,
             IdCiudadOrigen: null,
             sucursalEmisora: null,
             sucursalReceptora: null,
@@ -1077,8 +1084,9 @@ function Informes({history}) {
             PlacasRemolque1: "",
             PlacasRemolque2: "",
             PlacasDolly: "",
-            FolioInforme: "",
-        });
+            FolioInforme: "",*!/
+        });*/
+        getEmptyState()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1685,7 +1693,7 @@ function Informes({history}) {
                         <div id="Agregar" className="tab-pane fade ">
                             {/*INICIO DE ESTRUCTURA */}
 
-                            <form className="j-forms row" onSubmit={handleAceptar}>
+                            <form className="j-forms row">
                                 {/*Inicio de ejemplo*/}
                                 <div className="form-content">
                                     {/* start steps */}
@@ -2736,6 +2744,7 @@ function Informes({history}) {
                                     </button>
                                     <button
                                         type="submit"
+                                        onClick={handleAceptar}
                                         className="btn btn-primary primary-btn"
                                         disabled={state.agregar == "Consultar"}
                                     >
