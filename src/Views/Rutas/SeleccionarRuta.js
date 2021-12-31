@@ -71,9 +71,17 @@ export default function SeleccionarRuta(props){
             obtenerRutasByOrigenDestinoCliente(idCliente, idOrigen, idDestino).then(({data}) => {
                 if(data.length !== 0 ) {
                     setDataRutas(data)
+                    if (data.length === 1){
+                        props.onChangeRuta(data[0].IdRuta)
+                        getTrayectosByRuta(data[0].IdRuta)
+                    }
                 }else {
                     obtenerRutasByOrigenDestinoPublicoGeneral(idOrigen, idDestino).then(({data}) => {
                         setDataRutas(data)
+                        if (data.length === 1){
+                            props.onChangeRuta(data[0].IdRuta)
+                            getTrayectosByRuta(data[0].IdRuta)
+                        }
                     })
                 }
 
@@ -96,7 +104,7 @@ export default function SeleccionarRuta(props){
                 select
                 variant="outlined" margin="dense"
                 label="Selecciona ruta"
-                value={props.idRuta}
+                value={props.IdRuta}
                 fullWidth
                 disabled={props.disabled}
                 onChange={handleChange}
