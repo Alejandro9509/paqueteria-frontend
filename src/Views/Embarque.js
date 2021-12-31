@@ -492,6 +492,7 @@ function Embarque(props) {
         idTipoSeguro:5,
         porcentajeSeguro: 0,
         aplicaSeguro: false,
+        idTipoTarifa:'',
 
         //Entrega
         entregaEnSucursal: false,
@@ -553,6 +554,7 @@ function Embarque(props) {
                 idTipoSeguro: 5,
                 porcentajeSeguro: 0,
                 aplicaSeguro: false,
+                idTipoTarifa:'',
 
                 //Entrega
                 entregaEnSucursal: false,
@@ -1791,7 +1793,8 @@ function Embarque(props) {
                         estatusEmbarque: respuesta.data.EstatusEmbarque,
                         moneda: respuesta.data.MonedaEmbarque,
                         tipoCambio: respuesta.data.TipoCambioEmbarque,
-                        tipoCobro: respuesta.data.TipoCobro
+                        tipoCobro: respuesta.data.TipoCobro,
+                        idTipoTarifa: respuesta.data.TipoTarifaTarifas,
                     }
                 })
             }
@@ -2986,7 +2989,7 @@ function Embarque(props) {
                                                             </label>
                                                         </div>
 
-                                                        <Grid container spacing={2} style={{marginBottom:'10px'}}>
+                                                        <Grid container spacing={2} style={{marginBottom:'10px',paddingRight:'15px'}}>
                                                             <Grid item xs>
                                                                 <div className="input">
                                                                             <TextField
@@ -3067,6 +3070,28 @@ function Embarque(props) {
                                                                                }}
                                                                     />
                                                                 </div>
+                                                            </Grid>
+                                                            <Grid item xs>
+                                                                <label className="input select">
+                                                                    <FormControl fullWidth variant="outlined"
+                                                                                 margin="dense" required>
+                                                                        <InputLabel> Tipo de Tarifa</InputLabel>
+                                                                        <Select
+                                                                            native
+                                                                            label="Tipo de Tarifa"
+                                                                            className="form-control"
+                                                                            onChange={handleChange}
+                                                                            name="idTipoTarifa"
+                                                                            read="true"
+                                                                            value={state.idTipoTarifa}
+                                                                            disabled={state.agregar == "Consultar"}
+                                                                        >
+                                                                            <option value="1">Por peso o volumen</option>
+                                                                            <option value="2">Por rango</option>
+                                                                            <option value="3">Por región</option>
+                                                                        </Select>
+                                                                    </FormControl>
+                                                                </label>
                                                             </Grid>
                                                         </Grid>
 
