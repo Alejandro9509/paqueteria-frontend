@@ -3273,7 +3273,7 @@ function Recoleccion() {
                         </div>
 
                         <div id="Agregar" className="tab-pane fade">
-                            <form className="j-forms" onSubmit={handleAceptar}>
+                            <form className="j-forms">
                                 <div className="form-content">
                                     <div
                                         className="wizard-breadcrumb number-style"
@@ -3661,6 +3661,9 @@ function Recoleccion() {
                                     </div>
 
                                     <div className="widget-wrap" id="paquetesSobres">
+                                        <div className="widget-header">
+                                            <h2>Paquetes</h2>
+                                        </div>
                                         <Paquetes
                                             dataPaquetes={dataPaquetes}
                                             onChangeList={handleListPaquetesChange}
@@ -4702,6 +4705,7 @@ function Recoleccion() {
                                             type="submit"
                                             className="btn btn-primary primary-btn"
                                             disabled={state.agregar === "Consultar"}
+                                            onClick={handleAceptar}
                                         >
                                             Aceptar
                                         </button>
