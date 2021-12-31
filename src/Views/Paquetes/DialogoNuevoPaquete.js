@@ -89,6 +89,7 @@ export default function DialogoNuevoPaquete(props) {
     };
 
     const handleAceptar = (e) => {
+        e.stopPropagation()
         e.preventDefault()
         if (paquete.producto !== null){
             if (state.agregarMas){
