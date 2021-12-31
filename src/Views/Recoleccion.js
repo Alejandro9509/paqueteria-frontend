@@ -192,7 +192,7 @@ function Recoleccion() {
     const [state, setState] = React.useState({
         // ===VARIABLES DE LISTADO===
         idRecoleccion: 0,
-
+        valorDeclarado: 0,
         idTipoSeguro:5,
         porcentajeSeguro: 0,
         // ===VARIABLES DE CANCELAR===
@@ -1486,7 +1486,7 @@ function Recoleccion() {
             idTipoSeguro: row.data.m_bTieneSeguro ? row.data.m_nIdTipoSeguro : 5,
             porcentajeSeguro: row.data.m_bTieneSeguro ? row.data.m_cPorcentajeSeguro : 0,
             aplicaSeguro: row.data.m_bTieneSeguro,
-            tipoCobro: row.data.m_bSinCredito ? "10" : "11",
+            tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
             openDialog: false,
         }))
     }
@@ -2826,6 +2826,17 @@ function Recoleccion() {
             citaPendiente: data.citaPendiente
         })
     }
+
+    const handleChangeTipoSeguro = (event) => {
+        setState({
+            ...state,
+            idTipoSeguro: event.target.value,
+            porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
+            aplicaSeguro: (event.target.value === 3) || (event.target.value === 4),
+            valorDeclarado: 0
+        });
+    }
+
     return (
         <div>
             {
@@ -3591,7 +3602,7 @@ function Recoleccion() {
                                                                         required
                                                                         label="Tipo seguro"
                                                                         value={state.idTipoSeguro}
-                                                                        onChange={(event) => {
+                                                                        /*onChange={(event) => {
                                                                             event.preventDefault();
                                                                             setState({
                                                                                 ...state,
@@ -3599,7 +3610,8 @@ function Recoleccion() {
                                                                                 porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
                                                                                 aplicaSeguro: (event.target.value === 3) || (event.target.value === 4)
                                                                             });
-                                                                        }}
+                                                                        }}*/
+                                                                        onChange={handleChangeTipoSeguro}
                                                                         variant="outlined"
                                                                         disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                                                     >
