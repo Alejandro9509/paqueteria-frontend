@@ -265,13 +265,16 @@ function ParametrosConfiguracion2() {
 
                 </Paper>
                 <section className="main-container">
-                    <div className="container-fluid" style={{width: "70%"}}>
-                        <Box display="flex" justifyContent="flex-start" m={1} p={1} bgcolor="background.paper"
-                             flexDirection="column">
+                    <div className="container-fluid" >
 
                             <TabPanel value="1">
-                                <Box p={1}>
-                                    <h2 className={classes.subtitulo}>Embarque</h2>
+
+                                <Box margin={"0 auto"}>
+                                    <Button variant="contained" color="primary" style={{width: "100px"}}
+                                            onClick={onSubmit}>
+                                        Modificar
+                                    </Button>
+                                </Box>
                                     <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
                                          flexDirection="column">
                                         <Box width="40%" p={1} my={0.5} display="flex">
@@ -453,13 +456,9 @@ function ParametrosConfiguracion2() {
                                             </Box>
                                         </Box>
                                     </Box>
-                                    <Box margin={"0 auto"}>
-                                        <Button variant="contained" color="primary" style={{width: "100px"}}
-                                                onClick={onSubmit}>
-                                            Modificar
-                                        </Button>
-                                    </Box>
-                                </Box></TabPanel>
+
+
+                            </TabPanel>
                             <TabPanel value="2">
                                 <Box p={1}>
                                     <Box display="flex" p={1} my={0.5} flexDirection="column">
@@ -624,7 +623,6 @@ function ParametrosConfiguracion2() {
                                 </Box>
 
                             </TabPanel>
-                        </Box>
                     </div>
                 </section>
 
