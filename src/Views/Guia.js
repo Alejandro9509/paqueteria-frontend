@@ -561,7 +561,7 @@ function Guia(props) {
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion
             })
             $('.nav-tabs li ').removeClass('active');
-            $('.nav-tabs li').eq(3).addClass('active');
+            $('.nav-tabs li').eq(5).addClass('active');
             $('.tab-content div ').removeClass('in show');
             $('#Cancelar').addClass('in show');
         })

@@ -476,7 +476,7 @@ function Viajes() {
                 return (
                     <div>
                         {
-                            viajeSeleccionado.EsPermisionario && viajeSeleccionado.m_bUnidadPermisionario &&
+                            viajeSeleccionado.m_bEsPermisionario && viajeSeleccionado.m_bUnidadPermisionario &&
                             <Tooltip title="Descargar XML">
                                 <a href="#" className="btn btn-default btn-xs"
                                    onClick={() => (descargarXML(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-download"
