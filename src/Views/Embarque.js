@@ -1290,7 +1290,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-      if (state.idEmbarque != 0) {
+     if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1526,7 +1526,7 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
-            console.log('Embarque: ', respuesta)
+            console.log(JSON.stringify(respuesta.data))
             setState({
                 ...state,
                 agregar: "Consultar",
@@ -1579,6 +1579,7 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
+            console.log(JSON.stringify(respuesta.data))
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -2087,7 +2088,6 @@ function Embarque(props) {
     async function getParametrosConfiguracion(){
 
         obtenerParametrosConfiguracion().then(respuesta=>{
-            console.log(respuesta)
 
             setState((config)=>{
                 return{
@@ -2144,7 +2144,6 @@ function Embarque(props) {
 
     async function getAllSucursales() {
         obtenerSucursales().then((respuesta) => {
-            console.log('sucursales: ', respuesta.data)
             setDataSucursal(respuesta.data);
         });
     }
