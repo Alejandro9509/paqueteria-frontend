@@ -4159,6 +4159,7 @@ function Embarque(props) {
                                         type="submit"
                                         className="btn btn-primary primary-btn"
                                         disabled={state.agregar === "Consultar"}
+                                        onClick={handleAceptar}
                                     >
                                         Aceptar
                                     </button>
@@ -4271,7 +4272,6 @@ function Embarque(props) {
                                                             Cancelar
                                                         </button>
                                                         <button type={"submit"}
-                                                            onClick={handleAceptar}
                                                             className="btn btn-primary primary-btn"
                                                         >
                                                             Aceptar
