@@ -1290,7 +1290,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-      if (state.idEmbarque != 0) {
+     if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1525,7 +1525,7 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
-            console.log('Embarque: ', respuesta)
+            console.log(JSON.stringify(respuesta.data))
             setState({
                 ...state,
                 agregar: "Consultar",
@@ -1578,6 +1578,7 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
+            console.log(JSON.stringify(respuesta.data))
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -2144,7 +2145,6 @@ function Embarque(props) {
 
     async function getAllSucursales() {
         obtenerSucursales().then((respuesta) => {
-            console.log('sucursales: ', respuesta.data)
             setDataSucursal(respuesta.data);
         });
     }
@@ -4159,6 +4159,7 @@ function Embarque(props) {
                                         type="submit"
                                         className="btn btn-primary primary-btn"
                                         disabled={state.agregar === "Consultar"}
+                                        onClick={handleAceptar}
                                     >
                                         Aceptar
                                     </button>
@@ -4271,7 +4272,6 @@ function Embarque(props) {
                                                             Cancelar
                                                         </button>
                                                         <button type={"submit"}
-                                                            onClick={handleAceptar}
                                                             className="btn btn-primary primary-btn"
                                                         >
                                                             Aceptar
