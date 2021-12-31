@@ -195,119 +195,12 @@ function Embarque(props) {
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
-    const [dataCiudadF, setDataCiudadF] = React.useState([]);
 
-    const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
-    const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
     const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
     const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
-    // const [dataCodigosPostalesRecoleccionDD, setDataCodigosPostalesRecoleccionDD] = React.useState([]);
     const [dataCodigosPostalesEntregaDD, setDataCodigosPostalesEntregaDD] = React.useState([]);
     const [dataEmbarqueConsulta, setDataEmbarqueConsulta] = useState();
-    const [dataRecoleccionConsulta, setDataRecoleccionConsulta] = useState();
-
-    /*const [dataOperador, setDataOperador] = React.useState([]);
-    const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
-    const [dataUnidad, setDataUnidad] = React.useState([]);*/
-
-    // const [dataFolioEmbarque, SetDataFolioEmbarque] = React.useState([]);
-    // const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario,] = React.useState([]);
-
-    const [filtros, setFiltros] = useState({
-        fechaInicial: 0,
-        fechaFinal: 0,
-        estatusListado:0,
-        sucursalListado: 0,
-        folio: '',
-        OrigenListado:0,
-        DestinoListado:0,
-    })
-
-    const resetFiltros = () => {
-        setFiltros({
-            fechaInicial: 0,
-            fechaFinal: 0,
-            estatusListado:0,
-            sucursalListado: 0,
-            folio: '',
-            OrigenListado:0,
-            DestinoListado:0,
-        })
-    }
-
-    const handleChangeFiltros = (event) => {
-        event.preventDefault()
-        const {target} = event
-        setFiltros(filtros => {
-            return {
-                ...filtros,
-                [target.name]: target.value
-            }
-        })
-        if (target.name && event.keyCode == 13){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,target.value,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        if (target.name === "fechaInicial"){
-            obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }else if (target.name === "fechaFinal"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "sucursalListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "estatusListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "OrigenListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "DestinoListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-    }
     const [dataClientes, setDataClientes] = useState([])
     const [stepActive, setStepActive] = React.useState(1);
     const [Modal, open, close, isOpen] = useModal("root", {
@@ -368,74 +261,6 @@ function Embarque(props) {
             accessor: "m_nIdEstado",
         },
     ]);
-    /*const columnsOperadores = React.useMemo(() => [
-        {
-            Name: "Numero Operador",
-            accessor: "m_nNumeroOperador",
-        },
-        {
-            Name: "Nombre",
-            accessor: "m_sNombreCompleto",
-        },
-        {
-            Name: "Activo",
-            accessor: "m_bActivo",
-            width: 100,
-            renderCell: (row) => {
-                return (
-                    <div
-                        style={{
-                            width: "100%",
-                            textAlign: "center",
-                            color: row.row.m_bActivo === "true" ? "green" : "red",
-                        }}
-                    >
-                        {row.row.m_bActivo ? (
-                            <SvgIcon component={Activo}/>
-                        ) : (
-                            <SvgIcon component={NoActivo}/>
-                        )}
-                    </div>
-                );
-            },
-        },
-    ]);
-    const columnsTipoUnidades = React.useMemo(() => [
-        {
-            Name: "Tipo de unidad",
-            accessor: "m_nIdTipoUnidad",
-        },
-        {
-            Name: "Identificador",
-            accessor: "m_nIdentificador",
-        },
-        {
-            Name: "Nomenclatura",
-            accessor: "m_sNomenclaturaSCT",
-        },
-        {
-            Name: "Estatus",
-            accessor: "m_bActivo",
-        },
-    ]);
-    const columnsUnidades = React.useMemo(() => [
-        {
-            Name: "Descripcion",
-            accessor: "m_sDescripcion",
-        },
-        {
-            Name: "Codigo",
-            accessor: "m_sCodigo",
-        },
-        {
-            Name: "Tipo de unidad",
-            accessor: "m_nIdTipoUnidad",
-        },
-        {
-            Name: "Estatus",
-            accessor: "m_bActivo",
-        },
-    ]);*/
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -668,52 +493,10 @@ function Embarque(props) {
         porcentajeSeguro: 0,
         aplicaSeguro: false,
 
-        //Remitente
-        /*idRemitente: '',
-        aliasRemitente: '',
-        nombreRemitente: '',
-        RFCRemitente: '',
-        domicilioRemitente: '',
-        ciudadRemitente: '',
-        codigoPostalRemitente: '',
-        correoRemitente: '',
-        telefonoRemitente: '',
-        contactoRemitente: '',
-        ciudadOrigen: '',
-        zonaRemitente: {},
-        calleRemitente: '',
-        numeroIntRemitente: '0',
-        numeroExtRemitente: '',
-        coloniaRemitente: '',*/
-
-        //Destinatario
-        /*idDestinatario: '',
-        aliasDestinatario: '',
-        nombreDestinatario: '',
-        RFCDestinatario: '',
-        domicilioDestinatario: '',
-        ciudadDestinatario: '',
-        codigoPostalDestinatario: '',
-        correoDestinatario: '',
-        telefonoDestinatario: '',
-        contactoDestinatario: '',
-        destinoDestinatario: '',
-        zonaDestinatario: {},
-        calleDestinatario: '',
-        numeroIntDestinatario: '0',
-        numeroExtDestinatario: '',
-        coloniaDestinatario: '',*/
-
         //Entrega
         entregaEnSucursal: false,
         idSucursalEntrega: '',
         diferenteEntrega: false,
-        /*ciudadEntrega: '',
-        codigoPostalEntrega: '',
-        zonaEntrega: '',
-        domicilioEntrega: '',
-        entregaEn: '',
-        datosAdicionalesEntrega: '',*/
 
         //Cita de recoleccion
         entregaConCita: false,
@@ -973,6 +756,7 @@ function Embarque(props) {
             pdfWindow.document.title = "Embarque " + folio;
         })
     }
+
     const handleChangeEntregaDD = (event) => {
         event.preventDefault();
         setEntregaDD(entregaDD => {
@@ -995,39 +779,9 @@ function Embarque(props) {
         })
         if (input === "codigoPostalEnt"){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
-                    setEntregaDD(entregaDD => {
-                        return{
-                            ...entregaDD,
-                            zonaOperativaEnt: data[0]
-                        }
-                    })
-                }else{
-                    setEntregaDD(entregaDD => {
-                        return{
-                            ...entregaDD,
-                            zonaOperativaEnt: {}
-                        }
-                    })
-                }*/
                 setDataZonasOperativasEntregaDD(data)
             })
             obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
-                    setEntregaDD(entregaDD => {
-                        return{
-                            ...entregaDD,
-                            zonaTarifaEnt: data[0]
-                        }
-                    })
-                }else{
-                    setEntregaDD(entregaDD => {
-                        return{
-                            ...entregaDD,
-                            zonaTarifaEnt: {}
-                        }
-                    })
-                }*/
                 setDataZonasTarifaEntregaDD(data)
             })
         }
@@ -1328,10 +1082,6 @@ function Embarque(props) {
                 RFCRemitente: id.m_sRFC,
                 domicilioRemitente: id.m_sDomicilio,
 
-                /*codigoPostalRemitente: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP == id.m_nIdCP
-                ),*/
-
                 ciudadRemitente: dataCiudad.find(
                     (o) => o.m_nIdCiudad == dataCodigosPostalesRemitente.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
                 ),
@@ -1346,10 +1096,6 @@ function Embarque(props) {
                 [state.identificadorModal]: id,
                 RFCDestinatario: id.m_sRFC,
                 domicilioDestinatario: id.m_sDomicilio,
-
-                /*codigoPostalDestinatario: dataCodigosPostalesDestinatario.find(
-                    (o) => o.m_nIdCP == id.m_nIdCP
-                ),*/
 
                 ciudadDestinatario: dataCiudad.find(
                     (o) => o.m_nIdCiudad ==
@@ -1928,8 +1674,6 @@ function Embarque(props) {
             return {
                 ...state,
                 agregar: "Agregar",
-                fechaInicial: dataFechaInicial.Fecha,
-                fechaFinal: dataFechaFinal.Fecha,
                 sucursalListado: 0,
                 estatusListado: 0,
                 folioRecoleccion: '',
@@ -1943,12 +1687,6 @@ function Embarque(props) {
         $('#Listado').addClass('in show');
         setTabActiva(0)
     }
-
-    /*function getUltimoFolioEmbarque() {
-        obtenerUltimoFolioEmbarques().then((respuesta) => {
-            SetDataFolioEmbarque(respuesta.data);
-        });
-    }*/
 
     const handleChange = (event) => {
         setState({
@@ -2009,28 +1747,6 @@ function Embarque(props) {
         });
     };
 
-    //Maneja filtrado de listado embarque
-    const handleFolioEmbarqueFiltro = async (event) => {
-        if (event.keyCode == 13) {
-            let value = event.target.value
-            if (event.target.value == '') {
-                value = 0
-            }
-            setState({
-                ...state,
-                folioEmbarque: event.target.value,
-            })
-            const {fechaInicial, fechaFinal, sucursalListado, estatusListado} = state
-            obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-    }
-
     function handleSelectDatos(id, cp) {
         setState({
             ...state,
@@ -2053,28 +1769,9 @@ function Embarque(props) {
         }))
     }
 
-    const handleClickResponsablePago = (event) => {
-        event.preventDefault();
-        if (dataClientes.length === 0) {
-            getAllClientes()
-        }
-    }
-
-    const getAllClientes = () => {
-        obtenerCliente().then((respuesta) => {
-            setDataClientes(respuesta.data)
-        })
-    }
-
-    const getDataParaListado = () => {
-
-
-    }
-
     const getDataParaEditar = () => {
         getAllSucursales();
         getAllEstatusEmbarque();
-        getAllCiudadesFiltro();
         getAllTipoCobro();
         getAllTipoMoneda();
         getTipoCambio()
@@ -2176,11 +1873,6 @@ function Embarque(props) {
             setDataCiudad(respuesta.data);
         });
     }
-    async function getAllCiudadesFiltro() {
-        obtenerCiudades().then((respuesta) => {
-            setDataCiudadF(respuesta.data);
-        });
-    }
 
     async function getAllTiposSeguro(){
         axios.get(`${process.env.REACT_APP_REPORT_URL}/api/TipoSeguros/GetListado`, {headers}).then(({data}) => {
@@ -2189,10 +1881,6 @@ function Embarque(props) {
     }
 
     const headers = API_HEADERS
-
-    function conDatos() {
-        return data.length != 0;
-    }
 
     function DefaultColumnFilter({column: {filterValue, preFilteredRows, setFilter},}) {
         const count = preFilteredRows.length;
@@ -2476,265 +2164,6 @@ function Embarque(props) {
         );
     }
 
-    /*function TableOperadores({columns, data, select}) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-            state,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div
-                className="col-md-12"
-                style={{maxHeight: "300px", overflow: "auto"}}
-            >
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render("Name")}
-                                    {/!* Add a sort direction indicator *!/}
-                                    <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up"/>
-                                                ) : (
-                                                    <i className="fa fa-caret-down"/>
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                    <div>
-                                        {column.canFilter ? column.render("Filter") : null}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                style={{
-                                    backgroundColor:
-                                        row.original.m_nIdOperador === select
-                                            ? "orange"
-                                            : "white",
-                                }}
-                                {...row.getRowProps()}
-                                onClick={handleSelectDatos.bind(this, row.original)}
-                            >
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }*/
-
-    /*function TableTipoUnidad({columns, data, select}) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-            state,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div className="col-md-12">
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render("Name")}
-                                    {/!* Add a sort direction indicator *!/}
-                                    <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up"/>
-                                                ) : (
-                                                    <i className="fa fa-caret-down"/>
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                    <div>
-                                        {column.canFilter ? column.render("Filter") : null}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                style={{
-                                    backgroundColor:
-                                        row.original.m_nIdTipoUnidad === select
-                                            ? "orange"
-                                            : "white",
-                                }}
-                                {...row.getRowProps()}
-                                onClick={handleSelectDatos.bind(this, row.original)}
-                            >
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }*/
-
-    /*function TableUnidad({columns, data, select}) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-            state,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div
-                className="col-md-12"
-                style={{maxHeight: "300px", overflow: "auto"}}
-            >
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render("Name")}
-                                    {/!* Add a sort direction indicator *!/}
-                                    <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up"/>
-                                                ) : (
-                                                    <i className="fa fa-caret-down"/>
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                    <div>
-                                        {column.canFilter ? column.render("Filter") : null}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                style={{
-                                    backgroundColor:
-                                        row.original.m_nIdUnidad === select ? "orange" : "white",
-                                }}
-                                {...row.getRowProps()}
-                                onClick={handleSelectDatos.bind(this, row.original)}
-                            >
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }*/
-
     /*const handleImprimir = () => {
         imprimirFormatosId(state.formatoSeleccionado).then((response) => {
             var file = new Blob([response.data], {type: 'application/pdf'})
@@ -2806,27 +2235,6 @@ function Embarque(props) {
         }
     }
 
-    const handleFechaCita = (event) => {
-        setState({
-            ...state,
-            fechaCita: event.target.value,
-        })
-    }
-
-    const handleHoraCitaMinima = (event) => {
-        setState({
-            ...state,
-            horaCitaMinima: event.target.value,
-        })
-    }
-
-    const handleHoraCitaMaxima = (event) => {
-        setState({
-            ...state,
-            horaCitaMaxima: event.target.value,
-        })
-    }
-
     const handleChangeCita = (data) => {
         debugger
         setState({
@@ -2841,23 +2249,11 @@ function Embarque(props) {
     const handleListPaquetesChange = (newList) => {
         setDataPaquetes(newList)
     }
+
     const handleListComplementosSATChange = (newList) => {
         setDataComplementosSAT(newList)
     }
 
-
-    const filtrarTipoCobro = (tipoCobro) => {
-        // if (!state.clientePaga) {
-        if (localStorage.getItem("RFC") === "ADI880815DA7") {
-            return tipoCobro.m_nIdTipoCobro === 10 || tipoCobro.m_nIdTipoCobro === 11
-        }else {
-            return true
-        }
-        // }else {
-        //     return (state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 10) || ( !state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 11)
-        //
-        // }
-    }
     const dialogVisible = (isVisible) => {
         setState({
           ...state,
@@ -2872,6 +2268,7 @@ function Embarque(props) {
     const actualizarConceptos = (list) => {
         setDataConceptos(list);
     }
+
     const saveIdCotizacion = (id) => {
         if (id){
             setState(state => {
@@ -2890,6 +2287,7 @@ function Embarque(props) {
             idRuta: idRuta,
         })
     }
+
     const handleChangeTipoSeguro = (event) => {
         setState({
             ...state,
