@@ -121,7 +121,7 @@ class TourUltimaMilla extends Component {
                                             </Grid>
                                             <Grid item md={10}>
                                                 <Typography variant={"body1"}>No.
-                                                    Paquetes: {g.m_bEsRecoleccion ? g.m_parrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0) : g.m_arrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0)}</Typography>
+                                                    Paquetes: {g.m_bEsRecoleccion ? g.m_parrPaquetes.reduce((a, b) => +a + +b.m_nCantidad, 0) : g.m_arrPaquetes.reduce((a, b) => +a + +b.ctd, 0)}</Typography>
                                             </Grid>
                                             <Grid item md={2}>
                                                 <IconButton aria-label="file" onClick={() => this.generarReporte(g)}>

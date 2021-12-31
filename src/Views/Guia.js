@@ -561,7 +561,7 @@ function Guia(props) {
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion
             })
             $('.nav-tabs li ').removeClass('active');
-            $('.nav-tabs li').eq(3).addClass('active');
+            $('.nav-tabs li').eq(5).addClass('active');
             $('.tab-content div ').removeClass('in show');
             $('#Cancelar').addClass('in show');
         })
@@ -1017,7 +1017,21 @@ function Guia(props) {
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_arrPaquetes)
+        let conceptosCast = []
+        conceptosCast = respuesta.data.m_arrConceptos.map(item => ({
+            id: Math.floor(Math.random() * 10000),
+            idConcepto: item.m_nIdConceptoFacturacion,
+            importe: item.m_cImporte,
+            retiene: item.m_nIdImpuestoRetiene,
+            traslada: item.m_nIdImpuestoTraslada,
+            importeIVA: item.m_cImporteIva,
+            importeRet: item.m_cImporteRetiene,
+            nombreConcepto: item.m_sConcepto,
+            descuento: item.m_c_Descuento
+        }))
 
+        // setDataConceptos(conceptosCast)
+        setConceptosAdicionales(conceptosCast)
         setState(state => {
             return {
                 ...state,
@@ -1070,7 +1084,7 @@ function Guia(props) {
 
             }
         })
-        obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, state.idTipoTarifa)
+        // obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, state.idTipoTarifa)
     }
 
     const obtenerTarifasPorEmbarque = (idEmbarque, idTipoTarifa) => {
@@ -2160,7 +2174,7 @@ function Guia(props) {
                                                                         name="idTipoTarifa"
                                                                         read="true"
                                                                         value={state.idTipoTarifa}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        disabled
                                                                     >
                                                                         <option value="1">Por peso o volumen</option>
                                                                         <option value="2">Por rango</option>

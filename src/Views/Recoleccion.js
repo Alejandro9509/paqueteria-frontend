@@ -172,10 +172,27 @@ function Recoleccion() {
     const [dataOperador, setDataOperador] = React.useState([]);
     const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
     const [dataUnidad, setDataUnidad] = React.useState([]);
+    //variables de valores por defecto
+    const [configuraciones, setConfiguraciones] = React.useState({
+        estatusRecoleccion: 0,
+        estatusEmbarque: 0,
+        monedaPredeterminadaEmbarque: 0,
+        tipoCambioEmbarque: 0,
+        estatusGuia: 0,
+        tipoTarifa: 0,
+        cobroCargaDescarga: false,
+        cobrarCita: false,
+        costoCita: "0",
+        detectarTipoCobro: false,
+        tipoCobro:0,
+        limpiarProducto: false,
+        idsTiposCobroSeleccionArray: [],
+        idsTiposCobroSeleccionString: ''
+    })
     const [state, setState] = React.useState({
         // ===VARIABLES DE LISTADO===
         idRecoleccion: 0,
-
+        valorDeclarado: 0,
         idTipoSeguro:5,
         porcentajeSeguro: 0,
         // ===VARIABLES DE CANCELAR===
@@ -685,21 +702,45 @@ function Recoleccion() {
         getAllTiposSeguro()
         getAllEstados()
         getAllEstatusRecoleccion()
+        getParametrosConfiguracion()
         
     }
-    async function getParametrosConfiguracion(){
-        obtenerParametrosConfiguracion().then(respuesta=>{
-          console.log(respuesta)
-          setState((config)=>{
-            return{
-              ...config,
-              estatusRecoleccion:respuesta.data.EstatusRecoleccion, 
-              moneda:respuesta.data.MonedaEmbarque,
-              tipoCambio:respuesta.data.TipoCambioEmbarque
-                   }
-          })
+
+    async function getParametrosConfiguracion() {
+        obtenerParametrosConfiguracion().then(respuesta => {
+            console.log(respuesta)
+            if (state.agregar === "Agregar"){
+                setState((config) => {
+                    return {
+                        ...config,
+                        estatusRecoleccion: respuesta.data.EstatusRecoleccion,
+                        moneda: respuesta.data.MonedaEmbarque,
+                        tipoCambio: respuesta.data.TipoCambioEmbarque,
+                        tipoCobro: respuesta.data.TipoCobro
+                    }
+                })
+            }
+            setConfiguraciones((config) => {
+                return {
+                    ...config,
+                    estatusRecoleccion: respuesta.data.EstatusRecoleccion,
+                    estatusEmbarque: respuesta.data.EstatusEmbarque,
+                    monedaPredeterminadaEmbarque: respuesta.data.MonedaEmbarque,
+                    tipoCambioEmbarque: respuesta.data.TipoCambioEmbarque,
+                    estatusGuia: respuesta.data.EstatusGuia,
+                    tipoTarifa: respuesta.data.TipoTarifaTarifas,
+                    cobroCargaDescarga: respuesta.data.CobroCargaDescargaTarifa,
+                    cobrarCita: respuesta.data.esCobro,
+                    costoCita: respuesta.data.CobroCitaTarifas || 0,
+                    detectarTipoCobro: respuesta.data.DetectarTipoCobro,
+                    limpiarProducto: respuesta.data.LimpiarProducto,
+                    tipoCobro: respuesta.data.TipoCobro,
+                    idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
+                    idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
+                }
+            })
         })
-      }
+    }
     const handleClickRemitenteDestinatario = (event) => {
         event.preventDefault()
         if (dataRemitenteDestinatario.length === 0) {
@@ -1064,7 +1105,6 @@ function Recoleccion() {
 
     function handleShowModificar(id) {
         setIsModificar(true);
-        getDataParaEditar()
         obtenerRecoleccionId(id).then((respuesta) => {
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(1).addClass('active');
@@ -1086,7 +1126,6 @@ function Recoleccion() {
 
     function handleShowConsultar(id) {
         setIsAgregar(false);
-        getDataParaEditar()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1360,7 +1399,6 @@ function Recoleccion() {
         setIsAgregar(false);
         event.stopPropagation()
         getDataParaEditar()
-        getParametrosConfiguracion()
         limpiarInputsAgregar()
         setState(state => {
             return {
@@ -1448,7 +1486,7 @@ function Recoleccion() {
             idTipoSeguro: row.data.m_bTieneSeguro ? row.data.m_nIdTipoSeguro : 5,
             porcentajeSeguro: row.data.m_bTieneSeguro ? row.data.m_cPorcentajeSeguro : 0,
             aplicaSeguro: row.data.m_bTieneSeguro,
-            tipoCobro: row.data.m_bSinCredito ? "10" : "11",
+            tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
             openDialog: false,
         }))
     }
@@ -2788,6 +2826,17 @@ function Recoleccion() {
             citaPendiente: data.citaPendiente
         })
     }
+
+    const handleChangeTipoSeguro = (event) => {
+        setState({
+            ...state,
+            idTipoSeguro: event.target.value,
+            porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
+            aplicaSeguro: (event.target.value === 3) || (event.target.value === 4),
+            valorDeclarado: 0
+        });
+    }
+
     return (
         <div>
             {
@@ -3235,7 +3284,7 @@ function Recoleccion() {
                         </div>
 
                         <div id="Agregar" className="tab-pane fade">
-                            <form className="j-forms" onSubmit={handleAceptar}>
+                            <form className="j-forms">
                                 <div className="form-content">
                                     <div
                                         className="wizard-breadcrumb number-style"
@@ -3513,8 +3562,7 @@ function Recoleccion() {
                                                                             name: "tipoCobro"
                                                                         }}
                                                                     >
-                                                                        {dataTipoCobro.filter(d => filtrarTipoCobro(d)).map((tipoCobro) => (
-                                                                            tipoCobro.valid &&
+                                                                        {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((tipoCobro) => (
                                                                             <option
                                                                                 key={tipoCobro.m_nIdTipoCobro}
                                                                                 value={tipoCobro.m_nIdTipoCobro}
@@ -3554,7 +3602,7 @@ function Recoleccion() {
                                                                         required
                                                                         label="Tipo seguro"
                                                                         value={state.idTipoSeguro}
-                                                                        onChange={(event) => {
+                                                                        /*onChange={(event) => {
                                                                             event.preventDefault();
                                                                             setState({
                                                                                 ...state,
@@ -3562,7 +3610,8 @@ function Recoleccion() {
                                                                                 porcentajeSeguro: dataTiposSeguro.find(item => item.m_nIdTipoSeguro === event.target.value).m_xPorcentaje,
                                                                                 aplicaSeguro: (event.target.value === 3) || (event.target.value === 4)
                                                                             });
-                                                                        }}
+                                                                        }}*/
+                                                                        onChange={handleChangeTipoSeguro}
                                                                         variant="outlined"
                                                                         disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                                                     >
@@ -3624,6 +3673,9 @@ function Recoleccion() {
                                     </div>
 
                                     <div className="widget-wrap" id="paquetesSobres">
+                                        <div className="widget-header">
+                                            <h2>Paquetes</h2>
+                                        </div>
                                         <Paquetes
                                             dataPaquetes={dataPaquetes}
                                             onChangeList={handleListPaquetesChange}
@@ -4665,6 +4717,7 @@ function Recoleccion() {
                                             type="submit"
                                             className="btn btn-primary primary-btn"
                                             disabled={state.agregar === "Consultar"}
+                                            onClick={handleAceptar}
                                         >
                                             Aceptar
                                         </button>

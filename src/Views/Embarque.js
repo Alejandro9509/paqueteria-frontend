@@ -1290,7 +1290,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-      if (state.idEmbarque != 0) {
+     if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1436,7 +1436,6 @@ function Embarque(props) {
     //Se checa si se entró a embarque por una recoleccion
     useEffect(async (value) => {
         if (props.location.idRecoleccion !== undefined) {
-        // getDataParaEditar()
         obtenerRecoleccionId(props.location.idRecoleccion)
             .then((respuesta) => {
                 console.log('Recoleccion: ', respuesta.data);
@@ -1526,7 +1525,7 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
-            console.log('Embarque: ', respuesta)
+            console.log(JSON.stringify(respuesta.data))
             setState({
                 ...state,
                 agregar: "Consultar",
@@ -1579,6 +1578,7 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
+            console.log(JSON.stringify(respuesta.data))
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -2088,16 +2088,17 @@ function Embarque(props) {
 
         obtenerParametrosConfiguracion().then(respuesta=>{
             console.log(respuesta)
-
-            setState((config)=>{
-                return{
-                    ...config,
-                    estatusEmbarque:respuesta.data.EstatusEmbarque,
-                    moneda:respuesta.data.MonedaEmbarque,
-                    tipoCambio:respuesta.data.TipoCambioEmbarque,
-                    tipoCobro: respuesta.data.TipoCobro
-                }
-            })
+            if (state.agregar === "Agregar") {
+                setState((config) => {
+                    return {
+                        ...config,
+                        estatusEmbarque: respuesta.data.EstatusEmbarque,
+                        moneda: respuesta.data.MonedaEmbarque,
+                        tipoCambio: respuesta.data.TipoCambioEmbarque,
+                        tipoCobro: respuesta.data.TipoCobro
+                    }
+                })
+            }
             setConfiguraciones((config) => {
                 return {
                     ...config,
@@ -2144,7 +2145,6 @@ function Embarque(props) {
 
     async function getAllSucursales() {
         obtenerSucursales().then((respuesta) => {
-            console.log('sucursales: ', respuesta.data)
             setDataSucursal(respuesta.data);
         });
     }
@@ -3299,7 +3299,7 @@ function Embarque(props) {
                         <div id="Agregar"
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
 
-                            <form className="j-forms row" onSubmit={handleAceptar}>
+                            <form className="j-forms row" >
                                 <div className="form-content">
                                     <div
                                         className="wizard-breadcrumb number-style"
@@ -3679,11 +3679,15 @@ function Embarque(props) {
                                     </div>
 
                                     <div className="widget-wrap" id="paquetesSobres">
+                                        <div className="widget-header">
+                                            <h2>Paquetes</h2>
+                                        </div>
                                         <Paquetes
                                             dataPaquetes={dataPaquetes}
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                             cliente={state.clientePaga}
+                                            LimpiarProducto={configuraciones.limpiarProducto}
                                         />
 
                                     </div>
@@ -4155,6 +4159,7 @@ function Embarque(props) {
                                         type="submit"
                                         className="btn btn-primary primary-btn"
                                         disabled={state.agregar === "Consultar"}
+                                        onClick={handleAceptar}
                                     >
                                         Aceptar
                                     </button>
@@ -4266,8 +4271,7 @@ function Embarque(props) {
                                                         >
                                                             Cancelar
                                                         </button>
-                                                        <button
-                                                            type="submit"
+                                                        <button type={"submit"}
                                                             className="btn btn-primary primary-btn"
                                                         >
                                                             Aceptar
