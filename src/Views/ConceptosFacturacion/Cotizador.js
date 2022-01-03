@@ -52,7 +52,7 @@ class Cotizador extends Component {
 
     calcularTarifa() {
         if (this.props.paquetes.length === 0){
-            showSuccess("¿Y los paquetes?")
+            showSuccess("No se puede crear cotización sin paquetes.")
             return
         }
         obtenerCotizacion(this.props.embarque, this.props.paquetes, this.props.remitente, this.props.destinatario,this.props.recoleccion).then(({data}) => {
