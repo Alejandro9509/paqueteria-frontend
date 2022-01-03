@@ -34,6 +34,7 @@ import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";
 import Noty from "noty";
 import {
+    Button,
     Chip,
     Dialog,
     DialogActions,
@@ -106,7 +107,7 @@ import DialogTableClientes from "./Clientes/DialogTableClientes";
 import Cotizador from "./ConceptosFacturacion/Cotizador";
 import {obtenerInformeFiltro, obtenerInformeReporte} from "../Util/Contexts/InformesContext";
 import Filtros from "./Filtros/Filtros";
-import {obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
+import {agregarGuia, modificarGuia, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
 import {obtenerViajesByFiltro} from "../Util/Contexts/ViajesContext";
 import Citas from "./Citas/Citas";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
@@ -117,7 +118,7 @@ function showSuccess(mensaje) {
         type: "information",
         layout: "topCenter",
         text: mensaje,
-        timeout: "3000",
+        timeout: "8000",
     }).show();
 }
 
@@ -1062,12 +1063,20 @@ function Embarque(props) {
         } else {
             agregarEmbarques(params)
                 .then((respuesta) => {
-                    showSuccess(respuesta.data);
-                    if (respuesta.data != "Agregado Exitosamente"){
+                    if (respuesta.data.m_nFolioEmbarque.length === 0){
                         return
                     }
+                    showSuccess("Embarque creado con folio: "+respuesta.data.m_nFolioEmbarque);
+
                     console.log(respuesta.data);
-                    handleShowListado();
+                    // handleShowListado();
+                    setState(state => {
+                        return{
+                            ...state,
+                            idEmbarque: respuesta.data.m_nIdEmbarque,
+                            folioEmbarque: respuesta.data.m_nFolioEmbarque,
+                        }
+                    })
                 })
                 .catch((err) => {
                     console.log(err);
@@ -2299,6 +2308,62 @@ function Embarque(props) {
             aplicaSeguro: (event.target.value === 3) || (event.target.value === 4),
             valorDeclarado: 0
         });
+    }
+
+    const generarGuia = () => {
+
+        if (dataConceptos.length === 0) {
+            showSuccess("No se puede guardar una guia sin conceptos.");
+            return
+        }
+        let params = {
+            "TIpoCambio": state.tipoCambio,
+            "FolioGuia": state.folioGuia,
+            "IdEstatusGuia": 4,
+            "IdEmbarque": state.idEmbarque,
+            "IdMoneda": state.moneda,
+
+            "CreadoPor": state.CreadoPor,
+            "ModificadoPor": state.ModificadoPor,
+            "IdSucursal": state.idSucursalAgregar,
+            "ValorDeclarado": state.valorDeclarado,
+            // "idTipoServicio": state.idTipoServicio,
+            "m_dFecha": state.fechaHoraRegistro.substr(0, 10),
+            "m_sHora": state.fechaHoraRegistro.substr(state.fechaHoraRegistro.length - 5),
+
+            "arClsGuiaConceptos": dataConceptos.map(c => ({
+                m_nIdConceptosFacturacion: c.idConcepto,
+                m_cImporte: c.importe,
+                m_nIdImpuestoTraslada: c.traslada,
+                m_nIdImpuestoRetiene: c.retiene,
+                m_cImporteRetiene: c.importeRet,
+                m_cImporteIva: c.importeIVA,
+                m_bActivo: true,
+                m_cDescuento: c.descuento || 0
+            })),
+
+        }
+        console.log(params)
+        console.log(JSON.stringify(params))
+        if (state.idEmbarque > 0) {
+            agregarGuia(params).then(respuesta => {
+                showSuccess(respuesta.data)
+                handleShowListado()
+            }).catch(err => {
+                console.log(err)
+                showSuccess(err)
+            });
+        } else {
+            modificarGuia(state.idGuia, params).then(respuesta => {
+                showSuccess(respuesta.data)
+                showSuccess('Guia modificada')
+                handleShowListado()
+            }).catch(err => {
+                console.log(err)
+                showSuccess(err)
+            });
+
+        }
     }
 
     return (
@@ -3560,6 +3625,12 @@ function Embarque(props) {
                                             ctd:p.m_nCantidad,
                                             IdProducto:p.m_nIdProducto
                                         }))} />
+                                    </div>
+
+                                    <div className="row">
+                                        <Button fullWidth color={"primary"} variant={"contained"} onClick={() => generarGuia()} disabled={state.agregar !== "Agregar" || state.idEmbarque <= 0}>
+                                            Generar Guia
+                                        </Button>
                                     </div>
 
                                 </div>
