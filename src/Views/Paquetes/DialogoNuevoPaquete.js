@@ -89,6 +89,7 @@ export default function DialogoNuevoPaquete(props) {
     };
 
     const handleAceptar = (e) => {
+        e.stopPropagation()
         e.preventDefault()
         if (paquete.producto !== null){
             if (state.agregarMas){
@@ -222,7 +223,7 @@ export default function DialogoNuevoPaquete(props) {
 
     return (
         <div>
-            <Button variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'right'}} disabled={props.disabled}>
+            <Button variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'left'}} disabled={props.disabled}>
                 Agregar paquete
             </Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title"

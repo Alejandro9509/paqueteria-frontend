@@ -131,14 +131,12 @@ function RemitenteDestinatario(props) {
       ) {
         if (props.remitente) {
           let estado =`${respuesta.data.m_nIdEstadoRemitente}`
-          obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(
-            ({ data }) => {
               setState((state) => {
                 return {
                   ...state,
                   id: respuesta.data.m_nIdRemitente,
                   alias: respuesta.data.m_sAliasRemitente,
-                  nombre: data.m_sNombre,
+                  nombre: respuesta.data.m_sNombreRemitente,
                   RFC: respuesta.data.m_sRFCRemitente,
                   domicilio: respuesta.data.m_sDomicilioRemitente,
                   calle: respuesta.data.m_sCalleRemitente,
@@ -152,8 +150,7 @@ function RemitenteDestinatario(props) {
                   contacto: respuesta.data.m_sContactoRemitente,
                 };
               });
-            }
-          );
+         
           obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
             setDataMunicipios(data);
           });
@@ -211,15 +208,12 @@ function RemitenteDestinatario(props) {
           }
         } else if (props.destinatario) {
           let estado = `${respuesta.data.m_nIdEstadoDestinatario}`
-          obtenerRemitentesDestinatariosId(
-            respuesta.data.m_nIdDestinatario
-          ).then(({ data }) => {
             setState((state) => {
               return {
                 ...state,
                 id: respuesta.data.m_nIdDestinatario,
                 alias: respuesta.data.m_sAliasDestinatario,
-                nombre: data.m_sNombre,
+                nombre: respuesta.data.m_sNombreDestinatario,
                 RFC: respuesta.data.m_sRFCDestinatario,
                 domicilio: respuesta.data.m_sDomicilioDestinatario,
                 calle: respuesta.data.m_sCalleDestinatario,
@@ -231,11 +225,11 @@ function RemitenteDestinatario(props) {
                 correo: respuesta.data.m_sCorreoDestinatario,
                 telefono: respuesta.data.m_sTelefonoDestinatario,
                 contacto: respuesta.data.m_sContactoDestinatario,
-                latitud: data.m_sLatitud || "",
-                longitud: data.m_sLongitud || "",
+                latitud: respuesta.data.m_sLatitud || "",
+                longitud: respuesta.data.m_sLongitud || "",
               };
             });
-          });
+      
           obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
             setDataMunicipios(data);
           });
@@ -296,12 +290,10 @@ function RemitenteDestinatario(props) {
         /**Si se van a mostrar datos de remitente*/
         if (props.remitente) {
           let estado =`${respuesta.data.m_nIdEstadoRemitente}`
-          obtenerRemitentesDestinatariosId(respuesta.data.m_nIdRemitente).then(
-            ({ data }) => {
               setState((state) => {
                 return {
                   ...state,
-                  nombre: data.m_sNombre,
+                  nombre: respuesta.data.m_sNombreRemitente,
                   RFC: respuesta.data.m_sRFCRemitente,
                   domicilio: respuesta.data.m_sDomicilioRemitente,
                   ciudad: respuesta.data.m_nCiudadRemitente,
@@ -318,8 +310,7 @@ function RemitenteDestinatario(props) {
                   municipio: respuesta.data.m_sMunicipioRemitente,
                 };
               });
-            }
-          );
+         
           obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
             setDataMunicipios(data);
           });
@@ -349,13 +340,10 @@ function RemitenteDestinatario(props) {
           /**Si se van a mostrar datos de destinatario*/
         } else if (props.destinatario) {
           let estado =  `${respuesta.data.m_nIdEstadoDestinatario}`;
-          obtenerRemitentesDestinatariosId(
-            respuesta.data.m_nIdDestinatario
-          ).then(({ data }) => {
             setState((state) => {
               return {
                 ...state,
-                nombre: data.m_sNombre,
+                nombre: respuesta.data.m_sNombreDestinatario,
                 RFC: respuesta.data.m_sRFCDestinatario,
                 domicilio: respuesta.data.m_sDomicilioDestinatario,
                 ciudad: respuesta.data.m_nIdCIudadDestinatario,
@@ -372,7 +360,6 @@ function RemitenteDestinatario(props) {
                 colonia: respuesta.data.m_sColoniaDestinatario,
               };
             });
-          });
           obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
             setDataMunicipios(data);
           });

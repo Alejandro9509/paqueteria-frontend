@@ -114,6 +114,19 @@ function CrearConceptoSAT(props) {
                                     name="cantidad"
                                 />
                             </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    variant="outlined"
+                                    margin="dense"
+                                    type="number"
+                                    className="form-control"
+                                    label="Peso"
+                                    disabled={props.consulta}
+                                    value={props.dataComplemento.peso}
+                                    onChange={handleChange}
+                                    name="peso"
+                                />
+                            </Grid>
                             <Grid item xs={2}>
                                 <TextField
                                     variant="outlined"
