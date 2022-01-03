@@ -26,3 +26,4 @@ yarn-error.log*
 /.idea/dataSources.local.xml
 /.idea/dataSources
 /.idea
+.idea/workspace.xml
