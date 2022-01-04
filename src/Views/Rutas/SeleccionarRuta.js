@@ -116,6 +116,9 @@ export default function SeleccionarRuta(props){
                     </MenuItem>
                 ))}
             </TextField>
+            <div className="widget-header">
+                <h2>Trayectos</h2>
+            </div>
             <div className={"row"} style={{ height: '100%' }}>
                 <DataGrid
                     columns={columns}
