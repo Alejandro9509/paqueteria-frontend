@@ -2776,7 +2776,7 @@ function Embarque(props) {
 
                             <form className="j-forms row" >
                                 <div className="form-content">
-                                    <div
+                                    {/*<div
                                         className="wizard-breadcrumb number-style"
                                         style={{
                                             position: "sticky",
@@ -2800,7 +2800,7 @@ function Embarque(props) {
                                             </Stepper>
 
                                         </div>
-                                    </div>
+                                    </div>*/}
 
                                     <div className="widget-wrap" id="informacionGeneral">
                                         <div className="widget-header">
@@ -3352,6 +3352,9 @@ function Embarque(props) {
 
                                     <div className="row">
                                         <div className="widget-wrap">
+                                            <div className="widget-header">
+                                                <h2>Ruta</h2>
+                                            </div>
                                             <SeleccionarRuta
                                                 IdRuta={state.idRuta}
                                                 IdOrigen={remitente.origenRemitente ? remitente.origenRemitente.m_nIdCiudad : ''}
@@ -3653,7 +3656,7 @@ function Embarque(props) {
                                                 $('.nav-tabs li').eq(0).addClass('active');
                                                 $('.tab-content div ').removeClass('in show');
                                                 $('#Listado').addClass('in show');
-                                            }}>
+                                            }} style={{color: "white"}}>
                                                 Cancelar
                                             </Button>
                                         </Grid>

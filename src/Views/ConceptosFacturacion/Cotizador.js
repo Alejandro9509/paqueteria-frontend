@@ -97,6 +97,9 @@ class Cotizador extends Component {
                 <div className="widget-container">
                     <div className="widget-content">
                         <div className="row">
+                            <div className="widget-header">
+                                <h2>Conceptos de facturación</h2>
+                            </div>
                             {
                                 this.state.mostarConceptos &&
                                 <ConceptosFacturacionGuias
