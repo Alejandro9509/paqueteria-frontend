@@ -50,7 +50,7 @@ import {ToggleButtonGroup} from "@material-ui/lab";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import {API_HEADERS, dataGridLocaleText} from "../Constants";
+import {API_HEADERS, dataGridLocaleText, TICKET_ZABRA_TAMPLATE} from "../Constants";
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import {obtenerCiudades, obtenerCiudadId} from "../Util/Contexts/CiudadesContext";
@@ -1077,6 +1077,21 @@ function Embarque(props) {
                             folioEmbarque: respuesta.data.m_nFolioEmbarque,
                         }
                     })
+
+                    confirmAlert({
+                        title: 'Confirmación',
+                        message: '¿Desea crear la guía para este embarque?',
+                        buttons: [
+                            {
+                                label: 'Yes',
+                                onClick: async () => generarGuia(respuesta.data.m_nIdEmbarque)
+                            },
+                            {
+                                label: 'No',
+                                onClick: async () => handleShowListado()
+                            }
+                        ]
+                    });
                 })
                 .catch((err) => {
                     console.log(err);
@@ -2310,17 +2325,18 @@ function Embarque(props) {
         });
     }
 
-    const generarGuia = () => {
+    const generarGuia = (idEmbarque) => {
 
         if (dataConceptos.length === 0) {
             showSuccess("No se puede guardar una guia sin conceptos.");
+            handleShowListado()
             return
         }
         let params = {
             "TIpoCambio": state.tipoCambio,
             "FolioGuia": state.folioGuia,
             "IdEstatusGuia": 4,
-            "IdEmbarque": state.idEmbarque,
+            "IdEmbarque": idEmbarque,
             "IdMoneda": state.moneda,
 
             "CreadoPor": state.CreadoPor,
@@ -2345,24 +2361,17 @@ function Embarque(props) {
         }
         console.log(params)
         console.log(JSON.stringify(params))
-        if (state.idEmbarque > 0) {
+        if (idEmbarque > 0) {
             agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
+                handleShowListado()
             });
         } else {
-            modificarGuia(state.idGuia, params).then(respuesta => {
-                showSuccess(respuesta.data)
-                showSuccess('Guia modificada')
-                handleShowListado()
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err)
-            });
-
+            showSuccess("Hubo un problema al tratar de generar la guia.")
         }
     }
 
@@ -3627,14 +3636,46 @@ function Embarque(props) {
                                         }))} />
                                     </div>
 
-                                    <div className="row">
-                                        <Button fullWidth color={"primary"} variant={"contained"} onClick={() => generarGuia()} disabled={state.agregar !== "Agregar" || state.idEmbarque <= 0}>
+                                    {/*<div className="row">
+                                        <Button fullWidth color={"primary"} variant={"contained"} onClick={() => generarGuia()} >
                                             Generar Guia
                                         </Button>
-                                    </div>
+                                    </div>*/}
 
                                 </div>
                                 <div className="form-footer ol-md-12">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                            <Button fullWidth color={"secondary"} variant={"contained"} onClick={(event) => {
+                                                event.stopPropagation();
+                                                setState({...state, agregar: "Agregar"});
+                                                $('.nav-tabs li ').removeClass('active');
+                                                $('.nav-tabs li').eq(0).addClass('active');
+                                                $('.tab-content div ').removeClass('in show');
+                                                $('#Listado').addClass('in show');
+                                            }}>
+                                                Cancelar
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                            <Button fullWidth
+                                                    color={"primary"}
+                                                    variant={"contained"}
+                                                    type="submit"
+                                                    disabled={state.agregar === "Consultar"}
+                                                    onClick={handleAceptar}>
+                                                Guardar embarque
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                    {/*<button
+                                        type="submit"
+                                        className="btn btn-primary primary-btn"
+                                        disabled={state.agregar === "Consultar"}
+                                        onClick={handleAceptar}
+                                    >
+                                        Guardar Embarque
+                                    </button>
                                     <button
                                         type="button"
                                         onClick={(event) => {
@@ -3648,15 +3689,8 @@ function Embarque(props) {
                                         className="btn btn-secondary secondary-btn"
                                     >
                                         Cancelar
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="btn btn-primary primary-btn"
-                                        disabled={state.agregar === "Consultar"}
-                                        onClick={handleAceptar}
-                                    >
-                                        Aceptar
-                                    </button>
+                                    </button>*/}
+
                                 </div>
                             </form>
                         </div>
