@@ -1039,6 +1039,15 @@ function Informes({history}) {
 
     }
 
+    const handleShowCubicar = () => {
+        getEmptyState()
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(4).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Cubicar').addClass('in show');
+
+    }
+
     function handleShowModificar(id) {
         handleShowAgregar()
         obtenerInformesId(id).then(({data}) => {
@@ -1400,14 +1409,7 @@ function Informes({history}) {
                         </li>
 
                         <li>
-                            <a data-toggle="tab" href="#Cubicar" onClick={(event) => {
-                                event.stopPropagation();
-                                setState({...state, agregar: "Agregar"});
-                                $('.nav-tabs li ').removeClass('active');
-                                $('.nav-tabs li').eq(4).addClass('active');
-                                $('.tab-content div ').removeClass('in show');
-                                $('#Cubicar').addClass('in show');
-                            }}>
+                            <a data-toggle="tab" href="#Cubicar" onClick={handleShowCubicar}>
                                 <i className="fa fa-adjust"/> Cubicar / Optimizar Rutas
                             </a>
                         </li>
