@@ -275,7 +275,9 @@ class AgregarViaje extends Component {
     }
 
     handleSelectCP(id, dobleClick, e) {
-        clearTimeout(timer);
+        debugger
+        console.log("le pique x2")
+        /*clearTimeout(timer);
         if (e.detail === 1) {
             timer = setTimeout(() => {
                 this.setState({
@@ -288,7 +290,7 @@ class AgregarViaje extends Component {
                 [this.state.identificadorModal]: id,
                 openDialog: false
             })
-        }
+        }*/
     }
 
     getAllSucursales() {
@@ -862,44 +864,6 @@ class AgregarViaje extends Component {
                                                             margin="dense"
                                                             variant="outlined"
                                                             {...params}
-                                                            InputProps={{
-                                                                ...params.InputProps,
-                                                                style: {height: "33px", fontSize: "14px"},
-                                                                type: "search",
-                                                                //disabled: state.agregar == "Consultar",
-                                                                disableUnderline: true,
-                                                                endAdornment: (
-                                                                    <InputAdornment position="end">
-                                                                        <IconButton
-                                                                            padding="0px"
-                                                                            style={{
-                                                                                paddingRight: "0px",
-                                                                            }}
-                                                                            //disabled={state.agregar == "Consultar"}
-                                                                            onClick={() => {
-                                                                                this.setState({
-                                                                                    identificadorModal:
-                                                                                        "idCiudadOrigen",
-                                                                                    tipoModal: 1,
-                                                                                    openDialog: true
-                                                                                })
-                                                                            }}
-                                                                        >
-                                                                            <PageviewIcon
-                                                                                style={{
-                                                                                    color: "#F9A03E",
-                                                                                    fontSize: 32,
-                                                                                    paddingInlineEnd: 0,
-                                                                                    paddingRight: 0,
-                                                                                    paddingBlockEnd: 0,
-                                                                                    paddingLeft: 0,
-                                                                                    paddingBlock: 0,
-                                                                                }}
-                                                                            />
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                ),
-                                                            }}
                                                         />
                                                     </div>
                                                 )}
@@ -933,44 +897,6 @@ class AgregarViaje extends Component {
                                                             required
                                                             variant="outlined"
                                                             {...params}
-                                                            InputProps={{
-                                                                ...params.InputProps,
-                                                                style: {height: "33px", fontSize: "14px"},
-                                                                type: "search",
-                                                                //disabled: state.agregar == "Consultar",
-                                                                disableUnderline: true,
-                                                                endAdornment: (
-                                                                    <InputAdornment position="end">
-                                                                        <IconButton
-                                                                            padding="0px"
-                                                                            style={{
-                                                                                paddingRight: "0px",
-                                                                            }}
-                                                                            //disabled={state.agregar == "Consultar"}
-                                                                            onClick={() => {
-                                                                                this.setState({
-                                                                                    identificadorModal:
-                                                                                        "idCiudadDestino",
-                                                                                    tipoModal: 1,
-                                                                                    openDialog: true
-                                                                                })
-                                                                            }}
-                                                                        >
-                                                                            <PageviewIcon
-                                                                                style={{
-                                                                                    color: "#F9A03E",
-                                                                                    fontSize: 32,
-                                                                                    paddingInlineEnd: 0,
-                                                                                    paddingRight: 0,
-                                                                                    paddingBlockEnd: 0,
-                                                                                    paddingLeft: 0,
-                                                                                    paddingBlock: 0,
-                                                                                }}
-                                                                            />
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                ),
-                                                            }}
                                                         />
                                                     </div>
                                                 )}
@@ -1016,44 +942,6 @@ class AgregarViaje extends Component {
                                                                 required
                                                                 variant="outlined"
                                                                 {...params}
-                                                                InputProps={{
-                                                                    ...params.InputProps,
-                                                                    style: {height: "33px", fontSize: "14px"},
-                                                                    type: "search",
-                                                                    //disabled: state.agregar == "Consultar",
-                                                                    disableUnderline: true,
-                                                                    endAdornment: (
-                                                                        <InputAdornment position="end">
-                                                                            <IconButton
-                                                                                padding="0px"
-                                                                                style={{
-                                                                                    paddingRight: "0px",
-                                                                                }}
-                                                                                //disabled={state.agregar == "Consultar"}
-                                                                                onClick={() => {
-                                                                                    this.setState({
-                                                                                        identificadorModal:
-                                                                                            "IdRemolque1",
-                                                                                        tipoModal: 4,
-                                                                                        openDialog: true
-                                                                                    })
-                                                                                }}
-                                                                            >
-                                                                                <PageviewIcon
-                                                                                    style={{
-                                                                                        color: "#F9A03E",
-                                                                                        fontSize: 32,
-                                                                                        paddingInlineEnd: 0,
-                                                                                        paddingRight: 0,
-                                                                                        paddingBlockEnd: 0,
-                                                                                        paddingLeft: 0,
-                                                                                        paddingBlock: 0,
-                                                                                    }}
-                                                                                />
-                                                                            </IconButton>
-                                                                        </InputAdornment>
-                                                                    ),
-                                                                }}
                                                             />
                                                         </div>
                                                     )}
@@ -1128,44 +1016,6 @@ class AgregarViaje extends Component {
                                                                 margin="dense"
                                                                 variant="outlined"
                                                                 {...params}
-                                                                InputProps={{
-                                                                    ...params.InputProps,
-                                                                    style: {height: "33px", fontSize: "14px"},
-                                                                    type: "search",
-                                                                    //disabled: state.agregar == "Consultar",
-                                                                    disableUnderline: true,
-                                                                    endAdornment: (
-                                                                        <InputAdornment position="end">
-                                                                            <IconButton
-                                                                                padding="0px"
-                                                                                style={{
-                                                                                    paddingRight: "0px",
-                                                                                }}
-                                                                                //disabled={state.agregar == "Consultar"}
-                                                                                onClick={() => {
-                                                                                    this.setState({
-                                                                                        identificadorModal:
-                                                                                            "IdRemolque2",
-                                                                                        tipoModal: 4,
-                                                                                        openDialog: true
-                                                                                    })
-                                                                                }}
-                                                                            >
-                                                                                <PageviewIcon
-                                                                                    style={{
-                                                                                        color: "#F9A03E",
-                                                                                        fontSize: 32,
-                                                                                        paddingInlineEnd: 0,
-                                                                                        paddingRight: 0,
-                                                                                        paddingBlockEnd: 0,
-                                                                                        paddingLeft: 0,
-                                                                                        paddingBlock: 0,
-                                                                                    }}
-                                                                                />
-                                                                            </IconButton>
-                                                                        </InputAdornment>
-                                                                    ),
-                                                                }}
                                                             />
                                                         </div>
                                                     )}
@@ -1241,44 +1091,6 @@ class AgregarViaje extends Component {
                                                             margin="dense"
                                                             variant="outlined"
                                                             {...params}
-                                                            InputProps={{
-                                                                ...params.InputProps,
-                                                                style: {height: "33px", fontSize: "14px"},
-                                                                type: "search",
-                                                                //disabled: state.agregar == "Consultar",
-                                                                disableUnderline: true,
-                                                                endAdornment: (
-                                                                    <InputAdornment position="end">
-                                                                        <IconButton
-                                                                            padding="0px"
-                                                                            style={{
-                                                                                paddingRight: "0px",
-                                                                            }}
-                                                                            //disabled={state.agregar == "Consultar"}
-                                                                            onClick={() => {
-                                                                                this.setState({
-                                                                                    identificadorModal:
-                                                                                        "IdDolly",
-                                                                                    tipoModal: 4,
-                                                                                    openDialog: true
-                                                                                })
-                                                                            }}
-                                                                        >
-                                                                            <PageviewIcon
-                                                                                style={{
-                                                                                    color: "#F9A03E",
-                                                                                    fontSize: 32,
-                                                                                    paddingInlineEnd: 0,
-                                                                                    paddingRight: 0,
-                                                                                    paddingBlockEnd: 0,
-                                                                                    paddingLeft: 0,
-                                                                                    paddingBlock: 0,
-                                                                                }}
-                                                                            />
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                ),
-                                                            }}
                                                         />
                                                     </div>
                                                 )}
@@ -1382,78 +1194,6 @@ class AgregarViaje extends Component {
                             <h2 color={'#717171'}>Informes para asignación</h2>
                             <br/>
                             <div className="row" style={{display: "flex"}}>
-                                {/* Ruta */}
-                                {/*<div className="col-sm-12 col-md-12 unit">
-                                        <div className="input">
-                                            <Autocomplete
-                                                freeSolo
-                                                onChange={this.handleRutaFiltro}
-                                                value={this.state.idRuta}
-                                                //disabled={state.agregar == "Consultar"}
-                                                id="ruta"
-                                                disableClearable
-                                                forcePopupIcon={false}
-                                                options={this.state.dataRuta}
-                                                getOptionLabel={(option) =>
-                                                    option.m_sDescripcion
-                                                }
-                                                style={{
-                                                    transform: "translate(14px, 10px) scale(1) !important"
-                                                }}
-                                                renderInput={(params) => (
-                                                    <div>
-                                                        <TextField
-                                                            label="Ruta"
-                                                            margin="dense"
-                                                            variant="outlined"
-
-                                                            {...params}
-                                                            InputProps={{
-                                                                ...params.InputProps,
-                                                                style: {height: "33px", fontSize: "14px"},
-                                                                type: "search",
-                                                                //value: this.state.rutaSeleccionada,
-                                                                //disabled: state.agregar == "Consultar",
-                                                                disableUnderline: true,
-                                                                endAdornment: (
-                                                                    <InputAdornment position="end">
-                                                                        <IconButton
-                                                                            padding="0px"
-                                                                            style={{
-                                                                                paddingRight: "0px",
-                                                                            }}
-                                                                            //disabled={state.agregar == "Consultar"}
-                                                                            onClick={() => {
-                                                                                this.setState({
-                                                                                    identificadorModal:
-                                                                                        "idRuta",
-                                                                                    tipoModal: 1,
-                                                                                    openDialog: true
-                                                                                })
-                                                                            }}
-                                                                        >
-                                                                            <PageviewIcon
-                                                                                style={{
-                                                                                    color: "#F9A03E",
-                                                                                    fontSize: 32,
-                                                                                    paddingInlineEnd: 0,
-                                                                                    paddingRight: 0,
-                                                                                    paddingBlockEnd: 0,
-                                                                                    paddingLeft: 0,
-                                                                                    paddingBlock: 0,
-                                                                                }}
-                                                                            />
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                ),
-                                                            }}
-                                                        />
-                                                    </div>
-                                                )}
-                                            />
-                                        </div>
-                                    </div>*/}
-                                {/* Origen */}
                                 <div className="col-sm-12 col-md-12 unit">
                                     <div className="input">
                                         <Autocomplete
@@ -1478,52 +1218,12 @@ class AgregarViaje extends Component {
                                                         margin="dense"
                                                         variant="outlined"
                                                         {...params}
-                                                        InputProps={{
-                                                            ...params.InputProps,
-                                                            style: {height: "33px", fontSize: "14px"},
-                                                            type: "search",
-                                                            value: this.state.origen,
-                                                            //disabled: state.agregar == "Consultar",
-                                                            disableUnderline: true,
-                                                            endAdornment: (
-                                                                <InputAdornment position="end">
-                                                                    <IconButton
-                                                                        padding="0px"
-                                                                        style={{
-                                                                            paddingRight: "0px",
-                                                                        }}
-                                                                        //disabled={state.agregar == "Consultar"}
-                                                                        onClick={() => {
-                                                                            this.setState({
-                                                                                identificadorModal:
-                                                                                    "origen",
-                                                                                tipoModal: 1,
-                                                                                openDialog: true
-                                                                            })
-                                                                        }}
-                                                                    >
-                                                                        <PageviewIcon
-                                                                            style={{
-                                                                                color: "#F9A03E",
-                                                                                fontSize: 32,
-                                                                                paddingInlineEnd: 0,
-                                                                                paddingRight: 0,
-                                                                                paddingBlockEnd: 0,
-                                                                                paddingLeft: 0,
-                                                                                paddingBlock: 0,
-                                                                            }}
-                                                                        />
-                                                                    </IconButton>
-                                                                </InputAdornment>
-                                                            ),
-                                                        }}
                                                     />
                                                 </div>
                                             )}
                                         />
                                     </div>
                                 </div>
-                                {/* Destino */}
                                 <div className="col-sm-12 col-md-12 unit">
                                     <div className="input">
                                         <Autocomplete
@@ -1549,45 +1249,6 @@ class AgregarViaje extends Component {
                                                         margin="dense"
                                                         variant="outlined"
                                                         {...params}
-                                                        InputProps={{
-                                                            ...params.InputProps,
-                                                            style: {height: "33px", fontSize: "14px"},
-                                                            type: "search",
-                                                            value: this.state.destino,
-                                                            //disabled: state.agregar == "Consultar",
-                                                            disableUnderline: true,
-                                                            endAdornment: (
-                                                                <InputAdornment position="end">
-                                                                    <IconButton
-                                                                        padding="0px"
-                                                                        style={{
-                                                                            paddingRight: "0px",
-                                                                        }}
-                                                                        //disabled={state.agregar == "Consultar"}
-                                                                        onClick={() => {
-                                                                            this.setState({
-                                                                                identificadorModal:
-                                                                                    "destino",
-                                                                                tipoModal: 1,
-                                                                                openDialog: true
-                                                                            })
-                                                                        }}
-                                                                    >
-                                                                        <PageviewIcon
-                                                                            style={{
-                                                                                color: "#F9A03E",
-                                                                                fontSize: 32,
-                                                                                paddingInlineEnd: 0,
-                                                                                paddingRight: 0,
-                                                                                paddingBlockEnd: 0,
-                                                                                paddingLeft: 0,
-                                                                                paddingBlock: 0,
-                                                                            }}
-                                                                        />
-                                                                    </IconButton>
-                                                                </InputAdornment>
-                                                            ),
-                                                        }}
                                                     />
                                                 </div>
                                             )}
