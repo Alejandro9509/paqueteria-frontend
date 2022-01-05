@@ -144,7 +144,7 @@ class ConfirmarUbicacion extends Component {
                         </Grid>
                         <Grid item sm={12}>
                             <Typography
-                                variant={"h3"}>Dirección:{this.props.remitente?(this.props.esDiferenteRecoleccion? this.props.recoleccionDD.domicilioRec:this.props.direccion.domicilioRemitente):(this.props.esDiferenteEntrega?this.props.entregaDD.domicilioEnt:this.props.direccion.domicilioDestinatario)}
+                                variant={"h3"}>Dirección:{this.props.remitente?(this.props.esDiferenteRecoleccion? this.props.recoleccionDD.domicilioRec:(`${this.props.direccion.calleRemitente}, ${this.props.direccion.numeroExtRemitente}, ${this.props.direccion.coloniaRemitente} `)):(this.props.esDiferenteEntrega?this.props.entregaDD.domicilioEnt:(`${this.props.direccion.calleDestinatario}, ${this.props.direccion.numeroExtDestinatario}, ${this.props.direccion.coloniaDestinatario} `))}
                                 </Typography>
                         </Grid>
 
