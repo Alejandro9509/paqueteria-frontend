@@ -5,7 +5,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import axios from "axios";
 import PageviewIcon from "@material-ui/icons/Pageview";
-import {Button, Dialog, DialogActions, DialogContent, Tooltip} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, Grid, Tooltip} from "@material-ui/core";
 import TableCiudades from "./TableCiudades";
 import TableCiudadesViajes from "./TableCiudades";
 import FormControl from "@material-ui/core/FormControl";
@@ -164,7 +164,13 @@ class AgregarViaje extends Component {
     }
 
     handleAceptar = (e) => {
-        e.preventDefault();
+        if (e){
+            e.preventDefault();
+        }
+        if (this.state.dataInformesAsignados.length === 0){
+            showSuccess("No puede guardar un viaje sin informes.")
+            return
+        }
         if (Object.keys(this.state.asignacionEquipo).length === 0) {
             showSuccess("Debe asignar una unidad y un operador al viaje")
             return
@@ -691,22 +697,23 @@ class AgregarViaje extends Component {
                     <div className="widget-content">
 
                         <div className="row">
-                            <form className="j-forms row" onSubmit={this.handleAceptar}>
+                            <form className="j-forms row"
+                                  onSubmit={this.handleAceptar}
+                                  onKeyDown={(e) => {if (e.code === 13){e.preventDefault()}}}>
                                 <div className={"row"} style={{display: "flex"}}>
                                     {/* Sucursal */}
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
                                         <label className="input select">
-                                            <FormControl fullWidth variant="outlined" margin="dense">
+                                            <FormControl fullWidth variant="outlined" margin="dense" required>
                                                 <InputLabel id="idSucursalAgregarLabel">Sucursal</InputLabel>
                                                 <Select
                                                     labelId="idSucursalAgregarLabel"
                                                     className="form-control"
-                                                    required
                                                     value={this.state.idSucursalAgregar}
                                                     onChange={this.handleChange}
                                                     id="idSucursalAgregar"
                                                     label="Sucursal"
-                                                    disabled={this.props.consult}
+                                                    disabled
                                                     name="idSucursalAgregar"
                                                 >
                                                     {this.state.dataSucursal.map((sucursal) => (
@@ -777,7 +784,7 @@ class AgregarViaje extends Component {
                                     {/* Estatus viaje */}
                                     <div className="col-sm-6 col-md-2 col-lg-2 unit">
                                         <label className="input select">
-                                            <FormControl fullWidth variant="outlined" margin="dense">
+                                            <FormControl fullWidth variant="outlined" margin="dense" required>
                                                 <InputLabel id="idEstatusAgregarLabel">Estatus Viaje</InputLabel>
                                                 <Select
                                                     labelId="idEstatusAgregarLabel"
@@ -816,6 +823,7 @@ class AgregarViaje extends Component {
                                                        label="Candado Oficial"
                                                        value={this.state.candadoOficial}
                                                        name="candadoOficial"
+                                                       required
                                             />
                                         </div>
                                     </div>
@@ -830,6 +838,7 @@ class AgregarViaje extends Component {
                                                        label="Identificador"
                                                        value={this.state.identificadorViaje}
                                                        name="identificadorViaje"
+                                                       required
                                             />
                                         </div>
                                     </div>
@@ -1113,16 +1122,15 @@ class AgregarViaje extends Component {
                                             />
                                         </div>
                                     </div>
-                                    {(this.state.dataInformesAsignados.length !== 0 && !this.props.consult) ? (
-                                        <div className="col-sm-6 col-md-4 unit">
-                                            <Button
-                                                variant={"contained"}
-                                                color={"primary"}
-                                                onClick={() => this.setState({showAsignarOperadorDialog: true})}>Asignar
-                                                operador unidad</Button>
-                                        </div>
+                                    <div className="col-sm-6 col-md-4 unit">
+                                        <Button
+                                            variant={"contained"}
+                                            color={"primary"}
+                                            disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
+                                            onClick={() => this.setState({showAsignarOperadorDialog: true})}>Asignar
+                                            operador unidad</Button>
+                                    </div>
 
-                                    ) : (<div/>)}
                                 </div>
                                 <div className={"row"}>
 
@@ -1157,146 +1165,116 @@ class AgregarViaje extends Component {
                                     }
 
                                 </div>
-                                <div className="form-footer col-md-12">
-                                    <button
-                                        type="button"
-                                        onClick={(event) => {
-                                            event.stopPropagation();
-                                            this.setState({...this.state, agregar: "Agregar"});
-                                            $('.nav-tabs li ').removeClass('active');
-                                            $('.nav-tabs li').eq(0).addClass('active');
-                                            $('.tab-content div ').removeClass('in show');
-                                            $('#Listado').addClass('in show');
-                                        }
-                                        }
-                                        className="btn btn-secondary secondary-btn"
-                                    >
-                                        Cancelar
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="btn btn-primary primary-btn"
-                                        disabled={this.agregar === "Consultar"}
-                                    >
-                                        Aceptar
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
 
-                    </div>
-                </div>
-
-                {
-                    !this.props.consult &&
-                    <div className="widget-wrap">
-                        <div className="widget-header">
-                            <h2 color={'#717171'}>Informes para asignación</h2>
-                            <br/>
-                            <div className="row" style={{display: "flex"}}>
-                                <div className="col-sm-12 col-md-12 unit">
-                                    <div className="input">
-                                        <Autocomplete
-                                            freeSolo
-                                            onChange={this.handleOrigenFiltro}
-                                            value={this.state.origen}
-                                            //disabled={state.agregar == "Consultar"}
-                                            id="origenRemitente"
-                                            disableClearable
-                                            forcePopupIcon={false}
-                                            options={this.state.dataCiudad}
-                                            getOptionLabel={(option) =>
-                                                option.m_sCiudad
-                                            }
-                                            style={{
-                                                transform: "translate(14px, 10px) scale(1) !important"
-                                            }}
-                                            renderInput={(params) => (
-                                                <div>
-                                                    <TextField
-                                                        label="Origen"
-                                                        margin="dense"
-                                                        variant="outlined"
-                                                        {...params}
-                                                    />
+                                {
+                                    !this.props.consult &&
+                                    <div>
+                                        <div className="widget-header">
+                                            <h2 color={'#717171'}>Informes para asignación</h2>
+                                            <br/>
+                                            <div className="row" style={{display: "flex"}}>
+                                                <div className="col-sm-12 col-md-12 unit">
+                                                    <div className="input">
+                                                        <Autocomplete
+                                                            freeSolo
+                                                            onChange={this.handleOrigenFiltro}
+                                                            value={this.state.origen}
+                                                            //disabled={state.agregar == "Consultar"}
+                                                            id="origenRemitente"
+                                                            disableClearable
+                                                            forcePopupIcon={false}
+                                                            options={this.state.dataCiudad}
+                                                            getOptionLabel={(option) =>
+                                                                option.m_sCiudad
+                                                            }
+                                                            style={{
+                                                                transform: "translate(14px, 10px) scale(1) !important"
+                                                            }}
+                                                            renderInput={(params) => (
+                                                                <div>
+                                                                    <TextField
+                                                                        label="Origen"
+                                                                        margin="dense"
+                                                                        variant="outlined"
+                                                                        {...params}
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        />
+                                                    </div>
                                                 </div>
-                                            )}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-sm-12 col-md-12 unit">
-                                    <div className="input">
-                                        <Autocomplete
-                                            freeSolo
-                                            onChange={this.handleDestinoFiltro}
+                                                <div className="col-sm-12 col-md-12 unit">
+                                                    <div className="input">
+                                                        <Autocomplete
+                                                            freeSolo
+                                                            onChange={this.handleDestinoFiltro}
 
-                                            value={this.state.destino}
-                                            //disabled={state.agregar == "Consultar"}
-                                            id="destino"
-                                            disableClearable
-                                            forcePopupIcon={false}
-                                            options={this.state.dataCiudad}
-                                            getOptionLabel={(option) =>
-                                                option.m_sCiudad
-                                            }
-                                            style={{
-                                                transform: "translate(14px, 10px) scale(1) !important"
-                                            }}
-                                            renderInput={(params) => (
-                                                <div>
-                                                    <TextField
-                                                        label="Destino"
-                                                        margin="dense"
-                                                        variant="outlined"
-                                                        {...params}
-                                                    />
+                                                            value={this.state.destino}
+                                                            //disabled={state.agregar == "Consultar"}
+                                                            id="destino"
+                                                            disableClearable
+                                                            forcePopupIcon={false}
+                                                            options={this.state.dataCiudad}
+                                                            getOptionLabel={(option) =>
+                                                                option.m_sCiudad
+                                                            }
+                                                            style={{
+                                                                transform: "translate(14px, 10px) scale(1) !important"
+                                                            }}
+                                                            renderInput={(params) => (
+                                                                <div>
+                                                                    <TextField
+                                                                        label="Destino"
+                                                                        margin="dense"
+                                                                        variant="outlined"
+                                                                        {...params}
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        />
+                                                    </div>
                                                 </div>
-                                            )}
-                                        />
+
+                                            </div>
+                                        </div>
+
+                                        <div className="row" style={{height: "200px", width: '100%'}}>
+                                            <DataGrid
+                                                localeText={dataGridLocaleText}
+                                                rows={this.state.dataInformesPorAsignar}
+                                                columns={columnspRorAsignar}
+                                                density="compact"
+                                                pageSize={Math.floor((this.state.height - 310) / 30)}
+                                                getRowId={(row) => row.m_nIdInforme}
+                                                onRowSelected={(row) => {
+                                                    this.setState({
+                                                        idInforme: row.data.m_nIdInforme
+
+                                                    })
+                                                }}
+                                                hideFooter
+                                            />
+
+                                        </div>
+
+
                                     </div>
-                                </div>
 
-                            </div>
-                        </div>
+                                }
 
-                        <div className="row" style={{height: "200px", width: '100%'}}>
-                            <DataGrid
-                                localeText={dataGridLocaleText}
-                                rows={this.state.dataInformesPorAsignar}
-                                columns={columnspRorAsignar}
-                                density="compact"
-                                pageSize={Math.floor((this.state.height - 310) / 30)}
-                                getRowId={(row) => row.m_nIdInforme}
-                                onRowSelected={(row) => {
-                                    this.setState({
-                                        idInforme: row.data.m_nIdInforme
+                                <div>
+                                    <div className="widget-header">
+                                        <h2 color={'#717171'}>Detalle de paradas</h2>
+                                    </div>
 
-                                    })
+                                    <div className="row" style={{height: "200px", width: '100%'}}>
+                                        <InformesPorAsignar {...this.props} columns={columnspAsignadas}
+                                                            dataInformesAsignados={this.state.dataInformesAsignados}
+                                        />
 
-                                }}
-                            />
+                                    </div>
 
-                        </div>
-
-
-                    </div>
-
-                }
-
-
-                <div className="widget-wrap">
-                    <div className="widget-header">
-                        <h2 color={'#717171'}>Detalle de paradas</h2>
-                    </div>
-
-                    <div className="row" style={{height: "200px", width: '100%'}}>
-                        <InformesPorAsignar {...this.props} columns={columnspAsignadas}
-                                            dataInformesAsignados={this.state.dataInformesAsignados}
-                        />
-
-                    </div>
-
-                    {/* {this.state.dataInformesAsignados.length != 0 ? (
+                                    {/* {this.state.dataInformesAsignados.length != 0 ? (
 
                                 <Button
                                     type="submit"
@@ -1305,7 +1283,49 @@ class AgregarViaje extends Component {
                             ): (<div/>)}*/}
 
 
+                                </div>
+
+                                <div className="form-footer col-md-12">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                            <Button
+                                                fullWidth
+                                                type="button"
+                                                onClick={(event) => {
+                                                    event.stopPropagation();
+                                                    this.setState({...this.state, agregar: "Agregar"});
+                                                    $('.nav-tabs li ').removeClass('active');
+                                                    $('.nav-tabs li').eq(0).addClass('active');
+                                                    $('.tab-content div ').removeClass('in show');
+                                                    $('#Listado').addClass('in show');
+                                                }}
+                                                className="btn btn-secondary secondary-btn"
+                                            >
+                                                Cancelar
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                            <Button
+                                                fullWidth
+                                                type="submit"
+                                                className="btn btn-primary primary-btn"
+                                                disabled={this.agregar === "Consultar"}
+                                            >
+                                                Guardar viaje
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+                            </form >
+                        </div>
+
+                    </div>
                 </div>
+
+
+
+
+
 
 
                 {/*
