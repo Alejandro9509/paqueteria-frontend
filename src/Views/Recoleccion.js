@@ -985,7 +985,7 @@ function Recoleccion() {
         params.m_nIdCotizacion = state.idCotizacion
         console.log(params)
         console.log(JSON.stringify(params))
-        if (state.idRecoleccion != 0) {
+      if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1009,7 +1009,7 @@ function Recoleccion() {
                     showSuccess(err);
                 });
         }
-
+ 
     };
 
     function getTipoCambio() {
@@ -1288,13 +1288,14 @@ function Recoleccion() {
             })
         }
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
+            console.log("Tiene seguro"+data.m_bTieneSeguro)
             setState(state => {
                 return {
                     ...state,
                     clientePaga: data,
-                    idTipoSeguro: data.m_bTieneSeguro ? data.m_nIdTipoSeguro : 5,
+                  /*  idTipoSeguro: data.m_bTieneSeguro ? data.m_nIdTipoSeguro : 5,
                     porcentajeSeguro: data.m_bTieneSeguro ? data.m_cPorcentajeSeguro : 0,
-                    aplicaSeguro: data.m_bTieneSeguro
+                    aplicaSeguro: data.m_bTieneSeguro*/
                 }
             })
         })
@@ -1336,7 +1337,7 @@ function Recoleccion() {
                 mismoPaquete: false,
                 mismoSobre: false,
                 sobres: respuesta.data.m_parrSobres,
-                ValorDeclarado: state.valorDeclarado,
+                ValorDeclarado: respuesta.data.m_xValorDeclarado,
                 idTipoSeguro: respuesta.data.m_nIdTipoSeguro,
                 porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
                 aplicaSeguro: respuesta.data.m_bAplicaSeguro,
