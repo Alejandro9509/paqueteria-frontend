@@ -50,22 +50,28 @@ function Embalaje() {
         ModificadoPor: localStorage.getItem("UsuarioId")
     })
     const [fileUploaded, setFileUploaded] = React.useState([])
+    const [codigoError, setCodigoError] = useState(false)
 
-
-    const handleAceptar = (e) => {
-        e.preventDefault()
+    const handleAceptar = (e) => {  
+        e.preventDefault()     
+        if(state.CodigoEmbalaje.length>=10){
+                showSuccess("Error al ingresar los datos")
+         }
+        else{
         var params = {
             "IdEmbalaje": state.IdEmbalaje,
             "Codigo": state.CodigoEmbalaje,
             "Nombre": state.NombreEmbalaje,
             "Descripcion": state.DescripcionEmbalaje,
-
             "CreadoPor": state.CreadoPor,
             "ModificadoPor": state.ModificadoPor
         }
         console.log(params)
-        if (state.IdEmbalaje != 0) {
+      
+   /*     if (state.IdEmbalaje != 0) {
+            console.log('Entra a modificar')
             modificarEmbalajes(state.IdEmbalaje, params).then(respuesta => {
+                console.log("modificar"+JSON.stringify(respuesta))
                 showSuccess(respuesta.data)
                 getAllData()
                 $('.nav-tabs li ').removeClass('active');
@@ -77,7 +83,9 @@ function Embalaje() {
                 showSuccess("err")
             });
         } else {
+            console.log('Entra a agregar')
             agregarEmbalajes(params).then(respuesta => {
+                console.log("agregar"+JSON.stringify(respuesta))
                 showSuccess(respuesta.data)
                 getAllData()
                 $('.nav-tabs li ').removeClass('active');
@@ -85,11 +93,11 @@ function Embalaje() {
                 $('.tab-content div ').removeClass('in show');
                 $('#Listado').addClass('in show');
             }).catch(err => {
-                console.log(err)
+                console.log(JSON.stringify(err))
                 showSuccess(err)
             });
-        }
-
+        }*/
+}
     }
 
     function handleEliminar(id) {
@@ -160,11 +168,19 @@ function Embalaje() {
     }
 
     const handleChange = event => {
-        console.log(event.target.id + " : " + event.target.value)
+        if(event.target.id === "CodigoEmbalaje"){
+            console.log(event.target.value.length)
+            if(event.target.value.length>=10){
+                setCodigoError(true)
+            }else{
+                setCodigoError(false)
+            }
+        }
         setState({
             ...state,
             [event.target.id]: event.target.value
-        });
+        });  
+    
     };
 
     const columns = React.useMemo(() => [
@@ -338,7 +354,7 @@ function Embalaje() {
                                 <div className="widget-content">
                                     <div className="row">
                                         <div className="col-md-12">
-                                            <form className="j-forms" onSubmit={handleAceptar}>
+                                            <form className="j-forms" id="formEmbalaje" onSubmit={handleAceptar}>
                                                 <div className="form-content">
                                                     {/*****************************************Codigo************************************************************/}
                                                     <div className="col-xs-4 col-sm-3 col-md-2-5 col-lg-2-5 unit">
@@ -353,6 +369,8 @@ function Embalaje() {
                                                                 value={state.CodigoEmbalaje}
                                                                 readOnly={state.agregar == "Consultar"}
                                                                 id="CodigoEmbalaje"
+                                                                error={codigoError}
+                                                                helperText={codigoError?"Menos de 10 digitos":""}
                                                             />
                                                         </div>
                                                     </div>
@@ -391,7 +409,7 @@ function Embalaje() {
                                                 <br></br>
                                                 <div className="form-footer" className="col-12 col-sm-9 col-md-7 unit">
                                                     <button type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }} className="btn btn-secondary secondary-btn"> Cancelar</button>
-                                                    <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
+                                                    <button type="submit" form="formEmbalaje" className="btn btn-primary primary-btn">Aceptar</button>
                                                 </div>
                                             </form>
                                         </div>

@@ -50,7 +50,7 @@ import {
     modificarGuia,
     agregarGuia,
     imprimirGuia,
-    obtenerGuiaReporte, entregaOcurreGuia, cambiarTipoCobro, cambiarEstatusGuia,obtenerValidacionGuia
+    obtenerGuiaReporte, entregaOcurreGuia, cambiarTipoCobro, cambiarEstatusGuia, obtenerValidacionGuia, asignarTrayectos
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -77,6 +77,7 @@ import ConceptosFacturacionGuias from "./Tarifas/ConceptosFacturacionGuias";
 import Filtros from "./Filtros/Filtros";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import CambiarEstatus from "./Guia/CambiarEstatus";
+import AsignarTrayectos from "./Guia/AsignarTrayectos";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -1701,6 +1702,13 @@ function Guia(props) {
         })
     }
 
+    const handleAsignarTrayectos = (idGuia) => {
+        asignarTrayectos(idGuia).then(({data}) => {
+            showSuccess(data)
+            getAllData()
+        })
+    }
+
     const handleChangeListConceptos = (newList) => {
         setConceptosAdicionales(newList)
     }
@@ -1717,6 +1725,9 @@ function Guia(props) {
             <CambiarEstatus submit={(id) => cambiarEstaus(id)}
                               open={state.openCambiarEstatus} dataEstatusGuia={dataEstatusGuia}
                               close={() => setState({...state, openCambiarEstatus: false})}/>
+            <AsignarTrayectos submit={(id) => handleAsignarTrayectos(id)}
+                            open={state.openAsignarTrayectos} dataGuia={data.find(i => i.m_nIdGuia === state.idGuia)}
+                            close={() => setState({...state, openAsignarTrayectos: false})}/>
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
@@ -1804,6 +1815,14 @@ function Guia(props) {
                                    setState({...state, openCambiarEstatus: true})
                                }}>
                                 <i className="fa fa-refresh"/> Cambiar Estatus
+                            </a>
+                        </li>
+                        <li>
+                            <a className={(state.idGuia !== 0) ? "" : classes.disabled}
+                               onClick={() => {
+                                   setState({...state, openAsignarTrayectos: true})
+                               }}>
+                                <i className="fa fa-road"/> Asignar Trayectos
                             </a>
                         </li>
 
