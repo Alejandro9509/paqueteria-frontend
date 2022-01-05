@@ -480,6 +480,7 @@ function Embarque(props) {
         //Informacion general
         idSucursalAgregar: localStorage.getItem("Sucursal"),
         folioRecoleccion: '',
+        idRecoleccion: 0,
         folioEmbarque: '',
         folioGuia: '',
         folioInforme: '',
@@ -540,6 +541,7 @@ function Embarque(props) {
                 //==VARIABLES DE AGREGAR
                 //Informacion general
                 folioRecoleccion: '',
+                idRecoleccion: 0,
                 folioEmbarque: '',
                 folioGuia: '',
                 folioInforme: '',
@@ -1816,9 +1818,9 @@ function Embarque(props) {
                     return {
                         ...config,
                         estatusEmbarque: respuesta.data.EstatusEmbarque,
-                        moneda: respuesta.data.MonedaEmbarque,
-                        tipoCambio: respuesta.data.TipoCambioEmbarque,
-                        tipoCobro: respuesta.data.TipoCobro,
+                        moneda: state.idRecoleccion > 0 ? state.moneda :respuesta.data.MonedaEmbarque,
+                        tipoCambio: state.idRecoleccion > 0 ? state.tipoCambio :respuesta.data.TipoCambioEmbarque,
+                        tipoCobro: state.idRecoleccion > 0 ? state.tipoCobro : respuesta.data.TipoCobro,
                         idTipoTarifa: respuesta.data.TipoTarifaTarifas,
                     }
                 })
