@@ -139,26 +139,75 @@ class AgregarViaje extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.id !== this.props.id && this.props.id > 0 && (this.props.consult || this.props.modificar)) {
+        debugger
+        if (this.state.id !== this.props.id && this.props.id > 0 && (this.props.consult || this.props.modificar)) {
             // console.log(this.props.select)
-            this.setState({
-                id: this.props.id,
-                fechaHoraRegistro: this.props.select.m_dFecha + "T" + this.props.select.m_tHora,
-                estatusListado: this.props.select.m_nIdEstatusViaje,
-                idSucursalAgregar: this.props.select.m_nIdSucursal,
-                candadoOficial: this.props.select.m_sCandadoOficial,
-                folioViaje: this.props.select.m_sFolioViaje,
-                identificadorViaje: this.props.select.m_sIdentificador,
-                viajeCliente: this.props.select.m_sNumViajeCliente,
-                CreadoPor: this.props.select.CreadoPor,
-                dataInformesAsignados: this.props.select.m_arrInformes,
+            debugger
+            this.setState(state => {
+                return {
+                    ...state,
+                    id: this.props.select.m_nIdViaje,
+                        origen : {
+                        "m_sCiudad": this.props.select.m_sOringen,
+                        "m_nIdCiudad": this.props.select.m_nIdOrigen
+                    },
+                    destino: {
+                        "m_sCiudad": this.props.select.m_sDestino,
+                        "m_nIdCiudad": this.props.select.m_nIdDestino
+                    },
+                    fechaHoraRegistro: this.props.select.m_dFecha + "T" + this.props.select.m_tHora,
+                        estatusListado: this.props.select.m_nIdEstatusViaje,
+                    idSucursalAgregar: this.props.select.m_nIdSucursal,
+                    candadoOficial: this.props.select.m_sCandadoOficial,
+                    folioViaje: this.props.select.m_sFolioViaje,
+                    identificadorViaje: this.props.select.m_sIdentificador,
+                    viajeCliente: this.props.select.m_sNumViajeCliente,
+                    CreadoPor: this.props.select.CreadoPor,
+                    dataInformesAsignados: this.props.select.m_arrInformes,
 
+                }
             })
             obtenerOperadoresId(this.props.select.m_nIdOperador).then(({data}) => {
                 this.setState({
                     asignacionEquipo: {
                         ...this.state.asignacionEquipo,
                         operador: data
+                    }
+                })
+            })
+            debugger
+            obtenerEstatusUnidadeId(this.props.select.m_nIdRemolque1).then((resultado) => {
+                debugger
+                resultado.data.m_sDescripcion = this.props.select.m_sRemolque1
+                this.setState(state => {
+                    return {
+                        ...state,
+                        IdRemolque1: resultado.data,
+                        placasRemolque1: resultado.data.m_sPlacas,
+                        colorRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                        estatusRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
+                    }
+                })
+            })
+            obtenerEstatusUnidadeId(this.props.select.m_nIdRemolque2).then((resultado) => {
+                resultado.data.m_sDescripcion = this.props.select.m_sRemolque2
+                this.setState(state => {
+                    return {
+                        ...state,
+                        IdRemolque2: resultado.data,
+                        placasRemolque2: resultado.data.m_sPlacas,
+                        colorRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                        estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
+                    }
+                })
+            })
+            obtenerEstatusUnidadeId(this.props.select.m_nIdDolly).then((resultado) => {
+                resultado.data.m_sDescripcion = this.props.select.m_sDolly
+                this.setState(state => {
+                    return {
+                        ...state,
+                        IdDolly: resultado.data,
+                        placasDolly: resultado.data.m_sPlacas,
                     }
                 })
             })
