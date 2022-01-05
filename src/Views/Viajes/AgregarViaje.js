@@ -52,6 +52,13 @@ function showSuccess(mensaje) {
 let timer;
 window.jQuery = window.$ = $;
 
+/**Props
+ * reload FUNCION recarga el listado de viajes del tab Listado.
+ * consult BOOLEAN inidica si es consulta.
+ * modificar BOOLEAN indica si es modificacion.
+ * select OBJECT contiene el viaje si es consulta o modificación
+ * idViaje INT contiene el identificador del Viaje
+ * */
 class AgregarViaje extends Component {
 
 
@@ -132,8 +139,8 @@ class AgregarViaje extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.id !== this.props.id) {
-            console.log(this.props.select.m_sNumViajeCliente)
+        if (prevProps.id !== this.props.id && this.props.id > 0 && (this.props.consult || this.props.modificar)) {
+            // console.log(this.props.select)
             this.setState({
                 id: this.props.id,
                 fechaHoraRegistro: this.props.select.m_dFecha + "T" + this.props.select.m_tHora,
@@ -208,8 +215,8 @@ class AgregarViaje extends Component {
                 horaEntrega: this.state.asignacionEquipo.horaEntregaGeneral,
             }
         }
-        console.log(this.props.editar)
-        if (this.props.editar) {
+        console.log(this.props.modificar)
+        if (this.props.modificar) {
             modificarViaje(this.props.id, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data)
@@ -1321,13 +1328,6 @@ class AgregarViaje extends Component {
 
                     </div>
                 </div>
-
-
-
-
-
-
-
                 {/*
                 <div className="row">
                     <div className="col-md-12">
