@@ -92,6 +92,16 @@ function cambiarEstatusGuia(idGuia, estatus) {
     );
     return result
 }
+
+function asignarTrayectos(idGuia) {
+    const url = `${process.env.REACT_APP_API_URL}/Guia/AsignarTrayectos/${idGuia}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, {}), { headers })
+    );
+    return result
+}
+
 function actualizarCoordenadasGuia(idGuia, latitud, longitud) {
     const url = `${process.env.REACT_APP_API_URL}/Guia/ActualizarCoordenadas/${idGuia}/${latitud}/${longitud}`;
     let result;
@@ -206,4 +216,4 @@ function obtenerValidacionGuia(id){
 
 export {actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
     obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,
-    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia}
+    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos}
