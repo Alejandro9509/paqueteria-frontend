@@ -30,6 +30,8 @@ import {PieChart} from 'react-minimal-pie-chart';
 import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
 import AgregarPaqueteUltimaMilla from "./AgregarPaqueteUltimaMilla";
 import PaquetesList from "./PaquetesList";
+import GetAppIcon from '@material-ui/icons/GetApp';
+
 import {
     actualizarCoordenadasGuia,
     obtenerGuiaUltimaMilla
@@ -39,16 +41,15 @@ import {
     obtenerCFDI,
     obtenerReporteCFDIGuia,
     obtenerReporteCFDIRecoleccion,
-    obtenerUltimaMillaReporte,
+    obtenerUltimaMillaReporte, obtenerXMLCFDI, obtenerXMLPermisionario,
     ordenarParada,
     remplazarPaqueteUltimaMilla
 } from "../../Util/Contexts/UltimaMillaContext";
 import Noty from "noty";
-import {obtenerCorteReporte} from "../../Util/Contexts/CorteCajaContext";
 import {InsertDriveFile} from "@material-ui/icons";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 import {actualizarCoordenadasRecoleccion} from "../../Util/Contexts/RecoleccionContext";
-import { obtenerReporteCFDIViaje} from "../../Util/Contexts/ViajesContext";
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 
 function showError(mensaje) {
     new Noty({
@@ -141,7 +142,77 @@ class DetalleParadas extends Component {
             ]
         });
     }
+    obtenerXMLCFDITimbrado(xml, folio){
+        var filename = folio+".xml";
+        var pom = document.createElement('a');
+        var bb = new Blob([xml], {type: 'text/plain'});
+        pom.setAttribute('href', window.URL.createObjectURL(bb));
+        pom.setAttribute('download', filename);
 
+        pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
+        pom.draggable = true;
+        pom.classList.add('dragout');
+
+        pom.click();
+    }
+    descargarXMLCFDI(id,esRecoleccion, folio) {
+        obtenerXMLCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then(({data}) => {
+            var filename = folio+".xml";
+            var pom = document.createElement('a');
+            var bb = new Blob([data], {type: 'text/plain'});
+            pom.setAttribute('href', window.URL.createObjectURL(bb));
+            pom.setAttribute('download', filename);
+
+            pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
+            pom.draggable = true;
+            pom.classList.add('dragout');
+
+            pom.click();
+        }).catch((error) => {
+            if (error.response){
+                showError(error.response.data)
+            }
+        })
+    }
+    descargarXMLCFDIPermisionario(id,esRecoleccion, folio) {
+        obtenerXMLPermisionario(id,esRecoleccion, this.props.filtros.idSucursal).then(({data}) => {
+            var filename = folio+".xml";
+            var pom = document.createElement('a');
+            var bb = new Blob([data], {type: 'text/plain'});
+            pom.setAttribute('href', window.URL.createObjectURL(bb));
+            pom.setAttribute('download', filename);
+
+            pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
+            pom.draggable = true;
+            pom.classList.add('dragout');
+
+            pom.click();
+        }).catch((error) => {
+            if (error.response){
+                showError(error.response.data)
+            }
+        })
+    }
+    obtenerPDFCFDI(id,esRecoleccion, folio){
+        obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
+            if (esRecoleccion){
+                obtenerReporteCFDIRecoleccion(id).then(({data}) => {
+                    console.log(data)
+                    let pdfWindow = window.open("");
+                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                    pdfWindow.document.body.style.margin = "0px";
+                    pdfWindow.document.title = "CFDI_ " + folio;
+                })
+            }else{
+                obtenerReporteCFDIGuia(id).then(({data}) => {
+                    let pdfWindow = window.open("");
+                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                    pdfWindow.document.body.style.margin = "0px";
+                    pdfWindow.document.title = "CFDI_ " + folio;
+                })
+            }
+    })
+    }
     generarCFDI(id,esRecoleccion, folio) {
         obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
             if (esRecoleccion){
@@ -209,7 +280,7 @@ class DetalleParadas extends Component {
 
     onSubmitBorrarPaquete(idParada, idGuia, esRecoleccion) {
         eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion).then(({data}) => {
-            showSuccess(data.data)
+            showSuccess(data)
             this.props.refresh()
         })
     }
@@ -613,15 +684,66 @@ class DetalleParadas extends Component {
                                                                                                                     fontSize="default"/>
                                                                                                             </Tooltip>
                                                                                                         </IconButton>
-                                                                                                        <IconButton
-                                                                                                            aria-label="delete">
-                                                                                                            <Tooltip
-                                                                                                                title={"Generar CFDI Traslada"}>
-                                                                                                                <DescriptionIcon
-                                                                                                                    onClick={() => this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
-                                                                                                                    fontSize="default"/>
-                                                                                                            </Tooltip>
-                                                                                                        </IconButton>
+                                                                                                        {
+                                                                                                            r.m_bEsPermisionario && r.m_bUnidadPermisionario &&
+                                                                                                            <IconButton
+                                                                                                                aria-label="Descargar XML">
+                                                                                                                <Tooltip
+                                                                                                                    title={"Descargar XML Permisionario"}>
+                                                                                                                    <GetAppIcon
+                                                                                                                        onClick={() => this.descargarXMLCFDIPermisionario( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
+                                                                                                                        fontSize="default"/>
+                                                                                                                </Tooltip>
+                                                                                                            </IconButton>
+                                                                                                        }
+                                                                                                        {
+                                                                                                            !r.m_bUnidadPermisionario && !g.m_bTimbrado &&
+                                                                                                            <IconButton
+                                                                                                                aria-label="Timbrar SAT">
+                                                                                                                <Tooltip
+                                                                                                                    title={"Generar CFDI Traslada"}>
+                                                                                                                    <DescriptionIcon
+                                                                                                                        onClick={() => this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
+                                                                                                                        fontSize="default"/>
+                                                                                                                </Tooltip>
+                                                                                                            </IconButton>
+                                                                                                        }
+                                                                                                        {
+                                                                                                            !r.m_bUnidadPermisionario && !g.m_bTimbrado &&
+                                                                                                            <IconButton
+                                                                                                                aria-label="XML SAT">
+                                                                                                                <Tooltip
+                                                                                                                    title={"Descargar XML Traslada"}>
+                                                                                                                    <GetAppIcon
+                                                                                                                        onClick={() => this.descargarXMLCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
+                                                                                                                        fontSize="default"/>
+                                                                                                                </Tooltip>
+                                                                                                            </IconButton>
+                                                                                                        }
+                                                                                                        {
+                                                                                                            !r.m_bUnidadPermisionario && g.m_bTimbrado &&
+                                                                                                            <IconButton
+                                                                                                                aria-label="PDF TASLADA">
+                                                                                                                <Tooltip
+                                                                                                                    title={"Descargar PDF"}>
+                                                                                                                    <PictureAsPdfIcon
+                                                                                                                        onClick={() => this.obtenerPDFCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolioFiscalUUID)}
+                                                                                                                        fontSize="default"/>
+                                                                                                                </Tooltip>
+                                                                                                            </IconButton>
+                                                                                                        }
+                                                                                                        {
+                                                                                                            !r.m_bUnidadPermisionario && g.m_bTimbrado &&
+                                                                                                            <IconButton
+                                                                                                                aria-label="Descargar xml">
+                                                                                                                <Tooltip
+                                                                                                                    title={"Descargar XML"}>
+                                                                                                                    <GetAppIcon
+                                                                                                                        onClick={() => this.obtenerXMLCFDITimbrado(  g.m_sXMLTraslada,g.m_sFolioFiscalUUID)}
+                                                                                                                        fontSize="default"/>
+                                                                                                                </Tooltip>
+                                                                                                            </IconButton>
+                                                                                                        }
                                                                                                         <IconButton
                                                                                                             aria-label="delete">
                                                                                                             <Tooltip

@@ -431,10 +431,10 @@ async function remplazarPaqueteUltimaMilla(idParada, paqueteViejo, paqueteNuevo)
 }
 
 function eliminarPaqueteUltimaMilla(idParada, idGuia, esRecoleccion) {
-    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/RemplazarParada`;
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/EliminarParadaOperador`;
     let result;
     trackPromise(
-        result = axios.put(url, Object.assign({}, {
+        result = axios.post(url, Object.assign({}, {
             EsRecoleccion: esRecoleccion,
             IdGuia: idGuia,
             IdParada: idParada,
@@ -474,6 +474,22 @@ function obtenerCFDI(id,esRecolecion, IdSucursal){
     return result
 }
 
+function obtenerXMLCFDI(id,esRecolecion, IdSucursal){
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetXMLCFDITraslada/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
+function obtenerXMLPermisionario(id,esRecolecion, IdSucursal){
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetXMLTrasladaPermisionario/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
 function obtenerReporteCFDIGuia(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIGuia/${id}`;
     let result;
@@ -491,6 +507,8 @@ function obtenerReporteCFDIRecoleccion(id){
     return result
 }
 export {
+    obtenerXMLPermisionario,
+    obtenerXMLCFDI,
     obtenerCFDI,
     obtenerReporteCFDIGuia,
     obtenerReporteCFDIRecoleccion,

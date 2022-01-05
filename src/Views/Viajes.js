@@ -387,21 +387,60 @@ function Viajes() {
     }
 
     function generarCFDI(id, folio) {
-        obtenerCFDI(id).then((result) => {
-            obtenerReporteCFDIViaje(id).then(({data}) => {
-                let pdfWindow = window.open("");
-                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-                pdfWindow.document.body.style.margin = "0px";
-                pdfWindow.document.title = "CFDI_ " + folio;
-            })
-        }).catch((error) => {
-            if (error.response){
-                showError(error.response.data)
-            }
+        confirmAlert({
+            title: 'Confirmar Timbrado',
+            message: '¿Está seguro de realizar esta operación, se timbrara ante el SAT?',
+            buttons: [
+                {
+                    label: 'Sí',
+                    onClick: () => {
+                        obtenerCFDI(id).then((result) => {
+                            obtenerReporteCFDIViaje(id).then(({data}) => {
+                                let pdfWindow = window.open("");
+                                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                                pdfWindow.document.body.style.margin = "0px";
+                                pdfWindow.document.title = "CFDI_ " + folio;
+                            })
+                        }).catch((error) => {
+                            if (error.response){
+                                showError(error.response.data)
+                            }
+                        })
+                    }
+                },
+                {
+                    label: 'No',
+                }
+            ]
         })
 
-    }
 
+    }
+    function cancelarCFDI(id, folio) {
+        confirmAlert({
+            title: 'Confirmar Cancelación',
+            message: '¿Está seguro de realizar la cancelación ante el SAT?',
+            buttons: [
+                {
+                    label: 'Sí',
+                    onClick: () => {
+                        cancelarCFDI(id).then((result) => {
+                            showSuccess(result.data)
+                        }).catch((error) => {
+                            if (error.response){
+                                showError(error.response.data)
+                            }
+                        })
+                    }
+                },
+                {
+                    label: 'No',
+                }
+            ]
+        })
+
+
+    }
 
 
     /**DISPONIBILIDAD DE EQUIPO*/
@@ -530,7 +569,7 @@ function Viajes() {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_clsInforme.m_bTimbrado &&
                             <Tooltip title="Descargar PDF">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarPDF(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>
+                                   onClick={() => (descargarPDF(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioFiscalUUID))}><i className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
@@ -539,7 +578,16 @@ function Viajes() {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_clsInforme.m_bTimbrado &&
                             <Tooltip title="Descargar XML">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarXMLCFDITimbrado(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme,row.row.m_clsInforme.m_sXMLTraslada))}><i className="zmdi zmdi-file-text" style={{color: "#F9A03E"}}/></a>
+                                   onClick={() => (descargarXMLCFDITimbrado(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioFiscalUUID,row.row.m_clsInforme.m_sXMLTraslada))}><i className="zmdi zmdi-file-text" style={{color: "#F9A03E"}}/></a>
+
+                            </Tooltip>
+                        }
+
+                        {
+                            !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_clsInforme.m_bTimbrado &&
+                            <Tooltip title="Cancelar Timbrado SAT">
+                                <a href="#" className="btn btn-default btn-xs"
+                                   onClick={() => (cancelarCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioFiscalUUID))}><i className="zmdi zmdi-card-off" style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }

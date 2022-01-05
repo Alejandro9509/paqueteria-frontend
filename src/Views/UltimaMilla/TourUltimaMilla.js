@@ -10,6 +10,7 @@ import {Grid, Typography, Dialog, DialogTitle, DialogActions, DialogContent} fro
 import {InsertDriveFile} from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
+import {obtenerRecoleccionReporte} from "../../Util/Contexts/RecoleccionContext";
 
 
 class TourUltimaMilla extends Component {
@@ -71,12 +72,22 @@ class TourUltimaMilla extends Component {
 
     generarReporte(guia) {
         console.log(guia)
-        obtenerGuiaReporte(guia.m_nId).then(({data}) => {
-            let pdfWindow = window.open("");
-            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-            pdfWindow.document.body.style.margin = "0px";
-            pdfWindow.document.title = "Guía ";
-        })
+        if ( !guia.m_bEsRecoleccion ){
+            obtenerGuiaReporte(guia.m_nId).then(({data}) => {
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Guía "+ guia.m_sFolio;
+            })
+        }else{
+            obtenerRecoleccionReporte(guia.m_nId).then(({data}) => {
+                let pdfWindow = window.open("");
+                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+                pdfWindow.document.body.style.margin = "0px";
+                pdfWindow.document.title = "Recolección " + guia.m_sFolio;
+            })
+        }
+
     }
 
 

@@ -93,8 +93,8 @@ class PaquetesList extends Component {
     };
 
     handleSelectAllClickevent(event) {
-        if (event.target.checked) {
-            const newSelecteds = this.state.paquetes;
+        if (event.target.checked && this.state.paquetes.filter(f => !f.m_bClienteBloqueado).length !== this.props.paquetesSeleccionadas.length) {
+            const newSelecteds = this.state.paquetes.filter(f => !f.m_bClienteBloqueado);
             this.props.selectPaquetes(newSelecteds)
             return;
         }

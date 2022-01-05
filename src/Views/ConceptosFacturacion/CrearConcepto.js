@@ -164,7 +164,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({...state,catalogo: "c_ClaveProdServ", busqueda: "", complementoSAT: 1})}>
+                                    onClick={() => setState({...state,catalogo: "c_ClaveProdServCP", busqueda: "", complementoSAT: 1})}>
                                     Seleccionar
                                 </button>
                             </Grid>
@@ -239,6 +239,7 @@ function CrearConceptoSAT(props) {
                                             checked={props.dataComplemento.esPeligroso}
                                             onChange={handleChange}
                                             name="esPeligroso"
+                                            disabled
                                             color="primary"
                                         />
                                     }
