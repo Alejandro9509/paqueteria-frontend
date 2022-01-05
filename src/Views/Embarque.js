@@ -821,38 +821,38 @@ function Embarque(props) {
                 && !isValidText(entregaDD.latitudEnt)
                 && !isValidText(entregaDD.longitudEnt)
                 && !coordenadas){
-                mostrarDialogoMapa()
+                mostrarDialogoMapa(true)
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas guardadas*/
             }else if (!state.diferenteEntrega
                 && !isValidText(destinatario.latitudD)
                 && !isValidText(destinatario.longitudD)
                 && !coordenadas) {
-                mostrarDialogoMapa()
+                mostrarDialogoMapa(true)
                 return false
             }
             /**Si es agregar*/
         }else{
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
             if (state.diferenteEntrega  && !coordenadas){
-                mostrarDialogoMapa()
+                mostrarDialogoMapa(true)
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas*/
             }else if (!state.diferenteEntrega
                 && !isValidText(destinatario.latitudD)
                 && !isValidText(destinatario.longitudD)
                 && !coordenadas){
-                mostrarDialogoMapa()
+                mostrarDialogoMapa(true)
                 return false
             }
         }
         return true
     }
 
-    const mostrarDialogoMapa = () => {
+    const mostrarDialogoMapa = (isVisible) => {
         setState({
             ...state,
-            showConfirmarUbicacion: true,
+            showConfirmarUbicacion: isVisible,
             titulo: "entrega"
         })
     }
@@ -2383,7 +2383,13 @@ function Embarque(props) {
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     titulo={state.titulo}
                                     recoleccion={false}
-                                    direccion={destinatario}>
+                                    remitente={false}
+                                    mostrarDialogoMapa={mostrarDialogoMapa}
+                                    direccion={destinatario} 
+                                    dataMunicipiosEntregaDD={dataMunicipiosEntregaDD}
+                                    entregaDD={entregaDD}
+                                    esDiferenteEntrega={state.diferenteEntrega}>
+                                   
 
                 </ConfirmarUbicacion>
             }
