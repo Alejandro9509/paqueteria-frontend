@@ -69,6 +69,7 @@ import {validarPermisos} from "../Util/Contexts/UsuarioContext";
 import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/FormatosImpresionContext";
 import Filtros from "./Filtros/Filtros";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
+import Button from "@material-ui/core/Button";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -444,8 +445,9 @@ function Informes({history}) {
     }
 
     const handleAceptar = (e) => {
-        e.preventDefault();
-
+        if (e){
+            e.preventDefault();
+        }
         var params = {
             m_nIdInforme: state.IdInforme,
             m_nFolioInforme: state.FolioInforme,
@@ -1617,10 +1619,10 @@ function Informes({history}) {
                         <div id="Agregar" className="tab-pane fade ">
                             {/*INICIO DE ESTRUCTURA */}
 
-                            <form className="j-forms row">
+                            <form className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
                                 {/*Inicio de ejemplo*/}
-                                <div className="form-content">
-                                    {/* start steps */}
+                                {/*<div className="form-content">
+                                     start steps
                                     <div
                                         className="wizard-breadcrumb number-style"
                                         style={{
@@ -1645,8 +1647,8 @@ function Informes({history}) {
                                             </Stepper>
                                         </div>
                                     </div>
-                                    {/* end steps */}
-                                </div>
+                                     end steps
+                                </div>*/}
 
                                 <div className="row">
                                     <div className="col-md-6">
@@ -2641,28 +2643,29 @@ function Informes({history}) {
                                 </div>
 
                                 <div className="form-footer" className="col-md-12">
-                                    <button
-                                        type="button"
-                                        onClick={(event) => {
-                                            event.stopPropagation();
-                                            setState({...state, agregar: "Agregar"});
-                                            $('.nav-tabs li ').removeClass('active');
-                                            $('.nav-tabs li').eq(0).addClass('active');
-                                            $('.tab-content div ').removeClass('in show');
-                                            $('#Listado').addClass('in show');
-                                        }}
-                                        className="btn btn-secondary secondary-btn"
-                                    >
-                                        Cancelar
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        onClick={handleAceptar}
-                                        className="btn btn-primary primary-btn"
-                                        disabled={state.agregar == "Consultar"}
-                                    >
-                                        Aceptar
-                                    </button>
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                            <Button
+                                                fullWidth
+                                                type="button"
+                                                onClick={handleShowListado}
+                                                className="btn btn-secondary secondary-btn"
+                                            >
+                                                Cancelar
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                            <Button
+                                                fullWidth
+                                                type="submit"
+                                                className="btn btn-primary primary-btn"
+                                                disabled={state.agregar == "Consultar"}
+                                            >
+                                                Guardar informe
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+
                                     {
                                         state.cubicar &&
                                         <div>
