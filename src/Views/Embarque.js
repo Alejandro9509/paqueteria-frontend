@@ -1085,7 +1085,7 @@ function Embarque(props) {
                         message: '¿Desea crear la guía para este embarque?',
                         buttons: [
                             {
-                                label: 'Yes',
+                                label: 'Sí',
                                 onClick: async () => generarGuia(respuesta.data.m_nIdEmbarque)
                             },
                             {

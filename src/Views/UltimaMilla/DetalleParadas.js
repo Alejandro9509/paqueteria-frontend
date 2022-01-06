@@ -12,7 +12,7 @@ import {
     ListItem,
     ListItemText, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     TextField, ButtonGroup, Popover, Fade, Dialog, DialogContent, DialogTitle, DialogActions,
-    Typography, Tooltip, Popper, Paper, FormControl, InputLabel, Select
+    Typography, Tooltip, Popper, Paper, FormControl, InputLabel, Select, Chip
 } from "@material-ui/core";
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import DescriptionIcon from '@material-ui/icons/Description';
@@ -37,6 +37,7 @@ import {
     obtenerGuiaUltimaMilla
 } from "../../Util/Contexts/GuiaContext";
 import {
+    cancelarRuta,
     eliminarPaqueteUltimaMilla,
     obtenerCFDI,
     obtenerReporteCFDIGuia,
@@ -50,7 +51,8 @@ import {InsertDriveFile} from "@material-ui/icons";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 import {actualizarCoordenadasRecoleccion} from "../../Util/Contexts/RecoleccionContext";
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-
+import CancelIcon from '@material-ui/icons/Cancel';
+import {ReactComponent as EmbarqueIcon} from "../../iconos/Menu/IconoEmbarque/iconoEmbarque.svg";
 function showError(mensaje) {
     new Noty({
         type: "warning",
@@ -100,7 +102,7 @@ class DetalleParadas extends Component {
 
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0)) {
+        if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) ||  this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0) || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1: 0), 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1 : 0), 0), 0)) {
             this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla})
         }
     }
@@ -133,7 +135,7 @@ class DetalleParadas extends Component {
             message: '¿Está segura(o) que desea eliminar la parada?',
             buttons: [
                 {
-                    label: 'Yes',
+                    label: 'Sí',
                     onClick: () => this.onSubmitBorrarPaquete(idParada, idGuia, esRecoleccion)
                 },
                 {
@@ -333,7 +335,27 @@ class DetalleParadas extends Component {
             pdfWindow.document.title = "Última Milla";
         })
     }
+    cancelarRutaAccion(e, id) {
+        e.preventDefault()
+        e.stopPropagation()
+        confirmAlert({
+            title: 'Confirmación',
+            message: '¿Está segura(o) que desea cancelar la ruta?',
+            buttons: [
+                {
+                    label: 'Sí',
+                    onClick: async () =>  cancelarRuta(id).then(({data}) => {
+                        showSuccess(data)
+                        this.props.refresh()
+                    })
+                },
+                {
+                    label: 'No'
+                }
+            ]
+        });
 
+    }
     render() {
         var d = new Date();
         d.setHours(0,0,0,0);
@@ -527,32 +549,57 @@ class DetalleParadas extends Component {
                                                               this.openDetail(index)
                                                           }}>
                                                     <ListItemText primary={
-                                                        <Grid container spacing={1} alignItems={"baseline"}
+                                                        <Grid container spacing={1} style={{width:"100%"}} alignItems={"center"}
                                                               justify={"space-between"}>
-                                                            <Grid item>
-                                                                <Typography>{r.m_snNombreOperador}</Typography>
+                                                            <Grid item sm={5}>
+                                                                <Typography color={tour.m_bActiva ? "inherit" : "textSecondary"} align={"left"}>{r.m_snNombreOperador}</Typography>
                                                             </Grid>
-                                                            <Grid item>
-                                                                <UnidadesIcon
+                                                            <Grid item sm={2}>
+
+                                                                <Typography color={tour.m_bActiva ? "inherit" : "textSecondary"} style={{display:"flex", alignItems:"center"}}><UnidadesIcon
                                                                     style={{
                                                                         fill: color,
                                                                         paddingTop: "2px",
                                                                         paddingRight: "4px",
                                                                         paddingBottom: "2px",
                                                                         width: "20px",
-                                                                        verticalAlign: "middle"
+                                                                        verticalAlign: "middle",display:"flex"
                                                                     }}/>
-                                                                {r.m_sPlacasUnidad}
+                                                                    {r.m_sPlacasUnidad}
+                                                                </Typography>
 
                                                             </Grid>
-                                                            <Grid item>
-                                                                {tour.m_arrClsProGuia.length} Paradas
+                                                            <Grid item sm={2}>
+                                                                <Typography color={tour.m_bActiva ? "inherit" : "textSecondary"} >{tour.m_arrClsProGuia.length} Paradas</Typography>
+
                                                             </Grid>
-                                                            <Grid item>
+                                                            <Grid item sm={1}
+                                                            >
                                                                 <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour.m_nIdParadaUltimaMilla)}>
                                                                     <InsertDriveFile fontSize={"large"}/>
                                                                 </IconButton>
                                                             </Grid>
+
+                                                                <Grid item sm={2}>
+                                                                    {
+                                                                        tour.m_bActiva &&
+                                                                    <IconButton aria-label="file" onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}>
+                                                                        <CancelIcon style={{fill:"red"}} fontSize={"large"}/>
+                                                                    </IconButton>
+                                                                    }
+                                                                    {
+                                                                        !tour.m_bActiva &&
+                                                                        <Chip
+                                                                            style={{
+                                                                                backgroundColor: "red",
+                                                                                color: "white",
+                                                                            }}
+                                                                            label={`Cancelado`}
+                                                                            size={"small"}
+                                                                            variant="outlined"
+                                                                        />
+                                                                    }
+                                                                </Grid>
                                                         </Grid>
                                                     }/>
                                                 </ListItem>
@@ -566,6 +613,8 @@ class DetalleParadas extends Component {
                                                     }}>
 
 
+                                                        {
+                                                            tour.m_bActiva &&
                                                             <Button variant={"contained"} color={"primary"}
                                                                     onClick={() => this.setState({
                                                                         paquetes: tour.m_arrClsProGuia,
@@ -573,6 +622,7 @@ class DetalleParadas extends Component {
                                                                         openAgregar: true
                                                                     })}>Ordenar
                                                                 Paradas</Button>
+                                                        }
 
 
 
@@ -600,7 +650,9 @@ class DetalleParadas extends Component {
                                                                                         borderBottom: "none",
                                                                                         fontWeight: "bold"
                                                                                     }}
-                                                                                    align="left">Carta Porte</TableCell>
+                                                                                    align="left">
+                                                                                    Carta Porte
+                                                                                </TableCell>
                                                                                 <TableCell
                                                                                     style={{
                                                                                         borderBottom: "none",
@@ -638,10 +690,7 @@ class DetalleParadas extends Component {
                                                                                             <TableCell
                                                                                                 style={{borderBottom: "none"}}
                                                                                                 align="left">
-                                                                                                {
-                                                                                                    g.m_bEsRecoleccion &&
-                                                                                                    g.m_bRecoleccionConCita ? "" : "Sin Cita"
-                                                                                                }
+                                                                                                {g.m_bEsRecoleccion ? (g.m_bRecoleccionConCita ? (g.m_bCitaPendiente ? "Cita pendiente" : (g.m_sFechaRecoleccionCita + " " + g.m_sHoraCitarRecoleccionMinima + " a " + g.m_sHoraCitaRecoleccionMaxima)) : "Sin cita") : g.m_bEmbarqueConCita ? g.m_bCitaPendiente ? "Cita pendiente" : (g.m_sFechaEmbarqueCita + " " + g.m_sHoraEmbarqueCitaMinima + " a " + g.m_sHoraEmbarqueCitaMaxima) : "Sin Cita"}
                                                                                             </TableCell>
                                                                                             <TableCell
                                                                                                 style={{borderBottom: "none"}}
@@ -657,33 +706,38 @@ class DetalleParadas extends Component {
                                                                                             <TableCell
                                                                                                 style={{borderBottom: "none"}}
                                                                                                 align="left">
-                                                                                                {
-                                                                                                    g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 &&
+
                                                                                                     <ButtonGroup
                                                                                                         size="small"
                                                                                                         disableElevation
                                                                                                         variant="contained"
                                                                                                         color="primary">
+                                                                                                        {
+                                                                                                            g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            <IconButton
+                                                                                                                aria-label="reorder">
+                                                                                                                <Tooltip
+                                                                                                                    title={"Remplazar"}>
+                                                                                                                    <CachedIcon
+                                                                                                                        onClick={() => this.openRemplazarPaquete(tour, g)}
+                                                                                                                        fontSize="default"/>
+                                                                                                                </Tooltip>
+                                                                                                            </IconButton>
+                                                                                                        }
 
+                                                                                                        {
+                                                                                                            g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            <IconButton
+                                                                                                                aria-label="delete">
+                                                                                                                <Tooltip
+                                                                                                                    title={"Cambiar ubicación"}>
+                                                                                                                    <GpsFixedIcon
+                                                                                                                        onClick={() => this.confirmUbicacionParada( g.m_nId, g.m_bEsRecoleccion, g)}
+                                                                                                                        fontSize="default"/>
+                                                                                                                </Tooltip>
+                                                                                                            </IconButton>
+                                                                                                        }
 
-                                                                                                        <IconButton
-                                                                                                            aria-label="reorder">
-                                                                                                            <Tooltip
-                                                                                                                title={"Remplazar"}>
-                                                                                                                <CachedIcon
-                                                                                                                    onClick={() => this.openRemplazarPaquete(tour, g)}
-                                                                                                                    fontSize="default"/>
-                                                                                                            </Tooltip>
-                                                                                                        </IconButton>
-                                                                                                        <IconButton
-                                                                                                            aria-label="delete">
-                                                                                                            <Tooltip
-                                                                                                                title={"Cambiar ubicación"}>
-                                                                                                                <GpsFixedIcon
-                                                                                                                    onClick={() => this.confirmUbicacionParada( g.m_nId, g.m_bEsRecoleccion, g)}
-                                                                                                                    fontSize="default"/>
-                                                                                                            </Tooltip>
-                                                                                                        </IconButton>
                                                                                                         {
                                                                                                             r.m_bEsPermisionario && r.m_bUnidadPermisionario &&
                                                                                                             <IconButton
@@ -744,18 +798,21 @@ class DetalleParadas extends Component {
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
                                                                                                         }
-                                                                                                        <IconButton
-                                                                                                            aria-label="delete">
-                                                                                                            <Tooltip
-                                                                                                                title={"Eliminar"}>
-                                                                                                                <DeleteIcon
-                                                                                                                    onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
-                                                                                                                    fontSize="default"/>
-                                                                                                            </Tooltip>
-                                                                                                        </IconButton>
+                                                                                                        {
+                                                                                                            g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            <IconButton
+                                                                                                                aria-label="delete">
+                                                                                                                <Tooltip
+                                                                                                                    title={"Eliminar"}>
+                                                                                                                    <DeleteIcon
+                                                                                                                        onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
+                                                                                                                        fontSize="default"/>
+                                                                                                                </Tooltip>
+                                                                                                            </IconButton>
+                                                                                                        }
+
 
                                                                                                     </ButtonGroup>
-                                                                                                }
 
                                                                                             </TableCell>
                                                                                         </TableRow>

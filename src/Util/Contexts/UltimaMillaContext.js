@@ -465,6 +465,15 @@ function obtenerUltimaMillaReporte(id) {
     return result
 }
 
+function cancelarRuta(id) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/EliminarRuta/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.delete(url, { headers })
+    );
+    return result
+}
+
 function obtenerCFDI(id,esRecolecion, IdSucursal){
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/GetCFDITraslada/${id}/${esRecolecion ? 1 : 0}/${IdSucursal}`;
     let result;
@@ -507,6 +516,7 @@ function obtenerReporteCFDIRecoleccion(id){
     return result
 }
 export {
+    cancelarRuta,
     obtenerXMLPermisionario,
     obtenerXMLCFDI,
     obtenerCFDI,
