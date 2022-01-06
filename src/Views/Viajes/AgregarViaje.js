@@ -5,7 +5,16 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import axios from "axios";
 import PageviewIcon from "@material-ui/icons/Pageview";
-import {Button, Dialog, DialogActions, DialogContent, Grid, Tooltip} from "@material-ui/core";
+import {
+    Button,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    FormControlLabel,
+    Grid,
+    Tooltip
+} from "@material-ui/core";
 import TableCiudades from "./TableCiudades";
 import TableCiudadesViajes from "./TableCiudades";
 import FormControl from "@material-ui/core/FormControl";
@@ -35,7 +44,7 @@ import {obtenerInformesDisponiblesViajes} from "../../Util/Contexts/InformesCont
 import InformesPorAsignar from "./InformesPorAsignar";
 import Noty from "noty";
 import {obtenerEstatusUnidadeId, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
-import {obtenerOperadoresId} from "../../Util/Contexts/OperadoresContext";
+import {obtenerOperadores, obtenerOperadoresId} from "../../Util/Contexts/OperadoresContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 
 const headers = API_HEADERS
@@ -102,10 +111,39 @@ class AgregarViaje extends Component {
             placasDolly: "",
             placasRemolque1: "",
             placasRemolque2: "",
+            estatusRemolque1:'',
+            estatusRemolque2:'',
             height: window.innerHeight,
             showAsignarOperadorDialog: false,
             idInforme: 0,
             asignacionEquipo: {},
+
+            //OPERADOR
+            operador: {},
+            cargadoVacioRemolqueUno: false,
+            cargadoVacioRemolqueDos: false,
+            unidad: {},
+            placaIntUnidad: "",
+            estatusUnidad: "",
+            referencia: "",
+            kms: "",
+            horas: "",
+            fechaCarga: "",
+            horaCarga: "",
+            fechaEntregaGeneral: "",
+            horaEntregaGeneral: "",
+            horasEnRuta: "",
+
+            fechaInforme: "",
+            horaInforme: "",
+            folioInforme: "",
+            remolqueInforme: "",
+            totalInforme: "",
+            fechaEntregaInforme: "",
+            horaEntregaInforme: "",
+            entregado: false,
+            estatusInforme: "",
+            dataOperadores: [],
         }
 
         this.getAllCiudades = this.getAllCiudades.bind(this);
@@ -126,6 +164,10 @@ class AgregarViaje extends Component {
         this.handleAgregarInforme = this.handleAgregarInforme.bind(this);
         this.handleEliminarInforme = this.handleEliminarInforme.bind(this);
         this.handleClearData = this.handleClearData.bind(this);
+        this.handleChangeAutocomplete = this.handleChangeAutocomplete.bind(this);
+        this.handleChangeCheckbox = this.handleChangeCheckbox.bind(this);
+        this.getAllOperadores = this.getAllOperadores.bind(this);
+        this.handleUnidadFiltro = this.handleUnidadFiltro.bind(this);
 
     }
 
@@ -136,6 +178,7 @@ class AgregarViaje extends Component {
         this.getAllSucursales()
         this.getAllEstatusViaje();
         this.getAllUnidades();
+        this.getAllOperadores();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -147,16 +190,51 @@ class AgregarViaje extends Component {
                 return {
                     ...state,
                     id: this.props.select.m_nIdViaje,
-                        origen : {
-                        "m_sCiudad": this.props.select.m_sOringen,
+                    idCiudadOrigen: {
+                        "m_sCiudad": this.props.select.m_sOrigen,
                         "m_nIdCiudad": this.props.select.m_nIdOrigen
                     },
-                    destino: {
+                    idCiudadDestino: {
                         "m_sCiudad": this.props.select.m_sDestino,
                         "m_nIdCiudad": this.props.select.m_nIdDestino
                     },
-                    fechaHoraRegistro: this.props.select.m_dFecha + "T" + this.props.select.m_tHora,
-                        estatusListado: this.props.select.m_nIdEstatusViaje,
+                    IdRemolque1: {
+                        m_nIdUnidad: this.props.select.m_nIdRemolque1,
+                        m_sDescripcion: this.props.select.m_sDescripcionRemolque1,
+                        m_sCodigo: this.props.select.m_sCodigoRemolque1,
+                    },
+                    placasRemolque1: this.props.select.m_sPlacasRemolque1,
+                    colorRemolque1: this.props.select.m_sColorRemolque1,
+                    estatusRemolque1: this.props.select.m_sEstatusRemolque1,
+                    IdRemolque2: {
+                        m_nIdUnidad: this.props.select.m_nIdRemolque2,
+                        m_sDescripcion: this.props.select.m_sDescripcionRemolque2,
+                        m_sCodigo: this.props.select.m_sCodigoRemolque2,
+                    },
+                    placasRemolque2: this.props.select.m_sPlacasRemolque2,
+                    colorRemolque2: this.props.select.m_sColorRemolque2,
+                    estatusRemolque2: this.props.select.m_sEstatusRemolque2,
+                    IdDolly: {
+                        m_nIdUnidad: this.props.select.m_nIdDolly,
+                        m_sDescripcion: this.props.select.m_sDescripcionDolly,
+                        m_sCodigo: this.props.select.m_sCodigoDolly,
+                    },
+                    placasDolly: this.props.select.m_sPlacasDolly,
+                    operador: {
+                        m_nIdOperador: this.props.select.m_nIdOperador,
+                        m_sNombreCompleto: this.props.select.m_sNombreOperador,
+                    },
+                    unidad: {
+                        m_nIdUnidad: this.props.select.m_nIdUnidad,
+                        m_sCodigo: this.props.select.m_sCodigoUnidad,
+                        m_sDescripcion: this.props.select.m_sDescripcionUnidad
+                    },
+                    placaIntUnidad: this.props.select.m_sPlacasUnidad,
+                    estatusUnidad: this.props.select.m_sEstatusUnidad,
+                    kms: '',
+                    horas: '',
+                    fechaHoraRegistro: this.props.select.m_dFecha + "T" + this.props.select.m_tHora.substr(0, 5),
+                    estatusListado: this.props.select.m_nIdEstatusViaje,
                     idSucursalAgregar: this.props.select.m_nIdSucursal,
                     candadoOficial: this.props.select.m_sCandadoOficial,
                     folioViaje: this.props.select.m_sFolioViaje,
@@ -167,50 +245,14 @@ class AgregarViaje extends Component {
 
                 }
             })
-            obtenerOperadoresId(this.props.select.m_nIdOperador).then(({data}) => {
+            /*obtenerOperadoresId(this.props.select.m_nIdOperador).then(({data}) => {
                 this.setState({
                     asignacionEquipo: {
                         ...this.state.asignacionEquipo,
                         operador: data
                     }
                 })
-            })
-            debugger
-            obtenerEstatusUnidadeId(this.props.select.m_nIdRemolque1).then((resultado) => {
-                debugger
-                resultado.data.m_sDescripcion = this.props.select.m_sRemolque1
-                this.setState(state => {
-                    return {
-                        ...state,
-                        IdRemolque1: resultado.data,
-                        placasRemolque1: resultado.data.m_sPlacas,
-                        colorRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sColor,
-                        estatusRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
-                    }
-                })
-            })
-            obtenerEstatusUnidadeId(this.props.select.m_nIdRemolque2).then((resultado) => {
-                resultado.data.m_sDescripcion = this.props.select.m_sRemolque2
-                this.setState(state => {
-                    return {
-                        ...state,
-                        IdRemolque2: resultado.data,
-                        placasRemolque2: resultado.data.m_sPlacas,
-                        colorRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sColor,
-                        estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
-                    }
-                })
-            })
-            obtenerEstatusUnidadeId(this.props.select.m_nIdDolly).then((resultado) => {
-                resultado.data.m_sDescripcion = this.props.select.m_sDolly
-                this.setState(state => {
-                    return {
-                        ...state,
-                        IdDolly: resultado.data,
-                        placasDolly: resultado.data.m_sPlacas,
-                    }
-                })
-            })
+            })*/
         }
     }
 
@@ -227,10 +269,7 @@ class AgregarViaje extends Component {
             showSuccess("No puede guardar un viaje sin informes.")
             return
         }
-        if (Object.keys(this.state.asignacionEquipo).length === 0) {
-            showSuccess("Debe asignar una unidad y un operador al viaje")
-            return
-        }
+
         var params = {
             m_nIdViaje: this.props.id,
             m_sFecha: this.state.fechaHoraRegistro.substr(0, 10),
@@ -249,19 +288,19 @@ class AgregarViaje extends Component {
             IdRemolque2: this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0,
             IdDolly: this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0,
             asignacionUnidad: {
-                idUnidad: this.state.asignacionEquipo.unidad.m_nIdUnidad,
-                idOperador: this.state.asignacionEquipo.operador.m_nIdOperador,
-                CRV1: this.state.asignacionEquipo.cargadoVacioRemolqueUno,
-                CRV2: this.state.asignacionEquipo.cargadoVacioRemolqueDos,
-                referencia: this.state.asignacionEquipo.referencia,
-                kilometro: this.state.asignacionEquipo.kms,
-                fechaCarga: this.state.asignacionEquipo.fechaCarga,
-                horas: this.state.asignacionEquipo.horas,
-                fechaEntrega: this.state.asignacionEquipo.fechaEntregaGeneral,
-                fechaInforme: this.state.asignacionEquipo.fechaInforme,
-                horaInforme: this.state.asignacionEquipo.horaInforme,
-                estatus: this.state.asignacionEquipo.estatusInforme,
-                horaEntrega: this.state.asignacionEquipo.horaEntregaGeneral,
+                idUnidad: this.state.unidad.m_nIdUnidad,
+                idOperador: this.state.operador.m_nIdOperador,
+                CRV1: this.state.cargadoVacioRemolqueUno,
+                CRV2: this.state.cargadoVacioRemolqueDos,
+                referencia: this.state.referencia,
+                kilometro: this.state.kms,
+                fechaCarga: this.state.fechaCarga,
+                horas: this.state.horas,
+                fechaEntrega: this.state.fechaEntregaGeneral,
+                fechaInforme: this.state.fechaInforme,
+                horaInforme: this.state.horaInforme,
+                estatus: this.state.estatusInforme,
+                horaEntrega: this.state.horaEntregaGeneral,
             }
         }
         console.log(this.props.modificar)
@@ -331,8 +370,47 @@ class AgregarViaje extends Component {
             placasDolly: "",
             placasRemolque1: "",
             placasRemolque2: "",
+            estatusRemolque1:'',
+            estatusRemolque2:'',
             idInforme: 0,
             asignacionEquipo: {},
+
+            dataCiudad: [],
+            dataRutas: [],
+            dataCodigoPostal: [],
+            dataSucursal: [],
+            dataEstatusViaje: [],
+            identificadorModal: "",
+            height: window.innerHeight,
+            showAsignarOperadorDialog: false,
+
+
+            //OPERADOR
+            operador: {},
+            cargadoVacioRemolqueUno: false,
+            cargadoVacioRemolqueDos: false,
+            unidad: {},
+            placaIntUnidad: "",
+            estatusUnidad: "",
+            referencia: "",
+            kms: "",
+            horas: "",
+            fechaCarga: "",
+            horaCarga: "",
+            fechaEntregaGeneral: "",
+            horaEntregaGeneral: "",
+            horasEnRuta: "",
+
+            fechaInforme: "",
+            horaInforme: "",
+            folioInforme: "",
+            remolqueInforme: "",
+            totalInforme: "",
+            fechaEntregaInforme: "",
+            horaEntregaInforme: "",
+            entregado: false,
+            estatusInforme: "",
+            dataOperadores: [],
         })
     }
 
@@ -365,8 +443,8 @@ class AgregarViaje extends Component {
         obtenerCiudades().then((respuesta) => {
             this.setState({
                 dataCiudad: respuesta.data,
-                idCiudadOrigen: this.props.select ? respuesta.data.find(c => c.m_nIdCiudad === this.props.select.m_nIdOrigen) : null,
-                idCiudadDestino: this.props.select ? respuesta.data.find(c => c.m_nIdCiudad === this.props.select.m_nIdDestino) : null
+                /*idCiudadOrigen: this.props.select ? respuesta.data.find(c => c.m_nIdCiudad === this.props.select.m_nIdOrigen) : null,
+                idCiudadDestino: this.props.select ? respuesta.data.find(c => c.m_nIdCiudad === this.props.select.m_nIdDestino) : null*/
             })
             /*  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
              axios.get(url, { headers }).then((respuesta) => {
@@ -401,13 +479,14 @@ class AgregarViaje extends Component {
         obtenerUnidades().then((respuesta) => {
             this.setState({
                 dataUnidades: respuesta.data,
-                asignacionEquipo: this.props.select ? {
-                    ...this.state.asignacionEquipo,
-                    unidad: respuesta.data.find(u => u.m_nIdUnidad === this.props.select.m_nIdUnidad)
-                } : {},
-                IdRemolque1: this.props.select ? respuesta.data.find(c => c.m_nIdUnidad === this.props.select.m_nIdRemolque1) : null,
-                IdRemolque2: this.props.select ? respuesta.data.find(c => c.m_nIdUnidad === this.props.select.m_nIdRemolque2) : null,
-                IdDolly: this.props.select ? respuesta.data.find(c => c.m_nIdUnidad === this.props.select.m_nIdDolly) : null
+            })
+        });
+    }
+
+    getAllOperadores() {
+        obtenerOperadores().then((respuesta) => {
+            this.setState({
+                dataOperadores: respuesta.data,
             })
         });
     }
@@ -485,6 +564,25 @@ class AgregarViaje extends Component {
         }
     }
 
+    handleUnidadFiltro(event, newValue) {
+        event.preventDefault();
+        obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
+            this.setState({
+                unidad: newValue,
+                placaIntUnidad: newValue.m_sPlacas,
+                estatusUnidad: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus,
+                kms: newValue.m_nOdometro,
+                horas: newValue.m_nHorasTrabajadasMotorNoGPS
+            })
+        })
+
+        if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
+
+            this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
+                this.state.IdRemolque1.m_nIdUnidad, newValue.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
+        }
+    }
+
     handleDollyFiltro(event, newValue) {
         event.preventDefault();
         this.setState({IdDolly: newValue, placasDolly: newValue.m_sPlacas})
@@ -511,6 +609,18 @@ class AgregarViaje extends Component {
         var dataInformesAsignados = [...this.state.dataInformesAsignados]
         dataInformesAsignados.splice(dataInformesAsignados.findIndex(i => i.m_nIdInforme === id), 1)
         this.setState({dataInformesAsignados: dataInformesAsignados})
+    }
+
+    handleChangeAutocomplete = (input, value) => {
+        this.setState({
+            [input]: value
+        });
+    }
+
+    handleChangeCheckbox = (e) => {
+        this.setState({
+            [e.target.name]: e.target.checked
+        });
     }
 
     render() {
@@ -719,7 +829,7 @@ class AgregarViaje extends Component {
                     onClose={() => this.setState({openHistoryDialog: false})}>
                     <Historial/>
                 </Dialog>
-                {
+                {/*{
                     this.state.showAsignarOperadorDialog &&
                     <Dialog open={this.state.showAsignarOperadorDialog}
                             fullWidth={true}
@@ -747,7 +857,7 @@ class AgregarViaje extends Component {
                             </AsignarOperadorUnidad>
                         </DialogContent>
                     </Dialog>
-                }
+                }*/}
 
                 <div className="widget-wrap">
                     <div className="widget-content">
@@ -824,9 +934,7 @@ class AgregarViaje extends Component {
                                                        onChange={this.handleChange}
                                                        required
                                                        label="Fecha / Hora de Registro"
-                                                       InputLabelProps={{
-                                                           shrink: true,
-                                                       }}
+                                                       InputLabelProps={{shrink: true,}}
                                                        disabled={this.props.consult}
                                                        value={this.state.fechaHoraRegistro}
                                                        className="form-control"
@@ -968,6 +1076,176 @@ class AgregarViaje extends Component {
                                             />
                                         </div>
                                     </div>
+                                </div>
+
+                                <div className="row">
+                                    <div className="widget-header">
+                                        <h2>Operador</h2>
+                                    </div>
+                                    {/*<AsignarOperadorUnidad unidadAsignada={this.state.asignacionEquipo}
+                                                           rutaSeleccionada={this.state}
+                                                           disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
+                                                           onChange={(data) => this.setState({
+                                                               // showAsignarOperadorDialog: false,
+                                                               asignacionEquipo: data
+                                                           })}/>*/}
+                                    <Grid container spacing={2}>
+                                        {/*<Grid item xs={6}>
+                        <TextField
+                            margin={"dense"}
+                            variant={"outlined"}
+                            label={"Origen"}
+                            disabled
+                            value={data.origen}/>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <TextField
+                            margin={"dense"}
+                            variant={"outlined"}
+                            label={"Destino"}
+                            disabled
+                            value={data.destino}/>
+                    </Grid>*/}
+
+                                        {/*<Grid item xs={3}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.state.cargadoVacioRemolqueUno}
+                                                        onChange={this.handleChangeCheckbox}
+                                                        name="cargadoVacioRemolqueUno"
+                                                        //disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
+                                                    />
+                                                }
+                                                label={"Cargado/Vacío Remolque 1"}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.state.cargadoVacioRemolqueDos}
+                                                        onChange={this.handleChangeCheckbox}
+                                                        name="cargadoVacioRemolqueDos"
+                                                        //disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
+                                                    />
+                                                }
+                                                label={"Cargado/Vacío Remolque 2"}
+                                            />
+                                        </Grid>*/}
+                                        {/*<Grid item xs={6}/>*/}
+
+                                        <Grid item xs={6}>
+                                            <Autocomplete
+                                                freeSolo
+                                                onChange={(e, value) => this.handleChangeAutocomplete("operador", value)}
+                                                value={this.state.operador}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="dataOperador"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={this.state.dataOperadores}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sNombreCompleto
+                                                }
+                                                style={{
+                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                }}
+                                                //disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Operador"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            required
+                                                            {...params}
+                                                            //disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}/>
+
+                                        <Grid item xs={6}>
+                                            <Autocomplete
+                                                freeSolo
+                                                onChange={(e, value) => this.handleUnidadFiltro(e, value)}
+                                                value={this.state.unidad}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="unidad"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={this.state.dataUnidades}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                                                }
+                                                style={{transform: "translate(14px, 10px) scale(1) !important"}}
+                                                //disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Unidad"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            required
+                                                            {...params}
+                                                            //disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <TextField
+                                                margin={"dense"}
+                                                variant={"outlined"}
+                                                label={"Placa int"}
+                                                disabled
+                                                value={this.state.placaIntUnidad}/>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <TextField
+                                                margin={"dense"}
+                                                variant={"outlined"}
+                                                label={"Estatus"}
+                                                disabled
+                                                value={this.state.estatusUnidad}/>
+                                        </Grid>
+                                        <Grid item xs={1}/>
+
+                                        {/*<Grid item xs={3}>
+                                            <TextField
+                                                margin={"dense"}
+                                                variant={"outlined"}
+                                                label={"Referencia"}
+                                                onChange={this.handleChange}
+                                                value={this.state.referencia}
+                                                name={"referencia"}
+                                                //disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <TextField
+                                                margin={"dense"}
+                                                variant={"outlined"}
+                                                label={"Kilómetros"}
+                                                disabled
+                                                // onChange={(e) => setData({...data, kms: e.target.value})}
+                                                value={this.state.kms}/>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <TextField
+                                                margin={"dense"}
+                                                variant={"outlined"}
+                                                label={"Horas"}
+                                                disabled
+                                                // onChange={(e) => setData({...data, horas: e.target.value})}
+                                                value={this.state.horas}/>
+                                        </Grid>*/}
+                                        {/*<Grid item xs={4}/>*/}
+                                    </Grid>
                                 </div>
 
                                 <div className="widget-header">
@@ -1178,17 +1456,17 @@ class AgregarViaje extends Component {
                                             />
                                         </div>
                                     </div>
-                                    <div className="col-sm-6 col-md-4 unit">
+                                    {/*<div className="col-sm-6 col-md-4 unit">
                                         <Button
                                             variant={"contained"}
                                             color={"primary"}
                                             disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
                                             onClick={() => this.setState({showAsignarOperadorDialog: true})}>Asignar
                                             operador unidad</Button>
-                                    </div>
+                                    </div>*/}
 
                                 </div>
-                                <div className={"row"}>
+                                {/*<div className={"row"}>
 
                                     {
                                         Object.keys(this.state.asignacionEquipo).length !== 0 &&
@@ -1220,7 +1498,7 @@ class AgregarViaje extends Component {
                                         </div>
                                     }
 
-                                </div>
+                                </div>*/}
 
                                 {
                                     !this.props.consult &&
