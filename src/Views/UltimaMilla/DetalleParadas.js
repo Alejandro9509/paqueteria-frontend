@@ -37,6 +37,7 @@ import {
     obtenerGuiaUltimaMilla
 } from "../../Util/Contexts/GuiaContext";
 import {
+    cancelarRuta,
     eliminarPaqueteUltimaMilla,
     obtenerCFDI,
     obtenerReporteCFDIGuia,
@@ -50,7 +51,7 @@ import {InsertDriveFile} from "@material-ui/icons";
 import ConfirmarUbicacion from "../../Components/Map/ConfirmarUbicacion";
 import {actualizarCoordenadasRecoleccion} from "../../Util/Contexts/RecoleccionContext";
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-
+import CancelIcon from '@material-ui/icons/Cancel';
 function showError(mensaje) {
     new Noty({
         type: "warning",
@@ -133,7 +134,7 @@ class DetalleParadas extends Component {
             message: '¿Está segura(o) que desea eliminar la parada?',
             buttons: [
                 {
-                    label: 'Yes',
+                    label: 'Sí',
                     onClick: () => this.onSubmitBorrarPaquete(idParada, idGuia, esRecoleccion)
                 },
                 {
@@ -333,7 +334,26 @@ class DetalleParadas extends Component {
             pdfWindow.document.title = "Última Milla";
         })
     }
+    cancelarRutaAccion(e, id) {
+        e.preventDefault()
+        e.stopPropagation()
+        confirmAlert({
+            title: 'Confirmación',
+            message: '¿Está segura(o) que desea eliminar la ruta?',
+            buttons: [
+                {
+                    label: 'Sí',
+                    onClick: async () =>  cancelarRuta(id).then(({data}) => {
+                        showSuccess(data)
+                    })
+                },
+                {
+                    label: 'No'
+                }
+            ]
+        });
 
+    }
     render() {
         var d = new Date();
         d.setHours(0,0,0,0);
@@ -528,11 +548,11 @@ class DetalleParadas extends Component {
                                                           }}>
                                                     <ListItemText primary={
                                                         <Grid container spacing={1} alignItems={"baseline"}
-                                                              justify={"space-between"}>
-                                                            <Grid item>
-                                                                <Typography>{r.m_snNombreOperador}</Typography>
+                                                              justify={"flex-end"}>
+                                                            <Grid item sm={4}>
+                                                                <Typography align={"left"}>{r.m_snNombreOperador}</Typography>
                                                             </Grid>
-                                                            <Grid item>
+                                                            <Grid item sm={2}>
                                                                 <UnidadesIcon
                                                                     style={{
                                                                         fill: color,
@@ -545,12 +565,18 @@ class DetalleParadas extends Component {
                                                                 {r.m_sPlacasUnidad}
 
                                                             </Grid>
-                                                            <Grid item>
+                                                            <Grid item sm={2}>
                                                                 {tour.m_arrClsProGuia.length} Paradas
                                                             </Grid>
-                                                            <Grid item>
+                                                            <Grid item sm={2}
+                                                            >
                                                                 <IconButton aria-label="file" onClick={(e) => this.generarReporte(e,tour.m_nIdParadaUltimaMilla)}>
                                                                     <InsertDriveFile fontSize={"large"}/>
+                                                                </IconButton>
+                                                            </Grid>
+                                                            <Grid item sm={2}>
+                                                                <IconButton aria-label="file" onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}>
+                                                                    <CancelIcon fontSize={"large"}/>
                                                                 </IconButton>
                                                             </Grid>
                                                         </Grid>
@@ -638,10 +664,7 @@ class DetalleParadas extends Component {
                                                                                             <TableCell
                                                                                                 style={{borderBottom: "none"}}
                                                                                                 align="left">
-                                                                                                {
-                                                                                                    g.m_bEsRecoleccion &&
-                                                                                                    g.m_bRecoleccionConCita ? "" : "Sin Cita"
-                                                                                                }
+                                                                                                {g.m_bEsRecoleccion ? (g.m_bRecoleccionConCita ? (g.m_bCitaPendiente ? "Cita pendiente" : (g.m_sFechaRecoleccionCita + " " + g.m_sHoraCitarRecoleccionMinima + " a " + g.m_sHoraCitaRecoleccionMaxima)) : "Sin cita") : g.m_bEmbarqueConCita ? g.m_bCitaPendiente ? "Cita pendiente" : (g.m_sFechaEmbarqueCita + " " + g.m_sHoraEmbarqueCitaMinima + " a " + g.m_sHoraEmbarqueCitaMaxima) : "Sin Cita"}
                                                                                             </TableCell>
                                                                                             <TableCell
                                                                                                 style={{borderBottom: "none"}}
@@ -658,14 +681,12 @@ class DetalleParadas extends Component {
                                                                                                 style={{borderBottom: "none"}}
                                                                                                 align="left">
                                                                                                 {
-                                                                                                    g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 &&
+                                                                                                    g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                     <ButtonGroup
                                                                                                         size="small"
                                                                                                         disableElevation
                                                                                                         variant="contained"
                                                                                                         color="primary">
-
-
                                                                                                         <IconButton
                                                                                                             aria-label="reorder">
                                                                                                             <Tooltip

@@ -883,7 +883,7 @@ function Guia(props) {
                     message: '¿Está segura(o) que desea imprimir ' + totalEtiquetas + ' etiqueta(s)?',
                     buttons: [
                         {
-                            label: 'Yes',
+                            label: 'Sí',
                             onClick: async () => {
                                 guia.m_arrClsDetalle.forEach(async (p, index) => {
                                     for (let i = 0; i < p.ctd; i++) {
