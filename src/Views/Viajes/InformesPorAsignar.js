@@ -22,7 +22,7 @@ class InformesPorAsignar extends Component {
                     columns={this.props.columns}
                     density="compact"
                     getRowId={(row) => { console.log(row); return row.m_nIdInforme}}
-                    hideFooter
+
                 />
             </div>
         );

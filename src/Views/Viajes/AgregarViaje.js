@@ -1244,7 +1244,6 @@ class AgregarViaje extends Component {
                                                 rows={this.state.dataInformesPorAsignar}
                                                 columns={columnspRorAsignar}
                                                 density="compact"
-                                                pageSize={Math.floor((this.state.height - 310) / 30)}
                                                 getRowId={(row) => row.m_nIdInforme}
                                                 onRowSelected={(row) => {
                                                     this.setState({
@@ -1252,7 +1251,6 @@ class AgregarViaje extends Component {
 
                                                     })
                                                 }}
-                                                hideFooter
                                             />
 
                                         </div>
