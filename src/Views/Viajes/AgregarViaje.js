@@ -1071,6 +1071,109 @@ class AgregarViaje extends Component {
                                     </div>
                                 </div>
 
+                                {
+                                    !this.props.consult &&
+                                    <div>
+                                        <div className="widget-header">
+                                            <h2 color={'#717171'}>Informes para asignación</h2>
+                                            <br/>
+                                            <div className="row" style={{display: "flex"}}>
+                                                <div className="col-sm-12 col-md-12 unit">
+                                                    <div className="input">
+                                                        <Autocomplete
+                                                            freeSolo
+                                                            onChange={this.handleOrigenFiltro}
+                                                            value={this.state.origen}
+                                                            //disabled={state.agregar == "Consultar"}
+                                                            id="origenRemitente"
+                                                            disableClearable
+                                                            forcePopupIcon={false}
+                                                            options={this.state.dataCiudad}
+                                                            getOptionLabel={(option) =>
+                                                                option.m_sCiudad
+                                                            }
+                                                            style={{
+                                                                transform: "translate(14px, 10px) scale(1) !important"
+                                                            }}
+                                                            renderInput={(params) => (
+                                                                <div>
+                                                                    <TextField
+                                                                        label="Origen"
+                                                                        margin="dense"
+                                                                        variant="outlined"
+                                                                        {...params}
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="col-sm-12 col-md-12 unit">
+                                                    <div className="input">
+                                                        <Autocomplete
+                                                            freeSolo
+                                                            onChange={this.handleDestinoFiltro}
+
+                                                            value={this.state.destino}
+                                                            //disabled={state.agregar == "Consultar"}
+                                                            id="destino"
+                                                            disableClearable
+                                                            forcePopupIcon={false}
+                                                            options={this.state.dataCiudad}
+                                                            getOptionLabel={(option) =>
+                                                                option.m_sCiudad
+                                                            }
+                                                            style={{
+                                                                transform: "translate(14px, 10px) scale(1) !important"
+                                                            }}
+                                                            renderInput={(params) => (
+                                                                <div>
+                                                                    <TextField
+                                                                        label="Destino"
+                                                                        margin="dense"
+                                                                        variant="outlined"
+                                                                        {...params}
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row" style={{height: "200px", width: '100%'}}>
+                                            <DataGrid
+                                                localeText={dataGridLocaleText}
+                                                rows={this.state.dataInformesPorAsignar}
+                                                columns={columnspRorAsignar}
+                                                density="compact"
+                                                pageSize={Math.floor((this.state.height - 310) / 30)}
+                                                getRowId={(row) => row.m_nIdInforme}
+                                                onRowSelected={(row) => {
+                                                    this.setState({
+                                                        idInforme: row.data.m_nIdInforme
+
+                                                    })
+                                                }}
+                                                hideFooter
+                                            />
+
+                                        </div>
+                                    </div>
+                                }
+
+                                <div>
+                                    <div className="widget-header">
+                                        <h2 color={'#717171'}>Detalle de paradas</h2>
+                                    </div>
+
+                                    <div className="row" style={{height: "200px", width: '100%'}}>
+                                        <InformesPorAsignar {...this.props} columns={columnspAsignadas}
+                                                            dataInformesAsignados={this.state.dataInformesAsignados}
+                                        />
+                                    </div>
+                                </div>
+
                                 <div className="row">
                                     <div className="widget-header">
                                         <h2>Operador</h2>
@@ -1412,32 +1515,6 @@ class AgregarViaje extends Component {
 
                                 </div>
 
-
-
-                                <div className="row" style={{display: "flex"}}>
-                                    {/* Dolly  */}
-
-
-                                    <div className="col-sm-12 col-md-4 unit">
-
-
-
-                                    </div>
-
-                                    {/* Placa Int */}
-                                    <div className="col-sm-12 col-md-4 unit">
-
-                                    </div>
-                                    {/*<div className="col-sm-6 col-md-4 unit">
-                                        <Button
-                                            variant={"contained"}
-                                            color={"primary"}
-                                            disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
-                                            onClick={() => this.setState({showAsignarOperadorDialog: true})}>Asignar
-                                            operador unidad</Button>
-                                    </div>*/}
-
-                                </div>
                                 {/*<div className={"row"}>
 
                                     {
@@ -1472,126 +1549,7 @@ class AgregarViaje extends Component {
 
                                 </div>*/}
 
-                                {
-                                    !this.props.consult &&
-                                    <div>
-                                        <div className="widget-header">
-                                            <h2 color={'#717171'}>Informes para asignación</h2>
-                                            <br/>
-                                            <div className="row" style={{display: "flex"}}>
-                                                <div className="col-sm-12 col-md-12 unit">
-                                                    <div className="input">
-                                                        <Autocomplete
-                                                            freeSolo
-                                                            onChange={this.handleOrigenFiltro}
-                                                            value={this.state.origen}
-                                                            //disabled={state.agregar == "Consultar"}
-                                                            id="origenRemitente"
-                                                            disableClearable
-                                                            forcePopupIcon={false}
-                                                            options={this.state.dataCiudad}
-                                                            getOptionLabel={(option) =>
-                                                                option.m_sCiudad
-                                                            }
-                                                            style={{
-                                                                transform: "translate(14px, 10px) scale(1) !important"
-                                                            }}
-                                                            renderInput={(params) => (
-                                                                <div>
-                                                                    <TextField
-                                                                        label="Origen"
-                                                                        margin="dense"
-                                                                        variant="outlined"
-                                                                        {...params}
-                                                                    />
-                                                                </div>
-                                                            )}
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div className="col-sm-12 col-md-12 unit">
-                                                    <div className="input">
-                                                        <Autocomplete
-                                                            freeSolo
-                                                            onChange={this.handleDestinoFiltro}
-
-                                                            value={this.state.destino}
-                                                            //disabled={state.agregar == "Consultar"}
-                                                            id="destino"
-                                                            disableClearable
-                                                            forcePopupIcon={false}
-                                                            options={this.state.dataCiudad}
-                                                            getOptionLabel={(option) =>
-                                                                option.m_sCiudad
-                                                            }
-                                                            style={{
-                                                                transform: "translate(14px, 10px) scale(1) !important"
-                                                            }}
-                                                            renderInput={(params) => (
-                                                                <div>
-                                                                    <TextField
-                                                                        label="Destino"
-                                                                        margin="dense"
-                                                                        variant="outlined"
-                                                                        {...params}
-                                                                    />
-                                                                </div>
-                                                            )}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        <div className="row" style={{height: "200px", width: '100%'}}>
-                                            <DataGrid
-                                                localeText={dataGridLocaleText}
-                                                rows={this.state.dataInformesPorAsignar}
-                                                columns={columnspRorAsignar}
-                                                density="compact"
-                                                pageSize={Math.floor((this.state.height - 310) / 30)}
-                                                getRowId={(row) => row.m_nIdInforme}
-                                                onRowSelected={(row) => {
-                                                    this.setState({
-                                                        idInforme: row.data.m_nIdInforme
-
-                                                    })
-                                                }}
-                                                hideFooter
-                                            />
-
-                                        </div>
-
-
-                                    </div>
-
-                                }
-
-                                <div>
-                                    <div className="widget-header">
-                                        <h2 color={'#717171'}>Detalle de paradas</h2>
-                                    </div>
-
-                                    <div className="row" style={{height: "200px", width: '100%'}}>
-                                        <InformesPorAsignar {...this.props} columns={columnspAsignadas}
-                                                            dataInformesAsignados={this.state.dataInformesAsignados}
-                                        />
-
-                                    </div>
-
-                                    {/* {this.state.dataInformesAsignados.length != 0 ? (
-
-                                <Button
-                                    type="submit"
-                                    color={"primary"}
-                                    onClick={() => this.setState({openHistoryDialog: true })}>Historial</Button>
-                            ): (<div/>)}*/}
-
-
-                                </div>
-
-                                <div className="form-footer col-md-12">
+                                <div className="form-footer col-md-12" style={{marginTop:'30px'}}>
                                     <Grid container spacing={1}>
                                         <Grid item xs>
                                             <Button
@@ -1622,6 +1580,7 @@ class AgregarViaje extends Component {
                                         </Grid>
                                     </Grid>
                                 </div>
+
                             </form >
                         </div>
 
