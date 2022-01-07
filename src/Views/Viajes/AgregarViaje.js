@@ -5,7 +5,16 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import axios from "axios";
 import PageviewIcon from "@material-ui/icons/Pageview";
-import {Button, Dialog, DialogActions, DialogContent, Grid, Tooltip} from "@material-ui/core";
+import {
+    Button,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    FormControlLabel,
+    Grid,
+    Tooltip
+} from "@material-ui/core";
 import TableCiudades from "./TableCiudades";
 import TableCiudadesViajes from "./TableCiudades";
 import FormControl from "@material-ui/core/FormControl";
@@ -35,7 +44,7 @@ import {obtenerInformesDisponiblesViajes} from "../../Util/Contexts/InformesCont
 import InformesPorAsignar from "./InformesPorAsignar";
 import Noty from "noty";
 import {obtenerEstatusUnidadeId, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
-import {obtenerOperadoresId} from "../../Util/Contexts/OperadoresContext";
+import {obtenerOperadores, obtenerOperadoresId} from "../../Util/Contexts/OperadoresContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 
 const headers = API_HEADERS
@@ -52,6 +61,13 @@ function showSuccess(mensaje) {
 let timer;
 window.jQuery = window.$ = $;
 
+/**Props
+ * reload FUNCION recarga el listado de viajes del tab Listado.
+ * consult BOOLEAN inidica si es consulta.
+ * modificar BOOLEAN indica si es modificacion.
+ * select OBJECT contiene el viaje si es consulta o modificación
+ * idViaje INT contiene el identificador del Viaje
+ * */
 class AgregarViaje extends Component {
 
 
@@ -71,6 +87,7 @@ class AgregarViaje extends Component {
             idCiudadOrigen: {},
             idCiudadDestino: {},
             dataCiudad: [],
+            dataUnidades: [],
             dataRutas: [],
             dataCodigoPostal: [],
             dataSucursal: [],
@@ -95,10 +112,40 @@ class AgregarViaje extends Component {
             placasDolly: "",
             placasRemolque1: "",
             placasRemolque2: "",
+            estatusRemolque1:"",
+            estatusRemolque2:'',
             height: window.innerHeight,
             showAsignarOperadorDialog: false,
             idInforme: 0,
             asignacionEquipo: {},
+
+            //OPERADOR
+            operador: {},
+            cargadoVacioRemolqueUno: false,
+            cargadoVacioRemolqueDos: false,
+            unidad: null,
+            placaIntUnidad: "",
+            estatusUnidad: "",
+            referencia: "",
+            kms: "",
+            horas: "",
+            fechaCarga: "",
+            horaCarga: "",
+            fechaEntregaGeneral: "",
+            horaEntregaGeneral: "",
+            horasEnRuta: "",
+
+            fechaInforme: "",
+            horaInforme: "",
+            folioInforme: "",
+            remolqueInforme: "",
+            totalInforme: "",
+            fechaEntregaInforme: "",
+            horaEntregaInforme: "",
+            entregado: false,
+            estatusInforme: "",
+            dataOperadores: [],
+            openDialogInformes:false
         }
 
         this.getAllCiudades = this.getAllCiudades.bind(this);
@@ -119,6 +166,11 @@ class AgregarViaje extends Component {
         this.handleAgregarInforme = this.handleAgregarInforme.bind(this);
         this.handleEliminarInforme = this.handleEliminarInforme.bind(this);
         this.handleClearData = this.handleClearData.bind(this);
+        this.handleChangeAutocomplete = this.handleChangeAutocomplete.bind(this);
+        this.handleChangeCheckbox = this.handleChangeCheckbox.bind(this);
+        this.getAllOperadores = this.getAllOperadores.bind(this);
+        this.handleUnidadFiltro = this.handleUnidadFiltro.bind(this);
+        this.handleShowDialog = this.handleShowDialog.bind(this);
 
     }
 
@@ -129,31 +181,71 @@ class AgregarViaje extends Component {
         this.getAllSucursales()
         this.getAllEstatusViaje();
         this.getAllUnidades();
+        this.getAllOperadores();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.id !== this.props.id) {
-            console.log(this.props.select.m_sNumViajeCliente)
-            this.setState({
-                id: this.props.id,
-                fechaHoraRegistro: this.props.select.m_dFecha + "T" + this.props.select.m_tHora,
-                estatusListado: this.props.select.m_nIdEstatusViaje,
-                idSucursalAgregar: this.props.select.m_nIdSucursal,
-                candadoOficial: this.props.select.m_sCandadoOficial,
-                folioViaje: this.props.select.m_sFolioViaje,
-                identificadorViaje: this.props.select.m_sIdentificador,
-                viajeCliente: this.props.select.m_sNumViajeCliente,
-                CreadoPor: this.props.select.CreadoPor,
-                dataInformesAsignados: this.props.select.m_arrInformes,
+        if (this.state.id !== this.props.id && this.props.id > 0 && (this.props.consult || this.props.modificar)) {
+            // console.log(this.props.select)
+            this.setState(state => {
+                return {
+                    ...state,
+                    id: this.props.select.m_nIdViaje,
+                    idCiudadOrigen: {
+                        "m_sCiudad": this.props.select.m_sOrigen,
+                        "m_nIdCiudad": this.props.select.m_nIdOrigen
+                    },
+                    idCiudadDestino: {
+                        "m_sCiudad": this.props.select.m_sDestino,
+                        "m_nIdCiudad": this.props.select.m_nIdDestino
+                    },
+                    IdRemolque1: {
+                        m_nIdUnidad: this.props.select.m_nIdRemolque1,
+                        m_sDescripcion: this.props.select.m_sDescripcionRemolque1,
+                        m_sCodigo: this.props.select.m_sCodigoRemolque1,
+                    },
+                    placasRemolque1: this.props.select.m_sPlacasRemolque1,
+                    colorRemolque1: this.props.select.m_sColorRemolque1,
+                    estatusRemolque1: this.props.select.m_sEstatusRemolque1,
+                    IdRemolque2: {
+                        m_nIdUnidad: this.props.select.m_nIdRemolque2,
+                        m_sDescripcion: this.props.select.m_sDescripcionRemolque2,
+                        m_sCodigo: this.props.select.m_sCodigoRemolque2,
+                    },
+                    placasRemolque2: this.props.select.m_sPlacasRemolque2,
+                    colorRemolque2: this.props.select.m_sColorRemolque2,
+                    estatusRemolque2: this.props.select.m_sEstatusRemolque2,
+                    IdDolly: {
+                        m_nIdUnidad: this.props.select.m_nIdDolly,
+                        m_sDescripcion: this.props.select.m_sDescripcionDolly,
+                        m_sCodigo: this.props.select.m_sCodigoDolly,
+                    },
+                    placasDolly: this.props.select.m_sPlacasDolly,
+                    operador: {
+                        m_nIdOperador: this.props.select.m_nIdOperador,
+                        m_sNombreCompleto: this.props.select.m_sNombreOperador,
+                    },
+                    unidad: {
+                        m_nIdUnidad: this.props.select.m_nIdUnidad,
+                        m_sCodigo: this.props.select.m_sCodigoUnidad,
+                        m_sDescripcion: this.props.select.m_sDescripcionUnidad
+                    },
+                    placaIntUnidad: this.props.select.m_sPlacasUnidad,
+                    estatusUnidad: this.props.select.m_sEstatusUnidad,
+                    colorUnidad: this.props.select.m_sColorUnidad,
+                    kms: '',
+                    horas: '',
+                    fechaHoraRegistro: this.props.select.m_dFecha + "T" + this.props.select.m_tHora.substr(0, 5),
+                    estatusListado: this.props.select.m_nIdEstatusViaje,
+                    idSucursalAgregar: this.props.select.m_nIdSucursal,
+                    candadoOficial: this.props.select.m_sCandadoOficial,
+                    folioViaje: this.props.select.m_sFolioViaje,
+                    identificadorViaje: this.props.select.m_sIdentificador,
+                    viajeCliente: this.props.select.m_sNumViajeCliente,
+                    CreadoPor: this.props.select.CreadoPor,
+                    dataInformesAsignados: this.props.select.m_arrInformes,
 
-            })
-            obtenerOperadoresId(this.props.select.m_nIdOperador).then(({data}) => {
-                this.setState({
-                    asignacionEquipo: {
-                        ...this.state.asignacionEquipo,
-                        operador: data
-                    }
-                })
+                }
             })
         }
     }
@@ -171,10 +263,7 @@ class AgregarViaje extends Component {
             showSuccess("No puede guardar un viaje sin informes.")
             return
         }
-        if (Object.keys(this.state.asignacionEquipo).length === 0) {
-            showSuccess("Debe asignar una unidad y un operador al viaje")
-            return
-        }
+
         var params = {
             m_nIdViaje: this.props.id,
             m_sFecha: this.state.fechaHoraRegistro.substr(0, 10),
@@ -193,23 +282,23 @@ class AgregarViaje extends Component {
             IdRemolque2: this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0,
             IdDolly: this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0,
             asignacionUnidad: {
-                idUnidad: this.state.asignacionEquipo.unidad.m_nIdUnidad,
-                idOperador: this.state.asignacionEquipo.operador.m_nIdOperador,
-                CRV1: this.state.asignacionEquipo.cargadoVacioRemolqueUno,
-                CRV2: this.state.asignacionEquipo.cargadoVacioRemolqueDos,
-                referencia: this.state.asignacionEquipo.referencia,
-                kilometro: this.state.asignacionEquipo.kms,
-                fechaCarga: this.state.asignacionEquipo.fechaCarga,
-                horas: this.state.asignacionEquipo.horas,
-                fechaEntrega: this.state.asignacionEquipo.fechaEntregaGeneral,
-                fechaInforme: this.state.asignacionEquipo.fechaInforme,
-                horaInforme: this.state.asignacionEquipo.horaInforme,
-                estatus: this.state.asignacionEquipo.estatusInforme,
-                horaEntrega: this.state.asignacionEquipo.horaEntregaGeneral,
+                idUnidad: this.state.unidad.m_nIdUnidad,
+                idOperador: this.state.operador.m_nIdOperador,
+                CRV1: this.state.cargadoVacioRemolqueUno,
+                CRV2: this.state.cargadoVacioRemolqueDos,
+                referencia: this.state.referencia,
+                kilometro: this.state.kms,
+                fechaCarga: this.state.fechaCarga,
+                horas: this.state.horas,
+                fechaEntrega: this.state.fechaEntregaGeneral,
+                fechaInforme: this.state.fechaInforme,
+                horaInforme: this.state.horaInforme,
+                estatus: this.state.estatusInforme,
+                horaEntrega: this.state.horaEntregaGeneral,
             }
         }
-        console.log(this.props.editar)
-        if (this.props.editar) {
+        console.log(this.props.modificar)
+        if (this.props.modificar) {
             modificarViaje(this.props.id, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data)
@@ -275,8 +364,48 @@ class AgregarViaje extends Component {
             placasDolly: "",
             placasRemolque1: "",
             placasRemolque2: "",
+            estatusRemolque1:'',
+            estatusRemolque2:'',
             idInforme: 0,
             asignacionEquipo: {},
+
+            dataCiudad: [],
+            dataUnidades: [],
+            dataRutas: [],
+            dataCodigoPostal: [],
+            dataSucursal: [],
+            dataEstatusViaje: [],
+            identificadorModal: "",
+            height: window.innerHeight,
+            showAsignarOperadorDialog: false,
+
+
+            //OPERADOR
+            operador: {},
+            cargadoVacioRemolqueUno: false,
+            cargadoVacioRemolqueDos: false,
+            unidad: null,
+            placaIntUnidad: "",
+            estatusUnidad: "",
+            referencia: "",
+            kms: "",
+            horas: "",
+            fechaCarga: "",
+            horaCarga: "",
+            fechaEntregaGeneral: "",
+            horaEntregaGeneral: "",
+            horasEnRuta: "",
+
+            fechaInforme: "",
+            horaInforme: "",
+            folioInforme: "",
+            remolqueInforme: "",
+            totalInforme: "",
+            fechaEntregaInforme: "",
+            horaEntregaInforme: "",
+            entregado: false,
+            estatusInforme: "",
+            dataOperadores: [],
         })
     }
 
@@ -309,8 +438,8 @@ class AgregarViaje extends Component {
         obtenerCiudades().then((respuesta) => {
             this.setState({
                 dataCiudad: respuesta.data,
-                idCiudadOrigen: this.props.select ? respuesta.data.find(c => c.m_nIdCiudad === this.props.select.m_nIdOrigen) : null,
-                idCiudadDestino: this.props.select ? respuesta.data.find(c => c.m_nIdCiudad === this.props.select.m_nIdDestino) : null
+                /*idCiudadOrigen: this.props.select ? respuesta.data.find(c => c.m_nIdCiudad === this.props.select.m_nIdOrigen) : null,
+                idCiudadDestino: this.props.select ? respuesta.data.find(c => c.m_nIdCiudad === this.props.select.m_nIdDestino) : null*/
             })
             /*  const url = `${process.env.REACT_APP_API_URL}/Ciudades/GetListado`;
              axios.get(url, { headers }).then((respuesta) => {
@@ -345,13 +474,14 @@ class AgregarViaje extends Component {
         obtenerUnidades().then((respuesta) => {
             this.setState({
                 dataUnidades: respuesta.data,
-                asignacionEquipo: this.props.select ? {
-                    ...this.state.asignacionEquipo,
-                    unidad: respuesta.data.find(u => u.m_nIdUnidad === this.props.select.m_nIdUnidad)
-                } : {},
-                IdRemolque1: this.props.select ? respuesta.data.find(c => c.m_nIdUnidad === this.props.select.m_nIdRemolque1) : null,
-                IdRemolque2: this.props.select ? respuesta.data.find(c => c.m_nIdUnidad === this.props.select.m_nIdRemolque2) : null,
-                IdDolly: this.props.select ? respuesta.data.find(c => c.m_nIdUnidad === this.props.select.m_nIdDolly) : null
+            })
+        });
+    }
+
+    getAllOperadores() {
+        obtenerOperadores().then((respuesta) => {
+            this.setState({
+                dataOperadores: respuesta.data,
             })
         });
     }
@@ -397,12 +527,17 @@ class AgregarViaje extends Component {
     handleRemolqueUnoFiltro(event, newValue) {
         event.preventDefault();
         obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
-            this.setState({
-                IdRemolque1: newValue,
-                placasRemolque1: newValue.m_sPlacas,
-                colorRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sColor,
-                estatusRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
-            })
+            if (resultado.data.m_sEstatus === "DISPONIBLE"){
+                this.setState({
+                    IdRemolque1: newValue,
+                    placasRemolque1: newValue.m_sPlacas,
+                    colorRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                    estatusRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
+                })
+            }else {
+                showSuccess("La unidad seleccionada no está disponible")
+            }
+
         })
         if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && newValue.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
@@ -414,12 +549,40 @@ class AgregarViaje extends Component {
     handleRemolqueDosFiltro(event, newValue) {
         event.preventDefault();
         obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
-            this.setState({
-                IdRemolque2: newValue,
-                placasRemolque2: newValue.m_sPlacas,
-                colorRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sColor,
-                estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
-            })
+            if (resultado.data.m_sEstatus === "DISPONIBLE"){
+                this.setState({
+                    IdRemolque2: newValue,
+                    placasRemolque2: newValue.m_sPlacas,
+                    colorRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                    estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
+                })
+            }else{
+                showSuccess("La unidad seleccionada no está disponible")
+            }
+        })
+
+        if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
+
+            this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
+                this.state.IdRemolque1.m_nIdUnidad, newValue.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
+        }
+    }
+
+    handleUnidadFiltro(event, newValue) {
+        event.preventDefault();
+        obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
+            if (resultado.data.m_sEstatus === "DISPONIBLE"){
+                this.setState({
+                    unidad: newValue,
+                    placaIntUnidad: newValue.m_sPlacas,
+                    estatusUnidad: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus,
+                    colorUnidad: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                    kms: newValue.m_nOdometro,
+                    horas: newValue.m_nHorasTrabajadasMotorNoGPS
+                })
+            }else{
+                showSuccess("La unidad seleccionada no está disponible")
+            }
         })
 
         if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
@@ -445,6 +608,7 @@ class AgregarViaje extends Component {
             var informeAsignar = this.state.dataInformesPorAsignar.find(i => i.m_nIdInforme === id)
             arrayInformesAsignados.push(informeAsignar)
             this.setState({dataInformesAsignados: arrayInformesAsignados})
+            showSuccess("El informe "+informeAsignar.m_sFolioInforme+" fue agregado con exito.")
         }else{
             showSuccess("El informe ya se encuentra en el viaje.")
         }
@@ -457,6 +621,39 @@ class AgregarViaje extends Component {
         this.setState({dataInformesAsignados: dataInformesAsignados})
     }
 
+    handleChangeAutocomplete = (input, value) => {
+        this.setState({
+            [input]: value
+        });
+    }
+
+    handleChangeCheckbox = (e) => {
+        this.setState({
+            [e.target.name]: e.target.checked
+        });
+    }
+
+    handleShowDialog = (event) => {
+        event.preventDefault()
+        this.setState({
+            openDialogInformes: !this.state.openDialogInformes,
+        })
+    };
+
+    //Funcion para reaccionar al seleccionar una tarifa del LISTADO DE DIALOGO
+    handleTarifasSeleccionadas = (e) => {
+        if (this.state.dataRequerida === "Tarifas"){
+            this.setState({
+                idsTarifasSeleccionadas: e.selectionModel,
+            })
+        }else{
+            this.setState({
+                idsZonasSeleccionadas: e.selectionModel,
+            })
+        }
+
+    }
+
     render() {
 
         const columnspRorAsignar = [
@@ -467,7 +664,7 @@ class AgregarViaje extends Component {
             },
             {
                 headerName: "Fecha informe",
-                field: "m_dFecha",
+                field: "m_sFechaHora",
                 flex: 1,
             },
             {
@@ -525,7 +722,7 @@ class AgregarViaje extends Component {
             },
             {
                 headerName: "Fecha informe",
-                field: "m_dFecha",
+                field: "m_sFechaHora",
                 flex: 1,
             },
             {
@@ -580,7 +777,7 @@ class AgregarViaje extends Component {
         return (
 
             <div>
-                <Dialog open={this.state.openDialog} onClose={() => this.setState({openDialog: false})}>
+                {/*<Dialog open={this.state.openDialog} onClose={() => this.setState({openDialog: false})}>
                     <DialogContent>
                         {this.state.tipoModal === 1 &&
                         <div className="row" style={{backgroundColor: '#FFFFFF'}}>
@@ -662,8 +859,8 @@ class AgregarViaje extends Component {
                     open={this.state.openHistoryDialog}
                     onClose={() => this.setState({openHistoryDialog: false})}>
                     <Historial/>
-                </Dialog>
-                {
+                </Dialog>*/}
+                {/*{
                     this.state.showAsignarOperadorDialog &&
                     <Dialog open={this.state.showAsignarOperadorDialog}
                             fullWidth={true}
@@ -691,8 +888,124 @@ class AgregarViaje extends Component {
                             </AsignarOperadorUnidad>
                         </DialogContent>
                     </Dialog>
-                }
+                }*/}
+                <Dialog
+                    fullWidth={true}
+                    maxWidth={'xl'}
+                    open={this.state.openDialogInformes}
+                    onClose={this.handleShowDialog}
+                    aria-labelledby="max-width-dialog-title"
+                >
+                    <DialogContent>
+                        <div>
+                            <div className="widget-header">
+                                <h2 color={'#717171'}>Informes para asignación</h2>
+                                <br/>
+                                <div className="row" style={{display: "flex"}}>
+                                    <div className="col-sm-12 col-md-12 unit">
+                                        <div className="input">
+                                            <Autocomplete
+                                                freeSolo
+                                                onChange={this.handleOrigenFiltro}
+                                                value={this.state.origen}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="origenRemitente"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={this.state.dataCiudad}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sCiudad
+                                                }
+                                                style={{
+                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                }}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Origen"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            {...params}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-sm-12 col-md-12 unit">
+                                        <div className="input">
+                                            <Autocomplete
+                                                freeSolo
+                                                onChange={this.handleDestinoFiltro}
 
+                                                value={this.state.destino}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="destino"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={this.state.dataCiudad}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sCiudad
+                                                }
+                                                style={{
+                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                }}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Destino"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            {...params}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style={{ display: 'flex', height: '800px' }}>
+                                <DataGrid
+                                    localeText={dataGridLocaleText}
+                                    rows={this.state.dataInformesPorAsignar}
+                                    columns={columnspRorAsignar}
+                                    density="compact"
+                                    pageSize={Math.floor((this.state.height - 310) / 30)}
+                                    getRowId={(row) => row.m_nIdInforme}
+                                    onRowSelected={(row) => {
+                                        this.setState({
+                                            idInforme: row.data.m_nIdInforme
+
+                                        })
+                                    }}
+                                    hideFooterRowCount
+                                    hideFooterSelectedRowCount
+                                />
+                            </div>
+                        </div>
+                            {/*<DataGrid
+                                localeText={dataGridLocaleText}
+                                rows={this.state.dataInformesPorAsignar}
+                                columns={columnspRorAsignar}
+                                density="compact"
+                                pageSize={Math.floor((this.state.height - 310) / 30)}
+                                getRowId={(row) => row.m_nIdInforme}
+                                checkboxSelection
+                                onSelectionModelChange={(e) => this.handleTarifasSeleccionadas(e)}
+                            />*/}
+
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleShowDialog} color="primary" autoFocus>
+                            Aceptar
+                        </Button>
+
+                    </DialogActions>
+                    {  /*AQUI COMIENZA EL MODAL DE CLIENTES*/}
+
+
+                </Dialog>
                 <div className="widget-wrap">
                     <div className="widget-content">
 
@@ -768,9 +1081,7 @@ class AgregarViaje extends Component {
                                                        onChange={this.handleChange}
                                                        required
                                                        label="Fecha / Hora de Registro"
-                                                       InputLabelProps={{
-                                                           shrink: true,
-                                                       }}
+                                                       InputLabelProps={{shrink: true,}}
                                                        disabled={this.props.consult}
                                                        value={this.state.fechaHoraRegistro}
                                                        className="form-control"
@@ -914,259 +1225,7 @@ class AgregarViaje extends Component {
                                     </div>
                                 </div>
 
-                                <div className="widget-header">
-                                    <h2> Convoy</h2>
-                                </div>
-
-                                <div className="row" style={{display: "flex"}}>
-
-                                    {/* Remolque 1 */}
-
-                                    <div className="col-sm-12 col-md-6 unit">
-                                        <div className="col-sm-12 col-md-6 unit">
-
-                                            <div className="input">
-
-                                                <Autocomplete
-                                                    freeSolo
-                                                    onChange={this.handleRemolqueUnoFiltro}
-                                                    value={this.state.IdRemolque1}
-                                                    //disabled={state.agregar == "Consultar"}
-                                                    id="IdRemolque1"
-                                                    disableClearable
-                                                    disabled={this.props.consult}
-                                                    forcePopupIcon={false}
-                                                    options={this.state.dataUnidades && this.state.dataUnidades}
-                                                    getOptionLabel={(option) =>
-                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
-                                                    }
-                                                    style={{
-                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                    }}
-                                                    renderInput={(params) => (
-                                                        <div>
-                                                            <TextField
-                                                                label="Remolque 1"
-                                                                margin="dense"
-                                                                required
-                                                                variant="outlined"
-                                                                {...params}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                />
-
-                                            </div>
-
-                                        </div>
-
-                                        {/* Placa Int */}
-                                        <div className="col-sm-12 col-md-3 unit">
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           className="form-control"
-                                                           type="text"
-                                                           disabled
-                                                           label="Placas Int"
-
-                                                           value={this.state.placasRemolque1}
-                                                           name="placasRemolque1"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        {/* Estatus */}
-                                        <div className="col-sm-12 col-md-3 unit">
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Estatus"
-                                                           disabled
-                                                           style={{backgroundColor: this.state.colorRemolque1 ? `#${this.state.colorRemolque1}` : "white"}}
-                                                           InputLabelProps={{
-                                                               shrink: true,
-                                                           }}
-                                                           value={this.state.estatusRemolque1}
-                                                           name="estatusRemolque1"
-                                                />
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    {/* Remolque 2 */}
-
-                                    <div className="col-sm-12 col-md-6 unit">
-
-                                        <div className="col-sm-12 col-md-6 unit">
-
-                                            <div className="input">
-                                                <Autocomplete
-                                                    freeSolo
-                                                    onChange={this.handleRemolqueDosFiltro}
-                                                    value={this.state.IdRemolque2}
-                                                    //disabled={state.agregar == "Consultar"}
-                                                    id="IdRemolque2"
-                                                    disableClearable
-                                                    disabled={this.props.consult}
-                                                    forcePopupIcon={false}
-                                                    options={this.state.dataUnidades && this.state.dataUnidades}
-                                                    getOptionLabel={(option) =>
-                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
-                                                    }
-                                                    style={{
-                                                        transform: "translate(14px, 10px) scale(1) !important"
-                                                    }}
-                                                    renderInput={(params) => (
-                                                        <div>
-                                                            <TextField
-                                                                label="Remolque 2"
-                                                                margin="dense"
-                                                                variant="outlined"
-                                                                {...params}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                />
-
-                                            </div>
-
-                                        </div>
-
-                                        {/* Placa Int */}
-                                        <div className="col-sm-12 col-md-3 unit">
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           disabled
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Placas Int"
-                                                           value={this.state.placasRemolque2}
-                                                           name="placasRemolque2"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        {/* Estatus */}
-                                        <div className="col-sm-12 col-md-3 unit">
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           disabled
-                                                           className="form-control"
-                                                           type="text"
-                                                           label="Estatus"
-                                                           style={{backgroundColor: this.state.colorRemolque2 ? `#${this.state.colorRemolque2}` : "white"}}
-                                                           InputLabelProps={{
-                                                               shrink: true,
-                                                           }}
-                                                           value={this.state.estatusRemolque2}
-                                                           name="estatusRemolque2"
-                                                />
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <div className="row" style={{display: "flex"}}>
-                                    {/* Dolly  */}
-
-
-                                    <div className="col-sm-12 col-md-4 unit">
-
-                                        <div className="input">
-                                            <Autocomplete
-                                                freeSolo
-                                                onChange={this.handleDollyFiltro}
-                                                value={this.state.IdDolly}
-                                                //disabled={state.agregar == "Consultar"}
-                                                id="IdDolly"
-                                                disableClearable
-                                                disabled={this.props.consult}
-                                                forcePopupIcon={false}
-                                                options={this.state.dataUnidades && this.state.dataUnidades}
-                                                getOptionLabel={(option) =>
-                                                    option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
-                                                }
-                                                style={{
-                                                    transform: "translate(14px, 10px) scale(1) !important"
-                                                }}
-                                                renderInput={(params) => (
-                                                    <div>
-                                                        <TextField
-                                                            label="Dolly"
-                                                            margin="dense"
-                                                            variant="outlined"
-                                                            {...params}
-                                                        />
-                                                    </div>
-                                                )}
-                                            />
-
-                                        </div>
-
-                                    </div>
-
-                                    {/* Placa Int */}
-                                    <div className="col-sm-12 col-md-4 unit">
-                                        <div className="input">
-                                            <TextField variant="outlined" margin="dense"
-                                                       className="form-control"
-                                                       type="text"
-                                                       disabled
-                                                       label="Placas Int"
-                                                       value={this.state.placasDolly}
-                                                       name="placasDolly"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6 col-md-4 unit">
-                                        <Button
-                                            variant={"contained"}
-                                            color={"primary"}
-                                            disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
-                                            onClick={() => this.setState({showAsignarOperadorDialog: true})}>Asignar
-                                            operador unidad</Button>
-                                    </div>
-
-                                </div>
-                                <div className={"row"}>
-
-                                    {
-                                        Object.keys(this.state.asignacionEquipo).length !== 0 &&
-                                        <div className="row" style={{display: "flex"}}>
-                                            <div className="col-sm-6 col-md-4 unit">
-                                                <div className="input">
-                                                    <TextField variant="outlined" margin="dense"
-                                                               className="form-control"
-                                                               type="text"
-                                                               disabled
-                                                               label="Operador"
-                                                               value={this.state.asignacionEquipo.operador ? this.state.asignacionEquipo.operador.m_sNombreCompleto : ""}
-                                                               name="placasDolly"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="col-sm-6 col-md-4 unit">
-                                                <div className="input">
-                                                    <TextField variant="outlined" margin="dense"
-                                                               className="form-control"
-                                                               type="text"
-                                                               disabled
-                                                               label="Unidad"
-                                                               value={`${this.state.asignacionEquipo.unidad ? this.state.asignacionEquipo.unidad.m_sCodigo : ""} - ${this.state.asignacionEquipo.unidad ? this.state.asignacionEquipo.unidad.m_sDescripcion : ""}`}
-                                                               name="placasDolly"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-
-                                </div>
-
-                                {
+                                {/*{
                                     !this.props.consult &&
                                     <div>
                                         <div className="widget-header">
@@ -1234,16 +1293,15 @@ class AgregarViaje extends Component {
                                                         />
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
-
                                         <div className="row" style={{height: "200px", width: '100%'}}>
                                             <DataGrid
                                                 localeText={dataGridLocaleText}
                                                 rows={this.state.dataInformesPorAsignar}
                                                 columns={columnspRorAsignar}
                                                 density="compact"
+                                                pageSize={Math.floor((this.state.height - 310) / 30)}
                                                 getRowId={(row) => row.m_nIdInforme}
                                                 onRowSelected={(row) => {
                                                     this.setState({
@@ -1251,39 +1309,409 @@ class AgregarViaje extends Component {
 
                                                     })
                                                 }}
+                                                hideFooter
                                             />
 
                                         </div>
-
-
                                     </div>
+                                }*/}
 
-                                }
+
+
+                                <div className="row">
+                                    <div className="widget-header">
+                                        <h2>Operador</h2>
+                                    </div>
+                                    <Grid container spacing={2}>
+                                        {/*<Grid item xs={6}>
+                        <TextField
+                            margin={"dense"}
+                            variant={"outlined"}
+                            label={"Origen"}
+                            disabled
+                            value={data.origen}/>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <TextField
+                            margin={"dense"}
+                            variant={"outlined"}
+                            label={"Destino"}
+                            disabled
+                            value={data.destino}/>
+                    </Grid>*/}
+                                        {/*<Grid item xs={3}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.state.cargadoVacioRemolqueUno}
+                                                        onChange={this.handleChangeCheckbox}
+                                                        name="cargadoVacioRemolqueUno"
+                                                        //disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
+                                                    />
+                                                }
+                                                label={"Cargado/Vacío Remolque 1"}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.state.cargadoVacioRemolqueDos}
+                                                        onChange={this.handleChangeCheckbox}
+                                                        name="cargadoVacioRemolqueDos"
+                                                        //disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
+                                                    />
+                                                }
+                                                label={"Cargado/Vacío Remolque 2"}
+                                            />
+                                        </Grid>*/}
+                                        {/*<Grid item xs={6}/>*/}
+                                        <Grid item xs={6}>
+                                            <Autocomplete
+                                                freeSolo
+                                                onChange={(e, value) => this.handleChangeAutocomplete("operador", value)}
+                                                value={this.state.operador}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="dataOperador"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={this.state.dataOperadores}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sNombreCompleto
+                                                }
+                                                style={{
+                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                }}
+                                                disabled={this.props.consult}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Operador"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            required
+                                                            {...params}
+                                                            disabled={this.props.consult}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}/>
+
+                                        <Grid item xs={6}>
+                                            <Autocomplete
+                                                // freeSolo
+                                                onChange={(e, value) => this.handleUnidadFiltro(e, value)}
+                                                value={this.state.unidad}
+                                                inputValue={this.state.unidad ? this.state.unidad.m_sDescripcion : ""}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="unidad"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={this.state.dataUnidades.filter(i => i.m_bActivo)}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                                                }
+                                                style={{transform: "translate(14px, 10px) scale(1) !important"}}
+                                                disabled={this.props.consult}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Unidad"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            required
+                                                            {...params}
+                                                            disabled={this.props.consult}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <TextField
+                                                margin={"dense"}
+                                                variant={"outlined"}
+                                                label={"Placa int"}
+                                                disabled
+                                                value={this.state.placaIntUnidad}/>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <TextField
+                                                margin={"dense"}
+                                                variant={"outlined"}
+                                                label={"Estatus"}
+                                                disabled
+                                                style={{backgroundColor: this.state.colorUnidad ? `#${this.state.colorUnidad}` : "white"}}
+                                                value={this.state.estatusUnidad}/>
+                                        </Grid>
+                                        <Grid item xs={1}/>
+
+                                        {/*<Grid item xs={3}>
+                                            <TextField
+                                                margin={"dense"}
+                                                variant={"outlined"}
+                                                label={"Referencia"}
+                                                onChange={this.handleChange}
+                                                value={this.state.referencia}
+                                                name={"referencia"}
+                                                disabled={!(this.state.dataInformesAsignados.length > 0 && !this.props.consult)}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <TextField
+                                                margin={"dense"}
+                                                variant={"outlined"}
+                                                label={"Kilómetros"}
+                                                disabled
+                                                // onChange={(e) => setData({...data, kms: e.target.value})}
+                                                value={this.state.kms}/>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <TextField
+                                                margin={"dense"}
+                                                variant={"outlined"}
+                                                label={"Horas"}
+                                                disabled
+                                                // onChange={(e) => setData({...data, horas: e.target.value})}
+                                                value={this.state.horas}/>
+                                        </Grid>*/}
+                                        {/*<Grid item xs={4}/>*/}
+                                    </Grid>
+                                </div>
+
+                                <div className="widget-header">
+                                    <h2> Convoy</h2>
+                                </div>
+
+                                <div className="row">
+
+                                    {/* Remolque 1 */}
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={6}>
+                                            <div className="input">
+
+                                                <Autocomplete
+                                                    // freeSolo
+                                                    onChange={this.handleRemolqueUnoFiltro}
+                                                    value={this.state.IdRemolque1}
+                                                    inputValue={this.state.IdRemolque1 ? this.state.IdRemolque1.m_sDescripcion : ""}
+                                                    //disabled={state.agregar == "Consultar"}
+                                                    id="IdRemolque1"
+                                                    disableClearable
+                                                    disabled={this.props.consult}
+                                                    forcePopupIcon={false}
+                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo)}
+                                                    getOptionLabel={(option) =>
+                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
+                                                    }
+                                                    style={{
+                                                        transform: "translate(14px, 10px) scale(1) !important"
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <div>
+                                                            <TextField
+                                                                label="Remolque 1"
+                                                                margin="dense"
+                                                                required
+                                                                variant="outlined"
+                                                                {...params}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                />
+
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           className="form-control"
+                                                           type="text"
+                                                           disabled
+                                                           label="Placas Int"
+
+                                                           value={this.state.placasRemolque1}
+                                                           name="placasRemolque1"
+                                                />
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           className="form-control"
+                                                           type="text"
+                                                           label="Estatus"
+                                                           disabled
+                                                           style={{backgroundColor: this.state.colorRemolque1 ? `#${this.state.colorRemolque1}` : "white"}}
+                                                           value={this.state.estatusRemolque1}
+                                                           name="estatusRemolque1"
+                                                />
+                                            </div>
+                                        </Grid>
+                                    </Grid>
+
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={6}>
+                                            <div className="input">
+                                                <Autocomplete
+                                                    // freeSolo
+                                                    onChange={this.handleRemolqueDosFiltro}
+                                                    value={this.state.IdRemolque2}
+                                                    inputValue={this.state.IdRemolque2 ? this.state.IdRemolque2.m_sDescripcion : ""}
+                                                    //disabled={state.agregar == "Consultar"}
+                                                    id="IdRemolque2"
+                                                    disableClearable
+                                                    disabled={this.props.consult}
+                                                    forcePopupIcon={false}
+                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo)}
+                                                    getOptionLabel={(option) =>
+                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
+                                                    }
+                                                    style={{
+                                                        transform: "translate(14px, 10px) scale(1) !important"
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <div>
+                                                            <TextField
+                                                                label="Remolque 2"
+                                                                margin="dense"
+                                                                variant="outlined"
+                                                                {...params}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                />
+
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           disabled
+                                                           className="form-control"
+                                                           type="text"
+                                                           label="Placas Int"
+                                                           value={this.state.placasRemolque2}
+                                                           name="placasRemolque2"
+                                                />
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           disabled
+                                                           className="form-control"
+                                                           type="text"
+                                                           label="Estatus"
+                                                           style={{backgroundColor: this.state.colorRemolque2 ? `#${this.state.colorRemolque2}` : "white"}}
+                                                           value={this.state.estatusRemolque2}
+                                                           name="estatusRemolque2"
+                                                />
+                                            </div>
+                                        </Grid>
+                                    </Grid>
+
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={6}>
+                                            <div className="input">
+                                                <Autocomplete
+                                                    // freeSolo
+                                                    onChange={this.handleDollyFiltro}
+                                                    value={this.state.IdDolly}
+                                                    inputValue={this.state.IdDolly ? this.state.IdDolly.m_sDescripcion : ""}
+                                                    //disabled={state.agregar == "Consultar"}
+                                                    id="IdDolly"
+                                                    disableClearable
+                                                    disabled={this.props.consult}
+                                                    forcePopupIcon={false}
+                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo)}
+                                                    getOptionLabel={(option) =>
+                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                                                    }
+                                                    style={{
+                                                        transform: "translate(14px, 10px) scale(1) !important"
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <div>
+                                                            <TextField
+                                                                label="Dolly"
+                                                                margin="dense"
+                                                                variant="outlined"
+                                                                {...params}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                />
+
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           className="form-control"
+                                                           type="text"
+                                                           disabled
+                                                           label="Placas Int"
+                                                           value={this.state.placasDolly}
+                                                           name="placasDolly"
+                                                />
+                                            </div>
+                                        </Grid>
+                                    </Grid>
+
+                                </div>
 
                                 <div>
                                     <div className="widget-header">
                                         <h2 color={'#717171'}>Detalle de paradas</h2>
                                     </div>
-
+                                    <Button variant="contained" color="primary" fullWidth onClick={(event) => this.handleShowDialog(event)}>
+                                        Agregar informes
+                                    </Button>
                                     <div className="row" style={{height: "200px", width: '100%'}}>
                                         <InformesPorAsignar {...this.props} columns={columnspAsignadas}
                                                             dataInformesAsignados={this.state.dataInformesAsignados}
                                         />
-
                                     </div>
-
-                                    {/* {this.state.dataInformesAsignados.length != 0 ? (
-
-                                <Button
-                                    type="submit"
-                                    color={"primary"}
-                                    onClick={() => this.setState({openHistoryDialog: true })}>Historial</Button>
-                            ): (<div/>)}*/}
-
-
                                 </div>
 
-                                <div className="form-footer col-md-12">
+                                {/*<div className={"row"}>
+
+                                    {
+                                        Object.keys(this.state.asignacionEquipo).length !== 0 &&
+                                        <div className="row" style={{display: "flex"}}>
+                                            <div className="col-sm-6 col-md-4 unit">
+                                                <div className="input">
+                                                    <TextField variant="outlined" margin="dense"
+                                                               className="form-control"
+                                                               type="text"
+                                                               disabled
+                                                               label="Operador"
+                                                               value={this.state.asignacionEquipo.operador ? this.state.asignacionEquipo.operador.m_sNombreCompleto : ""}
+                                                               name="placasDolly"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="col-sm-6 col-md-4 unit">
+                                                <div className="input">
+                                                    <TextField variant="outlined" margin="dense"
+                                                               className="form-control"
+                                                               type="text"
+                                                               disabled
+                                                               label="Unidad"
+                                                               value={`${this.state.asignacionEquipo.unidad ? this.state.asignacionEquipo.unidad.m_sCodigo : ""} - ${this.state.asignacionEquipo.unidad ? this.state.asignacionEquipo.unidad.m_sDescripcion : ""}`}
+                                                               name="placasDolly"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>*/}
+
+                                <div className="form-footer col-md-12" style={{marginTop:'30px'}}>
                                     <Grid container spacing={1}>
                                         <Grid item xs>
                                             <Button
@@ -1314,18 +1742,12 @@ class AgregarViaje extends Component {
                                         </Grid>
                                     </Grid>
                                 </div>
+
                             </form >
                         </div>
 
                     </div>
                 </div>
-
-
-
-
-
-
-
                 {/*
                 <div className="row">
                     <div className="col-md-12">

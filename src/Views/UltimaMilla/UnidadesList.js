@@ -97,8 +97,8 @@ class UnidadesList extends Component {
     };
 
     handleSelectAllClickevent(event) {
-        if (event.target.checked) {
-            const newSelecteds = this.state.unidades;
+        if (event.target.checked && this.state.unidades.filter(f => f.m_nIdOperador).length !== this.props.unidadesSeleccionadas.filter(f => f.m_nIdOperador).length ) {
+            const newSelecteds = this.state.unidades.filter(f => f.m_nIdOperador);
             this.props.selectUnidades(newSelecteds)
             return;
         }
@@ -183,6 +183,7 @@ class UnidadesList extends Component {
                                                 <Checkbox
                                                     onClick={(event) => this.handleClick(event, u)}
                                                     checked={isItemSelected}
+                                                    disabled={!u.m_nIdOperador}
                                                     inputProps={{'aria-labelledby': labelId}}
                                                 />
                                             </TableCell>
@@ -190,7 +191,7 @@ class UnidadesList extends Component {
 
                                             <TableCell align="left">{u.m_sTipoUnidad}</TableCell>
                                             <TableCell align="left">{
-                                                <Link onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell>
+                                                <Link style={{cursor:"pointer"}} onClick={() => this.props.reasignarOperador(u)}>{!u.m_nIdOperador ? "Asignar" : u.m_sNombreOperador}</Link>}</TableCell>
                                             <TableCell align="left">{u.m_sPlacas}</TableCell>
                                         </TableRow>
                                     )
