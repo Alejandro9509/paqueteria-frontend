@@ -130,7 +130,7 @@ function RemitenteDestinatario(props) {
         props.dataPadreConsulta.data.m_nIdRecoleccion > 0
       ) {
         if (props.remitente) {
-          let estado =`${respuesta.data.m_nIdEstadoRemitente}`
+          let estado =respuesta.data.m_nIdEstadoRemitente< 10 ? `0${respuesta.data.m_nIdEstadoRemitente}` :  respuesta.data.m_nIdEstadoRemitente
               setState((state) => {
                 return {
                   ...state,
@@ -207,7 +207,7 @@ function RemitenteDestinatario(props) {
             );
           }
         } else if (props.destinatario) {
-          let estado = `${respuesta.data.m_nIdEstadoDestinatario}`
+          let estado = respuesta.data.m_nIdEstadoDestinatario< 10 ? `0${respuesta.data.m_nIdEstadoDestinatario}` :  respuesta.data.m_nIdEstadoDestinatario
             setState((state) => {
               return {
                 ...state,
@@ -289,7 +289,7 @@ function RemitenteDestinatario(props) {
       ) {
         /**Si se van a mostrar datos de remitente*/
         if (props.remitente) {
-          let estado =`${respuesta.data.m_nIdEstadoRemitente}`
+          let estado =respuesta.data.m_nIdEstadoRemitente< 10 ? `0${respuesta.data.m_nIdEstadoRemitente}` :  respuesta.data.m_nIdEstadoRemitente
               setState((state) => {
                 return {
                   ...state,
@@ -339,7 +339,7 @@ function RemitenteDestinatario(props) {
 
           /**Si se van a mostrar datos de destinatario*/
         } else if (props.destinatario) {
-          let estado =  `${respuesta.data.m_nIdEstadoDestinatario}`;
+          let estado =  respuesta.data.m_nIdEstadoDestinatario< 10 ? `0${respuesta.data.m_nIdEstadoDestinatario}` :  respuesta.data.m_nIdEstadoDestinatario;
             setState((state) => {
               return {
                 ...state,
@@ -450,10 +450,52 @@ function RemitenteDestinatario(props) {
   };
 
   const handleChangeAutocomplete = (input, newValue) => {
-    setState(() => ({
+    let zonasNoEncontradas = false
+    if(input=="codigoPostal"){
+      obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then((zonaOperativa)=>{
+        obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then((zonaTarifa)=>{
+          if(zonaOperativa.data.length == 0 ){
+            zonasNoEncontradas = true
+            showSuccess(`No se encontro zona operativa para el codigo postal ${newValue.m_sCP}. Revise con un supervisor`)
+            props.validarZonas(true)
+            setState((state)=>({
+              ...state,
+              zonaOperativa: null,
+            }))
+          }else{
+            props.validarZonas(false)
+            setState((state)=>({
+              ...state,
+              zonaOperativa:  zonaOperativa.data[0] 
+            }))
+            }
+          
+          
+           if(zonaTarifa.data.length == 0){
+            zonasNoEncontradas = true
+            showSuccess(`No se encontro zona tarifa para el codigo postal ${newValue.m_sCP}. Revise con un supervisor`)
+            props.validarZonas(true)
+            setState((state)=>({
+              ...state,
+              zonaTarifa: null
+            }))
+          }else{
+            props.validarZonas(false)
+            setState((state)=>({
+            ...state,
+            zonaTarifa: zonaTarifa.data[0] 
+            }))
+          }
+     
+        })
+      })
+    }
+    if(!zonasNoEncontradas){
+         setState(() => ({
       ...state,
       [input]: newValue,
     }));
+    }
   };
 
   const handleClickCodigosPostalesInput = (input) => {
