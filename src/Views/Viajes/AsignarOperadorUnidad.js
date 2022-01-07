@@ -137,14 +137,21 @@ export default function AsignarOperadorUnidad(props) {
         getAllOperadores()
         getAllUnidades();
 
-        if (props.unidadAsignada) {
+        /*if (props.unidadAsignada) {
             setData({
                 ...data,
-                origen: props.rutaSeleccionada.idCiudadOrigen ? props.rutaSeleccionada.idCiudadOrigen.m_sCiudad : "",
-                destino: props.rutaSeleccionada.idCiudadDestino ? props.rutaSeleccionada.idCiudadDestino.m_sCiudad : "",
-                kms: "",
-                horas: "",
-                horasEnRuta: "",
+                operador: props.unidadAsignada.operador,
+                unidad: props.unidadAsignada.unidad,
+                cargadoVacioRemolqueUno: props.unidadAsignada.cargadoVacioRemolqueUno,
+                cargadoVacioRemolqueDos: props.unidadAsignada.cargadoVacioRemolqueDos,
+                placaIntUnidad: props.unidadAsignada.placaIntUnidad,
+                estatusUnidad: props.unidadAsignada.estatusUnidad,
+                referencia: props.unidadAsignada.referencia,
+                // origen: props.rutaSeleccionada.idCiudadOrigen ? props.rutaSeleccionada.idCiudadOrigen.m_sCiudad : "",
+                // destino: props.rutaSeleccionada.idCiudadDestino ? props.rutaSeleccionada.idCiudadDestino.m_sCiudad : "",
+                kms: props.unidadAsignada.kms,
+                horas: props.unidadAsignada.horas,
+                horasEnRuta: props.unidadAsignada.horasEnRuta,
             ...props.unidadAsignada
 
             })
@@ -156,10 +163,32 @@ export default function AsignarOperadorUnidad(props) {
                 kms: "",
                 horas: "",
                 horasEnRuta: "",
+                referencia:""
+            })
+        }*/
+    }, []);
+
+    /*useEffect(() => {
+        debugger
+        if (props.unidadAsignada){
+            setData({
+                ...data,
+                operador: props.unidadAsignada.operador,
+                unidad: props.unidadAsignada.unidad,
+                cargadoVacioRemolqueUno: props.unidadAsignada.cargadoVacioRemolqueUno,
+                cargadoVacioRemolqueDos: props.unidadAsignada.cargadoVacioRemolqueDos,
+                placaIntUnidad: props.unidadAsignada.placaIntUnidad,
+                estatusUnidad: props.unidadAsignada.estatusUnidad,
+                referencia: props.unidadAsignada.referencia,
+                // origen: props.rutaSeleccionada.idCiudadOrigen ? props.rutaSeleccionada.idCiudadOrigen.m_sCiudad : "",
+                // destino: props.rutaSeleccionada.idCiudadDestino ? props.rutaSeleccionada.idCiudadDestino.m_sCiudad : "",
+                kms: props.unidadAsignada.kms,
+                horas: props.unidadAsignada.horas,
+                horasEnRuta: props.unidadAsignada.horasEnRuta,
 
             })
         }
-    }, []);
+    },[props.unidadAsignada])*/
 
     function getAllUnidadesTipo(id) {
         obtenerUnidadesTipo(id).then((respuesta) => {
@@ -179,63 +208,36 @@ export default function AsignarOperadorUnidad(props) {
         });
     }
 
+    const handleChange = (e) => {
+        setData({
+            ...data,
+            [e.target.name]: e.target.value
+        });
+    }
+    const handleChangeCheckbox = (e) => {
+        setData({
+            ...data,
+            [e.target.name]: e.target.checked
+        });
+    }
 
+    const handleChangeAutocomplete = (input, value) => {
+        if (input === "operador"){
+            setData({
+                ...data,
+                operador: value
+            });
+        }
+        setData({
+            ...data,
+            [input]: value
+        });
+    }
 
-    const handleFechaInforme = (e) => {
-        console.log(props)
-        setData({
-            ...data,
-            fechaInforme: e.target.value
-        });
-    }
-    const handleHoraInforme = (e) => {
-        setData({
-            ...data,
-            horaInforme: e.target.value
-        });
-    }
-    const handleFolioInforme = (e) => {
-        setData({
-            ...data,
-            folioInforme: e.target.value
-        });
-    }
-    const handleRemolqueInforme = (e) => {
-        setData({
-            ...data,
-            remolqueInforme: e.target.value
-        });
-    }
-    const handleTotoalInforme = (e) => {
-        setData({
-            ...data,
-            totalInforme: e.target.value
-        });
-    }
-    const handleFechaEntregaInforme = (e) => {
-        setData({
-            ...data,
-            fechaEntregaInforme: e.target.value
-        });
-    }
-    const handleHoraEntregaInforme = (e) => {
-        setData({
-            ...data,
-            horaEntregaInforme: e.target.value
-        });
-    }
-    const handleEntregado = (e) => {
-        setData({
-            ...data,
-            entregado: e.target.value
-        });
-    }
-    const handleEstatusInforme = (e) => {
-        setData({
-            ...data,
-            estatusInforme: e.target.value
-        });
-    }
+    useEffect(() => {
+        props.onChange(data)
+    },[data])
+
     const handleRemolqueUno = (e) => {
         setData({
             ...data,
@@ -270,40 +272,9 @@ export default function AsignarOperadorUnidad(props) {
     }
 
 
-    const handleFechaCarga = (e) => {
-        setData({
-            ...data,
-            fechaCarga: e.target.value
-        });
-    }
-    const handleHoraCarga = (e) => {
-        setData({
-            ...data,
-            horaCarga: e.target.value
-        });
-    }
-    const handleFechaEntrega = (e) => {
-        setData({
-            ...data,
-            fechaEntregaGeneral: e.target.value
-        });
-    }
-    const handleHoraEntrega = (e) => {
-        setData({
-            ...data,
-            horaEntregaGeneral: e.target.value
-        });
-    }
-    const handleHorasEnRuta = (e) => {
-        setData({
-            ...data,
-            horasEnRuta: e.target.value
-        });
-    }
-
     function submit(event) {
         event.preventDefault();
-        props.onSubmit(data);
+        props.onChange(data);
     }
 
     const handleChangeTab = (event, newValue) => {
@@ -562,259 +533,163 @@ export default function AsignarOperadorUnidad(props) {
 
     return (
         <div>
-            <Dialog
-                open={data.openDialog}
-                onClose={() => setData({...data, openDialog: false})}
-                fullWidth maxWidth="md"
-            >
-                <DialogContent>
-
-                    {data.tipoModal == 2 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        props.history.push("/Operadores");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
-
-                            {dataOperadores.length != 0 ? (
-                                <TableOperadores
-                                    select={
-                                        data[data.identificadorModal] &&
-                                        data[data.identificadorModal].m_nIdOperador
-                                    }
-                                    columns={columnsOperadores}
-                                    data={dataOperadores}
-                                    identificadorModal={data.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setData({...data, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setData({...data, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}
-                    {data.tipoModal == 4 && (
-                        <div className="row" style={{backgroundColor: "#FFFFFF"}}>
-                            <div align="right">
-                                <button
-                                    onClick={() => {
-                                        props.history.push("/Unidades");
-                                    }}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Agregar
-                                </button>
-                            </div>
-
-                            {dataUnidadesRem.length != 0 ? (
-                                <TableUnidad
-                                    select={
-                                        data[data.identificadorModal] &&
-                                        data[data.identificadorModal].m_nIdUnidad
-                                    }
-                                    columns={columnsUnidades}
-                                    data={dataUnidadesRem}
-                                    identificadorModal={data.identificadorModal}
-                                />
-                            ) : (
-                                <div>No se encontró ningún registro</div>
-                            )}
-                            <DialogActions style={{justifyContent: "left"}}>
-                                <button
-                                    onClick={() => setData({...data, openDialog: false})}
-                                    className="btn btn-secondary secondary-btn"
-                                >
-                                    Cerrar
-                                </button>
-                                <button
-                                    onClick={() => setData({...data, openDialog: false})}
-                                    className="btn btn-primary primary-btn"
-                                >
-                                    Aceptar
-                                </button>
-                            </DialogActions>
-                        </div>
-                    )}
-                </DialogContent>
-            </Dialog>
-
-            <Tabs
-                value={tabActive}
-                onChange={handleChangeTab}>
-                <Tab label="General" {...a11yProps(0)} />
-            </Tabs>
-            <form onSubmit={submit} onKeyDown={e => {if (e.code === 13){
-                e.preventDefault()
-            }}}>
-                <TabPanel value={tabActive} index={0}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Origen"}
-                                disabled
-                                value={data.origen}/>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Destino"}
-                                disabled
-                                value={data.destino}/>
-                        </Grid>
-
-                        <Grid item xs={3}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={data.cargadoVacioRemolqueUno}
-                                        onChange={handleRemolqueUno}
-                                        name="cargadoVacíoRemolqueUno"/>
-                                }
-                                label={"Cargado/Vacío Remolque 1"}
-                            />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={data.cargadoVacioRemolqueDos}
-                                        onChange={handleRemolqueDos}
-                                        name="cargadoVacíoRemolqueDos"/>
-                                }
-                                label={"Cargado/Vacío Remolque 2"}
-                            />
-                        </Grid>
-                        <Grid item xs={6}/>
-
-                        <Grid item xs={6}>
-                            <Autocomplete
-                                freeSolo
-                                onChange={handleOperador}
-
-                                value={data.operador}
-                                //disabled={state.agregar == "Consultar"}
-                                id="dataOperador"
-                                disableClearable
-                                forcePopupIcon={false}
-                                options={dataOperadores}
-                                getOptionLabel={(option) =>
-                                    option.m_sNombreCompleto
-                                }
-                                style={{
-                                    transform: "translate(14px, 10px) scale(1) !important"
-                                }}
-                                renderInput={(params) => (
-                                    <div>
-                                        <TextField
-                                            label="Operador"
-                                            margin="dense"
-                                            variant="outlined"
-                                            required
-                                            {...params}
-                                        />
-                                    </div>
-                                )}
-                            />
-                        </Grid>
-                        <Grid item xs={6}/>
-
-                        <Grid item xs={6}>
-                            <Autocomplete
-                                freeSolo
-                                onChange={handleUnidad}
-                                value={data.unidad}
-                                //disabled={state.agregar == "Consultar"}
-                                id="unidad"
-                                disableClearable
-                                forcePopupIcon={false}
-                                options={dataUnidadesRem}
-                                getOptionLabel={(option) =>
-                                    option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
-                                }
-                                style={{transform: "translate(14px, 10px) scale(1) !important"}}
-                                renderInput={(params) => (
-                                    <div>
-                                        <TextField
-                                            label="Unidad"
-                                            margin="dense"
-                                            variant="outlined"
-                                            required
-                                            {...params}
-                                        />
-                                    </div>
-                                )}
-                            />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Placa int"}
-                                disabled
-                                value={data.placaIntUnidad}/>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Estatus"}
-                                disabled
-                                value={data.estatusUnidad}/>
-                        </Grid>
-                        <Grid item xs={1}/>
-
-                        <Grid item xs={3}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Referencia"}
-                                onChange={(e) => setData({...data, referencia: e.target.value})}
-                                value={data.referencia}/>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Kilómetros"}
-                                disabled
-                                onChange={(e) => setData({...data, kms: e.target.value})}
-                                value={data.kms}/>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Horas"}
-                                disabled
-                                onChange={(e) => setData({...data, horas: e.target.value})}
-                                value={data.horas}/>
-                        </Grid>
-                        <Grid item xs={4}/>
+            {/*<form onSubmit={submit} onKeyDown={e => {if (e.code === 13){*/}
+            {/*    e.preventDefault()*/}
+            {/*}}}>*/}
+                <Grid container spacing={2}>
+                    {/*<Grid item xs={6}>
+                        <TextField
+                            margin={"dense"}
+                            variant={"outlined"}
+                            label={"Origen"}
+                            disabled
+                            value={data.origen}/>
                     </Grid>
-                </TabPanel>
-                {props.children}
-            </form>
+                    <Grid item xs={6}>
+                        <TextField
+                            margin={"dense"}
+                            variant={"outlined"}
+                            label={"Destino"}
+                            disabled
+                            value={data.destino}/>
+                    </Grid>*/}
+
+                    <Grid item xs={3}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={props.unidadAsignada.cargadoVacioRemolqueUno}
+                                    onChange={handleChangeCheckbox}
+                                    name="cargadoVacioRemolqueUno"
+                                    disabled={props.disabled}
+                                />
+                            }
+                            label={"Cargado/Vacío Remolque 1"}
+                        />
+                    </Grid>
+                    <Grid item xs={3}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={props.unidadAsignada.cargadoVacioRemolqueDos}
+                                    onChange={handleChangeCheckbox}
+                                    name="cargadoVacioRemolqueDos"
+                                    disabled={props.disabled}/>
+                            }
+                            label={"Cargado/Vacío Remolque 2"}
+                        />
+                    </Grid>
+                    <Grid item xs={6}/>
+
+                    <Grid item xs={6}>
+                        <Autocomplete
+                            freeSolo
+                            onChange={(e, value) => handleChangeAutocomplete("operador", value)}
+                            value={props.unidadAsignada.operador}
+                            //disabled={state.agregar == "Consultar"}
+                            id="dataOperador"
+                            disableClearable
+                            forcePopupIcon={false}
+                            options={dataOperadores}
+                            getOptionLabel={(option) =>
+                                option.m_sNombreCompleto
+                            }
+                            style={{
+                                transform: "translate(14px, 10px) scale(1) !important"
+                            }}
+                            renderInput={(params) => (
+                                <div>
+                                    <TextField
+                                        label="Operador"
+                                        margin="dense"
+                                        variant="outlined"
+                                        required
+                                        {...params}
+                                        disabled={props.disabled}
+                                    />
+                                </div>
+                            )}
+                        />
+                    </Grid>
+                    <Grid item xs={6}/>
+
+                    <Grid item xs={6}>
+                        <Autocomplete
+                            freeSolo
+                            onChange={(e, value) => handleChangeAutocomplete("unidad", value)}
+                            value={props.unidadAsignada.unidad}
+                            //disabled={state.agregar == "Consultar"}
+                            id="unidad"
+                            disableClearable
+                            forcePopupIcon={false}
+                            options={dataUnidadesRem}
+                            getOptionLabel={(option) =>
+                                option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                            }
+                            style={{transform: "translate(14px, 10px) scale(1) !important"}}
+                            renderInput={(params) => (
+                                <div>
+                                    <TextField
+                                        label="Unidad"
+                                        margin="dense"
+                                        variant="outlined"
+                                        required
+                                        {...params}
+                                        disabled={props.disabled}
+                                    />
+                                </div>
+                            )}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <TextField
+                            margin={"dense"}
+                            variant={"outlined"}
+                            label={"Placa int"}
+                            disabled
+                            value={props.unidadAsignada.placaIntUnidad}/>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <TextField
+                            margin={"dense"}
+                            variant={"outlined"}
+                            label={"Estatus"}
+                            disabled
+                            value={props.unidadAsignada.estatusUnidad}/>
+                    </Grid>
+                    <Grid item xs={1}/>
+
+                    <Grid item xs={3}>
+                        <TextField
+                            margin={"dense"}
+                            variant={"outlined"}
+                            label={"Referencia"}
+                            onChange={handleChange}
+                            value={props.unidadAsignada.referencia}
+                            name={"referencia"}
+                            disabled={props.disabled}/>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <TextField
+                            margin={"dense"}
+                            variant={"outlined"}
+                            label={"Kilómetros"}
+                            disabled
+                            onChange={(e) => setData({...data, kms: e.target.value})}
+                            value={props.unidadAsignada.kms}/>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <TextField
+                            margin={"dense"}
+                            variant={"outlined"}
+                            label={"Horas"}
+                            disabled
+                            onChange={(e) => setData({...data, horas: e.target.value})}
+                            value={props.unidadAsignada.horas}/>
+                    </Grid>
+                    <Grid item xs={4}/>
+                </Grid>
+            {/*</form>*/}
         </div>
     );
 }
