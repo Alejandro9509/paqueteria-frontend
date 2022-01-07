@@ -196,7 +196,7 @@ function Embarque(props) {
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
-
+    const [errorZonas, setErrorZonas] = React.useState(false)
     const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
     const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
     const [dataCodigosPostalesEntregaDD, setDataCodigosPostalesEntregaDD] = React.useState([]);
@@ -863,9 +863,16 @@ function Embarque(props) {
         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
         1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
     }
-
+    const validarZonas = (error) =>{
+        setErrorZonas(error)
+    }
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
+        if(errorZonas){
+            showSuccess("Verificar la zona operativa y zona tarifa")
+        }else{
+
+        
         setState({
             ...state,
             showConfirmarUbicacion: false
@@ -1100,6 +1107,7 @@ function Embarque(props) {
                     showSuccess(err);
                 });
         }
+    }
     };
 
     function handleSelectCP(id, cp) {
@@ -1352,6 +1360,7 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
+            console.log("id"+id)
             console.log(JSON.stringify(respuesta.data))
             setState({
                 ...state,
@@ -1474,7 +1483,6 @@ function Embarque(props) {
                 })
             })
         }
-
         setState(state => {
             return {
                 ...state,
@@ -1648,6 +1656,7 @@ function Embarque(props) {
         }))
 
         setDataConceptos(conceptosCast)
+        console.log( respuesta.data.m_nIdTIpoCobro)
         setState(state => {
             return {
                 ...state,
@@ -1812,9 +1821,9 @@ function Embarque(props) {
     async function getParametrosConfiguracion(){
 
         obtenerParametrosConfiguracion().then(respuesta=>{
-            console.log(respuesta)
             if (state.agregar === "Agregar") {
                 setState((config) => {
+                    console.log(state.tipoCobro)
                     return {
                         ...config,
                         estatusEmbarque: respuesta.data.EstatusEmbarque,
@@ -1824,8 +1833,9 @@ function Embarque(props) {
                         idTipoTarifa: respuesta.data.TipoTarifaTarifas,
                     }
                 })
-            }
-            setConfiguraciones((config) => {
+
+                   setConfiguraciones((config) => {
+                console.log(respuesta.data.TipoCobro)
                 return {
                     ...config,
                     estatusRecoleccion: respuesta.data.EstatusRecoleccion,
@@ -1844,6 +1854,8 @@ function Embarque(props) {
                     idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
                 }
             })
+            }
+         
         })
     }
 
@@ -3228,6 +3240,7 @@ function Embarque(props) {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeRemitente}
                                                                         dataPadreConsulta={dataEmbarqueConsulta}
+                                                                        validarZonas={validarZonas}
                                                                     />
                                                                 }
 
@@ -3254,6 +3267,7 @@ function Embarque(props) {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeDestinatario}
                                                                         dataPadreConsulta={dataEmbarqueConsulta}
+                                                                        validarZonas={validarZonas}
                                                                     />
                                                                 }
 
