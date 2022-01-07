@@ -144,6 +144,7 @@ class AgregarViaje extends Component {
             entregado: false,
             estatusInforme: "",
             dataOperadores: [],
+            openDialogInformes:false
         }
 
         this.getAllCiudades = this.getAllCiudades.bind(this);
@@ -168,6 +169,7 @@ class AgregarViaje extends Component {
         this.handleChangeCheckbox = this.handleChangeCheckbox.bind(this);
         this.getAllOperadores = this.getAllOperadores.bind(this);
         this.handleUnidadFiltro = this.handleUnidadFiltro.bind(this);
+        this.handleShowDialog = this.handleShowDialog.bind(this);
 
     }
 
@@ -592,6 +594,7 @@ class AgregarViaje extends Component {
             var informeAsignar = this.state.dataInformesPorAsignar.find(i => i.m_nIdInforme === id)
             arrayInformesAsignados.push(informeAsignar)
             this.setState({dataInformesAsignados: arrayInformesAsignados})
+            showSuccess("El informe "+informeAsignar.m_sFolioInforme+" fue agregado con exito.")
         }else{
             showSuccess("El informe ya se encuentra en el viaje.")
         }
@@ -614,6 +617,27 @@ class AgregarViaje extends Component {
         this.setState({
             [e.target.name]: e.target.checked
         });
+    }
+
+    handleShowDialog = (event) => {
+        event.preventDefault()
+        this.setState({
+            openDialogInformes: !this.state.openDialogInformes,
+        })
+    };
+
+    //Funcion para reaccionar al seleccionar una tarifa del LISTADO DE DIALOGO
+    handleTarifasSeleccionadas = (e) => {
+        if (this.state.dataRequerida === "Tarifas"){
+            this.setState({
+                idsTarifasSeleccionadas: e.selectionModel,
+            })
+        }else{
+            this.setState({
+                idsZonasSeleccionadas: e.selectionModel,
+            })
+        }
+
     }
 
     render() {
@@ -739,7 +763,7 @@ class AgregarViaje extends Component {
         return (
 
             <div>
-                <Dialog open={this.state.openDialog} onClose={() => this.setState({openDialog: false})}>
+                {/*<Dialog open={this.state.openDialog} onClose={() => this.setState({openDialog: false})}>
                     <DialogContent>
                         {this.state.tipoModal === 1 &&
                         <div className="row" style={{backgroundColor: '#FFFFFF'}}>
@@ -821,7 +845,7 @@ class AgregarViaje extends Component {
                     open={this.state.openHistoryDialog}
                     onClose={() => this.setState({openHistoryDialog: false})}>
                     <Historial/>
-                </Dialog>
+                </Dialog>*/}
                 {/*{
                     this.state.showAsignarOperadorDialog &&
                     <Dialog open={this.state.showAsignarOperadorDialog}
@@ -851,7 +875,126 @@ class AgregarViaje extends Component {
                         </DialogContent>
                     </Dialog>
                 }*/}
+                <Dialog
+                    fullWidth={true}
+                    maxWidth={'xl'}
+                    open={this.state.openDialogInformes}
+                    onClose={this.handleShowDialog}
+                    aria-labelledby="max-width-dialog-title"
+                >
+                    <DialogContent>
+                        <div>
+                            <div className="widget-header">
+                                <h2 color={'#717171'}>Informes para asignación</h2>
+                                <br/>
+                                <div className="row" style={{display: "flex"}}>
+                                    <div className="col-sm-12 col-md-12 unit">
+                                        <div className="input">
+                                            <Autocomplete
+                                                freeSolo
+                                                onChange={this.handleOrigenFiltro}
+                                                value={this.state.origen}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="origenRemitente"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={this.state.dataCiudad}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sCiudad
+                                                }
+                                                style={{
+                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                }}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Origen"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            {...params}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-sm-12 col-md-12 unit">
+                                        <div className="input">
+                                            <Autocomplete
+                                                freeSolo
+                                                onChange={this.handleDestinoFiltro}
 
+                                                value={this.state.destino}
+                                                //disabled={state.agregar == "Consultar"}
+                                                id="destino"
+                                                disableClearable
+                                                forcePopupIcon={false}
+                                                options={this.state.dataCiudad}
+                                                getOptionLabel={(option) =>
+                                                    option.m_sCiudad
+                                                }
+                                                style={{
+                                                    transform: "translate(14px, 10px) scale(1) !important"
+                                                }}
+                                                renderInput={(params) => (
+                                                    <div>
+                                                        <TextField
+                                                            label="Destino"
+                                                            margin="dense"
+                                                            variant="outlined"
+                                                            {...params}
+                                                        />
+                                                    </div>
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style={{ display: 'flex', height: '800px' }}>
+                                <DataGrid
+                                    localeText={dataGridLocaleText}
+                                    rows={this.state.dataInformesPorAsignar}
+                                    columns={columnspRorAsignar}
+                                    density="compact"
+                                    pageSize={Math.floor((this.state.height - 310) / 30)}
+                                    getRowId={(row) => row.m_nIdInforme}
+                                    onRowSelected={(row) => {
+                                        this.setState({
+                                            idInforme: row.data.m_nIdInforme
+
+                                        })
+                                    }}
+                                    hideFooterRowCount
+                                    hideFooterSelectedRowCount
+                                />
+                            </div>
+                        </div>
+                            {/*<DataGrid
+                                localeText={dataGridLocaleText}
+                                rows={this.state.dataInformesPorAsignar}
+                                columns={columnspRorAsignar}
+                                density="compact"
+                                pageSize={Math.floor((this.state.height - 310) / 30)}
+                                getRowId={(row) => row.m_nIdInforme}
+                                checkboxSelection
+                                onSelectionModelChange={(e) => this.handleTarifasSeleccionadas(e)}
+                            />*/}
+
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleShowDialog} color="primary">
+                            Close
+                        </Button>
+                        <Button onClick={this.handleShowDialog} color="primary" autoFocus>
+                            Aceptar
+                        </Button>
+
+                    </DialogActions>
+                    {  /*AQUI COMIENZA EL MODAL DE CLIENTES*/}
+
+
+                </Dialog>
                 <div className="widget-wrap">
                     <div className="widget-content">
 
@@ -1071,7 +1214,7 @@ class AgregarViaje extends Component {
                                     </div>
                                 </div>
 
-                                {
+                                {/*{
                                     !this.props.consult &&
                                     <div>
                                         <div className="widget-header">
@@ -1160,13 +1303,15 @@ class AgregarViaje extends Component {
 
                                         </div>
                                     </div>
-                                }
+                                }*/}
 
                                 <div>
                                     <div className="widget-header">
                                         <h2 color={'#717171'}>Detalle de paradas</h2>
                                     </div>
-
+                                    <Button variant="contained" color="primary" fullWidth onClick={(event) => this.handleShowDialog(event)}>
+                                        Agregar informes
+                                    </Button>
                                     <div className="row" style={{height: "200px", width: '100%'}}>
                                         <InformesPorAsignar {...this.props} columns={columnspAsignadas}
                                                             dataInformesAsignados={this.state.dataInformesAsignados}
