@@ -187,7 +187,6 @@ class AgregarViaje extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state.id !== this.props.id && this.props.id > 0 && (this.props.consult || this.props.modificar)) {
             // console.log(this.props.select)
-            debugger
             this.setState(state => {
                 return {
                     ...state,
@@ -385,7 +384,7 @@ class AgregarViaje extends Component {
             operador: {},
             cargadoVacioRemolqueUno: false,
             cargadoVacioRemolqueDos: false,
-            unidad: {},
+            unidad: null,
             placaIntUnidad: "",
             estatusUnidad: "",
             referencia: "",
@@ -665,7 +664,7 @@ class AgregarViaje extends Component {
             },
             {
                 headerName: "Fecha informe",
-                field: "m_dFecha",
+                field: "m_sFechaHora",
                 flex: 1,
             },
             {
@@ -723,7 +722,7 @@ class AgregarViaje extends Component {
             },
             {
                 headerName: "Fecha informe",
-                field: "m_dFecha",
+                field: "m_sFechaHora",
                 flex: 1,
             },
             {
@@ -998,9 +997,6 @@ class AgregarViaje extends Component {
 
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleShowDialog} color="primary">
-                            Close
-                        </Button>
                         <Button onClick={this.handleShowDialog} color="primary" autoFocus>
                             Aceptar
                         </Button>
@@ -1405,7 +1401,7 @@ class AgregarViaje extends Component {
 
                                         <Grid item xs={6}>
                                             <Autocomplete
-                                                freeSolo
+                                                // freeSolo
                                                 onChange={(e, value) => this.handleUnidadFiltro(e, value)}
                                                 value={this.state.unidad}
                                                 inputValue={this.state.unidad ? this.state.unidad.m_sDescripcion : ""}
@@ -1497,7 +1493,7 @@ class AgregarViaje extends Component {
                                             <div className="input">
 
                                                 <Autocomplete
-                                                    freeSolo
+                                                    // freeSolo
                                                     onChange={this.handleRemolqueUnoFiltro}
                                                     value={this.state.IdRemolque1}
                                                     inputValue={this.state.IdRemolque1 ? this.state.IdRemolque1.m_sDescripcion : ""}
@@ -1560,7 +1556,7 @@ class AgregarViaje extends Component {
                                         <Grid item xs={6}>
                                             <div className="input">
                                                 <Autocomplete
-                                                    freeSolo
+                                                    // freeSolo
                                                     onChange={this.handleRemolqueDosFiltro}
                                                     value={this.state.IdRemolque2}
                                                     inputValue={this.state.IdRemolque2 ? this.state.IdRemolque2.m_sDescripcion : ""}
@@ -1621,9 +1617,10 @@ class AgregarViaje extends Component {
                                         <Grid item xs={6}>
                                             <div className="input">
                                                 <Autocomplete
-                                                    freeSolo
+                                                    // freeSolo
                                                     onChange={this.handleDollyFiltro}
                                                     value={this.state.IdDolly}
+                                                    inputValue={this.state.IdDolly ? this.state.IdDolly.m_sDescripcion : ""}
                                                     //disabled={state.agregar == "Consultar"}
                                                     id="IdDolly"
                                                     disableClearable
