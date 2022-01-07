@@ -174,6 +174,9 @@ function Recoleccion() {
     const [dataUnidad, setDataUnidad] = React.useState([]);
     //error en zona operativa y zona tarifa
     const [errorZonas, setErrorZonas] = React.useState(false)
+    const [controlErrores, setControlErrores] = useState({
+        correo:false
+    })
     //variables de valores por defecto
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusRecoleccion: 0,
@@ -392,7 +395,7 @@ function Recoleccion() {
     })
 
     const handleChangeRemitente = (data) => {
-        console.log(data)
+      //  console.log(data)
         setRemitente({
             idRemitente: data.id,
             aliasRemitente: data.alias,
@@ -416,7 +419,7 @@ function Recoleccion() {
             latitudR: data.latitud,
             longitudR: data.longitud
         })
-        console.log(data.zonaOperativa)
+      //  console.log(data.zonaOperativa)
     };
 
     const handleClickCodigosPostalesInput = (input) => {
@@ -629,7 +632,7 @@ function Recoleccion() {
         })
         if (input === "codigoPostalRec") {
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                console.log(data)
+              //  console.log(data)
                 /*setRecoleccionDD(recoleccionDD => {
                     return{
                         ...recoleccionDD,
@@ -696,7 +699,7 @@ function Recoleccion() {
         // getAllSucursales();
     }
 
-    const getDataParaEditar = () => {
+    const getDataParaEditar = (operacion) => {
         getAllSucursales();
         getAllTipoCobro();
         getAllTipoMoneda();
@@ -705,14 +708,13 @@ function Recoleccion() {
         getAllTiposSeguro()
         getAllEstados()
         getAllEstatusRecoleccion()
-        getParametrosConfiguracion()
+        getParametrosConfiguracion(operacion)
         
     }
 
-    async function getParametrosConfiguracion() {
+    async function getParametrosConfiguracion(operacion) {
         obtenerParametrosConfiguracion().then(respuesta => {
-            console.log(respuesta)
-            if (state.agregar === "Agregar"){
+            if (operacion == "Agregar"){ 
                 setState((config) => {
                     return {
                         ...config,
@@ -722,8 +724,9 @@ function Recoleccion() {
                         tipoCobro: respuesta.data.TipoCobro
                     }
                 })
-            }
-            setConfiguraciones((config) => {
+           
+        
+         }    setConfiguraciones((config) => {
                 return {
                     ...config,
                     estatusRecoleccion: respuesta.data.EstatusRecoleccion,
@@ -782,10 +785,11 @@ function Recoleccion() {
                 mostrarDialogoMapa(true)
 
                 return false
-                /**Si es entrega en el domicilio del destinatario y no hay coordenadas*/
+                /**Si es recoleccion en el domicilio del remitente y no hay coordenadas*/
+                debugger;
             }else if (!state.diferenteRecoleccion
-                && !isValidText(destinatario.latitudD)
-                && !isValidText(destinatario.longitudD)
+                && !isValidText(remitente.latitudR)
+                && !isValidText(remitente.longitudR)
                 && !coordenadas){
                 mostrarDialogoMapa(true)
 
@@ -803,16 +807,54 @@ function Recoleccion() {
         })
     }
 
-    const validarZonas = (error) =>{
-        setErrorZonas(error)
-    }
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
-        if(errorZonas){
-            showSuccess("Verificar la zona operativa y zona tarifa")
-        }else{
 
-        
+        //FALTA VALIDAR QUE SI ES RECOLECTA EN DIFERENTE DOMICILIO TOME LA ZONA OPERATIVA Y DE TARIFA DE AHI 
+        //EJEMP params.m_nIdZonaOperativaEntrega = entregaDD.zonaOperativaEnt.m_nIdZona
+          //  params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt.m_nIdZona
+          //ENTONCES OCUPA SABER SI ES DIFERENTEENTREFA EN EL CONDICIONAL IGUAL PARA EMBARQUE
+        let error = false
+
+        if(state.diferenteEntrega){
+            if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
+                error = true
+                showSuccess("Verificar la zona operativa de diferente domicilio entrega")
+            }else if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
+                error = true
+                showSuccess("Verificar la zona tarifa de diferente domicilio entrega")
+            }
+        }else if(destinatario.zonaOperativaDestinatario?.m_nIdZona==undefined){
+            error = true
+            showSuccess("Verificar la zona operativa de destinatario")
+         }else if(destinatario.zonaTarifaDestinatario?.m_nIdZona==undefined){
+            error = true
+            showSuccess("Verificar la zona tarifa de destinatario")
+         }
+          else if(destinatario.correoDestinatario == ""){
+            error = true
+            showSuccess("Error al agregar recoleccion: El correo del destinatario es un campo requerido")
+        }
+
+         if(state.diferenteRecoleccion){
+            if(recoleccionDD.zonaOperativaRec?.m_nIdZona==undefined){
+                error = true
+                showSuccess("Verificar la zona operativa de diferente domicilio recoleccion")
+            }else if(recoleccionDD.zonaTarifaRec?.m_nIdZona==undefined){
+                error = true
+                showSuccess("Verificar la zona tarifa de diferente domicilio recoleccion")
+            }
+        }else if(remitente.zonaOperativaRemitente?.m_nIdZona==undefined){
+            error = true
+            showSuccess("Verificar la zona operativa de remitente")
+        } else if(remitente.zonaTarifaRemitente?.m_nIdZona==undefined){
+            error = true
+            showSuccess("Verificar la zona tarifa de remitente")
+        } else if(remitente.correoRemitente == "" ){
+            error = true
+            showSuccess("Error al agregar recoleccion: El correo del remitente es un campo requerido")
+        }
+        if(!error){
         setState({
             ...state,
             showConfirmarUbicacion: false,
@@ -987,8 +1029,8 @@ function Recoleccion() {
             m_c_Descuento: item.descuento
         }))
         params.m_nIdCotizacion = state.idCotizacion
-        console.log(params)
-        console.log(JSON.stringify(params))
+    //    console.log(params)
+      //  console.log(JSON.stringify(params))
       if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
@@ -997,23 +1039,23 @@ function Recoleccion() {
                     limpiarInputsAgregar()
                 })
                 .catch((err) => {
-                    console.log(err);
+                   // console.log(err);
                     showSuccess(err);
                 });
         } else {
             agregarRecoleccion(params)
                 .then((respuesta) => {
-                    console.log(respuesta.data);
+                 //   console.log(respuesta.data);
                     showSuccess(respuesta.data);
                     handleShowListado();
                     limpiarInputsAgregar()
                 })
                 .catch((err) => {
-                    console.log(err);
+                 //   console.log(err);
                     showSuccess(err);
                 });
         }
- }
+    }
     };
 
     function getTipoCambio() {
@@ -1069,7 +1111,7 @@ function Recoleccion() {
                 motivoCancelacion: '',
             })*/
         }).catch((err) => {
-            console.log(err);
+          //  console.log(err);
             showSuccess(err);
         });
     }
@@ -1081,10 +1123,10 @@ function Recoleccion() {
     };
 
     function handleSubmission() {
-        console.log(selectedFile)
+      //  console.log(selectedFile)
         var reader = new FileReader();
         reader.onload = function () {
-            console.log(reader.result)
+         //   console.log(reader.result)
         }.bind(this);
         reader.readAsText(selectedFile);
         setState({
@@ -1127,7 +1169,7 @@ function Recoleccion() {
             $('.tab-content div ').removeClass('in show');
             $('#Agregar').addClass('in show');
             setTabActiva(1)
-            console.log("Recoleccion: ", respuesta.data);
+           // console.log("Recoleccion: ", respuesta.data);
             setState(state => {
                 return {
                     ...state,
@@ -1135,7 +1177,7 @@ function Recoleccion() {
                     recoleccionConEmbarque: (data.find((o) => o.m_nIdRecoleccion === id).m_sFolioEmbarque)
                 }
             })
-            setRecoleccionDataParaConsultaModificacion(respuesta)
+            setRecoleccionDataParaConsultaModificacion(respuesta,"Modificar")
         });
 
     }
@@ -1154,14 +1196,16 @@ function Recoleccion() {
                     agregar: "Consultar",
                 }
             })
-            setRecoleccionDataParaConsultaModificacion(respuesta)
+            setRecoleccionDataParaConsultaModificacion(respuesta,"Consultar")
 
         });
     }
 
-    const setRecoleccionDataParaConsultaModificacion = (respuesta) => {
+    const setRecoleccionDataParaConsultaModificacion = (respuesta,operacion) => {
+        console.log("DATA DE RECOLECCION CONSULTA Y MODIFICACION")
+        console.log(respuesta)
         setDataRecoleccionConsulta(respuesta)
-        getDataParaEditar()
+        getDataParaEditar(operacion)
         getAllCiudades()
         getAllZonas()
         getAllEmbalajes()
@@ -1291,7 +1335,7 @@ function Recoleccion() {
             })
         }
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
-            console.log("Tiene seguro"+data.m_bTieneSeguro)
+          //  console.log("Tiene seguro"+data.m_bTieneSeguro)
             setState(state => {
                 return {
                     ...state,
@@ -1301,7 +1345,8 @@ function Recoleccion() {
                     aplicaSeguro: data.m_bTieneSeguro*/
                 }
             })
-        })
+        })  
+
         let conceptosCast = []
         conceptosCast = respuesta.data.m_arrConceptos.map(item => ({
             id: Math.floor(Math.random() * 10000),
@@ -1314,9 +1359,8 @@ function Recoleccion() {
             nombreConcepto: item.m_sConcepto,
             descuento: item.m_c_Descuento
         }))
-
+        //console.log("SETEANDO COBRO" +respuesta.data.m_nIdTipoDeCobro)
         setDataConceptos(conceptosCast)
-
         setState(state => {
             return {
                 ...state,
@@ -1387,7 +1431,7 @@ function Recoleccion() {
 
     function handleShowSalidaLlegada(type) {
         obtenerRecoleccionId(state.idRecoleccion).then((respuesta) => {
-            console.log(respuesta.data);
+           // console.log(respuesta.data);
             setState({
                 ...state,
                 sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == respuesta.data.m_nIdSucursal).m_sSucursal,
@@ -1414,7 +1458,7 @@ function Recoleccion() {
     function handleShowAgregar(event) {
         setIsAgregar(false);
         event.stopPropagation()
-        getDataParaEditar()
+        getDataParaEditar("Agregar")
         limpiarInputsAgregar()
         setState(state => {
             return {
@@ -2059,7 +2103,7 @@ function Recoleccion() {
     const getAllClientes = () => {
         obtenerCliente().then((respuesta) => {
             setDataClientes(respuesta.data)
-            console.log(respuesta.data)
+          //  console.log(respuesta.data)
         })
     }
 
@@ -2150,7 +2194,7 @@ function Recoleccion() {
             } else {
                 setDataTipoUnidad(respuesta.data)
             }
-            console.log("tipos unidades listado: ", respuesta.data)
+          //  console.log("tipos unidades listado: ", respuesta.data)
             // getAllUnidades(1);
         });
     }
@@ -2158,7 +2202,7 @@ function Recoleccion() {
     function getAllUnidades(id) {
 
         obtenerUnidadesTipo(id).then((respuesta) => {
-            console.log('unidades listado: ', respuesta);
+           // console.log('unidades listado: ', respuesta);
             setDataUnidad(respuesta.data);
         });
     }
@@ -2169,9 +2213,9 @@ function Recoleccion() {
         var files = e.target.files,
             f = files[0];
         var reader = new FileReader();
-        console.log(e.target.files);
+       // console.log(e.target.files);
         reader.onload = function (e) {
-            console.log("Nothing Happened");
+          //  console.log("Nothing Happened");
             var data = e.target.result;
             let readedData = XLSX.read(data, {type: "binary"});
             const wsname = readedData.SheetNames[0];
@@ -2179,7 +2223,7 @@ function Recoleccion() {
 
             /* Convert array to json*/
             const dataParse = XLSX.utils.sheet_to_json(ws, {header: 1});
-            console.log("dataParse : " + dataParse);
+          //  console.log("dataParse : " + dataParse);
             setFileUploaded(dataParse);
         };
         reader.readAsBinaryString(f);
@@ -3734,7 +3778,7 @@ function Recoleccion() {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeRemitente}
                                                                         dataPadreConsulta={dataRecoleccionConsulta}
-                                                                        validarZonas={validarZonas}
+                                                                    
                                                                     />
                                                                 }
 
@@ -3797,7 +3841,7 @@ function Recoleccion() {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeDestinatario}
                                                                         dataPadreConsulta={dataRecoleccionConsulta}
-                                                                        validarZonas={validarZonas}
+                                                             
                                                                     />
                                                                 }
 
