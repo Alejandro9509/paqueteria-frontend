@@ -760,47 +760,59 @@ function Recoleccion() {
                 && !isValidText(recoleccionDD.latitudRec)
                 && !isValidText(recoleccionDD.longitudRec)
                 && !coordenadas){
-                mostrarDialogoMapa()
+                mostrarDialogoMapa(true)
+
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas guardadas*/
             }else if (!state.diferenteRecoleccion
                 && !isValidText(remitente.latitudR)
                 && !isValidText(remitente.longitudR)
                 && !coordenadas) {
-                mostrarDialogoMapa()
+                mostrarDialogoMapa(true)
+
                 return false
             }
             /**Si es agregar*/
         }else{
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
             if (state.diferenteRecoleccion  && !coordenadas){
-                mostrarDialogoMapa()
+                mostrarDialogoMapa(true)
+
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas*/
             }else if (!state.diferenteRecoleccion
                 && !isValidText(destinatario.latitudD)
                 && !isValidText(destinatario.longitudD)
                 && !coordenadas){
-                mostrarDialogoMapa()
+                mostrarDialogoMapa(true)
+
                 return false
             }
         }
         return true
     }
 
-    const mostrarDialogoMapa = () => {
+    const mostrarDialogoMapa = (isVisible) => {
         setState({
             ...state,
-            showConfirmarUbicacion: true,
+            showConfirmarUbicacion: isVisible,         
             titulo: "recolección"
         })
     }
 
+    const mostrarDialogoMapaDestinatario = (isVisible) => {
+        setState({
+            ...state,
+            showConfirmarUbicacionDestinatario:isVisible,     
+            titulo: "Entrega"
+        })
+    }
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
         setState({
             ...state,
-            showConfirmarUbicacion: false
+            showConfirmarUbicacion: false,
+            showConfirmarUbicacionDestinatario:false
         })
         if (!validarCoordenadas(coordenadas)){
             return
@@ -973,7 +985,7 @@ function Recoleccion() {
         params.m_nIdCotizacion = state.idCotizacion
         console.log(params)
         console.log(JSON.stringify(params))
-        if (state.idRecoleccion != 0) {
+      if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -997,7 +1009,7 @@ function Recoleccion() {
                     showSuccess(err);
                 });
         }
-
+ 
     };
 
     function getTipoCambio() {
@@ -1276,13 +1288,14 @@ function Recoleccion() {
             })
         }
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
+            console.log("Tiene seguro"+data.m_bTieneSeguro)
             setState(state => {
                 return {
                     ...state,
                     clientePaga: data,
-                    idTipoSeguro: data.m_bTieneSeguro ? data.m_nIdTipoSeguro : 5,
+                  /*  idTipoSeguro: data.m_bTieneSeguro ? data.m_nIdTipoSeguro : 5,
                     porcentajeSeguro: data.m_bTieneSeguro ? data.m_cPorcentajeSeguro : 0,
-                    aplicaSeguro: data.m_bTieneSeguro
+                    aplicaSeguro: data.m_bTieneSeguro*/
                 }
             })
         })
@@ -1324,7 +1337,7 @@ function Recoleccion() {
                 mismoPaquete: false,
                 mismoSobre: false,
                 sobres: respuesta.data.m_parrSobres,
-                ValorDeclarado: state.valorDeclarado,
+                ValorDeclarado: respuesta.data.m_xValorDeclarado,
                 idTipoSeguro: respuesta.data.m_nIdTipoSeguro,
                 porcentajeSeguro: respuesta.data.m_xPorcentajeSeguro,
                 aplicaSeguro: respuesta.data.m_bAplicaSeguro,
@@ -2839,16 +2852,20 @@ function Recoleccion() {
 
     return (
         <div>
-            {
-                state.showConfirmarUbicacion &&
+            {/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
+               {state.showConfirmarUbicacion &&
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
+                                    dataMunicipiosRecoleccionDD={dataMunicipiosRecoleccionDD}
+                                    mostrarDialogoMapa={mostrarDialogoMapa}
                                     titulo={state.titulo}
-                                    recoleccion={true}
-                                    direccion={remitente}>
-
+                                    remitente={true}
+                                    direccion={remitente}
+                                    esDiferenteRecoleccion={state.diferenteRecoleccion}
+                                    esDiferenteEntrega={state.diferenteEntrega}
+                                    recoleccionDD={recoleccionDD}
+                                    >
                 </ConfirmarUbicacion>
-            }
-
+               }
             <Dialog open={state.openDialog} onClose={() => setState({...state, openDialog: false})} fullWidth
                     maxWidth="md">
                 <DialogContent>
@@ -4108,6 +4125,7 @@ function Recoleccion() {
                                                                         />
                                                                     </div>
                                                                 </div>
+                                                           
                                                             </div>
                                                         </div>
                                                     </div>
@@ -4339,7 +4357,7 @@ function Recoleccion() {
                                                                         />
                                                                     </div>
                                                                 </div>
-
+                                                                                                               
                                                             </div>
                                                         </div>
                                                     </div>

@@ -151,13 +151,19 @@ class FiltersMap extends Component {
     changeConfiguration(name, value) {
         this.setState({
             [name]: value,
-            paquetesSeleccionadas: []
+            paquetesSeleccionadas: [],
+            unidadesSeleccionadas: []
         })
     }
 
 
     changeDateConsult(value) {
-        this.setState({fecha: value})
+        this.setState({fecha: value,
+            openSucursales: false,
+            openZona: false,
+            openDate: false,
+            openUnidades: false,
+            openPaquetes: false, openConfiguration: false})
 
         this.props.refreshFilterUltimaMilla(value, this.state.sucursalSeleccionada.m_nIdSucursal, this.state.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.tipoBusqueda))
 
@@ -195,17 +201,26 @@ class FiltersMap extends Component {
     selectCiudad(sucursal) {
         this.setState({
             sucursalSeleccionada: sucursal,
-            openSucursales: false,
             zonasSeleccionada: [],
             paquetesSeleccionadas: [],
-            unidadesSeleccionadas: []
+            unidadesSeleccionadas: [],
+            openSucursales: false,
+            openZona: false,
+            openDate: false,
+            openUnidades: false,
+            openPaquetes: false, openConfiguration: false
         })
         this.props.changeMapLocation(sucursal)
     }
 
 
     selectZona(zona) {
-        this.setState({zonasSeleccionada: zona})
+        this.setState({zonasSeleccionada: zona,
+            openSucursales: false,
+            openZona: false,
+            openDate: false,
+            openUnidades: false,
+            openPaquetes: false, openConfiguration: false})
         if (zona.length !== 0) {
             //this.getAllGuias()
             this.props.refreshFilterUltimaMilla(this.state.fecha, this.state.sucursalSeleccionada.m_nIdSucursal, zona.map(z => z.m_nIdZona), parseInt(this.state.tipoBusqueda))
@@ -228,7 +243,12 @@ class FiltersMap extends Component {
 
 
     selectUnidades(array) {
-        this.setState({unidadesSeleccionadas: array})
+        this.setState({unidadesSeleccionadas: array,
+            openSucursales: false,
+            openZona: false,
+            openDate: false,
+            openUnidades: false,
+            openPaquetes: false, openConfiguration: false})
     }
 
     selectPaquetes(array) {
@@ -365,6 +385,7 @@ class FiltersMap extends Component {
                                     openSucursales: !this.state.openSucursales,
                                     openZona: false,
                                     openUnidades: false,
+                                    openDate: false,
                                     openPaquetes: false, openConfiguration: false
                                 })}
                                 deleteIcon={<KeyboardArrowDownIcon color={"primary"}/>}
@@ -397,6 +418,7 @@ class FiltersMap extends Component {
                                 onDelete={() => this.setState({
                                     openZona: !this.state.openZona, openSucursales: false,
                                     openUnidades: false,
+                                    openDate: false,
                                     openPaquetes: false, openConfiguration: false
                                 })}
                                 deleteIcon={<KeyboardArrowDownIcon color={"primary"}/>}

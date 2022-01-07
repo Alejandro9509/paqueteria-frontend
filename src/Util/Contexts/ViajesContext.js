@@ -96,6 +96,15 @@ function obtenerReporteCFDI(id){
     );
     return result
 }
+
+function cancelarCFDI(id, motivo){
+    const url = `${process.env.REACT_APP_API_URL}/Informes/CancelarCFDITraslada/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, {motivoCancelacion: motivo}), { headers })
+    );
+    return result
+}
 function obtenerReporteCFDIViaje(id){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/CFDIViaje/${id}`;
     let result;
@@ -128,4 +137,4 @@ function obetenerViajeId( id){
 
 
 export {obtenerViajesByFiltro,agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje,
-    obtenerViajes, obtenerViajesEstatus, obtenerXML,obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje}
+    obtenerViajes, obtenerViajesEstatus, obtenerXML,obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje,cancelarCFDI}

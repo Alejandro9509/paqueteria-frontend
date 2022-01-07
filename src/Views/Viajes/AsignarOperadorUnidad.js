@@ -661,7 +661,9 @@ export default function AsignarOperadorUnidad(props) {
                 onChange={handleChangeTab}>
                 <Tab label="General" {...a11yProps(0)} />
             </Tabs>
-            <form onSubmit={submit}>
+            <form onSubmit={submit} onKeyDown={e => {if (e.code === 13){
+                e.preventDefault()
+            }}}>
                 <TabPanel value={tabActive} index={0}>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
@@ -728,47 +730,8 @@ export default function AsignarOperadorUnidad(props) {
                                             label="Operador"
                                             margin="dense"
                                             variant="outlined"
+                                            required
                                             {...params}
-                                            InputProps={{
-                                                ...params.InputProps,
-                                                style: {height: "33px", fontSize: "14px"},
-                                                type: "search",
-                                                value: data.operador,
-                                                //disabled: state.agregar == "Consultar",
-                                                disableUnderline: true,
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        <IconButton
-                                                            padding="0px"
-                                                            style={{
-                                                                paddingRight: "0px",
-                                                            }}
-                                                            onClick={() => {
-                                                                setData({
-                                                                    ...data,
-                                                                    identificadorModal:
-                                                                        "dataOperador",
-                                                                    tipoModal: 0,
-                                                                    openDialog: true
-                                                                })
-                                                            }}
-                                                            //disabled={state.agregar == "Consultar"}
-                                                        >
-                                                            <PageviewIcon
-                                                                style={{
-                                                                    color: "#F9A03E",
-                                                                    fontSize: 32,
-                                                                    paddingInlineEnd: 0,
-                                                                    paddingRight: 0,
-                                                                    paddingBlockEnd: 0,
-                                                                    paddingLeft: 0,
-                                                                    paddingBlock: 0,
-                                                                }}
-                                                            />
-                                                        </IconButton>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
                                         />
                                     </div>
                                 )}
@@ -780,7 +743,6 @@ export default function AsignarOperadorUnidad(props) {
                             <Autocomplete
                                 freeSolo
                                 onChange={handleUnidad}
-
                                 value={data.unidad}
                                 //disabled={state.agregar == "Consultar"}
                                 id="unidad"
@@ -788,58 +750,17 @@ export default function AsignarOperadorUnidad(props) {
                                 forcePopupIcon={false}
                                 options={dataUnidadesRem}
                                 getOptionLabel={(option) =>
-                                    option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                                    option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                 }
-                                style={{
-                                    transform: "translate(14px, 10px) scale(1) !important"
-                                }}
+                                style={{transform: "translate(14px, 10px) scale(1) !important"}}
                                 renderInput={(params) => (
                                     <div>
                                         <TextField
                                             label="Unidad"
                                             margin="dense"
                                             variant="outlined"
+                                            required
                                             {...params}
-                                            InputProps={{
-                                                ...params.InputProps,
-                                                style: {height: "33px", fontSize: "14px"},
-                                                type: "search",
-                                                value: data.unidad,
-                                                //disabled: state.agregar == "Consultar",
-                                                disableUnderline: true,
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        <IconButton
-                                                            padding="0px"
-                                                            style={{
-                                                                paddingRight: "0px",
-                                                            }}
-                                                            //disabled={state.agregar == "Consultar"}
-                                                            onClick={() => {
-                                                                setData({
-                                                                    ...data,
-                                                                    identificadorModal:
-                                                                        "unidad",
-                                                                    tipoModal: 1,
-                                                                    openDialog: true
-                                                                })
-                                                            }}
-                                                        >
-                                                            <PageviewIcon
-                                                                style={{
-                                                                    color: "#F9A03E",
-                                                                    fontSize: 32,
-                                                                    paddingInlineEnd: 0,
-                                                                    paddingRight: 0,
-                                                                    paddingBlockEnd: 0,
-                                                                    paddingLeft: 0,
-                                                                    paddingBlock: 0,
-                                                                }}
-                                                            />
-                                                        </IconButton>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
                                         />
                                     </div>
                                 )}
@@ -890,171 +811,8 @@ export default function AsignarOperadorUnidad(props) {
                                 value={data.horas}/>
                         </Grid>
                         <Grid item xs={4}/>
-
-                        {/*<Grid item xs={4}>
-                            <h4>Detalles de la Carga</h4>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <h4>Detalles de la Entrega</h4>
-                        </Grid>
-                        <Grid item xs={4}/>
-
-                        <Grid item xs={3}>
-                            <TextField
-                                margin={"dense"}
-                                type={"date"}
-                                variant={"outlined"}
-                                required
-                                InputLabelProps={{shrink: true}}
-                                label={"Fecha"}
-                                onChange={handleFechaCarga}
-                                value={data.fechaCarga}/>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                type={"time"}
-                                InputLabelProps={{shrink: true}}
-                                label={"Hora"}
-                                required
-                                onChange={handleHoraCarga}
-                                value={data.horaCarga}/>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Fecha"}
-                                type={"date"}
-                                required
-                                InputLabelProps={{shrink: true}}
-                                onChange={handleFechaEntrega}
-                                value={data.fechaEntregaGeneral}/>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Hora"}
-                                InputLabelProps={{shrink: true}}
-                                type={"time"}
-                                required
-                                onChange={handleHoraEntrega}
-                                value={data.horaEntregaGeneral}/>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Horas en ruta"}
-                                required
-                                onChange={handleHorasEnRuta}
-                                value={data.horasEnRuta}/>
-                        </Grid>*/}
                     </Grid>
                 </TabPanel>
-                {/*<TabPanel value={tabActive} index={1}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={3}>
-                            <TextField
-                                margin={"dense"}
-                                type={"date"}
-                                required
-                                variant={"outlined"}
-                                InputLabelProps={{shrink: true}}
-                                label={"Fecha"}
-                                onChange={handleFechaInforme}
-                                value={data.fechaInforme}/>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                type={"time"}
-                                required
-                                InputLabelProps={{shrink: true}}
-                                label={"Hora"}
-                                onChange={handleHoraInforme}
-                                value={data.horaInforme}/>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Folio informe"}
-                                required
-                                onChange={handleFolioInforme}
-                                value={data.folioInforme}/>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Remolque"}
-                                required
-                                onChange={handleRemolqueInforme}
-                                value={data.remolqueInforme}/>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Total"}
-                                required
-                                onChange={handleTotoalInforme}
-                                value={data.totalInforme}/>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                            <h4>Detalle de entrega</h4>
-                        </Grid>
-
-                        <Grid item xs={3}>
-                            <TextField
-                                margin={"dense"}
-                                type={"date"}
-                                variant={"outlined"}
-                                InputLabelProps={{shrink: true}}
-                                label={"Fecha"}
-                                required
-                                onChange={handleFechaEntregaInforme}
-                                value={data.fechaEntregaInforme}/>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                type={"time"}
-                                InputLabelProps={{shrink: true}}
-                                label={"Hora"}
-                                required
-                                onChange={handleHoraEntregaInforme}
-                                value={data.horaEntregaInforme}/>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={data.entregado}
-                                        onChange={handleEntregado}
-                                        name="entregado"/>
-                                }
-                                label={"Entregado"}
-                            />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <TextField
-                                margin={"dense"}
-                                variant={"outlined"}
-                                label={"Estatus"}
-                                required
-                                onChange={handleEstatusInforme}
-                                value={data.estatusInforme}/>
-                        </Grid>
-                        <Grid item xs={2}/>
-                    </Grid>
-                </TabPanel>*/}
                 {props.children}
             </form>
         </div>

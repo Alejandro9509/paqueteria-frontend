@@ -93,8 +93,8 @@ class PaquetesList extends Component {
     };
 
     handleSelectAllClickevent(event) {
-        if (event.target.checked) {
-            const newSelecteds = this.state.paquetes;
+        if (event.target.checked && this.state.paquetes.filter(f => !f.m_bClienteBloqueado).length !== this.props.paquetesSeleccionadas.length) {
+            const newSelecteds = this.state.paquetes.filter(f => !f.m_bClienteBloqueado);
             this.props.selectPaquetes(newSelecteds)
             return;
         }
@@ -228,7 +228,7 @@ class PaquetesList extends Component {
                                 sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
                                 align="left">Tipo de cobro</TableCell>
                             <TableCell
-                                sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
+                                sortDirection={this.state.orderBy === "m_sZona" ? this.state.order : false}
                                 align="left">Zona</TableCell>
                             <TableCell
                                 sortDirection={this.state.orderBy === "m_sTipoCobro" ? this.state.order : false}
@@ -277,7 +277,7 @@ class PaquetesList extends Component {
                                         <TableCell style={{color: u.m_bClienteBloqueado ? "red": "black"}}
                                                    align="left">{u.m_bClienteBloqueado ? "Bloqueado" : "Activo"}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sDomicilioRemitente: u.m_sDomicilioDestinatario}</TableCell>
-                                        <TableCell align="left">{u.m_bEsRecoleccion ? (u.m_bRecoleccionConCita ? (u.m_sFechaRecoleccionCita + " " + u.m_sHoraCitarRecoleccionMinima + " a " + u.m_sHoraCitaRecoleccionMaxima) : "Sin cita") : u.m_bEmbarqueConCita ? (u.m_sFechaEmbarqueCita + " " + u.m_sHoraEmbarqueCitaMinima + " a " + u.m_sHoraEmbarqueCitaMaxima) : "Sin Cita"}</TableCell>
+                                        <TableCell align="left">{u.m_bEsRecoleccion ? (u.m_bRecoleccionConCita ? (u.m_bCitaPendiente ? "Cita pendiente" : (u.m_sFechaRecoleccionCita + " " + u.m_sHoraCitarRecoleccionMinima + " a " + u.m_sHoraCitaRecoleccionMaxima)) : "Sin cita") : u.m_bEmbarqueConCita ? u.m_bCitaPendiente ? "Cita pendiente" : (u.m_sFechaEmbarqueCita + " " + u.m_sHoraEmbarqueCitaMinima + " a " + u.m_sHoraEmbarqueCitaMaxima) : "Sin Cita"}</TableCell>
                                         <TableCell align="left">{u.m_dFechaRegistro}</TableCell>
                                         <TableCell align="left">{u.m_bEsRecoleccion ? u.m_sEstatusRecoleccion : u.m_sEstatusEmbarque}</TableCell>
                                     </TableRow>

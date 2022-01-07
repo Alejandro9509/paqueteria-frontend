@@ -34,6 +34,7 @@ import {ReactComponent as Activo} from "../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../iconos/Menu/cruz.svg";
 import Noty from "noty";
 import {
+    Button,
     Chip,
     Dialog,
     DialogActions,
@@ -49,7 +50,7 @@ import {ToggleButtonGroup} from "@material-ui/lab";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import {API_HEADERS, dataGridLocaleText} from "../Constants";
+import {API_HEADERS, dataGridLocaleText, TICKET_ZABRA_TAMPLATE} from "../Constants";
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import {obtenerCiudades, obtenerCiudadId} from "../Util/Contexts/CiudadesContext";
@@ -106,7 +107,7 @@ import DialogTableClientes from "./Clientes/DialogTableClientes";
 import Cotizador from "./ConceptosFacturacion/Cotizador";
 import {obtenerInformeFiltro, obtenerInformeReporte} from "../Util/Contexts/InformesContext";
 import Filtros from "./Filtros/Filtros";
-import {obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
+import {agregarGuia, modificarGuia, obtenerGuiasFiltro} from "../Util/Contexts/GuiaContext";
 import {obtenerViajesByFiltro} from "../Util/Contexts/ViajesContext";
 import Citas from "./Citas/Citas";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
@@ -117,7 +118,7 @@ function showSuccess(mensaje) {
         type: "information",
         layout: "topCenter",
         text: mensaje,
-        timeout: "3000",
+        timeout: "8000",
     }).show();
 }
 
@@ -195,119 +196,12 @@ function Embarque(props) {
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
-    const [dataCiudadF, setDataCiudadF] = React.useState([]);
 
-    const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
-    const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
     const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
     const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
-    // const [dataCodigosPostalesRecoleccionDD, setDataCodigosPostalesRecoleccionDD] = React.useState([]);
     const [dataCodigosPostalesEntregaDD, setDataCodigosPostalesEntregaDD] = React.useState([]);
     const [dataEmbarqueConsulta, setDataEmbarqueConsulta] = useState();
-    const [dataRecoleccionConsulta, setDataRecoleccionConsulta] = useState();
-
-    /*const [dataOperador, setDataOperador] = React.useState([]);
-    const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
-    const [dataUnidad, setDataUnidad] = React.useState([]);*/
-
-    // const [dataFolioEmbarque, SetDataFolioEmbarque] = React.useState([]);
-    // const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataRemitenteDestinatario, setDataRemitenteDestinatario,] = React.useState([]);
-
-    const [filtros, setFiltros] = useState({
-        fechaInicial: 0,
-        fechaFinal: 0,
-        estatusListado:0,
-        sucursalListado: 0,
-        folio: '',
-        OrigenListado:0,
-        DestinoListado:0,
-    })
-
-    const resetFiltros = () => {
-        setFiltros({
-            fechaInicial: 0,
-            fechaFinal: 0,
-            estatusListado:0,
-            sucursalListado: 0,
-            folio: '',
-            OrigenListado:0,
-            DestinoListado:0,
-        })
-    }
-
-    const handleChangeFiltros = (event) => {
-        event.preventDefault()
-        const {target} = event
-        setFiltros(filtros => {
-            return {
-                ...filtros,
-                [target.name]: target.value
-            }
-        })
-        if (target.name && event.keyCode == 13){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,target.value,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        if (target.name === "fechaInicial"){
-            obtenerEmbarquesFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }else if (target.name === "fechaFinal"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "sucursalListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "estatusListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "OrigenListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "DestinoListado"){
-            obtenerEmbarquesFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-    }
     const [dataClientes, setDataClientes] = useState([])
     const [stepActive, setStepActive] = React.useState(1);
     const [Modal, open, close, isOpen] = useModal("root", {
@@ -368,74 +262,6 @@ function Embarque(props) {
             accessor: "m_nIdEstado",
         },
     ]);
-    /*const columnsOperadores = React.useMemo(() => [
-        {
-            Name: "Numero Operador",
-            accessor: "m_nNumeroOperador",
-        },
-        {
-            Name: "Nombre",
-            accessor: "m_sNombreCompleto",
-        },
-        {
-            Name: "Activo",
-            accessor: "m_bActivo",
-            width: 100,
-            renderCell: (row) => {
-                return (
-                    <div
-                        style={{
-                            width: "100%",
-                            textAlign: "center",
-                            color: row.row.m_bActivo === "true" ? "green" : "red",
-                        }}
-                    >
-                        {row.row.m_bActivo ? (
-                            <SvgIcon component={Activo}/>
-                        ) : (
-                            <SvgIcon component={NoActivo}/>
-                        )}
-                    </div>
-                );
-            },
-        },
-    ]);
-    const columnsTipoUnidades = React.useMemo(() => [
-        {
-            Name: "Tipo de unidad",
-            accessor: "m_nIdTipoUnidad",
-        },
-        {
-            Name: "Identificador",
-            accessor: "m_nIdentificador",
-        },
-        {
-            Name: "Nomenclatura",
-            accessor: "m_sNomenclaturaSCT",
-        },
-        {
-            Name: "Estatus",
-            accessor: "m_bActivo",
-        },
-    ]);
-    const columnsUnidades = React.useMemo(() => [
-        {
-            Name: "Descripcion",
-            accessor: "m_sDescripcion",
-        },
-        {
-            Name: "Codigo",
-            accessor: "m_sCodigo",
-        },
-        {
-            Name: "Tipo de unidad",
-            accessor: "m_nIdTipoUnidad",
-        },
-        {
-            Name: "Estatus",
-            accessor: "m_bActivo",
-        },
-    ]);*/
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -654,6 +480,7 @@ function Embarque(props) {
         //Informacion general
         idSucursalAgregar: localStorage.getItem("Sucursal"),
         folioRecoleccion: '',
+        idRecoleccion: 0,
         folioEmbarque: '',
         folioGuia: '',
         folioInforme: '',
@@ -667,53 +494,12 @@ function Embarque(props) {
         idTipoSeguro:5,
         porcentajeSeguro: 0,
         aplicaSeguro: false,
-
-        //Remitente
-        /*idRemitente: '',
-        aliasRemitente: '',
-        nombreRemitente: '',
-        RFCRemitente: '',
-        domicilioRemitente: '',
-        ciudadRemitente: '',
-        codigoPostalRemitente: '',
-        correoRemitente: '',
-        telefonoRemitente: '',
-        contactoRemitente: '',
-        ciudadOrigen: '',
-        zonaRemitente: {},
-        calleRemitente: '',
-        numeroIntRemitente: '0',
-        numeroExtRemitente: '',
-        coloniaRemitente: '',*/
-
-        //Destinatario
-        /*idDestinatario: '',
-        aliasDestinatario: '',
-        nombreDestinatario: '',
-        RFCDestinatario: '',
-        domicilioDestinatario: '',
-        ciudadDestinatario: '',
-        codigoPostalDestinatario: '',
-        correoDestinatario: '',
-        telefonoDestinatario: '',
-        contactoDestinatario: '',
-        destinoDestinatario: '',
-        zonaDestinatario: {},
-        calleDestinatario: '',
-        numeroIntDestinatario: '0',
-        numeroExtDestinatario: '',
-        coloniaDestinatario: '',*/
+        idTipoTarifa:'',
 
         //Entrega
         entregaEnSucursal: false,
         idSucursalEntrega: '',
         diferenteEntrega: false,
-        /*ciudadEntrega: '',
-        codigoPostalEntrega: '',
-        zonaEntrega: '',
-        domicilioEntrega: '',
-        entregaEn: '',
-        datosAdicionalesEntrega: '',*/
 
         //Cita de recoleccion
         entregaConCita: false,
@@ -755,6 +541,7 @@ function Embarque(props) {
                 //==VARIABLES DE AGREGAR
                 //Informacion general
                 folioRecoleccion: '',
+                idRecoleccion: 0,
                 folioEmbarque: '',
                 folioGuia: '',
                 folioInforme: '',
@@ -770,6 +557,7 @@ function Embarque(props) {
                 idTipoSeguro: 5,
                 porcentajeSeguro: 0,
                 aplicaSeguro: false,
+                idTipoTarifa:'',
 
                 //Entrega
                 entregaEnSucursal: false,
@@ -973,6 +761,7 @@ function Embarque(props) {
             pdfWindow.document.title = "Embarque " + folio;
         })
     }
+
     const handleChangeEntregaDD = (event) => {
         event.preventDefault();
         setEntregaDD(entregaDD => {
@@ -995,39 +784,9 @@ function Embarque(props) {
         })
         if (input === "codigoPostalEnt"){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
-                    setEntregaDD(entregaDD => {
-                        return{
-                            ...entregaDD,
-                            zonaOperativaEnt: data[0]
-                        }
-                    })
-                }else{
-                    setEntregaDD(entregaDD => {
-                        return{
-                            ...entregaDD,
-                            zonaOperativaEnt: {}
-                        }
-                    })
-                }*/
                 setDataZonasOperativasEntregaDD(data)
             })
             obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
-                    setEntregaDD(entregaDD => {
-                        return{
-                            ...entregaDD,
-                            zonaTarifaEnt: data[0]
-                        }
-                    })
-                }else{
-                    setEntregaDD(entregaDD => {
-                        return{
-                            ...entregaDD,
-                            zonaTarifaEnt: {}
-                        }
-                    })
-                }*/
                 setDataZonasTarifaEntregaDD(data)
             })
         }
@@ -1064,38 +823,38 @@ function Embarque(props) {
                 && !isValidText(entregaDD.latitudEnt)
                 && !isValidText(entregaDD.longitudEnt)
                 && !coordenadas){
-                mostrarDialogoMapa()
+                mostrarDialogoMapa(true)
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas guardadas*/
             }else if (!state.diferenteEntrega
                 && !isValidText(destinatario.latitudD)
                 && !isValidText(destinatario.longitudD)
                 && !coordenadas) {
-                mostrarDialogoMapa()
+                mostrarDialogoMapa(true)
                 return false
             }
             /**Si es agregar*/
         }else{
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
             if (state.diferenteEntrega  && !coordenadas){
-                mostrarDialogoMapa()
+                mostrarDialogoMapa(true)
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas*/
             }else if (!state.diferenteEntrega
                 && !isValidText(destinatario.latitudD)
                 && !isValidText(destinatario.longitudD)
                 && !coordenadas){
-                mostrarDialogoMapa()
+                mostrarDialogoMapa(true)
                 return false
             }
         }
         return true
     }
 
-    const mostrarDialogoMapa = () => {
+    const mostrarDialogoMapa = (isVisible) => {
         setState({
             ...state,
-            showConfirmarUbicacion: true,
+            showConfirmarUbicacion: isVisible,
             titulo: "entrega"
         })
     }
@@ -1306,12 +1065,35 @@ function Embarque(props) {
         } else {
             agregarEmbarques(params)
                 .then((respuesta) => {
-                    showSuccess(respuesta.data);
-                    if (respuesta.data != "Agregado Exitosamente"){
+                    if (respuesta.data.m_nFolioEmbarque.length === 0){
                         return
                     }
+                    showSuccess("Embarque creado con folio: "+respuesta.data.m_nFolioEmbarque);
+
                     console.log(respuesta.data);
-                    handleShowListado();
+                    // handleShowListado();
+                    setState(state => {
+                        return{
+                            ...state,
+                            idEmbarque: respuesta.data.m_nIdEmbarque,
+                            folioEmbarque: respuesta.data.m_nFolioEmbarque,
+                        }
+                    })
+
+                    confirmAlert({
+                        title: 'Confirmación',
+                        message: '¿Desea crear la guía para este embarque?',
+                        buttons: [
+                            {
+                                label: 'Sí',
+                                onClick: async () => generarGuia(respuesta.data.m_nIdEmbarque)
+                            },
+                            {
+                                label: 'No',
+                                onClick: async () => handleShowListado()
+                            }
+                        ]
+                    });
                 })
                 .catch((err) => {
                     console.log(err);
@@ -1328,10 +1110,6 @@ function Embarque(props) {
                 RFCRemitente: id.m_sRFC,
                 domicilioRemitente: id.m_sDomicilio,
 
-                /*codigoPostalRemitente: dataCodigoPostal.find(
-                    (o) => o.m_nIdCP == id.m_nIdCP
-                ),*/
-
                 ciudadRemitente: dataCiudad.find(
                     (o) => o.m_nIdCiudad == dataCodigosPostalesRemitente.find((o) => o.m_nIdCP == id.m_nIdCP).m_nIdCiudad
                 ),
@@ -1346,10 +1124,6 @@ function Embarque(props) {
                 [state.identificadorModal]: id,
                 RFCDestinatario: id.m_sRFC,
                 domicilioDestinatario: id.m_sDomicilio,
-
-                /*codigoPostalDestinatario: dataCodigosPostalesDestinatario.find(
-                    (o) => o.m_nIdCP == id.m_nIdCP
-                ),*/
 
                 ciudadDestinatario: dataCiudad.find(
                     (o) => o.m_nIdCiudad ==
@@ -1929,8 +1703,6 @@ function Embarque(props) {
             return {
                 ...state,
                 agregar: "Agregar",
-                fechaInicial: dataFechaInicial.Fecha,
-                fechaFinal: dataFechaFinal.Fecha,
                 sucursalListado: 0,
                 estatusListado: 0,
                 folioRecoleccion: '',
@@ -1944,12 +1716,6 @@ function Embarque(props) {
         $('#Listado').addClass('in show');
         setTabActiva(0)
     }
-
-    /*function getUltimoFolioEmbarque() {
-        obtenerUltimoFolioEmbarques().then((respuesta) => {
-            SetDataFolioEmbarque(respuesta.data);
-        });
-    }*/
 
     const handleChange = (event) => {
         setState({
@@ -2010,28 +1776,6 @@ function Embarque(props) {
         });
     };
 
-    //Maneja filtrado de listado embarque
-    const handleFolioEmbarqueFiltro = async (event) => {
-        if (event.keyCode == 13) {
-            let value = event.target.value
-            if (event.target.value == '') {
-                value = 0
-            }
-            setState({
-                ...state,
-                folioEmbarque: event.target.value,
-            })
-            const {fechaInicial, fechaFinal, sucursalListado, estatusListado} = state
-            obtenerEmbarquesFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-    }
-
     function handleSelectDatos(id, cp) {
         setState({
             ...state,
@@ -2054,28 +1798,9 @@ function Embarque(props) {
         }))
     }
 
-    const handleClickResponsablePago = (event) => {
-        event.preventDefault();
-        if (dataClientes.length === 0) {
-            getAllClientes()
-        }
-    }
-
-    const getAllClientes = () => {
-        obtenerCliente().then((respuesta) => {
-            setDataClientes(respuesta.data)
-        })
-    }
-
-    const getDataParaListado = () => {
-
-
-    }
-
     const getDataParaEditar = () => {
         getAllSucursales();
         getAllEstatusEmbarque();
-        getAllCiudadesFiltro();
         getAllTipoCobro();
         getAllTipoMoneda();
         getTipoCambio()
@@ -2093,9 +1818,10 @@ function Embarque(props) {
                     return {
                         ...config,
                         estatusEmbarque: respuesta.data.EstatusEmbarque,
-                        moneda: respuesta.data.MonedaEmbarque,
-                        tipoCambio: respuesta.data.TipoCambioEmbarque,
-                        tipoCobro: respuesta.data.TipoCobro
+                        moneda: state.idRecoleccion > 0 ? state.moneda :respuesta.data.MonedaEmbarque,
+                        tipoCambio: state.idRecoleccion > 0 ? state.tipoCambio :respuesta.data.TipoCambioEmbarque,
+                        tipoCobro: state.idRecoleccion > 0 ? state.tipoCobro : respuesta.data.TipoCobro,
+                        idTipoTarifa: respuesta.data.TipoTarifaTarifas,
                     }
                 })
             }
@@ -2176,11 +1902,6 @@ function Embarque(props) {
             setDataCiudad(respuesta.data);
         });
     }
-    async function getAllCiudadesFiltro() {
-        obtenerCiudades().then((respuesta) => {
-            setDataCiudadF(respuesta.data);
-        });
-    }
 
     async function getAllTiposSeguro(){
         axios.get(`${process.env.REACT_APP_REPORT_URL}/api/TipoSeguros/GetListado`, {headers}).then(({data}) => {
@@ -2189,10 +1910,6 @@ function Embarque(props) {
     }
 
     const headers = API_HEADERS
-
-    function conDatos() {
-        return data.length != 0;
-    }
 
     function DefaultColumnFilter({column: {filterValue, preFilteredRows, setFilter},}) {
         const count = preFilteredRows.length;
@@ -2476,265 +2193,6 @@ function Embarque(props) {
         );
     }
 
-    /*function TableOperadores({columns, data, select}) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-            state,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div
-                className="col-md-12"
-                style={{maxHeight: "300px", overflow: "auto"}}
-            >
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render("Name")}
-                                    {/!* Add a sort direction indicator *!/}
-                                    <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up"/>
-                                                ) : (
-                                                    <i className="fa fa-caret-down"/>
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                    <div>
-                                        {column.canFilter ? column.render("Filter") : null}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                style={{
-                                    backgroundColor:
-                                        row.original.m_nIdOperador === select
-                                            ? "orange"
-                                            : "white",
-                                }}
-                                {...row.getRowProps()}
-                                onClick={handleSelectDatos.bind(this, row.original)}
-                            >
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }*/
-
-    /*function TableTipoUnidad({columns, data, select}) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-            state,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div className="col-md-12">
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render("Name")}
-                                    {/!* Add a sort direction indicator *!/}
-                                    <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up"/>
-                                                ) : (
-                                                    <i className="fa fa-caret-down"/>
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                    <div>
-                                        {column.canFilter ? column.render("Filter") : null}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                style={{
-                                    backgroundColor:
-                                        row.original.m_nIdTipoUnidad === select
-                                            ? "orange"
-                                            : "white",
-                                }}
-                                {...row.getRowProps()}
-                                onClick={handleSelectDatos.bind(this, row.original)}
-                            >
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }*/
-
-    /*function TableUnidad({columns, data, select}) {
-        const defaultColumn = React.useMemo(
-            () => ({
-                // Default Filter UI
-                Filter: DefaultColumnFilter,
-            }),
-            []
-        );
-
-        const {
-            getTableProps,
-            getTableBodyProps,
-            headerGroups,
-            rows,
-            prepareRow,
-            state,
-        } = useTable(
-            {
-                columns,
-                data,
-                defaultColumn,
-            },
-            useFilters,
-            useSortBy
-        );
-
-        return (
-            <div
-                className="col-md-12"
-                style={{maxHeight: "300px", overflow: "auto"}}
-            >
-                <table className="table" {...getTableProps()}>
-                    <thead>
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                // Add the sorting props to control sorting. For this example
-                                // we can add them into the header props
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render("Name")}
-                                    {/!* Add a sort direction indicator *!/}
-                                    <span>
-                                            {column.isSorted ? (
-                                                column.isSortedDesc ? (
-                                                    <i className="fa fa-caret-up"/>
-                                                ) : (
-                                                    <i className="fa fa-caret-down"/>
-                                                )
-                                            ) : (
-                                                ""
-                                            )}
-                                        </span>
-                                    <div>
-                                        {column.canFilter ? column.render("Filter") : null}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {rows.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                style={{
-                                    backgroundColor:
-                                        row.original.m_nIdUnidad === select ? "orange" : "white",
-                                }}
-                                {...row.getRowProps()}
-                                onClick={handleSelectDatos.bind(this, row.original)}
-                            >
-                                {row.cells.map((cell) => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }*/
-
     /*const handleImprimir = () => {
         imprimirFormatosId(state.formatoSeleccionado).then((response) => {
             var file = new Blob([response.data], {type: 'application/pdf'})
@@ -2806,27 +2264,6 @@ function Embarque(props) {
         }
     }
 
-    const handleFechaCita = (event) => {
-        setState({
-            ...state,
-            fechaCita: event.target.value,
-        })
-    }
-
-    const handleHoraCitaMinima = (event) => {
-        setState({
-            ...state,
-            horaCitaMinima: event.target.value,
-        })
-    }
-
-    const handleHoraCitaMaxima = (event) => {
-        setState({
-            ...state,
-            horaCitaMaxima: event.target.value,
-        })
-    }
-
     const handleChangeCita = (data) => {
         debugger
         setState({
@@ -2841,23 +2278,11 @@ function Embarque(props) {
     const handleListPaquetesChange = (newList) => {
         setDataPaquetes(newList)
     }
+
     const handleListComplementosSATChange = (newList) => {
         setDataComplementosSAT(newList)
     }
 
-
-    const filtrarTipoCobro = (tipoCobro) => {
-        // if (!state.clientePaga) {
-        if (localStorage.getItem("RFC") === "ADI880815DA7") {
-            return tipoCobro.m_nIdTipoCobro === 10 || tipoCobro.m_nIdTipoCobro === 11
-        }else {
-            return true
-        }
-        // }else {
-        //     return (state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 10) || ( !state.clientePaga.m_bSinCredito && tipoCobro.m_nIdTipoCobro === 11)
-        //
-        // }
-    }
     const dialogVisible = (isVisible) => {
         setState({
           ...state,
@@ -2872,6 +2297,7 @@ function Embarque(props) {
     const actualizarConceptos = (list) => {
         setDataConceptos(list);
     }
+
     const saveIdCotizacion = (id) => {
         if (id){
             setState(state => {
@@ -2890,6 +2316,7 @@ function Embarque(props) {
             idRuta: idRuta,
         })
     }
+
     const handleChangeTipoSeguro = (event) => {
         setState({
             ...state,
@@ -2900,6 +2327,56 @@ function Embarque(props) {
         });
     }
 
+    const generarGuia = (idEmbarque) => {
+
+        if (dataConceptos.length === 0) {
+            showSuccess("No se puede guardar una guia sin conceptos.");
+            handleShowListado()
+            return
+        }
+        let params = {
+            "TIpoCambio": state.tipoCambio,
+            "FolioGuia": state.folioGuia,
+            "IdEstatusGuia": 4,
+            "IdEmbarque": idEmbarque,
+            "IdMoneda": state.moneda,
+
+            "CreadoPor": state.CreadoPor,
+            "ModificadoPor": state.ModificadoPor,
+            "IdSucursal": state.idSucursalAgregar,
+            "ValorDeclarado": state.valorDeclarado,
+            // "idTipoServicio": state.idTipoServicio,
+            "m_dFecha": state.fechaHoraRegistro.substr(0, 10),
+            "m_sHora": state.fechaHoraRegistro.substr(state.fechaHoraRegistro.length - 5),
+
+            "arClsGuiaConceptos": dataConceptos.map(c => ({
+                m_nIdConceptosFacturacion: c.idConcepto,
+                m_cImporte: c.importe,
+                m_nIdImpuestoTraslada: c.traslada,
+                m_nIdImpuestoRetiene: c.retiene,
+                m_cImporteRetiene: c.importeRet,
+                m_cImporteIva: c.importeIVA,
+                m_bActivo: true,
+                m_cDescuento: c.descuento || 0
+            })),
+
+        }
+        console.log(params)
+        console.log(JSON.stringify(params))
+        if (idEmbarque > 0) {
+            agregarGuia(params).then(respuesta => {
+                showSuccess(respuesta.data)
+                handleShowListado()
+            }).catch(err => {
+                console.log(err)
+                showSuccess(err)
+                handleShowListado()
+            });
+        } else {
+            showSuccess("Hubo un problema al tratar de generar la guia.")
+        }
+    }
+
     return (
         <div>
 
@@ -2908,7 +2385,13 @@ function Embarque(props) {
                 <ConfirmarUbicacion confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
                                     titulo={state.titulo}
                                     recoleccion={false}
-                                    direccion={destinatario}>
+                                    remitente={false}
+                                    mostrarDialogoMapa={mostrarDialogoMapa}
+                                    direccion={destinatario} 
+                                    dataMunicipiosEntregaDD={dataMunicipiosEntregaDD}
+                                    entregaDD={entregaDD}
+                                    esDiferenteEntrega={state.diferenteEntrega}>
+                                   
 
                 </ConfirmarUbicacion>
             }
@@ -3301,7 +2784,7 @@ function Embarque(props) {
 
                             <form className="j-forms row" >
                                 <div className="form-content">
-                                    <div
+                                    {/*<div
                                         className="wizard-breadcrumb number-style"
                                         style={{
                                             position: "sticky",
@@ -3325,7 +2808,7 @@ function Embarque(props) {
                                             </Stepper>
 
                                         </div>
-                                    </div>
+                                    </div>*/}
 
                                     <div className="widget-wrap" id="informacionGeneral">
                                         <div className="widget-header">
@@ -3588,7 +3071,7 @@ function Embarque(props) {
                                                             </label>
                                                         </div>
 
-                                                        <Grid container spacing={2} style={{marginBottom:'10px'}}>
+                                                        <Grid container spacing={2} style={{marginBottom:'10px',paddingRight:'15px'}}>
                                                             <Grid item xs>
                                                                 <div className="input">
                                                                             <TextField
@@ -3669,6 +3152,28 @@ function Embarque(props) {
                                                                                }}
                                                                     />
                                                                 </div>
+                                                            </Grid>
+                                                            <Grid item xs>
+                                                                <label className="input select">
+                                                                    <FormControl fullWidth variant="outlined"
+                                                                                 margin="dense" required>
+                                                                        <InputLabel> Tipo de Tarifa</InputLabel>
+                                                                        <Select
+                                                                            native
+                                                                            label="Tipo de Tarifa"
+                                                                            className="form-control"
+                                                                            onChange={handleChange}
+                                                                            name="idTipoTarifa"
+                                                                            read="true"
+                                                                            value={state.idTipoTarifa}
+                                                                            disabled={state.agregar == "Consultar"}
+                                                                        >
+                                                                            <option value="1">Por peso o volumen</option>
+                                                                            <option value="2">Por rango</option>
+                                                                            <option value="3">Por región</option>
+                                                                        </Select>
+                                                                    </FormControl>
+                                                                </label>
                                                             </Grid>
                                                         </Grid>
 
@@ -3855,6 +3360,9 @@ function Embarque(props) {
 
                                     <div className="row">
                                         <div className="widget-wrap">
+                                            <div className="widget-header">
+                                                <h2>Ruta</h2>
+                                            </div>
                                             <SeleccionarRuta
                                                 IdRuta={state.idRuta}
                                                 IdOrigen={remitente.origenRemitente ? remitente.origenRemitente.m_nIdCiudad : ''}
@@ -4139,8 +3647,46 @@ function Embarque(props) {
                                         }))} />
                                     </div>
 
+                                    {/*<div className="row">
+                                        <Button fullWidth color={"primary"} variant={"contained"} onClick={() => generarGuia()} >
+                                            Generar Guia
+                                        </Button>
+                                    </div>*/}
+
                                 </div>
                                 <div className="form-footer ol-md-12">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                            <Button fullWidth color={"secondary"} variant={"contained"} onClick={(event) => {
+                                                event.stopPropagation();
+                                                setState({...state, agregar: "Agregar"});
+                                                $('.nav-tabs li ').removeClass('active');
+                                                $('.nav-tabs li').eq(0).addClass('active');
+                                                $('.tab-content div ').removeClass('in show');
+                                                $('#Listado').addClass('in show');
+                                            }} style={{color: "white"}}>
+                                                Cancelar
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                            <Button fullWidth
+                                                    color={"primary"}
+                                                    variant={"contained"}
+                                                    type="submit"
+                                                    disabled={state.agregar === "Consultar"}
+                                                    onClick={handleAceptar}>
+                                                Guardar embarque
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                    {/*<button
+                                        type="submit"
+                                        className="btn btn-primary primary-btn"
+                                        disabled={state.agregar === "Consultar"}
+                                        onClick={handleAceptar}
+                                    >
+                                        Guardar Embarque
+                                    </button>
                                     <button
                                         type="button"
                                         onClick={(event) => {
@@ -4154,15 +3700,8 @@ function Embarque(props) {
                                         className="btn btn-secondary secondary-btn"
                                     >
                                         Cancelar
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="btn btn-primary primary-btn"
-                                        disabled={state.agregar === "Consultar"}
-                                        onClick={handleAceptar}
-                                    >
-                                        Aceptar
-                                    </button>
+                                    </button>*/}
+
                                 </div>
                             </form>
                         </div>
