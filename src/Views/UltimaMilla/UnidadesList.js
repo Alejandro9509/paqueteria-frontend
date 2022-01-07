@@ -19,6 +19,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
+import {confirmAlert} from "react-confirm-alert";
 
 const useStyles = theme => ({
     visuallyHidden: {
@@ -105,7 +106,25 @@ class UnidadesList extends Component {
         this.props.selectUnidades([])
     };
 
-    handleClick(event, row) {
+    solicitarRemolques(row){
+
+        confirmAlert({
+            title: 'Confirmar',
+            message: '¿Desea agregar remolques?',
+            buttons: [
+                {
+                    label: 'Si',
+                    onClick: () => this.setState({unidadSeleccionadaRemolques: row, openRemolques: true})
+                },
+                {
+                    label: 'No',
+                    onClick: () => this.handleClick(row)
+                }
+            ]
+        })
+    }
+
+    handleClick( row) {
         const selectedIndex = this.props.unidadesSeleccionadas.map(u => u.m_nIdUnidad).indexOf(row.m_nIdUnidad);
         let newSelected = [];
 
@@ -131,7 +150,6 @@ class UnidadesList extends Component {
 
         return (
             <div style={{height:"400px", overflow:"auto"}}>
-
                 <TableContainer>
                     <Table>
                         <TableHead>
@@ -175,7 +193,6 @@ class UnidadesList extends Component {
                             {
                                 this.stableSort(this.state.unidades, this.getComparator(this.state.order, this.state.orderBy)).map((u, index) => {
                                     const isItemSelected = isSelected(u.m_nIdUnidad);
-                                    console.log(isItemSelected)
                                     const labelId = `enhanced-table-checkbox-${index}`;
                                     return (
                                         <TableRow>
