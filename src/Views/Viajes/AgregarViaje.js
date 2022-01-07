@@ -1305,19 +1305,7 @@ class AgregarViaje extends Component {
                                     </div>
                                 }*/}
 
-                                <div>
-                                    <div className="widget-header">
-                                        <h2 color={'#717171'}>Detalle de paradas</h2>
-                                    </div>
-                                    <Button variant="contained" color="primary" fullWidth onClick={(event) => this.handleShowDialog(event)}>
-                                        Agregar informes
-                                    </Button>
-                                    <div className="row" style={{height: "200px", width: '100%'}}>
-                                        <InformesPorAsignar {...this.props} columns={columnspAsignadas}
-                                                            dataInformesAsignados={this.state.dataInformesAsignados}
-                                        />
-                                    </div>
-                                </div>
+
 
                                 <div className="row">
                                     <div className="widget-header">
@@ -1383,7 +1371,7 @@ class AgregarViaje extends Component {
                                                 style={{
                                                     transform: "translate(14px, 10px) scale(1) !important"
                                                 }}
-                                                disabled={!(this.state.dataInformesAsignados.length > 0 && !this.props.consult)}
+                                                disabled={this.props.consult}
                                                 renderInput={(params) => (
                                                     <div>
                                                         <TextField
@@ -1392,7 +1380,7 @@ class AgregarViaje extends Component {
                                                             variant="outlined"
                                                             required
                                                             {...params}
-                                                            disabled={!(this.state.dataInformesAsignados.length > 0 && !this.props.consult)}
+                                                            disabled={this.props.consult}
                                                         />
                                                     </div>
                                                 )}
@@ -1414,7 +1402,7 @@ class AgregarViaje extends Component {
                                                     option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                 }
                                                 style={{transform: "translate(14px, 10px) scale(1) !important"}}
-                                                disabled={!(this.state.dataInformesAsignados.length > 0 && !this.props.consult)}
+                                                disabled={this.props.consult}
                                                 renderInput={(params) => (
                                                     <div>
                                                         <TextField
@@ -1423,7 +1411,7 @@ class AgregarViaje extends Component {
                                                             variant="outlined"
                                                             required
                                                             {...params}
-                                                            disabled={!(this.state.dataInformesAsignados.length > 0 && !this.props.consult)}
+                                                            disabled={this.props.consult}
                                                         />
                                                     </div>
                                                 )}
@@ -1658,6 +1646,20 @@ class AgregarViaje extends Component {
                                         </Grid>
                                     </Grid>
 
+                                </div>
+
+                                <div>
+                                    <div className="widget-header">
+                                        <h2 color={'#717171'}>Detalle de paradas</h2>
+                                    </div>
+                                    <Button variant="contained" color="primary" fullWidth onClick={(event) => this.handleShowDialog(event)}>
+                                        Agregar informes
+                                    </Button>
+                                    <div className="row" style={{height: "200px", width: '100%'}}>
+                                        <InformesPorAsignar {...this.props} columns={columnspAsignadas}
+                                                            dataInformesAsignados={this.state.dataInformesAsignados}
+                                        />
+                                    </div>
                                 </div>
 
                                 {/*<div className={"row"}>
