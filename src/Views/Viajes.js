@@ -99,7 +99,7 @@ function Viajes() {
         DerechoBorrar: 58,
         codigoDepartamento: "",
         descripcionDepartamento: "",
-        agregar: "Viaje",
+        agregar: "Agregar",
         importar: "",
         CreadoPor: localStorage.getItem("UsuarioId"),
         ModificadoPor: localStorage.getItem("UsuarioId"),
@@ -161,14 +161,16 @@ function Viajes() {
 
         obetenerViajeId(id).then(respuesta => {
             console.log(respuesta.data)
-            setState({
-                ...state,
-                agregar: "Viaje",
-                edit: true,
-                idViaje: id,
-                consult: false,
-                selectViaje: respuesta.data,
-                open: true
+            setState(state => {
+                return {
+                    ...state,
+                    agregar: "Modificar",
+                    edit: true,
+                    idViaje: id,
+                    consult: false,
+                    selectViaje: respuesta.data,
+                    open: true
+                }
             })
         });
     }
@@ -179,26 +181,27 @@ function Viajes() {
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
         obetenerViajeId(id).then(respuesta => {
-            setState({
-                ...state,
-                agregar: "Viaje",
-                edit: true,
-                consult: true,
-                idViaje: id,
-                selectViaje: respuesta.data,
-                open: true
+            setState(state => {
+                return {
+                    ...state,
+                    agregar: "Consultar",
+                    edit: true,
+                    consult: true,
+                    idViaje: id,
+                    selectViaje: respuesta.data,
+                    open: true
+                }
             })
         });
     }
 
     function handleShowAgregar() {
-        setState({
-            ...state,
-            agregar: "Viaje",
-            showPopUp: false,
-            edit: false,
-            consult: false,
-            open: true,
+        clearData()
+        setState(state => {
+            return {
+                ...state,
+                open: true,
+            }
         })
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
@@ -206,9 +209,32 @@ function Viajes() {
         $('#Agregar').addClass('in show');
     }
 
+    const handleShowListado = (event) => {
+        if (event){
+            event.stopPropagation();
+        }
+        getAllData()
+        clearData()
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
+    }
 
-
-
+    const clearData = () => {
+        setState(state => {
+            return {
+                ...state,
+                agregar: "Agregar",
+                showPopUp: false,
+                edit: false,
+                consult: false,
+                open: false,
+                idViaje: 0,
+                selectViaje: null
+            }
+        })
+    }
 
     const columns = React.useMemo(() => [
         {
@@ -953,15 +979,7 @@ function Viajes() {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a onClick={(event) => {
-                                event.stopPropagation();
-                                getAllData()
-                                setState({...state, agregar: "Viaje", open: true});
-                                $('.nav-tabs li ').removeClass('active');
-                                $('.nav-tabs li').eq(0).addClass('active');
-                                $('.tab-content div ').removeClass('in show');
-                                $('#Listado').addClass('in show');
-                            }}>
+                            <a onClick={handleShowListado}>
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
@@ -1140,7 +1158,12 @@ function Viajes() {
 
                             {
                                 state.open &&
-                                <AgregarViaje reload={getAllData} consult={state.consult} editar={state.edit} select={state.selectViaje} id={state.idViaje}/>
+                                <AgregarViaje
+                                    reload={getAllData}
+                                    consult={state.agregar === "Consultar"}
+                                    modificar={state.agregar === "Modificar"}
+                                    select={state.selectViaje}
+                                    id={state.idViaje}/>
 
                             }
 
