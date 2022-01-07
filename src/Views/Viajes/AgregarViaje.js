@@ -87,6 +87,7 @@ class AgregarViaje extends Component {
             idCiudadOrigen: {},
             idCiudadDestino: {},
             dataCiudad: [],
+            dataUnidades: [],
             dataRutas: [],
             dataCodigoPostal: [],
             dataSucursal: [],
@@ -122,7 +123,7 @@ class AgregarViaje extends Component {
             operador: {},
             cargadoVacioRemolqueUno: false,
             cargadoVacioRemolqueDos: false,
-            unidad: {},
+            unidad: null,
             placaIntUnidad: "",
             estatusUnidad: "",
             referencia: "",
@@ -370,6 +371,7 @@ class AgregarViaje extends Component {
             asignacionEquipo: {},
 
             dataCiudad: [],
+            dataUnidades: [],
             dataRutas: [],
             dataCodigoPostal: [],
             dataSucursal: [],
@@ -526,12 +528,17 @@ class AgregarViaje extends Component {
     handleRemolqueUnoFiltro(event, newValue) {
         event.preventDefault();
         obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
-            this.setState({
-                IdRemolque1: newValue,
-                placasRemolque1: newValue.m_sPlacas,
-                colorRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sColor,
-                estatusRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
-            })
+            if (resultado.data.m_sEstatus === "DISPONIBLE"){
+                this.setState({
+                    IdRemolque1: newValue,
+                    placasRemolque1: newValue.m_sPlacas,
+                    colorRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                    estatusRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
+                })
+            }else {
+                showSuccess("La unidad seleccionada no está disponible")
+            }
+
         })
         if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && newValue.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
@@ -543,12 +550,16 @@ class AgregarViaje extends Component {
     handleRemolqueDosFiltro(event, newValue) {
         event.preventDefault();
         obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
-            this.setState({
-                IdRemolque2: newValue,
-                placasRemolque2: newValue.m_sPlacas,
-                colorRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sColor,
-                estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
-            })
+            if (resultado.data.m_sEstatus === "DISPONIBLE"){
+                this.setState({
+                    IdRemolque2: newValue,
+                    placasRemolque2: newValue.m_sPlacas,
+                    colorRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                    estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
+                })
+            }else{
+                showSuccess("La unidad seleccionada no está disponible")
+            }
         })
 
         if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
@@ -561,14 +572,18 @@ class AgregarViaje extends Component {
     handleUnidadFiltro(event, newValue) {
         event.preventDefault();
         obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
-            this.setState({
-                unidad: newValue,
-                placaIntUnidad: newValue.m_sPlacas,
-                estatusUnidad: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus,
-                colorUnidad: resultado.data instanceof String ? "" : resultado.data.m_sColor,
-                kms: newValue.m_nOdometro,
-                horas: newValue.m_nHorasTrabajadasMotorNoGPS
-            })
+            if (resultado.data.m_sEstatus === "DISPONIBLE"){
+                this.setState({
+                    unidad: newValue,
+                    placaIntUnidad: newValue.m_sPlacas,
+                    estatusUnidad: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus,
+                    colorUnidad: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                    kms: newValue.m_nOdometro,
+                    horas: newValue.m_nHorasTrabajadasMotorNoGPS
+                })
+            }else{
+                showSuccess("La unidad seleccionada no está disponible")
+            }
         })
 
         if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
@@ -1393,11 +1408,12 @@ class AgregarViaje extends Component {
                                                 freeSolo
                                                 onChange={(e, value) => this.handleUnidadFiltro(e, value)}
                                                 value={this.state.unidad}
+                                                inputValue={this.state.unidad ? this.state.unidad.m_sDescripcion : ""}
                                                 //disabled={state.agregar == "Consultar"}
                                                 id="unidad"
                                                 disableClearable
                                                 forcePopupIcon={false}
-                                                options={this.state.dataUnidades}
+                                                options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                 }
@@ -1484,12 +1500,13 @@ class AgregarViaje extends Component {
                                                     freeSolo
                                                     onChange={this.handleRemolqueUnoFiltro}
                                                     value={this.state.IdRemolque1}
+                                                    inputValue={this.state.IdRemolque1 ? this.state.IdRemolque1.m_sDescripcion : ""}
                                                     //disabled={state.agregar == "Consultar"}
                                                     id="IdRemolque1"
                                                     disableClearable
                                                     disabled={this.props.consult}
                                                     forcePopupIcon={false}
-                                                    options={this.state.dataUnidades && this.state.dataUnidades}
+                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                     getOptionLabel={(option) =>
                                                         `${option.m_sCodigo} - ${option.m_sDescripcion}`
                                                     }
@@ -1546,12 +1563,13 @@ class AgregarViaje extends Component {
                                                     freeSolo
                                                     onChange={this.handleRemolqueDosFiltro}
                                                     value={this.state.IdRemolque2}
+                                                    inputValue={this.state.IdRemolque2 ? this.state.IdRemolque2.m_sDescripcion : ""}
                                                     //disabled={state.agregar == "Consultar"}
                                                     id="IdRemolque2"
                                                     disableClearable
                                                     disabled={this.props.consult}
                                                     forcePopupIcon={false}
-                                                    options={this.state.dataUnidades && this.state.dataUnidades}
+                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                     getOptionLabel={(option) =>
                                                         `${option.m_sCodigo} - ${option.m_sDescripcion}`
                                                     }
@@ -1611,7 +1629,7 @@ class AgregarViaje extends Component {
                                                     disableClearable
                                                     disabled={this.props.consult}
                                                     forcePopupIcon={false}
-                                                    options={this.state.dataUnidades && this.state.dataUnidades}
+                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                     getOptionLabel={(option) =>
                                                         option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                     }
