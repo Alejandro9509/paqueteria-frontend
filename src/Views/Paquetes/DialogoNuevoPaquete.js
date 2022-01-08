@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Noty from 'noty';
 import {Checkbox, FormControl, FormControlLabel, Grid, InputLabel, Radio, RadioGroup, Select} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -17,7 +18,14 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {obtenerEmbalajes} from "../../Util/Contexts/EmbalajesContext";
 import {obtenerProductos, obtenerProductosByConvenioCliente} from "../../Util/Contexts/ProductosContext";
-
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
+}
 export default function DialogoNuevoPaquete(props) {
     const [open, setOpen] = React.useState(false);
     const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
@@ -25,7 +33,15 @@ export default function DialogoNuevoPaquete(props) {
     const [state, setState] = useState({
         agregarMas: false
     })
-
+    const [errores, setErrores] = useState({
+        errorLargo:false,
+        errorAlto:false,
+        errorAncho:false,
+        errorPeso:false,
+        errorCantidad:false,
+        errorTexto:""
+       
+    })
     const [paquete, setPaquete] = useState({
         m_nIdPaquete: Math.floor(Math.random() * 10000),
         producto: null,
@@ -91,7 +107,10 @@ export default function DialogoNuevoPaquete(props) {
     const handleAceptar = (e) => {
         e.stopPropagation()
         e.preventDefault()
-        if (paquete.producto !== null){
+        if(errores.errorAlto || errores.errorAncho || errores.errorCantidad ||errores.errorPeso || errores.errorLargo){
+            showSuccess("Uno o más campos tienen error")
+        }else{  
+            if (paquete.producto !== null){
             if (state.agregarMas){
                 console.log(paquete)
                 props.agregar(paquete)
@@ -103,7 +122,8 @@ export default function DialogoNuevoPaquete(props) {
                 resetPaquete()
             }
 
-        }
+        }}
+      
 
     }
 
@@ -150,6 +170,183 @@ export default function DialogoNuevoPaquete(props) {
     }
 
     const handleChangePaquetev2 = (event) => {
+
+        if(event.target.name == "m_nCantidad"){
+            if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
+                console.log("numero"+Number(event.target.value))
+                console.log("valida si es numero"+isNaN(Number(event.target.value)))
+                if(Number(event.target.value)<=0){
+                        setErrores(errores=>{
+                            return{ 
+                                ...errores,
+                             errorCantidad:true,
+                             errorTexto:"Ingrese un numero mayor a 0"
+                            
+                            }
+                         })
+                }else if(isNaN(Number(event.target.value))){
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorCantidad:true,
+                         errorTexto:"Ingrese solo digitos"
+                        }
+                     })
+                }else{
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorCantidad:false}
+                     })
+                }
+            }else{
+                setErrores(errores=>{
+                    return{ 
+                        ...errores,
+                     errorCantidad:false}
+                 })
+            }
+                
+        }else
+
+        if(event.target.name == "m_rLargo"){
+            if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
+                if(Number(event.target.value)<=0){
+                        setErrores(errores=>{
+                            return{ 
+                                ...errores,
+                             errorLargo:true,
+                             errorTexto:"Ingrese un numero mayor a 0"
+
+                            }
+                         })
+                         
+                }else if(isNaN(Number(event.target.value))){
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorLargo:true,
+                         errorTexto:"Ingrese solo digitos"
+                        }
+                     })
+                }else{
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorLargo:false}
+                     })
+                }
+            }else{
+                setErrores(errores=>{
+                    return{ 
+                        ...errores,
+                     errorLargo:false}
+                 })
+            }
+        }else
+        if(event.target.name == "m_rAlto"){
+            if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
+                if(Number(event.target.value)<=0){
+                        setErrores(errores=>{
+                            return{ 
+                                ...errores,
+                             errorAlto:true,
+                             errorTexto:"Ingrese un numero mayor a 0"
+                            
+                            }
+                         })
+                }else if(isNaN(Number(event.target.value))){
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorAlto:true,
+                         errorTexto:"Ingrese solo digitos"
+                        }
+                     })
+                }else{
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorAlto:false}
+                     })
+                }
+            }else{
+                setErrores(errores=>{
+                    return{ 
+                        ...errores,
+                     errorAlto:false}
+                 })
+            }
+        }else
+        if(event.target.name == "m_rAncho"){
+            if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
+                if(Number(event.target.value)<=0){
+                        setErrores(errores=>{
+                            return{ 
+                                ...errores,
+                             errorAncho:true,
+                             errorTexto:"Ingrese un numero mayor a 0"
+                            
+                            }
+                         })
+                }else if(isNaN(Number(event.target.value))){
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorAncho:true,
+                         errorTexto:"Ingrese solo digitos"
+                        }
+                     })
+                }else{
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorAncho:false}
+                     })
+                }
+            }else{
+                setErrores(errores=>{
+                    return{ 
+                        ...errores,
+                     errorAncho:false}
+                 })
+            }
+        }else
+        if(event.target.name == "m_rPeso"){
+            if(event.target.value!==""){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
+                if(Number(event.target.value)<=0){
+                        setErrores(errores=>{
+                            return{ 
+                                ...errores,
+                             errorPeso:true,
+                             errorTexto:"Ingrese un numero mayor a 0"
+                            
+                            }
+                         })
+                }else if(isNaN(Number(event.target.value))){
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorPeso:true,
+                         errorTexto:"Ingrese solo digitos"
+                        }
+                     })
+                }else{
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorPeso:false}
+                     })
+                }
+            }else{
+                setErrores(errores=>{
+                    return{ 
+                        ...errores,
+                     errorPeso:false}
+                 })
+            }
+        }
+
         setPaquete(paquete => {
             return {
                 ...paquete,
@@ -303,6 +500,8 @@ export default function DialogoNuevoPaquete(props) {
                                                disabled={props.disabled}
                                                placeholder="Ctd"
                                                name="m_nCantidad"
+                                               helperText={errores.errorCantidad?errores.errorTexto:""}
+                                               error={errores.errorCantidad}
                                     />
                                 </div>
                             </Grid>
@@ -338,7 +537,6 @@ export default function DialogoNuevoPaquete(props) {
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
                                                onChange={(event) => handleChangePaquetev2(event)}
-                                               className="form-control"
                                                type="text"
                                                label="Peso"
                                                required
@@ -346,6 +544,8 @@ export default function DialogoNuevoPaquete(props) {
                                                disabled={props.disabled}
                                                placeholder="kg"
                                                name="m_rPeso"
+                                               helperText={errores.errorPeso?errores.errorTexto:""}
+                                               error={errores.errorPeso}
                                     />
                                 </div>
                             </Grid>
@@ -353,16 +553,17 @@ export default function DialogoNuevoPaquete(props) {
                             {paquete.m_nIdTipo != 1 &&
                             <Grid item xs={6}>
                                 <div className="input">
-                                    <TextField variant="outlined" margin="dense"
+                                <TextField variant="outlined" margin="dense"
                                                onChange={(event) => handleChangePaquetev2(event)}
-                                               className="form-control"
                                                type="text"
-                                               value={paquete.m_rLargo}
                                                label="Largo"
                                                required
+                                               value={paquete.m_rLargo}
                                                disabled={props.disabled}
                                                placeholder="cms"
                                                name="m_rLargo"
+                                               helperText={errores.errorLargo?errores.errorTexto:""}
+                                               error={errores.errorLargo}
                                     />
                                 </div>
                             </Grid>
@@ -372,7 +573,6 @@ export default function DialogoNuevoPaquete(props) {
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
                                                onChange={(event) => handleChangePaquetev2(event)}
-                                               className="form-control"
                                                type="text"
                                                required
                                                label="Ancho"
@@ -380,6 +580,8 @@ export default function DialogoNuevoPaquete(props) {
                                                disabled={props.disabled}
                                                placeholder="cms"
                                                name="m_rAncho"
+                                               helperText={errores.errorAncho?errores.errorTexto:""}
+                                               error={errores.errorAncho}
                                     />
                                 </div>
                             </Grid>
@@ -389,7 +591,6 @@ export default function DialogoNuevoPaquete(props) {
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
                                                onChange={(event) => handleChangePaquetev2(event)}
-                                               className="form-control"
                                                type="text"
                                                value={paquete.m_rAlto}
                                                label="Alto"
@@ -397,6 +598,8 @@ export default function DialogoNuevoPaquete(props) {
                                                disabled={props.disabled}
                                                placeholder="cms"
                                                name="m_rAlto"
+                                               helperText={errores.errorAlto?errores.errorTexto:""}
+                                               error={errores.errorAlto}
                                     />
                                 </div>
                             </Grid>
@@ -428,6 +631,7 @@ export default function DialogoNuevoPaquete(props) {
                                                value={paquete.m_sDescripcion}
                                                disabled={props.disabled}
                                                placeholder="Descripción"
+                                               helperText="hola mi estimado"
                                                name="m_sDescripcion"
                                     />
                                 </div>

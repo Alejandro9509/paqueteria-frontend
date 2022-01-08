@@ -153,7 +153,7 @@ function Recoleccion() {
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataFechaFinal, setDataFechaFinal] = React.useState([]);
     const [dataFechaInicial, setDataFechaInicial] = React.useState([]);
-    const [dataComplementosSAT, setDataComplementosSAT] = useState([])
+    const [dataComplementosSAT, setDataComplementosSAT] = React.useState([])
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
     const [dataCiudadF, setDataCiudadF] = React.useState([]);
@@ -172,6 +172,8 @@ function Recoleccion() {
     const [dataOperador, setDataOperador] = React.useState([]);
     const [dataTipoUnidad, setDataTipoUnidad] = React.useState([]);
     const [dataUnidad, setDataUnidad] = React.useState([]);
+    //error en zona operativa y zona tarifa
+    const [errorZonas, setErrorZonas] = React.useState(false)
     //variables de valores por defecto
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusRecoleccion: 0,
@@ -627,6 +629,7 @@ function Recoleccion() {
         })
         if (input === "codigoPostalRec") {
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
+                console.log(data)
                 /*setRecoleccionDD(recoleccionDD => {
                     return{
                         ...recoleccionDD,
@@ -800,15 +803,16 @@ function Recoleccion() {
         })
     }
 
-    const mostrarDialogoMapaDestinatario = (isVisible) => {
-        setState({
-            ...state,
-            showConfirmarUbicacionDestinatario:isVisible,     
-            titulo: "Entrega"
-        })
+    const validarZonas = (error) =>{
+        setErrorZonas(error)
     }
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
+        if(errorZonas){
+            showSuccess("Verificar la zona operativa y zona tarifa")
+        }else{
+
+        
         setState({
             ...state,
             showConfirmarUbicacion: false,
@@ -1009,7 +1013,7 @@ function Recoleccion() {
                     showSuccess(err);
                 });
         }
- 
+ }
     };
 
     function getTipoCambio() {
@@ -1157,7 +1161,6 @@ function Recoleccion() {
 
     const setRecoleccionDataParaConsultaModificacion = (respuesta) => {
         setDataRecoleccionConsulta(respuesta)
-        console.log(respuesta.data)
         getDataParaEditar()
         getAllCiudades()
         getAllZonas()
@@ -3731,6 +3734,7 @@ function Recoleccion() {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeRemitente}
                                                                         dataPadreConsulta={dataRecoleccionConsulta}
+                                                                        validarZonas={validarZonas}
                                                                     />
                                                                 }
 
@@ -3793,6 +3797,7 @@ function Recoleccion() {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeDestinatario}
                                                                         dataPadreConsulta={dataRecoleccionConsulta}
+                                                                        validarZonas={validarZonas}
                                                                     />
                                                                 }
 
