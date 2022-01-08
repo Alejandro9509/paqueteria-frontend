@@ -51,10 +51,9 @@ class ConfirmarUbicacion extends Component {
                 let municipio = this.props.direccion.municipioTexto;
                 let calle = this.props.direccion.calleRemitente 
                 let colonia = this.props.direccion.coloniaRemitente 
-                let numeroInterior =  this.props.direccion.numeroIntRemitente
+                let numeroExterior =  this.props.direccion.numeroExtRemitente
                 let codigoPostal = this.props.direccion.codigoPostalRemitente.m_sCP
-
-                searchLocationAddress(`${calle},${numeroInterior},${colonia},${codigoPostal},${municipio}`).then(data => {
+                searchLocationAddress(`${calle} ${numeroExterior} ${colonia} ${codigoPostal} ${municipio}`).then(data => {
                     this.setState({
                         coordenadas: {lat:data.y, lng:data.x}
                     })
@@ -79,10 +78,10 @@ class ConfirmarUbicacion extends Component {
        let municipio = this.props.direccion.municipioTexto;
        let calle =  this.props.direccion.calleDestinatario;
        let colonia =  this.props.direccion.coloniaDestinatario;
-       let numeroInterior = this.props.direccion.numeroIntDestinatario
+       let numeroExterior = this.props.direccion.numeroExtDestinatario
        let codigoPostal = this.props.direccion.codigoPostalDestinatario.m_sCP
 
-       searchLocationAddress(`${calle},${numeroInterior},${colonia},${codigoPostal},${municipio}`).then(data => {
+       searchLocationAddress(`${calle} ${numeroExterior} ${colonia} ${codigoPostal} ${municipio}`).then(data => {
            this.setState({
                coordenadas: {lat:data.y, lng:data.x}
            })
@@ -144,7 +143,7 @@ class ConfirmarUbicacion extends Component {
                         </Grid>
                         <Grid item sm={12}>
                             <Typography
-                                variant={"h3"}>Dirección:{this.props.remitente?(this.props.esDiferenteRecoleccion? this.props.recoleccionDD.domicilioRec:(`${this.props.direccion.calleRemitente}, ${this.props.direccion.numeroExtRemitente}, ${this.props.direccion.coloniaRemitente} `)):(this.props.esDiferenteEntrega?this.props.entregaDD.domicilioEnt:(`${this.props.direccion.calleDestinatario}, ${this.props.direccion.numeroExtDestinatario}, ${this.props.direccion.coloniaDestinatario} `))}
+                                variant={"h3"}>Dirección:{this.props.remitente?(this.props.esDiferenteRecoleccion? this.props.recoleccionDD.domicilioRec:(`${this.props.direccion.calleRemitente},${this.props.direccion.numeroExtRemitente},${this.props.direccion.coloniaRemitente} `)):(this.props.esDiferenteEntrega?this.props.entregaDD.domicilioEnt:(`${this.props.direccion.calleDestinatario},${this.props.direccion.numeroExtDestinatario},${this.props.direccion.coloniaDestinatario} `))}
                                 </Typography>
                         </Grid>
 
