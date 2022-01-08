@@ -20,6 +20,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
 import {confirmAlert} from "react-confirm-alert";
+import AgregarRemolques from "./AgregarRemolques";
 
 const useStyles = theme => ({
     visuallyHidden: {
@@ -47,6 +48,8 @@ class UnidadesList extends Component {
         this.getAllUnidades = this.getAllUnidades.bind(this)
         this.handleRequestSort = this.handleRequestSort.bind(this)
         this.handleSelectAllClickevent = this.handleSelectAllClickevent.bind(this)
+        this.solicitarRemolques = this.solicitarRemolques.bind(this)
+
     }
 
     componentDidMount() {
@@ -106,15 +109,17 @@ class UnidadesList extends Component {
         this.props.selectUnidades([])
     };
 
-    solicitarRemolques(row){
 
+
+    solicitarRemolques(row){
+        this.props.cerrarDialogos()
         confirmAlert({
             title: 'Confirmar',
             message: '¿Desea agregar remolques?',
             buttons: [
                 {
-                    label: 'Si',
-                    onClick: () => this.setState({unidadSeleccionadaRemolques: row, openRemolques: true})
+                    label: 'Sí',
+                    onClick: () => this.props.asignarRemolques(row)
                 },
                 {
                     label: 'No',
@@ -154,14 +159,14 @@ class UnidadesList extends Component {
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell padding="checkbox">
+                                {/*<TableCell padding="checkbox">
                                     <Checkbox
                                         indeterminate={this.props.unidadesSeleccionadas.length > 0 && this.props.unidadesSeleccionadas.length < this.state.unidades.length}
                                         checked={this.state.unidades.length > 0 && this.props.unidadesSeleccionadas.length === this.state.unidades.length}
                                         onChange={this.handleSelectAllClickevent}
                                         inputProps={{'aria-label': 'select all desserts'}}
                                     />
-                                </TableCell>
+                                </TableCell>*/}
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sDescripcion" ? this.state.order : false}
                                     align="left">
@@ -198,7 +203,7 @@ class UnidadesList extends Component {
                                         <TableRow>
                                             <TableCell padding="checkbox">
                                                 <Checkbox
-                                                    onClick={(event) => this.handleClick(event, u)}
+                                                    onClick={(event) => this.solicitarRemolques( u)}
                                                     checked={isItemSelected}
                                                     inputProps={{'aria-labelledby': labelId}}
                                                 />
