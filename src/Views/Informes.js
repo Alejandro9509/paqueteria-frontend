@@ -191,6 +191,11 @@ function Informes({history}) {
             width: 200,
         },
         {
+            headerName: "Estatus",
+            field: "m_sEstatusInforme",
+            width: 200,
+        },
+        {
             headerName: "Viaje",
             field: "m_sFolioViaje",
             width: 125,
