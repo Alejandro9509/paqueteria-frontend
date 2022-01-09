@@ -761,7 +761,7 @@ function Viajes() {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        /*agregarViajeSalida(params)
+        agregarViajeSalida(params)
             .then((respuesta) => {
                 showSuccess(respuesta.data);
                 console.log(respuesta.data);
@@ -771,7 +771,7 @@ function Viajes() {
             .catch((err) => {
                 console.log(err);
                 showSuccess(err);
-            });*/
+            });
 
 
     }
@@ -806,7 +806,7 @@ function Viajes() {
 
         console.log(params)
         console.log(JSON.stringify(params))
-        /*agregarViajeLlegada(params)
+        agregarViajeLlegada(params)
             .then((respuesta) => {
                 showSuccess(respuesta.data);
                 console.log(respuesta.data);
@@ -817,7 +817,7 @@ function Viajes() {
             .catch((err) => {
                 console.log(err);
                 showSuccess(err);
-            });*/
+            });
 
     }
 
