@@ -262,6 +262,8 @@ function RemitenteDestinatario(props) {
             obtenerByIdZonaOperativa(
               respuesta.data.m_nIdZonaOperativaEntrega
             ).then(({ data }) => {
+              console.log("data que setea")
+              console.log(data)
               setState((state) => {
                 return {
                   ...state,
@@ -336,9 +338,9 @@ function RemitenteDestinatario(props) {
               };
             });
           });
-
           /**Si se van a mostrar datos de destinatario*/
         } else if (props.destinatario) {
+
           let estado =  respuesta.data.m_nIdEstadoDestinatario< 10 ? `0${respuesta.data.m_nIdEstadoDestinatario}` :  respuesta.data.m_nIdEstadoDestinatario;
             setState((state) => {
               return {
@@ -376,7 +378,6 @@ function RemitenteDestinatario(props) {
                 },
               };
             });
-            console.log(cp.data)
             obtenerZonaOperativaByIdCodigoPostal(cp.data.m_sCP).then(
               ({ data }) => {
                 setDataZonasOperativas(data);
@@ -400,6 +401,7 @@ function RemitenteDestinatario(props) {
           );
 
           if (respuesta.data.EntregarMismoDomicilio) {
+            
             setState((state) => {
               return {
                 ...state,
@@ -435,6 +437,7 @@ function RemitenteDestinatario(props) {
   );
 
   const handleChange = (event) => {
+
     event.preventDefault();
     setState((state) => {
       return {
@@ -450,52 +453,29 @@ function RemitenteDestinatario(props) {
   };
 
   const handleChangeAutocomplete = (input, newValue) => {
-    let zonasNoEncontradas = false
-    if(input=="codigoPostal"){
-      obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then((zonaOperativa)=>{
-        obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then((zonaTarifa)=>{
-          if(zonaOperativa.data.length == 0 ){
-            zonasNoEncontradas = true
-            showSuccess(`No se encontro zona operativa para el codigo postal ${newValue.m_sCP}. Revise con un supervisor`)
-            props.validarZonas(true)
-            setState((state)=>({
+if(input=="codigoPostal"){
+  obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(
+    ( zonaOperativa ) => {
+      obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(
+          ( zonaTarifa ) => {
+            setState((state) => ({
               ...state,
-              zonaOperativa: null,
-            }))
-          }else{
-            props.validarZonas(false)
-            setState((state)=>({
-              ...state,
-              zonaOperativa:  zonaOperativa.data[0] 
-            }))
-            }
-          
-          
-           if(zonaTarifa.data.length == 0){
-            zonasNoEncontradas = true
-            showSuccess(`No se encontro zona tarifa para el codigo postal ${newValue.m_sCP}. Revise con un supervisor`)
-            props.validarZonas(true)
-            setState((state)=>({
-              ...state,
-              zonaTarifa: null
-            }))
-          }else{
-            props.validarZonas(false)
-            setState((state)=>({
-            ...state,
-            zonaTarifa: zonaTarifa.data[0] 
-            }))
+              zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+              zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null
+            }));
           }
-     
-        })
-      })
+      );
+
     }
-    if(!zonasNoEncontradas){
-         setState(() => ({
+);
+  
+}
+
+     setState(() => ({
       ...state,
       [input]: newValue,
     }));
-    }
+    
   };
 
   const handleClickCodigosPostalesInput = (input) => {

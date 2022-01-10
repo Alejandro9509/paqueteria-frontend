@@ -196,7 +196,6 @@ function Embarque(props) {
     const [dataTipoCobro, setDataTipoCobro] = React.useState([]);
     const [dataTipoCambio, setDataTipoCambio] = React.useState([]);
     const [dataCiudad, setDataCiudad] = React.useState([]);
-    const [errorZonas, setErrorZonas] = React.useState(false)
     const [dataCodigosPostalesRemitente, setDataCodigosPostalesRemitente] = React.useState([]);
     const [dataCodigosPostalesDestinatario, setDataCodigosPostalesDestinatario] = React.useState([]);
     const [dataCodigosPostalesEntregaDD, setDataCodigosPostalesEntregaDD] = React.useState([]);
@@ -820,8 +819,8 @@ function Embarque(props) {
         if (state.idEmbarque != 0){
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
             if(state.diferenteEntrega
-                && !isValidText(entregaDD.latitudEnt)
-                && !isValidText(entregaDD.longitudEnt)
+                && !isValidText(destinatario.latitudD)
+                && !isValidText(destinatario.longitudD)
                 && !coordenadas){
                 mostrarDialogoMapa(true)
                 return false
@@ -863,16 +862,35 @@ function Embarque(props) {
         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
         1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
     }
-    const validarZonas = (error) =>{
-        setErrorZonas(error)
-    }
+ 
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
-        if(errorZonas){
-            showSuccess("Verificar la zona operativa y zona tarifa")
-        }else{
+        let error = false
 
-        
+        if(state.diferenteEntrega){
+            if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
+                error = true
+                showSuccess("Verificar la zona operativa de diferente domicilio entrega")
+            }else if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
+                error = true
+                showSuccess("Verificar la zona tarifa de diferente domicilio entrega")
+            }
+        }else if(destinatario.zonaOperativaDestinatario?.m_nIdZona==undefined){
+            error = true
+            showSuccess("Verificar la zona operativa de destinatario")
+         }else if(destinatario.zonaTarifaDestinatario?.m_nIdZona==undefined){
+            error = true
+            showSuccess("Verificar la zona tarifa de destinatario")
+         }
+          else if(destinatario.correoDestinatario == ""){
+            error = true
+            showSuccess("Error al agregar recoleccion: El correo del destinatario es un campo requerido")
+        }
+        if(remitente.correoRemitente == "" ){
+            error = true
+            showSuccess("Error al agregar recoleccion: El correo del remitente es un campo requerido")
+        }
+        if(!error){
         setState({
             ...state,
             showConfirmarUbicacion: false
@@ -1312,7 +1330,7 @@ function Embarque(props) {
                 ...state,
                 agregar: "Consultar",
             });
-            setDataParaConsultarModificar(respuesta, false)
+            setDataParaConsultarModificar(respuesta, false,"Consultar")
 
         });
     }
@@ -1330,7 +1348,7 @@ function Embarque(props) {
                 ...state,
                 agregar: "Agregar",
             });
-            setDataParaConsultarModificar(respuesta, true)
+            setDataParaConsultarModificar(respuesta, true,"Agregar")
 
         });
     }
@@ -1338,7 +1356,7 @@ function Embarque(props) {
     function handleShowAgregar() {
         let today = new Date();
         limpiarCamposAgregar()
-        getDataParaEditar()
+        getDataParaEditar("Agregar")
         setState(state => {
             return {
                 ...state,
@@ -1367,14 +1385,14 @@ function Embarque(props) {
                 agregar: "Modificar",
                 embarqueConGuia: data.find((o) => o.m_nIdEmbarque == id).m_sFolioGuia != null,
             });
-            setDataParaConsultarModificar(respuesta, false)
+            setDataParaConsultarModificar(respuesta, false,"Modificar")
         });
     }
 
     //Funcion para mostrar datos de recoleccion para crear embarque
     function setDataRecoleccionOnState(respuesta) {
         setDataEmbarqueConsulta(respuesta)
-        getDataParaEditar()
+        getDataParaEditar("Consultar")
         getAllCiudades()
         getAllSucursales()
         getAllEstatusEmbarque()
@@ -1504,9 +1522,10 @@ function Embarque(props) {
     }
 
     //Funcion para mostrar datos de embarque para consultar o modificar
-    const setDataParaConsultarModificar = (respuesta, duplicar) => {
+    const setDataParaConsultarModificar = (respuesta, duplicar,operacion) => {
+
         setDataEmbarqueConsulta(respuesta)
-        getDataParaEditar()
+        getDataParaEditar(operacion)
         getAllCiudades()
 
         /**Si es entrega en sucursal*/
@@ -1807,7 +1826,7 @@ function Embarque(props) {
         }))
     }
 
-    const getDataParaEditar = () => {
+    const getDataParaEditar = (operacion) => {
         getAllSucursales();
         getAllEstatusEmbarque();
         getAllTipoCobro();
@@ -1815,13 +1834,13 @@ function Embarque(props) {
         getTipoCambio()
         getAllTiposSeguro()
         getAllEstados()
-        getParametrosConfiguracion()
+        getParametrosConfiguracion(operacion)
     }
 
-    async function getParametrosConfiguracion(){
+    async function getParametrosConfiguracion(operacion){
 
         obtenerParametrosConfiguracion().then(respuesta=>{
-            if (state.agregar === "Agregar") {
+            if (operacion === "Agregar") {
                 setState((config) => {
                     console.log(state.tipoCobro)
                     return {
@@ -1834,7 +1853,9 @@ function Embarque(props) {
                     }
                 })
 
-                   setConfiguraciones((config) => {
+                  
+            }
+          setConfiguraciones((config) => {
                 console.log(respuesta.data.TipoCobro)
                 return {
                     ...config,
@@ -1854,8 +1875,6 @@ function Embarque(props) {
                     idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
                 }
             })
-            }
-         
         })
     }
 
@@ -3240,7 +3259,7 @@ function Embarque(props) {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeRemitente}
                                                                         dataPadreConsulta={dataEmbarqueConsulta}
-                                                                        validarZonas={validarZonas}
+                                                                        
                                                                     />
                                                                 }
 
@@ -3267,7 +3286,7 @@ function Embarque(props) {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeDestinatario}
                                                                         dataPadreConsulta={dataEmbarqueConsulta}
-                                                                        validarZonas={validarZonas}
+                                                                      
                                                                     />
                                                                 }
 
