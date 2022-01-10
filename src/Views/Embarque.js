@@ -415,7 +415,7 @@ function Embarque(props) {
         },
         {
             headerName: "Folio Informe",
-            field: "m_nFolioInforme",
+            field: "m_sFolioInforme",
             width: 150,
         },
         {
@@ -1694,7 +1694,7 @@ function Embarque(props) {
                 folioRecoleccion: duplicar ? "" : respuesta.data.m_sFolioRecoleccion,
                 folioEmbarque: respuesta.data.m_sFolioEmbarque,
                 folioGuia: duplicar ? "" : respuesta.data.m_sFolioGuia,
-                folioInforme: duplicar ? "" : respuesta.data.m_nFolioInforme,
+                folioInforme: duplicar ? "" : respuesta.data.m_sFolioInforme,
                 fechaHoraRegistro: getCurrentDateTime(),
                 estatusEmbarque: duplicar ? 16 : respuesta.data.m_nIdEstatusEmbarque,
                 moneda: respuesta.data.m_nIdMoneda,
