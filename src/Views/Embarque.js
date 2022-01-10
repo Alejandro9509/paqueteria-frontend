@@ -1384,6 +1384,7 @@ function Embarque(props) {
         getAllEstatusEmbarque()
         getAllTiposSeguro()
 
+        //PAQUETES
         respuesta.data.m_parrPaquetes.forEach((p) => {
             p.m_nClaveSATProducto = p.m_sClaveSATProducto
             p.m_nClaveSATUnidad = p.m_sClaveSATUnidad
@@ -1399,6 +1400,8 @@ function Embarque(props) {
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_parrPaquetes)
+
+        //COMPLEMENTOS SAT
         respuesta.data.m_arrClsComplementoSAT.forEach(item => {
             item.id = item.m_nIdComplementoSAT
             item.cantidad = item.m_nCantidad
@@ -1418,6 +1421,8 @@ function Embarque(props) {
             item.peso = item.m_xPeso
         })
         setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
+
+        //CLIENTE
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
             setState(state => {
                 return {
@@ -1429,6 +1434,8 @@ function Embarque(props) {
                 }
             })
         })
+
+        //CONCEPTOS
         let conceptosCast = []
         conceptosCast = respuesta.data.m_arrConceptos.map(item => ({
             id: Math.floor(Math.random() * 10000),
@@ -1441,52 +1448,66 @@ function Embarque(props) {
             nombreConcepto: item.m_sConcepto,
             descuento: item.m_c_Descuento
         }))
-
         setDataConceptos(conceptosCast)
-        if (respuesta.data.m_bEntregaDiferenteDomicilio) {
-            setEntregaDD(entregaDD =>{
+
+        //ENTREGA EN SUCURSAL
+        if (respuesta.data.m_bEntregaSucursal){
+            setState(state => {
                 return {
-                    ...entregaDD,
-                    estadoEnt: respuesta.data.m_nIdEstadoEntrega || 0,
-                    municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega || 0,
-                    domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
-                    entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
-                    datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                    ...state,
+                    entregaEnSucursal: respuesta.data.m_bEntregaSucursal,
+                    idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
+                    diferenteEntrega: false,
                 }
             })
-            let estado = `${respuesta.data.m_nIdEstadoEntrega}`
-            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
-                setDataMunicipiosEntregaDD(data)
-            })
-            obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
+        }else{
+            //ENTREGA EN DIFERENTE DOMICILIO
+            if (respuesta.data.m_bEntregaDiferenteDomicilio) {
                 setEntregaDD(entregaDD =>{
                     return {
                         ...entregaDD,
-                        codigoPostalEnt: {
-                            m_nIdCP: cp.data.m_nIdCP,
-                            m_sCP: cp.data.m_sCP,
-                            m_sColonia: cp.data.m_sColonia
-                        },
+                        estadoEnt: respuesta.data.m_nIdEstadoEntrega || 0,
+                        municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega || 0,
+                        domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
+                        entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
+                        datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
                     }
                 })
-            })
-            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
-                setEntregaDD(entregaDD => {
-                    return {
-                        ...entregaDD,
-                        zonaOperativaEnt: data
-                    }
+                let estado = `${respuesta.data.m_nIdEstadoEntrega}`
+                obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+                    setDataMunicipiosEntregaDD(data)
                 })
-            })
-            obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifaEntrega).then(({data}) => {
-                setEntregaDD(entregaDD => {
-                    return {
-                        ...entregaDD,
-                        zonaTarifaEnt: data
-                    }
+                obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
+                    setEntregaDD(entregaDD =>{
+                        return {
+                            ...entregaDD,
+                            codigoPostalEnt: {
+                                m_nIdCP: cp.data.m_nIdCP,
+                                m_sCP: cp.data.m_sCP,
+                                m_sColonia: cp.data.m_sColonia
+                            },
+                        }
+                    })
                 })
-            })
+                obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
+                    setEntregaDD(entregaDD => {
+                        return {
+                            ...entregaDD,
+                            zonaOperativaEnt: data
+                        }
+                    })
+                })
+                obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifaEntrega).then(({data}) => {
+                    setEntregaDD(entregaDD => {
+                        return {
+                            ...entregaDD,
+                            zonaTarifaEnt: data
+                        }
+                    })
+                })
+            }
         }
+
         setState(state => {
             return {
                 ...state,
