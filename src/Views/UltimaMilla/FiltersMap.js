@@ -41,6 +41,7 @@ import MessageIcon from "@material-ui/icons/Message";
 import UpdateIcon from '@material-ui/icons/Update';
 import PaquetesPlaneacion from "./PaquetesPlaneacion";
 import {Autocomplete} from "@material-ui/lab";
+import AgregarRemolques from "./AgregarRemolques";
 
 const useStyles = theme => ({
     search: {
@@ -129,6 +130,10 @@ class FiltersMap extends Component {
         this.changeDate = this.changeDate.bind(this)
         this.changeConfiguration = this.changeConfiguration.bind(this)
         this.changeDateConsult = this.changeDateConsult.bind(this)
+        this.cerrarDialogos = this.cerrarDialogos.bind(this)
+        this.asignarRemolques = this.asignarRemolques.bind(this)
+        this.asignarRemolquesUnidad = this.asignarRemolquesUnidad.bind(this)
+
     }
 
     componentDidMount() {
@@ -227,9 +232,14 @@ class FiltersMap extends Component {
 
         }
     }
-
+    asignarRemolques(row){
+        this.setState({
+            unidad: row,
+            openUnidades: false,
+            openRemolques: true
+        })
+    }
     reasignarOperador(unidad) {
-        console.log(unidad)
         obtenerOperadores().then(({data}) => {
 
             this.setState({
@@ -248,6 +258,15 @@ class FiltersMap extends Component {
             openZona: false,
             openDate: false,
             openUnidades: false,
+            openRemolques:false,
+            openPaquetes: false, openConfiguration: false})
+    }
+    cerrarDialogos(){
+        this.setState({
+            openSucursales: false,
+            openZona: false,
+            openDate: false,
+            openUnidades: false,
             openPaquetes: false, openConfiguration: false})
     }
 
@@ -262,6 +281,29 @@ class FiltersMap extends Component {
         })
     }
 
+    asignarRemolquesUnidad(remolques) {
+        console.log(remolques)
+        const {unidad} = this.state
+        unidad.idRemolque1 = remolques.IdRemolque1.m_nIdUnidad
+        unidad.idRemolque2 =  remolques.IdRemolque2 ? remolques.IdRemolque2.m_nIdUnidad : 0
+        unidad.idDolly =  remolques.IdDolly ? remolques.IdDolly.m_nIdUnidad : 0
+        const selectedIndex = this.state.unidadesSeleccionadas.map(u => u.m_nIdUnidad).indexOf(unidad.m_nIdUnidad);
+        let newSelected = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(this.state.unidadesSeleccionadas, unidad);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(this.state.unidadesSeleccionadas.slice(1));
+        } else if (selectedIndex === this.state.unidadesSeleccionadas.length - 1) {
+            newSelected = newSelected.concat(this.state.unidadesSeleccionadas.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                this.state.unidadesSeleccionadas.slice(0, selectedIndex),
+                this.state.unidadesSeleccionadas.slice(selectedIndex + 1),
+            );
+        }
+        this.selectUnidades(newSelected)
+    }
 
     searchSucursal(event) {
         event.preventDefault()
@@ -277,6 +319,7 @@ class FiltersMap extends Component {
         const {classes} = this.props;
         return (
             <div className="leaflet-top leaflet-left" style={{paddingLeft: "40px"}}>
+                <AgregarRemolques asignarRemolquesUnidad={this.asignarRemolquesUnidad} open={this.state.openRemolques} close={() => this.setState({openRemolques: false})} />
 
                 <PaquetesPlaneacion open={this.props.data.modoPlaneacion && this.state.openPaquetes}
                                     close={() => this.setState({openPaquetes: false})}
@@ -544,7 +587,7 @@ class FiltersMap extends Component {
                                 <UnidadesList reasignarOperador={this.reasignarOperador}
                                               sucursalId={this.state.sucursalSeleccionada ? this.state.sucursalSeleccionada.m_nIdSucursal : 0 }
                                               unidadesSeleccionadas={this.state.unidadesSeleccionadas}
-                                              selectUnidades={this.selectUnidades}>
+                                              selectUnidades={this.selectUnidades} cerrarDialogos={this.cerrarDialogos} asignarRemolques={this.asignarRemolques}>
 
                                 </UnidadesList>
                             }>
