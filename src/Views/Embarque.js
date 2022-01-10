@@ -300,11 +300,11 @@ function Embarque(props) {
                                 className="btn btn-default btn-xs"
                                 onClick={() => confirmAlert({
                                     title: 'Confirmar Eliminar',
-                                    message: 'Está seguro de eliminar Embarque?',
+                                    message: '¿Está seguro de eliminar Embarque?',
                                     buttons: [
                                         {
                                             label: 'Si',
-                                            onClick: () => handleEliminar(row.row.m_nIdEmbarque)
+                                            onClick: () => handleEliminar(row.row)
                                         },
                                         {
                                             label: 'No',
@@ -1172,8 +1172,12 @@ function Embarque(props) {
         });
     }
 
-    function handleEliminar(id) {
-        var derecho;
+    function handleEliminar(embarque) {
+        let derecho;
+        if (embarque.m_sEstatusEmbarque !== "Cancelado"){
+            showSuccess("El embarque tiene que estar cancelado.");
+            return;
+        }
         validarPermisos(state)
             .then((respuesta) => {
                 //showSuccess(respuesta.data)
@@ -1183,8 +1187,7 @@ function Embarque(props) {
                     showSuccess("El usuario no tiene derechos para realizar el proceso");
                     return;
                 }
-
-                eliminarEmbarques(id, state.CreadoPor)
+                eliminarEmbarques(embarque.m_nIdEmbarque, state.CreadoPor)
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
                         // getAllEmbarque();
@@ -1194,7 +1197,7 @@ function Embarque(props) {
                     });
             })
             .catch((err) => {
-                showSuccess(err);
+                showSuccess("Hubo un error al intentar eliminar.");
             });
     }
 
