@@ -493,12 +493,12 @@ export default function DialogoNuevoPaquete(props) {
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
                                                onChange={(event) => handleChangePaquetev2(event)}
-                                               type="text"
-                                               label="Ctd"
+                                               type="number"
+                                               label="Cantidad"
                                                required
                                                value={paquete.m_nCantidad}
                                                disabled={props.disabled}
-                                               placeholder="Ctd"
+                                               placeholder="Cantidad"
                                                name="m_nCantidad"
                                                helperText={errores.errorCantidad?errores.errorTexto:""}
                                                error={errores.errorCantidad}

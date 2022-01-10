@@ -2813,7 +2813,8 @@ function Embarque(props) {
                         <div id="Agregar"
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
 
-                            <form className="j-forms row" >
+                            <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if(e.code === 13) {e.preventDefault()}}}>
+
                                 <div className="form-content">
                                     {/*<div
                                         className="wizard-breadcrumb number-style"
