@@ -19,6 +19,8 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import {obtenerOperadores} from "../../Util/Contexts/OperadoresContext";
+import {confirmAlert} from "react-confirm-alert";
+import AgregarRemolques from "./AgregarRemolques";
 
 const useStyles = theme => ({
     visuallyHidden: {
@@ -46,6 +48,8 @@ class UnidadesList extends Component {
         this.getAllUnidades = this.getAllUnidades.bind(this)
         this.handleRequestSort = this.handleRequestSort.bind(this)
         this.handleSelectAllClickevent = this.handleSelectAllClickevent.bind(this)
+        this.solicitarRemolques = this.solicitarRemolques.bind(this)
+
     }
 
     componentDidMount() {
@@ -105,7 +109,27 @@ class UnidadesList extends Component {
         this.props.selectUnidades([])
     };
 
-    handleClick(event, row) {
+
+
+    solicitarRemolques(row){
+        this.props.cerrarDialogos()
+        confirmAlert({
+            title: 'Confirmar',
+            message: '¿Desea agregar remolques?',
+            buttons: [
+                {
+                    label: 'Sí',
+                    onClick: () => this.props.asignarRemolques(row)
+                },
+                {
+                    label: 'No',
+                    onClick: () => this.handleClick(row)
+                }
+            ]
+        })
+    }
+
+    handleClick( row) {
         const selectedIndex = this.props.unidadesSeleccionadas.map(u => u.m_nIdUnidad).indexOf(row.m_nIdUnidad);
         let newSelected = [];
 
@@ -131,19 +155,18 @@ class UnidadesList extends Component {
 
         return (
             <div style={{height:"400px", overflow:"auto"}}>
-
                 <TableContainer>
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell padding="checkbox">
+                                {/*<TableCell padding="checkbox">
                                     <Checkbox
                                         indeterminate={this.props.unidadesSeleccionadas.length > 0 && this.props.unidadesSeleccionadas.length < this.state.unidades.length}
                                         checked={this.state.unidades.length > 0 && this.props.unidadesSeleccionadas.length === this.state.unidades.length}
                                         onChange={this.handleSelectAllClickevent}
                                         inputProps={{'aria-label': 'select all desserts'}}
                                     />
-                                </TableCell>
+                                </TableCell>*/}
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sDescripcion" ? this.state.order : false}
                                     align="left">
@@ -175,13 +198,12 @@ class UnidadesList extends Component {
                             {
                                 this.stableSort(this.state.unidades, this.getComparator(this.state.order, this.state.orderBy)).map((u, index) => {
                                     const isItemSelected = isSelected(u.m_nIdUnidad);
-                                    console.log(isItemSelected)
                                     const labelId = `enhanced-table-checkbox-${index}`;
                                     return (
                                         <TableRow>
                                             <TableCell padding="checkbox">
                                                 <Checkbox
-                                                    onClick={(event) => this.handleClick(event, u)}
+                                                    onClick={(event) => this.solicitarRemolques( u)}
                                                     checked={isItemSelected}
                                                     disabled={!u.m_nIdOperador}
                                                     inputProps={{'aria-labelledby': labelId}}

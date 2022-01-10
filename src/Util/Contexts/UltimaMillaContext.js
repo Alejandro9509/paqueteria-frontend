@@ -331,6 +331,9 @@ function agregarRuta(idUltimaMilla, tour, data) {
         ultimaMillaObject.rutas.push({
             idOperador: u.m_nIdOperador,
             idUnidad: u.m_nIdUnidad,
+            idRemolque1: u.idRemolque1,
+            idRemolque2:u.idRemolque2,
+            idDolly: u.idDolly,
             guias: guias.map((g, index) => {
                 var tourReport = tour.tour.tourReports.find(t => t.vehicleId === ("vehicle" + u.m_nIdUnidad))
                 var distance = tourReport.legReports[index].distance
@@ -354,7 +357,6 @@ function agregarRuta(idUltimaMilla, tour, data) {
     data.zonasSeleccionada.forEach((z) => {
         ultimaMillaObject.zonas.push({id: z.m_nIdZona})
     })
-
     trackPromise(
         result = axios.post(url, Object.assign({}, ultimaMillaObject), {headers})
     );
