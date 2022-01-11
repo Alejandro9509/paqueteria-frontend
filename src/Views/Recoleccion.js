@@ -44,7 +44,7 @@ import {
     DialogTitle,
     FormControl,
     FormControlLabel, Grid,
-    InputLabel,
+    InputLabel, MenuItem,
     Select,
     Step,
     StepLabel,
@@ -291,7 +291,7 @@ function Recoleccion() {
         //Entrega
         diferenteEntrega: false,
         entregaEnSucursal: false,
-        idSucursalEntrega: 0,
+        idSucursalEntrega: "",
         /*ciudadEntrega: '',
         codigoPostalEntrega: '',
         zonaEntrega: '',
@@ -1399,7 +1399,7 @@ function Recoleccion() {
                 fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
                 entregaEnSucursal:respuesta.data.m_bEntregaSucursal,
-                idSucursalEntrega:respuesta.data.m_nIdSucursalEntrega
+                idSucursalEntrega:respuesta.data.m_nIdSucursalEntrega = 0 ? "" : respuesta.data.m_nIdSucursalEntrega
 
             }
         });
@@ -3348,7 +3348,7 @@ function Recoleccion() {
                         </div>
 
                         <div id="Agregar" className="tab-pane fade">
-                            <form className="j-forms">
+                            <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if(e.code === 13) {e.preventDefault()}}}>
                                 <div className="form-content">
                                     <div
                                         className="wizard-breadcrumb number-style"
@@ -3900,6 +3900,7 @@ function Recoleccion() {
                                       fullWidth
                                       variant="outlined"
                                       margin="dense"
+                                      required={state.entregaEnSucursal}
                                     >
                                       <InputLabel id="idSucursalEntrega">
                                         Sucursal de Entrega
@@ -3922,6 +3923,7 @@ function Recoleccion() {
                                           <option
                                             key={sucursal.m_nIdSucursal}
                                             value={sucursal.m_nIdSucursal}
+
                                             // value={sucursal}
                                           >
                                             {sucursal.m_sSucursal}
@@ -4784,7 +4786,6 @@ function Recoleccion() {
                                             type="submit"
                                             className="btn btn-primary primary-btn"
                                             disabled={state.agregar === "Consultar"}
-                                            onClick={handleAceptar}
                                         >
                                             Aceptar
                                         </button>

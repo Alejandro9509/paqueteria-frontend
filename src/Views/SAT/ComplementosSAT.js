@@ -31,7 +31,6 @@ function showSuccess(mensaje) {
 }
 
 function ComplementosSAT(props) {
-
     const [openDialog, setOpenDialog] = useState(false)
     const [dataComplemento, setDataComplemento] = useState({
         id:0,
@@ -289,7 +288,36 @@ function ComplementosSAT(props) {
     }
 
     const handleAceptar = (data)=>{
-        debugger
+        let error = false
+        console.log( dataComplemento)
+        if(!dataComplemento.UnidadSAT  || !dataComplemento.claveUnidad ){
+            showSuccess("Se requiere seleccionar Unidad de medida")
+            error = true
+        }
+        if((!dataComplemento.materialPeligrosoSAT || !dataComplemento.claveMaterialPeligroso) && dataComplemento.esPeligroso){
+            showSuccess("Se requiere seleccionar material peligroso")
+            error = true
+        }
+
+        if((!dataComplemento.embalajeSAT || !dataComplemento.claveEmbalaje) && dataComplemento.esPeligroso ){
+            showSuccess("Se requiere seleccionar Embalaje")
+            error = true
+        }
+    /*    if(dataComplemento?.cantidad){
+        if(dataComplemento.cantidad<=0){      
+            error = true
+        }else
+        if(Number(dataComplemento.cantidad)<=0){
+           error = true
+          }
+        if(isNaN(Number(dataComplemento.cantidad))){
+           error = true
+       }
+    }else{
+        showSuccess("Se requiere cantidad")
+        error = true
+    }*/
+        if(!error){
         if (dataComplemento.id === 0){
             const item = dataComplemento
             item.id = Math.floor(Math.random() * 10000)
@@ -323,7 +351,7 @@ function ComplementosSAT(props) {
         resetDataComplemento()
         showSuccess("Complemento Agregado!")
         dialogVisible(false)
-
+    }
 
     }
 
@@ -331,11 +359,6 @@ function ComplementosSAT(props) {
         setOpenDialog(isVisible)
 
     }
-
-
-
-
-
 
 
     const handleOpenClick = (event) => {
