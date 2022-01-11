@@ -1071,7 +1071,7 @@ function Informes({history}) {
         setState(state => {
             return {
                 ...state,
-                fechaHora: getCurrentDateTime(),
+                fechaHora: data.m_dFecha + 'T' + data.m_tHora.substr(0,5),
                 IdInforme: data.m_nIdInforme,
                 guiasInforme: data.m_arrClsProGuia,
                 IdCiudadDestino: dataOrigenes.find(c => c.m_nIdCiudad === data.m_nIdCiudadDestino),
