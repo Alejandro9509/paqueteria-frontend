@@ -43,7 +43,12 @@ export default function DialogoNuevoConcepto(props) {
         descuento: 0,
         agregadoDesde: props.keys
     })
-
+    const [errores, setErrores] = useState({
+        errorImporte:false,
+        errorConcepto:false,
+        errorTexto:'',
+        errorTextoImporte:''
+    })
     const resetPaquete = () =>{
         setConcepto(concepto => {
             return {
@@ -82,11 +87,63 @@ export default function DialogoNuevoConcepto(props) {
     };
 
     const handleClose = () => {
+        setErrores(errores=>{
+            return{
+                ...errores,
+            errorImporte:false,
+            errorConcepto:false
+            }
+          
+        })
+
         setOpen(false);
     };
 
-    const handleAceptar = () => {
-        if (concepto.concepto !== null){
+    const handleAceptar = (e) => {
+        e.preventDefault()
+        console.log((concepto.importe<=0)) 
+        
+        if(concepto.concepto == null){
+        setErrores(errores=>{
+            return{
+                ...errores,
+            errorConcepto:true,
+            errorTexto:'Falta elegir concepto' 
+            }
+          
+        })
+       }else{
+        setErrores(errores=>{
+            return {
+                ...errores,
+                errorConcepto:false
+            }
+            
+        })
+        
+       }
+       
+       if(concepto.importe<=0){
+        setErrores(errores=>{
+            return{
+                ...errores,
+            errorImporte:true,
+            errorTextoImporte:'El importe debe ser mayor a 0'
+            }
+           
+        })
+       }else{
+        setErrores(errores=>{
+            return{
+                ...errores,
+                errorImporte:false
+            }
+          
+        })
+        
+       }
+      
+        if (concepto.concepto !== null && concepto.importe>0){
             handleClose()
             console.log(concepto)
             props.agregarConcepto(concepto)
@@ -121,6 +178,20 @@ export default function DialogoNuevoConcepto(props) {
 
     /**Al seleccionar un concepto del listado del autocomplete*/
     const handleConceptoClick = (event, newValue) => {
+        if(newValue){
+            setErrores(errores=>{  
+                return {...errores,errorConcepto:false}}
+              
+                 )
+            if(newValue.m_cImporte && newValue.m_cImporte>0 ){
+                setErrores(errores=>{  
+                    return {...errores,errorImporte:false}}
+                  
+                     )
+            }else{
+                setErrores( {errorImporte:true, errorTextoImporte:"El importe debe ser mayor a 0"} )
+            }
+        }
         obtenerImpuestosByConceptosFacturacion(newValue.m_nIdConceptosFacturacion).then(respuesta => {
             newValue.arClsDetalle = respuesta.data
             if (respuesta.data.length > 0){
@@ -144,6 +215,23 @@ export default function DialogoNuevoConcepto(props) {
     const handleChangePaquetev2 = (event) => {
         event.preventDefault()
         if (event.target.name === "importe") {
+            if(Number(event.target.value)<=0){
+                setErrores(errores=>{
+                    return{ 
+                        ...errores,
+                        errorImporte:true,
+                        errorTextoImporte:"El importe debe ser mayor a 0"
+
+                    }
+                 })
+                 
+        }else{
+            setErrores(errores=>{
+                return{ 
+                    ...errores,
+                    errorImporte:false}
+             })
+        }
             calcularImpuestos(concepto.traslada, concepto.retiene, event.target.value)
         } else if (event.target.name === "traslada") {
             calcularImpuestos(event.target.value, concepto.retiene, concepto.importe)
@@ -247,7 +335,7 @@ export default function DialogoNuevoConcepto(props) {
                                         getOptionLabel={(option) => option.m_sConcepto}
                                         variant="outlined"
                                         fullWidth
-                                        required
+                                        required          
                                         style={{transform: "translate(14px, 10px) scale(1) !important"}}
                                         renderInput={(params) => (
                                             <div>
@@ -255,10 +343,11 @@ export default function DialogoNuevoConcepto(props) {
                                                     {...params}
                                                     variant="outlined"
                                                     label="Concepto"
-                                                    className="form-control"
                                                     margin="dense"
                                                     fullWidth
                                                     required
+                                                    helperText={errores.errorConcepto?errores.errorTexto:''}
+                                                    error={errores.errorConcepto}
                                                 />
                                             </div>
                                         )}
@@ -269,7 +358,6 @@ export default function DialogoNuevoConcepto(props) {
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
                                                onChange={handleChangePaquetev2}
-                                               className="form-control"
                                                type="number"
                                                label="Importe"
                                                style={{textAlign: "right"}}
@@ -277,6 +365,8 @@ export default function DialogoNuevoConcepto(props) {
                                                min="0"
                                                value={concepto.importe}
                                                name="importe"
+                                               helperText={errores.errorImporte?errores.errorTextoImporte:''}
+                                               error={errores.errorImporte}
                                     />
                                 </div>
                             </Grid>
