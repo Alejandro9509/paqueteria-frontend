@@ -541,6 +541,7 @@ function Embarque(props) {
                 //Informacion general
                 folioRecoleccion: '',
                 idRecoleccion: 0,
+                idCotizacion:'',
                 folioEmbarque: '',
                 folioGuia: '',
                 folioInforme: '',
