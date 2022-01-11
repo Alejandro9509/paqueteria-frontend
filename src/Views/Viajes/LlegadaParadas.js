@@ -60,8 +60,8 @@ export default function LlegadaParadas(props){
         millasRemolqueDos: "",
         placasremolqueDos: props.data.m_sPlacasRemolque2,
         dolly: props.data.m_sDolly,
-        fechaSalida: props.data.m_dFechaSalida,
-        horaSalida: props.data.m_tHoraSalida,
+        fechaSalida: props.parada.m_dFechaSalida,
+        horaSalida: props.parada.m_tHoraSalida.substr(0,5),
         fechaLlegada: props.data.m_dFechaLlegada,
         horaLlegada: props.data.m_tHoraLlegada,
         idEstatus: 0,
@@ -523,6 +523,7 @@ export default function LlegadaParadas(props){
                         InputLabelProps={{shrink: true,}}
                         value={data.fechaSalida}
                         onChange={handleChangeFechaSalida}
+                        disabled
                     />
                 </Grid>
                 <Grid item xs={2}>
@@ -534,6 +535,7 @@ export default function LlegadaParadas(props){
                         label={"Hora"}
                         variant={"outlined"}
                         value={data.horaSalida}
+                        disabled
                         onChange={handleChangeHoraSalida}
                     />
                 </Grid>

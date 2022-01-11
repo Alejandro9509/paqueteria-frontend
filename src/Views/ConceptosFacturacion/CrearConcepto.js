@@ -37,9 +37,48 @@ function CrearConceptoSAT(props) {
         busqueda: "",
         dataSat: []
     });
-
+    const [errores, setErrores] = useState({
+        errorCantidad:false,
+        errorTexto:"Ingrese un numero mayor a 0"
+       
+    })
     
     const handleChange = (event) => {
+
+        if(event.target.name == "cantidad"){
+            if(event.target.value!==""){
+                if(Number(event.target.value)<=0){
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                            errorCantidad:true,
+                         errorTexto:"Ingrese un numero mayor a 0"
+                        
+                        }
+                     })
+            }else if(isNaN(Number(event.target.value))){
+                setErrores(errores=>{
+                    return{ 
+                        ...errores,
+                        errorCantidad:true,
+                     errorTexto:"Ingrese solo digitos"
+                    }
+                 })
+            }else{
+                setErrores(errores=>{
+                    return{ 
+                        ...errores,
+                        errorCantidad:false}
+                 })
+            }
+            }else{
+                setErrores(errores=>{
+                    return{ 
+                        ...errores,
+                     errorCantidad:false}
+                 })
+            }
+        }
         props.onChangeData(0, event)
     }
 
@@ -106,12 +145,13 @@ function CrearConceptoSAT(props) {
                                     variant="outlined"
                                     margin="dense"
                                     type="text"
-                                    className="form-control"
                                     label="Cantidad"
                                     disabled={props.consulta}
                                     value={props.dataComplemento.cantidad}
                                     onChange={handleChange}
                                     name="cantidad"
+                                   /* helperText={(errores.errorCantidad || props.dataComplemento.cantidad == "0")?errores.errorTexto:""}
+                                    error={errores.errorCantidad || props.dataComplemento.cantidad == "0"}*/
                                 />
                             </Grid>
                             <Grid item xs={12}>

@@ -300,11 +300,11 @@ function Embarque(props) {
                                 className="btn btn-default btn-xs"
                                 onClick={() => confirmAlert({
                                     title: 'Confirmar Eliminar',
-                                    message: 'Está seguro de eliminar Embarque?',
+                                    message: '¿Está seguro de eliminar Embarque?',
                                     buttons: [
                                         {
                                             label: 'Si',
-                                            onClick: () => handleEliminar(row.row.m_nIdEmbarque)
+                                            onClick: () => handleEliminar(row.row)
                                         },
                                         {
                                             label: 'No',
@@ -415,7 +415,7 @@ function Embarque(props) {
         },
         {
             headerName: "Folio Informe",
-            field: "m_nFolioInforme",
+            field: "m_sFolioInforme",
             width: 150,
         },
         {
@@ -1172,8 +1172,12 @@ function Embarque(props) {
         });
     }
 
-    function handleEliminar(id) {
-        var derecho;
+    function handleEliminar(embarque) {
+        let derecho;
+        if (embarque.m_sEstatusEmbarque !== "Cancelado"){
+            showSuccess("El embarque tiene que estar cancelado.");
+            return;
+        }
         validarPermisos(state)
             .then((respuesta) => {
                 //showSuccess(respuesta.data)
@@ -1183,8 +1187,7 @@ function Embarque(props) {
                     showSuccess("El usuario no tiene derechos para realizar el proceso");
                     return;
                 }
-
-                eliminarEmbarques(id, state.CreadoPor)
+                eliminarEmbarques(embarque.m_nIdEmbarque, state.CreadoPor)
                     .then((respuesta) => {
                         showSuccess(respuesta.data);
                         // getAllEmbarque();
@@ -1194,7 +1197,7 @@ function Embarque(props) {
                     });
             })
             .catch((err) => {
-                showSuccess(err);
+                showSuccess("Hubo un error al intentar eliminar.");
             });
     }
 
@@ -1205,7 +1208,7 @@ function Embarque(props) {
         let params = {
             motivoCancelacion: state.motivoCancelacion,
             usuarioCancelacion: localStorage.getItem("UsuarioId"),
-            fechaCancelacion: state.fechaCancelacion,
+            fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
         };
         cancelarEmbarque(state, params).then((respuesta) => {
             showSuccess(respuesta.data);
@@ -1275,43 +1278,26 @@ function Embarque(props) {
         setDataTipoCobro(newTiposCobro)
     }, [state.entregaEnSucursal])
 
-    function handleShowCancelar() {
-        var today = new Date();
-        var hours = today.getHours();
-        var minutes = today.getMinutes();
-        var ampm = hours >= 12 ? "pm" : "am";
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        var strTime = hours + ":" + minutes + " " + ampm;
+    function handleShowCancelar(e) {
+        if (e){
+            e.preventDefault()
+        }
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(4).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Cancelar').addClass('in show');
         setTabActiva(2)
-        obtenerEmbarqueCancelado(state).then((respuesta) => {
+        obtenerEmbarquesId(state.idEmbarque).then((respuesta) => {
             setState({
                 ...state,
-                folioEmbarque: respuesta.data.m_nFolioEmbarque,
-                sucursalCancelacion: dataSucursal.find(
-                    (o) => o.m_nIdSucursal === respuesta.data.IdSucursal
-                ).m_sSucursal,
-                fechaCancelacion:
-                    today.getFullYear() +
-                    "/" +
-                    (today.getMonth() + 1) +
-                    "/" +
-                    today.getDate() +
-                    " " +
-                    today.getHours() +
-                    ":" +
-                    today.getMinutes(),
-                estatusEmbarque: dataEstatusEmbarque.find(
-                    (o) => o.m_nIdEstatusEmbarque === respuesta.data.m_nIdEstatusEmbarque
-                ).m_sEstatus,
-                motivoCancelacion: respuesta.data.m_sMotivoCancelacion,
+                folioEmbarque: respuesta.data.m_sFolioEmbarque,
+                sucursalCancelacion: respuesta.data.m_sSucursal,
+                fechaCancelacion: respuesta.data.m_sFechaCancelacion ? respuesta.data.m_sFechaCancelacion.replace(' ', 'T') : getCurrentDateTime(),
+                estatusEmbarque: respuesta.data.m_sEstatusEmbarque,
+                motivoCancelacion: respuesta.data.m_sMotivoCancelacion || '',
+                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar
             });
-            if (respuesta.data.m_nSePuedeCancelar === 0) {
+            if (!respuesta.data.m_bSePuedeCancelar) {
                 showSuccess("Embarque no se puede cancelar");
             }
         });
@@ -1398,6 +1384,7 @@ function Embarque(props) {
         getAllEstatusEmbarque()
         getAllTiposSeguro()
 
+        //PAQUETES
         respuesta.data.m_parrPaquetes.forEach((p) => {
             p.m_nClaveSATProducto = p.m_sClaveSATProducto
             p.m_nClaveSATUnidad = p.m_sClaveSATUnidad
@@ -1413,6 +1400,8 @@ function Embarque(props) {
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre': 'Paquete'
         })
         setDataPaquetes(respuesta.data.m_parrPaquetes)
+
+        //COMPLEMENTOS SAT
         respuesta.data.m_arrClsComplementoSAT.forEach(item => {
             item.id = item.m_nIdComplementoSAT
             item.cantidad = item.m_nCantidad
@@ -1432,6 +1421,8 @@ function Embarque(props) {
             item.peso = item.m_xPeso
         })
         setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
+
+        //CLIENTE
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
             setState(state => {
                 return {
@@ -1443,6 +1434,8 @@ function Embarque(props) {
                 }
             })
         })
+
+        //CONCEPTOS
         let conceptosCast = []
         conceptosCast = respuesta.data.m_arrConceptos.map(item => ({
             id: Math.floor(Math.random() * 10000),
@@ -1455,52 +1448,66 @@ function Embarque(props) {
             nombreConcepto: item.m_sConcepto,
             descuento: item.m_c_Descuento
         }))
-
         setDataConceptos(conceptosCast)
-        if (respuesta.data.m_bEntregaDiferenteDomicilio) {
-            setEntregaDD(entregaDD =>{
+
+        //ENTREGA EN SUCURSAL
+        if (respuesta.data.m_bEntregaSucursal){
+            setState(state => {
                 return {
-                    ...entregaDD,
-                    estadoEnt: respuesta.data.m_nIdEstadoEntrega || 0,
-                    municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega || 0,
-                    domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
-                    entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
-                    datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                    ...state,
+                    entregaEnSucursal: respuesta.data.m_bEntregaSucursal,
+                    idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
+                    diferenteEntrega: false,
                 }
             })
-            let estado = `${respuesta.data.m_nIdEstadoEntrega}`
-            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
-                setDataMunicipiosEntregaDD(data)
-            })
-            obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
+        }else{
+            //ENTREGA EN DIFERENTE DOMICILIO
+            if (respuesta.data.m_bEntregaDiferenteDomicilio) {
                 setEntregaDD(entregaDD =>{
                     return {
                         ...entregaDD,
-                        codigoPostalEnt: {
-                            m_nIdCP: cp.data.m_nIdCP,
-                            m_sCP: cp.data.m_sCP,
-                            m_sColonia: cp.data.m_sColonia
-                        },
+                        estadoEnt: respuesta.data.m_nIdEstadoEntrega || 0,
+                        municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega || 0,
+                        domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
+                        entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
+                        datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
                     }
                 })
-            })
-            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
-                setEntregaDD(entregaDD => {
-                    return {
-                        ...entregaDD,
-                        zonaOperativaEnt: data
-                    }
+                let estado = `${respuesta.data.m_nIdEstadoEntrega}`
+                obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+                    setDataMunicipiosEntregaDD(data)
                 })
-            })
-            obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifaEntrega).then(({data}) => {
-                setEntregaDD(entregaDD => {
-                    return {
-                        ...entregaDD,
-                        zonaTarifaEnt: data
-                    }
+                obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
+                    setEntregaDD(entregaDD =>{
+                        return {
+                            ...entregaDD,
+                            codigoPostalEnt: {
+                                m_nIdCP: cp.data.m_nIdCP,
+                                m_sCP: cp.data.m_sCP,
+                                m_sColonia: cp.data.m_sColonia
+                            },
+                        }
+                    })
                 })
-            })
+                obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
+                    setEntregaDD(entregaDD => {
+                        return {
+                            ...entregaDD,
+                            zonaOperativaEnt: data
+                        }
+                    })
+                })
+                obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifaEntrega).then(({data}) => {
+                    setEntregaDD(entregaDD => {
+                        return {
+                            ...entregaDD,
+                            zonaTarifaEnt: data
+                        }
+                    })
+                })
+            }
         }
+
         setState(state => {
             return {
                 ...state,
@@ -1687,7 +1694,7 @@ function Embarque(props) {
                 folioRecoleccion: duplicar ? "" : respuesta.data.m_sFolioRecoleccion,
                 folioEmbarque: respuesta.data.m_sFolioEmbarque,
                 folioGuia: duplicar ? "" : respuesta.data.m_sFolioGuia,
-                folioInforme: duplicar ? "" : respuesta.data.m_nFolioInforme,
+                folioInforme: duplicar ? "" : respuesta.data.m_sFolioInforme,
                 fechaHoraRegistro: getCurrentDateTime(),
                 estatusEmbarque: duplicar ? 16 : respuesta.data.m_nIdEstatusEmbarque,
                 moneda: respuesta.data.m_nIdMoneda,
@@ -2813,8 +2820,7 @@ function Embarque(props) {
                         <div id="Agregar"
                              className={props.location.idRecoleccion != undefined ? "tab-pane fade in show" : "tab-pane fade"}>
 
-                            <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if(e.code === 13) {e.preventDefault()}}}>
-
+                            <form className="j-forms row" onSubmit={handleAceptar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
                                 <div className="form-content">
                                     {/*<div
                                         className="wizard-breadcrumb number-style"
@@ -3707,8 +3713,7 @@ function Embarque(props) {
                                                     color={"primary"}
                                                     variant={"contained"}
                                                     type="submit"
-                                                    disabled={state.agregar === "Consultar"}
-                                                    onClick={handleAceptar}>
+                                                    disabled={state.agregar === "Consultar"}>
                                                 Guardar embarque
                                             </Button>
                                         </Grid>
@@ -3744,114 +3749,105 @@ function Embarque(props) {
                             <div className="widget-wrap">
                                 <div className="widget-container">
                                     <div className="widget-content">
-                                            <form className="j-forms" onSubmit={handleCancelar}>
-                                                <div className="form-content">
-                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
-                                                                       label="Folio Embarque"
-                                                                       onChange={handleChange}
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       value={state.folioEmbarque}
-                                                                       name="folioEmbarque"
-                                                                       readOnly
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" margin="dense"
-                                                                       label="Sucursal"
-                                                                       onChange={handleChange}
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       value={state.sucursalCancelacion}
-                                                                       name="sucursalCancelacion"
-                                                                       readOnly disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Fecha"
-                                                                       onChange={handleChange}
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       value={state.fechaCancelacion}
-                                                                       name="fechaCancelacion"
-                                                                       readOnly
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Usuario"
-                                                                       onChange={handleChange}
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       value={state.usuario}
-                                                                       name="usuario"
-                                                                       readOnly
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Estatus"
-                                                                       onChange={handleChange}
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       value={state.estatusEmbarque}
-                                                                       name="estatusEmbarque"
-                                                                       readOnly
-                                                                       disabled
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                        <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Motivo"
-                                                                       onChange={handleChange}
-                                                                       className="form-control"
-                                                                       type="text"
-                                                                       value={state.motivoCancelacion}
-                                                                       name="motivoCancelacion"
-                                                                       required
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="form-footer col-md-12">
-                                                        <button
-                                                            type="button"
-                                                            onClick={(event) => {
-                                                                event.stopPropagation();
-                                                                setState({...state, agregar: "Agregar"});
-                                                                $('.nav-tabs li ').removeClass('active');
-                                                                $('.nav-tabs li').eq(0).addClass('active');
-                                                                $('.tab-content div ').removeClass('in show');
-                                                                $('#Listado').addClass('in show');
-                                                            }}
-                                                            className="btn btn-secondary secondary-btn"
-                                                        >
-                                                            Cancelar
-                                                        </button>
-                                                        <button type={"submit"}
-                                                            className="btn btn-primary primary-btn"
-                                                        >
-                                                            Aceptar
-                                                        </button>
+                                        <form className="j-forms" onSubmit={handleCancelar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
+                                            <div className="form-content">
+                                                <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                    <div className="input">
+                                                        <TextField variant="outlined" margin="dense"
+                                                                   label="Folio Embarque"
+                                                                   onChange={handleChange}
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   value={state.folioEmbarque}
+                                                                   name="folioEmbarque"
+                                                                   disabled
+                                                        />
                                                     </div>
                                                 </div>
-                                            </form>
+
+                                                <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                    <div className="input">
+                                                        <TextField variant="outlined" margin="dense"
+                                                                   label="Sucursal"
+                                                                   onChange={handleChange}
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   value={state.sucursalCancelacion}
+                                                                   name="sucursalCancelacion"
+                                                                   disabled
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                    <div className="input">
+                                                        <TextField variant="outlined" margin="dense" label="Fecha"
+                                                                   onChange={handleChange}
+                                                                   className="form-control"
+                                                                   type="datetime-local"
+                                                                   value={state.fechaCancelacion}
+                                                                   name="fechaCancelacion"
+                                                                   disabled
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                    <div className="input">
+                                                        <TextField variant="outlined" margin="dense" label="Usuario"
+                                                                   onChange={handleChange}
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   value={state.usuario}
+                                                                   name="usuario"
+                                                                   disabled
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                    <div className="input">
+                                                        <TextField variant="outlined" margin="dense" label="Estatus"
+                                                                   onChange={handleChange}
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   value={state.estatusEmbarque}
+                                                                   name="estatusEmbarque"
+                                                                   disabled
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-sm-12 col-md-12 col-lg-12 unit">
+                                                    <div className="input">
+                                                        <TextField variant="outlined" margin="dense" label="Motivo"
+                                                                   onChange={handleChange}
+                                                                   className="form-control"
+                                                                   type="text"
+                                                                   value={state.motivoCancelacion}
+                                                                   name="motivoCancelacion"
+                                                                   required
+                                                                   disabled={!state.sePuedeCancelar}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="form-footer col-md-12">
+                                                    <Grid container spacing={2}>
+                                                        <Grid item xs>
+                                                            <Button type={"submit"}
+                                                                    className="btn btn-primary primary-btn"
+                                                                    fullWidth
+                                                                    disabled={!state.sePuedeCancelar}
+                                                            >
+                                                                Guardar cambios
+                                                            </Button>
+                                                        </Grid>
+                                                    </Grid>
+
+                                                </div>
+                                            </div>
+                                        </form>
 
                                     </div>
                                 </div>

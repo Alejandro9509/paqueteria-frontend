@@ -76,7 +76,7 @@ function showSuccess(mensaje) {
         type: "information",
         layout: "topCenter",
         text: mensaje,
-        timeout: "3000",
+        timeout: "8000",
     }).show();
 }
 
@@ -188,6 +188,11 @@ function Informes({history}) {
         {
             headerName: "Fecha/Hora Elaboración",
             field: "m_sFechaHora",
+            width: 200,
+        },
+        {
+            headerName: "Estatus",
+            field: "m_sEstatusInforme",
             width: 200,
         },
         {
@@ -370,7 +375,7 @@ function Informes({history}) {
                 observaciones: "",
             },
         ],
-        FechaCancelacion: "",
+        fechaCancelacion: "",
         motivoCancelacion: "",
         sucursalCancelacion: {},
         sePuedeCancelar: false,
@@ -428,7 +433,7 @@ function Informes({history}) {
                         observaciones: "",
                     },
                 ],
-                FechaCancelacion: "",
+                fechaCancelacion: "",
                 motivoCancelacion: "",
                 sucursalCancelacion: {},
                 sePuedeCancelar: false,
@@ -867,51 +872,44 @@ function Informes({history}) {
     };
 
     function handleShowCancelar(event) {
-        event.stopPropagation()
-        var today = new Date();
+        event.preventDefault()
         obtenerInformesId(state.IdInforme).then((respuesta) => {
             setState({
                 ...state,
-                FolioInforme: respuesta.data.m_nIdInforme,
-                sucursalCancelacion: dataSucursal.find(
-                    (o) => o.m_nIdSucursal == respuesta.data.m_nIdSucursalEmisora
-                ).m_sSucursal,
-                fechaCancelacion:
-                    today.getFullYear() +
-                    "-" +
-                    (today.getMonth() + 1) +
-                    "-" +
-                    today.getDate(),
-                motivoCancelacion: respuesta.data.m_sMotivoCancelacion,
-                usuarioCancelacion:
-                    respuesta.data.m_nIdUsuarioCancelacion != 0
-                        ? respuesta.data.m_nIdUsuarioCancelacion
-                        : localStorage.getItem("UsuarioId"),
-                estatusCancelacion: dataEstatusInformes[0].m_sEstatus, //dataEstatusInformes.find(o => o.m_nIdEstatusInforme == respuesta.data.m_nIdEstatusInforme),
-                sePuedeCancelar: false,
+                FolioInforme: respuesta.data.m_sFolioInforme,
+                sucursalCancelacion: respuesta.data.m_sSucursalEmisora,
+                fechaCancelacion: respuesta.data.m_dtFechaCancelacion ? respuesta.data.m_dtFechaCancelacion.replace(' ', 'T') : getCurrentDateTime(),
+                motivoCancelacion: respuesta.data.m_sMotivoCancelacion || '',
+                usuarioCancelacion: respuesta.data.m_sUsuarioCancelacion || localStorage.getItem("Usuario"),
+                estatusCancelacion: respuesta.data.m_sEstatusInforme,
+                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar,
             });
 
-            if (respuesta.data.m_nSePuedeCancelar == 0) {
-                state.sePuedeCancelar = true;
-                showSuccess("Informe no se puede cancelar");
-            } else {
-                $('.nav-tabs li ').removeClass('active');
-                $('.nav-tabs li').eq(3).addClass('active');
-                $('.tab-content div ').removeClass('in show');
-                $('#Cancelar').addClass('in show');
+            if (!respuesta.data.m_bSePuedeCancelar) {
+                showSuccess("Este informe no se puede cancelar.");
             }
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(3).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Cancelar').addClass('in show');
         });
     }
 
     const handleCancelar = (e) => {
-        e.preventDefault();
-        var params = {
-            motivoCancelacion: state.MotivoCancelacion,
+        if (e){
+            e.preventDefault();
+        }
+        let params = {
+            motivoCancelacion: state.motivoCancelacion,
             usuarioCancelacion: localStorage.getItem("UsuarioId"),
-            fechaCancelacion: state.fechaCancelado,
+            fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
         };
-        cancelarInformes(state.IdInforme).then((respuesta) => {
+        console.log(params)
+        console.log(JSON.stringify(params))
+        cancelarInformes(state.IdInforme,params).then((respuesta) => {
             console.log(respuesta.data);
+            showSuccess(respuesta.data)
+            handleShowListado()
         });
     };
 
@@ -2681,12 +2679,12 @@ function Informes({history}) {
                                 <div className="widget-container">
                                     <div className="widget-content">
                                         <div className="row">
-                                            <form className="j-forms" onSubmit={handleCancelar}>
+                                            <form className="j-forms" onSubmit={handleCancelar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
                                                 <div className="form-content">
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                       label="Folio Informes"
+                                                                       label="Folio Informe"
                                                                        className="form-control"
                                                                        type="text"
                                                                        value={state.FolioInforme}
@@ -2699,7 +2697,7 @@ function Informes({history}) {
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
                                                             <TextField variant="outlined" margin="dense"
-                                                                       label="Sucursal"
+                                                                       label="Sucursal Emisora"
                                                                        className="form-control"
                                                                        type="text"
                                                                        value={state.sucursalCancelacion}
@@ -2711,12 +2709,12 @@ function Informes({history}) {
 
                                                     <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                         <div className="input">
-                                                            <TextField variant="outlined" margin="dense" label="Fecha"
+                                                            <TextField variant="outlined" margin="dense" label="Fecha de cancelación"
                                                                        className="form-control"
-                                                                       type="text"
+                                                                       type="datetime-local"
                                                                        value={state.fechaCancelacion}
                                                                        id="fechaCancelacion"
-                                                                       readOnly
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -2728,7 +2726,7 @@ function Informes({history}) {
                                                                        type="text"
                                                                        value={state.usuarioCancelacion}
                                                                        id="usuarioCancelacion"
-                                                                       readOnly
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -2740,7 +2738,7 @@ function Informes({history}) {
                                                                        type="text"
                                                                        value={state.estatusCancelacion}
                                                                        id="estatusCancelacion"
-                                                                       readOnly
+                                                                       disabled
                                                             />
                                                         </div>
                                                     </div>
@@ -2750,32 +2748,27 @@ function Informes({history}) {
                                                             <TextField variant="outlined" margin="dense" label="Motivo"
                                                                        className="form-control"
                                                                        type="text"
+                                                                       onChange={handleChange}
                                                                        value={state.motivoCancelacion}
                                                                        id="motivoCancelacion"
+                                                                       disabled={!state.sePuedeCancelar}
                                                             />
                                                         </div>
                                                     </div>
 
                                                     <div className="form-footer" className="col-md-12">
-                                                        <button
-                                                            onClick={(event) => {
-                                                                event.stopPropagation();
-                                                                setState({...state, agregar: "Agregar"});
-                                                                $('.nav-tabs li ').removeClass('active');
-                                                                $('.nav-tabs li').eq(0).addClass('active');
-                                                                $('.tab-content div ').removeClass('in show');
-                                                                $('#Listado').addClass('in show');
-                                                            }}
-                                                            className="btn btn-secondary secondary-btn"
-                                                        >
-                                                            Cancelar
-                                                        </button>
-                                                        <button
-                                                            type="submit"
-                                                            className="btn btn-primary primary-btn"
-                                                        >
-                                                            Aceptar
-                                                        </button>
+                                                        <Grid container spacing={2}>
+                                                            <Grid item xs>
+                                                                <Button
+                                                                    fullWidth
+                                                                    type="submit"
+                                                                    className="btn btn-primary primary-btn"
+                                                                    disabled={!state.sePuedeCancelar}
+                                                                >
+                                                                    Guardar Cambios
+                                                                </Button>
+                                                            </Grid>
+                                                        </Grid>
                                                     </div>
                                                 </div>
                                             </form>
