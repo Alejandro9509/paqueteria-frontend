@@ -590,6 +590,7 @@ function Embarque(props) {
         setDataPaquetes([])
         resetEntregaDD()
         setDataConceptos([])
+        setDataComplementosSAT([])
         setConfiguraciones({
             estatusRecoleccion: 0,
             estatusEmbarque: 0,
