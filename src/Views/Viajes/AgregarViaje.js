@@ -570,20 +570,33 @@ class AgregarViaje extends Component {
 
     handleUnidadFiltro(event, newValue) {
         event.preventDefault();
-        obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
-            if (resultado.data.m_sEstatus === "DISPONIBLE"){
-                this.setState({
-                    unidad: newValue,
-                    placaIntUnidad: newValue.m_sPlacas,
-                    estatusUnidad: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus,
-                    colorUnidad: resultado.data instanceof String ? "" : resultado.data.m_sColor,
-                    kms: newValue.m_nOdometro,
-                    horas: newValue.m_nHorasTrabajadasMotorNoGPS
-                })
-            }else{
-                showSuccess("La unidad seleccionada no está disponible")
-            }
-        })
+        if (newValue){
+            obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
+                if (resultado.data.m_sEstatus === "DISPONIBLE"){
+                    this.setState({
+                        unidad: newValue,
+                        placaIntUnidad: newValue.m_sPlacas,
+                        estatusUnidad: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus,
+                        colorUnidad: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                        kms: newValue.m_nOdometro,
+                        horas: newValue.m_nHorasTrabajadasMotorNoGPS
+                    })
+                }else{
+                    showSuccess("La unidad seleccionada no está disponible")
+                }
+            })
+        }else {
+            this.setState({
+                unidad: null,
+                placaIntUnidad: "",
+                estatusUnidad: "",
+                colorUnidad: '',
+                kms: '',
+                horas: '',
+            })
+        }
+
+
 
         if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
 
@@ -1401,19 +1414,18 @@ class AgregarViaje extends Component {
 
                                         <Grid item xs={6}>
                                             <Autocomplete
-                                                // freeSolo
+                                                freeSolo
                                                 onChange={(e, value) => this.handleUnidadFiltro(e, value)}
                                                 value={this.state.unidad}
-                                                inputValue={this.state.unidad ? this.state.unidad.m_sDescripcion : ""}
-                                                //disabled={state.agregar == "Consultar"}
+                                                // inputValue={this.state.unidad ? this.state.unidad.m_sDescripcion : ""}
                                                 id="unidad"
-                                                disableClearable
-                                                forcePopupIcon={false}
+                                                // disableClearable
+                                                // forcePopupIcon={false}
                                                 options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                 }
-                                                style={{transform: "translate(14px, 10px) scale(1) !important"}}
+                                                // style={{transform: "translate(14px, 10px) scale(1) !important"}}
                                                 disabled={this.props.consult}
                                                 renderInput={(params) => (
                                                     <div>
@@ -1493,15 +1505,15 @@ class AgregarViaje extends Component {
                                             <div className="input">
 
                                                 <Autocomplete
-                                                    // freeSolo
+                                                    freeSolo
                                                     onChange={this.handleRemolqueUnoFiltro}
                                                     value={this.state.IdRemolque1}
-                                                    inputValue={this.state.IdRemolque1 ? this.state.IdRemolque1.m_sDescripcion : ""}
+                                                    // inputValue={this.state.IdRemolque1 ? this.state.IdRemolque1.m_sDescripcion : ""}
                                                     //disabled={state.agregar == "Consultar"}
                                                     id="IdRemolque1"
-                                                    disableClearable
+                                                    // disableClearable
                                                     disabled={this.props.consult}
-                                                    forcePopupIcon={false}
+                                                    // forcePopupIcon={false}
                                                     options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                     getOptionLabel={(option) =>
                                                         `${option.m_sCodigo} - ${option.m_sDescripcion}`
@@ -1556,15 +1568,15 @@ class AgregarViaje extends Component {
                                         <Grid item xs={6}>
                                             <div className="input">
                                                 <Autocomplete
-                                                    // freeSolo
+                                                    freeSolo
                                                     onChange={this.handleRemolqueDosFiltro}
                                                     value={this.state.IdRemolque2}
-                                                    inputValue={this.state.IdRemolque2 ? this.state.IdRemolque2.m_sDescripcion : ""}
+                                                    // inputValue={this.state.IdRemolque2 ? this.state.IdRemolque2.m_sDescripcion : ""}
                                                     //disabled={state.agregar == "Consultar"}
                                                     id="IdRemolque2"
-                                                    disableClearable
+                                                    // disableClearable
                                                     disabled={this.props.consult}
-                                                    forcePopupIcon={false}
+                                                    // forcePopupIcon={false}
                                                     options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                     getOptionLabel={(option) =>
                                                         `${option.m_sCodigo} - ${option.m_sDescripcion}`
@@ -1617,15 +1629,15 @@ class AgregarViaje extends Component {
                                         <Grid item xs={6}>
                                             <div className="input">
                                                 <Autocomplete
-                                                    // freeSolo
+                                                    freeSolo
                                                     onChange={this.handleDollyFiltro}
                                                     value={this.state.IdDolly}
-                                                    inputValue={this.state.IdDolly ? this.state.IdDolly.m_sDescripcion : ""}
+                                                    // inputValue={this.state.IdDolly ? this.state.IdDolly.m_sDescripcion : ""}
                                                     //disabled={state.agregar == "Consultar"}
                                                     id="IdDolly"
-                                                    disableClearable
+                                                    // disableClearable
                                                     disabled={this.props.consult}
-                                                    forcePopupIcon={false}
+                                                    // forcePopupIcon={false}
                                                     options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                     getOptionLabel={(option) =>
                                                         option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
