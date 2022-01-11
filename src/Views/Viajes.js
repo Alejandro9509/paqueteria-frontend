@@ -759,6 +759,7 @@ function Viajes() {
         }
 
         console.log(params)
+        console.log(JSON.stringify(params))
 
         agregarViajeSalida(params)
             .then((respuesta) => {
@@ -803,7 +804,8 @@ function Viajes() {
             m_nTipoCambio: data.tipoDeCambioOrigen
         }
 
-
+        console.log(params)
+        console.log(JSON.stringify(params))
         agregarViajeLlegada(params)
             .then((respuesta) => {
                 showSuccess(respuesta.data);
@@ -916,7 +918,7 @@ function Viajes() {
                         maxWidth={'xl'}>
                     <DialogTitle><h2>Llegada de Paradas</h2></DialogTitle>
                     <DialogContent>
-                        <LlegadaParadas onSubmit={updateLlegada} data={paradaData.m_clsInforme} viaje={viajeSeleccionado}>
+                        <LlegadaParadas onSubmit={updateLlegada} data={paradaData.m_clsInforme} viaje={viajeSeleccionado} parada={paradaData}>
                             <DialogActions>
                                 <Button
                                     variant={'contained'} color={'primary'}

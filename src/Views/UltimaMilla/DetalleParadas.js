@@ -335,6 +335,7 @@ class DetalleParadas extends Component {
             pdfWindow.document.title = "Última Milla";
         })
     }
+
     cancelarRutaAccion(e, id) {
         e.preventDefault()
         e.stopPropagation()

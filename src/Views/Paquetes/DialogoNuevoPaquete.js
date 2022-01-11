@@ -373,7 +373,144 @@ export default function DialogoNuevoPaquete(props) {
     };
 
     const handleChangePaqueteProductov2 = (event, newValue) => {
-        if (newValue){
+        console.log(newValue)
+           if (newValue){  
+            if(newValue?.m_xLargo !== undefined || newValue?.m_xLargo !== null){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
+                if(Number(newValue.m_xLargo)<=0){
+                        setErrores(errores=>{
+                            return{ 
+                                ...errores,
+                             errorLargo:true,
+                             errorTexto:"Ingrese un numero mayor a 0"
+
+                            }
+                         })
+                         
+                }else if(isNaN(Number(newValue.m_xLargo))){
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorLargo:true,
+                         errorTexto:"Ingrese solo digitos"
+                        }
+                     })
+                }else{
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorLargo:false}
+                     })
+                }
+            }else{
+                setErrores(errores=>{
+                    return{ 
+                        ...errores,
+                     errorLargo:false}
+                 })
+            }
+        
+
+            if(newValue?.m_xAlto !== undefined || newValue?.m_xAlto !== null){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
+                if(Number(newValue.m_xAlto)<=0){
+                        setErrores(errores=>{
+                            return{ 
+                                ...errores,
+                             errorAlto:true,
+                             errorTexto:"Ingrese un numero mayor a 0"
+                            
+                            }
+                         })
+                }else if(isNaN(Number(newValue.m_xAlto))){
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorAlto:true,
+                         errorTexto:"Ingrese solo digitos"
+                        }
+                     })
+                }else{
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorAlto:false}
+                     })
+                }
+            }else{
+                setErrores(errores=>{
+                    return{ 
+                        ...errores,
+                     errorAlto:false}
+                 })
+            
+        }
+            if(newValue?.m_xAncho !== undefined || newValue?.m_xAncho !== null){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
+                if(Number(newValue.m_xAncho)<=0){
+                        setErrores(errores=>{
+                            return{ 
+                                ...errores,
+                             errorAncho:true,
+                             errorTexto:"Ingrese un numero mayor a 0"
+                            
+                            }
+                         })
+                }else if(isNaN(Number(newValue.m_xAncho))){
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorAncho:true,
+                         errorTexto:"Ingrese solo digitos"
+                        }
+                     })
+                }else{
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorAncho:false}
+                     })
+                }
+            }else{
+                setErrores(errores=>{
+                    return{ 
+                        ...errores,
+                     errorAncho:false}
+                 })
+            }
+
+   
+            if(newValue?.m_xPeso !== undefined ||newValue?.m_xPeso !== null){//si la cantidad no esta vacia procede a validar si es mayor a cero o no contiene caracteres
+                if(Number(newValue.m_xPeso)<=0){
+                        setErrores(errores=>{
+                            return{ 
+                                ...errores,
+                             errorPeso:true,
+                             errorTexto:"Ingrese un numero mayor a 0"
+                            
+                            }
+                         })
+                }else if(isNaN(Number(newValue.m_xPeso))){
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorPeso:true,
+                         errorTexto:"Ingrese solo digitos"
+                        }
+                     })
+                }else{
+                    setErrores(errores=>{
+                        return{ 
+                            ...errores,
+                         errorPeso:false}
+                     })
+                }
+            }else{
+                setErrores(errores=>{
+                    return{ 
+                        ...errores,
+                     errorPeso:false}
+                 })
+            }
+
+       
             setPaquete(paquete =>{
                 return{
                     ...paquete,
@@ -493,12 +630,12 @@ export default function DialogoNuevoPaquete(props) {
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
                                                onChange={(event) => handleChangePaquetev2(event)}
-                                               type="text"
-                                               label="Ctd"
+                                               type="number"
+                                               label="Cantidad"
                                                required
                                                value={paquete.m_nCantidad}
                                                disabled={props.disabled}
-                                               placeholder="Ctd"
+                                               placeholder="Cantidad"
                                                name="m_nCantidad"
                                                helperText={errores.errorCantidad?errores.errorTexto:""}
                                                error={errores.errorCantidad}
