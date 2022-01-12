@@ -61,18 +61,20 @@ class Cotizador extends Component {
             let ivaRetiene = []
             data.forEach((element) => {
                 this.props.saveIdCotizacion(element.m_nIdCotizacion)
-                conceptosCast.push({
-                    id: Math.floor(Math.random() * 10000),
-                    concepto: element,
-                    idConcepto: element.m_nIdConceptosFacturacion,
-                    importe: element.m_cImporte,
-                    retiene: element.m_nIdImpuestoRetiene,
-                    traslada: element.m_nIdImpuestoTraslada,
-                    importeIVA: element.m_cImporteIva,
-                    importeRet: element.m_cImporteRetiene,
-                    nombreConcepto: element.m_sConcepto,
-                    descuento: element.m_c_Descuento,
-                })
+                if (element.m_nIdConceptosFacturacion > 0){
+                    conceptosCast.push({
+                        id: Math.floor(Math.random() * 10000),
+                        concepto: element,
+                        idConcepto: element.m_nIdConceptosFacturacion,
+                        importe: element.m_cImporte,
+                        retiene: element.m_nIdImpuestoRetiene,
+                        traslada: element.m_nIdImpuestoTraslada,
+                        importeIVA: element.m_cImporteIva,
+                        importeRet: element.m_cImporteRetiene,
+                        nombreConcepto: element.m_sConcepto,
+                        descuento: element.m_c_Descuento,
+                    })
+                }
             })
             ivaTraslada = getUniqueListBy(conceptosCast, "traslada").map(i => i.traslada);
             ivaRetiene = getUniqueListBy(conceptosCast, "retiene").map(i => i.retiene);
