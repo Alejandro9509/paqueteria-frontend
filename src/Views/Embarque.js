@@ -541,6 +541,7 @@ function Embarque(props) {
                 //Informacion general
                 folioRecoleccion: '',
                 idRecoleccion: 0,
+                idCotizacion:'',
                 folioEmbarque: '',
                 folioGuia: '',
                 folioInforme: '',
@@ -590,6 +591,7 @@ function Embarque(props) {
         setDataPaquetes([])
         resetEntregaDD()
         setDataConceptos([])
+        setDataComplementosSAT([])
         setConfiguraciones({
             estatusRecoleccion: 0,
             estatusEmbarque: 0,
@@ -1697,7 +1699,7 @@ function Embarque(props) {
                 folioEmbarque: respuesta.data.m_sFolioEmbarque,
                 folioGuia: duplicar ? "" : respuesta.data.m_sFolioGuia,
                 folioInforme: duplicar ? "" : respuesta.data.m_sFolioInforme,
-                fechaHoraRegistro: getCurrentDateTime(),
+                fechaHoraRegistro: respuesta.data.m_dFechaRegistro + 'T' + respuesta.data.m_tHoraRegistro.substr(0,5),
                 estatusEmbarque: duplicar ? 16 : respuesta.data.m_nIdEstatusEmbarque,
                 moneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,

@@ -506,7 +506,7 @@ function Guia(props) {
                 idGuia: respuesta.data.m_nIdGuia,
                 IdEmbarque: respuesta.data.m_nIdEmbarque,
                 idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
-                fecha: getCurrentDateTime(),
+                fecha: respuesta.data.m_dFecha + 'T' + respuesta.data.m_sHora.substr(0,5),
                 creadoEl: respuesta.data.m_dCreadoEl,
 
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,

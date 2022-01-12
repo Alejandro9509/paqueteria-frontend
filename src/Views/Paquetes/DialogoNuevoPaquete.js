@@ -107,23 +107,53 @@ export default function DialogoNuevoPaquete(props) {
     const handleAceptar = (e) => {
         e.stopPropagation()
         e.preventDefault()
-        if(errores.errorAlto || errores.errorAncho || errores.errorCantidad ||errores.errorPeso || errores.errorLargo){
-            showSuccess("Uno o más campos tienen error")
-        }else{  
-            if (paquete.producto !== null){
-            if (state.agregarMas){
-                console.log(paquete)
-                props.agregar(paquete)
-                resetPaquete()
+        //Si es paquete
+        if (paquete.m_nIdTipo === 2){
+            if(errores.errorAlto || errores.errorAncho || errores.errorCantidad ||errores.errorPeso || errores.errorLargo){
+                showSuccess("Uno o más campos tienen error")
             }else{
+                if (paquete.producto !== null) {
+                    if (state.agregarMas) {
+                        console.log(paquete)
+                        props.agregar(paquete)
+                        resetPaquete()
+                    } else {
+                        handleClose()
+                        console.log(paquete)
+                        props.agregar(paquete)
+                        resetPaquete()
+                    }
+                }
+            }
+        //    Si es sobre
+        }else if (paquete.m_nIdTipo === 1){
+            let sobre = {
+                m_nIdPaquete: paquete.m_nIdPaquete,
+                producto: null,
+                m_rPeso: "",
+                m_rLargo: "",
+                m_rAncho: "",
+                m_rAlto: "",
+                m_rVolumen: "",
+                m_nIdTipoEmbalaje: "",
+                m_sDescripcion: paquete.m_sDescripcion,
+                m_nCantidad: "1",
+                m_sObservaciones: "",
+                m_nIdTipo: paquete.m_nIdTipo,
+                m_nIdProducto:'',
+                m_sTipo: paquete.m_sTipo,
+            }
+            if (state.agregarMas) {
+                console.log(sobre)
+                props.agregar(sobre)
+                resetPaquete()
+            } else {
                 handleClose()
-                console.log(paquete)
-                props.agregar(paquete)
+                console.log(sobre)
+                props.agregar(sobre)
                 resetPaquete()
             }
-
-        }}
-      
+        }
 
     }
 
@@ -630,12 +660,12 @@ export default function DialogoNuevoPaquete(props) {
                                 <div className="input">
                                     <TextField variant="outlined" margin="dense"
                                                onChange={(event) => handleChangePaquetev2(event)}
-                                               type="text"
-                                               label="Ctd"
+                                               type="number"
+                                               label="Cantidad"
                                                required
                                                value={paquete.m_nCantidad}
                                                disabled={props.disabled}
-                                               placeholder="Ctd"
+                                               placeholder="Cantidad"
                                                name="m_nCantidad"
                                                helperText={errores.errorCantidad?errores.errorTexto:""}
                                                error={errores.errorCantidad}
@@ -768,7 +798,6 @@ export default function DialogoNuevoPaquete(props) {
                                                value={paquete.m_sDescripcion}
                                                disabled={props.disabled}
                                                placeholder="Descripción"
-                                               helperText="hola mi estimado"
                                                name="m_sDescripcion"
                                     />
                                 </div>
