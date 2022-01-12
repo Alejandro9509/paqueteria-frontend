@@ -502,6 +502,7 @@ function Embarque(props) {
 
         //Cita de recoleccion
         entregaConCita: false,
+        recoleccionConCita: false,
         fechaCita: '',
         horaCitaMinima: '',
         horaCitaMaxima: '',
@@ -566,6 +567,7 @@ function Embarque(props) {
 
                 //Cita de recoleccion
                 entregaConCita: false,
+                recoleccionConCita: false,
                 fechaCita: '',
                 horaCitaMinima: '',
                 horaCitaMaxima: '',
@@ -1528,6 +1530,7 @@ function Embarque(props) {
                 porcentajeSeguro: respuesta.data.m_bAplicaSeguro ? respuesta.data.m_xPorcentajeSeguro : 0,
                 aplicaSeguro: respuesta.data.m_bAplicaSeguro,
                 valorDeclarado: respuesta.data.m_xValor,
+                recoleccionConCita: respuesta.data.m_bRecoleccionConCita
             }
         });
     }
@@ -1696,6 +1699,7 @@ function Embarque(props) {
                 idRecoleccion: duplicar ? 0 : respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.IdSucursal,
                 folioRecoleccion: duplicar ? "" : respuesta.data.m_sFolioRecoleccion,
+                recoleccionConCita: respuesta.data.m_sFolioRecoleccion.length > 0,
                 folioEmbarque: respuesta.data.m_sFolioEmbarque,
                 folioGuia: duplicar ? "" : respuesta.data.m_sFolioGuia,
                 folioInforme: duplicar ? "" : respuesta.data.m_sFolioInforme,

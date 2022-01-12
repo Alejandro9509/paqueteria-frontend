@@ -19,9 +19,11 @@ function obtenerCotizacion( data, paquetes, remitente, destinatario, recoleccion
         EntregaEnSucursal:  data.entregaEnSucursal,
         IdSeguro: data.idTipoSeguro,
         ValorDeclarado: data.valorDeclarado,
-        AplicaRecoleccion: data.idRecoleccion !== undefined || recoleccion,
+        AplicaRecoleccion: data.folioRecoleccion.length > 0|| recoleccion,
         AplicaSeguro: data.aplicaSeguro,
         PorcentajeSeguro: data.porcentajeSeguro,
+        RecoleccionConCita: data.recoleccionConCita,
+        EmbarqueConCita: data.entregaConCita,
         paquetesCotizacion: paquetes
     }
     trackPromise(
