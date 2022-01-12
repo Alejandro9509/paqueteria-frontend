@@ -550,6 +550,21 @@ if(input=="codigoPostal"){
                     zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
                     zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null
                   }));
+
+                  if (zonaOperativa.data.length === 0){
+                    if (props.remitente){
+                      showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa.")
+                    }else if (props.destinatario){
+                      showSuccess("El codigo postal del destinatario no está registrado en ninguna zona operativa.")
+                    }
+                  }
+                  if (zonaTarifa.data.length === 0){
+                    if (props.remitente){
+                      showSuccess("El codigo postal del remitente no está registrado en ninguna zona de tarifa.")
+                    }else if (props.destinatario){
+                      showSuccess("El codigo postal del destinatario no está registrado en ninguna zona de tarifa.")
+                    }
+                  }
                 }
             );
 

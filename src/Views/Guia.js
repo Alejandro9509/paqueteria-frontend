@@ -292,12 +292,13 @@ function Guia(props) {
     }
 
     const handleAceptar = (e) => {
-
+        if (e){
+            e.preventDefault()
+        }
         if (conceptosAdicionales.length === 0) {
             showSuccess("No se puede guardar una guia sin conceptos.");
             return
         }
-        e.preventDefault()
         let params = {
             "TIpoCambio": state.tipoCambio,
             "FolioGuia": state.folioGuia,
@@ -506,7 +507,7 @@ function Guia(props) {
                 idGuia: respuesta.data.m_nIdGuia,
                 IdEmbarque: respuesta.data.m_nIdEmbarque,
                 idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
-                fecha: getCurrentDateTime(),
+                fecha: respuesta.data.m_dFecha + 'T' + respuesta.data.m_sHora.substr(0,5),
                 creadoEl: respuesta.data.m_dCreadoEl,
 
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
@@ -1882,10 +1883,10 @@ function Guia(props) {
                             </div>
                         </div>
                         <div id="Agregar" className="tab-pane fade">
-                            <form className="j-forms" onSubmit={handleAceptar}>
+                            <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
                                 <div className="form-content">
 
-                                    <div
+                                    {/*<div
                                         className="wizard-breadcrumb number-style"
                                         style={{
                                             position: "sticky",
@@ -1909,7 +1910,7 @@ function Guia(props) {
                                                 }
                                             </Stepper>
                                         </div>
-                                    </div>
+                                    </div>*/}
 
                                     <div className="widget-wrap" id="informacionGeneral">
                                         <div className="widget-header">
@@ -2881,10 +2882,17 @@ function Guia(props) {
                                                             ivaRetiene={state.ivaRetiene}
                                                         />
                                                     </div>
+                                                </div>
 
-                                                    <div className="form-footer" className="col-md-12">
 
-                                                        {/*<button
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div className="form-footer" className="col-md-12">
+
+                                        {/*<button
                                                             href="#Listado"
                                                             role="tab"
                                                             data-toggle="tab"
@@ -2892,18 +2900,14 @@ function Guia(props) {
                                                         >
                                                             Cancelar
                                                         </button>*/}
-                                                        <button type="submit" className="btn btn-primary primary-btn"
-                                                                disabled={state.agregar == "Consultar"}>
-                                                            Aceptar
-                                                        </button>
-                                                    </div>
-
-                                                </div>
-
-
-                                            </div>
-                                        </div>
-
+                                        <Grid container spacing={2}>
+                                            <Grid item xs>
+                                                <Button fullWidth type="submit" className="btn btn-primary primary-btn"
+                                                        disabled={state.agregar === "Consultar"}>
+                                                    Guardar guía
+                                                </Button>
+                                            </Grid>
+                                        </Grid>
                                     </div>
 
                                 </div>
