@@ -21,7 +21,7 @@ function cancelarUltimaMillaCFDI(id, claveSAT,motivoSAT,motivo, sUUIDRelacionado
     return result
 }
 function obtenerClavesCancelacionSAT( ) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/SAT/ObtenerClavesCancelacion`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/ObtenerClavesCancelacion`;
     let result;
     trackPromise(
         result = axios.get(url, { headers })
