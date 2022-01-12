@@ -1428,9 +1428,7 @@ function Embarque(props) {
                 return {
                     ...state,
                     clientePaga: data,
-                    idTipoSeguro: data.m_bTieneSeguro ? data.m_nIdTipoSeguro : 5,
-                    porcentajeSeguro: data.m_bTieneSeguro ? data.m_cPorcentajeSeguro : 0,
-                    aplicaSeguro: data.m_bTieneSeguro
+                    
                 }
             })
         })
@@ -1524,6 +1522,10 @@ function Embarque(props) {
                 estatusEmbarque: 16,
                 //Datos entrega
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
+                idTipoSeguro: respuesta.data.m_bAplicaSeguro ? respuesta.data.m_nIdTipoSeguro : 5,
+                porcentajeSeguro: respuesta.data.m_bAplicaSeguro ? respuesta.data.m_xPorcentajeSeguro : 0,
+                aplicaSeguro: respuesta.data.m_bAplicaSeguro,
+                valorDeclarado: respuesta.data.m_xValor,
             }
         });
     }
