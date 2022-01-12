@@ -530,6 +530,11 @@ function Recoleccion() {
                 setDataMunicipiosEntregaDD(data)
             })
         }
+        if (event.target.name === "municipioEnt") {
+            obtenerCodigosPostalesPorEstadoMunicipio(recoleccionDD.estadoRec, event.target.value).then(({data}) => {
+                setDataCodigosPostalesRecoleccionDD(data)
+            })
+        }
     };
 
     const handleChangeAutocompleteEntregaDD = (input, newValue) => {
@@ -539,13 +544,8 @@ function Recoleccion() {
         })
         if (input === "codigoPostalEnt") {
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
-                    setEntregaDD(entregaDD => {
-                        return{
-                            ...entregaDD,
-                            zonaOperativaEnt: data[0]
-                        }
-                    })
+                if (data.length > 0){
+                    setDataZonasOperativasEntregaDD(data)
                 }else{
                     setEntregaDD(entregaDD => {
                         return{
@@ -553,17 +553,12 @@ function Recoleccion() {
                             zonaOperativaEnt: {}
                         }
                     })
-                }*/
-                setDataZonasOperativasEntregaDD(data)
+                }
+                
             })
             obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*if (data.length > 0){
-                    setEntregaDD(entregaDD => {
-                        return{
-                            ...entregaDD,
-                            zonaTarifaEnt: data[0]
-                        }
-                    })
+                if (data.length > 0){ 
+                    setDataZonasTarifaEntregaDD(data)
                 }else{
                     setEntregaDD(entregaDD => {
                         return{
@@ -571,8 +566,8 @@ function Recoleccion() {
                             zonaTarifaEnt: {}
                         }
                     })
-                }*/
-                setDataZonasTarifaEntregaDD(data)
+                }
+              
             })
         }
     }
@@ -632,23 +627,30 @@ function Recoleccion() {
         })
         if (input === "codigoPostalRec") {
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-              //  console.log(data)
-                /*setRecoleccionDD(recoleccionDD => {
-                    return{
-                        ...recoleccionDD,
-                        zonaOperativaRec: data
-                    }
-                })*/
-                setDataZonasOperativasRecoleccionDD(data)
+                if (data.length > 0){
+                    setDataZonasOperativasRecoleccionDD(data)
+                }else{
+                    setRecoleccionDD(recoleccionDD => {
+                        return{
+                            ...recoleccionDD,
+                            zonaOperativaRec: {}
+                        }
+                    })
+                }
+               
             })
             obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                /*setRecoleccionDD(recoleccionDD => {
-                    return{
-                        ...recoleccionDD,
-                        zonaTarifaRec: data
-                    }
-                })*/
-                setDataZonasTarifaRecoleccionDD(data)
+                if (data.length > 0){ 
+                    setDataZonasTarifaRecoleccionDD(data)
+                }else{
+                    setRecoleccionDD(recoleccionDD => {
+                        return{
+                            ...recoleccionDD,
+                            zonaTarifaRec: {}
+                        }
+                    })
+                }
+              
             })
         }
     }
@@ -815,7 +817,7 @@ function Recoleccion() {
           //  params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt.m_nIdZona
           //ENTONCES OCUPA SABER SI ES DIFERENTEENTREFA EN EL CONDICIONAL IGUAL PARA EMBARQUE
         let error = false
-
+        let params = {}
         if(state.diferenteEntrega){
             if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
                 error = true
@@ -823,6 +825,15 @@ function Recoleccion() {
             }else if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
                 error = true
                 showSuccess("Verificar la zona tarifa de diferente domicilio entrega")
+            }else if(entregaDD.domicilioEnt==""){
+                error = true
+                showSuccess("Verificar el domicilio de entrega")
+            }else if(entregaDD.entregarEnEnt==""){
+                error = true
+                showSuccess("Verificar la direccion a entregar en")
+            }else if(entregaDD.datosAdicionalesEnt==""){
+                error = true
+                showSuccess("Verificar los datos adicionales para la entrega")
             }
         }else if(destinatario.zonaOperativaDestinatario?.m_nIdZona==undefined){
             error = true
@@ -843,6 +854,15 @@ function Recoleccion() {
             }else if(recoleccionDD.zonaTarifaRec?.m_nIdZona==undefined){
                 error = true
                 showSuccess("Verificar la zona tarifa de diferente domicilio recoleccion")
+            }else if(recoleccionDD.domicilioRec==""){
+                error = true
+                showSuccess("Verificar el domicilio de recoleccion")
+            }else if(recoleccionDD.recogerEnRec==""){
+                error = true
+                showSuccess("Verificar la direccion a recoger en")
+            }else if(recoleccionDD.datosAdicionalesRec==""){
+                error = true
+                showSuccess("Verificar los datos adicionales para la recoleccion")
             }
         }else if(remitente.zonaOperativaRemitente?.m_nIdZona==undefined){
             error = true
@@ -888,92 +908,92 @@ function Recoleccion() {
             item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
             item.m_xPeso = item.peso
         })
-        let params = {
+  
             //Informacion general
-            m_nIdRecoleccion: state.idRecoleccion,
-            m_nIdSucursal: state.idSucursalAgregar,
-            m_nIdEstatusRecoleccion: state.estatusRecoleccion,
-            m_nIdEmbarque: state.folioEmbarque,
-            m_nIdGuia: state.folioGuia,
-            m_nIdInforme: state.folioInforme,
-            m_sFecha: state.fechaHoraRegistro.substr(0, 10),
-            m_sHora: state.fechaHoraRegistro.substr(state.fechaHoraRegistro.length - 5),
-            m_nMoneda: state.moneda,
-            m_rTipoCambio: state.tipoCambio,
-            m_nIdTipoDeCobro: state.tipoCobro,
-            m_nIdCliente: state.clientePaga.m_nIdCliente,
-            ValorDeclarado: state.valorDeclarado,
-            m_nIdTipoSeguro: state.idTipoSeguro,
-            m_xPorcentajeSeguro: state.porcentajeSeguro,
-            m_bAplicaSeguro: state.aplicaSeguro,
+            params.m_nIdRecoleccion = state.idRecoleccion
+            params.m_nIdSucursal = state.idSucursalAgregar
+            params.m_nIdEstatusRecoleccion = state.estatusRecoleccion
+            params.m_nIdEmbarque = state.folioEmbarque
+            params.m_nIdGuia = state.folioGuia
+            params.m_nIdInforme = state.folioInforme
+            params.m_sFecha = state.fechaHoraRegistro.substr(0, 10)
+            params.m_sHora = state.fechaHoraRegistro.substr(state.fechaHoraRegistro.length - 5)
+            params.m_nMoneda = state.moneda
+            params.m_rTipoCambio = state.tipoCambio
+            params.m_nIdTipoDeCobro = state.tipoCobro
+            params.m_nIdCliente = state.clientePaga.m_nIdCliente
+            params.ValorDeclarado = state.valorDeclarado
+            params.m_nIdTipoSeguro = state.idTipoSeguro
+            params.m_xPorcentajeSeguro = state.porcentajeSeguro
+            params.m_bAplicaSeguro = state.aplicaSeguro
             //Remitente
-            m_sNombreRemitente: remitente.nombreRemitente,
-            m_sRFCRemitente: remitente.RFCRemitente,
-            m_sDomicilioRemitente: remitente.domicilioRemitente,
-            m_sIdCodigoPostalRemitente: remitente.codigoPostalRemitente.m_nIdCP,
-            m_nIdCiudadRemitente: remitente.municipioRemitente,
+            params.m_sNombreRemitente = remitente.nombreRemitente
+            params.m_sRFCRemitente = remitente.RFCRemitente
+            params.m_sDomicilioRemitente = remitente.domicilioRemitente
+            params.m_sIdCodigoPostalRemitente = remitente.codigoPostalRemitente.m_nIdCP
+            params.m_nIdCiudadRemitente = remitente.municipioRemitente
             // m_sMunicipioRemitente: remitente.municipioRemitente,
-            m_sCorreoRemitente: remitente.correoRemitente,
-            m_sTelefonoRemitente: remitente.telefonoRemitente,
-            m_sContactoRemitente: remitente.contactoRemitente,
-            m_nIdCiudadOrigen: remitente.origenRemitente.m_nIdCiudad,
+            params.m_sCorreoRemitente = remitente.correoRemitente
+            params.m_sTelefonoRemitente = remitente.telefonoRemitente
+            params.m_sContactoRemitente = remitente.contactoRemitente
+            params.m_nIdCiudadOrigen = remitente.origenRemitente.m_nIdCiudad
             // m_nIdZonaRemitente: remitente.zonaRemitente.m_nIdZona,
-            m_nIdRemitente: remitente.idRemitente,
-            m_sAliasRemitente: remitente.aliasRemitente,
-            m_sCalleRemitente: remitente.calleRemitente,
-            m_sNoIntRemitente: remitente.numeroIntRemitente,
-            m_sNoExtRemitente: remitente.numeroExtRemitente,
-            m_sColoniaRemitente: remitente.coloniaRemitente,
-            m_nIdEstadoRemitente: remitente.estadoRemitente,
+            params.m_nIdRemitente = remitente.idRemitente
+            params.m_sAliasRemitente = remitente.aliasRemitente
+            params.m_sCalleRemitente = remitente.calleRemitente
+            params.m_sNoIntRemitente = remitente.numeroIntRemitente
+            params.m_sNoExtRemitente = remitente.numeroExtRemitente
+            params.m_sColoniaRemitente = remitente.coloniaRemitente
+            params.m_nIdEstadoRemitente = remitente.estadoRemitente
 
             //Destinatario
-            m_sNombreDestinatario: destinatario.nombreDestinatario,
-            m_sRFCDestinatario: destinatario.RFCDestinatario,
-            m_sDomicilioDestinatario: destinatario.domicilioDestinatario,
-            m_sIdCodigoPostalDestinatario: destinatario.codigoPostalDestinatario.m_nIdCP,
-            m_nIdCiudadDestinatario: destinatario.municipioDestinatario,
+            params.m_sNombreDestinatario = destinatario.nombreDestinatario
+            params.m_sRFCDestinatario = destinatario.RFCDestinatario
+            params.m_sDomicilioDestinatario = destinatario.domicilioDestinatario
+            params.m_sIdCodigoPostalDestinatario = destinatario.codigoPostalDestinatario.m_nIdCP
+            params.m_nIdCiudadDestinatario = destinatario.municipioDestinatario
             // m_sMunicipioDestinatario: destinatario.municipioDestinatario,
-            m_sCorreoDestinatario: destinatario.correoDestinatario,
-            m_sTelefonoDestinatario: destinatario.telefonoDestinatario,
-            m_sContactoDestinatario: destinatario.contactoDestinatario,
-            m_nIdCiudadDestino: destinatario.destinoDestinatario.m_nIdCiudad,
+            params.m_sCorreoDestinatario = destinatario.correoDestinatario
+            params.m_sTelefonoDestinatario = destinatario.telefonoDestinatario
+            params.m_sContactoDestinatario = destinatario.contactoDestinatario
+            params.m_nIdCiudadDestino = destinatario.destinoDestinatario.m_nIdCiudad
             // m_nIdZonaDestinatario: destinatario.zonaDestinatario.m_nIdZona,
-            m_nIdDestinatario: destinatario.idDestinatario,
-            m_sAliasDestinatario: destinatario.aliasDestinatario,
-            m_sCalleDestinatario: destinatario.calleDestinatario,
-            m_sNoIntDestinatario: destinatario.numeroIntDestinatario,
-            m_sNoExtDestinatario: destinatario.numeroExtDestinatario,
-            m_sColoniaDestinatario: destinatario.coloniaDestinatario,
-            m_nIdEstadoDestinatario: destinatario.estadoDestinatario,
-            m_sLatitudD: destinatario.latitudD,
-            m_sLongitudD: destinatario.longitudD,
+            params.m_nIdDestinatario = destinatario.idDestinatario
+            params.m_sAliasDestinatario = destinatario.aliasDestinatario
+            params.m_sCalleDestinatario = destinatario.calleDestinatario
+            params.m_sNoIntDestinatario = destinatario.numeroIntDestinatario
+            params.m_sNoExtDestinatario = destinatario.numeroExtDestinatario
+            params.m_sColoniaDestinatario = destinatario.coloniaDestinatario
+            params.m_nIdEstadoDestinatario = destinatario.estadoDestinatario
+            params.m_sLatitudD = destinatario.latitudD
+            params.m_sLongitudD = destinatario.longitudD
 
             //Cita de recoleccion
-            m_bRecoleccionConCita: state.recoleccionConCita,
+            params.m_bRecoleccionConCita = state.recoleccionConCita
 
             //Recoleccion
-            m_nIdCPDetalleRecoleccion: remitente.codigoPostalRemitente.m_nIdCP,
-            m_bRecoleccionDiferenteDomicilio: state.diferenteRecoleccion,
+            params.m_nIdCPDetalleRecoleccion = remitente.codigoPostalRemitente.m_nIdCP
+            params.m_bRecoleccionDiferenteDomicilio = state.diferenteRecoleccion
 
             //Entrega
-            m_nIdCPDetalleEntrega: destinatario.codigoPostalDestinatario.m_nIdCP,
-            m_bEntregaDiferenteDomicilio: state.diferenteEntrega,
-            m_arrClsComplementoSAT: dataComplementosSAT,
+            params.m_nIdCPDetalleEntrega = destinatario.codigoPostalDestinatario.m_nIdCP
+            params.m_bEntregaDiferenteDomicilio = state.diferenteEntrega
+            params.m_arrClsComplementoSAT = dataComplementosSAT
             //Detalles de la operación
-            m_dFechaSalida: state.fechaHoraSalida.split("T")[0],
-            m_dFechaLlegada: state.fechaHoraLlegada.split("T")[0],
-            m_tHoraSalida: state.fechaHoraSalida.split("T")[1],
-            m_tHoraLlegada: state.fechaHoraLlegada.split("T")[1],
-            m_parrPaquetes: dataPaquetes,
-            m_nNoPaquetes: dataPaquetes.length,
-            m_parrSobres: state.sobres,
-            m_nNoSobres: state.sobres.length,
-            m_nIdOperador: state.operador.m_nIdOperador,
-            m_nIdUnidad: state.unidad.m_nIdUnidad,
-            m_nIdRemolque: state.unidad.m_nIdUnidad,
-            m_nCreadoPor: state.CreadoPor,
-            m_nModificadoPor: state.ModificadoPor
-        }
+            params.m_dFechaSalida = state.fechaHoraSalida.split("T")[0]
+            params.m_dFechaLlegada = state.fechaHoraLlegada.split("T")[0]
+            params.m_tHoraSalida = state.fechaHoraSalida.split("T")[1]
+            params.m_tHoraLlegada = state.fechaHoraLlegada.split("T")[1]
+            params.m_parrPaquetes = dataPaquetes
+            params.m_nNoPaquetes = dataPaquetes.length
+            params.m_parrSobres = state.sobres
+            params.m_nNoSobres = state.sobres.length
+            params.m_nIdOperador = state.operador.m_nIdOperador
+            params.m_nIdUnidad = state.unidad.m_nIdUnidad
+            params.m_nIdRemolque = state.unidad.m_nIdUnidad
+            params.m_nCreadoPor = state.CreadoPor
+            params.m_nModificadoPor = state.ModificadoPor
+        
        
         if (state.diferenteRecoleccion) {
             params.m_nIdCPDetalleRecoleccion = recoleccionDD.codigoPostalRec.m_nIdCP
@@ -984,13 +1004,13 @@ function Recoleccion() {
             params.m_nIdZonaTarifa = recoleccionDD.zonaTarifaRec.m_nIdZona
             params.m_nIdEstadoRecoleccion = recoleccionDD.estadoRec
             params.m_sCodigoMunicipioRecoleccion = recoleccionDD.municipioRec
-            params.m_sLatitudR = coordenadas ? coordenadas.lat : recoleccionDD.latitudRec
-            params.m_sLongitudR = coordenadas ? coordenadas.lng : recoleccionDD.longitudRec
+            params.m_sLatitudR = coordenadas ? coordenadas[0] : recoleccionDD.latitudRec
+            params.m_sLongitudR = coordenadas ? coordenadas[1] : recoleccionDD.longitudRec
         } else {
             params.m_nIdZonaOperativa = remitente.zonaOperativaRemitente.m_nIdZona
             params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente.m_nIdZona
-            params.m_sLatitudR = coordenadas ? coordenadas.lat : remitente.latitudR
-            params.m_sLongitudR = coordenadas ? coordenadas.lng : remitente.longitudR
+            params.m_sLatitudR = coordenadas ? coordenadas[0] : remitente.latitudR
+            params.m_sLongitudR = coordenadas ? coordenadas[1] : remitente.longitudR
         } 
             params.m_bEntregaEnSucursal = state.entregaEnSucursal;
             params.m_nIdSucursalEntrega = state.idSucursalEntrega;
@@ -1030,8 +1050,8 @@ function Recoleccion() {
         }))
         params.m_nIdCotizacion = state.idCotizacion
     //    console.log(params)
-      //  console.log(JSON.stringify(params))
-      if (state.idRecoleccion != 0) {
+        console.log(JSON.stringify(params))
+ /*     if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1054,7 +1074,7 @@ function Recoleccion() {
                  //   console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
     }
     };
 
