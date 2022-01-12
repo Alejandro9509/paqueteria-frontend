@@ -691,11 +691,6 @@ class AgregarViaje extends Component {
                 flex: 1,
             },
             {
-                headerName: "Operador",
-                field: "m_sNombreCompleto",
-                flex: 1,
-            },
-            {
                 headerName: "Remolque 1",
                 field: "m_sRemolque1",
                 flex: 1,
@@ -746,11 +741,6 @@ class AgregarViaje extends Component {
             {
                 headerName: "Destino",
                 field: "m_sCiudadDestino",
-                flex: 1,
-            },
-            {
-                headerName: "Operador",
-                field: "m_sNombreCompleto",
                 flex: 1,
             },
             {
