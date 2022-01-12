@@ -80,8 +80,8 @@ function obtenerXML(id){
     );
     return result
 }
-function obtenerCFDI(id){
-    const url = `${process.env.REACT_APP_API_URL}/Guias/GetCFDITraslada/${id}`;
+function obtenerCFDI(id,sustituir){
+    const url = `${process.env.REACT_APP_API_URL}/Guias/GetCFDITraslada/${id}/${sustituir ? 1 : 0}`;
     let result;
     trackPromise(
         result =  axios.get(url,  { headers })

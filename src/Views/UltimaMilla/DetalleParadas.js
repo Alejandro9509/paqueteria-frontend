@@ -26,7 +26,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import SearchIcon from "@material-ui/icons/Search";
 import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unidades/icono_unidades.svg";
 import {PieChart} from 'react-minimal-pie-chart';
-
+import BlockIcon from '@material-ui/icons/Block';
 import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
 import AgregarPaqueteUltimaMilla from "./AgregarPaqueteUltimaMilla";
 import PaquetesList from "./PaquetesList";
@@ -53,6 +53,8 @@ import {actualizarCoordenadasRecoleccion} from "../../Util/Contexts/RecoleccionC
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import CancelIcon from '@material-ui/icons/Cancel';
 import {ReactComponent as EmbarqueIcon} from "../../iconos/Menu/IconoEmbarque/iconoEmbarque.svg";
+import CancelarSAT from "../SAT/CancelarSAT";
+import {cancelarInformeCFDI, cancelarUltimaMillaCFDI} from "../../Util/Contexts/SATContext";
 function showError(mensaje) {
     new Noty({
         type: "warning",
@@ -97,6 +99,8 @@ class DetalleParadas extends Component {
         this.confirmUbicacionParada = this.confirmUbicacionParada.bind(this)
         this.confirmarUbicacion = this.confirmarUbicacion.bind(this)
         this.generarCFDI = this.generarCFDI.bind(this)
+        this.showCancelarCFDI = this.showCancelarCFDI.bind(this)
+        this.cancelarCFDI = this.cancelarCFDI.bind(this)
 
     }
 
@@ -242,9 +246,6 @@ class DetalleParadas extends Component {
 
     }
     confirmUbicacionParada(id,esRecoleccion, data) {
-        console.log(id)
-        console.log(esRecoleccion)
-        console.log(data)
 
         const domicilioRecoleccion = data.m_bRecoleccionDiferenteDomicilio ? data.m_sDomicilioDetalleRecoleccion : data.m_sDomicilioRemitente
         const domicilioEntrega = data.m_bEntregaDiferenteDomicilio ? data.m_sDomicilioDetalleEntrega : data.m_sDomicilioDestinatario
@@ -304,8 +305,6 @@ class DetalleParadas extends Component {
     }
 
     confirmarUbicacion(coordenadas,e,idGuia, esRecoleccion) {
-        console.log(coordenadas.lat)
-        console.log(coordenadas.lng)
         if (esRecoleccion){
             actualizarCoordenadasRecoleccion(idGuia,coordenadas.lat,coordenadas.lng).then((respuesta) => {
                 showSuccess(respuesta.data)
@@ -323,6 +322,36 @@ class DetalleParadas extends Component {
 
     }
 
+    showCancelarCFDI(paquete){
+        this.setState({openCancelarSAT: true, paqueteSeleccionado: paquete})
+    }
+
+    cancelarCFDI( data) {
+        confirmAlert({
+            title: 'Confirmar Cancelación',
+            message: '¿Está seguro de realizar la cancelación ante el SAT?',
+            buttons: [
+                {
+                    label: 'Sí',
+                    onClick: () => {
+                        cancelarUltimaMillaCFDI(this.state.paqueteSeleccionado.m_nId,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado,this.state.paqueteSeleccionado.m_bEsRecoleccion).then((result) => {
+                            showSuccess(result.data)
+                            this.props.refresh()
+                        }).catch((error) => {
+                            if (error.response){
+                                showError(error.response.data)
+                            }
+                        })
+                    }
+                },
+                {
+                    label: 'No',
+                }
+            ]
+        })
+
+
+    }
     generarReporte(e, id) {
         e.preventDefault()
         console.log(' id: ' + id)
@@ -364,6 +393,11 @@ class DetalleParadas extends Component {
         const allGuias = [].concat(...this.props.tour.m_arrClsParadaUltimaMilla.map(a => a.m_arrClsProGuia))
         return (
             <div>
+
+                {this.state.openCancelarSAT &&
+                    <CancelarSAT open={this.state.openCancelarSAT} onSubmit={this.cancelarCFDI} data={{folioSustituye: this.state.paqueteSeleccionado.m_sFolioFiscalUUID,m_sFolio: this.state.paqueteSeleccionado.m_sFolio, folioCancelar: this.state.paqueteSeleccionado.m_sFolioFiscalUUIDSustituido || this.state.paqueteSeleccionado.m_sFolioFiscalUUID
+                    }} close={() => this.setState({openCancelarSAT: false})}/>
+                }
                 {
                     this.state.showConfirmarUbicacion &&
                     <ConfirmarUbicacion confirmarUbicacion={this.confirmarUbicacion} open={this.state.showConfirmarUbicacion}
@@ -800,7 +834,19 @@ class DetalleParadas extends Component {
                                                                                                             </IconButton>
                                                                                                         }
                                                                                                         {
-                                                                                                            g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            g.m_bTimbrado &&
+                                                                                                            <IconButton
+                                                                                                                aria-label="Cancelar SAT">
+                                                                                                                <Tooltip
+                                                                                                                    title={"Cancelar SAT"}>
+                                                                                                                    <BlockIcon
+                                                                                                                        onClick={() => this.showCancelarCFDI(g)}
+                                                                                                                        fontSize="default"/>
+                                                                                                                </Tooltip>
+                                                                                                            </IconButton>
+                                                                                                        }
+                                                                                                        {
+                                                                                                            g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva && !g.m_bTimbrado &&
                                                                                                             <IconButton
                                                                                                                 aria-label="delete">
                                                                                                                 <Tooltip
@@ -811,6 +857,7 @@ class DetalleParadas extends Component {
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
                                                                                                         }
+
 
 
                                                                                                     </ButtonGroup>

@@ -17,7 +17,7 @@ function obtenerDetalleParadasIdInformes(id) {
 }
 function obtenerDetalleParadasIdViaje(id) {
     const url =
-        `${process.env.REACT_APP_REPORT_URL}/api/Informes/GetPardasIdViaje/` +
+        `${process.env.REACT_APP_API_URL_LOCAL}/api/Informes/GetPardasIdViaje/` +
         id;
     let result;
     trackPromise(
