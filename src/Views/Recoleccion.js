@@ -1847,7 +1847,21 @@ function Recoleccion() {
                     <div>
                         <Tooltip title="Modificar">
                             <a data-toggle="tab"
-                               onClick={() => (handleShowModificar(row.row.m_nIdRecoleccion))}
+                               onClick={() =>
+                                 { if(row.row.m_nIdEstatusRecoleccion==1 ||row.row.m_nIdEstatusRecoleccion==6){
+                                     handleShowModificar(row.row.m_nIdRecoleccion)
+                                 }else{
+                                     showSuccess(`La recoleccion solo puede ser modificada en Estatus: Pendiente, Estatus Actual: ${row.row.m_sEstatusRecoleccion}`)
+                                 }
+                                    }
+                                   
+                                 
+                                 
+                                 
+                                 
+                                 
+                                
+                                }
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
