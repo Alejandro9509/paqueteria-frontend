@@ -54,7 +54,7 @@ function showSuccess(mensaje) {
         type: "information",
         layout: "topCenter",
         text: mensaje,
-        timeout: "3000"
+        timeout: "6000"
     }).show()
 }
 
@@ -524,10 +524,34 @@ class AgregarViaje extends Component {
         this.getInformesDisponibles(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, newValue.m_nIdCiudad)
     }
 
+    isUnidadAvailable(idUnidad, origen){
+        switch (origen) {
+            case 'UNIDAD':
+                return !((idUnidad === this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0) || (idUnidad === this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0));
+                break;
+            case 'REMOLQUE1':
+                return !((idUnidad === this.state.unidad ? this.state.unidad.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0) || (idUnidad === this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0));
+                break;
+            case 'REMOLQUE2':
+                return !((idUnidad === this.state.unidad ? this.state.unidad.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0) || (idUnidad === this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0));
+                break;
+            case 'DOLLY':
+                return !((idUnidad === this.state.unidad ? this.state.unidad.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0));
+                break;
+            default:
+                return true;
+                break;
+        }
+    }
+
     handleRemolqueUnoFiltro(event, newValue) {
         event.preventDefault();
         obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
             if (resultado.data.m_sEstatus === "DISPONIBLE"){
+                if (!this.isUnidadAvailable(newValue, "REMOLQUE1")){
+                    showSuccess("La unidad elegida ya se encuentra seleccionada.");
+                    return
+                }
                 this.setState({
                     IdRemolque1: newValue,
                     placasRemolque1: newValue.m_sPlacas,
@@ -550,6 +574,10 @@ class AgregarViaje extends Component {
         event.preventDefault();
         obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
             if (resultado.data.m_sEstatus === "DISPONIBLE"){
+                if (!this.isUnidadAvailable(newValue, "REMOLQUE2")){
+                    showSuccess("La unidad elegida ya se encuentra seleccionada.");
+                    return
+                }
                 this.setState({
                     IdRemolque2: newValue,
                     placasRemolque2: newValue.m_sPlacas,
@@ -573,6 +601,10 @@ class AgregarViaje extends Component {
         if (newValue){
             obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
                 if (resultado.data.m_sEstatus === "DISPONIBLE"){
+                    if (!this.isUnidadAvailable(newValue, "UNIDAD")){
+                        showSuccess("La unidad elegida ya se encuentra seleccionada.");
+                        return
+                    }
                     this.setState({
                         unidad: newValue,
                         placaIntUnidad: newValue.m_sPlacas,
@@ -607,6 +639,10 @@ class AgregarViaje extends Component {
 
     handleDollyFiltro(event, newValue) {
         event.preventDefault();
+        if (!this.isUnidadAvailable(newValue, "DOLLY")){
+            showSuccess("La unidad elegida ya se encuentra seleccionada.");
+            return
+        }
         this.setState({IdDolly: newValue, placasDolly: newValue.m_sPlacas})
         if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && newValue.m_nIdUnidad) {
 
