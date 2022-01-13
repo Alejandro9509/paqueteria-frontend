@@ -871,22 +871,25 @@ function Embarque(props) {
         e.preventDefault();
         let error = false
 
-        if(state.diferenteEntrega){
-            if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
+        if (!state.entregaEnSucursal){
+            if(state.diferenteEntrega){
+                if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
+                    error = true
+                    showSuccess("Verificar la zona operativa de diferente domicilio entrega")
+                }else if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
+                    error = true
+                    showSuccess("Verificar la zona tarifa de diferente domicilio entrega")
+                }
+            }else if(destinatario.zonaOperativaDestinatario?.m_nIdZona==undefined){
                 error = true
-                showSuccess("Verificar la zona operativa de diferente domicilio entrega")
-            }else if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
+                showSuccess("Verificar la zona operativa de destinatario")
+            }else if(destinatario.zonaTarifaDestinatario?.m_nIdZona==undefined){
                 error = true
-                showSuccess("Verificar la zona tarifa de diferente domicilio entrega")
+                showSuccess("Verificar la zona tarifa de destinatario")
             }
-        }else if(destinatario.zonaOperativaDestinatario?.m_nIdZona==undefined){
-            error = true
-            showSuccess("Verificar la zona operativa de destinatario")
-         }else if(destinatario.zonaTarifaDestinatario?.m_nIdZona==undefined){
-            error = true
-            showSuccess("Verificar la zona tarifa de destinatario")
-         }
-          else if(destinatario.correoDestinatario == ""){
+        }
+
+        if(destinatario.correoDestinatario == ""){
             error = true
             showSuccess("Error al agregar recoleccion: El correo del destinatario es un campo requerido")
         }
