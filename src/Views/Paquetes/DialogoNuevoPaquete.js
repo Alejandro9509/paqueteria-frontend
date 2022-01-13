@@ -587,9 +587,12 @@ export default function DialogoNuevoPaquete(props) {
 
     return (
         <div>
-            <Button variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'left'}} disabled={props.disabled}>
-                Agregar paquete
-            </Button>
+            {!props.disabled &&
+                <Button variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'left'}} disabled={props.disabled}>
+                    Agregar paquete
+                </Button>
+            }
+
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title"
                     fullWidth
                     maxWidth={'sm'}>

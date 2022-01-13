@@ -372,6 +372,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                     concepto={concepto}
                     conceptosBase={conceptosBase}
                     keys={keys}
+                    disabled={disabled}
                     resetPaquete={resetPaquete}
                 />
             </div>

@@ -24,6 +24,7 @@ import {ReactComponent as UltimaMillaIcono} from './iconos/Menu/IconoUltimaMilla
 
 import {ReactComponent as viajeIcon} from './iconos/Menu/IconoViajes/iconoViajes.svg';
 import {ReactComponent as corteCajaIcon} from './iconos/Menu/IconoCorteCaja/IconoCorteCaja.svg';
+import Seguimiento from "./Views/Seguimiento/Seguimiento";
 
 const dashboardRoutes = [
   {
@@ -104,6 +105,14 @@ const dashboardRoutes = [
     name: "Corte de Caja",
     icon: corteCajaIcon,
     component: CorteCajaPage,
+    single: true,
+    child:[]
+  },
+  {
+    path: "/Segumiento",
+    name: "Seguimiento",
+    icon: corteCajaIcon,
+    component: Seguimiento,
     single: true,
     child:[]
   },
