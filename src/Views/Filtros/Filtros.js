@@ -124,10 +124,12 @@ function Filtros(props) {
             if (filtros.folio.length > 0){
                 obtenerRecoleccionFiltro(0, 0,0, 0,filtros.folio,0,0,0).then(respuesta => {
                     props.listaResultado(respuesta.data)
+                    
                 })
             }else{
                 obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado, filtros.clientePaga.id||0).then((respuesta) => {
                     props.listaResultado(respuesta.data)
+                    console.log(respuesta.data)
                 })
             }
         }else if (props.guia){
@@ -226,6 +228,7 @@ function Filtros(props) {
                 }else if (props.recoleccion){
                     obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
                         props.listaResultado(respuesta.data);
+                        console.log(respuesta.data)
                     })
                 }else if (props.guia){
                     obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {

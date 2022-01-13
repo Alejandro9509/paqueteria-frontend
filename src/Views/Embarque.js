@@ -502,6 +502,7 @@ function Embarque(props) {
 
         //Cita de recoleccion
         entregaConCita: false,
+        recoleccionConCita: false,
         fechaCita: '',
         horaCitaMinima: '',
         horaCitaMaxima: '',
@@ -541,6 +542,7 @@ function Embarque(props) {
                 //Informacion general
                 folioRecoleccion: '',
                 idRecoleccion: 0,
+                idCotizacion:'',
                 folioEmbarque: '',
                 folioGuia: '',
                 folioInforme: '',
@@ -565,6 +567,7 @@ function Embarque(props) {
 
                 //Cita de recoleccion
                 entregaConCita: false,
+                recoleccionConCita: false,
                 fechaCita: '',
                 horaCitaMinima: '',
                 horaCitaMaxima: '',
@@ -590,6 +593,7 @@ function Embarque(props) {
         setDataPaquetes([])
         resetEntregaDD()
         setDataConceptos([])
+        setDataComplementosSAT([])
         setConfiguraciones({
             estatusRecoleccion: 0,
             estatusEmbarque: 0,
@@ -867,22 +871,25 @@ function Embarque(props) {
         e.preventDefault();
         let error = false
 
-        if(state.diferenteEntrega){
-            if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
+        if (!state.entregaEnSucursal){
+            if(state.diferenteEntrega){
+                if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
+                    error = true
+                    showSuccess("Verificar la zona operativa de diferente domicilio entrega")
+                }else if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
+                    error = true
+                    showSuccess("Verificar la zona tarifa de diferente domicilio entrega")
+                }
+            }else if(destinatario.zonaOperativaDestinatario?.m_nIdZona==undefined){
                 error = true
-                showSuccess("Verificar la zona operativa de diferente domicilio entrega")
-            }else if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
+                showSuccess("Verificar la zona operativa de destinatario")
+            }else if(destinatario.zonaTarifaDestinatario?.m_nIdZona==undefined){
                 error = true
-                showSuccess("Verificar la zona tarifa de diferente domicilio entrega")
+                showSuccess("Verificar la zona tarifa de destinatario")
             }
-        }else if(destinatario.zonaOperativaDestinatario?.m_nIdZona==undefined){
-            error = true
-            showSuccess("Verificar la zona operativa de destinatario")
-         }else if(destinatario.zonaTarifaDestinatario?.m_nIdZona==undefined){
-            error = true
-            showSuccess("Verificar la zona tarifa de destinatario")
-         }
-          else if(destinatario.correoDestinatario == ""){
+        }
+
+        if(destinatario.correoDestinatario == ""){
             error = true
             showSuccess("Error al agregar recoleccion: El correo del destinatario es un campo requerido")
         }
@@ -1428,9 +1435,7 @@ function Embarque(props) {
                 return {
                     ...state,
                     clientePaga: data,
-                    idTipoSeguro: data.m_bTieneSeguro ? data.m_nIdTipoSeguro : 5,
-                    porcentajeSeguro: data.m_bTieneSeguro ? data.m_cPorcentajeSeguro : 0,
-                    aplicaSeguro: data.m_bTieneSeguro
+                    
                 }
             })
         })
@@ -1524,6 +1529,11 @@ function Embarque(props) {
                 estatusEmbarque: 16,
                 //Datos entrega
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
+                idTipoSeguro: respuesta.data.m_bAplicaSeguro ? respuesta.data.m_nIdTipoSeguro : 5,
+                porcentajeSeguro: respuesta.data.m_bAplicaSeguro ? respuesta.data.m_xPorcentajeSeguro : 0,
+                aplicaSeguro: respuesta.data.m_bAplicaSeguro,
+                valorDeclarado: respuesta.data.m_xValor,
+                recoleccionConCita: respuesta.data.m_bRecoleccionConCita
             }
         });
     }
@@ -1692,10 +1702,11 @@ function Embarque(props) {
                 idRecoleccion: duplicar ? 0 : respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.IdSucursal,
                 folioRecoleccion: duplicar ? "" : respuesta.data.m_sFolioRecoleccion,
+                recoleccionConCita: respuesta.data.m_sFolioRecoleccion ? respuesta.data.m_sFolioRecoleccion.length > 0 : false,
                 folioEmbarque: respuesta.data.m_sFolioEmbarque,
                 folioGuia: duplicar ? "" : respuesta.data.m_sFolioGuia,
                 folioInforme: duplicar ? "" : respuesta.data.m_sFolioInforme,
-                fechaHoraRegistro: getCurrentDateTime(),
+                fechaHoraRegistro: respuesta.data.m_dFechaRegistro + 'T' + respuesta.data.m_tHoraRegistro.substr(0,5),
                 estatusEmbarque: duplicar ? 16 : respuesta.data.m_nIdEstatusEmbarque,
                 moneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,

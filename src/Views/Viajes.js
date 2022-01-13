@@ -58,6 +58,8 @@ import Filtros from "./Filtros/Filtros";
 import {obtenerFechaFinal, obtenerFechaInicio} from "../Util/Contexts/UtileriasContext";
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import CancelarSAT from "./SAT/CancelarSAT";
+import {cancelarInformeCFDI} from "../Util/Contexts/SATContext";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -412,7 +414,7 @@ function Viajes() {
 
     }
 
-    function generarCFDI(id, folio) {
+    function generarCFDI(id, folio, idViaje, sustituir) {
         confirmAlert({
             title: 'Confirmar Timbrado',
             message: '¿Está seguro de realizar esta operación, se timbrara ante el SAT?',
@@ -420,13 +422,14 @@ function Viajes() {
                 {
                     label: 'Sí',
                     onClick: () => {
-                        obtenerCFDI(id).then((result) => {
+                        obtenerCFDI(id,sustituir).then((result) => {
                             obtenerReporteCFDIViaje(id).then(({data}) => {
                                 let pdfWindow = window.open("");
                                 pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
                                 pdfWindow.document.body.style.margin = "0px";
                                 pdfWindow.document.title = "CFDI_ " + folio;
                             })
+                            getParadasListado({m_nIdViaje:idViaje})
                         }).catch((error) => {
                             if (error.response){
                                 showError(error.response.data)
@@ -442,7 +445,12 @@ function Viajes() {
 
 
     }
-    function cancelarCFDI(id, folio) {
+
+    function showCancelarCFDI(informe){
+        setState({...state,openCancelarSAT: true, informe: informe})
+    }
+    function cancelarCFDI( data) {
+        console.log(data)
         confirmAlert({
             title: 'Confirmar Cancelación',
             message: '¿Está seguro de realizar la cancelación ante el SAT?',
@@ -450,7 +458,8 @@ function Viajes() {
                 {
                     label: 'Sí',
                     onClick: () => {
-                        cancelarCFDI(id).then((result) => {
+                        cancelarInformeCFDI(state.informe.m_clsInforme.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
+                            getParadasListado(state.informe)
                             showSuccess(result.data)
                         }).catch((error) => {
                             if (error.response){
@@ -578,7 +587,7 @@ function Viajes() {
                             !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_clsInforme.m_bTimbrado &&
                             <Tooltip title="Generar CFDI">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (generarCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-file-text"
+                                   onClick={() => (generarCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme, row.row.m_nIdViaje, false))}><i className="zmdi zmdi-file-text"
                                                                                                                                              style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
@@ -588,6 +597,15 @@ function Viajes() {
                             <Tooltip title="Descargar XML">
                                 <a href="#" className="btn btn-default btn-xs"
                                    onClick={() => (descargarXMLCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-download" style={{color: "#F9A03E"}}/></a>
+
+                            </Tooltip>
+                        }
+                        {
+                            !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_clsInforme.m_bTimbrado &&
+                            <Tooltip title="Sustituir CFDI">
+                                <a href="#" className="btn btn-default btn-xs"
+                                   onClick={() => (generarCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme, row.row.m_nIdViaje, true))}><i className="zmdi zmdi-refresh"
+                                                                                                                                                                        style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
@@ -613,7 +631,7 @@ function Viajes() {
                             !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_clsInforme.m_bTimbrado &&
                             <Tooltip title="Cancelar Timbrado SAT">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (cancelarCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioFiscalUUID))}><i className="zmdi zmdi-card-off" style={{color: "#F9A03E"}}/></a>
+                                   onClick={() => (showCancelarCFDI(row.row))}><i className="zmdi zmdi-card-off" style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
@@ -673,6 +691,18 @@ function Viajes() {
             field: "m_sOperador",
             width: 200
         },
+        {
+            headerName: "Folio Fiscal",
+            field: "m_nIdDestino",
+            width: 200,
+            valueFormatter: row => row.row.m_clsInforme.m_sFolioFiscalUUID || " "
+        },
+        {
+            headerName: "Folio Fiscal sustituido",
+            field: "m_nIdOrigen",
+            width: 200,
+            valueFormatter: row => row.row.m_clsInforme.m_sFolioFiscalUUIDSustituido || row.row.m_clsInforme.m_sUltimoFolioFiscalUUIDSustituido || " "
+        },
         // {
         //     headerName: "Liq",
         //     field: "m_sNumeroNombreOperador",
@@ -685,9 +715,9 @@ function Viajes() {
 
     function getParadasListado(row) {
         obtenerDetalleParadasIdViaje(row.m_nIdViaje).then(respuesta => {
-            var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdOrigen")
+            var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdDestino")
             arrayInformes.forEach(a => {
-                a["informes"] = respuesta.data.filter(r => r.m_nIdOrigen === a.m_nIdOrigen)
+                a["informes"] = respuesta.data.filter(r => r.m_nIdOrigen === a.m_nIdOrigen && r.m_nIdDestino === a.m_nIdDestino)
                 a.origenDestino = `${a.m_sOrigen} - ${a.m_sDestino}`
             })
             setViajeSeleccionado(row)
@@ -765,7 +795,7 @@ function Viajes() {
             .then((respuesta) => {
                 showSuccess(respuesta.data);
                 console.log(respuesta.data);
-                getParadasListado(paradaData.m_nIdViaje)
+                getParadasListado(paradaData)
                 getAllData()
             })
             .catch((err) => {
@@ -810,7 +840,7 @@ function Viajes() {
             .then((respuesta) => {
                 showSuccess(respuesta.data);
                 console.log(respuesta.data);
-                getParadasListado(paradaData.m_nIdViaje)
+                getParadasListado(paradaData)
                 getAllData()
 
             })
@@ -847,6 +877,10 @@ function Viajes() {
 
     return (
         <div>
+            {state.openCancelarSAT &&
+                <CancelarSAT open={state.openCancelarSAT} onSubmit={cancelarCFDI} data={{folioSustituye: state.informe.m_clsInforme.m_sFolioFiscalUUID,m_sFolio: state.informe.m_clsInforme.m_sFolioInforme, folioCancelar: state.informe.m_clsInforme.m_sFolioFiscalUUIDSustituido || state.informe.m_clsInforme.m_sFolioFiscalUUID
+                }} close={() => setState({...state,openCancelarSAT: false})}/>
+            }
             {
                 informeSeleccionado &&
                 <Dialog open={eventOptions.showDetalleGuias}

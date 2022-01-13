@@ -123,8 +123,8 @@ class Cronograma extends Component {
                                                             fontWeight="fontWeightBold">Repartidor</Box></TableCell>
                                                         <TableCell style={{borderBottom: "none"}} align="left"><Box
                                                             fontWeight="fontWeightBold">Unidad</Box></TableCell>
-                                                        <TableCell style={{borderBottom: "none"}} align="left"><Box
-                                                            fontWeight="fontWeightBold">Capacidad</Box></TableCell>
+                                                        {/*<TableCell style={{borderBottom: "none"}} align="left"><Box
+                                                            fontWeight="fontWeightBold">Capacidad</Box></TableCell>*/}
                                                         <TableCell style={{borderBottom: "none"}} align="center"><Box
                                                             fontWeight="fontWeightBold">Tiempo</Box></TableCell>
                                                         <TableCell style={{borderBottom: "none"}} align="center"><Box
@@ -158,8 +158,8 @@ class Cronograma extends Component {
                                                                                align="left">{u.m_snNombreOperador}</TableCell>
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="left">{u.m_sPlacasUnidad}</TableCell>
-                                                                    <TableCell style={{borderBottom: "none"}}
-                                                                               align="left">Capacidad</TableCell>
+                                                                    {/*<TableCell style={{borderBottom: "none"}}
+                                                                               align="left">Capacidad</TableCell>*/}
                                                                     <TableCell style={{borderBottom: "none"}}
                                                                                align="center">
                                                                         {

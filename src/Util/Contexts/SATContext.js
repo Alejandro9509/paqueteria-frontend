@@ -1,0 +1,32 @@
+import axios from "axios";
+import { trackPromise } from "react-promise-tracker";
+import { API_HEADERS } from "../../Constants";
+
+const headers = API_HEADERS
+
+function cancelarInformeCFDI(id, claveSAT,motivoSAT,motivo, sUUIDRelacionado ) {
+    const url = `${process.env.REACT_APP_API_URL}/Informes/CancelarCFDITraslada/${id}`;
+    let result;
+    trackPromise(
+        result = axios.post(url,Object.assign({}, {motivoCancelacion: motivo,motivoCancelacionSAT: motivoSAT,claveCancelacionSAT: claveSAT,FolioFiscalUUID: sUUIDRelacionado }), { headers })
+    );
+    return result
+}
+function cancelarUltimaMillaCFDI(id, claveSAT,motivoSAT,motivo, sUUIDRelacionado, esRecoleccion) {
+    const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/CancelarCFDITraslada/${id}`;
+    let result;
+    trackPromise(
+        result = axios.post(url,Object.assign({}, {motivoCancelacion: motivo,motivoCancelacionSAT: motivoSAT,claveCancelacionSAT: claveSAT,FolioFiscalUUID: sUUIDRelacionado,esRecoleccion: esRecoleccion ? 1 : 0 }), { headers })
+    );
+    return result
+}
+function obtenerClavesCancelacionSAT( ) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/ObtenerClavesCancelacion`;
+    let result;
+    trackPromise(
+        result = axios.get(url, { headers })
+    );
+    return result
+}
+
+export {cancelarInformeCFDI,obtenerClavesCancelacionSAT,cancelarUltimaMillaCFDI}
