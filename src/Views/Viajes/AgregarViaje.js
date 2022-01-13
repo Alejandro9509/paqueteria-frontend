@@ -54,7 +54,7 @@ function showSuccess(mensaje) {
         type: "information",
         layout: "topCenter",
         text: mensaje,
-        timeout: "3000"
+        timeout: "6000"
     }).show()
 }
 
@@ -527,16 +527,16 @@ class AgregarViaje extends Component {
     isUnidadAvailable(idUnidad, origen){
         switch (origen) {
             case 'UNIDAD':
-                return !(idUnidad === this.state.IdRemolque1.m_nIdUnidad || idUnidad === this.state.IdRemolque2.m_nIdUnidad || idUnidad === this.state.IdDolly.m_nIdUnidad);
+                return !((idUnidad === this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0) || (idUnidad === this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0));
                 break;
             case 'REMOLQUE1':
-                return !(idUnidad === this.state.unidad.m_nIdUnidad || idUnidad === this.state.IdRemolque2.m_nIdUnidad || idUnidad === this.state.IdDolly.m_nIdUnidad);
+                return !((idUnidad === this.state.unidad ? this.state.unidad.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0) || (idUnidad === this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0));
                 break;
             case 'REMOLQUE2':
-                return !(idUnidad === this.state.unidad.m_nIdUnidad || idUnidad === this.state.IdRemolque1.m_nIdUnidad || idUnidad === this.state.IdDolly.m_nIdUnidad);
+                return !((idUnidad === this.state.unidad ? this.state.unidad.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0) || (idUnidad === this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0));
                 break;
             case 'DOLLY':
-                return !(idUnidad === this.state.unidad.m_nIdUnidad || idUnidad === this.state.IdRemolque1.m_nIdUnidad || idUnidad === this.state.IdRemolque2.m_nIdUnidad);
+                return !((idUnidad === this.state.unidad ? this.state.unidad.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0) || (idUnidad === this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0));
                 break;
             default:
                 return true;
