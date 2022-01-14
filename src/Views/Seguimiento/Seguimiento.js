@@ -81,13 +81,12 @@ class Seguimiento extends Component {
                             <Grid container alignItems={"flex-start"} justify={"flex-start"}>
 
                                 <Grid item>
-                                    <Typography variant={"h4"} style={{display: "flex", alignItems: "center"}}>Folio
-                                        seguimiento: <TextField size={"small"} variant={"outlined"}
-                                                                style={{width: "50%"}}
+                                    <Typography style={{display: "flex", alignItems: "center"}}>Folio
+                                        seguimiento: <input type={"text"}
+                                                                style={{width: "50%", height:"20px"}}
                                                                 onChange={this.handleChage}
                                                                 value={this.state.folioBusqueda}
-                                                                name={"folioBusqueda"}
-                                                                fullWidth margin={"dense"}/></Typography>
+                                                                name={"folioBusqueda"}/></Typography>
                                 </Grid>
                                 <Grid item>
                                     <RadioGroup row aria-label="position" onChange={this.handleChage} name="tipoBusqueda" value={this.state.tipoBusqueda} defaultValue="top">
@@ -114,7 +113,7 @@ class Seguimiento extends Component {
                                     </RadioGroup>
                                 </Grid>
                                 <Grid item>
-                                    <Button color={"primary"} onClick={this.buscarAction} variant={"contained"}>Buscar</Button>
+                                    <Button size={"small"} color={"primary"} onClick={this.buscarAction} variant={"contained"}>Buscar</Button>
                                 </Grid>
                             </Grid>
                         </div>
@@ -126,7 +125,7 @@ class Seguimiento extends Component {
                             <RemitenteDestinatario data={this.state.data}/>
                         </div>
                         <div style={{marginTop:"4px",padding: "5px",borderStyle: "solid",borderWidth: "1px",borderRadius: "10px"}}>
-                            <Typography variant={"h3"} align={"center"}>Paquetes y Sobres</Typography>
+                            <Typography variant={"h4"} align={"center"}>Paquetes y Sobres</Typography>
                             <Paquetes
                                 dataPaquetes={this.state.data.paquetes}
                                 onChangeList={() => console.log("")}
