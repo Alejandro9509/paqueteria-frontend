@@ -1449,7 +1449,7 @@ class AgregarViaje extends Component {
                                                 // forcePopupIcon={false}
                                                 options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                 getOptionLabel={(option) =>
-                                                    option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                                                    option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})` : ""
                                                 }
                                                 // style={{transform: "translate(14px, 10px) scale(1) !important"}}
                                                 disabled={this.props.consult}
@@ -1542,7 +1542,7 @@ class AgregarViaje extends Component {
                                                     // forcePopupIcon={false}
                                                     options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                     getOptionLabel={(option) =>
-                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
+                                                        `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                                     }
                                                     style={{
                                                         transform: "translate(14px, 10px) scale(1) !important"
@@ -1605,7 +1605,7 @@ class AgregarViaje extends Component {
                                                     // forcePopupIcon={false}
                                                     options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                     getOptionLabel={(option) =>
-                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
+                                                        `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                                     }
                                                     style={{
                                                         transform: "translate(14px, 10px) scale(1) !important"
@@ -1666,7 +1666,7 @@ class AgregarViaje extends Component {
                                                     // forcePopupIcon={false}
                                                     options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                     getOptionLabel={(option) =>
-                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})` : ""
                                                     }
                                                     style={{
                                                         transform: "translate(14px, 10px) scale(1) !important"
