@@ -1867,12 +1867,15 @@ function Embarque(props) {
                         moneda: state.idRecoleccion > 0 ? state.moneda :respuesta.data.MonedaEmbarque,
                         tipoCambio: state.idRecoleccion > 0 ? state.tipoCambio :respuesta.data.TipoCambioEmbarque,
                         tipoCobro: state.idRecoleccion > 0 ? state.tipoCobro : respuesta.data.TipoCobro,
-                        idTipoTarifa: respuesta.data.TipoTarifaTarifas,
                     }
                 })
-
-                  
             }
+            setState(state => {
+                return {
+                    ...state,
+                    idTipoTarifa: respuesta.data.TipoTarifaTarifas,
+                }
+            })
           setConfiguraciones((config) => {
                 console.log(respuesta.data.TipoCobro)
                 return {
@@ -3215,8 +3218,9 @@ function Embarque(props) {
                                                                             name="idTipoTarifa"
                                                                             read="true"
                                                                             value={state.idTipoTarifa}
-                                                                            disabled={state.agregar == "Consultar"}
+                                                                            disabled
                                                                         >
+                                                                            <option value="0">Sin definir</option>
                                                                             <option value="1">Por peso o volumen</option>
                                                                             <option value="2">Por rango</option>
                                                                             <option value="3">Por región</option>
