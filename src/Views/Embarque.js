@@ -823,8 +823,8 @@ function Embarque(props) {
         if (state.idEmbarque != 0){
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
             if(state.diferenteEntrega
-                && !isValidText(destinatario.latitudD)
-                && !isValidText(destinatario.longitudD)
+                && !isValidText(entregaDD.latitudEnt)
+                && !isValidText(entregaDD.longitudEnt)
                 && !coordenadas){
                 mostrarDialogoMapa(true)
                 return false
