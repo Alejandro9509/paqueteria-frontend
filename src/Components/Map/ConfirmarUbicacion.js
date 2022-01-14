@@ -36,63 +36,62 @@ class ConfirmarUbicacion extends Component {
     }
 
     componentDidMount() {
-    if(this.props.remitente){//si es recoleccion entrara y evaluara si es informacion solo de recoleccion de remitente o si es de diferente direccion de recoleccion
-         if(this.props.esDiferenteRecoleccion){//si es diferente de recoleccion consulta los valores de recoleccionDD
-                 let municipioTexto =this.props.dataMunicipiosRecoleccionDD.filter(m=> m.m_sCodigoMunicipio === this.props.recoleccionDD.municipioRec)[0].m_sMunicipio
-                 searchLocationAddress(`${this.props.recoleccionDD.domicilioRec},${this.props.recoleccionDD.codigoPostalRec},${municipioTexto}`).then(data => {
+        if (this.props.remitente) {//si es recoleccion entrara y evaluara si es informacion solo de recoleccion de remitente o si es de diferente direccion de recoleccion
+            if (this.props.esDiferenteRecoleccion) {//si es diferente de recoleccion consulta los valores de recoleccionDD
+                let municipioTexto = this.props.dataMunicipiosRecoleccionDD.filter(m => m.m_sCodigoMunicipio === this.props.recoleccionDD.municipioRec)[0].m_sMunicipio
+                searchLocationAddress(`${this.props.recoleccionDD.domicilioRec},${this.props.recoleccionDD.codigoPostalRec},${municipioTexto}`).then(data => {
 
                     this.setState({
-                        coordenadas: {lat:data.y, lng:data.x}
+                        coordenadas: {lat: data.y, lng: data.x}
                     })
                     this.state.map.setView([data.y, data.x], 18)
                 })
-            
-            }else{//en cambio si esta haciendo recoleccion al remitente tomara sus valores
+
+            } else {//en cambio si esta haciendo recoleccion al remitente tomara sus valores
                 let municipio = this.props.direccion.municipioTexto;
-                let calle = this.props.direccion.calleRemitente 
-                let colonia = this.props.direccion.coloniaRemitente 
-                let numeroExterior =  this.props.direccion.numeroExtRemitente
+                let calle = this.props.direccion.calleRemitente
+                let colonia = this.props.direccion.coloniaRemitente
+                let numeroExterior = this.props.direccion.numeroExtRemitente
                 let codigoPostal = this.props.direccion.codigoPostalRemitente.m_sCP
                 searchLocationAddress(`${calle} ${numeroExterior} ${colonia} ${codigoPostal} ${municipio}`).then(data => {
                     this.setState({
-                        coordenadas: {lat:data.y, lng:data.x}
+                        coordenadas: {lat: data.y, lng: data.x}
                     })
                     this.state.map.setView([data.y, data.x], 18)
                 })
- 
+
             }
 
-}else{//es destinatario y checara si toma la direccion de remitente
-   // console.log("Entra en destinatario"+this.props.esDiferenteEntrega)
-    if(this.props.esDiferenteEntrega){//si es diferente domicilio de entrega tomara los valores del form del diferente domicilio de entrega
-        let municipioTexto =this.props.dataMunicipiosEntregaDD.filter(m=> m.m_sCodigoMunicipio === this.props.entregaDD.municipioEnt)[0].m_sMunicipio
-        searchLocationAddress(`${this.props.entregaDD.domicilioEnt},${this.props.entregaDD.codigoPostalEnt},${municipioTexto}`).then(data => {
+        }
+        if (!this.props.recoleccion) {//Si es embarque
+            // console.log("Entra en destinatario"+this.props.esDiferenteEntrega)
+            if (this.props.esDiferenteDomicilio) {//si es diferente domicilio de entrega tomara los valores del form del diferente domicilio de entrega
+                // debugger
+                let municipioTexto = this.props.dataMunicipiosEntregaDD.find(m => m.m_sCodigoMunicipio === parseInt(this.props.direccion.municipioEnt))?.m_sMunicipio
+                searchLocationAddress(`${this.props.direccion.domicilioEnt},${this.props.direccion.codigoPostalEnt},${municipioTexto}`).then(data => {
 
-           this.setState({
-               coordenadas: {lat:data.y, lng:data.x}
-           })
-           this.state.map.setView([data.y, data.x], 18)
-       })
-   
-   }else{//en cambio si esta haciendo entrega al destinatario normal tomara sus valores
-       let municipio = this.props.direccion.municipioTexto;
-       let calle =  this.props.direccion.calleDestinatario;
-       let colonia =  this.props.direccion.coloniaDestinatario;
-       let numeroExterior = this.props.direccion.numeroExtDestinatario
-       let codigoPostal = this.props.direccion.codigoPostalDestinatario.m_sCP
+                    this.setState({
+                        coordenadas: {lat: data.y, lng: data.x}
+                    })
+                    this.state.map.setView([data.y, data.x], 18)
+                })
 
-       searchLocationAddress(`${calle} ${numeroExterior} ${colonia} ${codigoPostal} ${municipio}`).then(data => {
-           this.setState({
-               coordenadas: {lat:data.y, lng:data.x}
-           })
-           this.state.map.setView([data.y, data.x], 18)
-       })
+            } else {//en cambio si esta haciendo entrega al destinatario normal tomara sus valores
+                let municipio = this.props.direccion.municipioTexto;
+                let calle = this.props.direccion.calleDestinatario;
+                let colonia = this.props.direccion.coloniaDestinatario;
+                let numeroExterior = this.props.direccion.numeroExtDestinatario
+                let codigoPostal = this.props.direccion.codigoPostalDestinatario.m_sCP
 
-   }
-}
-            
-           
-     
+                searchLocationAddress(`${calle} ${numeroExterior} ${colonia} ${codigoPostal} ${municipio}`).then(data => {
+                    this.setState({
+                        coordenadas: {lat: data.y, lng: data.x}
+                    })
+                    this.state.map.setView([data.y, data.x], 18)
+                })
+
+            }
+        }
     }
 
 
@@ -143,7 +142,7 @@ class ConfirmarUbicacion extends Component {
                         </Grid>
                         <Grid item sm={12}>
                             <Typography
-                                variant={"h3"}>Dirección:{this.props.remitente?(this.props.esDiferenteRecoleccion? this.props.recoleccionDD.domicilioRec:(`${this.props.direccion.calleRemitente},${this.props.direccion.numeroExtRemitente},${this.props.direccion.coloniaRemitente} `)):(this.props.esDiferenteEntrega?this.props.entregaDD.domicilioEnt:(`${this.props.direccion.calleDestinatario},${this.props.direccion.numeroExtDestinatario},${this.props.direccion.coloniaDestinatario} `))}
+                                variant={"h3"}>Dirección:{this.props.remitente?(this.props.esDiferenteRecoleccion? this.props.recoleccionDD.domicilioRec:(`${this.props.direccion.calleRemitente},${this.props.direccion.numeroExtRemitente},${this.props.direccion.coloniaRemitente} `)):(this.props.esDiferenteDomicilio?this.props.direccion.domicilioEnt:(`${this.props.direccion.calleDestinatario},${this.props.direccion.numeroExtDestinatario},${this.props.direccion.coloniaDestinatario} `))}
                                 </Typography>
                         </Grid>
 
