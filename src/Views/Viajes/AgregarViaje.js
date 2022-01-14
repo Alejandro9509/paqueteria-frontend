@@ -235,7 +235,7 @@ class AgregarViaje extends Component {
                     colorUnidad: this.props.select.m_sColorUnidad,
                     kms: '',
                     horas: '',
-                    fechaHoraRegistro: this.props.select.m_dFecha + "T" + this.props.select.m_tHora.substr(0, 5),
+                    fechaHoraRegistro: this.props.select.m_dFechaRegistro + "T" + this.props.select.m_tHoraRegistro.substr(0, 5),
                     estatusListado: this.props.select.m_nIdEstatusViaje,
                     idSucursalAgregar: this.props.select.m_nIdSucursal,
                     candadoOficial: this.props.select.m_sCandadoOficial,
@@ -267,7 +267,7 @@ class AgregarViaje extends Component {
         var params = {
             m_nIdViaje: this.props.id,
             m_sFecha: this.state.fechaHoraRegistro.substr(0, 10),
-            m_sHora: this.state.fechaHoraRegistro.substr(this.state.fechaHoraRegistro.length - 5),
+            m_sHora: this.state.fechaHoraRegistro.substr(this.state.fechaHoraRegistro.length-5, 5),
             m_nIdEstatusViaje: this.state.estatusListado,
             m_nIdSucursal: this.state.idSucursalAgregar,
             m_sCandadoOficial: this.state.candadoOficial,
