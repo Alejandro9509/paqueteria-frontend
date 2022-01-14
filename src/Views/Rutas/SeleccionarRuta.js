@@ -54,12 +54,14 @@ export default function SeleccionarRuta(props){
         if (props.IdRuta === 0){
             setDataRutas([])
             setDataTrayectos([])
+        }else {
+            getTrayectosByRuta(props.IdRuta)
         }
     },[props.IdRuta])
 
     const handleChange = (event) => {
         props.onChangeRuta(event.target.value)
-        getTrayectosByRuta(event.target.value)
+        // getTrayectosByRuta(event.target.value)
     }
 
     const getRutasByOrigenDestino = (idOrigen, idDestino, idCliente) => {
