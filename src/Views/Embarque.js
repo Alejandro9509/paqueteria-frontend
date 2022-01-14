@@ -1580,7 +1580,7 @@ function Embarque(props) {
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipiosEntregaDD(data)
             })
-            obtenerCodigoPostalId(respuesta.data.CodigoPostalEntrega).then((cp) => {
+            obtenerCodigoPostalId(respuesta.data.m_sCodigoPostalEntrega).then((cp) => {
                 setEntregaDD(entregaDD => {
                     return {
                         ...entregaDD,
@@ -2439,10 +2439,13 @@ function Embarque(props) {
                                     recoleccion={false}
                                     remitente={false}
                                     mostrarDialogoMapa={mostrarDialogoMapa}
-                                    direccion={destinatario} 
+                                    direccion={state.diferenteEntrega ? entregaDD :destinatario}
                                     dataMunicipiosEntregaDD={dataMunicipiosEntregaDD}
                                     entregaDD={entregaDD}
-                                    esDiferenteEntrega={state.diferenteEntrega}>
+                                    esDiferenteEntrega={state.diferenteEntrega}
+                                    esDiferenteDomicilio={state.diferenteEntrega}
+                                    dataDiferenteDomicilio={entregaDD}
+                >
                                    
 
                 </ConfirmarUbicacion>
