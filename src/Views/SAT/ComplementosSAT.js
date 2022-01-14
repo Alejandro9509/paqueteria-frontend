@@ -129,6 +129,14 @@ function ComplementosSAT(props) {
 
     const columnsPaquetes = React.useMemo(() => [
         {
+            headerName: 'Acciones',
+            field: 'complementos',
+            renderCell: RowMenuCell,
+            sortable: false,
+            width: 150,
+            filterable: false,
+        },
+        {
             headerName: "Cantidad",
             field: "cantidad",
             type:'number',
@@ -213,14 +221,6 @@ function ComplementosSAT(props) {
             hide:true,
             flex: 1,
         },
-        {
-            headerName: 'Acciones',
-            field: 'complementos',
-            renderCell: RowMenuCell,
-            sortable: false,
-            width: 150,
-            filterable: false,
-        }
     ]);
 
     const handleChangeComplementoSat = (idComplemento, data) => {
