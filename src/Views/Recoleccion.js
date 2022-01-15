@@ -1004,8 +1004,8 @@ function Recoleccion() {
             params.m_nIdZonaTarifa = recoleccionDD.zonaTarifaRec.m_nIdZona
             params.m_nIdEstadoRecoleccion = recoleccionDD.estadoRec
             params.m_sCodigoMunicipioRecoleccion = recoleccionDD.municipioRec
-            params.m_sLatitudR = coordenadas ? coordenadas[0] : recoleccionDD.latitudRec
-            params.m_sLongitudR = coordenadas ? coordenadas[1] : recoleccionDD.longitudRec
+            params.m_sLatitudR = coordenadas ? coordenadas.lat : recoleccionDD.latitudRec
+            params.m_sLongitudR = coordenadas ? coordenadas.lng : recoleccionDD.longitudRec
         } else {
             params.m_nIdZonaOperativa = remitente.zonaOperativaRemitente.m_nIdZona
             params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente.m_nIdZona
