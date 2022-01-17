@@ -114,12 +114,16 @@ export default function DialogoNuevoPaquete(props) {
             }else{
                 if (paquete.producto !== null) {
                     if (state.agregarMas) {
-                        console.log(paquete)
                         props.agregar(paquete)
                         resetPaquete()
                     } else {
                         handleClose()
-                        console.log(paquete)
+                        setPaquete(paquete=>{
+                            return{
+                                ...paquete,
+                                m_rLargo:Number(paquete.m_rLargo)
+                            }
+                        })
                         props.agregar(paquete)
                         resetPaquete()
                     }
@@ -376,12 +380,17 @@ export default function DialogoNuevoPaquete(props) {
                  })
             }
         }
-
+        
         setPaquete(paquete => {
             return {
                 ...paquete,
                 [event.target.name]: event.target.value,
-                m_rVolumen: paquete.m_rLargo * paquete.m_rAlto * paquete.m_rAncho,
+            }
+        })
+        setPaquete(paquete => {
+            return {
+                ...paquete,
+                m_rVolumen:paquete.m_rLargo * paquete.m_rAlto * paquete.m_rAncho,
             }
         })
         if (event.target.name == "m_nIdTipoEmbalaje"){
@@ -546,10 +555,10 @@ export default function DialogoNuevoPaquete(props) {
                     ...paquete,
                     producto: newValue,
                     m_nIdProducto: newValue.m_nIdProducto || 0,
-                    m_rLargo: newValue.m_xLargo,
-                    m_rAlto: newValue.m_xAlto,
-                    m_rAncho: newValue.m_xAncho,
-                    m_rPeso: newValue.m_xPeso,
+                    m_rLargo: newValue.m_xLargo===0?undefined:newValue.m_xLargo,
+                    m_rAlto: newValue.m_xAlto===0?undefined:newValue.m_xAlto,
+                    m_rAncho: newValue.m_xAncho===0?undefined:newValue.m_xAncho,
+                    m_rPeso: newValue.m_xPeso===0?undefined:newValue.m_xPeso,
                     m_nIdTipoEmbalaje: newValue.m_nIdEmbalaje,
                     m_sTipoEmbalaje: dataEmbalaje.find((i) => i.m_nIdEmbalaje == newValue.m_nIdEmbalaje).m_sNombre,
                     m_sDescripcion: newValue.m_nIdProducto== 1 ? "" : newValue.m_sDescripcion,
