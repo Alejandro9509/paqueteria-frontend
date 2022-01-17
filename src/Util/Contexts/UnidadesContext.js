@@ -46,7 +46,7 @@ function validaCodigoUnidad(code) {
 
 
 function obtenerUnidades() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Unidades/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
