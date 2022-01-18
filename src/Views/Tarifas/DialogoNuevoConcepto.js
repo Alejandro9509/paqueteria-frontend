@@ -311,9 +311,13 @@ export default function DialogoNuevoConcepto(props) {
 
     return (
         <div>
-            <Button variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'right'}}>
-                Agregar concepto
-            </Button>
+            {
+                !props.disabled &&
+                <Button variant="contained" color="primary" onClick={handleClickOpen} style={{float: 'right'}}>
+                    Agregar concepto
+                </Button>
+            }
+
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title"
                     fullWidth
                     maxWidth={'sm'}>

@@ -235,7 +235,7 @@ class AgregarViaje extends Component {
                     colorUnidad: this.props.select.m_sColorUnidad,
                     kms: '',
                     horas: '',
-                    fechaHoraRegistro: this.props.select.m_dFecha + "T" + this.props.select.m_tHora.substr(0, 5),
+                    fechaHoraRegistro: this.props.select.m_dFechaRegistro + "T" + this.props.select.m_tHoraRegistro.substr(0, 5),
                     estatusListado: this.props.select.m_nIdEstatusViaje,
                     idSucursalAgregar: this.props.select.m_nIdSucursal,
                     candadoOficial: this.props.select.m_sCandadoOficial,
@@ -267,7 +267,7 @@ class AgregarViaje extends Component {
         var params = {
             m_nIdViaje: this.props.id,
             m_sFecha: this.state.fechaHoraRegistro.substr(0, 10),
-            m_sHora: this.state.fechaHoraRegistro.substr(this.state.fechaHoraRegistro.length - 5),
+            m_sHora: this.state.fechaHoraRegistro.substr(this.state.fechaHoraRegistro.length-5, 5),
             m_nIdEstatusViaje: this.state.estatusListado,
             m_nIdSucursal: this.state.idSucursalAgregar,
             m_sCandadoOficial: this.state.candadoOficial,
@@ -1449,7 +1449,7 @@ class AgregarViaje extends Component {
                                                 // forcePopupIcon={false}
                                                 options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                 getOptionLabel={(option) =>
-                                                    option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                                                    option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})` : ""
                                                 }
                                                 // style={{transform: "translate(14px, 10px) scale(1) !important"}}
                                                 disabled={this.props.consult}
@@ -1542,7 +1542,7 @@ class AgregarViaje extends Component {
                                                     // forcePopupIcon={false}
                                                     options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                     getOptionLabel={(option) =>
-                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
+                                                        `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                                     }
                                                     style={{
                                                         transform: "translate(14px, 10px) scale(1) !important"
@@ -1605,7 +1605,7 @@ class AgregarViaje extends Component {
                                                     // forcePopupIcon={false}
                                                     options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                     getOptionLabel={(option) =>
-                                                        `${option.m_sCodigo} - ${option.m_sDescripcion}`
+                                                        `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                                     }
                                                     style={{
                                                         transform: "translate(14px, 10px) scale(1) !important"
@@ -1666,7 +1666,7 @@ class AgregarViaje extends Component {
                                                     // forcePopupIcon={false}
                                                     options={this.state.dataUnidades.filter(i => i.m_bActivo)}
                                                     getOptionLabel={(option) =>
-                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})` : ""
                                                     }
                                                     style={{
                                                         transform: "translate(14px, 10px) scale(1) !important"

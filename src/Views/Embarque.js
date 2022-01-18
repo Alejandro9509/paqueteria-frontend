@@ -823,8 +823,8 @@ function Embarque(props) {
         if (state.idEmbarque != 0){
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
             if(state.diferenteEntrega
-                && !isValidText(destinatario.latitudD)
-                && !isValidText(destinatario.longitudD)
+                && !isValidText(entregaDD.latitudEnt)
+                && !isValidText(entregaDD.longitudEnt)
                 && !coordenadas){
                 mostrarDialogoMapa(true)
                 return false
@@ -1580,7 +1580,7 @@ function Embarque(props) {
             obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
                 setDataMunicipiosEntregaDD(data)
             })
-            obtenerCodigoPostalId(respuesta.data.CodigoPostalEntrega).then((cp) => {
+            obtenerCodigoPostalId(respuesta.data.m_sCodigoPostalEntrega).then((cp) => {
                 setEntregaDD(entregaDD => {
                     return {
                         ...entregaDD,
@@ -1867,12 +1867,15 @@ function Embarque(props) {
                         moneda: state.idRecoleccion > 0 ? state.moneda :respuesta.data.MonedaEmbarque,
                         tipoCambio: state.idRecoleccion > 0 ? state.tipoCambio :respuesta.data.TipoCambioEmbarque,
                         tipoCobro: state.idRecoleccion > 0 ? state.tipoCobro : respuesta.data.TipoCobro,
-                        idTipoTarifa: respuesta.data.TipoTarifaTarifas,
                     }
                 })
-
-                  
             }
+            setState(state => {
+                return {
+                    ...state,
+                    idTipoTarifa: respuesta.data.TipoTarifaTarifas,
+                }
+            })
           setConfiguraciones((config) => {
                 console.log(respuesta.data.TipoCobro)
                 return {
@@ -2436,10 +2439,13 @@ function Embarque(props) {
                                     recoleccion={false}
                                     remitente={false}
                                     mostrarDialogoMapa={mostrarDialogoMapa}
-                                    direccion={destinatario} 
+                                    direccion={state.diferenteEntrega ? entregaDD :destinatario}
                                     dataMunicipiosEntregaDD={dataMunicipiosEntregaDD}
                                     entregaDD={entregaDD}
-                                    esDiferenteEntrega={state.diferenteEntrega}>
+                                    esDiferenteEntrega={state.diferenteEntrega}
+                                    esDiferenteDomicilio={state.diferenteEntrega}
+                                    dataDiferenteDomicilio={entregaDD}
+                >
                                    
 
                 </ConfirmarUbicacion>
@@ -3215,8 +3221,9 @@ function Embarque(props) {
                                                                             name="idTipoTarifa"
                                                                             read="true"
                                                                             value={state.idTipoTarifa}
-                                                                            disabled={state.agregar == "Consultar"}
+                                                                            disabled
                                                                         >
+                                                                            <option value="0">Sin definir</option>
                                                                             <option value="1">Por peso o volumen</option>
                                                                             <option value="2">Por rango</option>
                                                                             <option value="3">Por región</option>
