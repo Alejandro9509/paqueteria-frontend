@@ -3686,9 +3686,9 @@ function Recoleccion() {
                                                                                 helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
                                                                                 InputLabelProps={{shrink: true}}
-                                                                                onClick={()=>{
-                                                                                    setState({ ...state, openDialog: true,tipoModal:10})
-                                                                                }}                                                                         
+                                                                                onClick={(state.agregar === "Consultar" || state.embarqueConGuia)?
+                                                                                ()=>{return}:(()=>{ setState({ ...state, openDialog: true,tipoModal:10})
+                                                                            })}                                                                     
                                                                             />
                                                                 </div>
                                                             </Grid>
