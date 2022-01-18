@@ -1706,7 +1706,7 @@ function Embarque(props) {
                 idRecoleccion: duplicar ? 0 : respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.IdSucursal,
                 folioRecoleccion: duplicar ? "" : respuesta.data.m_sFolioRecoleccion,
-                recoleccionConCita: respuesta.data.m_sFolioRecoleccion ? respuesta.data.m_sFolioRecoleccion.length > 0 : false,
+                // recoleccionConCita: respuesta.data.m_sFolioRecoleccion ? respuesta.data.m_sFolioRecoleccion.length > 0 : false,
                 folioEmbarque: respuesta.data.m_sFolioEmbarque,
                 folioGuia: duplicar ? "" : respuesta.data.m_sFolioGuia,
                 folioInforme: duplicar ? "" : respuesta.data.m_sFolioInforme,
@@ -1728,6 +1728,8 @@ function Embarque(props) {
                 horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
                 horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
                 citaPendiente: respuesta.data.m_bCitaPendiente,
+
+                recoleccionConCita: respuesta.data.m_bRecoleccionConCita,
 
                 //Ruta
                 idRuta: respuesta.data.m_nIdRuta,
