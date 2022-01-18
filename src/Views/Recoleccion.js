@@ -3819,7 +3819,7 @@ function Recoleccion() {
                                                                 <div className="row">
 
                                                                     {/* --------------------------------------- RecoleccionDD ------------------------------------------------- */}
-                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="col-sm-6 col-md-6 unit">
                                                                         <label className="checkbox">
                                                                             <input
                                                                                 onChange={
@@ -3835,8 +3835,12 @@ function Recoleccion() {
                                                                             <i/>
                                                                             Recolección en Diferente Domicilio
                                                                         </label>
+                                                                    </div> 
+                                                                    
                                                                     </div>
-                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                    
+                                                                <div className="row">
+                                                                    <div className="col-sm-6 col-md-6 unit">
                                                                         <label className="checkbox">
                                                                             <input
                                                                                 onChange={handleCitaCheckboxChange}
@@ -3851,7 +3855,7 @@ function Recoleccion() {
                                                                             Programar cita de recolección
                                                                         </label>
                                                                     </div>
-                                                                </div>
+                                                               </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3878,8 +3882,8 @@ function Recoleccion() {
                                                              
                                                                     />
                                                                 }
-
-                                                                <div className="col-sm-12 col-md-12  unit">
+                                                            <div className="row">
+                                                                <div className="col-sm-6 col-md-6 unit">
                                                                     <label className="checkbox">
                                                                         <input
                                                                             onChange={handleEntregaCheckboxChange}
@@ -3895,7 +3899,9 @@ function Recoleccion() {
                                                                         Entrega en Diferente Domicilio
                                                                     </label>
                                                                 </div>
-                                                                <div className="col-sm-12 col-md-12  unit">
+                                                                </div>
+                                                                <div className="row">
+                                                                <div className="col-sm-6 col-md-6 unit">
                                                               <label className="checkbox">
                                                                       Entrega en Sucursal
                                                                          <input
@@ -3911,6 +3917,7 @@ function Recoleccion() {
                                                                           </label>
                                                                       </div>
                                                             </div>
+                                                          </div>
                                                         </div>
                                                     </div>
                                                 </div>
