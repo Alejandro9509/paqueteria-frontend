@@ -897,6 +897,10 @@ function Embarque(props) {
             error = true
             showSuccess("Error al agregar recoleccion: El correo del remitente es un campo requerido")
         }
+        if (dataConceptos.length === 0){
+            showSuccess("No se han agregado conceptos de facturación")
+            return;
+        }
         if(!error){
         setState({
             ...state,
