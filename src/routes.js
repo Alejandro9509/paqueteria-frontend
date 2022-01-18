@@ -108,14 +108,14 @@ const dashboardRoutes = [
     single: true,
     child:[]
   },
-  {
+ /* {
     path: "/Segumiento",
     name: "Seguimiento",
     icon: corteCajaIcon,
     component: Seguimiento,
     single: true,
     child:[]
-  },
+  },*/
   /*{
     path: "/Tutoriales",
     name: "Tutoriales",

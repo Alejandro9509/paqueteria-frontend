@@ -112,21 +112,30 @@ class UnidadesList extends Component {
 
 
     solicitarRemolques(row){
-        this.props.cerrarDialogos()
-        confirmAlert({
-            title: 'Confirmar',
-            message: '¿Desea agregar remolques?',
-            buttons: [
-                {
-                    label: 'Sí',
-                    onClick: () => this.props.asignarRemolques(row)
-                },
-                {
-                    label: 'No',
-                    onClick: () => this.handleClick(row)
-                }
-            ]
-        })
+        const selectedIndex = this.props.unidadesSeleccionadas.map(u => u.m_nIdUnidad).indexOf(row.m_nIdUnidad);
+        if (selectedIndex === -1) {
+            this.props.cerrarDialogos()
+            if (row.m_bAplicaRemolques) {
+                confirmAlert({
+                    title: 'Confirmar',
+                    message: '¿Desea agregar remolques?',
+                    buttons: [
+                        {
+                            label: 'Sí',
+                            onClick: () => this.props.asignarRemolques(row)
+                        },
+                        {
+                            label: 'No',
+                            onClick: () => this.handleClick(row)
+                        }
+                    ]
+                })
+            } else {
+                this.handleClick(row)
+            }
+        } else {
+            this.handleClick(row)
+        }
     }
 
     handleClick( row) {
@@ -167,6 +176,7 @@ class UnidadesList extends Component {
                                         inputProps={{'aria-label': 'select all desserts'}}
                                     />
                                 </TableCell>*/}
+                                <TableCell padding="checkbox"></TableCell>
                                 <TableCell
                                     sortDirection={this.state.orderBy === "m_sDescripcion" ? this.state.order : false}
                                     align="left">

@@ -116,11 +116,11 @@ class TourUltimaMilla extends Component {
                                             </Grid>
                                             <Grid item md={12}>
                                                 <Typography
-                                                    variant={"body1"}>{g.m_bEsRecoleccion ? g.m_sNombreRemitente : g.m_sNombreDestinatario}</Typography>
+                                                    variant={"body1"}>{g.m_bEsRecoleccion ?   g.m_sNombreRemitente : g.m_sNombreDestinatario}</Typography>
                                             </Grid>
                                             <Grid item md={12}>
                                                 <Typography
-                                                    variant={"body1"}>{g.m_bEsRecoleccion ? g.m_sDomicilioRemitente : g.m_sDomicilioDestinatario}</Typography>
+                                                    variant={"body1"}>{g.m_bEsRecoleccion ? g.m_bRecoleccionDiferenteDomicilio ? g.m_sDomicilioDetalleRecoleccion : g.m_sDomicilioRemitente : g.m_bEntregaDiferenteDomicilio ? g.m_sDomicilioDetalleEntrega :  g.m_sDomicilioDestinatario}</Typography>
                                             </Grid>
                                             <Grid item md={12}>
                                                 <Typography

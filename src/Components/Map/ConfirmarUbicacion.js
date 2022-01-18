@@ -33,68 +33,85 @@ class ConfirmarUbicacion extends Component {
         this.cambiarCordenadas = this.cambiarCordenadas.bind(this)
         this.confirmarUbicacion = this.confirmarUbicacion.bind(this)
         this.buscarDireccion = this.buscarDireccion.bind(this)
+        this.cargarMapa = this.cargarMapa.bind(this)
     }
 
     componentDidMount() {
-    if(this.props.remitente){//si es recoleccion entrara y evaluara si es informacion solo de recoleccion de remitente o si es de diferente direccion de recoleccion
-         if(this.props.esDiferenteRecoleccion){//si es diferente de recoleccion consulta los valores de recoleccionDD
-                 let municipioTexto =this.props.dataMunicipiosRecoleccionDD.filter(m=> m.m_sCodigoMunicipio === this.props.recoleccionDD.municipioRec)[0].m_sMunicipio
-                 searchLocationAddress(`${this.props.recoleccionDD.domicilioRec},${this.props.recoleccionDD.codigoPostalRec},${municipioTexto}`).then(data => {
+        if (this.props.ultimaMilla) {
+            return
+        }
+
+
+        if (this.props.remitente) {//si es recoleccion entrara y evaluara si es informacion solo de recoleccion de remitente o si es de diferente direccion de recoleccion
+            if (this.props.esDiferenteRecoleccion) {//si es diferente de recoleccion consulta los valores de recoleccionDD
+                let municipioTexto = this.props.dataMunicipiosRecoleccionDD.filter(m => m.m_sCodigoMunicipio === this.props.recoleccionDD.municipioRec)[0].m_sMunicipio
+                searchLocationAddress(`${this.props.recoleccionDD.domicilioRec},${this.props.recoleccionDD.codigoPostalRec},${municipioTexto}`).then(data => {
 
                     this.setState({
-                        coordenadas: {lat:data.y, lng:data.x}
+                        coordenadas: {lat: data.y, lng: data.x}
                     })
                     this.state.map.setView([data.y, data.x], 18)
                 })
-            
-            }else{//en cambio si esta haciendo recoleccion al remitente tomara sus valores
+
+            } else {//en cambio si esta haciendo recoleccion al remitente tomara sus valores
                 let municipio = this.props.direccion.municipioTexto;
-                let calle = this.props.direccion.calleRemitente 
-                let colonia = this.props.direccion.coloniaRemitente 
-                let numeroExterior =  this.props.direccion.numeroExtRemitente
+                let calle = this.props.direccion.calleRemitente
+                let colonia = this.props.direccion.coloniaRemitente
+                let numeroExterior = this.props.direccion.numeroExtRemitente
                 let codigoPostal = this.props.direccion.codigoPostalRemitente.m_sCP
                 searchLocationAddress(`${calle} ${numeroExterior} ${colonia} ${codigoPostal} ${municipio}`).then(data => {
                     this.setState({
-                        coordenadas: {lat:data.y, lng:data.x}
+                        coordenadas: {lat: data.y, lng: data.x}
                     })
                     this.state.map.setView([data.y, data.x], 18)
                 })
- 
+
             }
 
-}else{//es destinatario y checara si toma la direccion de remitente
-   // console.log("Entra en destinatario"+this.props.esDiferenteEntrega)
-    if(this.props.esDiferenteEntrega){//si es diferente domicilio de entrega tomara los valores del form del diferente domicilio de entrega
-        let municipioTexto =this.props.dataMunicipiosEntregaDD.filter(m=> m.m_sCodigoMunicipio === this.props.entregaDD.municipioEnt)[0].m_sMunicipio
-        searchLocationAddress(`${this.props.entregaDD.domicilioEnt},${this.props.entregaDD.codigoPostalEnt},${municipioTexto}`).then(data => {
+        } else {//es destinatario y checara si toma la direccion de remitente
+            // console.log("Entra en destinatario"+this.props.esDiferenteEntrega)
+            if (this.props.esDiferenteEntrega) {//si es diferente domicilio de entrega tomara los valores del form del diferente domicilio de entrega
+                let municipioTexto = this.props.dataMunicipiosEntregaDD.filter(m => m.m_sCodigoMunicipio === this.props.entregaDD.municipioEnt)[0].m_sMunicipio
+                searchLocationAddress(`${this.props.entregaDD.domicilioEnt},${this.props.entregaDD.codigoPostalEnt},${municipioTexto}`).then(data => {
 
-           this.setState({
-               coordenadas: {lat:data.y, lng:data.x}
-           })
-           this.state.map.setView([data.y, data.x], 18)
-       })
-   
-   }else{//en cambio si esta haciendo entrega al destinatario normal tomara sus valores
-       let municipio = this.props.direccion.municipioTexto;
-       let calle =  this.props.direccion.calleDestinatario;
-       let colonia =  this.props.direccion.coloniaDestinatario;
-       let numeroExterior = this.props.direccion.numeroExtDestinatario
-       let codigoPostal = this.props.direccion.codigoPostalDestinatario.m_sCP
+                    this.setState({
+                        coordenadas: {lat: data.y, lng: data.x}
+                    })
+                    this.state.map.setView([data.y, data.x], 18)
+                })
 
-       searchLocationAddress(`${calle} ${numeroExterior} ${colonia} ${codigoPostal} ${municipio}`).then(data => {
-           this.setState({
-               coordenadas: {lat:data.y, lng:data.x}
-           })
-           this.state.map.setView([data.y, data.x], 18)
-       })
+            } else {//en cambio si esta haciendo entrega al destinatario normal tomara sus valores
+                let municipio = this.props.direccion.municipioTexto;
+                let calle = this.props.direccion.calleDestinatario;
+                let colonia = this.props.direccion.coloniaDestinatario;
+                let numeroExterior = this.props.direccion.numeroExtDestinatario
+                let codigoPostal = this.props.direccion.codigoPostalDestinatario.m_sCP
 
-   }
-}
-            
-           
-     
+                searchLocationAddress(`${calle} ${numeroExterior} ${colonia} ${codigoPostal} ${municipio}`).then(data => {
+                    this.setState({
+                        coordenadas: {lat: data.y, lng: data.x}
+                    })
+                    this.state.map.setView([data.y, data.x], 18)
+                })
+
+            }
+        }
+
+
     }
 
+
+    cargarMapa(map) {
+        if (this.props.ultimaMilla) {
+            this.setState({
+                coordenadas: {map: map, lat: this.props.lat, lng: this.props.lng}
+            })
+            map.setView([this.props.lat, this.props.lng], 18)
+            return
+        } else {
+            this.setState({map: map})
+        }
+    }
 
     cambiarCordenadas(posicion) {
         this.setState({
@@ -103,49 +120,64 @@ class ConfirmarUbicacion extends Component {
     }
 
     confirmarUbicacion(e) {
-        this.props.confirmarUbicacion(this.state.coordenadas, e, this.props.direccion.idGuia?this.props.direccion.idGuia:0, this.props.remitente)
+        this.props.confirmarUbicacion(this.state.coordenadas, e, this.props.direccion.idGuia ? this.props.direccion.idGuia : 0, this.props.remitente)
     }
 
-     buscarDireccion(e){
+    buscarDireccion(e) {
         e.preventDefault()
         searchLocationAddress(this.state.busqueda).then(data => {
 
             this.setState({
-                coordenadas: {lat:data.y, lng:data.x}
+                coordenadas: {lat: data.y, lng: data.x}
             })
             this.state.map.setView([data.y, data.x], 18)
         })
     }
+
     render() {
         return (
             <Dialog open={this.props.open} maxWidth={"lg"} fullWidth>
                 <DialogTitle>
                     <Box display="flex">
-                    <Box width="90%"><Typography variant={"h1"}>Confirmar ubicación de la {this.props.titulo}</Typography>
-                     </Box>
-                    <Box width="10%">
-                    <IconButton aria-label="close" onClick={()=>this.props.mostrarDialogoMapa(false)} style={{position: 'absolute', right: '20px',top: '20px',padding:'5px'}}>
-                    <CloseIcon  style={{fontSize: '30px'}} />
-                    </IconButton>
+                        <Box width="90%"><Typography variant={"h1"}>Confirmar ubicación de
+                            la {this.props.titulo}</Typography>
+                        </Box>
+                        <Box width="10%">
+                            <IconButton aria-label="close" onClick={() => this.props.mostrarDialogoMapa(false)}
+                                        style={{position: 'absolute', right: '20px', top: '20px', padding: '5px'}}>
+                                <CloseIcon style={{fontSize: '30px'}}/>
+                            </IconButton>
+                        </Box>
                     </Box>
-                </Box>
-              </DialogTitle>
+                </DialogTitle>
 
                 <DialogContent>
                     <Typography variant={"h4"}>Es importante selecciónar la ubicación exacta de
                         la {this.props.titulo} para facilitar el trabajo de los operadores</Typography>
                     <br/>
                     <Grid container>
+                        {!this.props.ultimaMilla &&
+                            <Grid item sm={12}>
+                                <Typography
+                                    variant={"h2"}>{this.props.remitente ? "Remitente:" : "Destinatario:"} {this.props.recoleccion ? this.props.direccion.nombreRemitente : this.props.direccion.nombreDestinatario}</Typography>
+                            </Grid>
+                        }
 
-                        <Grid item sm={12}>
-                            <Typography
-                                variant={"h2"}>{this.props.remitente ? "Remitente:" : "Destinatario:"} {this.props.recoleccion ? this.props.direccion.nombreRemitente : this.props.direccion.nombreDestinatario}</Typography>
-                        </Grid>
-                        <Grid item sm={12}>
-                            <Typography
-                                variant={"h3"}>Dirección:{this.props.remitente?(this.props.esDiferenteRecoleccion? this.props.recoleccionDD.domicilioRec:(`${this.props.direccion.calleRemitente},${this.props.direccion.numeroExtRemitente},${this.props.direccion.coloniaRemitente} `)):(this.props.esDiferenteEntrega?this.props.entregaDD.domicilioEnt:(`${this.props.direccion.calleDestinatario},${this.props.direccion.numeroExtDestinatario},${this.props.direccion.coloniaDestinatario} `))}
+                        {!this.props.ultimaMilla &&
+                            <Grid item sm={12}>
+                                <Typography
+                                    variant={"h3"}>Dirección:{this.props.remitente ? (this.props.esDiferenteRecoleccion ? this.props.recoleccionDD.domicilioRec : (`${this.props.direccion.calleRemitente},${this.props.direccion.numeroExtRemitente},${this.props.direccion.coloniaRemitente} `)) : (this.props.esDiferenteEntrega ? this.props.entregaDD.domicilioEnt : (`${this.props.direccion.calleDestinatario},${this.props.direccion.numeroExtDestinatario},${this.props.direccion.coloniaDestinatario} `))}
                                 </Typography>
-                        </Grid>
+                            </Grid>
+                        }
+                        {this.props.ultimaMilla &&
+                            <Grid item sm={12}>
+                                <Typography
+                                    variant={"h3"}>Dirección: {this.props.remitente ? this.props.direccion.domicilioRemitente : this.props.direccion.domicilioDestinatario}
+                                </Typography>
+                            </Grid>
+                        }
+
 
                     </Grid>
                     <br/>
@@ -166,14 +198,15 @@ class ConfirmarUbicacion extends Component {
                                     paddingBlockEnd: 0,
                                     paddingLeft: 0,
                                     paddingBlock: 0,
-                                    cursor:"pointer"
+                                    cursor: "pointer"
                                 }} onClick={this.buscarDireccion}/>,
                             }}
                         />
                     </Grid>
                     <br/>
                     <MapContainer style={{width: "100%", height: "500px"}} center={[32.62781, -115.44632]} zoom={18}
-                                  scrollWheelZoom={false} whenCreated={m => this.setState({map: m})}>
+                                  scrollWheelZoom={false} whenCreated={m => this.cargarMapa(
+                        m)}>
                         <TileLayer style={{width: "100%", height: "500px"}}
                                    url="https://xserver2-america.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es&amp;xtok={token}"
                                    token="51FA3E8E-8BF3-49EF-AB82-59D807A0645C"
