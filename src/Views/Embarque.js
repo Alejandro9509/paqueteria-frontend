@@ -3687,6 +3687,7 @@ function Embarque(props) {
                                         <Cotizador embarque={state}
                                                    remitente={remitente}
                                                    destinatario={destinatario}
+                                                   entregaDiferenteDom={entregaDD}
                                                    onChangeConceptosList={actualizarConceptos}
                                                    conceptos={dataConceptos}
                                                    recoleccion={false}
