@@ -276,6 +276,8 @@ class DetalleParadas extends Component {
            titulo: 'parada',
            showConfirmarUbicacion: true,
            direccion: direccion,
+           lat: parseFloat(data.m_sLatitud),
+           lng: parseFloat(data.m_sLongitud),
            recoleccion: esRecoleccion,
 
        })
@@ -389,8 +391,8 @@ class DetalleParadas extends Component {
     render() {
         var d = new Date();
         d.setHours(0,0,0,0);
-        const totalPaquetes = this.props.tour.m_arrClsParadaUltimaMilla.map(a => a.m_arrClsProGuia.length).reduce((a, b) => a + b)
-        const allGuias = [].concat(...this.props.tour.m_arrClsParadaUltimaMilla.map(a => a.m_arrClsProGuia))
+        const totalPaquetes = this.props.tour.m_arrClsParadaUltimaMilla.filter(t => t.m_bActiva).map(a => a.m_arrClsProGuia.length).reduce((a, b) => a + b)
+        const allGuias = [].concat(...this.props.tour.m_arrClsParadaUltimaMilla.filter(t => t.m_bActiva).map(a => a.m_arrClsProGuia))
         return (
             <div>
 
@@ -402,7 +404,11 @@ class DetalleParadas extends Component {
                     this.state.showConfirmarUbicacion &&
                     <ConfirmarUbicacion confirmarUbicacion={this.confirmarUbicacion} open={this.state.showConfirmarUbicacion}
                                         titulo={this.state.titulo}
-                                        recoleccion={this.state.recoleccion}
+                                        remitente={this.state.recoleccion}
+                                        ultimaMilla={true}
+                                        lat={this.state.lat}
+                                        lng={this.state.lng}
+                                        mostrarDialogoMapa={(value) => this.setState({showConfirmarUbicacion: value})}
                                         direccion={this.state.direccion}>
                     </ConfirmarUbicacion>
                 }
@@ -731,11 +737,11 @@ class DetalleParadas extends Component {
                                                                                                 style={{borderBottom: "none"}}
                                                                                                 align="left">
                                                                                                 <div style={{
-                                                                                                    backgroundColor: g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 ? "#DBC50040" : g.m_nEstatusUlimaMilla === 3 ? "#06B10040" : "#F5153340",
+                                                                                                    backgroundColor: !tour.m_bActiva ? "#F5153340" : (g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 ? "#DBC50040" : g.m_nEstatusUlimaMilla === 3 ? "#06B10040" : "#F5153340"),
                                                                                                     width: "100%",
                                                                                                     textAlign: "center"
                                                                                                 }}>
-                                                                                                    {g.m_sEstatusUltimaMilla}
+                                                                                                    {!tour.m_bActiva ? "Cancelada" : g.m_sEstatusUltimaMilla}
                                                                                                 </div>
                                                                                             </TableCell>
                                                                                             <TableCell
