@@ -828,7 +828,7 @@ function Guia(props) {
                 getDataParaEditar()
             });
         }
-
+        getAllDataTipoCobro()
     }, []);
 
 
@@ -1203,7 +1203,7 @@ function Guia(props) {
     const getDataParaEditar = () =>{
         getAllDataSucursal()
         getAllDataMoneda()
-        getAllDataTipoCobro()
+
         getTipoCambio()
         getAllDataEstatusGuia()
         getAllDataTipoServicio()

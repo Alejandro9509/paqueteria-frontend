@@ -267,7 +267,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
                     {
                         dataPaquetes.length !== 0 &&
                         (
-                            <div className="row" style={{height: 200, width: "100%"}}>
+                            <div className="row" style={{height: `${(dataPaquetes.length * 20)+80}px` , width: "100%"}}>
                                 <DataGrid
                                     localeText={dataGridLocaleText}
                                     density="compact"

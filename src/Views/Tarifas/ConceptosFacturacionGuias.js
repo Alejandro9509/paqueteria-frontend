@@ -111,6 +111,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
 
         },
+        !disabled &&
         {
             field: 'complementos',
             headerName: 'Acciones',
@@ -372,6 +373,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                     concepto={concepto}
                     conceptosBase={conceptosBase}
                     keys={keys}
+                    disabled={disabled}
                     resetPaquete={resetPaquete}
                 />
             </div>

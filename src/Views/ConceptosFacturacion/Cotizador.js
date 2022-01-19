@@ -55,7 +55,7 @@ class Cotizador extends Component {
             showSuccess("No se puede crear cotización sin paquetes.")
             return
         }
-        obtenerCotizacion(this.props.embarque, this.props.paquetes, this.props.remitente, this.props.destinatario,this.props.recoleccion).then(({data}) => {
+        obtenerCotizacion(this.props.embarque, this.props.paquetes, this.props.remitente, this.props.destinatario,this.props.recoleccion,this.props.entregaDiferenteDom).then(({data}) => {
             let conceptosCast = []
             let ivaTraslada = []
             let ivaRetiene = []
