@@ -896,7 +896,7 @@ class CrearTarifa extends Component {
                                     {this.state.porRangos &&
                                         <div>
                                             <Tabs value={this.state.tab} onChange={this.handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
-                                                <Tab label="Concetos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
+                                                <Tab label="Conceptos Adicionales por Destino" {...this.a11yProps(0)} className={{ backgroundColor: "white !important" }} />
                                                 <Tab label="Maniobras" {...this.a11yProps(1)} disabled={!this.state.porRangos} />
                                                 <Tab label="Flete" {...this.a11yProps(2)} disabled={!this.state.porRangos} />
                                                 {/*<Tab label="Recolección" {...this.a11yProps(3)} disabled={!this.state.porRangos} />*/}

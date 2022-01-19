@@ -212,6 +212,15 @@ class ClavesCFDI extends Component {
                             }}
                             style={{width:'60ch'}}
                         />
+                        <div>
+                        <Button
+                            variant="contained"
+                            onClick={this.props.closeDialog}
+                            color="primary"
+                            style={{marginRight:"10px"}}
+                        >
+                            Cancelar
+                        </Button>
                         <Button
                             variant="contained"
                             onClick={this.props.closeDialog}
@@ -219,6 +228,7 @@ class ClavesCFDI extends Component {
                         >
                             Seleccionar
                         </Button>
+                        </div>
                     </div>
                     <div style={{height:"300px", padding:"5px"}}>
                         {this.props.dataSAT != 0 ? (

@@ -509,7 +509,6 @@ if(input=="codigoPostal"){
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
     let estado = row.data.m_nIdEstado;
 
-
       obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
         setDataMunicipios(data);
       });
@@ -1009,7 +1008,7 @@ if(input=="codigoPostal"){
                 disabled={props.consulta}
                 getOptionLabel={(option) =>
                   option
-                    ? option.m_sCodigoZona || "Código Postal sin zona asignada"
+                    ? `${option.m_sCodigoZona} - CÓDIGO POSTAL:${state.codigoPostal.m_sCP}`|| "Código Postal sin zona asignada"
                     : ""
                 }
                 variant="outlined"

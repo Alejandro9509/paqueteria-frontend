@@ -53,7 +53,6 @@ function TipoViaje() {
     })
 
     const handleAceptar = (e) => {
-        e.preventDefault()
         var params = {
 
             "Codigo": state.Codigo,
@@ -65,6 +64,7 @@ function TipoViaje() {
             modificarTipoViaje(state.idTipoViaje, params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData();
+                window.location.replace("#Listado");
             }).catch(err => {
                 console.log(err)
                 showSuccess("err")
@@ -73,6 +73,7 @@ function TipoViaje() {
             agregarTipoViaje(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 getAllData()
+                window.location.replace("#Listado");
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)

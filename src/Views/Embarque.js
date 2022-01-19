@@ -3146,9 +3146,9 @@ function Embarque(props) {
                                                                                 helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
                                                                                 InputLabelProps={{shrink: true}}
-                                                                                onClick={()=>{
-                                                                                    setState({ ...state, openDialog: true,tipoModal:10})
-                                                                                }} 
+                                                                                onClick={(state.agregar === "Consultar" || state.embarqueConGuia)?
+                                                                                ()=>{return}:(()=>{ setState({ ...state, openDialog: true,tipoModal:10})
+                                                                            })} 
                                                                             />
                                                                 </div>
                                                             </Grid>
@@ -3320,8 +3320,8 @@ function Embarque(props) {
                                                                       
                                                                     />
                                                                 }
-
-                                                                <div className="col-sm-12 col-md-12  unit">
+                                                            <div className="row">
+                                                                <div className="col-sm-6 col-md-6  unit">
                                                                     <label className="checkbox">
                                                                         Entrega en Sucursal
                                                                         <input
@@ -3336,8 +3336,9 @@ function Embarque(props) {
                                                                         <i/>
                                                                     </label>
                                                                 </div>
-
-                                                                <div className="col-sm-12 col-md-12  unit">
+                                                            </div>
+                                                            <div className="row">
+                                                                <div className="col-sm-6 col-md-6  unit">
                                                                     <label className="checkbox">
                                                                         Entrega en Diferente Domicilio
                                                                         <input
@@ -3353,8 +3354,9 @@ function Embarque(props) {
                                                                         <i/>
                                                                     </label>
                                                                 </div>
-
-                                                                <div className="col-sm-12 col-md-12  unit">
+                                                          </div>
+                                                        <div className="row">
+                                                                <div className="col-sm-6 col-md-6  unit">
                                                                     <label className="checkbox">
                                                                         Entrega con cita
                                                                         <input
@@ -3371,6 +3373,7 @@ function Embarque(props) {
                                                                     </label>
                                                                 </div>
                                                             </div>
+                                                          </div>
                                                         </div>
                                                     </div>
                                                 </div>
