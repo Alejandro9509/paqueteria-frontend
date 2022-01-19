@@ -754,7 +754,7 @@ class DetalleParadas extends Component {
                                                                                                         variant="contained"
                                                                                                         color="primary">
                                                                                                         {
-                                                                                                            g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
                                                                                                                 aria-label="reorder">
                                                                                                                 <Tooltip
@@ -852,7 +852,7 @@ class DetalleParadas extends Component {
                                                                                                             </IconButton>
                                                                                                         }
                                                                                                         {
-                                                                                                            g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva && !g.m_bTimbrado &&
+                                                                                                            !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva && !g.m_bTimbrado &&
                                                                                                             <IconButton
                                                                                                                 aria-label="delete">
                                                                                                                 <Tooltip

@@ -653,7 +653,7 @@ function Viajes() {
         {
             headerName: "Origen - Destino",
             field: "origenDestino",
-            width: 250,
+            width: 200,
         },
         {
             headerName: "Salida",
@@ -689,18 +689,18 @@ function Viajes() {
         {
             headerName: "Operador",
             field: "m_sOperador",
-            width: 200
+            width: 250
         },
         {
             headerName: "Folio Fiscal",
             field: "m_nIdDestino",
-            width: 200,
+            width: 300,
             valueFormatter: row => row.row.m_clsInforme.m_sFolioFiscalUUID || " "
         },
         {
             headerName: "Folio Fiscal sustituido",
             field: "m_nIdOrigen",
-            width: 200,
+            width: 300,
             valueFormatter: row => row.row.m_clsInforme.m_sFolioFiscalUUIDSustituido || row.row.m_clsInforme.m_sUltimoFolioFiscalUUIDSustituido || " "
         },
         // {
@@ -774,6 +774,7 @@ function Viajes() {
             m_nMillasViaje: data.millas,
             m_sMotivoRetraso: data.motivoRetraso,
             m_nIdCiudadOrigen: paradaData.m_nIdOrigen,
+
             IdRuta: paradaData.m_nIdRuta,
 
 
@@ -822,6 +823,8 @@ function Viajes() {
             m_nKmViaje: data.kms,
             m_nIdEstatusLlegada: data.idEstatus,
             m_nMillasViaje: data.millas,
+            m_nIdCiudadOrigen: paradaData.m_nIdOrigen,
+            m_nIdCiudadDestino: paradaData.m_nIdDestino,
             IdRuta: paradaData.m_nIdRuta,
             m_nIdViaje: paradaData.m_nIdViaje,
             m_sMotivoRetraso: data.motivoRetraso,
