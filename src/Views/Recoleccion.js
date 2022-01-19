@@ -1976,7 +1976,7 @@ function Recoleccion() {
             width: 200,
         },
         {
-            headerName: "Fecha/Hora Recolección",
+            headerName: "Fecha/Hora Cita",
             field: "m_sFechaHoraDetalleRec",
             width: 250,
         },
