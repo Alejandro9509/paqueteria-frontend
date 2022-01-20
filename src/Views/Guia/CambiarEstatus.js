@@ -55,11 +55,13 @@ class MyComponent extends Component {
                                     <option key={0} value="0">Seleccionar</option>
                                     {this.props.dataEstatusGuia.map(
                                         (estatusGuia) => (
+                                           estatusGuia.m_nIdEstatusGuia!=8?
                                             <option
                                                 key={estatusGuia.m_nIdEstatusGuia}
                                                 value={estatusGuia.m_nIdEstatusGuia}>
                                                 {estatusGuia.m_sEstatus}
                                             </option>
+                                            :null
                                         )
                                     )}
                                 </Select>

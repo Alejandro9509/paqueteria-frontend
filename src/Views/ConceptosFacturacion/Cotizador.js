@@ -106,7 +106,7 @@ class Cotizador extends Component {
                                 this.state.mostarConceptos &&
                                 <ConceptosFacturacionGuias
                                     keys={0}
-                                    disabled={false}
+                                    disabled={this.props.disabled}
                                     dataPaquetes={this.props.conceptos}
                                     onChangeList={this.handleChangeListConceptos}
                                     conceptosBase={this.state.conceptosBase}
@@ -121,6 +121,7 @@ class Cotizador extends Component {
                                     e.preventDefault();
                                     this.calcularTarifa()
                                 }}
+                                disabled={this.props.disabled}
                             >
                                 Calcular Tarifa
                             </button>

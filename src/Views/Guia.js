@@ -20,7 +20,9 @@ import {getUniqueListBy, remove_array_element} from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
 import {DataGrid} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
-
+import {
+    obtenerZonaTarifaByIdCodigoPostal,
+  } from "../Util/Contexts/ZonaTarifaContext";
 import Noty from 'noty';
 import {
     Dialog,
@@ -493,7 +495,29 @@ function Guia(props) {
             ivaTraslada: ivaTraslada
         })
         setConceptosAdicionales(conceptosAdicionalesAux)
+        obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalRemitente).then(
+            ({ data }) => {
+                console.log(data)
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaTarifaRemitente:data[0].m_sCodigoZona
+                    }
 
+                })
+            }
+          );
+          obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
+            ({ data }) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaTarifaDestinatario:data[0].m_sCodigoZona
+                    }
+
+                })
+            }
+          );
         setState(state => {
             return {
                 ...state,
@@ -529,8 +553,6 @@ function Guia(props) {
                 sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 CiudadDestino: respuesta.data.m_sCiudadDestino,
                 codigoPostalDestinatario: respuesta.data.m_sCodigoPostalDestinatario,
-                zonaTarifaRemitente: respuesta.data.m_sZonaTarifaRecoleccion,
-                zonaTarifaDestinatario: respuesta.data.m_sZonaTarifaEntrega,
 
                 agregar: label,
                 ValorDeclarado: respuesta.data.m_cValorDeclarado,
@@ -578,10 +600,15 @@ function Guia(props) {
             "fechaCancelacion": state.fechaCancelado
         }
         console.log(JSON.stringify(params))
-        cancelarGuia(state.idGuia, params).then((respuesta) => {
+        if(state.folioInforme){
+            showSuccess("La guia no puede ser eliminada ya que esta siendo usada en un informe")
+        }else{
+          cancelarGuia(state.idGuia, params).then((respuesta) => {
             console.log(respuesta.data)
-            showSuccess(respuesta.data)
-        })
+            showSuccess("La guia ha sido cancelada")
+        })  
+        }
+        
     }
 
     //Prepara campos para agregar guia
@@ -620,7 +647,6 @@ function Guia(props) {
 
     const handleChange = event => {
         event.preventDefault()
-        console.log(event.target.name + " : " + event.target.value)
         setState(state => {
             return {
                 ...state,
@@ -828,7 +854,7 @@ function Guia(props) {
                 getDataParaEditar()
             });
         }
-
+        getAllDataTipoCobro()
     }, []);
 
 
@@ -1203,7 +1229,7 @@ function Guia(props) {
     const getDataParaEditar = () =>{
         getAllDataSucursal()
         getAllDataMoneda()
-        getAllDataTipoCobro()
+
         getTipoCambio()
         getAllDataEstatusGuia()
         getAllDataTipoServicio()
@@ -1697,10 +1723,13 @@ function Guia(props) {
     }
 
     const cambiarEstaus = (estatus) => {
-        cambiarEstatusGuia(state.idGuia, estatus).then(({data}) => {
+
+             cambiarEstatusGuia(state.idGuia, estatus).then(({data}) => {
             showSuccess(data)
             getAllData()
-        })
+        }) 
+       
+       
     }
 
     const handleAsignarTrayectos = (idGuia) => {
@@ -1869,11 +1898,13 @@ function Guia(props) {
                                             pageSize={Math.floor((state.height - 310) / 30)}
                                             getRowId={(row) => row.m_nIdGuia}
                                             onRowSelected={(row) => {
+                                                console.log(row)
                                                 setState({
                                                     ...state,
                                                     idGuia: row.data.m_nIdGuia,
                                                     cambioCobro: true,
-                                                    creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito
+                                                    creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito,
+                                                    folioInforme:row.data.m_sFolioInforme
                                                 })
                                             }}
                                         />
@@ -3072,6 +3103,7 @@ function Guia(props) {
                                                                        }}
                                                                        value={state.MotivoCancelacion}
                                                                        id="MotivoCancelacion"
+                                                                       required
                                                                        name="MotivoCancelacion"
                                                             />
                                                         </div>

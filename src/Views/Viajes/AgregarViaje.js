@@ -550,6 +550,12 @@ class AgregarViaje extends Component {
             if (resultado.data.m_sEstatus === "DISPONIBLE"){
                 if (!this.isUnidadAvailable(newValue, "REMOLQUE1")){
                     showSuccess("La unidad elegida ya se encuentra seleccionada.");
+                    this.setState({
+                        IdRemolque1: null,
+                        placasRemolque1: "",
+                        colorRemolque1: "",
+                        estatusRemolque1: ""
+                    })
                     return
                 }
                 this.setState({
@@ -576,6 +582,12 @@ class AgregarViaje extends Component {
             if (resultado.data.m_sEstatus === "DISPONIBLE"){
                 if (!this.isUnidadAvailable(newValue, "REMOLQUE2")){
                     showSuccess("La unidad elegida ya se encuentra seleccionada.");
+                    this.setState({
+                        IdRemolque2: null,
+                        placasRemolque2: "",
+                        colorRemolque2: "",
+                        estatusRemolque2: ""
+                    })
                     return
                 }
                 this.setState({
@@ -603,6 +615,14 @@ class AgregarViaje extends Component {
                 if (resultado.data.m_sEstatus === "DISPONIBLE"){
                     if (!this.isUnidadAvailable(newValue, "UNIDAD")){
                         showSuccess("La unidad elegida ya se encuentra seleccionada.");
+                        this.setState({
+                            unidad: null,
+                            placaIntUnidad: "",
+                            estatusUnidad: "",
+                            colorUnidad: "",
+                            kms: 0,
+                            horas: 0
+                        })
                         return
                     }
                     this.setState({
@@ -1447,7 +1467,7 @@ class AgregarViaje extends Component {
                                                 id="unidad"
                                                 // disableClearable
                                                 // forcePopupIcon={false}
-                                                options={this.state.dataUnidades.filter(i => i.m_bActivo)}
+                                                options={this.state.dataUnidades.filter(i => i.m_bActivo && (this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})` : ""
                                                 }
@@ -1540,7 +1560,7 @@ class AgregarViaje extends Component {
                                                     // disableClearable
                                                     disabled={this.props.consult}
                                                     // forcePopupIcon={false}
-                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo)}
+                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo && (this.state.unidad ? this.state.unidad.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
                                                     getOptionLabel={(option) =>
                                                         `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                                     }
@@ -1603,7 +1623,7 @@ class AgregarViaje extends Component {
                                                     // disableClearable
                                                     disabled={this.props.consult}
                                                     // forcePopupIcon={false}
-                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo)}
+                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo && (this.state.unidad ? this.state.unidad.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
                                                     getOptionLabel={(option) =>
                                                         `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                                     }
@@ -1664,7 +1684,7 @@ class AgregarViaje extends Component {
                                                     // disableClearable
                                                     disabled={this.props.consult}
                                                     // forcePopupIcon={false}
-                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo)}
+                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo && i.m_nIdTipoUnidad === 28)}
                                                     getOptionLabel={(option) =>
                                                         option ? `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})` : ""
                                                     }
@@ -1705,9 +1725,13 @@ class AgregarViaje extends Component {
                                     <div className="widget-header">
                                         <h2 color={'#717171'}>Detalle de paradas</h2>
                                     </div>
-                                    <Button variant="contained" color="primary" fullWidth onClick={(event) => this.handleShowDialog(event)}>
-                                        Agregar informes
-                                    </Button>
+                                    {
+                                        !this.props.consult &&
+                                        <Button variant="contained" color="primary" fullWidth onClick={(event) => this.handleShowDialog(event)}>
+                                            Agregar informes
+                                        </Button>
+                                    }
+
                                     <div className="row" style={{height: "200px", width: '100%'}}>
                                         <InformesPorAsignar {...this.props} columns={columnspAsignadas}
                                                             dataInformesAsignados={this.state.dataInformesAsignados}
@@ -1768,16 +1792,20 @@ class AgregarViaje extends Component {
                                                 Cancelar
                                             </Button>
                                         </Grid>
-                                        <Grid item xs>
-                                            <Button
-                                                fullWidth
-                                                type="submit"
-                                                className="btn btn-primary primary-btn"
-                                                disabled={this.agregar === "Consultar"}
-                                            >
-                                                Guardar viaje
-                                            </Button>
-                                        </Grid>
+                                        {
+                                            !this.props.consult &&
+                                            <Grid item xs>
+                                                <Button
+                                                    fullWidth
+                                                    type="submit"
+                                                    className="btn btn-primary primary-btn"
+                                                    disabled={this.props.consult}
+                                                >
+                                                    Guardar viaje
+                                                </Button>
+                                            </Grid>
+                                        }
+
                                     </Grid>
                                 </div>
 

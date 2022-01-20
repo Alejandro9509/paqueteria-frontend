@@ -391,8 +391,9 @@ class DetalleParadas extends Component {
     render() {
         var d = new Date();
         d.setHours(0,0,0,0);
-        const totalPaquetes = this.props.tour.m_arrClsParadaUltimaMilla.filter(t => t.m_bActiva).map(a => a.m_arrClsProGuia.length).reduce((a, b) => a + b)
-        const allGuias = [].concat(...this.props.tour.m_arrClsParadaUltimaMilla.filter(t => t.m_bActiva).map(a => a.m_arrClsProGuia))
+        const todasParadas = this.props.tour.m_arrClsParadaUltimaMilla.filter(t => t.m_bActiva)
+        const totalPaquetes = todasParadas.length === 0 ? 0 : todasParadas.map(a => a.m_arrClsProGuia.length).reduce((a, b) => a + b)
+        const allGuias = [].concat(...this.props.tour.m_arrClsParadaUltimaMilla.filter(t => t.m_bActiva).map(a => a.m_arrClsProGuia)) || []
         return (
             <div>
 
@@ -534,7 +535,7 @@ class DetalleParadas extends Component {
                                             textAlign: "center"
                                         }}>
                                             <strong>Pendientes </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length} de {totalPaquetes}
-                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length / totalPaquetes) * 100)}%</strong>
+                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla !== 3 && g.m_nEstatusUlimaMilla !== 4).length / totalPaquetes) * 100) || 0 }%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -545,7 +546,7 @@ class DetalleParadas extends Component {
                                             textAlign: "center"
                                         }}>
                                             <strong>Exitosas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length} de {totalPaquetes}
-                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length / totalPaquetes) * 100)}%</strong>
+                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 3).length / totalPaquetes) * 100) || 0}%</strong>
                                         </div>
                                     </Grid>
                                     <Grid item sm={12}>
@@ -556,7 +557,7 @@ class DetalleParadas extends Component {
                                             textAlign: "center"
                                         }}>
                                             <strong>Fallidas </strong> {allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length} de {totalPaquetes}
-                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length / totalPaquetes) * 100)}%</strong>
+                                            <strong> {parseInt((allGuias.filter(g => g.m_nEstatusUlimaMilla === 4).length / totalPaquetes) * 100) || 0}%</strong>
                                         </div>
                                     </Grid>
                                 </Grid>
@@ -754,7 +755,7 @@ class DetalleParadas extends Component {
                                                                                                         variant="contained"
                                                                                                         color="primary">
                                                                                                         {
-                                                                                                            g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
                                                                                                                 aria-label="reorder">
                                                                                                                 <Tooltip
@@ -852,7 +853,7 @@ class DetalleParadas extends Component {
                                                                                                             </IconButton>
                                                                                                         }
                                                                                                         {
-                                                                                                            g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva && !g.m_bTimbrado &&
+                                                                                                            !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva && !g.m_bTimbrado &&
                                                                                                             <IconButton
                                                                                                                 aria-label="delete">
                                                                                                                 <Tooltip

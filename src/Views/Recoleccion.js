@@ -993,8 +993,7 @@ function Recoleccion() {
             params.m_nIdRemolque = state.unidad.m_nIdUnidad
             params.m_nCreadoPor = state.CreadoPor
             params.m_nModificadoPor = state.ModificadoPor
-        
-       
+
         if (state.diferenteRecoleccion) {
             params.m_nIdCPDetalleRecoleccion = recoleccionDD.codigoPostalRec.m_nIdCP
             params.m_sDomicilioDetalleRecoleccion = recoleccionDD.domicilioRec
@@ -1009,8 +1008,8 @@ function Recoleccion() {
         } else {
             params.m_nIdZonaOperativa = remitente.zonaOperativaRemitente.m_nIdZona
             params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente.m_nIdZona
-            params.m_sLatitudR = coordenadas ? coordenadas[0] : remitente.latitudR
-            params.m_sLongitudR = coordenadas ? coordenadas[1] : remitente.longitudR
+            params.m_sLatitudR = coordenadas ? coordenadas.lat : remitente.latitudR
+            params.m_sLongitudR = coordenadas ? coordenadas.lng : remitente.longitudR
         } 
             params.m_bEntregaEnSucursal = state.entregaEnSucursal;
             params.m_nIdSucursalEntrega = state.idSucursalEntrega;
@@ -1051,7 +1050,7 @@ function Recoleccion() {
         params.m_nIdCotizacion = state.idCotizacion
     //    console.log(params)
         console.log(JSON.stringify(params))
-      if (state.idRecoleccion != 0) {
+     if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1224,6 +1223,8 @@ function Recoleccion() {
     const setRecoleccionDataParaConsultaModificacion = (respuesta,operacion) => {
         console.log("DATA DE RECOLECCION CONSULTA Y MODIFICACION")
         console.log(respuesta)
+        /**Este indicador se checa en el componente de RemitentesDestinatarios*/
+        respuesta.data.recoleccionById = true
         setDataRecoleccionConsulta(respuesta)
         getDataParaEditar(operacion)
         getAllCiudades()
@@ -1976,7 +1977,7 @@ function Recoleccion() {
             width: 200,
         },
         {
-            headerName: "Fecha/Hora Recolección",
+            headerName: "Fecha/Hora Cita",
             field: "m_sFechaHoraDetalleRec",
             width: 250,
         },
@@ -2911,7 +2912,6 @@ function Recoleccion() {
     }
 
     const handleChangeCita = (data) => {
-        debugger
         setState({
             ...state,
             fechaCita: data.fechaCita,
@@ -2939,6 +2939,7 @@ function Recoleccion() {
                                     dataMunicipiosRecoleccionDD={dataMunicipiosRecoleccionDD}
                                     mostrarDialogoMapa={mostrarDialogoMapa}
                                     titulo={state.titulo}
+                                    recoleccion={true}
                                     remitente={true}
                                     direccion={remitente}
                                     esDiferenteRecoleccion={state.diferenteRecoleccion}
@@ -3686,9 +3687,9 @@ function Recoleccion() {
                                                                                 helperText={ (state.clientePaga.m_bCreditoVencido && !state.clientePaga.m_bSinCredito) ? "El cliente presenta saldo vencido. Días de crédito: " + state.clientePaga.m_nDiasCredito : ""}
                                                                                 placeholder={"No. Cliente: Nombre fiscal"}
                                                                                 InputLabelProps={{shrink: true}}
-                                                                                onClick={()=>{
-                                                                                    setState({ ...state, openDialog: true,tipoModal:10})
-                                                                                }}                                                                         
+                                                                                onClick={(state.agregar === "Consultar" || state.embarqueConGuia)?
+                                                                                ()=>{return}:(()=>{ setState({ ...state, openDialog: true,tipoModal:10})
+                                                                            })}                                                                     
                                                                             />
                                                                 </div>
                                                             </Grid>
@@ -3815,11 +3816,11 @@ function Recoleccion() {
                                                                     
                                                                     />
                                                                 }
-
+                                                </div>
                                                                 <div className="row">
-
+                                                                <div style={{width:'70%'}}>
                                                                     {/* --------------------------------------- RecoleccionDD ------------------------------------------------- */}
-                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                    <div className="col-sm-7 col-md-7 unit">
                                                                         <label className="checkbox">
                                                                             <input
                                                                                 onChange={
@@ -3835,8 +3836,13 @@ function Recoleccion() {
                                                                             <i/>
                                                                             Recolección en Diferente Domicilio
                                                                         </label>
+                                                                    </div> 
+                                                                </div>
                                                                     </div>
-                                                                    <div className="col-sm-12 col-md-12 unit">
+                                                                    
+                                                                <div className="row">
+                                                                <div style={{width:'70%'}}>
+                                                                    <div className="col-sm-7 col-md-7 unit">
                                                                         <label className="checkbox">
                                                                             <input
                                                                                 onChange={handleCitaCheckboxChange}
@@ -3851,7 +3857,7 @@ function Recoleccion() {
                                                                             Programar cita de recolección
                                                                         </label>
                                                                     </div>
-                                                                </div>
+                                                               </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -3878,8 +3884,9 @@ function Recoleccion() {
                                                              
                                                                     />
                                                                 }
-
-                                                                <div className="col-sm-12 col-md-12  unit">
+                                                            <div className="row">
+                                                            <div style={{width:'70%'}}>
+                                                                <div className="col-sm-7 col-md-7 unit">
                                                                     <label className="checkbox">
                                                                         <input
                                                                             onChange={handleEntregaCheckboxChange}
@@ -3895,8 +3902,12 @@ function Recoleccion() {
                                                                         Entrega en Diferente Domicilio
                                                                     </label>
                                                                 </div>
-                                                                <div className="col-sm-12 col-md-12  unit">
-                                                              <label className="checkbox">
+                                                                </div>
+                                                                </div>
+                                                                <div className="row">
+                                                                    <div style={{width:'70%'}}>
+                                                                <div className="col-sm-7 col-md-7 unit" >
+                                                                 <label className="checkbox">
                                                                       Entrega en Sucursal
                                                                          <input
                                                                              onChange={handleEntregaEnSucursalCheckbox}
@@ -3909,8 +3920,9 @@ function Recoleccion() {
                                                                           />
                                                                            <i />
                                                                           </label>
-                                                                      </div>
+                                                                      </div></div>
                                                             </div>
+                                                          </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -4789,6 +4801,7 @@ function Recoleccion() {
 
                                     <div className="row">
                                         <Cotizador embarque={state}
+                                                   disabled={state.agregar === "Consultar"}
                                                    remitente={remitente}
                                                    destinatario={destinatario}
                                                    onChangeConceptosList={actualizarConceptos}
