@@ -31,7 +31,7 @@ import {
     List,
     ListItem,
     Collapse,
-    ListItemText, Link, Chip
+    ListItemText, Link, Chip, Grid
 } from "@material-ui/core";
 import {obtenerEstatusDocumentos} from "../Util/Contexts/EstatusContext";
 import Historial from "./Viajes/Historial";
@@ -45,11 +45,16 @@ import {
     agregarViajeLlegada,
     obetenerViajeId,
     obtenerViajes,
-    obtenerXML, obtenerViajesByFiltro, obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje
+    obtenerXML, obtenerViajesByFiltro, obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje, cancelarViaje
 } from "../Util/Contexts/ViajesContext";
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import {obtenerInformeFiltro, obtenerInformesPorViaje, obtenerXMLCFDI} from "../Util/Contexts/InformesContext";
+import {
+    cancelarInformes,
+    obtenerInformeFiltro, obtenerInformesId,
+    obtenerInformesPorViaje,
+    obtenerXMLCFDI
+} from "../Util/Contexts/InformesContext";
 import {getUniqueListBy} from "../Util/Util";
 import DetalleInforme from "./Viajes/DetalleInforme";
 import {obtenerDetalleParadasIdInformes, obtenerDetalleParadasIdViaje} from "../Util/Contexts/DetalleParadasContext";
@@ -88,6 +93,7 @@ const useStyles = makeStyles(styles);
 window.jQuery = window.$ = $;
 
 function Viajes() {
+    const classes = useStyles();
     const [data, setData] = React.useState([])
     const [dataSucursal, setDataSucursal] = React.useState([]);
     const [indexOpen, setIndexOpen] = React.useState(-1);
@@ -223,6 +229,29 @@ function Viajes() {
         $('#Listado').addClass('in show');
     }
 
+    function handleShowCancelar(event) {
+        event.preventDefault()
+        obetenerViajeId(state.idViaje).then((respuesta) => {
+            setState({
+                ...state,
+                FolioViaje: respuesta.data.m_sFolioViaje,
+                sucursalCancelacion: respuesta.data.m_sSucursal,
+                fechaCancelacion: respuesta.data.m_dtFechaCancelacion ? respuesta.data.m_dtFechaCancelacion.replace(' ', 'T') : getCurrentDateTime(),
+                motivoCancelacion: respuesta.data.m_sMotivoCancelacion || '',
+                usuarioCancelacion: respuesta.data.m_sUsuarioCancelacion || localStorage.getItem("Usuario"),
+                estatusCancelacion: respuesta.data.m_sEstatusViaje,
+                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar,
+            });
+
+            if (!respuesta.data.m_bSePuedeCancelar) {
+                showSuccess("Este viaje no se puede cancelar.");
+            }
+            $('.nav-tabs li ').removeClass('active');
+            $('.nav-tabs li').eq(3).addClass('active');
+            $('.tab-content div ').removeClass('in show');
+            $('#Cancelar').addClass('in show');
+        });
+    }
     const clearData = () => {
         setState(state => {
             return {
@@ -237,7 +266,17 @@ function Viajes() {
             }
         })
     }
+    const getCurrentDateTime = () => {
+        return `${new Date().getFullYear()}-${`${new Date().getMonth() +
+        1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
+    }
 
+    const handleChange = (event) => {
+        setState({
+            ...state,
+            [event.target.id]: event.target.value,
+        });
+    };
     const columns = React.useMemo(() => [
         {
             headerName: "Acciones",
@@ -714,6 +753,7 @@ function Viajes() {
     const [paradaData, setParadaData] = React.useState();
 
     function getParadasListado(row) {
+        setState({...state, idViaje: row.m_nIdViaje})
         obtenerDetalleParadasIdViaje(row.m_nIdViaje).then(respuesta => {
             var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdDestino")
             arrayInformes.forEach(a => {
@@ -878,6 +918,24 @@ function Viajes() {
         setData(listado)
     }
 
+    const handleCancelar = (e) => {
+        if (e){
+            e.preventDefault();
+        }
+        let params = {
+            motivoCancelacion: state.motivoCancelacion,
+            usuarioCancelacion: localStorage.getItem("UsuarioId"),
+            fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
+        };
+        console.log(params)
+        console.log(JSON.stringify(params))
+        cancelarViaje(state.IdViaje,params).then((respuesta) => {
+            console.log(respuesta.data);
+            showSuccess(respuesta.data)
+            handleShowListado()
+        });
+    };
+
     return (
         <div>
             {state.openCancelarSAT &&
@@ -1038,6 +1096,16 @@ function Viajes() {
                                 });
                             }}>
                                 <i className="fa fa-print"/> Imprimir
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                data-toggle="tab"
+                                href="#Cancelar"
+                                onClick={handleShowCancelar}
+                                className={state.idViaje === 0 ? classes.disabled : ""}
+                            >
+                                <i className="fa fa-ban"/> Cancelar
                             </a>
                         </li>
 
@@ -1208,7 +1276,115 @@ function Viajes() {
 
                         </div>
 
+                        <div id="Cancelar" className="tab-pane fade">
+                            <div className="widget-wrap">
+                                <div className="widget-container">
+                                    <div className="widget-content">
+                                        <div className="row">
+                                            <form className="j-forms" onSubmit={handleCancelar} onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
+                                                <div className="form-content">
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <div className="input">
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       label="Folio Viaje"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       InputLabelProps={{shrink: true,}}
+                                                                       value={state.FolioViaje}
+                                                                       id="FolioViaje"
+                                                                       disabled
+                                                            />
+                                                        </div>
+                                                    </div>
 
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <div className="input">
+                                                            <TextField variant="outlined" margin="dense"
+                                                                       label="Sucursal Emisora"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       InputLabelProps={{shrink: true,}}
+                                                                       value={state.sucursalCancelacion}
+                                                                       id="sucursalCancelacion"
+                                                                       disabled
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <div className="input">
+                                                            <TextField variant="outlined" margin="dense" label="Fecha de cancelación"
+                                                                       className="form-control"
+                                                                       type="datetime-local"
+                                                                       InputLabelProps={{shrink: true,}}
+                                                                       value={state.fechaCancelacion}
+                                                                       id="fechaCancelacion"
+                                                                       disabled
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <div className="input">
+                                                            <TextField variant="outlined" margin="dense" label="Usuario"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       InputLabelProps={{shrink: true,}}
+                                                                       value={state.usuarioCancelacion}
+                                                                       id="usuarioCancelacion"
+                                                                       disabled
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
+                                                        <div className="input">
+                                                            <TextField variant="outlined" margin="dense" label="Estatus"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       InputLabelProps={{shrink: true,}}
+                                                                       value={state.estatusCancelacion}
+                                                                       id="estatusCancelacion"
+                                                                       disabled
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-sm-12 col-md-12 col-lg-12 unit">
+                                                        <div className="input">
+                                                            <TextField variant="outlined" margin="dense" label="Motivo"
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       InputLabelProps={{shrink: true,}}
+                                                                       onChange={handleChange}
+                                                                       value={state.motivoCancelacion}
+                                                                       id="motivoCancelacion"
+                                                                       disabled={!state.sePuedeCancelar}
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="form-footer" className="col-md-12">
+                                                        <Grid container spacing={2}>
+                                                            <Grid item xs>
+                                                                <Button
+                                                                    fullWidth
+                                                                    type="submit"
+                                                                    className="btn btn-primary primary-btn"
+                                                                    disabled={!state.sePuedeCancelar}
+                                                                >
+                                                                    Guardar Cambios
+                                                                </Button>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
