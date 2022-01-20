@@ -866,52 +866,164 @@ function Embarque(props) {
         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
         1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
     }
- 
-    const handleAceptar = (e, coordenadas) => {
-        e.preventDefault();
-        let error = false
 
-        if (!state.entregaEnSucursal){
-            if(state.diferenteEntrega){
-                if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
-                    error = true
-                    showSuccess("Verificar la zona operativa de diferente domicilio entrega")
-                }else if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
-                    error = true
-                    showSuccess("Verificar la zona tarifa de diferente domicilio entrega")
-                }
-            }else if(destinatario.zonaOperativaDestinatario?.m_nIdZona==undefined){
-                error = true
+    /**Valida que no sea null/undefined,
+     * no sea campo vacio,
+     * no sea cero,
+     * no sea un string con cero*/
+    const esDatoValido = (dato) => {
+        return dato
+            && dato !== ''
+            && dato !== 0
+            && dato !== "0";
+
+    }
+
+    const esEmbarqueValido = () => {
+        let valid = false;
+        /**INFORMACION GENERAÑ*/
+        if (!esDatoValido(state.idTipoSeguro)){
+            showSuccess("El tipo de seguro es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(state.tipoCambio)){
+            showSuccess("El tipo de cambio es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(state.tipoCobro)){
+            showSuccess("El tipo de cobro es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(state.clientePaga?.m_nIdCliente)){
+            showSuccess("El responsable de pago es un dato requerido");
+            return valid;
+        }
+
+        /**REMITENTE*/
+        if (!esDatoValido(remitente.idRemitente)){
+            showSuccess("El remitente es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(remitente.codigoPostalRemitente?.m_nIdCP)){
+            showSuccess("El cÓdigo postal del remitente es un dato requerido");
+            return valid;
+        }
+        if(!esDatoValido(remitente.correoRemitente)){
+            showSuccess("El correo del remitente es un dato requerido")
+            return valid;
+        }
+        if (!esDatoValido(remitente.origenRemitente?.m_nIdCiudad)){
+            showSuccess("La ciudad de origen es un dato requerido");
+            return valid;
+        }
+
+        /**DESTINATARIO*/
+        if (!esDatoValido(destinatario.idDestinatario)){
+            showSuccess("El destinatario es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(destinatario.codigoPostalDestinatario?.m_nIdCP)){
+            showSuccess("El código postal del destinatario es un dato requerido");
+            return valid;
+        }
+        if(!esDatoValido(destinatario.correoDestinatario)){
+            showSuccess("El correo del destinatario es un dato requerido")
+            return valid;
+        }
+        if (!esDatoValido(destinatario.destinoDestinatario?.m_nIdCiudad)){
+            showSuccess("La ciudad de destino es un dato requerido");
+            return valid;
+        }
+
+        /**Si es entrega en sucursal*/
+        if (state.entregaEnSucursal){
+            if (!esDatoValido(state.idSucursalEntrega)){
+                showSuccess("La sucursal de entrega es un dato requerido");
+                return valid;
+            }
+            /**Si es entrega en direfente domicilio*/
+        }else if(state.diferenteEntrega){
+            if (!esDatoValido(entregaDD.codigoPostalEnt?.m_nIdCP)){
+                showSuccess("El código postal de entrega es un dato requerido");
+                return valid;
+            }
+            if (!esDatoValido(entregaDD.estadoEnt)){
+                showSuccess("El estado de entrega es un dato requerido");
+                return valid;
+            }
+            if (!esDatoValido(entregaDD.zonaOperativaEnt?.m_nIdZona)){
+                showSuccess("La zona operativa de entrega es un dato requerido");
+                return valid;
+            }
+            if (!esDatoValido(entregaDD.zonaTarifaEnt?.m_nIdZona)){
+                showSuccess("La zona de la tarifa de entrega es un dato requerido");
+                return valid;
+            }
+
+        }else {
+            /**Si es entrega en domicilio de destinatario*/
+            if (!esDatoValido(destinatario.zonaOperativaDestinatario?.m_nIdZona)) {
                 showSuccess("Verificar la zona operativa de destinatario")
-            }else if(destinatario.zonaTarifaDestinatario?.m_nIdZona==undefined){
-                error = true
+                return valid;
+            } else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
                 showSuccess("Verificar la zona tarifa de destinatario")
+                return valid;
+            }
+        }
+        if (state.entregaConCita){
+            if (!state.citaPendiente){
+                if (!esDatoValido(state.fechaCita)){
+                    showSuccess("La fecha de la cita es un dato requerido");
+                    return;
+                }
+                if (!esDatoValido(state.horaCitaMinima)){
+                    showSuccess("La hora mínima de la cita es un dato requerido");
+                    return;
+                }
+                if (!esDatoValido(state.horaCitaMaxima)){
+                    showSuccess("La hora máxima de la cita es un dato requerido");
+                    return;
+                }
             }
         }
 
-        if(destinatario.correoDestinatario == ""){
-            error = true
-            showSuccess("Error al agregar recoleccion: El correo del destinatario es un campo requerido")
+        if (!esDatoValido(state.idRuta) ){
+            showSuccess("La ruta es un dato requerido.")
+            return valid;
         }
-        if(remitente.correoRemitente == "" ){
-            error = true
-            showSuccess("Error al agregar recoleccion: El correo del remitente es un campo requerido")
-        }
-        if (dataConceptos.length === 0){
-            showSuccess("No se han agregado conceptos de facturación")
-            return;
-        }
-        if(!error){
-        setState({
-            ...state,
-            showConfirmarUbicacion: false
-        })
-        const {paquetes, sobres} = state;
-
         if (dataPaquetes.length === 0) {
             showSuccess("Debe agregar al menos un paquete")
             return
         }
+
+        if (dataConceptos.length === 0){
+            showSuccess("No se han agregado conceptos de facturación")
+            return;
+        }
+        valid = true
+        return valid;
+    }
+ 
+    const handleAceptar = (e, coordenadas) => {
+        e.preventDefault();
+
+        /**Se cierra el dialogo porque si no se quedará abierto despues de darle aceptar.*/
+        setState({
+            ...state,
+            showConfirmarUbicacion: false
+        })
+
+        if (!esEmbarqueValido()){
+            return;
+        }
+
+        /**Si no es entrega en sucursal se validan las coordenadas*/
+        if (!state.entregaEnSucursal){
+            if (!validarCoordenadas(coordenadas)){
+                return
+            }
+        }
+
         let packs = []
         dataPaquetes.forEach((p) => {
             p.m_xPeso = p.m_rPeso
@@ -947,13 +1059,6 @@ function Embarque(props) {
             item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
             item.m_xPeso = item.peso
         })
-
-        /**Si no es entrega en sucursal se validan las coordenadas*/
-        if (!state.entregaEnSucursal){
-            if (!validarCoordenadas(coordenadas)){
-                return
-            }
-        }
 
         const params = {
             m_nIdEmbarque: state.idEmbarque,
@@ -1077,16 +1182,12 @@ function Embarque(props) {
         }))
         params.m_nIdCotizacion = state.idCotizacion
 
-        if (state.idRuta === 0 ){
-            showSuccess("Seleccione una ruta.")
-            return;
-        }
         params.m_nIdRuta = state.idRuta
         console.log(params)
         console.log(JSON.stringify(params))
 
-     if (state.idEmbarque != 0) {
-            modificarEmbarques(state.idEmbarque, params)
+        if (state.idEmbarque != 0) {
+            /*modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
                     if (respuesta.data != "Modificado Exitosamente"){
@@ -1097,9 +1198,9 @@ function Embarque(props) {
                 .catch((err) => {
                     console.log(err);
                     showSuccess("El Usuario no tiene derecho para modificar");
-                });
+                });*/
         } else {
-            agregarEmbarques(params)
+            /*agregarEmbarques(params)
                 .then((respuesta) => {
                     if (respuesta.data.m_nFolioEmbarque.length === 0){
                         return
@@ -1134,9 +1235,8 @@ function Embarque(props) {
                 .catch((err) => {
                     console.log(err);
                     showSuccess(err);
-                });
+                });*/
         }
-    }
     };
 
     function handleSelectCP(id, cp) {
