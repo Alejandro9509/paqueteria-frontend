@@ -654,6 +654,9 @@ function Viajes() {
             headerName: "Origen - Destino",
             field: "origenDestino",
             width: 250,
+            valueFormatter: row => {
+                return (`${row.row.m_clsInforme.m_sCiudadOrigen} - ${row.row.m_clsInforme.m_sCiudadDestino}`)
+            }
         },
         {
             headerName: "Salida",
