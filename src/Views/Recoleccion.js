@@ -4801,6 +4801,7 @@ function Recoleccion() {
 
                                     <div className="row">
                                         <Cotizador embarque={state}
+                                                   disabled={state.agregar === "Consultar"}
                                                    remitente={remitente}
                                                    destinatario={destinatario}
                                                    onChangeConceptosList={actualizarConceptos}
