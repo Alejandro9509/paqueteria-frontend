@@ -3802,6 +3802,7 @@ function Embarque(props) {
 
                                     <div className="row">
                                         <Cotizador embarque={state}
+                                                   disabled={state.agregar === "Consultar"}
                                                    remitente={remitente}
                                                    destinatario={destinatario}
                                                    entregaDiferenteDom={entregaDD}
