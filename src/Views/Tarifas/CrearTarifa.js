@@ -205,7 +205,9 @@ class CrearTarifa extends Component {
         });
         if (event.target.name == "destino"){
             let destino = []
-            destino.push(this.state.ciudades.find((i) => i.m_nIdCiudad == event.target.value))
+            if (event.target.value != 0){
+                destino.push(this.state.ciudades.find((i) => i.m_nIdCiudad == event.target.value))
+            }
             this.setState({
                 dataDestinosSeleccionados: destino
             })
