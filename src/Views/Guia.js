@@ -600,10 +600,15 @@ function Guia(props) {
             "fechaCancelacion": state.fechaCancelado
         }
         console.log(JSON.stringify(params))
-        cancelarGuia(state.idGuia, params).then((respuesta) => {
+        if(state.folioInforme){
+            showSuccess("La guia no puede ser eliminada ya que esta siendo usada en un informe")
+        }else{
+          cancelarGuia(state.idGuia, params).then((respuesta) => {
             console.log(respuesta.data)
-            showSuccess(respuesta.data)
-        })
+            showSuccess("La guia ha sido cancelada")
+        })  
+        }
+        
     }
 
     //Prepara campos para agregar guia
@@ -642,7 +647,6 @@ function Guia(props) {
 
     const handleChange = event => {
         event.preventDefault()
-        console.log(event.target.name + " : " + event.target.value)
         setState(state => {
             return {
                 ...state,
@@ -1719,22 +1723,12 @@ function Guia(props) {
     }
 
     const cambiarEstaus = (estatus) => {
-        console.log(estatus)
-       if(state.folioInforme){//contiene folioinforme
-        if(estatus==8){ //el estatus que quiere cambiar es cancelado
-            showSuccess("La guia no puede ser cancelada, ya esta siendo usada en un informe")
-        }else{
-              cambiarEstatusGuia(state.idGuia, estatus).then(({data}) => {
-            showSuccess(data)
-            getAllData()
-        })
-        }     
-       }else{
+
              cambiarEstatusGuia(state.idGuia, estatus).then(({data}) => {
             showSuccess(data)
             getAllData()
         }) 
-       }
+       
        
     }
 
@@ -3109,6 +3103,7 @@ function Guia(props) {
                                                                        }}
                                                                        value={state.MotivoCancelacion}
                                                                        id="MotivoCancelacion"
+                                                                       required
                                                                        name="MotivoCancelacion"
                                                             />
                                                         </div>
