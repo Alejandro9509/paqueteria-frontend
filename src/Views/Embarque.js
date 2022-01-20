@@ -1488,6 +1488,8 @@ function Embarque(props) {
 
     //Funcion para mostrar datos de recoleccion para crear embarque
     function setDataRecoleccionOnState(respuesta) {
+        /**Este indicador se checa en el componente de RemitentesDestinatarios*/
+        respuesta.data.recoleccionById = true
         setDataEmbarqueConsulta(respuesta)
         getDataParaEditar("Consultar")
         getAllCiudades()
@@ -1644,7 +1646,8 @@ function Embarque(props) {
 
     //Funcion para mostrar datos de embarque para consultar o modificar
     const setDataParaConsultarModificar = (respuesta, duplicar,operacion) => {
-
+        /**Este indicador se checa en el componente de RemitentesDestinatarios*/
+        respuesta.data.embarqueById = true
         setDataEmbarqueConsulta(respuesta)
         getDataParaEditar(operacion)
         getAllCiudades()
