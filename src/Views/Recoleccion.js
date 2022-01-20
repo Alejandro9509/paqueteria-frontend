@@ -993,8 +993,7 @@ function Recoleccion() {
             params.m_nIdRemolque = state.unidad.m_nIdUnidad
             params.m_nCreadoPor = state.CreadoPor
             params.m_nModificadoPor = state.ModificadoPor
-        
-       
+
         if (state.diferenteRecoleccion) {
             params.m_nIdCPDetalleRecoleccion = recoleccionDD.codigoPostalRec.m_nIdCP
             params.m_sDomicilioDetalleRecoleccion = recoleccionDD.domicilioRec
@@ -1009,8 +1008,8 @@ function Recoleccion() {
         } else {
             params.m_nIdZonaOperativa = remitente.zonaOperativaRemitente.m_nIdZona
             params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente.m_nIdZona
-            params.m_sLatitudR = coordenadas ? coordenadas[0] : remitente.latitudR
-            params.m_sLongitudR = coordenadas ? coordenadas[1] : remitente.longitudR
+            params.m_sLatitudR = coordenadas ? coordenadas.lat : remitente.latitudR
+            params.m_sLongitudR = coordenadas ? coordenadas.lng : remitente.longitudR
         } 
             params.m_bEntregaEnSucursal = state.entregaEnSucursal;
             params.m_nIdSucursalEntrega = state.idSucursalEntrega;
@@ -1051,7 +1050,7 @@ function Recoleccion() {
         params.m_nIdCotizacion = state.idCotizacion
     //    console.log(params)
         console.log(JSON.stringify(params))
-  /*   if (state.idRecoleccion != 0) {
+     if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1074,7 +1073,7 @@ function Recoleccion() {
                  //   console.log(err);
                     showSuccess(err);
                 });
-        }*/
+        }
     }
     };
 
