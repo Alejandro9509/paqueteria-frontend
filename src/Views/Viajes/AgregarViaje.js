@@ -1725,9 +1725,13 @@ class AgregarViaje extends Component {
                                     <div className="widget-header">
                                         <h2 color={'#717171'}>Detalle de paradas</h2>
                                     </div>
-                                    <Button variant="contained" color="primary" fullWidth onClick={(event) => this.handleShowDialog(event)}>
-                                        Agregar informes
-                                    </Button>
+                                    {
+                                        !this.props.consult &&
+                                        <Button variant="contained" color="primary" fullWidth onClick={(event) => this.handleShowDialog(event)}>
+                                            Agregar informes
+                                        </Button>
+                                    }
+
                                     <div className="row" style={{height: "200px", width: '100%'}}>
                                         <InformesPorAsignar {...this.props} columns={columnspAsignadas}
                                                             dataInformesAsignados={this.state.dataInformesAsignados}
@@ -1788,16 +1792,20 @@ class AgregarViaje extends Component {
                                                 Cancelar
                                             </Button>
                                         </Grid>
-                                        <Grid item xs>
-                                            <Button
-                                                fullWidth
-                                                type="submit"
-                                                className="btn btn-primary primary-btn"
-                                                disabled={this.agregar === "Consultar"}
-                                            >
-                                                Guardar viaje
-                                            </Button>
-                                        </Grid>
+                                        {
+                                            !this.props.consult &&
+                                            <Grid item xs>
+                                                <Button
+                                                    fullWidth
+                                                    type="submit"
+                                                    className="btn btn-primary primary-btn"
+                                                    disabled={this.props.consult}
+                                                >
+                                                    Guardar viaje
+                                                </Button>
+                                            </Grid>
+                                        }
+
                                     </Grid>
                                 </div>
 
