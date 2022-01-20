@@ -227,6 +227,14 @@ class Tarifas extends Component {
     }
 
     handleAceptar(data) {
+        if(data.dataDestinosSeleccionados.length === 0 ){
+            showSuccess("No se pueden crear tarifas sin destino.")
+            return
+        }
+        if(data.todosConceptos.length === 0 ){
+            showSuccess("No se pueden crear tarifas sin conceptos.")
+            return
+        }
         var params = {
             m_nIdSucursal: data.sucursal,
             m_nIdOrigen: data.origen,
