@@ -20,7 +20,9 @@ import {getUniqueListBy, remove_array_element} from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
 import {DataGrid} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
-
+import {
+    obtenerZonaTarifaByIdCodigoPostal,
+  } from "../Util/Contexts/ZonaTarifaContext";
 import Noty from 'noty';
 import {
     Dialog,
@@ -493,7 +495,29 @@ function Guia(props) {
             ivaTraslada: ivaTraslada
         })
         setConceptosAdicionales(conceptosAdicionalesAux)
+        obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalRemitente).then(
+            ({ data }) => {
+                console.log(data)
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaTarifaRemitente:data[0].m_sCodigoZona
+                    }
 
+                })
+            }
+          );
+          obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
+            ({ data }) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaTarifaDestinatario:data[0].m_sCodigoZona
+                    }
+
+                })
+            }
+          );
         setState(state => {
             return {
                 ...state,
@@ -529,8 +553,6 @@ function Guia(props) {
                 sContactoDestinatario: respuesta.data.m_sContactoDestinatario,
                 CiudadDestino: respuesta.data.m_sCiudadDestino,
                 codigoPostalDestinatario: respuesta.data.m_sCodigoPostalDestinatario,
-                zonaTarifaRemitente: respuesta.data.m_sZonaTarifaRecoleccion,
-                zonaTarifaDestinatario: respuesta.data.m_sZonaTarifaEntrega,
 
                 agregar: label,
                 ValorDeclarado: respuesta.data.m_cValorDeclarado,

@@ -2323,7 +2323,6 @@ function Embarque(props) {
     }
 
     const handleChangeCita = (data) => {
-        debugger
         setState({
             ...state,
             fechaCita: data.fechaCita,
@@ -3321,6 +3320,7 @@ function Embarque(props) {
                                                                     />
                                                                 }
                                                             <div className="row">
+                                                            <div style={{width:'70%'}}>
                                                                 <div className="col-sm-6 col-md-6  unit">
                                                                     <label className="checkbox">
                                                                         Entrega en Sucursal
@@ -3337,7 +3337,9 @@ function Embarque(props) {
                                                                     </label>
                                                                 </div>
                                                             </div>
+                                                            </div>
                                                             <div className="row">
+                                                            <div style={{width:'70%'}}>
                                                                 <div className="col-sm-6 col-md-6  unit">
                                                                     <label className="checkbox">
                                                                         Entrega en Diferente Domicilio
@@ -3354,8 +3356,10 @@ function Embarque(props) {
                                                                         <i/>
                                                                     </label>
                                                                 </div>
+                                                            </div>
                                                           </div>
                                                         <div className="row">
+                                                        <div style={{width:'70%'}}>
                                                                 <div className="col-sm-6 col-md-6  unit">
                                                                     <label className="checkbox">
                                                                         Entrega con cita
@@ -3372,6 +3376,7 @@ function Embarque(props) {
                                                                         <i/>
                                                                     </label>
                                                                 </div>
+                                                              </div>
                                                             </div>
                                                           </div>
                                                         </div>
