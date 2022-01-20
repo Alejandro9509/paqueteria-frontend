@@ -1719,10 +1719,23 @@ function Guia(props) {
     }
 
     const cambiarEstaus = (estatus) => {
-        cambiarEstatusGuia(state.idGuia, estatus).then(({data}) => {
+        console.log(estatus)
+       if(state.folioInforme){//contiene folioinforme
+        if(estatus==8){ //el estatus que quiere cambiar es cancelado
+            showSuccess("La guia no puede ser cancelada, ya esta siendo usada en un informe")
+        }else{
+              cambiarEstatusGuia(state.idGuia, estatus).then(({data}) => {
             showSuccess(data)
             getAllData()
         })
+        }     
+       }else{
+             cambiarEstatusGuia(state.idGuia, estatus).then(({data}) => {
+            showSuccess(data)
+            getAllData()
+        }) 
+       }
+       
     }
 
     const handleAsignarTrayectos = (idGuia) => {
@@ -1891,11 +1904,13 @@ function Guia(props) {
                                             pageSize={Math.floor((state.height - 310) / 30)}
                                             getRowId={(row) => row.m_nIdGuia}
                                             onRowSelected={(row) => {
+                                                console.log(row)
                                                 setState({
                                                     ...state,
                                                     idGuia: row.data.m_nIdGuia,
                                                     cambioCobro: true,
-                                                    creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito
+                                                    creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito,
+                                                    folioInforme:row.data.m_sFolioInforme
                                                 })
                                             }}
                                         />
