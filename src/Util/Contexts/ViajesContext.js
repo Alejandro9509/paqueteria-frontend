@@ -134,7 +134,15 @@ function obetenerViajeId( id){
 }
 
 
+function cancelarViaje(id, params){
+    const url = `${process.env.REACT_APP_API_URL}/Viajes/CancelarViaje/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+    );
+    return result
+}
 
 
 export {obtenerViajesByFiltro,agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje,
-    obtenerViajes, obtenerViajesEstatus, obtenerXML,obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje,cancelarCFDI}
+    obtenerViajes, obtenerViajesEstatus, obtenerXML,obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje,cancelarCFDI,cancelarViaje}
