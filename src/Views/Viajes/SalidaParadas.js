@@ -19,7 +19,7 @@ export default function SalidaParadas(props){
     const classes = useStyles();
     const [data, setData] = React.useState({
         sucursal: props.data.m_sSucursalEmisora,
-        recorrido: "",
+        recorrido: props.data.m_sFolioViaje,
         fecha: props.data.m_dFecha,
         hora: props.data.m_tHora,
         cliente: "",
@@ -40,7 +40,7 @@ export default function SalidaParadas(props){
         origen: props.data.m_sCiudadOrigen,
         destino: props.data.m_sCiudadDestino,
         operador: props.data.m_sNombreCompleto,
-        unidad: props.data.m_sUnidadIdentificador + props.data.m_sUnidad,
+        unidad: props.data.m_sUnidadIdentificador +' - '+ props.data.m_sUnidad,
         placasUnidad: "",
         fechaSalida: props.data.m_dFechaSalida,
         horaSalida: props.data.m_dHoraSalida,
@@ -185,7 +185,7 @@ export default function SalidaParadas(props){
                         id={'recorrido-text'}
                         margin="dense"
                         disabled
-                        label={"Recorrido"}
+                        label={"Viaje"}
                         variant={"outlined"}
                         InputProps={{
                             readOnly: true,
