@@ -566,6 +566,12 @@ class AgregarViaje extends Component {
                 })
             }else {
                 showSuccess("La unidad seleccionada no está disponible")
+                this.setState({
+                    IdRemolque1: null,
+                    placasRemolque1: "",
+                    colorRemolque1: "",
+                    estatusRemolque1: ""
+                })
             }
 
         })
@@ -598,6 +604,12 @@ class AgregarViaje extends Component {
                 })
             }else{
                 showSuccess("La unidad seleccionada no está disponible")
+                this.setState({
+                    IdRemolque2: null,
+                    placasRemolque2: "",
+                    colorRemolque2: "",
+                    estatusRemolque2: ""
+                })
             }
         })
 
@@ -634,7 +646,16 @@ class AgregarViaje extends Component {
                         horas: newValue.m_nHorasTrabajadasMotorNoGPS
                     })
                 }else{
+                    this.setState({
+                        unidad: null,
+                        placaIntUnidad: "",
+                        estatusUnidad: "",
+                        colorUnidad: "",
+                        kms: 0,
+                        horas: 0
+                    })
                     showSuccess("La unidad seleccionada no está disponible")
+
                 }
             })
         }else {
@@ -1471,6 +1492,7 @@ class AgregarViaje extends Component {
                                                 getOptionLabel={(option) =>
                                                     option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})` : ""
                                                 }
+                                                getOptionDisabled={(option) => option.EstatusUnidad !== "DISPONIBLE"}
                                                 // style={{transform: "translate(14px, 10px) scale(1) !important"}}
                                                 disabled={this.props.consult}
                                                 renderInput={(params) => (
@@ -1564,6 +1586,7 @@ class AgregarViaje extends Component {
                                                     getOptionLabel={(option) =>
                                                         `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                                     }
+                                                    getOptionDisabled={(option) => option.EstatusUnidad !== "DISPONIBLE"}
                                                     style={{
                                                         transform: "translate(14px, 10px) scale(1) !important"
                                                     }}
@@ -1627,6 +1650,7 @@ class AgregarViaje extends Component {
                                                     getOptionLabel={(option) =>
                                                         `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                                     }
+                                                    getOptionDisabled={(option) => option.EstatusUnidad !== "DISPONIBLE"}
                                                     style={{
                                                         transform: "translate(14px, 10px) scale(1) !important"
                                                     }}
