@@ -6,6 +6,7 @@ import { List, ListItem, Popover, TextField, Typography } from '@material-ui/cor
 import { TrafficOutlined } from '@material-ui/icons';
 import { agregarTipoCobro, obtenerTipoCobro } from '../../Util/Contexts/TipoCobroContext';
 import {API_HEADERS} from "../../Constants";
+import Button from "@material-ui/core/Button";
 
 const headers = API_HEADERS
 function showSuccess(mensaje) {
@@ -148,10 +149,10 @@ class TipoCobro extends Component {
                                         </div>
                                     </div>
                                     <div className="col-sm-12 col-md-12 unit">
-                                        <button data-toggle="tab" className="btn btn-secondary secondary-btn"
+                                        <Button data-toggle="tab" className="btn btn-secondary secondary-btn"
                                             onClick={this.handleClose}>
-                                            Cancelar</button>
-                                        <button onClick={this.handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                                            Cancelar</Button>
+                                        <Button onClick={this.handleAceptar} className="btn btn-primary primary-btn">Aceptar</Button>
                                     </div>
                                 </div>
                             </Popover>

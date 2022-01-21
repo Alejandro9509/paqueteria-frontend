@@ -5,6 +5,7 @@ import Noty from 'noty';
 import { List, ListItem, Popover, TextField } from '@material-ui/core';
 import { TrafficOutlined } from '@material-ui/icons';
 import { agregarTipoServicio, obtenerTipoServicio } from '../../Util/Contexts/TipoServiciosContext';
+import Button from "@material-ui/core/Button";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -149,11 +150,11 @@ class TipoServicio extends Component {
                                         </div>
                                     </div>
                                     <div className="col-sm-12 col-md-12 unit">
-                                        <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+                                        <Button data-toggle="tab" className="btn btn-secondary secondary-btn"
                                             onClick={this.handleClose}
                                         >
-                                            Cancelar</button>
-                                        <button onClick={this.handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                                            Cancelar</Button>
+                                        <Button onClick={this.handleAceptar} className="btn btn-primary primary-btn">Aceptar</Button>
                                     </div>
                                 </div>
                             </Popover>
