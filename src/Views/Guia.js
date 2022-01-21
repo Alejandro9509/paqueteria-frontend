@@ -137,7 +137,6 @@ function Guia(props) {
     const [dataTipoPago, setDataTipoPago] = React.useState([])
     const [dataEstatusGuia, setDataEstatusGuia] = React.useState([])
     const [dataEmbarque, setDataEmbarque] = React.useState([])
-
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
     const [showDialogOcurre, setShowDialogOcurre] = useState(false)
     const [dataOcurre, setDataOcurre] = useState()
@@ -180,6 +179,7 @@ function Guia(props) {
         idMoneda: 1,
         idTipoTarifa: 2,
         tipoCambio: 0,
+        validarEmbarqueGuia:false,
         //Remitente
         nombreRemitente: "",
         RFCRemitente: "",
@@ -833,11 +833,14 @@ function Guia(props) {
             window.location.replace("login");
             return;
         }
-        if (props.location.idEmbarque != undefined) {
+        if (props.location.idEmbarque != undefined) {//viene de un embarque
             obtenerEmbarquesId(props.location.idEmbarque).then(respuesta => {
                 console.log('Embarque datos:')
                 console.log(respuesta.data)
-
+                setState({
+                            ...state,
+                            validarEmbarqueGuia:true 
+                })
                 setDataFromEmbarque(respuesta)
                 obtenerEmbarqueMoneda(respuesta.data.IdSucursal, respuesta.data.m_nIdMoneda, state.idGuia).then(respuesta => {
                     setDataEmbarque(respuesta.data)
@@ -853,6 +856,7 @@ function Guia(props) {
                 // setDataCiudadF(props.location.dataCiudades)
                 getDataParaEditar()
             });
+
         }
         getAllDataTipoCobro()
     }, []);
@@ -1174,6 +1178,7 @@ function Guia(props) {
                 telefonoRemitente: "",
                 contactoRemitente: "",
                 origenRemitente: "",
+                validarEmbarqueGuia:false,
                 //Destinatario
                 sNombreDestinatario: "",
                 sRFCDestinatario: "",
@@ -2021,7 +2026,7 @@ function Guia(props) {
                                                                         id="idEmbarque"
                                                                         read="true"
                                                                         value={state.idEmbarque}
-                                                                        disabled={state.agregar == "Consultar"}
+                                                                        disabled={state.agregar == "Consultar" || state.validarEmbarqueGuia}
 
                                                                     >
                                                                         <option value="0">
