@@ -53,6 +53,15 @@ function obtenerUnidades() {
         );
     return result
 }
+
+function obtenerRemolques() {
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Unidades/GetListadoRemolques`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 function obtenerUnidadesInforme() {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListadoInformes`;
     let result;
@@ -105,4 +114,4 @@ function obtenerUnidadesTipo(id) {
     return result
 }
 
-export { cambiarOperadorUnidad, obtenerUnidadesInforme, obtenerUnidadesUltimaMilla, modificarUnidades, agregarUnidades, eliminarUnidades, obtenerUnidadesId, obtenerUnidades, validaCodigoUnidad, obtenerUnidadesTipo, obtenerEstatusUnidadeId }
+export { obtenerRemolques,cambiarOperadorUnidad, obtenerUnidadesInforme, obtenerUnidadesUltimaMilla, modificarUnidades, agregarUnidades, eliminarUnidades, obtenerUnidadesId, obtenerUnidades, validaCodigoUnidad, obtenerUnidadesTipo, obtenerEstatusUnidadeId }
