@@ -1107,7 +1107,7 @@ function Recoleccion() {
         }
     }
 
-    //funcion para cancelar un embarque. Se usa en tab cancelar.
+    //funcion para cancelar una recoleccion. Se usa en tab cancelar.
     const handleCancelar = (e) => {
         e.preventDefault();
         let params = {
@@ -1118,24 +1118,9 @@ function Recoleccion() {
         JSON.stringify(params)
         cancelarRecoleccion(state.idRecoleccion, params).then((respuesta) => {
             showSuccess(respuesta.data)
-            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.sucursalListado, filtros.estatusListado, filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
-                setData(respuesta.data);
-            })
-            $('.nav-tabs li ').removeClass('active');
-            $('.nav-tabs li').eq(0).addClass('active');
-            $('.tab-content div ').removeClass('in show');
-            $('#Listado').addClass('in show');
-            /*setState({
-                ...state,
-                idRecoleccion: 0,
-                folioRecoleccion:'',
-                sucursalCancelacion: '',
-                mostrarFechaCancelacion: '',
-                estatusRecoleccion: '',
-                motivoCancelacion: '',
-            })*/
+            handleShowListado();
         }).catch((err) => {
-          //  console.log(err);
+
             showSuccess(err);
         });
     }
@@ -1529,6 +1514,7 @@ function Recoleccion() {
     }
 
     function handleShowCancelar() {
+ 
         let hours = today.getHours();
         let mostrarHora = today.getHours();
         let minutes = today.getMinutes();
@@ -1537,15 +1523,22 @@ function Recoleccion() {
         hours = hours ? hours : 12; // the hour '0' should be '12'
         minutes = minutes < 10 ? '0' + minutes : minutes;
         let strTime = hours + ':' + minutes + ' ' + ampm;
-        obtenerRecoleccionCancelada(state.idRecoleccion).then((respuesta) => {
+        obtenerRecoleccionCancelada(state.idRecoleccion).then((respuesta) => { 
+            
             const {
                 m_sFolioRecoleccion,
                 m_nIdSucursal,
                 m_nIdEstatusRecoleccion,
                 m_dtFechaCancelacion,
-                m_sMotivoCancelacion
-            } = respuesta.data
-            setState({
+                m_sMotivoCancelacion,
+                m_nIdInforme,
+                m_nIdGuia,
+                m_nIdEmbarque
+            } = respuesta.data 
+            if (respuesta.data.m_nSePuedeCancelar == 0 || m_nIdEmbarque > 0|| m_nIdInforme > 0 || m_nIdGuia > 0)
+               {showSuccess("Recolección no se puede cancelar")
+            }else{
+                 setState({
                 ...state,
                 folioRecoleccion: m_sFolioRecoleccion,
                 sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == m_nIdSucursal).m_sSucursal,
@@ -1555,14 +1548,19 @@ function Recoleccion() {
                     today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + strTime,
                 estatusRecoleccion: dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == m_nIdEstatusRecoleccion).m_sEstatus,
                 motivoCancelacion: m_sMotivoCancelacion,
-            })
-            if (respuesta.data.m_nSePuedeCancelar == 0)
-                showSuccess("Recolección no se puede cancelar")
-        })
-        $('.nav-tabs li ').removeClass('active');
+            }) 
+         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(3).addClass('active');
         $('.tab-content div ').removeClass('in show');
-        $('#Cancelar').addClass('in show');
+        $('#Cancelar').addClass('in show');} 
+           
+          
+        })
+    
+      
+        
+   
+    
     }
 
     const handlePatrocinadorSelected = (row) => {
