@@ -91,7 +91,7 @@ function obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, est
         folioRecoleccion = 0
     }
     const url =
-        `${process.env.REACT_APP_API_URL_LOCAL}/api/Recoleccion/GetByFiltro/` +
+        `${process.env.REACT_APP_API_URL}/api/Recoleccion/GetByFiltro/` +
         fechaInicial +
         "/" +
         fechaFinal +
