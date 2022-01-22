@@ -55,7 +55,7 @@ function obtenerUnidades() {
 }
 
 function obtenerRemolques() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Unidades/GetListadoRemolques`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Unidades/GetListadoRemolques`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
