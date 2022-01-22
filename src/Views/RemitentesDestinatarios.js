@@ -123,12 +123,9 @@ function RemitenteDestinatario(props) {
       const { dataPadreConsulta: respuesta } = props;
 
       /**Se ocupa hacer la distincion de si es de recoleccion o embarque porque el nombre de las variables cambia*/
-      /**Si es recoleccion o embarque y se es una respuesta de RecoleccionById*/
-      if (
-        (props.componentePadre === "Recoleccion" ||
-          props.componentePadre === "Embarque") &&
-        props.dataPadreConsulta.data.m_nIdRecoleccion > 0
-      ) {
+      /**Si es una respuesta de RecoleccionById*/
+      debugger
+      if (props.dataPadreConsulta.data.recoleccionById) {
         if (props.remitente) {
           let estado =respuesta.data.m_nIdEstadoRemitente< 10 ? `0${respuesta.data.m_nIdEstadoRemitente}` :  respuesta.data.m_nIdEstadoRemitente
               setState((state) => {
@@ -285,50 +282,47 @@ function RemitenteDestinatario(props) {
         }
 
         /**Si es embarque y volvemos a verificar que haya respuesta*/
-      } else if (
-        props.componentePadre === "Embarque" &&
-        props.dataPadreConsulta.data.m_nIdEmbarque > 0
-      ) {
+      } else if (props.dataPadreConsulta.data.embarqueById) {
         /**Si se van a mostrar datos de remitente*/
         if (props.remitente) {
           let estado =respuesta.data.m_nIdEstadoRemitente< 10 ? `0${respuesta.data.m_nIdEstadoRemitente}` :  respuesta.data.m_nIdEstadoRemitente
-              setState((state) => {
-                return {
-                  ...state,
-                  nombre: respuesta.data.m_sNombreRemitente,
-                  RFC: respuesta.data.m_sRFCRemitente,
-                  domicilio: respuesta.data.m_sDomicilioRemitente,
-                  ciudad: respuesta.data.m_nCiudadRemitente,
-                  correo: respuesta.data.m_sCorreoRemitente,
-                  telefono: respuesta.data.m_sTelefonoRemitente,
-                  contacto: respuesta.data.m_sContactoRemitente,
-                  id: respuesta.data.m_nIdRemitente,
-                  alias: respuesta.data.m_sAliasRemitente,
-                  calle: respuesta.data.m_sCalleRemitente,
-                  numeroInt: respuesta.data.m_sNoIntRemitente || 0,
-                  numeroExt: respuesta.data.m_sNoExtRemitente,
-                  colonia: respuesta.data.m_sColoniaRemitente,
-                  estado: estado || 0,
-                  municipio: respuesta.data.m_sMunicipioRemitente,
-                };
-              });
-         
+          setState((state) => {
+            return {
+              ...state,
+              nombre: respuesta.data.m_sNombreRemitente,
+              RFC: respuesta.data.m_sRFCRemitente,
+              domicilio: respuesta.data.m_sDomicilioRemitente,
+              ciudad: respuesta.data.m_nCiudadRemitente,
+              correo: respuesta.data.m_sCorreoRemitente,
+              telefono: respuesta.data.m_sTelefonoRemitente,
+              contacto: respuesta.data.m_sContactoRemitente,
+              id: respuesta.data.m_nIdRemitente,
+              alias: respuesta.data.m_sAliasRemitente,
+              calle: respuesta.data.m_sCalleRemitente,
+              numeroInt: respuesta.data.m_sNoIntRemitente || 0,
+              numeroExt: respuesta.data.m_sNoExtRemitente,
+              colonia: respuesta.data.m_sColoniaRemitente,
+              estado: estado || 0,
+              municipio: respuesta.data.m_sMunicipioRemitente,
+            };
+          });
+
           obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
             setDataMunicipios(data);
           });
           obtenerCodigoPostalId(respuesta.data.m_nIdCodigoPostalRemitente).then(
-            (cp) => {
-              setState((state) => {
-                return {
-                  ...state,
-                  codigoPostal: {
-                    m_nIdCP: cp.data.m_nIdCP,
-                    m_sCP: cp.data.m_sCP,
-                    m_sColonia: cp.data.m_sColonia,
-                  },
-                };
-              });
-            }
+              (cp) => {
+                setState((state) => {
+                  return {
+                    ...state,
+                    codigoPostal: {
+                      m_nIdCP: cp.data.m_nIdCP,
+                      m_sCP: cp.data.m_sCP,
+                      m_sColonia: cp.data.m_sColonia,
+                    },
+                  };
+                });
+              }
           );
           obtenerCiudadId(respuesta.data.m_nIdCiudadOrigen).then(({ data }) => {
             setState((state) => {
@@ -342,31 +336,31 @@ function RemitenteDestinatario(props) {
         } else if (props.destinatario) {
 
           let estado =  respuesta.data.m_nIdEstadoDestinatario< 10 ? `0${respuesta.data.m_nIdEstadoDestinatario}` :  respuesta.data.m_nIdEstadoDestinatario;
-            setState((state) => {
-              return {
-                ...state,
-                nombre: respuesta.data.m_sNombreDestinatario,
-                RFC: respuesta.data.m_sRFCDestinatario,
-                domicilio: respuesta.data.m_sDomicilioDestinatario,
-                ciudad: respuesta.data.m_nIdCIudadDestinatario,
-                correo: respuesta.data.m_sCorreoDestinatario,
-                telefono: respuesta.data.m_sTelefonoDestinatario,
-                contacto: respuesta.data.m_sContactoDestinatario,
-                id: respuesta.data.m_nIdDestinatario,
-                alias: respuesta.data.m_sAliasDestinatario,
-                estado: estado || 0,
-                calle: respuesta.data.m_sCalleDestinatario,
-                numeroInt: respuesta.data.m_sNoIntDestinatario || 0,
-                numeroExt: respuesta.data.m_sNoExtDestinatario,
-                municipio: respuesta.data.m_sMunicipioDestinatario,
-                colonia: respuesta.data.m_sColoniaDestinatario,
-              };
-            });
+          setState((state) => {
+            return {
+              ...state,
+              nombre: respuesta.data.m_sNombreDestinatario,
+              RFC: respuesta.data.m_sRFCDestinatario,
+              domicilio: respuesta.data.m_sDomicilioDestinatario,
+              ciudad: respuesta.data.m_nIdCIudadDestinatario,
+              correo: respuesta.data.m_sCorreoDestinatario,
+              telefono: respuesta.data.m_sTelefonoDestinatario,
+              contacto: respuesta.data.m_sContactoDestinatario,
+              id: respuesta.data.m_nIdDestinatario,
+              alias: respuesta.data.m_sAliasDestinatario,
+              estado: estado || 0,
+              calle: respuesta.data.m_sCalleDestinatario,
+              numeroInt: respuesta.data.m_sNoIntDestinatario || 0,
+              numeroExt: respuesta.data.m_sNoExtDestinatario,
+              municipio: respuesta.data.m_sMunicipioDestinatario,
+              colonia: respuesta.data.m_sColoniaDestinatario,
+            };
+          });
           obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
             setDataMunicipios(data);
           });
           obtenerCodigoPostalId(
-            respuesta.data.m_nIdCodigoPostalDestinatario
+              respuesta.data.m_nIdCodigoPostalDestinatario
           ).then((cp) => {
             setState((state) => {
               return {
@@ -379,29 +373,29 @@ function RemitenteDestinatario(props) {
               };
             });
             obtenerZonaOperativaByIdCodigoPostal(cp.data.m_sCP).then(
-              ({ data }) => {
-                setDataZonasOperativas(data);
-              }
+                ({ data }) => {
+                  setDataZonasOperativas(data);
+                }
             );
             obtenerZonaTarifaByIdCodigoPostal(cp.data.m_sCP).then(
-              ({ data }) => {
-                setDataZonasTarifa(data);
-              }
+                ({ data }) => {
+                  setDataZonasTarifa(data);
+                }
             );
           });
           obtenerCiudadId(respuesta.data.m_nIdCiudadDestino).then(
-            ({ data }) => {
-              setState((state) => {
-                return {
-                  ...state,
-                  destino: data,
-                };
-              });
-            }
+              ({ data }) => {
+                setState((state) => {
+                  return {
+                    ...state,
+                    destino: data,
+                  };
+                });
+              }
           );
 
           if (respuesta.data.EntregarMismoDomicilio) {
-            
+
             setState((state) => {
               return {
                 ...state,
@@ -410,27 +404,28 @@ function RemitenteDestinatario(props) {
               };
             });
             obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(
-              ({ data }) => {
-                setState((state) => {
-                  return {
-                    ...state,
-                    zonaOperativa: data,
-                  };
-                });
-              }
+                ({ data }) => {
+                  setState((state) => {
+                    return {
+                      ...state,
+                      zonaOperativa: data,
+                    };
+                  });
+                }
             );
             obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(
-              ({ data }) => {
-                setState((state) => {
-                  return {
-                    ...state,
-                    zonaTarifa: data,
-                  };
-                });
-              }
+                ({ data }) => {
+                  setState((state) => {
+                    return {
+                      ...state,
+                      zonaTarifa: data,
+                    };
+                  });
+                }
             );
           }
         }
+
       }
     },
     [props.dataPadreConsulta]

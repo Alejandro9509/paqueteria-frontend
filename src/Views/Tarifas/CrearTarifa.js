@@ -205,7 +205,9 @@ class CrearTarifa extends Component {
         });
         if (event.target.name == "destino"){
             let destino = []
-            destino.push(this.state.ciudades.find((i) => i.m_nIdCiudad == event.target.value))
+            if (event.target.value != 0){
+                destino.push(this.state.ciudades.find((i) => i.m_nIdCiudad == event.target.value))
+            }
             this.setState({
                 dataDestinosSeleccionados: destino
             })
@@ -995,9 +997,10 @@ class CrearTarifa extends Component {
 
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={4}>
-                                                <TipoCobro consult={consult} tiposCobroSeleccionado={this.state.tiposCobroSeleccionado} handleChange={this.handleChangeChecboxTiposCobro} all={this.state.tiposCobroAll}>
-
-                                                </TipoCobro>
+                                                <TipoCobro consult={consult}
+                                                           tiposCobroSeleccionado={this.state.tiposCobroSeleccionado}
+                                                           handleChange={this.handleChangeChecboxTiposCobro}
+                                                           all={this.state.tiposCobroAll}/>
                                             </TabPanel>
                                             <TabPanel value={this.state.tab} index={5}>
                                                 <TipoServicio consult={consult} tiposServicioSeleccionado={this.state.tiposServicioSeleccionado} handleChange={this.handleChangeChecboxTiposServicio} all={this.state.tiposServicioAll}>

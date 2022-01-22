@@ -1228,6 +1228,8 @@ function Recoleccion() {
     const setRecoleccionDataParaConsultaModificacion = (respuesta,operacion) => {
         console.log("DATA DE RECOLECCION CONSULTA Y MODIFICACION")
         console.log(respuesta)
+        /**Este indicador se checa en el componente de RemitentesDestinatarios*/
+        respuesta.data.recoleccionById = true
         setDataRecoleccionConsulta(respuesta)
         getDataParaEditar(operacion)
         getAllCiudades()
@@ -4809,6 +4811,7 @@ function Recoleccion() {
 
                                     <div className="row">
                                         <Cotizador embarque={state}
+                                                   disabled={state.agregar === "Consultar"}
                                                    remitente={remitente}
                                                    destinatario={destinatario}
                                                    onChangeConceptosList={actualizarConceptos}
