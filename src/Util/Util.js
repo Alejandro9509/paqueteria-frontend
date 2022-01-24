@@ -238,3 +238,20 @@ export function decode_utf8(s) {
     return decodeURIComponent(escape(s));
 }
 
+/**Retorna = 2022-01-24T14:06*/
+export const getCurrentDateTime = () => {
+    return `${new Date().getFullYear()}-${`${new Date().getMonth() +
+    1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
+}
+
+/**Retorna = 2022-01-24*/
+export const getCurrentDate = () => {
+    return `${new Date().getFullYear()}-${`${new Date().getMonth() +
+    1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}`
+}
+
+/**Retorna = 14:06*/
+export const getCurrentTime = () => {
+    return `${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
+}
+

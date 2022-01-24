@@ -2,6 +2,7 @@ import React from 'react';
 import {Grid, MenuItem, TextField} from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from "@material-ui/core/InputAdornment";
+import {getCurrentDate, getCurrentTime} from "../../Util/Util";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -77,6 +78,14 @@ export default function SalidaParadas(props){
         }
     ]
 
+    /*const getCurrentDate = () => {
+        return `${new Date().getFullYear()}-${`${new Date().getMonth() +
+        1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}`
+    }
+
+    const getCurrentTime = () => {
+        return `${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
+    }*/
     const handleChangeKmsRemolqueUno = (event) => {
         setData({
             ...data,
@@ -453,8 +462,10 @@ export default function SalidaParadas(props){
                         margin={"dense"}
                         label={"Fecha Salida"}
                         variant={"outlined"}
-                        InputLabelProps={{shrink: true,}}
+                        InputLabelProps={{shrink: true}}
+                        InputProps={{inputProps: { min: getCurrentDate()}}}
                         value={data.fechaSalida}
+                        defaultValue={getCurrentDate()}
                         onChange={handleChangeFechaSalida}
                     />
                 </Grid>
@@ -467,6 +478,7 @@ export default function SalidaParadas(props){
                         type={"time"}
                         variant={"outlined"}
                         value={data.horaSalida}
+                        defaultValue={getCurrentTime()}
                         onChange={handleChangeHoraSalida}
                     />
                 </Grid>

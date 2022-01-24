@@ -1172,13 +1172,13 @@ function Viajes() {
                                                                                 Salida</Link>
                                                                         }
 
-                                                                        {!p.m_dFechaLlegada  && !p.m_dFechaSalida  &&
+                                                                        {/*{!p.m_dFechaLlegada  && !p.m_dFechaSalida  &&
                                                                         "/"
-                                                                        }
+                                                                        }*/}
 
 
                                                                         {
-                                                                            !p.m_dFechaLlegada &&
+                                                                            p.m_dFechaSalida && !p.m_dFechaLlegada &&
 
                                                                             <Link style={{cursor: "pointer"}}
                                                                                   onClick={() => showLlegadaDialog(p)}>Marcar
