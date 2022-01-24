@@ -1834,24 +1834,21 @@ function Informes({history}) {
                                                                                     onChange={handleSelectEstatus}
                                                                                     value={state.EstatusInforme}
                                                                                     id="EstatusInforme"
+                                                                                    disabled={state.agregar === "Agregar" || state.agregar === "Consultar"}
                                                                                 >
                                                                                     <option
                                                                                         value="">Seleccionar
                                                                                     </option>
                                                                                     {dataEstatusInformes.map(
-                                                                                        (EstatusInforme) => (
-                                                                                            <option
-                                                                                                key={
-                                                                                                    EstatusInforme.m_nIdEstatusInforme
-                                                                                                }
-                                                                                                value={
-                                                                                                    EstatusInforme.m_nIdEstatusInforme
-                                                                                                }
-                                                                                            >
-                                                                                                {EstatusInforme.m_sEstatus}
-                                                                                            </option>
+                                                                                            (EstatusInforme) => (
+                                                                                                <option
+                                                                                                    key={EstatusInforme.m_nIdEstatusInforme}
+                                                                                                    value={EstatusInforme.m_nIdEstatusInforme}
+                                                                                                >{EstatusInforme.m_sEstatus}
+                                                                                                </option>
+                                                                                            )
                                                                                         )
-                                                                                    )}
+                                                                                    }
                                                                                 </Select>
                                                                             </FormControl>
                                                                         </label>
