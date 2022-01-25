@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import clsx from 'clsx';
 import Grid from '@material-ui/core/Grid';
+import {getCurrentDate, getCurrentTime} from "../../Util/Util";
 
 const useStyles = makeStyles(() => ({
     /*root: {
@@ -550,6 +551,8 @@ export default function LlegadaParadas(props){
                         variant={"outlined"}
                         InputLabelProps={{shrink: true,}}
                         value={data.fechaLlegada}
+                        InputProps={{inputProps: { min: data.fechaSalida}}}
+                        defaultValue={getCurrentDate()}
                         onChange={handleChangeFechaLlegada}
                     />
                 </Grid>
@@ -562,6 +565,7 @@ export default function LlegadaParadas(props){
                         label={"Hora"}
                         variant={"outlined"}
                         value={data.horaLlegada}
+                        defaultValue={getCurrentTime()}
                         onChange={handleChangeHoraLlegada}
                     />
                 </Grid>
