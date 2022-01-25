@@ -5,13 +5,14 @@ import Noty from 'noty';
 import { List, ListItem, Popover, TextField } from '@material-ui/core';
 import { TrafficOutlined } from '@material-ui/icons';
 import { agregarTipoServicio, obtenerTipoServicio } from '../../Util/Contexts/TipoServiciosContext';
+import Button from "@material-ui/core/Button";
 
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
         layout: "topCenter",
         text: mensaje,
-        timeout: "3000"
+        timeout: "5000"
     }).show()
 }
 
@@ -21,8 +22,10 @@ class TipoServicio extends Component {
         this.state = {
             tiposServicio: [],
             anchorEl: null,
-            codigo: "",
-            descripcion: ""
+            Descripcion: "",
+            DiasHabiles: '0',
+            Costo: '0'
+
         }
         this.getAllTipos = this.getAllTipos.bind(this)
         this.handleClose = this.handleClose.bind(this)
@@ -57,16 +60,22 @@ class TipoServicio extends Component {
 
     handleAceptar(e) {
         e.preventDefault()
-        var params = {
-            "Codigo": this.state.codigo,
+        if (this.state.Descripcion === '' || this.state.DiasHabiles === '' || this.state.Costo === ''){
+            showSuccess("Todos los campos necesarios")
+            return
+        }
+        let params = {
             "activo": 1,
-            "Descripcion": this.state.descripcion,
             "CreadoPor": localStorage.getItem("UsuarioId"),
-            "ModificadoPor": localStorage.getItem("UsuarioId")
+            "ModificadoPor": localStorage.getItem("UsuarioId"),
+            "Descripcion": this.state.Descripcion,
+            "DiasHabiles": this.state.DiasHabiles,
+            "Costo": this.state.Costo,
         }
         console.log(params)
         agregarTipoServicio(params).then(respuesta => {
             showSuccess(respuesta.data)
+            this.handleClose();
             this.getAllTipos();
         }).catch(err => {
             console.log(err)
@@ -118,42 +127,65 @@ class TipoServicio extends Component {
                             >
                                 <div style={{ padding: "10px" }} className="j-forms">
                                     <h5>Agregando Tipo de Servicio</h5>
-                                    <div className="col-sm-12 col-md-12 unit">
-
-                                        <div className="input">
-                                            <TextField variant="outlined" margin="dense"
-                                                onChange={this.handleChange}
-                                                className="form-control"
-                                                type="text"
-                                                label="Código"
-                                                required={true}
-                                                value={this.state.codigo}
-                                                name="codigo"
-                                            />
+                                    <div className="form-content">
+                                        {/*****************************************Descripcion************************************************************/}
+                                        <div className="col-sm-12 col-md-6 unit">
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           label="Descripción"
+                                                           onChange={this.handleChange}
+                                                           className="form-control"
+                                                           type="text"
+                                                           maxLength="50"
+                                                           required
+                                                           value={this.state.Descripcion}
+                                                           id="Descripcion"
+                                                           name="Descripcion"
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-
-                                    <div className="col-sm-12 col-md-12 unit">
-
-                                        <div className="input">
-                                            <TextField variant="outlined" margin="dense"
-                                                onChange={this.handleChange}
-                                                className="form-control"
-                                                label="Descripción"
-                                                type="text"
-                                                maxLenght="125"
-                                                required={true}
-                                                value={this.state.descripcion}
-                                                name="descripcion"
-                                            />
+                                        {/*****************************************Dias Habiles************************************************************/}
+                                        <div className="col-sm-12 col-md-6 unit">
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           label="Dias Habiles"
+                                                           onChange={this.handleChange}
+                                                           className="form-control"
+                                                           type="number"
+                                                           min="0"
+                                                           step="1"
+                                                           value={this.state.DiasHabiles}
+                                                           id="DiasHabiles"
+                                                           name="DiasHabiles"
+                                                />
+                                            </div>
                                         </div>
+
+                                        {/*****************************************Costo*******************************************************/}
+                                        <div className="col-sm-12 col-md-12 unit">
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense" label="Costo"
+                                                           onChange={this.handleChange}
+                                                           className="form-control"
+                                                           type="number"
+                                                           min="0"
+                                                           step="0.01"
+                                                           required
+                                                           value={this.state.Costo}
+                                                           id="Costo"
+                                                           name="Costo"
+                                                />
+                                            </div>
+                                        </div>
+
+
                                     </div>
                                     <div className="col-sm-12 col-md-12 unit">
-                                        <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+                                        <Button data-toggle="tab" className="btn btn-secondary secondary-btn"
                                             onClick={this.handleClose}
                                         >
-                                            Cancelar</button>
-                                        <button onClick={this.handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                                            Cancelar</Button>
+                                        <Button onClick={this.handleAceptar} className="btn btn-primary primary-btn">Aceptar</Button>
                                     </div>
                                 </div>
                             </Popover>

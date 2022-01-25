@@ -339,7 +339,12 @@ function Recoleccion() {
         OrigenListado:0,
         DestinoListado:0,
     })
-
+    const [sortModel, setSortModel] = React.useState([
+        {
+          field: 'm_sFechaHora',
+          sort: 'asc',
+        },
+      ]);
     const resetFiltros = () => {
         setFiltros({
             fechaInicial: 0,
@@ -1924,6 +1929,10 @@ function Recoleccion() {
         {
             headerName: "Fecha/Hora Elaboración",
             field: "m_sFechaHora",
+            sortComparator: (v1, v2, param1, param2) =>
+            
+            param1.api.getCellValue(param1.id, 'm_sFechaHora').substring(0,10)>
+            param2.api.getCellValue(param2.id, 'm_sFechaHora').substring(0,10),
             width: 200,
         },
         {
@@ -3365,6 +3374,7 @@ function Recoleccion() {
                                         components={{
                                             LoadingOverlay: CustomLoadingOverlay,
                                         }}
+                                        onSortModelChange={(model) => setSortModel(model)}
                                         rows={data}
                                         columns={columns}
                                         density="compact"

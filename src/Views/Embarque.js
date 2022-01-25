@@ -2418,7 +2418,7 @@ function Embarque(props) {
                         dataSucursal: dataSucursal,
                         dataTipoCobro: dataTipoCobro,
                         dataMoneda: dataTipoMoneda,
-                        dataCiudades: dataCiudad
+                        dataCiudades: dataCiudad,
                     }}
                 />
             );

@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Dialog, DialogContent, DialogTitle} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-import {obtenerEstatusUnidadeId, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
+import {obtenerEstatusUnidadeId, obtenerRemolques, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 
 class AgregarRemolques extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            dataUnidades: [],
             IdRemolque1:null,
             IdRemolque2: null,
             IdDolly: null
@@ -28,7 +29,7 @@ class AgregarRemolques extends Component {
 
 
     getAllUnidades() {
-        obtenerUnidades().then((respuesta) => {
+        obtenerRemolques().then((respuesta) => {
             this.setState({
                 dataUnidades: respuesta.data,
                 IdRemolque1: this.props.select ? respuesta.data.find(c => c.m_nIdUnidad === this.props.select.m_nIdRemolque1) : null,
@@ -39,16 +40,6 @@ class AgregarRemolques extends Component {
     }
 
 
-    getAllUnidades() {
-        obtenerUnidades().then((respuesta) => {
-            this.setState({
-                dataUnidades: respuesta.data,
-                IdRemolque1: this.props.select ? respuesta.data.find(c => c.m_nIdUnidad === this.props.select.m_nIdRemolque1) : null,
-                IdRemolque2: this.props.select ? respuesta.data.find(c => c.m_nIdUnidad === this.props.select.m_nIdRemolque2) : null,
-                IdDolly: this.props.select ? respuesta.data.find(c => c.m_nIdUnidad === this.props.select.m_nIdDolly) : null
-            })
-        });
-    }
 
     handleRemolqueDosFiltro(event, newValue) {
         event.preventDefault();
@@ -109,10 +100,11 @@ this.props.asignarRemolquesUnidad(this.state)
                                         //disabled={state.agregar == "Consultar"}
                                         id="IdRemolque1"
                                         disableClearable
+                                        getOptionDisabled={(option) => option.EstatusUnidad !== "DISPONIBLE"}
                                         forcePopupIcon={false}
-                                        options={this.state.dataUnidades && this.state.dataUnidades}
+                                        options={this.state.dataUnidades && this.state.dataUnidades.filter(u => u.m_bActivo && u.m_nIdTipoUnidad !== 28 && (this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0 ) !== u.m_nIdUnidad)}
                                         getOptionLabel={(option) =>
-                                            `${option.m_sCodigo} - ${option.m_sDescripcion}`
+                                            `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                         }
                                         style={{
                                             transform: "translate(14px, 10px) scale(1) !important"
@@ -185,11 +177,13 @@ this.props.asignarRemolquesUnidad(this.state)
                                         //disabled={state.agregar == "Consultar"}
                                         id="IdRemolque2"
                                         disableClearable
+                                        getOptionDisabled={(option) => option.EstatusUnidad !== "DISPONIBLE"}
+
                                         disabled={this.props.consult}
                                         forcePopupIcon={false}
-                                        options={this.state.dataUnidades && this.state.dataUnidades}
+                                        options={this.state.dataUnidades && this.state.dataUnidades.filter(u => u.m_bActivo && u.m_nIdTipoUnidad !== 28 && (this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0 ) !== u.m_nIdUnidad)}
                                         getOptionLabel={(option) =>
-                                            `${option.m_sCodigo} - ${option.m_sDescripcion}`
+                                            `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                         }
                                         style={{
                                             transform: "translate(14px, 10px) scale(1) !important"
@@ -263,11 +257,13 @@ this.props.asignarRemolquesUnidad(this.state)
                                     //disabled={state.agregar == "Consultar"}
                                     id="IdDolly"
                                     disableClearable
+                                    getOptionDisabled={(option) => option.EstatusUnidad !== "DISPONIBLE"}
+
                                     disabled={this.props.consult}
                                     forcePopupIcon={false}
-                                    options={this.state.dataUnidades && this.state.dataUnidades.filter(u => u.m_nIdTipoUnidad === 28)}
+                                    options={this.state.dataUnidades && this.state.dataUnidades.filter(u => u.m_bActivo && u.m_nIdTipoUnidad === 28)}
                                     getOptionLabel={(option) =>
-                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                                        `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                     }
                                     style={{
                                         transform: "translate(14px, 10px) scale(1) !important"
@@ -304,14 +300,20 @@ this.props.asignarRemolquesUnidad(this.state)
                                 />
                             </div>
                         </div>
-                        <div className="col-sm-6 col-md-4 unit">
-                            <Button
-                                variant={"contained"}
-                                type={"submit"}
-                                color={"primary"}>Asignar remolques</Button>
-                        </div>
+
+
 
                     </div>
+                                <DialogActions>
+                                    <Button
+                                        variant={"contained"}
+                                        onClick={() => this.props.close()}
+                                        color={"secondary"}>Cancelar</Button>
+                                    <Button
+                                        variant={"contained"}
+                                        type={"submit"}
+                                        color={"primary"}>Asignar remolques</Button>
+                                </DialogActions>
                             </form>
                         </div>
                     </div>

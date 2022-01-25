@@ -40,7 +40,7 @@ function Embalaje() {
     const [state, setState] = React.useState({
         showPopUp: false,
         IdEmbalaje: 0,
-        CodigoEmbalaje: 0,
+        CodigoEmbalaje: undefined,
         NombreEmbalaje: "",
         DerechoBorrar: 87,
         DescripcionEmbalaje: "",
@@ -55,7 +55,9 @@ function Embalaje() {
     const handleAceptar = (e) => {  
         e.preventDefault()     
         if(state.CodigoEmbalaje.length>=10){
-                showSuccess("Error al ingresar los datos")
+                showSuccess("Error el codigo debe ser menor a 10 digitos")
+         }else if(state.CodigoEmbalaje <= 0){
+            showSuccess("Error el codigo de embalaje debe ser mayor a 0")
          }
         else{
         var params = {
@@ -68,7 +70,7 @@ function Embalaje() {
         }
         console.log(params)
       
-   /*     if (state.IdEmbalaje != 0) {
+        if (state.IdEmbalaje != 0) {
             console.log('Entra a modificar')
             modificarEmbalajes(state.IdEmbalaje, params).then(respuesta => {
                 console.log("modificar"+JSON.stringify(respuesta))
@@ -96,7 +98,7 @@ function Embalaje() {
                 console.log(JSON.stringify(err))
                 showSuccess(err)
             });
-        }*/
+        }
 }
     }
 
@@ -160,7 +162,7 @@ function Embalaje() {
             showPopUp: true,
             IdEmbalaje: 0,
             NombreEmbalaje: "",
-            CodigoEmbalaje: 0,
+            CodigoEmbalaje: undefined,
             DescripcionEmbalaje: ""
         })
         $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show');
