@@ -1430,7 +1430,7 @@ function Recoleccion() {
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-
+                mostrarCotizador:true,
                 //Paquetes/Sobres
                 countPaquetes: dataPaquetes.length,
                 countSobres: respuesta.data.m_parrSobres.length,
@@ -1448,17 +1448,12 @@ function Recoleccion() {
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
                 entregaEnSucursal:respuesta.data.m_bEntregaSucursal,
                 idSucursalEntrega:respuesta.data.m_nIdSucursalEntrega = 0 ? "" : respuesta.data.m_nIdSucursalEntrega
+                
 
             }
         });
-        setState({
-            ...state,
-            fechaCita: respuesta.data.m_sFechaCita,
-            horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
-            horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
-            citaPendiente: respuesta.data.m_bCitaPendiente,
-        })
-        mostrarCotizadorRec(true)
+    
+       // mostrarCotizadorRec(true)
     }
     useEffect(value => {
         let newTiposCobro = []
@@ -1546,10 +1541,10 @@ function Recoleccion() {
                 sucursalListado: 0,
                 estatusListado: 0,
                 folioRecoleccion: '',
+                mostrarCotizador:false,
                 agregar: "Agregar",
             }
         });
-        mostrarCotizadorRec(false)//se deja de ver el cotizador
         getAllData();
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
@@ -2963,6 +2958,7 @@ function Recoleccion() {
     }
 
     const handleChangeCita = (data) => {
+        console.log(data)
         setState({
             ...state,
             fechaCita: data.fechaCita,
@@ -4044,7 +4040,7 @@ function Recoleccion() {
                                         <div className="widget-wrap" id="citaRecoleccion">
                                             <Citas titulo={"Programar cita de la Recolección"}
                                                    onDataChange={handleChangeCita}
-                                                   data={state}
+                                                   dataPadreConsulta={dataRecoleccionConsulta}
                                                    recoleccion={true}
                                                    disabled={state.agregar === "Consultar"}
                                                    required={state.recoleccionConCita}

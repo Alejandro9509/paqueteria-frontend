@@ -16,6 +16,21 @@ export default function Citas(props){
         props.onDataChange(state)
     }, [state])
 
+    useEffect(value => {
+        if (!props.dataPadreConsulta) {
+            return;
+          }
+        const { dataPadreConsulta: respuesta } = props;
+        console.log(respuesta)
+        setState({
+            ...state,
+            fechaCita: respuesta.data.m_sFechaCita,
+            horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
+            horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
+            citaPendiente: respuesta.data.m_bCitaPendiente
+
+        })
+    }, [props.dataPadreConsulta])
     const handleChangeCita = (event) => {
         setState({
             ...state,
@@ -46,7 +61,7 @@ export default function Citas(props){
                                             onChange={handleChangeCheckbox}
                                             icon={<CheckBoxOutlineBlankIcon fontSize="large" />}
                                             checkedIcon={<CheckBoxIcon fontSize="large" />}
-                                            checked={props.citaPendiente}
+                                            checked={state.citaPendiente}
                                             name="citaPendiente"
                                         />
                                     }
@@ -62,11 +77,11 @@ export default function Citas(props){
                                     label="Fecha de la cita"
                                     type="date"
                                     onChange={handleChangeCita}
-                                    value={props.data.fechaCita}
+                                    value={state.fechaCita}
                                     className={"form-control"}
                                     disabled={props.disabled}
                                     InputLabelProps={{shrink: true,}}
-                                    required={!props.data.citaPendiente}
+                                    required={!state.citaPendiente}
                                 />
                             </Grid>
                             <Grid item xs={4}>
@@ -76,13 +91,13 @@ export default function Citas(props){
                                     name="horaCitaMinima"
                                     label="Hora mínima"
                                     type="time"
-                                    value={props.data.horaCitaMinima}
+                                    value={state.horaCitaMinima}
                                     onChange={handleChangeCita}
                                     className={"form-control"}
                                     disabled={props.disabled}
                                     InputLabelProps={{shrink: true,}}
                                     inputProps={{step: 300,}}
-                                    required={!props.data.citaPendiente}
+                                    required={!state.citaPendiente}
                                 />
                             </Grid>
                             <Grid item xs={4}>
@@ -93,12 +108,12 @@ export default function Citas(props){
                                     label="Hora máxima"
                                     type="time"
                                     onChange={handleChangeCita}
-                                    value={props.data.horaCitaMaxima}
+                                    value={state.horaCitaMaxima}
                                     className={"form-control"}
                                     InputLabelProps={{shrink: true,}}
                                     inputProps={{step: 300,}}
                                     disabled={props.disabled}
-                                    required={!props.data.citaPendiente}
+                                    required={!state.citaPendiente}
                                 />
                             </Grid>
                         </Grid>
