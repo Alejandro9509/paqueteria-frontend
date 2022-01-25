@@ -1443,11 +1443,6 @@ function Recoleccion() {
                 aplicaSeguro: respuesta.data.m_bAplicaSeguro,
                 //Cita de recoleccion
                 recoleccionConCita: respuesta.data.m_bRecoleccionConCita,
-                fechaCita: respuesta.data.m_sFechaCita,
-                horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
-                horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
-                citaPendiente: respuesta.data.m_bCitaPendiente,
-
                 diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio,
                 fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
@@ -1456,6 +1451,13 @@ function Recoleccion() {
 
             }
         });
+        setState({
+            ...state,
+            fechaCita: respuesta.data.m_sFechaCita,
+            horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
+            horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
+            citaPendiente: respuesta.data.m_bCitaPendiente,
+        })
     }
     useEffect(value => {
         let newTiposCobro = []
