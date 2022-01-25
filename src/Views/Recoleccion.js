@@ -1458,6 +1458,7 @@ function Recoleccion() {
             horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
             citaPendiente: respuesta.data.m_bCitaPendiente,
         })
+        mostrarCotizadorRec(true)
     }
     useEffect(value => {
         let newTiposCobro = []
