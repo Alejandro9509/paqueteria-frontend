@@ -29,6 +29,7 @@ class Cotizador extends Component {
     }
 
     componentDidMount() {
+        console.log("Busqueda Concepto")
         obtenerConceptosFacturacion().then(respuesta => {
             this.setState({
                 conceptosBase: respuesta.data,
@@ -47,6 +48,7 @@ class Cotizador extends Component {
                 ivaRetiene: ivaRetiene,
                 ivaTraslada: ivaTraslada
             })
+            this.props.mostrarCotizadorRec(true)
         }
     }
 
@@ -78,12 +80,14 @@ class Cotizador extends Component {
             })
             ivaTraslada = getUniqueListBy(conceptosCast, "traslada").map(i => i.traslada);
             ivaRetiene = getUniqueListBy(conceptosCast, "retiene").map(i => i.retiene);
+            console.log(conceptosCast)
             this.props.onChangeConceptosList(conceptosCast)
             this.setState({
                 mostarConceptos: true,
                 ivaRetiene: ivaRetiene,
                 ivaTraslada: ivaTraslada
             })
+            this.props.mostrarCotizadorRec(true)
 
         })
     }
@@ -103,7 +107,7 @@ class Cotizador extends Component {
                                 <h2>Conceptos de facturación</h2>
                             </div>
                             {
-                                this.state.mostarConceptos &&
+                                this.props.embarque.mostrarCotizador &&
                                 <ConceptosFacturacionGuias
                                     keys={0}
                                     disabled={this.props.disabled}

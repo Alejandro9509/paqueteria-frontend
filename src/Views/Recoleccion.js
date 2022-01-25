@@ -208,7 +208,7 @@ function Recoleccion() {
         usuario: localStorage.getItem("Usuario"),
         // estatusRecoleccion: '', Se usa en agregar tambien
         motivoCancelacion: '',
-
+        mostrarCotizador:false,
         // ==VARIABLES DE LLEGADA/SALIDA===
         // sucursalCancelacion: '', Se usa en cancelar tambien
         // folioRecoleccion: '', Se usa en agregar tambien
@@ -400,7 +400,7 @@ function Recoleccion() {
     })
 
     const handleChangeRemitente = (data) => {
-      //  console.log(data)
+     //  console.log(data)
         setRemitente({
             idRemitente: data.id,
             aliasRemitente: data.alias,
@@ -814,6 +814,14 @@ function Recoleccion() {
         })
     }
 
+    const mostrarCotizadorRec = (isVisible) =>{
+        setState({
+            ...state,
+            mostrarCotizador:isVisible,
+            clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
+        })
+    }
+
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
 
@@ -1067,17 +1075,51 @@ function Recoleccion() {
                     showSuccess(err);
                 });
         } else {
-            agregarRecoleccion(params)
-                .then((respuesta) => {
-                 //   console.log(respuesta.data);
-                    showSuccess(respuesta.data);
-                    handleShowListado();
-                    limpiarInputsAgregar()
-                })
-                .catch((err) => {
-                 //   console.log(err);
-                    showSuccess(err);
-                });
+            confirmAlert({
+                title: 'Confirmación',
+                message: '¿Desea crear esta recoleccion?',
+                buttons: [
+                    {
+                        label: 'Sí',
+                        onClick: ()=>{
+                            agregarRecoleccion(params)
+                            .then((respuesta) => {
+                             //   console.log(respuesta.data);
+                                showSuccess(respuesta.data);
+                                limpiarInputsAgregar()
+                                confirmAlert({
+                                    title: 'Confirmación',
+                                    message: '¿Desea crear otra recoleccion?',
+                                    buttons: [
+                                        {
+                                            label: 'Sí',
+                                            onClick: ()=>{                                  
+                                              
+                                                mostrarCotizadorRec(false)//deja de mostrar el cotizador de la recoleccion pasada
+                                                setLimpiarRemDes(e)
+                                            }
+                                        },
+                                        {
+                                            label: 'No',
+                                            onClick: ()=>{return}
+                                        }
+                                    ]
+                                });
+                               
+                            })
+                            .catch((err) => {
+                             //   console.log(err);
+                                showSuccess(err);
+                            });
+                        }
+                    },
+                    {
+                        label: 'No',
+                        onClick: ()=>{return}
+                    }
+                ]
+            });
+         
         }
     }
     };
@@ -1209,7 +1251,7 @@ function Recoleccion() {
 
         });
     }
-
+    const [limpiarRemDes,setLimpiarRemDes] = React.useState()
     const setRecoleccionDataParaConsultaModificacion = (respuesta,operacion) => {
         console.log("DATA DE RECOLECCION CONSULTA Y MODIFICACION")
         console.log(respuesta)
@@ -1468,7 +1510,6 @@ function Recoleccion() {
 
     function handleShowAgregar(event) {
         setIsAgregar(false);
-        event.stopPropagation()
         getDataParaEditar("Agregar")
         limpiarInputsAgregar()
         setState(state => {
@@ -1505,6 +1546,7 @@ function Recoleccion() {
                 agregar: "Agregar",
             }
         });
+        mostrarCotizadorRec(false)//se deja de ver el cotizador
         getAllData();
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
@@ -1607,7 +1649,6 @@ function Recoleccion() {
                 valorDeclarado: 0,
                 porcentajeSeguro: 0,
                 clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
-
                 //Remitente
                 /*nombreRemitente: {m_sNombre: "Nombre", m_sAlias: "Alias"},
                 RFCRemitente: '',
@@ -3821,6 +3862,7 @@ function Recoleccion() {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeRemitente}
                                                                         dataPadreConsulta={dataRecoleccionConsulta}
+                                                                        limpiarRemDes={limpiarRemDes}
                                                                     
                                                                     />
                                                                 }
@@ -3889,7 +3931,7 @@ function Recoleccion() {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeDestinatario}
                                                                         dataPadreConsulta={dataRecoleccionConsulta}
-                                                             
+                                                                        limpiarRemDes={limpiarRemDes}
                                                                     />
                                                                 }
                                                             <div className="row">
@@ -4816,6 +4858,7 @@ function Recoleccion() {
                                                    conceptos={dataConceptos}
                                                    saveIdCotizacion={saveIdCotizacion}
                                                    recoleccion={true}
+                                                   mostrarCotizadorRec={mostrarCotizadorRec}
                                                    paquetes={dataPaquetes.map(p =>({
                                                        Tipo: p.m_nIdTipo,
                                                        Peso: p.m_rPeso,
@@ -4844,6 +4887,7 @@ function Recoleccion() {
                                         >
                                             Aceptar
                                         </button>
+                     
                                     </div>
 
                                 </div>
