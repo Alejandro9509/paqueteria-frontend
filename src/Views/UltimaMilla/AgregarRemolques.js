@@ -100,10 +100,11 @@ this.props.asignarRemolquesUnidad(this.state)
                                         //disabled={state.agregar == "Consultar"}
                                         id="IdRemolque1"
                                         disableClearable
+                                        getOptionDisabled={(option) => option.EstatusUnidad !== "DISPONIBLE"}
                                         forcePopupIcon={false}
-                                        options={this.state.dataUnidades && this.state.dataUnidades.filter(u => u.m_nIdTipoUnidad !== 28)}
+                                        options={this.state.dataUnidades && this.state.dataUnidades.filter(u => u.m_bActivo && u.m_nIdTipoUnidad !== 28 && (this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0 ) !== u.m_nIdUnidad)}
                                         getOptionLabel={(option) =>
-                                            `${option.m_sCodigo} - ${option.m_sDescripcion}`
+                                            `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                         }
                                         style={{
                                             transform: "translate(14px, 10px) scale(1) !important"
@@ -176,11 +177,13 @@ this.props.asignarRemolquesUnidad(this.state)
                                         //disabled={state.agregar == "Consultar"}
                                         id="IdRemolque2"
                                         disableClearable
+                                        getOptionDisabled={(option) => option.EstatusUnidad !== "DISPONIBLE"}
+
                                         disabled={this.props.consult}
                                         forcePopupIcon={false}
-                                        options={this.state.dataUnidades && this.state.dataUnidades.filter(u => u.m_nIdTipoUnidad !== 28)}
+                                        options={this.state.dataUnidades && this.state.dataUnidades.filter(u => u.m_bActivo && u.m_nIdTipoUnidad !== 28 && (this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0 ) !== u.m_nIdUnidad)}
                                         getOptionLabel={(option) =>
-                                            `${option.m_sCodigo} - ${option.m_sDescripcion}`
+                                            `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                         }
                                         style={{
                                             transform: "translate(14px, 10px) scale(1) !important"
@@ -254,11 +257,13 @@ this.props.asignarRemolquesUnidad(this.state)
                                     //disabled={state.agregar == "Consultar"}
                                     id="IdDolly"
                                     disableClearable
+                                    getOptionDisabled={(option) => option.EstatusUnidad !== "DISPONIBLE"}
+
                                     disabled={this.props.consult}
                                     forcePopupIcon={false}
-                                    options={this.state.dataUnidades && this.state.dataUnidades.filter(u => u.m_nIdTipoUnidad === 28)}
+                                    options={this.state.dataUnidades && this.state.dataUnidades.filter(u => u.m_bActivo && u.m_nIdTipoUnidad === 28)}
                                     getOptionLabel={(option) =>
-                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                                        `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                     }
                                     style={{
                                         transform: "translate(14px, 10px) scale(1) !important"
