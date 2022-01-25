@@ -112,6 +112,34 @@ function RemitenteDestinatario(props) {
     },
     [state]
   );
+
+  useEffect((value)=>{
+  setState({
+    ...state,
+    id: "",
+    alias: "",
+    nombre: "",
+    RFC: "",
+    domicilio: "",
+    calle: "",
+    numeroInt: "",
+    numeroExt: "",
+    colonia: "",
+    estado: "",
+    municipio: "",
+    codigoPostal: "",
+    correo: "",
+    telefono: "",
+    contacto: "",
+    destino: "",
+    origen: "",
+    zonaOperativa: "",
+    zonaTarifa: "",
+    latitud: "",
+    longitud: "",
+    openDialog: false,
+  })
+  },[props.limpiarRemDes])
   useEffect(
     (value) => {
       /**Para validar que hay una respuesta de donde tomar los datos*/

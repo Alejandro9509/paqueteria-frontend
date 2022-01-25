@@ -474,7 +474,7 @@ function Embarque(props) {
         usuario: localStorage.getItem("Usuario"),
         // estatusEmbarque: '', se usa en agregar tambien
         motivoCancelacion: '',
-
+        mostrarCotizador:false,
         //==VARIABLES DE AGREGAR
         //Informacion general
         idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -861,7 +861,12 @@ function Embarque(props) {
             titulo: "entrega"
         })
     }
-
+    const mostrarCotizadorRec = (isVisible) =>{
+        setState({
+            ...state,
+            mostrarCotizador:isVisible
+        })
+    }
     const getCurrentDateTime = () => {
         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
         1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
@@ -1216,7 +1221,7 @@ function Embarque(props) {
                             folioEmbarque: respuesta.data.m_nFolioEmbarque,
                         }
                     })
-
+                    mostrarCotizadorRec(false)
                     confirmAlert({
                         title: 'Confirmación',
                         message: '¿Desea crear la guía para este embarque?',
@@ -3809,6 +3814,7 @@ function Embarque(props) {
                                                    onChangeConceptosList={actualizarConceptos}
                                                    conceptos={dataConceptos}
                                                    recoleccion={false}
+                                                   mostrarCotizadorRec={mostrarCotizadorRec}
                                                    saveIdCotizacion={saveIdCotizacion}
                                                    paquetes={dataPaquetes.map(p =>({
                                             Tipo: p.m_nIdTipo,
