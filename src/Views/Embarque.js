@@ -1643,7 +1643,7 @@ function Embarque(props) {
                 idTipoSeguro: respuesta.data.m_bAplicaSeguro ? respuesta.data.m_nIdTipoSeguro : 5,
                 porcentajeSeguro: respuesta.data.m_bAplicaSeguro ? respuesta.data.m_xPorcentajeSeguro : 0,
                 aplicaSeguro: respuesta.data.m_bAplicaSeguro,
-                valorDeclarado: respuesta.data.m_xValor,
+                valorDeclarado: respuesta.data.m_xValorDeclarado,
                 recoleccionConCita: respuesta.data.m_bRecoleccionConCita
             }
         });
