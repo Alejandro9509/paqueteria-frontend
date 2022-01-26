@@ -573,7 +573,10 @@ function Guia(props) {
     //Muestra la pestaña de cancelar
     function handleShowCancelar(event) {
         event.preventDefault()
-        limpiarCamposAgregar()
+        if(state.folioInforme && state.folioInforme != ""){
+      showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+state.folioInforme)
+    }else if(state.folioInforme == undefined || state.folioInforme == ""){
+          limpiarCamposAgregar()
         obtenerGuiaId(state.idGuia).then((respuesta) => {
             setState({
                 ...state,
@@ -590,6 +593,7 @@ function Guia(props) {
             $('#Cancelar').addClass('in show');
         })
     }
+    }
 
     //Funcion para cancelar una guia. Se usa en pestaña cancelar.
     const handleCancelar = (e) => {
@@ -599,15 +603,11 @@ function Guia(props) {
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
             "fechaCancelacion": state.fechaCancelado
         }
-        console.log(JSON.stringify(params))
-        if(state.folioInforme){
-            showSuccess("La guia no puede ser eliminada ya que esta siendo usada en un informe")
-        }else{
           cancelarGuia(state.idGuia, params).then((respuesta) => {
             console.log(respuesta.data)
             showSuccess("La guia ha sido cancelada")
         })  
-        }
+        
         
     }
 
@@ -1171,6 +1171,7 @@ function Guia(props) {
                 idEstatusGuia: 0,
                 idMoneda: 1,
                 tipoCambio: 0,
+                idGuia:0,
                 //Remitente
                 nombreRemitente: "",
                 RFCRemitente: "",
@@ -1865,7 +1866,7 @@ function Guia(props) {
                         </li>
 
                         <li>
-                            <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}
+                            <a data-toggle="tab"  onClick={handleShowCancelar}
                                className={state.idGuia === 0 ? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
@@ -2029,7 +2030,7 @@ function Guia(props) {
                                                                         id="idEmbarque"
                                                                         read="true"
                                                                         value={state.idEmbarque}
-                                                                        disabled={state.agregar == "Consultar" || state.validarEmbarqueGuia}
+                                                                        disabled={state.agregar == "Consultar" || state.validarEmbarqueGuia || state.agregar == "Modificar" }
 
                                                                     >
                                                                         <option value="0">

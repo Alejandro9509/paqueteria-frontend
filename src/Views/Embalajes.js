@@ -106,7 +106,7 @@ function Embalaje() {
         var derecho;
         validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
-
+            console.log(respuesta.data)
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
