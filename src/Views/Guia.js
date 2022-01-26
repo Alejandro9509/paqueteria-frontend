@@ -1021,7 +1021,9 @@ function Guia(props) {
 
     const setDataFromEmbarque = (respuesta) => {
         console.log('Embarque datos: ', respuesta.data)
-
+   respuesta.data.m_arrSobres.forEach((s) => {
+            respuesta.data.m_arrPaquetes.push(s)
+        })
         let totalCantidad = 0
         respuesta.data.m_arrPaquetes.forEach((p) => {
             p.m_nIdPaquete = p.m_nIdEmbarqueDetalle
@@ -1048,6 +1050,7 @@ function Guia(props) {
             })
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
         })
+     
         setDataPaquetes(respuesta.data.m_arrPaquetes)
         let conceptosCast = []
         conceptosCast = respuesta.data.m_arrConceptos.map(item => ({
