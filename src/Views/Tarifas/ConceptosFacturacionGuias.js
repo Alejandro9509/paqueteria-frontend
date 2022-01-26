@@ -365,6 +365,11 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
 
     }
 
+    const round = (num) => {
+        let m = Number((Math.abs(num) * 100).toPrecision(15));
+        return Math.round(m) / 100 * Math.sign(num);
+    }
+
     return(
         <div>
             <div className="row">
@@ -410,7 +415,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             borderColor: "gray",
                             minWidth: "230px",
                             textAlign: "right"
-                        }}> ${parseFloat(dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importe), 0)).toFixed(2)}</div>
+                        }}> ${round(parseFloat(dataPaquetes.reduce((total, arg) => total + parseFloat(arg.importe), 0)))}</div>
                     </div>
                     <div className="col-md-12 col-sm-12"
                          style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
@@ -425,7 +430,7 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                             borderColor: "gray",
                             minWidth: "230px",
                             textAlign: "right"
-                        }}> ${parseFloat(dataPaquetes.reduce((total, arg) => total + parseFloat(arg.descuento), 0)).toFixed(2)}</div>
+                        }}> ${round(parseFloat(dataPaquetes.reduce((total, arg) => total + parseFloat(arg.descuento), 0)))}</div>
                     </div>
                     <div className="col-md-12 col-sm-12"
                          style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
@@ -445,14 +450,14 @@ function ConceptosFacturacionGuias({dataPaquetes = [],onChangeList, disabled,key
                                 state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t.traslada)) ?
                                     state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t.traslada)).m_sImpuesto :
                                     "" :
-                                ""} `} ${parseFloat(dataPaquetes.filter(c => c.traslada === t.traslada).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br/>
+                                ""} `} ${round(parseFloat(dataPaquetes.filter(c => c.traslada === t.traslada).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)))}<br/>
                             </div>))}
                             {getUniqueListBy(dataPaquetes, "retiene").map(t => (
                             <div>{`${state.impuestos.length !== 0 ?
                                 `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t.retiene)) ?
                                     state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t.retiene)).m_sImpuesto :
                                     ""}` :
-                                ""} `} ${parseFloat(dataPaquetes.filter(c => c.retiene === t.retiene).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br/>
+                                ""} `} ${round(parseFloat(dataPaquetes.filter(c => c.retiene === t.retiene).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)))}<br/>
                             </div>))} </div>
                     </div>
                     <div className="col-md-12 col-sm-12"
