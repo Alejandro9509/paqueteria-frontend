@@ -328,8 +328,8 @@ function Guia(props) {
             })),
 
         }
-        console.log(params)
-        console.log(JSON.stringify(params))
+      //  console.log(state)
+       // console.log(JSON.stringify(params))
         if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
             agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
@@ -1067,6 +1067,29 @@ function Guia(props) {
 
         // setDataConceptos(conceptosCast)
         setConceptosAdicionales(conceptosCast)
+        obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalRemitente).then(
+            ({ data }) => {
+                console.log(data)
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaTarifaRemitente:data[0].m_sCodigoZona
+                    }
+
+                })
+            }
+          );
+          obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
+            ({ data }) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaTarifaDestinatario:data[0].m_sCodigoZona
+                    }
+
+                })
+            }
+          );
         setState(state => {
             return {
                 ...state,
@@ -1113,10 +1136,6 @@ function Guia(props) {
                 tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
                 tieneCitaRecoleccion: false,
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
-
-                zonaTarifaRemitente: respuesta.data.m_sZonaTarifaRecoleccion,
-                zonaTarifaDestinatario: respuesta.data.m_sZonaTarifaEntrega,
-
             }
         })
         // obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, state.idTipoTarifa)
