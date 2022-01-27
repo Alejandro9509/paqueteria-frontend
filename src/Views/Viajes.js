@@ -240,10 +240,10 @@ function Viajes() {
                 motivoCancelacion: respuesta.data.m_sMotivoCancelacion || '',
                 usuarioCancelacion: respuesta.data.m_sUsuarioCancelacion || localStorage.getItem("Usuario"),
                 estatusCancelacion: respuesta.data.m_sEstatusViaje,
-                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar,
+                sePuedeCancelar: respuesta.data.m_bSePuedeCancelar === 1,
             });
 
-            if (!respuesta.data.m_bSePuedeCancelar) {
+            if (respuesta.data.m_bSePuedeCancelar === 0) {
                 showSuccess("Este viaje no se puede cancelar.");
             }
             $('.nav-tabs li ').removeClass('active');
