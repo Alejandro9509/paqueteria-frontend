@@ -87,7 +87,8 @@ class Tour extends Component {
                                                 <Typography variant={"body1"} >{paquete.m_bEsRecoleccion ? paquete.m_sNombreRemitente : paquete.m_sNombreDestinatario}</Typography>
                                             </Grid>
                                             <Grid item md={12}>
-                                                <Typography variant={"body1"} >{paquete.m_bEsRecoleccion ? paquete.m_sDomicilioRemitente : paquete.m_sDomicilioDestinatario}</Typography>
+                                                <Typography
+                                                    variant={"body1"}>{paquete.m_bEsRecoleccion ? paquete.m_bRecoleccionDiferenteDomicilio ? paquete.m_sDomicilioDetalleRecoleccion : paquete.m_sDomicilioRemitente : paquete.m_bEntregaDiferenteDomicilio ? paquete.m_sDomicilioDetalleEntrega :  paquete.m_sDomicilioDestinatario}</Typography>
                                             </Grid>
                                             <Grid item md={12}>
                                                 <Typography variant={"body1"} >{paquete.m_bEsRecoleccion ? paquete.m_sContactoRemitente : paquete.m_sContactoDestinatario}</Typography>
