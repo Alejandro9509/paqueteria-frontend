@@ -817,8 +817,7 @@ function Recoleccion() {
     const mostrarCotizadorRec = (isVisible) =>{
         setState({
             ...state,
-            mostrarCotizador:isVisible,
-            clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
+            mostrarCotizador:isVisible
         })
     }
 
@@ -1063,6 +1062,7 @@ function Recoleccion() {
         params.m_nIdCotizacion = state.idCotizacion
     //    console.log(params)
         console.log(JSON.stringify(params))
+        console.log(coordenadas)
      if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
@@ -1087,21 +1087,28 @@ function Recoleccion() {
                              //   console.log(respuesta.data);
                                 showSuccess(respuesta.data);
                                 limpiarInputsAgregar()
+                                mostrarDialogoMapa(false)
                                 confirmAlert({
                                     title: 'Confirmación',
                                     message: '¿Desea crear otra recoleccion?',
                                     buttons: [
                                         {
                                             label: 'Sí',
-                                            onClick: ()=>{                                  
+                                            onClick: ()=>{//limpia los inputs para volver a agregar denuevo la info            
+                                               
+                                                setLimpiarRemDes(e) 
+                                                mostrarCotizadorRec(false)
+                                                limpiarInputsAgregar()
+                                                                                
+                                                $('.tab-content div ').removeClass('in show');
+                                                $('#Agregar').addClass('in show');   
+                                                setTabActiva(1)                                               
                                               
-                                                mostrarCotizadorRec(false)//deja de mostrar el cotizador de la recoleccion pasada
-                                                setLimpiarRemDes(e)
                                             }
                                         },
                                         {
                                             label: 'No',
-                                            onClick: ()=>{return}
+                                            onClick: ()=>{ handleShowListado();}
                                         }
                                     ]
                                 });
@@ -1420,9 +1427,9 @@ function Recoleccion() {
                 idRecoleccion: respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.m_nIdSucursal,
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-                folioEmbarque: respuesta.data.m_nIdEmbarque,
+                folioEmbarque: respuesta.data.m_sFolioEmbarque,
                 valorDeclarado: respuesta.data.m_xValorDeclarado,
-                folioGuia: respuesta.data.m_nIdGuia,
+                folioGuia: respuesta.data.m_sFolioGuia,
                 idCotizacion: respuesta.data.m_nIdCotizacion,
                 folioInforme: respuesta.data.m_nIdInforme,
                 fechaHoraRegistro: respuesta.data.m_dFechaRegistro + "T" + respuesta.data.m_tHoraRegistro.slice(0, 5),
@@ -1633,7 +1640,6 @@ function Recoleccion() {
             return {
                 ...state,
                 idRecoleccion:0,
-                idSucursalAgregar: '',
                 folioRecoleccion: '',
                 folioEmbarque: '',
                 folioGuia: '',

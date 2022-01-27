@@ -2505,6 +2505,7 @@ function Embarque(props) {
             "TIpoCambio": state.tipoCambio,
             "FolioGuia": state.folioGuia,
             "IdEstatusGuia": 4,
+            "idTipoServicio": 2,
             "IdEmbarque": idEmbarque,
             "IdMoneda": state.moneda,
 
