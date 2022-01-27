@@ -807,10 +807,12 @@ function Recoleccion() {
     }
 
     const mostrarDialogoMapa = (isVisible) => {
-        setState({
+        setState(state=>{
+            return {
             ...state,
             showConfirmarUbicacion: isVisible,         
-            titulo: "recolección"
+            titulo: "recolección"}
+           
         })
     }
 
@@ -1087,7 +1089,6 @@ function Recoleccion() {
                              //   console.log(respuesta.data);
                                 showSuccess(respuesta.data);
                                 limpiarInputsAgregar()
-                                mostrarDialogoMapa(false)
                                 confirmAlert({
                                     title: 'Confirmación',
                                     message: '¿Desea crear otra recoleccion?',
@@ -1095,15 +1096,9 @@ function Recoleccion() {
                                         {
                                             label: 'Sí',
                                             onClick: ()=>{//limpia los inputs para volver a agregar denuevo la info            
-                                                mostrarDialogoMapa(false)
                                                 setLimpiarRemDes(e) 
                                                 mostrarCotizadorRec(false)
-                                                limpiarInputsAgregar()
-                                                                                
-                                                $('.tab-content div ').removeClass('in show');
-                                                $('#Agregar').addClass('in show');   
-                                                setTabActiva(1)                                               
-                                              
+                                                limpiarInputsAgregar()        
                                             }
                                         },
                                         {
@@ -1653,6 +1648,7 @@ function Recoleccion() {
                 valorDeclarado: 0,
                 porcentajeSeguro: 0,
                 clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
+                showConfirmarUbicacion:false,
                 //Remitente
                 /*nombreRemitente: {m_sNombre: "Nombre", m_sAlias: "Alias"},
                 RFCRemitente: '',
