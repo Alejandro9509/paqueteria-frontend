@@ -1095,7 +1095,7 @@ function Recoleccion() {
                                         {
                                             label: 'Sí',
                                             onClick: ()=>{//limpia los inputs para volver a agregar denuevo la info            
-                                               
+                                                mostrarDialogoMapa(false)
                                                 setLimpiarRemDes(e) 
                                                 mostrarCotizadorRec(false)
                                                 limpiarInputsAgregar()
