@@ -12,6 +12,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import InputAdornment from "@material-ui/core/InputAdornment";
+import {getCurrentDateTime} from "../Util/Util"
 import {
     ReactTable,
     useTable,
@@ -475,6 +476,7 @@ function Embarque(props) {
         // estatusEmbarque: '', se usa en agregar tambien
         motivoCancelacion: '',
         mostrarCotizador:false,
+        isConsultaModificacion:false,
         //==VARIABLES DE AGREGAR
         //Informacion general
         idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -559,7 +561,7 @@ function Embarque(props) {
                 porcentajeSeguro: 0,
                 aplicaSeguro: false,
                 idTipoTarifa:'',
-
+                isConsultaModificacion:false,
                 //Entrega
                 entregaEnSucursal: false,
                 diferenteEntrega: false,
@@ -867,10 +869,10 @@ function Embarque(props) {
             mostrarCotizador:isVisible
         })
     }
-    const getCurrentDateTime = () => {
+    /*const getCurrentDateTime = () => {
         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
         1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
-    }
+    }*/
 
     /**Valida que no sea null/undefined,
      * no sea campo vacio,
@@ -1077,8 +1079,8 @@ function Embarque(props) {
             m_nIdMoneda: state.moneda,
             m_cTIpoCambio: state.tipoCambio,
             m_nIdTIpoCobro: state.tipoCobro,
-            m_dFecha: state.fechaHoraRegistro.substr(0, 10),
-            m_sHora: state.fechaHoraRegistro.substr(state.fechaHoraRegistro.length - 5),
+            m_dFecha: getCurrentDateTime().substr(0, 10),
+            m_sHora: getCurrentDateTime().substr(getCurrentDateTime().length - 5),
             m_nIdCliente: state.clientePaga.m_nIdCliente,
             ValorDeclarado: state.valorDeclarado,
             m_nIdTipoSeguro: state.idTipoSeguro,
@@ -1829,6 +1831,7 @@ function Embarque(props) {
                 aplicaSeguro: respuesta.data.m_bAplicaSeguro,
                 // clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
                 duplicar: duplicar,
+                isConsultaModificacion:true,
                 //Entrega
                 
                 entregaConCita: respuesta.data.m_bEmbarqueConCita,
@@ -3809,6 +3812,7 @@ function Embarque(props) {
                                     <div className="row">
                                         <Cotizador embarque={state}
                                                    disabled={state.agregar === "Consultar"}
+                                                   isConsultaModificacion = {state.isConsultaModificacion}
                                                    remitente={remitente}
                                                    destinatario={destinatario}
                                                    entregaDiferenteDom={entregaDD}

@@ -29,6 +29,7 @@ import {
     useSortBy,
 } from "react-table";
 import $ from "jquery";
+import {getCurrentDateTime} from "../Util/Util"
 import {remove_array_element} from "../Util/Util";
 import {useHistory, Redirect} from 'react-router-dom';
 import {confirmAlert} from 'react-confirm-alert'; // Import
@@ -226,7 +227,7 @@ function Recoleccion() {
         folioEmbarque: '',
         folioGuia: '',
         folioInforme: '',
-        fechaHoraRegistro:'',
+        fechaHoraRegistro:getCurrentDateTime(),
         estatusRecoleccion: '',
         moneda: '',
         tipoCambio: '',
@@ -930,8 +931,8 @@ function Recoleccion() {
             params.m_nIdEmbarque = state.folioEmbarque
             params.m_nIdGuia = state.folioGuia
             params.m_nIdInforme = state.folioInforme
-            params.m_sFecha = state.fechaHoraRegistro.substr(0, 10)
-            params.m_sHora = state.fechaHoraRegistro.substr(state.fechaHoraRegistro.length - 5)
+            params.m_sFecha = getCurrentDateTime().substr(0, 10)
+            params.m_sHora = getCurrentDateTime().substr(getCurrentDateTime().length - 5)
             params.m_nMoneda = state.moneda
             params.m_rTipoCambio = state.tipoCambio
             params.m_nIdTipoDeCobro = state.tipoCobro
@@ -1624,10 +1625,10 @@ function Recoleccion() {
         }
     }
     
-    const getCurrentDateTime = () => {
+  /*  const getCurrentDateTime = () => {
         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
         1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
-    }
+    }*/
 
     //Limpia todos los inputs
     const limpiarInputsAgregar = () => {
