@@ -476,7 +476,6 @@ function Embarque(props) {
         // estatusEmbarque: '', se usa en agregar tambien
         motivoCancelacion: '',
         mostrarCotizador:false,
-        isConsultaModificacion:false,
         //==VARIABLES DE AGREGAR
         //Informacion general
         idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -561,7 +560,6 @@ function Embarque(props) {
                 porcentajeSeguro: 0,
                 aplicaSeguro: false,
                 idTipoTarifa:'',
-                isConsultaModificacion:false,
                 //Entrega
                 entregaEnSucursal: false,
                 diferenteEntrega: false,
@@ -574,6 +572,7 @@ function Embarque(props) {
                 horaCitaMinima: '',
                 horaCitaMaxima: '',
                 citaPendiente: false,
+                mostrarCotizador:false,
 
                 //Paquetes/sobres
                 paquetes: [],
@@ -1193,7 +1192,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        if (state.idEmbarque != 0) {
+  /*      if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1243,7 +1242,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/
     };
 
     function handleSelectCP(id, cp) {
@@ -1831,7 +1830,6 @@ function Embarque(props) {
                 aplicaSeguro: respuesta.data.m_bAplicaSeguro,
                 // clientePaga: dataClientes.find((c) => c.m_nIdCliente == respuesta.data.m_nIdCliente),
                 duplicar: duplicar,
-                isConsultaModificacion:true,
                 //Entrega
                 
                 entregaConCita: respuesta.data.m_bEmbarqueConCita,
@@ -3812,7 +3810,6 @@ function Embarque(props) {
                                     <div className="row">
                                         <Cotizador embarque={state}
                                                    disabled={state.agregar === "Consultar"}
-                                                   isConsultaModificacion = {state.isConsultaModificacion}
                                                    remitente={remitente}
                                                    destinatario={destinatario}
                                                    entregaDiferenteDom={entregaDD}
