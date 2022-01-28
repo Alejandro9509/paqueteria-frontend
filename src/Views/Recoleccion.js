@@ -823,14 +823,138 @@ function Recoleccion() {
             mostrarCotizador:isVisible
         })
     }
+    const esDatoValido = (dato) => {
+        return dato
+            && dato !== ''
+            && dato !== 0
+            && dato !== "0";
 
+    }
+    const esRecoleccionValido = () => {
+        let valid = false;
+        /**INFORMACION GENERAÑ*/
+        if (!esDatoValido(state.idTipoSeguro)){
+            showSuccess("El tipo de seguro es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(state.tipoCambio)){
+            showSuccess("El tipo de cambio es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(state.tipoCobro)){
+            showSuccess("El tipo de cobro es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(state.clientePaga?.m_nIdCliente)){
+            showSuccess("El responsable de pago es un dato requerido");
+            return valid;
+        }
+
+        /**REMITENTE*/
+        if (!esDatoValido(remitente.idRemitente)){
+            showSuccess("El remitente es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(remitente.codigoPostalRemitente?.m_nIdCP)){
+            showSuccess("El código postal del remitente es un dato requerido");
+            return valid;
+        }
+        if(!esDatoValido(remitente.correoRemitente)){
+            showSuccess("El correo del remitente es un dato requerido")
+            return valid;
+        }
+        if (!esDatoValido(remitente.origenRemitente?.m_nIdCiudad)){
+            showSuccess("La ciudad de origen es un dato requerido");
+            return valid;
+        }
+
+        /**DESTINATARIO*/
+        if (!esDatoValido(destinatario.idDestinatario)){
+            showSuccess("El destinatario es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(destinatario.codigoPostalDestinatario?.m_nIdCP)){
+            showSuccess("El código postal del destinatario es un dato requerido");
+            return valid;
+        }
+        if(!esDatoValido(destinatario.correoDestinatario)){
+            showSuccess("El correo del destinatario es un dato requerido")
+            return valid;
+        }
+        if (!esDatoValido(destinatario.destinoDestinatario?.m_nIdCiudad)){
+            showSuccess("La ciudad de destino es un dato requerido");
+            return valid;
+        }
+
+        /**Si es entrega en sucursal*/
+        if (state.entregaEnSucursal){
+            if (!esDatoValido(state.idSucursalEntrega)){
+                showSuccess("La sucursal de entrega es un dato requerido");
+                return valid;
+            }
+            /**Si es entrega en direfente domicilio*/
+        }else if(state.diferenteEntrega){
+            if (!esDatoValido(entregaDD.codigoPostalEnt?.m_nIdCP)){
+                showSuccess("El código postal de entrega es un dato requerido");
+                return valid;
+            }
+            if (!esDatoValido(entregaDD.estadoEnt)){
+                showSuccess("El estado de entrega es un dato requerido");
+                return valid;
+            }
+            if (!esDatoValido(entregaDD.zonaOperativaEnt?.m_nIdZona)){
+                showSuccess("La zona operativa de entrega es un dato requerido");
+                return valid;
+            }
+            if (!esDatoValido(entregaDD.zonaTarifaEnt?.m_nIdZona)){
+                showSuccess("La zona de la tarifa de entrega es un dato requerido");
+                return valid;
+            }
+
+        }else {
+            /**Si es entrega en domicilio de destinatario*/
+            if (!esDatoValido(destinatario.zonaOperativaDestinatario?.m_nIdZona)) {
+                showSuccess("Verificar la zona operativa de destinatario")
+                return valid;
+            } else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
+                showSuccess("Verificar la zona tarifa de destinatario")
+                return valid;
+            }
+        }
+        if (state.entregaConCita){
+            if (!state.citaPendiente){
+                if (!esDatoValido(state.fechaCita)){
+                    showSuccess("La fecha de la cita es un dato requerido");
+                    return;
+                }
+                if (!esDatoValido(state.horaCitaMinima)){
+                    showSuccess("La hora mínima de la cita es un dato requerido");
+                    return;
+                }
+                if (!esDatoValido(state.horaCitaMaxima)){
+                    showSuccess("La hora máxima de la cita es un dato requerido");
+                    return;
+                }
+            }
+        }
+        if (dataPaquetes.length === 0) {
+            showSuccess("Debe agregar al menos un paquete")
+            return
+        }
+
+        if (dataConceptos.length === 0){
+            showSuccess("No se han agregado conceptos de facturación")
+            return;
+        }
+        valid = true
+        return valid;
+    }
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
 
-        //FALTA VALIDAR QUE SI ES RECOLECTA EN DIFERENTE DOMICILIO TOME LA ZONA OPERATIVA Y DE TARIFA DE AHI 
-        //EJEMP params.m_nIdZonaOperativaEntrega = entregaDD.zonaOperativaEnt.m_nIdZona
-          //  params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt.m_nIdZona
-          //ENTONCES OCUPA SABER SI ES DIFERENTEENTREFA EN EL CONDICIONAL IGUAL PARA EMBARQUE
+        if (!esRecoleccionValido()){
+            return;
+        }
         let error = false
         let params = {}
         if(state.diferenteEntrega){
@@ -1078,6 +1202,7 @@ function Recoleccion() {
                     showSuccess(err);
                 });
         } else {
+            console.log("ENTRO")
             confirmAlert({
                 title: 'Confirmación',
                 message: '¿Desea crear esta recoleccion?',
@@ -1748,6 +1873,7 @@ function Recoleccion() {
             }
         });
         setDataPaquetes([])
+        setDataConceptos([])
         setDataComplementosSAT([])
         resetRecoleccionDD()
         resetEntregaDD()
