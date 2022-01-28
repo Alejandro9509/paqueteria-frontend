@@ -113,6 +113,7 @@ import {obtenerViajesByFiltro} from "../Util/Contexts/ViajesContext";
 import Citas from "./Citas/Citas";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
+import {obtenerRutasId} from "../Util/Contexts/RutasContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -587,6 +588,7 @@ function Embarque(props) {
 
                 //Rutas
                 idRuta: 0,
+                esConsultaRuta: false,
                 height: window.innerHeight,
             }
         })
@@ -1805,7 +1807,6 @@ function Embarque(props) {
         }))
 
         setDataConceptos(conceptosCast)
-        console.log( respuesta.data.m_nIdTIpoCobro)
         setState(state => {
             return {
                 ...state,
@@ -1842,6 +1843,7 @@ function Embarque(props) {
 
                 //Ruta
                 idRuta: respuesta.data.m_nIdRuta,
+                esConsultaRuta: true,
 
                 //Paquetes/sobres
                 paquetes: respuesta.data.m_arrPaquetes,
@@ -3552,6 +3554,7 @@ function Embarque(props) {
                                                 IdCliente={state.clientePaga.m_nIdCliente}
                                                 disabled={state.agregar === "Consultar"}
                                                 onChangeRuta={handleChangeRuta}
+                                                EsConsulta={state.esConsultaRuta}
                                             />
                                         </div>
                                     </div>

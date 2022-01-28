@@ -61,7 +61,7 @@ function cargarDesdeServidor(pagina,registros){
         <TextField
             variant="standard"
             value={busqueda}
-            onChange={(e) => setBusqueda( e.target.value)}
+            onChange={(e) => setBusqueda(e.target.value)}
 
             InputProps={{
                 endAdornment: <SearchIcon style={{
@@ -72,27 +72,37 @@ function cargarDesdeServidor(pagina,registros){
                     paddingBlockEnd: 0,
                     paddingLeft: 0,
                     paddingBlock: 0,
-                    cursor:"pointer"
-                }}  onClick={() =>  cargarDesdeServidor(0,registros)}/>,
+                    cursor: "pointer"
+                }} onClick={() => {
+                    cargarDesdeServidor(0, registros)
+                    setPagina(0)
+                }}/>,
             }}
-            style={{width:'60ch'}}
+            onKeyDown={e => {if (e.code === "Enter" ) {
+                cargarDesdeServidor(0, registros)
+                setPagina(0)
+            }}}
+            style={{width: '60ch'}}
         />
         <div style={{height:"300px", padding:"5px"}}>
-           <DataGrid
-           localeText={dataGridLocaleText}
-           columns={columns}
-           rows={rows}
-           getRowId={ ((row)=> row.m_nIdCliente)}
-           onRowSelected={(row) => {
-           rowSelect = row;
-          }}
-          pagination
-          pageSize={registros}
-          rowCount={3600}
-          paginationMode="server"
-          onPageChange={(newPage)=>{setPagina(newPage.page)
-          console.log(newPage)}}
-           />
+            <DataGrid
+                localeText={dataGridLocaleText}
+                columns={columns}
+                rows={rows}
+                getRowId={((row) => row.m_nIdCliente)}
+                onRowSelected={(row) => {
+                    rowSelect = row;
+                }}
+                page={pagina}
+                pagination
+                pageSize={registros}
+                rowCount={3600}
+                paginationMode="server"
+                onPageChange={(newPage) => {
+                    setPagina(newPage.page)
+                    console.log(newPage)
+                }}
+            />
         </div>
         <DialogActions style={{justifyContent: "rigth"}}>
                    <button

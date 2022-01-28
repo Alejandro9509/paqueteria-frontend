@@ -71,27 +71,37 @@ function cargarDesdeServidor(pagina,registros){
                     paddingBlockEnd: 0,
                     paddingLeft: 0,
                     paddingBlock: 0,
-                }} onClick={() => cargarDesdeServidor(0,registros)}/>,
+                }} onClick={() => {
+                    cargarDesdeServidor(0, registros)
+                    setPagina(0)
+                }}/>,
             }}
+            onKeyDown={e => {if (e.code === "Enter" ) {
+                cargarDesdeServidor(0, registros)
+                setPagina(0)
+            }}}
             style={{width:'60ch'}}
         />
-        <div style={{height:"500px", padding:"5px"}}>
-           <DataGrid
-           localeText={dataGridLocaleText}
-           columns={columns}
-           rows={rows}
-           getRowId={ ((row)=> row.m_nNumero)}
-           onRowSelected={(row) => {
-           rowSelect = row;
-          }}
-          pagination
-           rowsPerPageOptions={[registros]}
-          pageSize={registros}
-          rowCount={13600}
-          paginationMode="server"
-          onPageChange={(newPage)=>{setPagina(newPage.page)
-          console.log(newPage)}}
-           />
+        <div style={{height: "500px", padding: "5px"}}>
+            <DataGrid
+                localeText={dataGridLocaleText}
+                columns={columns}
+                rows={rows}
+                getRowId={((row) => row.m_nNumero)}
+                onRowSelected={(row) => {
+                    rowSelect = row;
+                }}
+                pagination
+                page={pagina}
+                rowsPerPageOptions={[registros]}
+                pageSize={registros}
+                rowCount={13600}
+                paginationMode="server"
+                onPageChange={(newPage) => {
+                    setPagina(newPage.page)
+                    console.log(newPage)
+                }}
+            />
         </div>
         <DialogActions style={{justifyContent: "rigth"}}>
                    <button
