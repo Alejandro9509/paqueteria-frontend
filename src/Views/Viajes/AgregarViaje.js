@@ -15,6 +15,7 @@ import {
     Grid,
     Tooltip
 } from "@material-ui/core";
+import {getCurrentDateTime} from "../../Util/Util"
 import TableCiudades from "./TableCiudades";
 import TableCiudadesViajes from "./TableCiudades";
 import FormControl from "@material-ui/core/FormControl";
@@ -102,8 +103,8 @@ class AgregarViaje extends Component {
             idSucursalAgregar: localStorage.getItem("Sucursal"),
             folioViaje: "",
             viajeCliente: "",
-            fechaHoraCreacion: this.getCurrentDateTime(),
-            fechaHoraRegistro: this.getCurrentDateTime(),
+            fechaHoraCreacion: getCurrentDateTime(),
+            fechaHoraRegistro: getCurrentDateTime(),
             candadoOficial: "",
             identificadorViaje: "",
             estatusListado: '8',
@@ -250,10 +251,10 @@ class AgregarViaje extends Component {
         }
     }
 
-    getCurrentDateTime = () => {
+ /*   getCurrentDateTime = () => {
         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
         1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
-    }
+    }*/
 
     handleAceptar = (e) => {
         if (e){
@@ -266,8 +267,8 @@ class AgregarViaje extends Component {
 
         var params = {
             m_nIdViaje: this.props.id,
-            m_sFecha: this.state.fechaHoraRegistro.substr(0, 10),
-            m_sHora: this.state.fechaHoraRegistro.substr(this.state.fechaHoraRegistro.length-5, 5),
+            m_sFecha: getCurrentDateTime().substr(0, 10),
+            m_sHora: getCurrentDateTime().substr(getCurrentDateTime().length-5, 5),
             m_nIdEstatusViaje: this.state.estatusListado,
             m_nIdSucursal: this.state.idSucursalAgregar,
             m_sCandadoOficial: this.state.candadoOficial,
@@ -297,8 +298,8 @@ class AgregarViaje extends Component {
                 horaEntrega: this.state.horaEntregaGeneral,
             }
         }
-        console.log(this.props.modificar)
-        if (this.props.modificar) {
+        console.log(params)
+       if (this.props.modificar) {
             modificarViaje(this.props.id, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data)
@@ -354,8 +355,8 @@ class AgregarViaje extends Component {
             idSucursalAgregar: localStorage.getItem("Sucursal"),
             folioViaje: "",
             viajeCliente: "",
-            fechaHoraCreacion: this.getCurrentDateTime(),
-            fechaHoraRegistro: this.getCurrentDateTime(),
+            fechaHoraCreacion: getCurrentDateTime(),
+            fechaHoraRegistro: getCurrentDateTime(),
             candadoOficial: "",
             identificadorViaje: "",
             estatusListado: '8',

@@ -12,6 +12,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import InputAdornment from "@material-ui/core/InputAdornment";
+import {getCurrentDateTime} from "../Util/Util"
 import {
     ReactTable,
     useTable,
@@ -112,6 +113,7 @@ import {obtenerViajesByFiltro} from "../Util/Contexts/ViajesContext";
 import Citas from "./Citas/Citas";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
+import {obtenerRutasId} from "../Util/Contexts/RutasContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -559,7 +561,6 @@ function Embarque(props) {
                 porcentajeSeguro: 0,
                 aplicaSeguro: false,
                 idTipoTarifa:'',
-
                 //Entrega
                 entregaEnSucursal: false,
                 diferenteEntrega: false,
@@ -572,6 +573,7 @@ function Embarque(props) {
                 horaCitaMinima: '',
                 horaCitaMaxima: '',
                 citaPendiente: false,
+                mostrarCotizador:false,
 
                 //Paquetes/sobres
                 paquetes: [],
@@ -586,6 +588,7 @@ function Embarque(props) {
 
                 //Rutas
                 idRuta: 0,
+                esConsultaRuta: false,
                 height: window.innerHeight,
             }
         })
@@ -867,10 +870,10 @@ function Embarque(props) {
             mostrarCotizador:isVisible
         })
     }
-    const getCurrentDateTime = () => {
+    /*const getCurrentDateTime = () => {
         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
         1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
-    }
+    }*/
 
     /**Valida que no sea null/undefined,
      * no sea campo vacio,
@@ -1077,8 +1080,8 @@ function Embarque(props) {
             m_nIdMoneda: state.moneda,
             m_cTIpoCambio: state.tipoCambio,
             m_nIdTIpoCobro: state.tipoCobro,
-            m_dFecha: state.fechaHoraRegistro.substr(0, 10),
-            m_sHora: state.fechaHoraRegistro.substr(state.fechaHoraRegistro.length - 5),
+            m_dFecha: getCurrentDateTime().substr(0, 10),
+            m_sHora: getCurrentDateTime().substr(getCurrentDateTime().length - 5),
             m_nIdCliente: state.clientePaga.m_nIdCliente,
             ValorDeclarado: state.valorDeclarado,
             m_nIdTipoSeguro: state.idTipoSeguro,
@@ -1804,7 +1807,6 @@ function Embarque(props) {
         }))
 
         setDataConceptos(conceptosCast)
-        console.log( respuesta.data.m_nIdTIpoCobro)
         setState(state => {
             return {
                 ...state,
@@ -1841,6 +1843,7 @@ function Embarque(props) {
 
                 //Ruta
                 idRuta: respuesta.data.m_nIdRuta,
+                esConsultaRuta: true,
 
                 //Paquetes/sobres
                 paquetes: respuesta.data.m_arrPaquetes,
@@ -2503,6 +2506,7 @@ function Embarque(props) {
             "TIpoCambio": state.tipoCambio,
             "FolioGuia": state.folioGuia,
             "IdEstatusGuia": 4,
+            "idTipoServicio": 2,
             "IdEmbarque": idEmbarque,
             "IdMoneda": state.moneda,
 
@@ -3550,6 +3554,7 @@ function Embarque(props) {
                                                 IdCliente={state.clientePaga.m_nIdCliente}
                                                 disabled={state.agregar === "Consultar"}
                                                 onChangeRuta={handleChangeRuta}
+                                                EsConsulta={state.esConsultaRuta}
                                             />
                                         </div>
                                     </div>

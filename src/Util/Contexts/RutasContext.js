@@ -49,7 +49,7 @@ function obtenerRutasOrigenes() {
 }
 
 function obtenerRutasId(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Rutas/GetById/${id}`;
+    const url = `${process.env.REACT_APP_API_URL}/api/Rutas/GetById/${id}`;
     let result;
     trackPromise(
         result = axios.get(url, { headers })

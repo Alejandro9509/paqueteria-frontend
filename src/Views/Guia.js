@@ -20,6 +20,7 @@ import {getUniqueListBy, remove_array_element} from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
 import {DataGrid} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
+import {getCurrentDateTime} from "../Util/Util"
 import {
     obtenerZonaTarifaByIdCodigoPostal,
   } from "../Util/Contexts/ZonaTarifaContext";
@@ -313,8 +314,8 @@ function Guia(props) {
             "IdSucursal": state.idSucursalAgregar,
             "ValorDeclarado": state.ValorDeclarado,
             "idTipoServicio": state.idTipoServicio,
-            "m_dFecha": state.fecha.substr(0, 10),
-            "m_sHora": state.fecha.substr(state.fecha.length - 5),
+            "m_dFecha": getCurrentDateTime().substr(0, 10),
+            "m_sHora": getCurrentDateTime().substr(getCurrentDateTime().length - 5),
 
             "arClsGuiaConceptos": conceptosAdicionales.map(c => ({
                 m_nIdConceptosFacturacion: c.idConcepto,
@@ -328,7 +329,7 @@ function Guia(props) {
             })),
 
         }
-        console.log(params)
+      //  console.log(state)
         console.log(JSON.stringify(params))
         if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
             agregarGuia(params).then(respuesta => {
@@ -1014,10 +1015,10 @@ function Guia(props) {
         });
     }
 
-    const getCurrentDateTime = () => {
+  /*  const getCurrentDateTime = () => {
         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
         1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
-    }
+    }*/
 
     const setDataFromEmbarque = (respuesta) => {
         console.log('Embarque datos: ', respuesta.data)
@@ -1067,6 +1068,29 @@ function Guia(props) {
 
         // setDataConceptos(conceptosCast)
         setConceptosAdicionales(conceptosCast)
+        obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalRemitente).then(
+            ({ data }) => {
+                console.log(data)
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaTarifaRemitente:data[0].m_sCodigoZona
+                    }
+
+                })
+            }
+          );
+          obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
+            ({ data }) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaTarifaDestinatario:data[0].m_sCodigoZona
+                    }
+
+                })
+            }
+          );
         setState(state => {
             return {
                 ...state,
@@ -1113,10 +1137,6 @@ function Guia(props) {
                 tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
                 tieneCitaRecoleccion: false,
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
-
-                zonaTarifaRemitente: respuesta.data.m_sZonaTarifaRecoleccion,
-                zonaTarifaDestinatario: respuesta.data.m_sZonaTarifaEntrega,
-
             }
         })
         // obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, state.idTipoTarifa)
