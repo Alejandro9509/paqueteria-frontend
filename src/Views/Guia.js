@@ -526,7 +526,7 @@ function Guia(props) {
                 idSucursalAgregar: respuesta.data.IdSucursal,
                 idMoneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
-                folioInforme: respuesta.data.m_nFolioInforme,
+                folioInforme: respuesta.data.m_sFolioInforme,
                 tracking: respuesta.data.m_nTracking,
                 folioGuia: respuesta.data.m_nFolioGuia,
                 idGuia: respuesta.data.m_nIdGuia,
@@ -574,9 +574,9 @@ function Guia(props) {
     //Muestra la pestaña de cancelar
     function handleShowCancelar(event) {
         event.preventDefault()
-        if(state.folioInforme && state.folioInforme != ""){
+        if(state.folioInforme || state.folioInforme != ""){
       showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+state.folioInforme)
-    }else if(state.folioInforme == undefined || state.folioInforme == ""){
+     }else if(state.folioInforme == undefined || state.folioInforme == ""){
           limpiarCamposAgregar()
         obtenerGuiaId(state.idGuia).then((respuesta) => {
             setState({
@@ -599,6 +599,9 @@ function Guia(props) {
     //Funcion para cancelar una guia. Se usa en pestaña cancelar.
     const handleCancelar = (e) => {
         e.preventDefault();
+        if(state.folioInforme || state.folioInforme != ""){
+            showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+state.folioInforme)
+           }else if(state.folioInforme == undefined || state.folioInforme == ""){
         var params = {
             "motivoCancelacion": state.MotivoCancelacion,
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
@@ -608,7 +611,7 @@ function Guia(props) {
             console.log(respuesta.data)
             showSuccess("La guia ha sido cancelada")
         })  
-        
+    }
         
     }
 
@@ -2093,7 +2096,8 @@ function Guia(props) {
                                                                            className="form-control"
                                                                            type="text"
                                                                            label="Folio Informe"
-                                                                           placeholder={state.folioInforme}
+                                                                           //placeholder={state.folioInforme}
+                                                                           value={state.folioInforme}
                                                                            readOnly={state.agregar == "Consultar"}
                                                                            id="folioInforme"
                                                                            name="folioInforme"
