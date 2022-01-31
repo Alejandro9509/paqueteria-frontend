@@ -53,7 +53,7 @@ import {
     modificarGuia,
     agregarGuia,
     imprimirGuia,
-    obtenerGuiaReporte, entregaOcurreGuia, cambiarTipoCobro, cambiarEstatusGuia, obtenerValidacionGuia, asignarTrayectos
+    obtenerGuiaReporte, entregaOcurreGuia, cambiarTipoCobro, cambiarEstatusGuia, obtenerValidacionGuia, asignarTrayectos,validarEliminarGuia
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -385,8 +385,9 @@ function Guia(props) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-
-            eliminarGuia(id, state.modificadoPor).then(respuesta => {
+            validarEliminarGuia(id).then(respuesta=>{
+               if(respuesta.data.sePuedeEliminar){
+                eliminarGuia(id, state.modificadoPor).then(respuesta => {
                 showSuccess(respuesta.data)
                 //console.log(respuesta)
                 if (respuesta.data.indexOf("fracaso:") <= 0)
@@ -394,6 +395,11 @@ function Guia(props) {
             }).catch(function (err) {
                 console.log(err.data)
             });
+               }else{
+                   showSuccess("La guia no puede ser eliminada a menos que se cancele")
+               }
+            })
+           
         }).catch(err => {
             showSuccess(err)
         });

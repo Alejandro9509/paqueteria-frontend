@@ -40,6 +40,15 @@ function eliminarGuia(id, idEliminadoPor) {
         );
     return result
 }
+function validarEliminarGuia(id){
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Guia/ValidarEliminar/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
 function cancelarGuia(id, params) {
     const url = `${process.env.REACT_APP_API_URL}/Guia/Cancelar/${id}`;
     let result;
@@ -216,4 +225,4 @@ function obtenerValidacionGuia(id){
 
 export {actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
     obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,
-    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos}
+    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia}
