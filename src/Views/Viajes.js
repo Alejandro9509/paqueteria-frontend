@@ -847,7 +847,6 @@ function Viajes() {
                 showSuccess(err);
             });
 
-
     }
 
     function updateLlegada(data) {
