@@ -932,7 +932,7 @@ function Viajes() {
         };
         console.log(params)
         console.log(JSON.stringify(params))
-        cancelarViaje(state.IdViaje,params).then((respuesta) => {
+        cancelarViaje(state.idViaje,params).then((respuesta) => {
             console.log(respuesta.data);
             showSuccess(respuesta.data)
             handleShowListado()
@@ -1124,7 +1124,7 @@ function Viajes() {
                                         viajes={true}
                                     />
 
-                                    <div className="row" style={{height: "300px", width: '100%'}}>
+                                    <div  style={{height: "300px", width: '100%'}}>
                                         <DataGrid
                                             localeText={dataGridLocaleText}
                                             rows={data}
@@ -1192,7 +1192,7 @@ function Viajes() {
                                                                     </ListItem>
                                                                     <Collapse in={indexOpen === index}
                                                                               timeout="auto" unmountOnExit>
-                                                                        <div style={{height: "300px"}}>
+                                                                        <div style={{height: `${70 + (p.informes.length * 30)}px`}}>
                                                                             <DataGrid
                                                                                 localeText={dataGridLocaleText}
                                                                                 rows={p.informes}

@@ -274,7 +274,7 @@ function Filtros(props) {
                     <DialogTableClientes dialogVisible={dialogVisible } handlePatrocinadorSelected={handlePatrocinadorSelected}/>
                 </DialogContent>
             </Dialog>
-            <Grid container spacing={2} alignItems="center">
+            <Grid container spacing={1} alignItems="center" style={{paddingRight: "16px"}}>
                 <Grid container spacing={2} item={12}>
                     <Grid item xs>
                         <TextField variant="outlined" margin="dense"
