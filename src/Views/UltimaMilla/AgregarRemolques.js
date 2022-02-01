@@ -74,6 +74,11 @@ class AgregarRemolques extends Component {
     guardarRemolques(e){
         e.preventDefault()
 this.props.asignarRemolquesUnidad(this.state)
+        this.setState({
+            IdRemolque1:null,
+            IdRemolque2: null,
+            IdDolly: null
+        })
     }
 
     render() {

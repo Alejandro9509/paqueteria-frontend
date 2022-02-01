@@ -63,8 +63,8 @@ export default function LlegadaParadas(props){
         dolly: props.data.m_sDolly,
         fechaSalida: props.parada.m_dFechaSalida,
         horaSalida: props.parada.m_tHoraSalida.substr(0,5),
-        fechaLlegada: props.data.m_dFechaLlegada,
-        horaLlegada: props.data.m_tHoraLlegada,
+        fechaLlegada: props.data.m_dFechaLlegada || getCurrentDate(),
+        horaLlegada: props.data.m_tHoraLlegada || getCurrentTime(),
         idEstatus: 0,
         motivoRetraso: "",
         pesoLiquidar: "",
@@ -273,30 +273,6 @@ export default function LlegadaParadas(props){
                         value={data.hora}/>
                 </Grid>
 
-               {/*  <Grid item xs={7}>
-                    <TextField
-                        id={"cliente"}
-                        margin={"dense"}
-                        label={"Cliente"}
-                        InputProps={{readOnly: true}}
-                        disabled
-                        variant={"outlined"}
-                        value={data.cliente}/>
-                </Grid>
-                <Grid item xs={5}/> */}
-
-                {/*<Grid item xs={7}>*/}
-                {/*    <TextField*/}
-                {/*        id={"ruta"}*/}
-                {/*        margin={"dense"}*/}
-                {/*        label={"Ruta"}*/}
-                {/*        InputProps={{readOnly: true}}*/}
-                {/*        disabled*/}
-                {/*        variant={"outlined"}*/}
-                {/*        value={data.ruta}/>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={5}/>*/}
-
                 <Grid item xs={5}>
                     <TextField
                         id={"origen"}
@@ -320,34 +296,6 @@ export default function LlegadaParadas(props){
                         value={data.destino}/>
                 </Grid>
                 <Grid item xs={7}/>
-
-                {/*<Grid item xs={2}>
-                    <TextField
-                        id={"kilometros"}
-                        margin={"dense"}
-                        label={"Kilómetros"}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">kms</InputAdornment>,
-                        }}
-                        variant={"outlined"}
-                        value={data.kms}
-                        onChange={handleChangeKms}
-                    />
-                </Grid>*/}
-                {/*<Grid item xs={2}>
-                    <TextField
-                        id={"millas"}
-                        margin={"dense"}
-                        label={"Millas"}
-                        variant={"outlined"}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">mi</InputAdornment>,
-                        }}
-                        value={data.millas}
-                        onChange={handleChangeMillas}
-                    />
-                </Grid>*/}
-                {/*<Grid item xs={8}/>*/}
 
                 <Grid item xs={5}>
                     <TextField
@@ -413,32 +361,6 @@ export default function LlegadaParadas(props){
                         value={data.remolqueUno}
                     />
                 </Grid>
-                {/*<Grid item xs={2}>
-                    <TextField
-                        id={"kmsRemolqueUno"}
-                        margin={"dense"}
-                        label={"Odómetro"}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">kms</InputAdornment>,
-                        }}
-                        variant={"outlined"}
-                        value={data.kmsRemolqueUno}
-                        onChange={handleChangeKmsRemolqueUno}
-                    />
-                </Grid>*/}
-                {/*<Grid item xs={2}>
-                    <TextField
-                        id={"millasRemolqueUno"}
-                        margin={"dense"}
-                        label={"Odómetro"}
-                        variant={"outlined"}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">mi</InputAdornment>,
-                        }}
-                        value={data.millasRemolqueUno}
-                        onChange={handleChangeMillasRemolqueUno}
-                    />
-                </Grid>*/}
                 <Grid item xs={2}>
                     <TextField
                         id="placasRemolqueUno"
@@ -463,32 +385,7 @@ export default function LlegadaParadas(props){
                         value={data.remolqueDos}
                     />
                 </Grid>
-                {/*<Grid item xs={2}>
-                    <TextField
-                        id={"kmsRemolqueDos"}
-                        margin={"dense"}
-                        label={"Odómetro"}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">kms</InputAdornment>,
-                        }}
-                        variant={"outlined"}
-                        value={data.kmsRemolqueDos}
-                        onChange={handleChangeKmsRemolqueDos}
-                    />
-                </Grid>*/}
-                {/*<Grid item xs={2}>
-                    <TextField
-                        id={"millasRemolqueDos"}
-                        margin={"dense"}
-                        label={"Odómetro"}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">mi</InputAdornment>,
-                        }}
-                        variant={"outlined"}
-                        value={data.millasRemolqueDos}
-                        onChange={handleChangeMillasRemolqueDos}
-                    />
-                </Grid>*/}
+
                 <Grid item xs={2}>
                     <TextField
                         id="placasRemolqueDos"
@@ -552,7 +449,6 @@ export default function LlegadaParadas(props){
                         InputLabelProps={{shrink: true,}}
                         value={data.fechaLlegada}
                         InputProps={{inputProps: { min: data.fechaSalida}}}
-                        defaultValue={getCurrentDate()}
                         onChange={handleChangeFechaLlegada}
                     />
                 </Grid>
@@ -565,7 +461,6 @@ export default function LlegadaParadas(props){
                         label={"Hora"}
                         variant={"outlined"}
                         value={data.horaLlegada}
-                        defaultValue={getCurrentTime()}
                         onChange={handleChangeHoraLlegada}
                     />
                 </Grid>
@@ -597,28 +492,6 @@ export default function LlegadaParadas(props){
                     />
                 </Grid>
                 <Grid item xs={3}/>
-
-                {/*<Grid item xs={2}>
-                    <TextField
-                        id={"pesoLiquidar"}
-                        margin={"dense"}
-                        disabled
-                        label={"Peso a Liquidar"}
-                        variant={"outlined"}
-                        InputProps={{readOnly: true}}
-                        value={data.pesoLiquidar}
-                    />
-                </Grid>
-                <Grid item xs={2}>
-                    <TextField
-                        id={"pesoDescarga"}
-                        margin={"dense"}
-                        label={"Peso de Descarga"}
-                        variant={"outlined"}
-                        value={data.pesoDescarga}
-                        onChange={handlePesoDescarga}
-                    />
-                </Grid>*/}
 
             </Grid>
             {props.children}
