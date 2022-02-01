@@ -235,7 +235,7 @@ class DetalleParadas extends Component {
                     pdfWindow.document.title = "CFDI_ " + folio;
                 })
             }
-
+            this.props.refresh()
         }).catch((error) => {
             if (error.response){
                 showError(error.response.data)
