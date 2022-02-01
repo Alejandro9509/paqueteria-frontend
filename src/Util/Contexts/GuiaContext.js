@@ -41,7 +41,7 @@ function eliminarGuia(id, idEliminadoPor) {
     return result
 }
 function validarEliminarGuia(id){
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Guia/ValidarEliminar/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/ValidarEliminar/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

@@ -31,6 +31,14 @@ function eliminarEmbalajes(id, idEliminadoPor){
         );
     return result
 }
+function validarEliminarEmbalajes(id){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embalajes/ValidarEliminar/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
 
 function obtenerEmbalajes(){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Embalajes/GetListado`;
@@ -50,4 +58,4 @@ function obtenerEmbalajesId(id){
     return result
 }
 
-export {modificarEmbalajes, agregarEmbalajes, eliminarEmbalajes, obtenerEmbalajes, obtenerEmbalajesId}
+export {modificarEmbalajes, agregarEmbalajes, eliminarEmbalajes, obtenerEmbalajes, obtenerEmbalajesId,validarEliminarEmbalajes}
