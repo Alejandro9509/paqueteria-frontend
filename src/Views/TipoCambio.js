@@ -199,6 +199,7 @@ function TipoCambio() {
 
     function getAllData() {
         obtenerTipoCambio().then(respuesta => {
+            respuesta.data.map(cambio=>cambio.m_cTipoCambio = cambio.m_cTipoCambio.toFixed(4))
             setData(respuesta.data)
         });
     };
