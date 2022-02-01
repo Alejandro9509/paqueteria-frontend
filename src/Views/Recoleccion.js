@@ -4987,6 +4987,7 @@ function Recoleccion() {
                                                    saveIdCotizacion={saveIdCotizacion}
                                                    recoleccion={true}
                                                    mostrarCotizadorRec={mostrarCotizadorRec}
+                                                   entregaDiferenteDom={entregaDD}
                                                    paquetes={dataPaquetes.map(p =>({
                                                        Tipo: p.m_nIdTipo,
                                                        Peso: p.m_rPeso,
