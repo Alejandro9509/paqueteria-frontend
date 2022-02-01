@@ -112,6 +112,34 @@ function RemitenteDestinatario(props) {
     },
     [state]
   );
+
+  useEffect((value)=>{
+  setState({
+    ...state,
+    id: "",
+    alias: "",
+    nombre: "",
+    RFC: "",
+    domicilio: "",
+    calle: "",
+    numeroInt: "",
+    numeroExt: "",
+    colonia: "",
+    estado: "",
+    municipio: "",
+    codigoPostal: "",
+    correo: "",
+    telefono: "",
+    contacto: "",
+    destino: "",
+    origen: "",
+    zonaOperativa: "",
+    zonaTarifa: "",
+    latitud: "",
+    longitud: "",
+    openDialog: false,
+  })
+  },[props.limpiarRemDes])
   useEffect(
     (value) => {
       /**Para validar que hay una respuesta de donde tomar los datos*/
@@ -124,7 +152,6 @@ function RemitenteDestinatario(props) {
 
       /**Se ocupa hacer la distincion de si es de recoleccion o embarque porque el nombre de las variables cambia*/
       /**Si es una respuesta de RecoleccionById*/
-      debugger
       if (props.dataPadreConsulta.data.recoleccionById) {
         if (props.remitente) {
           let estado =respuesta.data.m_nIdEstadoRemitente< 10 ? `0${respuesta.data.m_nIdEstadoRemitente}` :  respuesta.data.m_nIdEstadoRemitente

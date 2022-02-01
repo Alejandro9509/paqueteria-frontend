@@ -24,7 +24,7 @@ import {
 } from "@material-ui/core";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
-
+import {getCurrentDateTime} from "../Util/Util"
 
 import DataTable from "react-data-table-component";
 import $ from "jquery";
@@ -444,10 +444,10 @@ function Informes({history}) {
         setDataGuias([])
     }
 
-    const getCurrentDateTime = () => {
+   /* const getCurrentDateTime = () => {
         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
         1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
-    }
+    }*/
 
     const handleAceptar = (e) => {
         if (e){
@@ -456,8 +456,8 @@ function Informes({history}) {
         var params = {
             m_nIdInforme: state.IdInforme,
             m_nFolioInforme: state.FolioInforme,
-            m_dFecha: state.fechaHora.substr(0, 10),
-            m_tHora: state.fechaHora.substr(state.fechaHora.length - 5),
+            m_dFecha: getCurrentDateTime().substr(0, 10),
+            m_tHora: getCurrentDateTime().substr(getCurrentDateTime().length - 5),
             m_nIdCiudadDestino: state.IdCiudadDestino.m_nIdCiudad,
             m_nIdCiudadOrigen: state.IdCiudadOrigen.m_nIdCiudad,
             m_nIdEstatusInforme: state.EstatusInforme,
@@ -1834,24 +1834,21 @@ function Informes({history}) {
                                                                                     onChange={handleSelectEstatus}
                                                                                     value={state.EstatusInforme}
                                                                                     id="EstatusInforme"
+                                                                                    disabled={state.agregar === "Agregar" || state.agregar === "Consultar"}
                                                                                 >
                                                                                     <option
                                                                                         value="">Seleccionar
                                                                                     </option>
                                                                                     {dataEstatusInformes.map(
-                                                                                        (EstatusInforme) => (
-                                                                                            <option
-                                                                                                key={
-                                                                                                    EstatusInforme.m_nIdEstatusInforme
-                                                                                                }
-                                                                                                value={
-                                                                                                    EstatusInforme.m_nIdEstatusInforme
-                                                                                                }
-                                                                                            >
-                                                                                                {EstatusInforme.m_sEstatus}
-                                                                                            </option>
+                                                                                            (EstatusInforme) => (
+                                                                                                <option
+                                                                                                    key={EstatusInforme.m_nIdEstatusInforme}
+                                                                                                    value={EstatusInforme.m_nIdEstatusInforme}
+                                                                                                >{EstatusInforme.m_sEstatus}
+                                                                                                </option>
+                                                                                            )
                                                                                         )
-                                                                                    )}
+                                                                                    }
                                                                                 </Select>
                                                                             </FormControl>
                                                                         </label>

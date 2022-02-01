@@ -12,6 +12,11 @@ import CodigosPostalesZonas from "../ZonasOperativas/CodigosPostalesZonas";
 import ConceptosAdicionalesRecoleccion from "../Tarifas/ConceptosAdicionalesRecoleccion";
 import ConceptosAdicionalesEntrega from "../Tarifas/ConceptosAdicionalesEntrega";
 import {getUniqueListBy} from "../../Util/Util";
+import ConceptosFacturacion from "../Tarifas/ConceptosFacturacion";
+import {
+    obtenerConceptosFacturacion,
+    obtenerConceptosFacturacionRecoleccion
+} from "../../Util/Contexts/ConceptosFacturacionContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -62,7 +67,7 @@ function ZonaTarifasAgregar({idZona, consult}) {
     const [selec, setSelec] = useState({})
     const [value, setValue] = React.useState(0);
     const [todosConceptos, setTodosConceptos] = useState([])
-    const [conceptosRecoleccion, setConceptosRecoleccion] = useState([])
+    const [dataConceptosFacturacion, setDataConceptosFacturacion] = useState([])
     const [conceptosEntrega, setConceptosEntrega] = useState([])
 
     const handleChangeTab = (event, newValue) => {
@@ -79,6 +84,7 @@ function ZonaTarifasAgregar({idZona, consult}) {
                     let ivaTraslada = []
                     let ivaRetiene = []
                     conceptosCast.push({
+                        id:Math.floor(Math.random() * 10000),
                         idConcepto : element.m_nIdConceptosFacturacion,
                         importe: element.m_cImporte,
                         retiene: element.m_nIdImpuestoRetiene,
@@ -102,6 +108,10 @@ function ZonaTarifasAgregar({idZona, consult}) {
         }
     } ,[idZona])
 
+    useEffect(value => {
+        getAllConceptos()
+    },[])
+
     const handleDataCodigosPostalesChange = (data) => {
         setState(data)
     }
@@ -111,6 +121,7 @@ function ZonaTarifasAgregar({idZona, consult}) {
         let ivaTraslada = [];
         let ivaRetiene = [];
         const concept = {
+            id:data.id,
             idConcepto : data.concepto.m_nIdConceptosFacturacion,
             concepto: data.concepto,
             importe: data.importe,
@@ -137,7 +148,7 @@ function ZonaTarifasAgregar({idZona, consult}) {
 
     const removeConcepto = (item) => {
         // const newArrayConceptos = conceptosRecoleccion.filter(c => this.filtrarConceptoAdicionalManiobraEmbarqueRecoleccion(c, item))
-        const newArrayTodosConceptos = todosConceptos.filter(c => c !== item)
+        const newArrayTodosConceptos = todosConceptos.filter(c => c.id !== item.id)
         // this.setState({ conceptosRecoleccion: newArrayTodosConceptos, todosConceptos: newArrayTodosConceptos })
         setTodosConceptos(newArrayTodosConceptos)
     }
@@ -188,6 +199,12 @@ function ZonaTarifasAgregar({idZona, consult}) {
         }
     }
 
+    const getAllConceptos = () => {
+        obtenerConceptosFacturacion().then(({data}) => {
+            setDataConceptosFacturacion(data)
+        })
+    }
+
     return(
         <section className={"main-container"} style={{ marginLeft: "0px", padding: "0px" }}>
             <div className={"content-fluid"}>
@@ -223,13 +240,25 @@ function ZonaTarifasAgregar({idZona, consult}) {
                                         <TabPanel value={value} index={1}>
                                             <div className="widget-container">
                                                 <div className="widget-content">
-                                                    <ConceptosAdicionalesRecoleccion consult={consult}
+                                                    <ConceptosFacturacion
+                                                        conceptosBase={dataConceptosFacturacion}
+                                                        // onChangeList={{}}
+                                                        dataList={todosConceptos.filter(i => i.agregadoDesde === 3)}
+                                                        consulta={consult}
+                                                        mostrarRangos={true}
+                                                        mostrarImpuestos={true}
+                                                        keys={3}
+                                                        agregarConcepto={addConcepto}
+                                                        eliminarConcepto={removeConcepto}
+                                                        mostrarTotales={false}
+                                                    />
+                                                    {/*<ConceptosAdicionalesRecoleccion consult={consult}
                                                                                      select={{}}
                                                                                      conceptosAdicionales={todosConceptos.filter(i => i.agregadoDesde == 3)}
                                                                                      addConcepto={addConcepto}
                                                                                      removeConcepto={removeConcepto}
                                                                                      ivaRetiene={ivas.ivaRetiene}
-                                                                                     ivaTraslada={ivas.ivaTraslada}/>
+                                                                                     ivaTraslada={ivas.ivaTraslada}/>*/}
                                                 </div>
                                             </div>
 
@@ -237,13 +266,25 @@ function ZonaTarifasAgregar({idZona, consult}) {
                                         <TabPanel value={value} index={2}>
                                             <div className="widget-container">
                                                 <div className="widget-content">
-                                                    <ConceptosAdicionalesEntrega consult={consult}
+                                                    <ConceptosFacturacion
+                                                        conceptosBase={dataConceptosFacturacion}
+                                                        // onChangeList={{}}
+                                                        dataList={todosConceptos.filter(i => i.agregadoDesde === 2)}
+                                                        consulta={consult}
+                                                        mostrarRangos={true}
+                                                        mostrarImpuestos={true}
+                                                        keys={2}
+                                                        agregarConcepto={addConcepto}
+                                                        eliminarConcepto={removeConcepto}
+                                                        mostrarTotales={false}
+                                                    />
+                                                    {/*<ConceptosAdicionalesEntrega consult={consult}
                                                                                  select={{}}
                                                                                  conceptosAdicionales={todosConceptos.filter(i => i.agregadoDesde == 2)}
                                                                                  addConcepto={addConcepto}
                                                                                  removeConcepto={removeConcepto}
                                                                                  ivaRetiene={ivas.ivaRetiene}
-                                                                                 ivaTraslada={ivas.ivaTraslada}/>
+                                                                                 ivaTraslada={ivas.ivaTraslada}/>*/}
                                                 </div>
                                             </div>
                                         </TabPanel>

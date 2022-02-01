@@ -200,7 +200,6 @@ class DetalleParadas extends Component {
         })
     }
     obtenerPDFCFDI(id,esRecoleccion, folio){
-        obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
             if (esRecoleccion){
                 obtenerReporteCFDIRecoleccion(id).then(({data}) => {
                     console.log(data)
@@ -217,7 +216,6 @@ class DetalleParadas extends Component {
                     pdfWindow.document.title = "CFDI_ " + folio;
                 })
             }
-    })
     }
     generarCFDI(id,esRecoleccion, folio) {
         obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {

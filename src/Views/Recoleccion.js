@@ -29,6 +29,7 @@ import {
     useSortBy,
 } from "react-table";
 import $ from "jquery";
+import {getCurrentDateTime} from "../Util/Util"
 import {remove_array_element} from "../Util/Util";
 import {useHistory, Redirect} from 'react-router-dom';
 import {confirmAlert} from 'react-confirm-alert'; // Import
@@ -208,7 +209,7 @@ function Recoleccion() {
         usuario: localStorage.getItem("Usuario"),
         // estatusRecoleccion: '', Se usa en agregar tambien
         motivoCancelacion: '',
-
+        mostrarCotizador:false,
         // ==VARIABLES DE LLEGADA/SALIDA===
         // sucursalCancelacion: '', Se usa en cancelar tambien
         // folioRecoleccion: '', Se usa en agregar tambien
@@ -226,7 +227,7 @@ function Recoleccion() {
         folioEmbarque: '',
         folioGuia: '',
         folioInforme: '',
-        fechaHoraRegistro:'',
+        fechaHoraRegistro:getCurrentDateTime(),
         estatusRecoleccion: '',
         moneda: '',
         tipoCambio: '',
@@ -400,7 +401,7 @@ function Recoleccion() {
     })
 
     const handleChangeRemitente = (data) => {
-      //  console.log(data)
+     //  console.log(data)
         setRemitente({
             idRemitente: data.id,
             aliasRemitente: data.alias,
@@ -807,20 +808,153 @@ function Recoleccion() {
     }
 
     const mostrarDialogoMapa = (isVisible) => {
-        setState({
+        setState(state=>{
+            return {
             ...state,
             showConfirmarUbicacion: isVisible,         
-            titulo: "recolección"
+            titulo: "recolección"}
+           
         })
     }
 
+    const mostrarCotizadorRec = (isVisible) =>{
+        setState({
+            ...state,
+            mostrarCotizador:isVisible
+        })
+    }
+    const esDatoValido = (dato) => {
+        return dato
+            && dato !== ''
+            && dato !== 0
+            && dato !== "0";
+
+    }
+    const esRecoleccionValido = () => {
+        let valid = false;
+        /**INFORMACION GENERAÑ*/
+        if (!esDatoValido(state.idTipoSeguro)){
+            showSuccess("El tipo de seguro es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(state.tipoCambio)){
+            showSuccess("El tipo de cambio es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(state.tipoCobro)){
+            showSuccess("El tipo de cobro es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(state.clientePaga?.m_nIdCliente)){
+            showSuccess("El responsable de pago es un dato requerido");
+            return valid;
+        }
+
+        /**REMITENTE*/
+        if (!esDatoValido(remitente.idRemitente)){
+            showSuccess("El remitente es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(remitente.codigoPostalRemitente?.m_nIdCP)){
+            showSuccess("El código postal del remitente es un dato requerido");
+            return valid;
+        }
+        if(!esDatoValido(remitente.correoRemitente)){
+            showSuccess("El correo del remitente es un dato requerido")
+            return valid;
+        }
+        if (!esDatoValido(remitente.origenRemitente?.m_nIdCiudad)){
+            showSuccess("La ciudad de origen es un dato requerido");
+            return valid;
+        }
+
+        /**DESTINATARIO*/
+        if (!esDatoValido(destinatario.idDestinatario)){
+            showSuccess("El destinatario es un dato requerido");
+            return valid;
+        }
+        if (!esDatoValido(destinatario.codigoPostalDestinatario?.m_nIdCP)){
+            showSuccess("El código postal del destinatario es un dato requerido");
+            return valid;
+        }
+        if(!esDatoValido(destinatario.correoDestinatario)){
+            showSuccess("El correo del destinatario es un dato requerido")
+            return valid;
+        }
+        if (!esDatoValido(destinatario.destinoDestinatario?.m_nIdCiudad)){
+            showSuccess("La ciudad de destino es un dato requerido");
+            return valid;
+        }
+
+        /**Si es entrega en sucursal*/
+        if (state.entregaEnSucursal){
+            if (!esDatoValido(state.idSucursalEntrega)){
+                showSuccess("La sucursal de entrega es un dato requerido");
+                return valid;
+            }
+            /**Si es entrega en direfente domicilio*/
+        }else if(state.diferenteEntrega){
+            if (!esDatoValido(entregaDD.codigoPostalEnt?.m_nIdCP)){
+                showSuccess("El código postal de entrega es un dato requerido");
+                return valid;
+            }
+            if (!esDatoValido(entregaDD.estadoEnt)){
+                showSuccess("El estado de entrega es un dato requerido");
+                return valid;
+            }
+            if (!esDatoValido(entregaDD.zonaOperativaEnt?.m_nIdZona)){
+                showSuccess("La zona operativa de entrega es un dato requerido");
+                return valid;
+            }
+            if (!esDatoValido(entregaDD.zonaTarifaEnt?.m_nIdZona)){
+                showSuccess("La zona de la tarifa de entrega es un dato requerido");
+                return valid;
+            }
+
+        }else {
+            /**Si es entrega en domicilio de destinatario*/
+            if (!esDatoValido(destinatario.zonaOperativaDestinatario?.m_nIdZona)) {
+                showSuccess("Verificar la zona operativa de destinatario")
+                return valid;
+            } else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
+                showSuccess("Verificar la zona tarifa de destinatario")
+                return valid;
+            }
+        }
+        if (state.entregaConCita){
+            if (!state.citaPendiente){
+                if (!esDatoValido(state.fechaCita)){
+                    showSuccess("La fecha de la cita es un dato requerido");
+                    return;
+                }
+                if (!esDatoValido(state.horaCitaMinima)){
+                    showSuccess("La hora mínima de la cita es un dato requerido");
+                    return;
+                }
+                if (!esDatoValido(state.horaCitaMaxima)){
+                    showSuccess("La hora máxima de la cita es un dato requerido");
+                    return;
+                }
+            }
+        }
+        if (dataPaquetes.length === 0) {
+            showSuccess("Debe agregar al menos un paquete")
+            return
+        }
+
+        if (dataConceptos.length === 0){
+            showSuccess("No se han agregado conceptos de facturación")
+            return;
+        }
+        valid = true
+        return valid;
+    }
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
 
-        //FALTA VALIDAR QUE SI ES RECOLECTA EN DIFERENTE DOMICILIO TOME LA ZONA OPERATIVA Y DE TARIFA DE AHI 
-        //EJEMP params.m_nIdZonaOperativaEntrega = entregaDD.zonaOperativaEnt.m_nIdZona
-          //  params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt.m_nIdZona
-          //ENTONCES OCUPA SABER SI ES DIFERENTEENTREFA EN EL CONDICIONAL IGUAL PARA EMBARQUE
+        if (!esRecoleccionValido()){
+            return;
+        }
         let error = false
         let params = {}
         if(state.diferenteEntrega){
@@ -921,8 +1055,8 @@ function Recoleccion() {
             params.m_nIdEmbarque = state.folioEmbarque
             params.m_nIdGuia = state.folioGuia
             params.m_nIdInforme = state.folioInforme
-            params.m_sFecha = state.fechaHoraRegistro.substr(0, 10)
-            params.m_sHora = state.fechaHoraRegistro.substr(state.fechaHoraRegistro.length - 5)
+            params.m_sFecha = getCurrentDateTime().substr(0, 10)
+            params.m_sHora = getCurrentDateTime().substr(getCurrentDateTime().length - 5)
             params.m_nMoneda = state.moneda
             params.m_rTipoCambio = state.tipoCambio
             params.m_nIdTipoDeCobro = state.tipoCobro
@@ -1055,6 +1189,7 @@ function Recoleccion() {
         params.m_nIdCotizacion = state.idCotizacion
     //    console.log(params)
         console.log(JSON.stringify(params))
+        console.log(coordenadas)
      if (state.idRecoleccion != 0) {
             modificarRecoleccion(state.idRecoleccion, params)
                 .then((respuesta) => {
@@ -1067,17 +1202,52 @@ function Recoleccion() {
                     showSuccess(err);
                 });
         } else {
-            agregarRecoleccion(params)
-                .then((respuesta) => {
-                 //   console.log(respuesta.data);
-                    showSuccess(respuesta.data);
-                    handleShowListado();
-                    limpiarInputsAgregar()
-                })
-                .catch((err) => {
-                 //   console.log(err);
-                    showSuccess(err);
-                });
+            console.log("ENTRO")
+            confirmAlert({
+                title: 'Confirmación',
+                message: '¿Desea crear esta recoleccion?',
+                buttons: [
+                    {
+                        label: 'Sí',
+                        onClick: ()=>{
+                            agregarRecoleccion(params)
+                            .then((respuesta) => {
+                             //   console.log(respuesta.data);
+                                showSuccess(respuesta.data);
+                                limpiarInputsAgregar()
+                                confirmAlert({
+                                    title: 'Confirmación',
+                                    message: '¿Desea crear otra recoleccion?',
+                                    buttons: [
+                                        {
+                                            label: 'Sí',
+                                            onClick: ()=>{//limpia los inputs para volver a agregar denuevo la info            
+                                                setLimpiarRemDes(e) 
+                                                mostrarCotizadorRec(false)
+                                                limpiarInputsAgregar()        
+                                            }
+                                        },
+                                        {
+                                            label: 'No',
+                                            onClick: ()=>{ handleShowListado();}
+                                        }
+                                    ]
+                                });
+                               
+                            })
+                            .catch((err) => {
+                             //   console.log(err);
+                                showSuccess(err);
+                            });
+                        }
+                    },
+                    {
+                        label: 'No',
+                        onClick: ()=>{return}
+                    }
+                ]
+            });
+         
         }
     }
     };
@@ -1107,7 +1277,7 @@ function Recoleccion() {
         }
     }
 
-    //funcion para cancelar un embarque. Se usa en tab cancelar.
+    //funcion para cancelar una recoleccion. Se usa en tab cancelar.
     const handleCancelar = (e) => {
         e.preventDefault();
         let params = {
@@ -1118,24 +1288,9 @@ function Recoleccion() {
         JSON.stringify(params)
         cancelarRecoleccion(state.idRecoleccion, params).then((respuesta) => {
             showSuccess(respuesta.data)
-            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal, filtros.sucursalListado, filtros.estatusListado, filtros.folio, filtros.OrigenListado, filtros.DestinoListado).then((respuesta) => {
-                setData(respuesta.data);
-            })
-            $('.nav-tabs li ').removeClass('active');
-            $('.nav-tabs li').eq(0).addClass('active');
-            $('.tab-content div ').removeClass('in show');
-            $('#Listado').addClass('in show');
-            /*setState({
-                ...state,
-                idRecoleccion: 0,
-                folioRecoleccion:'',
-                sucursalCancelacion: '',
-                mostrarFechaCancelacion: '',
-                estatusRecoleccion: '',
-                motivoCancelacion: '',
-            })*/
+            handleShowListado();
         }).catch((err) => {
-          //  console.log(err);
+
             showSuccess(err);
         });
     }
@@ -1224,7 +1379,7 @@ function Recoleccion() {
 
         });
     }
-
+    const [limpiarRemDes,setLimpiarRemDes] = React.useState()
     const setRecoleccionDataParaConsultaModificacion = (respuesta,operacion) => {
         console.log("DATA DE RECOLECCION CONSULTA Y MODIFICACION")
         console.log(respuesta)
@@ -1393,9 +1548,9 @@ function Recoleccion() {
                 idRecoleccion: respuesta.data.m_nIdRecoleccion,
                 idSucursalAgregar: respuesta.data.m_nIdSucursal,
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-                folioEmbarque: respuesta.data.m_nIdEmbarque,
+                folioEmbarque: respuesta.data.m_sFolioEmbarque,
                 valorDeclarado: respuesta.data.m_xValorDeclarado,
-                folioGuia: respuesta.data.m_nIdGuia,
+                folioGuia: respuesta.data.m_sFolioGuia,
                 idCotizacion: respuesta.data.m_nIdCotizacion,
                 folioInforme: respuesta.data.m_nIdInforme,
                 fechaHoraRegistro: respuesta.data.m_dFechaRegistro + "T" + respuesta.data.m_tHoraRegistro.slice(0, 5),
@@ -1403,7 +1558,7 @@ function Recoleccion() {
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
                 tipoCobro: respuesta.data.m_nIdTipoDeCobro,
-
+                mostrarCotizador:true,
                 //Paquetes/Sobres
                 countPaquetes: dataPaquetes.length,
                 countSobres: respuesta.data.m_parrSobres.length,
@@ -1416,19 +1571,17 @@ function Recoleccion() {
                 aplicaSeguro: respuesta.data.m_bAplicaSeguro,
                 //Cita de recoleccion
                 recoleccionConCita: respuesta.data.m_bRecoleccionConCita,
-                fechaCita: respuesta.data.m_sFechaCita,
-                horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
-                horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
-                citaPendiente: respuesta.data.m_bCitaPendiente,
-
                 diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio,
                 fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
                 entregaEnSucursal:respuesta.data.m_bEntregaSucursal,
                 idSucursalEntrega:respuesta.data.m_nIdSucursalEntrega = 0 ? "" : respuesta.data.m_nIdSucursalEntrega
+                
 
             }
         });
+    
+       // mostrarCotizadorRec(true)
     }
     useEffect(value => {
         let newTiposCobro = []
@@ -1483,7 +1636,6 @@ function Recoleccion() {
 
     function handleShowAgregar(event) {
         setIsAgregar(false);
-        event.stopPropagation()
         getDataParaEditar("Agregar")
         limpiarInputsAgregar()
         setState(state => {
@@ -1517,6 +1669,7 @@ function Recoleccion() {
                 sucursalListado: 0,
                 estatusListado: 0,
                 folioRecoleccion: '',
+                mostrarCotizador:false,
                 agregar: "Agregar",
             }
         });
@@ -1529,6 +1682,7 @@ function Recoleccion() {
     }
 
     function handleShowCancelar() {
+ 
         let hours = today.getHours();
         let mostrarHora = today.getHours();
         let minutes = today.getMinutes();
@@ -1537,15 +1691,22 @@ function Recoleccion() {
         hours = hours ? hours : 12; // the hour '0' should be '12'
         minutes = minutes < 10 ? '0' + minutes : minutes;
         let strTime = hours + ':' + minutes + ' ' + ampm;
-        obtenerRecoleccionCancelada(state.idRecoleccion).then((respuesta) => {
+        obtenerRecoleccionCancelada(state.idRecoleccion).then((respuesta) => { 
+            
             const {
                 m_sFolioRecoleccion,
                 m_nIdSucursal,
                 m_nIdEstatusRecoleccion,
                 m_dtFechaCancelacion,
-                m_sMotivoCancelacion
-            } = respuesta.data
-            setState({
+                m_sMotivoCancelacion,
+                m_nIdInforme,
+                m_nIdGuia,
+                m_nIdEmbarque
+            } = respuesta.data 
+            if (respuesta.data.m_nSePuedeCancelar == 0 || m_nIdEmbarque > 0|| m_nIdInforme > 0 || m_nIdGuia > 0)
+               {showSuccess("Recolección no se puede cancelar")
+            }else{
+                 setState({
                 ...state,
                 folioRecoleccion: m_sFolioRecoleccion,
                 sucursalCancelacion: dataSucursal.find(o => o.m_nIdSucursal == m_nIdSucursal).m_sSucursal,
@@ -1555,14 +1716,19 @@ function Recoleccion() {
                     today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + strTime,
                 estatusRecoleccion: dataEstatusRecoleccion.find(o => o.m_nIdEstatusRecoleccion == m_nIdEstatusRecoleccion).m_sEstatus,
                 motivoCancelacion: m_sMotivoCancelacion,
-            })
-            if (respuesta.data.m_nSePuedeCancelar == 0)
-                showSuccess("Recolección no se puede cancelar")
-        })
-        $('.nav-tabs li ').removeClass('active');
+            }) 
+         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(3).addClass('active');
         $('.tab-content div ').removeClass('in show');
-        $('#Cancelar').addClass('in show');
+        $('#Cancelar').addClass('in show');} 
+           
+          
+        })
+    
+      
+        
+   
+    
     }
 
     const handlePatrocinadorSelected = (row) => {
@@ -1584,10 +1750,10 @@ function Recoleccion() {
         }
     }
     
-    const getCurrentDateTime = () => {
+  /*  const getCurrentDateTime = () => {
         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
         1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
-    }
+    }*/
 
     //Limpia todos los inputs
     const limpiarInputsAgregar = () => {
@@ -1595,7 +1761,6 @@ function Recoleccion() {
             return {
                 ...state,
                 idRecoleccion:0,
-                idSucursalAgregar: '',
                 folioRecoleccion: '',
                 folioEmbarque: '',
                 folioGuia: '',
@@ -1609,7 +1774,7 @@ function Recoleccion() {
                 valorDeclarado: 0,
                 porcentajeSeguro: 0,
                 clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
-
+                showConfirmarUbicacion:false,
                 //Remitente
                 /*nombreRemitente: {m_sNombre: "Nombre", m_sAlias: "Alias"},
                 RFCRemitente: '',
@@ -1708,6 +1873,7 @@ function Recoleccion() {
             }
         });
         setDataPaquetes([])
+        setDataConceptos([])
         setDataComplementosSAT([])
         resetRecoleccionDD()
         resetEntregaDD()
@@ -2921,6 +3087,7 @@ function Recoleccion() {
     }
 
     const handleChangeCita = (data) => {
+        console.log(data)
         setState({
             ...state,
             fechaCita: data.fechaCita,
@@ -3823,6 +3990,7 @@ function Recoleccion() {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeRemitente}
                                                                         dataPadreConsulta={dataRecoleccionConsulta}
+                                                                        limpiarRemDes={limpiarRemDes}
                                                                     
                                                                     />
                                                                 }
@@ -3891,7 +4059,7 @@ function Recoleccion() {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeDestinatario}
                                                                         dataPadreConsulta={dataRecoleccionConsulta}
-                                                             
+                                                                        limpiarRemDes={limpiarRemDes}
                                                                     />
                                                                 }
                                                             <div className="row">
@@ -4001,7 +4169,7 @@ function Recoleccion() {
                                         <div className="widget-wrap" id="citaRecoleccion">
                                             <Citas titulo={"Programar cita de la Recolección"}
                                                    onDataChange={handleChangeCita}
-                                                   data={state}
+                                                   dataPadreConsulta={dataRecoleccionConsulta}
                                                    recoleccion={true}
                                                    disabled={state.agregar === "Consultar"}
                                                    required={state.recoleccionConCita}
@@ -4818,6 +4986,7 @@ function Recoleccion() {
                                                    conceptos={dataConceptos}
                                                    saveIdCotizacion={saveIdCotizacion}
                                                    recoleccion={true}
+                                                   mostrarCotizadorRec={mostrarCotizadorRec}
                                                    paquetes={dataPaquetes.map(p =>({
                                                        Tipo: p.m_nIdTipo,
                                                        Peso: p.m_rPeso,
@@ -4846,6 +5015,7 @@ function Recoleccion() {
                                         >
                                             Aceptar
                                         </button>
+                     
                                     </div>
 
                                 </div>

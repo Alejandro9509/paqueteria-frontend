@@ -2,6 +2,7 @@ import React from 'react';
 import {Grid, MenuItem, TextField} from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from "@material-ui/core/InputAdornment";
+import {getCurrentDate, getCurrentTime} from "../../Util/Util";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -42,8 +43,8 @@ export default function SalidaParadas(props){
         operador: props.data.m_sNombreCompleto,
         unidad: props.data.m_sUnidadIdentificador +' - '+ props.data.m_sUnidad,
         placasUnidad: "",
-        fechaSalida: props.data.m_dFechaSalida,
-        horaSalida: props.data.m_dHoraSalida,
+        fechaSalida: props.data.m_dFechaSalida || getCurrentDate(),
+        horaSalida: props.data.m_dHoraSalida || getCurrentTime(),
         idEstatus: 0,
         nameEstatus: "",
         motivoRetraso: "",
@@ -217,52 +218,6 @@ export default function SalidaParadas(props){
                 </Grid>
                 <Grid item xs={4}/>
 
-              {/*   <Grid item xs={8}>
-                    <TextField
-                        id={"cliente"}
-                        InputProps={{readOnly: true}}
-                        margin={"dense"}
-                        disabled
-                        label={"Cliente"}
-                        variant={"outlined"}
-                        value={data.cliente}
-                    />
-                </Grid>
-                <Grid item xs={4}/> */}
-
-                {/*<Grid item xs={8}>*/}
-                {/*    <TextField*/}
-                {/*        id={"ruta"}*/}
-                {/*        InputProps={{readOnly: true}}*/}
-                {/*        margin={"dense"}*/}
-                {/*        disabled*/}
-                {/*        label={"Ruta"}*/}
-                {/*        variant={"outlined"}*/}
-                {/*        value={data.ruta}*/}
-                {/*    />*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={2}>*/}
-                {/*    <TextField*/}
-                {/*        id={"fechaEntrega"}*/}
-                {/*        InputProps={{readOnly: true}}*/}
-                {/*        margin={"dense"}*/}
-                {/*        disabled*/}
-                {/*        label={"Fecha Entrega"}*/}
-                {/*        variant={"outlined"}*/}
-                {/*        value={data.fechaEntrega}*/}
-                {/*    />*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={2}>*/}
-                {/*    <TextField*/}
-                {/*        id={"horaEntrega"}*/}
-                {/*        InputProps={{readOnly: true}}*/}
-                {/*        margin={"dense"}*/}
-                {/*        disabled*/}
-                {/*        label={"Hora"}*/}
-                {/*        variant={"outlined"}*/}
-                {/*        value={data.horaEntrega}*/}
-                {/*    />*/}
-                {/*</Grid>*/}
 
                 <Grid item xs={5}>
                     <TextField
@@ -275,32 +230,7 @@ export default function SalidaParadas(props){
                         value={data.remolqueUno}
                     />
                 </Grid>
-                {/*<Grid item xs={2}>
-                    <TextField
-                        id={"kmsRemolqueUno"}
-                        margin={"dense"}
-                        label={"Odómetro Kms"}
-                        variant={"outlined"}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">kms</InputAdornment>,
-                        }}
-                        value={data.kmsRemolqueUno}
-                        onChange={handleChangeKmsRemolqueUno}
-                    />
-                </Grid>*/}
-               {/* <Grid item xs={2}>
-                    <TextField
-                        id={"millasRemolqueUno"}
-                        margin={"dense"}
-                        label={"Odómetro Mi"}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">mi</InputAdornment>,
-                        }}
-                        variant={"outlined"}
-                        value={data.millasRemolqueUno}
-                        onChange={handleChangeMillasRemolqueUno}
-                    />
-                </Grid>*/}
+
                 <Grid item xs={2}>
                     <TextField
                         id="estatusRemolqueUno"
@@ -328,32 +258,6 @@ export default function SalidaParadas(props){
                         value={data.remolqueDos}
                     />
                 </Grid>
-                {/*<Grid item xs={2}>
-                    <TextField
-                        id={"kmsRemolqueDos"}
-                        margin={"dense"}
-                        label={"Odómetro Kms"}
-                        variant={"outlined"}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">kms</InputAdornment>,
-                        }}
-                        value={data.kmsRemolqueDos}
-                        onChange={handleChangeKmsRemolqueDos}
-                    />
-                </Grid>*/}
-                {/*<Grid item xs={2}>
-                    <TextField
-                        id={"millasRemolqueDos"}
-                        margin={"dense"}
-                        label={"Odómetro Mi"}
-                        variant={"outlined"}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">mi</InputAdornment>,
-                        }}
-                        value={data.millasRemolqueDos}
-                        onChange={handleChangeMillasRemolqueDos}
-                    />
-                </Grid>*/}
                 <Grid item xs={2}>
                     <TextField
                         id="estatusRemolqueDos"
@@ -453,7 +357,8 @@ export default function SalidaParadas(props){
                         margin={"dense"}
                         label={"Fecha Salida"}
                         variant={"outlined"}
-                        InputLabelProps={{shrink: true,}}
+                        InputLabelProps={{shrink: true}}
+                        InputProps={{inputProps: { min: getCurrentDate()}}}
                         value={data.fechaSalida}
                         onChange={handleChangeFechaSalida}
                     />
@@ -499,32 +404,6 @@ export default function SalidaParadas(props){
                 </Grid>
                 <Grid item xs={3}/>
 
-                {/*<Grid item xs={2}>
-                    <TextField
-                        id={"kms"}
-                        margin={"dense"}
-                        label={"Odómetro Kms"}
-                        variant={"outlined"}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">kms</InputAdornment>,
-                        }}
-                        value={data.kms}
-                        onChange={handleChangeKms}
-                    />
-                </Grid>
-                <Grid item xs={2}>
-                    <TextField
-                        id={"millas"}
-                        margin={"dense"}
-                        label={"Odómetro Mi"}
-                        variant={"outlined"}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end">mi</InputAdornment>,
-                        }}
-                        value={data.millas}
-                        onChange={handleChangeMillas}
-                    />
-                </Grid>*/}
             </Grid>
             {props.children}
         </form>

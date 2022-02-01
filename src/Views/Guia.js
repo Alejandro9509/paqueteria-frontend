@@ -20,6 +20,7 @@ import {getUniqueListBy, remove_array_element} from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
 import {DataGrid} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
+import {getCurrentDateTime} from "../Util/Util"
 import {
     obtenerZonaTarifaByIdCodigoPostal,
   } from "../Util/Contexts/ZonaTarifaContext";
@@ -313,8 +314,8 @@ function Guia(props) {
             "IdSucursal": state.idSucursalAgregar,
             "ValorDeclarado": state.ValorDeclarado,
             "idTipoServicio": state.idTipoServicio,
-            "m_dFecha": state.fecha.substr(0, 10),
-            "m_sHora": state.fecha.substr(state.fecha.length - 5),
+            "m_dFecha": getCurrentDateTime().substr(0, 10),
+            "m_sHora": getCurrentDateTime().substr(getCurrentDateTime().length - 5),
 
             "arClsGuiaConceptos": conceptosAdicionales.map(c => ({
                 m_nIdConceptosFacturacion: c.idConcepto,
@@ -328,7 +329,7 @@ function Guia(props) {
             })),
 
         }
-        console.log(params)
+      //  console.log(state)
         console.log(JSON.stringify(params))
         if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
             agregarGuia(params).then(respuesta => {
@@ -573,7 +574,10 @@ function Guia(props) {
     //Muestra la pestaña de cancelar
     function handleShowCancelar(event) {
         event.preventDefault()
-        limpiarCamposAgregar()
+        if(state.folioInforme && state.folioInforme != ""){
+      showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+state.folioInforme)
+    }else if(state.folioInforme == undefined || state.folioInforme == ""){
+          limpiarCamposAgregar()
         obtenerGuiaId(state.idGuia).then((respuesta) => {
             setState({
                 ...state,
@@ -590,6 +594,7 @@ function Guia(props) {
             $('#Cancelar').addClass('in show');
         })
     }
+    }
 
     //Funcion para cancelar una guia. Se usa en pestaña cancelar.
     const handleCancelar = (e) => {
@@ -599,15 +604,11 @@ function Guia(props) {
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
             "fechaCancelacion": state.fechaCancelado
         }
-        console.log(JSON.stringify(params))
-        if(state.folioInforme){
-            showSuccess("La guia no puede ser eliminada ya que esta siendo usada en un informe")
-        }else{
           cancelarGuia(state.idGuia, params).then((respuesta) => {
             console.log(respuesta.data)
             showSuccess("La guia ha sido cancelada")
         })  
-        }
+        
         
     }
 
@@ -1014,14 +1015,16 @@ function Guia(props) {
         });
     }
 
-    const getCurrentDateTime = () => {
+  /*  const getCurrentDateTime = () => {
         return `${new Date().getFullYear()}-${`${new Date().getMonth() +
         1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
-    }
+    }*/
 
     const setDataFromEmbarque = (respuesta) => {
         console.log('Embarque datos: ', respuesta.data)
-
+   respuesta.data.m_arrSobres.forEach((s) => {
+            respuesta.data.m_arrPaquetes.push(s)
+        })
         let totalCantidad = 0
         respuesta.data.m_arrPaquetes.forEach((p) => {
             p.m_nIdPaquete = p.m_nIdEmbarqueDetalle
@@ -1048,6 +1051,7 @@ function Guia(props) {
             })
             p.m_sTipo = p.m_nIdTipo == 1 ? 'Sobre' : 'Paquete'
         })
+     
         setDataPaquetes(respuesta.data.m_arrPaquetes)
         let conceptosCast = []
         conceptosCast = respuesta.data.m_arrConceptos.map(item => ({
@@ -1064,6 +1068,29 @@ function Guia(props) {
 
         // setDataConceptos(conceptosCast)
         setConceptosAdicionales(conceptosCast)
+        obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalRemitente).then(
+            ({ data }) => {
+                console.log(data)
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaTarifaRemitente:data[0].m_sCodigoZona
+                    }
+
+                })
+            }
+          );
+          obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalDestinatario).then(
+            ({ data }) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaTarifaDestinatario:data[0].m_sCodigoZona
+                    }
+
+                })
+            }
+          );
         setState(state => {
             return {
                 ...state,
@@ -1110,10 +1137,6 @@ function Guia(props) {
                 tieneEntregaDomicilio: !respuesta.data.m_bEntregaEnSucursal,
                 tieneCitaRecoleccion: false,
                 tieneCitaEntrega: respuesta.data.m_bEmbarqueConCita,
-
-                zonaTarifaRemitente: respuesta.data.m_sZonaTarifaRecoleccion,
-                zonaTarifaDestinatario: respuesta.data.m_sZonaTarifaEntrega,
-
             }
         })
         // obtenerTarifasPorEmbarque(respuesta.data.m_nIdEmbarque, state.idTipoTarifa)
@@ -1168,6 +1191,7 @@ function Guia(props) {
                 idEstatusGuia: 0,
                 idMoneda: 1,
                 tipoCambio: 0,
+                idGuia:0,
                 //Remitente
                 nombreRemitente: "",
                 RFCRemitente: "",
@@ -1862,7 +1886,7 @@ function Guia(props) {
                         </li>
 
                         <li>
-                            <a data-toggle="tab" href="#Cancelar" onClick={handleShowCancelar}
+                            <a data-toggle="tab"  onClick={handleShowCancelar}
                                className={state.idGuia === 0 ? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
@@ -2026,7 +2050,7 @@ function Guia(props) {
                                                                         id="idEmbarque"
                                                                         read="true"
                                                                         value={state.idEmbarque}
-                                                                        disabled={state.agregar == "Consultar" || state.validarEmbarqueGuia}
+                                                                        disabled={state.agregar == "Consultar" || state.validarEmbarqueGuia || state.agregar == "Modificar" }
 
                                                                     >
                                                                         <option value="0">

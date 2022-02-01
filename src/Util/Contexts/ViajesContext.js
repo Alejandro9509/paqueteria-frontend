@@ -138,7 +138,7 @@ function cancelarViaje(id, params){
     const url = `${process.env.REACT_APP_API_URL}/Viajes/CancelarViaje/${id}`;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers })
+        result =  axios.post(url, Object.assign({}, params), { headers })
     );
     return result
 }

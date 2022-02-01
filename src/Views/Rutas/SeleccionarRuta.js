@@ -4,10 +4,19 @@ import {dataGridLocaleText} from "../../Constants";
 import {MenuItem, TextField, Tooltip} from "@material-ui/core";
 import {
     obtenerRutasByOrigenDestinoCliente,
-    obtenerRutasByOrigenDestinoPublicoGeneral,
+    obtenerRutasByOrigenDestinoPublicoGeneral, obtenerRutasId,
     obtenerTrayectosByRuta
 } from "../../Util/Contexts/RutasContext";
 
+/**Props
+ * IdOrigen: Int
+ * IdDestino: Int
+ * IdCliente: Int
+ * IdRuta: Int
+ * disabled: Boolean
+ * onChangeRuta: function
+ * EsConsulta: Boolean
+ * */
 export default function SeleccionarRuta(props){
     const [state, setState] = useState({
         height: window.innerHeight,
@@ -44,9 +53,11 @@ export default function SeleccionarRuta(props){
     ]);
 
     useEffect(() => {
-        if (props.IdOrigen && props.IdDestino && props.IdCliente >= 0){
-            setDataTrayectos([])
-            getRutasByOrigenDestino(props.IdOrigen, props.IdDestino, props.IdCliente)
+        if (!props.EsConsulta){
+            if (props.IdOrigen && props.IdDestino && props.IdCliente >= 0){
+                setDataTrayectos([])
+                getRutasByOrigenDestino(props.IdOrigen, props.IdDestino, props.IdCliente)
+            }
         }
     },[props.IdOrigen, props.IdDestino, props.IdCliente])
 
@@ -55,6 +66,12 @@ export default function SeleccionarRuta(props){
             setDataRutas([])
             setDataTrayectos([])
         }else {
+            if (props.EsConsulta){
+                obtenerRutasId(props.IdRuta).then(respuesta => {
+                    dataRutas.push(respuesta.data)
+                    setDataRutas(dataRutas)
+                })
+            }
             getTrayectosByRuta(props.IdRuta)
         }
     },[props.IdRuta])
