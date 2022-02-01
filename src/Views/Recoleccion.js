@@ -818,9 +818,11 @@ function Recoleccion() {
     }
 
     const mostrarCotizadorRec = (isVisible) =>{
-        setState({
-            ...state,
-            mostrarCotizador:isVisible
+        setState(state => {
+            return {
+                ...state,
+                mostrarCotizador:isVisible
+            }
         })
     }
     const esDatoValido = (dato) => {
