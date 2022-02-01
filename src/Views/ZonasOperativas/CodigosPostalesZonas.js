@@ -199,6 +199,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                                         onChange={handleChangeState}
                                         id="idSucursal"
                                         name="idSucursal"
+                                        disabled={consult}
                                     >
                                         {dataSucursal.map((sucursal) => (
                                             <option
