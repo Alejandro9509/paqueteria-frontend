@@ -1558,7 +1558,7 @@ function Recoleccion() {
                 folioGuia: respuesta.data.m_sFolioGuia,
                 idCotizacion: respuesta.data.m_nIdCotizacion,
                 folioInforme: respuesta.data.m_nIdInforme,
-                fechaHoraRegistro: respuesta.data.m_dFechaRegistro + "T" + respuesta.data.m_tHoraRegistro.slice(0, 5),
+                fechaHoraRegistro: respuesta.data.m_dFechaRegistro + "T" + respuesta.data.m_tHora.slice(0, 5),
                 estatusRecoleccion: respuesta.data.m_nIdEstatusRecoleccion,
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
