@@ -3814,7 +3814,7 @@ function Recoleccion() {
                                                                                 key={cambio.m_nIdTipoCambio}
                                                                                 value={cambio.m_nIdTipoCambio}
                                                                             >
-                                                                                {cambio.m_cTipoCambio}
+                                                                                {cambio.m_cTipoCambio.toFixed(4)}
                                                                             </option>
                                                                         ))}
                                                                     </Select>
@@ -4996,6 +4996,7 @@ function Recoleccion() {
                                                    saveIdCotizacion={saveIdCotizacion}
                                                    recoleccion={true}
                                                    mostrarCotizadorRec={mostrarCotizadorRec}
+                                                   entregaDiferenteDom={entregaDD}
                                                    paquetes={dataPaquetes.map(p =>({
                                                        Tipo: p.m_nIdTipo,
                                                        Peso: p.m_rPeso,

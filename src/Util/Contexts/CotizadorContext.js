@@ -7,7 +7,7 @@ const headers = API_HEADERS
 function obtenerCotizacion( data, paquetes, remitente, destinatario, recoleccion, entregaDD) {
     const url = `${process.env.REACT_APP_API_URL}/Cotizador/Agregar`;
     let result;
-    console.log(destinatario)
+    console.log(entregaDD)
     var params = {
         IdOrigen: remitente.origenRemitente.m_nIdCiudad,
         IdDestino: destinatario.destinoDestinatario.m_nIdCiudad,
