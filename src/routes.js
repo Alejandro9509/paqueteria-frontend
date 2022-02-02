@@ -21,6 +21,7 @@ import {ReactComponent as RecolecionIcon} from './iconos/Menu/IconoRecoleccion/i
 import {ReactComponent as EmbarqueIcon} from './iconos/Menu/IconoEmbarque/iconoEmbarque.svg';
 import {ReactComponent as GuiasIcon} from './iconos/Menu/IconoGuias/iconoGuia.svg';
 import {ReactComponent as UltimaMillaIcono} from './iconos/Menu/IconoUltimaMilla/IconoUltimaMilla.svg';
+import {ReactComponent as SeguimientoIcon} from './iconos/Menu/Icono Tracking/Trackingnaranja.svg'
 
 import {ReactComponent as viajeIcon} from './iconos/Menu/IconoViajes/iconoViajes.svg';
 import {ReactComponent as corteCajaIcon} from './iconos/Menu/IconoCorteCaja/IconoCorteCaja.svg';
@@ -108,14 +109,14 @@ const dashboardRoutes = [
     single: true,
     child:[]
   },
- /* {
+  {
     path: "/Segumiento",
     name: "Seguimiento",
-    icon: corteCajaIcon,
+    icon: SeguimientoIcon,
     component: Seguimiento,
     single: true,
     child:[]
-  },*/
+  },
   /*{
     path: "/Tutoriales",
     name: "Tutoriales",

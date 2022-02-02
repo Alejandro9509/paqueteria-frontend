@@ -78,7 +78,7 @@ class Seguimiento extends Component {
                     <div className="widget-wrap">
 
                         <div className="widget-content">
-                            <Grid container alignItems={"flex-start"} justify={"flex-start"}>
+                            <Grid container alignItems={"center"} justify={"flex-start"}>
 
                                 <Grid item>
                                     <Typography style={{display: "flex", alignItems: "center"}}>Folio
@@ -118,41 +118,68 @@ class Seguimiento extends Component {
                             </Grid>
                         </div>
 
-                        <div style={{padding: "10px"}}>
-                            <InformacionBasica data={this.state.data}/>
-                        </div>
-                        <div style={{padding: "5px",borderStyle: "solid",borderWidth: "1px",borderRadius: "10px"}}>
-                            <RemitenteDestinatario data={this.state.data}/>
-                        </div>
-                        <div style={{marginTop:"4px",padding: "5px",borderStyle: "solid",borderWidth: "1px",borderRadius: "10px"}}>
-                            <Typography variant={"h4"} align={"center"}>Paquetes y Sobres</Typography>
-                            <Paquetes
-                                dataPaquetes={this.state.data.paquetes}
-                                onChangeList={() => console.log("")}
-                                disabled={true}
-                            />
-                        </div>
-                        <Grid container alignItems={"stretch"} justify={"flex-start"} spacing={1}>
-                            <Grid item md={6}>
-                                <div style={{marginTop:"4px",padding: "5px",borderStyle: "solid",borderWidth: "1px",borderRadius: "10px"}}>
-                                    <Timeline items={events} format="hh:mm a" />
+                        {
+                            Object.keys(this.state.data).length !== 0 &&
+                            <div style={{padding: "10px"}}>
+                                <InformacionBasica data={this.state.data}/>
+                            </div>
+                        }
+                        {
+                            Object.keys(this.state.data).length !== 0 &&
+                            <div style={{padding: "5px",borderStyle: "solid",borderWidth: "1px",borderRadius: "10px"}}>
+                                <RemitenteDestinatario data={this.state.data}/>
+                            </div>
+                        }
+                        {
+                            Object.keys(this.state.data).length !== 0 &&
+                            <div style={{marginTop:"4px",padding: "5px",borderStyle: "solid",borderWidth: "1px",borderRadius: "10px"}}>
+                                <Typography variant={"h4"} align={"center"}>Paquetes y Sobres</Typography>
+                                <Paquetes
+                                    dataPaquetes={this.state.data.paquetes}
+                                    onChangeList={() => console.log("")}
+                                    disabled={true}
+                                />
+                            </div>
+                        }
 
-                                </div>
+                        {
+                            Object.keys(this.state.data).length !== 0 &&
+                            <Grid container alignItems={"stretch"} justify={"flex-start"} spacing={1}>
+                                <Grid item md={6}>
+                                    <div style={{
+                                        marginTop: "4px",
+                                        padding: "5px",
+                                        borderStyle: "solid",
+                                        borderWidth: "1px",
+                                        borderRadius: "10px"
+                                    }}>
+                                        <Timeline items={this.state.data.bitacora ? this.state.data.bitacora.map(b => ({
+                                            ts: b.Fecha + "T" + b.Hora,
+                                            text: b.Descripcion
+                                        })) : []} format="hh:mm a"/>
+
+                                    </div>
+                                </Grid>
+                                <Grid item md={6}>
+                                    <div style={{
+                                        marginTop: "4px",
+                                        padding: "5px",
+                                        borderStyle: "solid",
+                                        borderWidth: "1px",
+                                        borderRadius: "10px"
+                                    }}>
+                                        <ConceptosFacturacionGuias
+                                            keys={0}
+                                            disabled={true}
+                                            dataPaquetes={this.state.data.conceptos}
+                                            conceptosBase={[]}
+                                        />
+
+                                    </div>
+                                </Grid>
                             </Grid>
-                            <Grid item md={6}>
-                                <div style={{marginTop:"4px",padding: "5px",borderStyle: "solid",borderWidth: "1px",borderRadius: "10px"}}>
-                                    <ConceptosFacturacionGuias
-                                        keys={0}
-                                        disabled={true}
-                                        dataPaquetes={this.state.data.conceptos}
-                                        conceptosBase={[]}
-                                    />
 
-                                </div>
-                            </Grid>
-                        </Grid>
-
-
+                        }
 
 
                     </div>
