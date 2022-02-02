@@ -1217,6 +1217,7 @@ function Recoleccion() {
                             .then((respuesta) => {
                              //   console.log(respuesta.data);
                                 showSuccess(respuesta.data);
+                                showSuccess("Recolección creada con folio: "+respuesta.data.m_sFolioRecoleccion);
                                 limpiarInputsAgregar()
                                 confirmAlert({
                                     title: 'Confirmación',
