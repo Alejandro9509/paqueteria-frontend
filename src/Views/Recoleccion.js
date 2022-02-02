@@ -768,13 +768,14 @@ function Recoleccion() {
     }
 
     const validarCoordenadas = (coordenadas) => {
+        console.log("coordenadas"+coordenadas)
         /**Si es modificacion*/
         if (state.idRecoleccion != 0){
             /**Si es recoleccion diferente domicilio y no hay coordenadas guardadas*/
             if(state.diferenteRecoleccion
                 && !isValidText(recoleccionDD.latitudRec)
-                && !isValidText(recoleccionDD.longitudRec)
-                && !coordenadas){
+                && !isValidText(recoleccionDD.longitudRec))
+                {
                 mostrarDialogoMapa(true)
 
                 return false
@@ -790,14 +791,14 @@ function Recoleccion() {
             /**Si es agregar*/
         }else{
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
-            if (state.diferenteRecoleccion  && !coordenadas){
+            if (state.diferenteRecoleccion){
                 mostrarDialogoMapa(true)
 
                 return false
                 /**Si es recoleccion en el domicilio del remitente y no hay coordenadas*/
                 debugger;
             }else if (!state.diferenteRecoleccion
-                && !isValidText(remitente.latitudR)
+                && !isValidText(remitente.latitudR) 
                 && !isValidText(remitente.longitudR)
                 && !coordenadas){
                 mostrarDialogoMapa(true)

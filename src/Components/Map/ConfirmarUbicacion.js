@@ -18,7 +18,7 @@ import {obtenerUbicacion} from "../../Util/Contexts/RemitenteDestinatarioContext
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/marker.png";
 import SearchIcon from "@material-ui/icons/Search";
-import {searchLocationAddress} from "../../Util/Contexts/UltimaMillaContext";
+import {searchLocationAddress,searchAdressWithCoordinates} from "../../Util/Contexts/UltimaMillaContext";
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -116,10 +116,18 @@ class ConfirmarUbicacion extends Component {
         }
     }
 
-    cambiarCordenadas(posicion) {
+    cambiarCordenadas(posicion) { 
+        var popup = L.popup()
+        .setLatLng([posicion.lat,posicion.lng])
+        .setContent(`Latitud: ${posicion.lat} <br/> Longitud: ${posicion.lng}`)
+        .openOn(this.state.map);
+
+        searchAdressWithCoordinates(5,6)
         this.setState({
             coordenadas: posicion
         })
+     
+          
     }
 
     confirmarUbicacion(e) {
@@ -134,6 +142,7 @@ class ConfirmarUbicacion extends Component {
                 coordenadas: {lat: data.y, lng: data.x}
             })
             this.state.map.setView([data.y, data.x], 18)
+            
         })
     }
 
@@ -157,6 +166,7 @@ class ConfirmarUbicacion extends Component {
                 <DialogContent>
                     <Typography variant={"h4"}>Es importante selecciónar la ubicación exacta de
                         la {this.props.titulo} para facilitar el trabajo de los operadores</Typography>
+                    
                     <br/>
                     <Grid container>
                         {!this.props.ultimaMilla &&
@@ -180,7 +190,12 @@ class ConfirmarUbicacion extends Component {
                                 </Typography>
                             </Grid>
                         }
-
+                        <br/>
+                        <br/>
+                        <Grid item sm={12}> 
+                        <Typography variant={"h4"}>{(this.state.coordenadas.lat==0 && this.state.coordenadas.lng==0)?"No hay coordenadas seleccionadas":(`Latitud: ${this.state.coordenadas.lat}   Longitud: ${this.state.coordenadas.lng}`)}</Typography>
+                        </Grid>
+                   
 
                     </Grid>
                     <br/>

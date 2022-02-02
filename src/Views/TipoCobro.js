@@ -185,7 +185,9 @@ function TipoCobro() {
             setData(respuesta.data)
         });
     };
-
+const handleClickCancelar = () =>{
+    getAllData();
+}
 
 
     return (
@@ -296,7 +298,7 @@ function TipoCobro() {
                                                 </div>
                                                 <br></br>
                                                 <div className="form-footer" className="col-md-12">
-                                                    <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+                                                    <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn" onClick={handleClickCancelar}
                                                     >
                                                         Cancelar</button>
                                                     <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
