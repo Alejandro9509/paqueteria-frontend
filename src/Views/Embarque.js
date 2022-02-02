@@ -858,16 +858,20 @@ function Embarque(props) {
     }
 
     const mostrarDialogoMapa = (isVisible) => {
-        setState({
-            ...state,
-            showConfirmarUbicacion: isVisible,
-            titulo: "entrega"
+        setState(state => {
+            return {
+                ...state,
+                showConfirmarUbicacion: isVisible,
+                titulo: "entrega"
+            }
         })
     }
     const mostrarCotizadorRec = (isVisible) =>{
-        setState({
-            ...state,
-            mostrarCotizador:isVisible
+        setState(state => {
+            return {
+                ...state,
+                mostrarCotizador:isVisible
+            }
         })
     }
     /*const getCurrentDateTime = () => {
@@ -1016,10 +1020,7 @@ function Embarque(props) {
         e.preventDefault();
 
         /**Se cierra el dialogo porque si no se quedará abierto despues de darle aceptar.*/
-        setState({
-            ...state,
-            showConfirmarUbicacion: false
-        })
+        mostrarDialogoMapa(false)
 
         if (!esEmbarqueValido()){
             return;

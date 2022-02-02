@@ -377,6 +377,7 @@ function Recoleccion() {
     const [tabActiva, setTabActiva] = useState(0);
     const [isAgregar, setIsAgregar] = useState(false);
     const [isModificar, setIsModificar] = useState(false);
+    const [pagina, setPagina] = useState(0);
     const [remitente, setRemitente] = useState({
         idRemitente: '',
         aliasRemitente: '',
@@ -819,9 +820,11 @@ function Recoleccion() {
     }
 
     const mostrarCotizadorRec = (isVisible) =>{
-        setState({
-            ...state,
-            mostrarCotizador:isVisible
+        setState(state => {
+            return {
+                ...state,
+                mostrarCotizador:isVisible
+            }
         })
     }
     const esDatoValido = (dato) => {
@@ -1215,6 +1218,7 @@ function Recoleccion() {
                             .then((respuesta) => {
                              //   console.log(respuesta.data);
                                 showSuccess(respuesta.data);
+                                showSuccess("Recolección creada con folio: "+respuesta.data.m_sFolioRecoleccion);
                                 limpiarInputsAgregar()
                                 confirmAlert({
                                     title: 'Confirmación',
@@ -3084,6 +3088,7 @@ function Recoleccion() {
       };
 
     const setDataListado = (listado) => {
+        setPagina(0)
         setData(listado)
     }
 
@@ -3544,6 +3549,11 @@ function Recoleccion() {
                                         }}
                                         onSortModelChange={(model) => setSortModel(model)}
                                         rows={data}
+                                        pagination
+                                        page={pagina}
+                                        onPageChange={(newPage) => {
+                                            setPagina(newPage.page)
+                                        }}
                                         columns={columns}
                                         density="compact"
                                         pageSize={Math.floor((state.height - 310) / 30)}
