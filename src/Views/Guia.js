@@ -53,7 +53,7 @@ import {
     modificarGuia,
     agregarGuia,
     imprimirGuia,
-    obtenerGuiaReporte, entregaOcurreGuia, cambiarTipoCobro, cambiarEstatusGuia, obtenerValidacionGuia, asignarTrayectos
+    obtenerGuiaReporte, entregaOcurreGuia, cambiarTipoCobro, cambiarEstatusGuia, obtenerValidacionGuia, asignarTrayectos,validarEliminarGuia
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -385,8 +385,9 @@ function Guia(props) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-
-            eliminarGuia(id, state.modificadoPor).then(respuesta => {
+            validarEliminarGuia(id).then(respuesta=>{
+               if(respuesta.data.sePuedeEliminar){
+                eliminarGuia(id, state.modificadoPor).then(respuesta => {
                 showSuccess(respuesta.data)
                 //console.log(respuesta)
                 if (respuesta.data.indexOf("fracaso:") <= 0)
@@ -394,6 +395,11 @@ function Guia(props) {
             }).catch(function (err) {
                 console.log(err.data)
             });
+               }else{
+                   showSuccess("La guia no puede ser eliminada a menos que se cancele")
+               }
+            })
+           
         }).catch(err => {
             showSuccess(err)
         });
@@ -526,7 +532,7 @@ function Guia(props) {
                 idSucursalAgregar: respuesta.data.IdSucursal,
                 idMoneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
-                folioInforme: respuesta.data.m_nFolioInforme,
+                folioInforme: respuesta.data.m_sFolioInforme,
                 tracking: respuesta.data.m_nTracking,
                 folioGuia: respuesta.data.m_nFolioGuia,
                 idGuia: respuesta.data.m_nIdGuia,
@@ -574,9 +580,9 @@ function Guia(props) {
     //Muestra la pestaña de cancelar
     function handleShowCancelar(event) {
         event.preventDefault()
-        if(state.folioInforme && state.folioInforme != ""){
+        if(state.folioInforme || state.folioInforme != ""){
       showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+state.folioInforme)
-    }else if(state.folioInforme == undefined || state.folioInforme == ""){
+     }else if(state.folioInforme == undefined || state.folioInforme == ""){
           limpiarCamposAgregar()
         obtenerGuiaId(state.idGuia).then((respuesta) => {
             setState({
@@ -599,6 +605,9 @@ function Guia(props) {
     //Funcion para cancelar una guia. Se usa en pestaña cancelar.
     const handleCancelar = (e) => {
         e.preventDefault();
+        if(state.folioInforme || state.folioInforme != ""){
+            showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+state.folioInforme)
+           }else if(state.folioInforme == undefined || state.folioInforme == ""){
         var params = {
             "motivoCancelacion": state.MotivoCancelacion,
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
@@ -608,7 +617,7 @@ function Guia(props) {
             console.log(respuesta.data)
             showSuccess("La guia ha sido cancelada")
         })  
-        
+    }
         
     }
 
@@ -2093,7 +2102,8 @@ function Guia(props) {
                                                                            className="form-control"
                                                                            type="text"
                                                                            label="Folio Informe"
-                                                                           placeholder={state.folioInforme}
+                                                                           //placeholder={state.folioInforme}
+                                                                           value={state.folioInforme}
                                                                            readOnly={state.agregar == "Consultar"}
                                                                            id="folioInforme"
                                                                            name="folioInforme"
@@ -2233,7 +2243,7 @@ function Guia(props) {
                                                                                 key={cambio.m_nIdTipoCambio}
                                                                                 value={cambio.m_nIdTipoCambio}
                                                                             >
-                                                                                {cambio.m_cTipoCambio}
+                                                                                {cambio.m_cTipoCambio.toFixed(4)}
                                                                             </option>
                                                                         ))}
                                                                     </Select>

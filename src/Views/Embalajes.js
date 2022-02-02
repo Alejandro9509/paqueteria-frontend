@@ -11,7 +11,7 @@ import $ from "jquery";
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
-import { agregarEmbalajes, modificarEmbalajes, eliminarEmbalajes, obtenerEmbalajesId, obtenerEmbalajes } from "../Util/Contexts/EmbalajesContext";
+import { agregarEmbalajes, modificarEmbalajes, eliminarEmbalajes, obtenerEmbalajesId, obtenerEmbalajes,validarEliminarEmbalajes } from "../Util/Contexts/EmbalajesContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 
 function showSuccess(mensaje) {
@@ -112,13 +112,19 @@ function Embalaje() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
+            validarEliminarEmbalajes(id).then(respuesta=>{
+                if(respuesta.data.sePuedeEliminar){
+                    eliminarEmbalajes(id, state.CreadoPor).then(respuesta => {
+                        showSuccess("Eliminacion de embalaje exitoso")
+                        getAllData()
+                    }).catch(err => {
+                        showSuccess(err)
+                    });                   
+                }else{
+                    showSuccess("El embalaje no puede ser eliminado ya que se encuentra relacionado a por lo menos una recoleccion o embarque")
+                }
+            })
 
-            eliminarEmbalajes(id, state.CreadoPor).then(respuesta => {
-                console.log(respuesta)
-                getAllData()
-            }).catch(err => {
-                showSuccess(err)
-            });
         }).catch(err => {
             showSuccess(err)
         });

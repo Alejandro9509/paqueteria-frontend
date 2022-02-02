@@ -20,6 +20,7 @@ import {
     obtenerSATServicios,
     obtenerSATUnidades,
 } from "../../Util/Contexts/ConceptosFacturacionContext";
+import { confirmAlert } from "react-confirm-alert";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -77,13 +78,25 @@ function ComplementosSAT(props) {
         const {row} = propss;
 
         const handleDeleteClick = (event) => {
+            
             event.stopPropagation();
-            props.onChangeList(props.dataList.filter(item => item.id !== row.id))
+            confirmAlert({
+                title: 'Confirmación',
+                message: '¿Desea eliminar el complemento?',
+                buttons: [{
+                    label: 'Si',
+                    onClick: ()=>{props.onChangeList(props.dataList.filter(item => item.id !== row.id))}
+                },  {
+                    label: 'No',
+                    onClick: ()=>{return}
+                }
+            ]
+        });
+            
         };
 
         const handleOpenClick = (event) => {
             event.stopPropagation();
-
             setDataComplemento(row);
             console.log(row);
             setOpenDialog(true);

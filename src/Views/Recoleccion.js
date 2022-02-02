@@ -377,6 +377,7 @@ function Recoleccion() {
     const [tabActiva, setTabActiva] = useState(0);
     const [isAgregar, setIsAgregar] = useState(false);
     const [isModificar, setIsModificar] = useState(false);
+    const [pagina, setPagina] = useState(0);
     const [remitente, setRemitente] = useState({
         idRemitente: '',
         aliasRemitente: '',
@@ -818,9 +819,11 @@ function Recoleccion() {
     }
 
     const mostrarCotizadorRec = (isVisible) =>{
-        setState({
-            ...state,
-            mostrarCotizador:isVisible
+        setState(state => {
+            return {
+                ...state,
+                mostrarCotizador:isVisible
+            }
         })
     }
     const esDatoValido = (dato) => {
@@ -1214,6 +1217,7 @@ function Recoleccion() {
                             .then((respuesta) => {
                              //   console.log(respuesta.data);
                                 showSuccess(respuesta.data);
+                                showSuccess("Recolección creada con folio: "+respuesta.data.m_sFolioRecoleccion);
                                 limpiarInputsAgregar()
                                 confirmAlert({
                                     title: 'Confirmación',
@@ -3083,6 +3087,7 @@ function Recoleccion() {
       };
 
     const setDataListado = (listado) => {
+        setPagina(0)
         setData(listado)
     }
 
@@ -3543,6 +3548,11 @@ function Recoleccion() {
                                         }}
                                         onSortModelChange={(model) => setSortModel(model)}
                                         rows={data}
+                                        pagination
+                                        page={pagina}
+                                        onPageChange={(newPage) => {
+                                            setPagina(newPage.page)
+                                        }}
                                         columns={columns}
                                         density="compact"
                                         pageSize={Math.floor((state.height - 310) / 30)}
@@ -3805,7 +3815,7 @@ function Recoleccion() {
                                                                                 key={cambio.m_nIdTipoCambio}
                                                                                 value={cambio.m_nIdTipoCambio}
                                                                             >
-                                                                                {cambio.m_cTipoCambio}
+                                                                                {cambio.m_cTipoCambio.toFixed(4)}
                                                                             </option>
                                                                         ))}
                                                                     </Select>
@@ -4987,6 +4997,7 @@ function Recoleccion() {
                                                    saveIdCotizacion={saveIdCotizacion}
                                                    recoleccion={true}
                                                    mostrarCotizadorRec={mostrarCotizadorRec}
+                                                   entregaDiferenteDom={entregaDD}
                                                    paquetes={dataPaquetes.map(p =>({
                                                        Tipo: p.m_nIdTipo,
                                                        Peso: p.m_rPeso,
