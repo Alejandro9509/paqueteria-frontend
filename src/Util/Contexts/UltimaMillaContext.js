@@ -259,7 +259,10 @@ async function searchLocationGuia(city, address, postalCode) {
     }
 }
 
-
+function searchAdressWithCoordinates(x,y){
+   
+console.log("searching...")
+}
 function searchLocationWeb(city, address, subdistrict, number, code) {
     var result;
     trackPromise(
@@ -539,7 +542,8 @@ export {
     obtenerPaquetesInforme,
     obtenerPaquetesViaje,
     obtenerPaquetesUnidadOperador,
-    calcularRutaUltimaMilla
+    calcularRutaUltimaMilla,
+    searchAdressWithCoordinates
 }
 
 
