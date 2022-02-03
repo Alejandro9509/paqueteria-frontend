@@ -1217,7 +1217,7 @@ function Recoleccion() {
                             agregarRecoleccion(params)
                             .then((respuesta) => {
                              //   console.log(respuesta.data);
-                                showSuccess(respuesta.data);
+                             //    showSuccess(respuesta.data);
                                 showSuccess("Recolección creada con folio: "+respuesta.data.m_sFolioRecoleccion);
                                 limpiarInputsAgregar()
                                 confirmAlert({

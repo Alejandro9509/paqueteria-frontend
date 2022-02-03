@@ -699,13 +699,13 @@ function Viajes() {
         },
         {
             headerName: "Salida",
-            field: "m_dFechaSalida",
+            field: "m_sFechaSalidaFormat",
             width: 130,
             valueFormatter: row => !row.value ? "Sin definir" : row.value
         },
         {
             headerName: "Llegada",
-            field: "m_dFechaLlegada",
+            field: "m_sFechaLlegadaFormat",
             width: 130,
             valueFormatter: row => !row.value ? "Sin definir" : row.value
         },
