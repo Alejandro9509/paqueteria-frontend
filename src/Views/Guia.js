@@ -703,7 +703,7 @@ function Guia(props) {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a data-toggle="tab"
+                            <a 
                                onClick={() => (handleShowModificar(row.row.m_nIdGuia,row.row.m_nFolioGuia))}
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>

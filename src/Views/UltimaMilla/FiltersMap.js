@@ -178,6 +178,15 @@ class FiltersMap extends Component {
         if (prevState.fecha !== this.state.fecha || prevState.zonasSeleccionada.length !== this.state.zonasSeleccionada.length || prevState.unidadesSeleccionadas.length !== this.state.unidadesSeleccionadas.length || prevState.zonasSeleccionada.length !== this.state.zonasSeleccionada.length || prevState.sucursalSeleccionada !== this.state.sucursalSeleccionada) {
             this.props.guardarFiltros(this.state)
         }
+
+       if(this.props.closeFiltersMapDialogs!=prevProps.closeFiltersMapDialogs){//Cierra todas las ventanas
+        this.setState({
+            openSucursales: false,
+            openZona: false,
+            openDate: false,
+            openUnidades: false,
+            openPaquetes: false, openConfiguration: false})
+       }
     }
 
     getAllGuias() {
@@ -314,6 +323,7 @@ class FiltersMap extends Component {
         }
 
     }
+
 
     render() {
         const {classes} = this.props;

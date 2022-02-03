@@ -87,6 +87,7 @@ class UltimaMilla extends Component {
             modoPlaneacion: false,
             ultimaMilla: null,
             openDialog: false,
+            closeFiltersMapDialogs: false
 
         }
         this.generarRuta = this.generarRuta.bind(this)
@@ -103,6 +104,7 @@ class UltimaMilla extends Component {
         this.reasignarParada = this.reasignarParada.bind(this)
         this.refreshUltimaMilla = this.refreshUltimaMilla.bind(this)
         this.refreshFilterUltimaMilla = this.refreshFilterUltimaMilla.bind(this)
+        this.changeFiltersMapDialogsState = this.changeFiltersMapDialogsState.bind(this)
     }
 
 
@@ -270,6 +272,12 @@ class UltimaMilla extends Component {
         })
     }
 
+    changeFiltersMapDialogsState(isVisible){
+        this.setState({
+            closeFiltersMapDialogs:isVisible
+        })
+    }
+
     render() {
 
         return (
@@ -343,6 +351,7 @@ class UltimaMilla extends Component {
                                 {
                                     !this.state.fullScreen &&
                                     <FiltersMap refreshFilterUltimaMilla={this.refreshFilterUltimaMilla}
+                                                closeFiltersMapDialogs={this.state.closeFiltersMapDialogs}
                                                 changeConfiguration={this.changeConfiguration}
                                                 searchLocation={this.searchLocation} generarRuta={this.generarRuta}
                                                 guardarRuta={this.guardarRuta}
@@ -380,6 +389,7 @@ class UltimaMilla extends Component {
                                 {
                                     !this.state.modoEdicion && this.state.ultimaMilla && (this.state.fullScreen === false || this.state.resumenFullscreen) &&
                                     <DetalleParadas refresh={this.refreshUltimaMilla}
+                                    changeFiltersMapDialogsState={this.changeFiltersMapDialogsState}
                                                     fecha={this.state.fechaUltimaMilla} filtros={{
                                         zonasSeleccionada: this.state.zonasIds,
                                         tipoBusqueda: this.state.tipoBusqueda,

@@ -428,7 +428,8 @@ class DetalleParadas extends Component {
                 {
                     !this.state.openDetail &&
                     <IconButton
-                        onClick={() => this.setState({openDetail: true})}
+                        onClick={(e) => { this.setState({openDetail: true}); 
+                        this.props.changeFiltersMapDialogsState(true)} }
                         style={{
                             color: "white",
                             borderRadius: "10px",
@@ -482,7 +483,8 @@ class DetalleParadas extends Component {
                             <div style={{float: "right"}}>
                                 <IconButton
                                     style={{height: "30px"}}
-                                    onClick={() => this.setState({openDetail: false})}
+                                    onClick={() => {this.setState({openDetail: false})
+                                    this.props.changeFiltersMapDialogsState(false)}}
                                 >
                                     <CloseIcon style={{fill: "white"}}/>
                                 </IconButton>
