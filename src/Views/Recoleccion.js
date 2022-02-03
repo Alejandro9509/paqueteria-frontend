@@ -777,7 +777,7 @@ function Recoleccion() {
                 && !isValidText(recoleccionDD.longitudRec))
                 {
                 mostrarDialogoMapa(true)
-
+                   
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas guardadas*/
             }else if (!state.diferenteRecoleccion
@@ -785,15 +785,15 @@ function Recoleccion() {
                 && !isValidText(remitente.longitudR)
                 && !coordenadas) {
                 mostrarDialogoMapa(true)
-
+                
                 return false
             }
             /**Si es agregar*/
         }else{
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
-            if (state.diferenteRecoleccion){
+            if (state.diferenteRecoleccion && coordenadas==undefined ){
                 mostrarDialogoMapa(true)
-
+                
                 return false
                 /**Si es recoleccion en el domicilio del remitente y no hay coordenadas*/
                 debugger;
@@ -802,7 +802,7 @@ function Recoleccion() {
                 && !isValidText(remitente.longitudR)
                 && !coordenadas){
                 mostrarDialogoMapa(true)
-
+                
                 return false
             }
         }
