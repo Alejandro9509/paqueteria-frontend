@@ -27,6 +27,7 @@ import {
     obtenerSATUnidades,
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import DialogoNuevoPaquete from "./DialogoNuevoPaquete";
+import { confirmAlert } from "react-confirm-alert";
 const headers = API_HEADERS
 
 function showSuccess(mensaje) {
@@ -48,7 +49,19 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
             let row = dataPaquetes.find((p) => p.m_nIdPaquete === id);
             console.log(row)
             if (row){
-                handleDelete(row);
+                confirmAlert({
+                    title: 'Confirmar Eliminar',
+                    message: '¿Está seguro de eliminar el paquete?',
+                    buttons: [
+                        {
+                            label: 'Si',
+                            onClick: () => handleDelete(row)
+                        },
+                        {
+                            label: 'No',
+                        }
+                    ]
+                })
             }
 
         };
