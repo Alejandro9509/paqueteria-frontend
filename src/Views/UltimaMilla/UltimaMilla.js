@@ -25,7 +25,7 @@ import {
     obtenerGuiasUbicacion,
     randomColor,
     searchLocationWeb,
-    generarRuta, agregarRuta, searchLocationAddress, obtenerUltimaMillaFecha
+    generarRuta, agregarRuta, searchLocationAddress, obtenerUltimaMillaFecha,validarUnidadesSeleccionadas
 } from "../../Util/Contexts/UltimaMillaContext";
 import Tour from "./Tour";
 import Mensajes from "./Mensajes";
@@ -87,6 +87,7 @@ class UltimaMilla extends Component {
             modoPlaneacion: false,
             ultimaMilla: null,
             openDialog: false,
+            closeFiltersMapDialogs: false
 
         }
         this.generarRuta = this.generarRuta.bind(this)
@@ -103,6 +104,7 @@ class UltimaMilla extends Component {
         this.reasignarParada = this.reasignarParada.bind(this)
         this.refreshUltimaMilla = this.refreshUltimaMilla.bind(this)
         this.refreshFilterUltimaMilla = this.refreshFilterUltimaMilla.bind(this)
+        this.changeFiltersMapDialogsState = this.changeFiltersMapDialogsState.bind(this)
     }
 
 
@@ -187,7 +189,16 @@ class UltimaMilla extends Component {
 
     guardarRuta() {
         if (this.state.ultimaMilla) {
-            if (this.state.tour) {
+            if (this.state.tour) { 
+                console.log("unidades"+Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad)))
+              
+             /*   validarUnidadesSeleccionadas(Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad))).then(respuesta=>{
+                    if(respuesta.data.sePuedeSeleccionar){
+                        showSuccess("se puede seleccionar")
+                    }else{
+                        showSuccess("No se puede seleccionar la unidad")
+                    }
+                })*/
                 agregarRuta(this.state.ultimaMilla.m_nIdUltimaMilla, this.state.tour, this.state.filtros).then((data) => {
                     showSuccess("Se guardo la información con éxito")
                     actualizar = true
@@ -197,7 +208,7 @@ class UltimaMilla extends Component {
             }
         } else {
             if (this.state.tour) {
-                agregarRuta(0, this.state.tour, this.state.filtros).then((data) => {
+                  agregarRuta(0, this.state.tour, this.state.filtros).then((data) => {
                     showSuccess("Se guardo la información con éxito")
                     actualizar = true
                     this.setState({tour: null})
@@ -267,6 +278,12 @@ class UltimaMilla extends Component {
         event.preventDefault()
         reasignarGuia(this.state.unidadSeleccionada, this.state.paradaFuente, this.state.idGuia).then((data) => {
             showSuccess("Se realizó el cambio de operador")
+        })
+    }
+
+    changeFiltersMapDialogsState(isVisible){
+        this.setState({
+            closeFiltersMapDialogs:isVisible
         })
     }
 
@@ -343,6 +360,7 @@ class UltimaMilla extends Component {
                                 {
                                     !this.state.fullScreen &&
                                     <FiltersMap refreshFilterUltimaMilla={this.refreshFilterUltimaMilla}
+                                                closeFiltersMapDialogs={this.state.closeFiltersMapDialogs}
                                                 changeConfiguration={this.changeConfiguration}
                                                 searchLocation={this.searchLocation} generarRuta={this.generarRuta}
                                                 guardarRuta={this.guardarRuta}
@@ -380,6 +398,7 @@ class UltimaMilla extends Component {
                                 {
                                     !this.state.modoEdicion && this.state.ultimaMilla && (this.state.fullScreen === false || this.state.resumenFullscreen) &&
                                     <DetalleParadas refresh={this.refreshUltimaMilla}
+                                    changeFiltersMapDialogsState={this.changeFiltersMapDialogsState}
                                                     fecha={this.state.fechaUltimaMilla} filtros={{
                                         zonasSeleccionada: this.state.zonasIds,
                                         tipoBusqueda: this.state.tipoBusqueda,
