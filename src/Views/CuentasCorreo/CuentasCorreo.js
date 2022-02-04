@@ -37,7 +37,7 @@ class CuentasCorreo extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dataTipoCuenta: [{id: 1, name: 'Para Enviar Viajes'}, {id: 2, name: 'Para Enviar Tracking'}],
+            dataTipoCuenta: [{id: 1, name: 'Para Enviar Viajes'}, {id: 2, name: 'Para Enviar Tracking'},{id: 3, name: 'Para Facturación'}],
             dataSeguridad: [{id: 1, name: 'Cifrada SSL'}, {id: 2, name: 'Cifrada TLS'}],
             idTipoCuenta: '',
             idSeguridad: '',
