@@ -842,7 +842,7 @@ function Embarque(props) {
             /**Si es agregar*/
         }else{
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
-            if (state.diferenteEntrega  && !coordenadas){
+            if (state.diferenteEntrega && coordenadas==undefined){
                 mostrarDialogoMapa(true)
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas*/

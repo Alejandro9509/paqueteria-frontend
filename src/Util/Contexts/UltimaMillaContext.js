@@ -366,6 +366,25 @@ function agregarRuta(idUltimaMilla, tour, data) {
     return result
 }
 
+function validarUnidadesSeleccionadas(unidades){
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/UltimaMilla/ValidarUnidades`;
+    let result;
+    var config = {
+        method: 'post',
+        url: url,
+        headers: { 
+          'RFC': 'ADI880815DA7', 
+          'Content-Type': 'application/json'
+        },
+        data : JSON.stringify(unidades)
+      };
+    trackPromise(
+        result = axios(config)
+    )
+    ;
+    return result
+
+}
 async function ordenarParada(idParada, guias) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/OrdenarParada/${idParada}`;
     let result;
@@ -543,7 +562,8 @@ export {
     obtenerPaquetesViaje,
     obtenerPaquetesUnidadOperador,
     calcularRutaUltimaMilla,
-    searchAdressWithCoordinates
+    searchAdressWithCoordinates,
+    validarUnidadesSeleccionadas
 }
 
 
