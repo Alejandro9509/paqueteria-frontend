@@ -42,7 +42,7 @@ export default function SalidaParadas(props){
         destino: props.data.m_sCiudadDestino,
         operador: props.data.m_sNombreCompleto,
         unidad: props.data.m_sUnidadIdentificador +' - '+ props.data.m_sUnidad,
-        placasUnidad: "",
+        placasUnidad: props.data.m_sPlacasUnidad,
         fechaSalida: props.data.m_dFechaSalida || getCurrentDate(),
         horaSalida: props.data.m_dHoraSalida || getCurrentTime(),
         idEstatus: 0,
