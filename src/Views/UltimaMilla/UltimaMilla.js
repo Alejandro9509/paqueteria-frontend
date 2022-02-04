@@ -192,28 +192,28 @@ class UltimaMilla extends Component {
             if (this.state.tour) { 
                 console.log("unidades"+Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad)))
               
-                validarUnidadesSeleccionadas(Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad))).then(respuesta=>{
+             /*   validarUnidadesSeleccionadas(Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad))).then(respuesta=>{
                     if(respuesta.data.sePuedeSeleccionar){
                         showSuccess("se puede seleccionar")
                     }else{
                         showSuccess("No se puede seleccionar la unidad")
                     }
-                })
-               /* agregarRuta(this.state.ultimaMilla.m_nIdUltimaMilla, this.state.tour, this.state.filtros).then((data) => {
+                })*/
+                agregarRuta(this.state.ultimaMilla.m_nIdUltimaMilla, this.state.tour, this.state.filtros).then((data) => {
                     showSuccess("Se guardo la información con éxito")
                     actualizar = true
                     this.setState({tour: null})
                     this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.filtros.tipoBusqueda))
-                })*/
+                })
             }
         } else {
             if (this.state.tour) {
-              /*    agregarRuta(0, this.state.tour, this.state.filtros).then((data) => {
+                  agregarRuta(0, this.state.tour, this.state.filtros).then((data) => {
                     showSuccess("Se guardo la información con éxito")
                     actualizar = true
                     this.setState({tour: null})
                     this.getFechaUltimaMilla(this.state.filtros.fecha, this.state.filtros.sucursalSeleccionada.m_nIdSucursal, this.state.filtros.zonasSeleccionada.map(z => z.m_nIdZona), parseInt(this.state.filtros.tipoBusqueda))
-                })*/
+                })
             }
         }
     }
