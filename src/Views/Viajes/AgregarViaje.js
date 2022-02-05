@@ -1186,7 +1186,7 @@ class AgregarViaje extends Component {
                                                     id="estatusListado"
                                                     label="Estatus Viaje"
                                                     name={"estatusListado"}
-                                                    disabled={this.props.consult}
+                                                    disabled={!this.props.modificar}
                                                     InputProps={{
                                                         id: "estatusListado",
                                                         name: "estatusListado"
