@@ -1345,8 +1345,11 @@ function Recoleccion() {
             });
     }
 
-    function handleShowModificar(id) {
+    function handleShowModificar(id,row) {
         setIsModificar(true);
+        if(row.m_nTimbrado){
+            showSuccess("La recoleccion no puede ser modificada ya que se encuentra timbrada")
+        }else{
         obtenerRecoleccionId(id).then((respuesta) => {
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(1).addClass('active');
@@ -1363,7 +1366,7 @@ function Recoleccion() {
             })
             setRecoleccionDataParaConsultaModificacion(respuesta,"Modificar")
         });
-
+    }
     }
 
     function handleShowConsultar(id) {
@@ -2046,7 +2049,7 @@ function Recoleccion() {
                             <a data-toggle="tab"
                                onClick={() =>
                                  { if(row.row.m_nIdEstatusRecoleccion==1 ||row.row.m_nIdEstatusRecoleccion==6){
-                                     handleShowModificar(row.row.m_nIdRecoleccion)
+                                     handleShowModificar(row.row.m_nIdRecoleccion,row.row)
                                  }else{
                                      showSuccess(`La recoleccion solo puede ser modificada en Estatus: Pendiente, Estatus Actual: ${row.row.m_sEstatusRecoleccion}`)
                                  }
