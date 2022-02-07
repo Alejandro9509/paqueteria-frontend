@@ -42,7 +42,7 @@ class MyComponent extends Component {
                                           control={<Checkbox
                                               checked={this.state.correoDefault}
                                               name="correoDefault"/>}
-                                          label="Enviar correo al operador"/>
+                                          label={`Enviar correo al ${this.props.viajes ? "operador" : "cliente"}`}/>
                         <Typography> En caso que necesite agregar correos adicioneles ingreselos en el campo siguiente separados por una ",".</Typography>
 
                         <TextField type={"text"} onChange={(e) => this.setState({correos: e.target.value})} label={"Correos"} value={this.state.correos}/>

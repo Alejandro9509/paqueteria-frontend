@@ -464,16 +464,7 @@ function Viajes() {
                     onClick: () => {
 
                         obtenerCFDI(id,sustituir).then((result) => {
-
-                            obtenerReporteCFDIViaje(id).then(({data}) => {
-                                let pdfWindow = window.open("");
-                                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-                                pdfWindow.document.body.style.margin = "0px";
-                                pdfWindow.document.title = "CFDI_ " + folio;
-                                setState({...state, openEnvioCorreo: true, idInforme: id})
-                            })
-
-                            getParadasListado({m_nIdViaje:idViaje})
+                            setState({...state, openEnvioCorreo: true, idInforme: id, folio: folio, idViaje: idViaje})
                         }).catch((error) => {
                             if (error.response){
                                 showError(error.response.data)
@@ -930,7 +921,6 @@ function Viajes() {
             fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
         };
         cancelarViaje(state.idViaje,params).then((respuesta) => {
-            console.log(respuesta.data);
             showSuccess(respuesta.data)
             handleShowListado()
         });
@@ -938,7 +928,10 @@ function Viajes() {
     function envioCorreoAction(data){
         enviarCorreoCFDIViaje(state.idInforme, data.correos,data.correoDefault).then(({data}) => {
             showSuccess(data);
+            descargarPDF(state.idInforme, state.folio)
             setState({...state, openEnvioCorreo: false})
+            getParadasListado({m_nIdViaje:state.idViaje})
+
         })
     }
 
@@ -946,7 +939,7 @@ function Viajes() {
         <div>
             {
                 state.openEnvioCorreo &&
-                <EnvioCorreoDialogo onSubmit={envioCorreoAction} open={state.openEnvioCorreo} close={()=> setState({...state, openEnvioCorreo:false})}/>
+                <EnvioCorreoDialogo onSubmit={envioCorreoAction} open={state.openEnvioCorreo} close={()=> {setState({...state, openEnvioCorreo:false}); descargarPDF(state.idInforme, state.folio);getParadasListado({m_nIdViaje:state.idViaje})}}/>
             }
             {state.openCancelarSAT &&
                 <CancelarSAT open={state.openCancelarSAT} onSubmit={cancelarCFDI} data={{folioSustituye: state.informe.m_clsInforme.m_sFolioFiscalUUID,m_sFolio: state.informe.m_clsInforme.m_sFolioInforme, folioCancelar: state.informe.m_clsInforme.m_sFolioFiscalUUIDSustituido || state.informe.m_clsInforme.m_sFolioFiscalUUID

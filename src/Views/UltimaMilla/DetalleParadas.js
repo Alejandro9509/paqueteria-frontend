@@ -225,30 +225,29 @@ class DetalleParadas extends Component {
             }
     }
     generarCFDI(id,esRecoleccion, folio) {
-        obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
-            if (esRecoleccion){
-                obtenerReporteCFDIRecoleccion(id).then(({data}) => {
-                    let pdfWindow = window.open("");
-                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-                    pdfWindow.document.body.style.margin = "0px";
-                    pdfWindow.document.title = "CFDI_ " + folio;
-                    this.setState({idParada: id, esRecoleccion: esRecoleccion, openEnvioCorreo: true})
-                })
-            }else{
-                obtenerReporteCFDIGuia(id).then(({data}) => {
-                    let pdfWindow = window.open("");
-                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-                    pdfWindow.document.body.style.margin = "0px";
-                    pdfWindow.document.title = "CFDI_ " + folio;
-                    this.setState({idParada: id, esRecoleccion: esRecoleccion, openEnvioCorreo: true})
-                })
-            }
-            this.props.refresh()
-        }).catch((error) => {
-            if (error.response){
-                showError(error.response.data)
-            }
+        confirmAlert({
+            title: 'Confirmar Timbrado',
+            message: '¿Está seguro de realizar esta operación, el CFDI de traslada se timbrara ante el SAT?',
+            buttons: [
+                {
+                    label: 'Sí',
+                    onClick: () => {
+
+                        obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
+                            this.setState({idParada: id, esRecoleccion: esRecoleccion, openEnvioCorreo: true, folio: folio})
+                        }).catch((error) => {
+                            if (error.response){
+                                showError(error.response.data)
+                            }
+                        })
+                    }
+                },
+                {
+                    label: 'No',
+                }
+            ]
         })
+
 
     }
     confirmUbicacionParada(id,esRecoleccion, data) {
@@ -398,7 +397,9 @@ class DetalleParadas extends Component {
     envioCorreoAction(data){
         enviarCorreoCFDIUltimaMilla(this.state.idParada, data.correos,data.correoDefault,this.state.esRecoleccion).then(({data}) => {
             showSuccess(data);
+            this.obtenerPDFCFDI(this.state.idParada,this.state.esRecoleccion,this.state.folio)
             this.setState({ openEnvioCorreo: false})
+            this.props.refresh()
         })
     }
 
@@ -412,7 +413,7 @@ class DetalleParadas extends Component {
             <div>
                 {
                     this.state.openEnvioCorreo &&
-                    <EnvioCorreoDialogo onSubmit={this.envioCorreoAction} open={this.state.openEnvioCorreo} close={()=> this.setState({openEnvioCorreo:false})}/>
+                    <EnvioCorreoDialogo onSubmit={this.envioCorreoAction} open={this.state.openEnvioCorreo} close={()=> {this.props.refresh();this.obtenerPDFCFDI(this.state.idParada,this.state.esRecoleccion,this.state.folio);this.setState({openEnvioCorreo:false});}}/>
                 }
                 {this.state.openCancelarSAT &&
                     <CancelarSAT open={this.state.openCancelarSAT} onSubmit={this.cancelarCFDI} data={{folioSustituye: this.state.paqueteSeleccionado.m_sFolioFiscalUUID,m_sFolio: this.state.paqueteSeleccionado.m_sFolio, folioCancelar: this.state.paqueteSeleccionado.m_sFolioFiscalUUIDSustituido || this.state.paqueteSeleccionado.m_sFolioFiscalUUID
