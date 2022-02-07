@@ -29,7 +29,7 @@ function obtenerClavesCancelacionSAT( ) {
     return result
 }
 function enviarCorreoCFDIViaje(id, correos, correoDefault){
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/SAT/Informe/${id}/EnviarCorreoFactura`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/Informe/${id}/EnviarCorreoFactura`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, {correos: correos, correoDefault:correoDefault}), { headers })
@@ -37,7 +37,7 @@ function enviarCorreoCFDIViaje(id, correos, correoDefault){
     return result
 }
 function enviarCorreoCFDIUltimaMilla(id, correos, correoDefault, esRecoleccion){
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/SAT/UltimaMilla/${id}/${esRecoleccion ? 1 : 0}/EnviarCorreoFactura`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/UltimaMilla/${id}/${esRecoleccion ? 1 : 0}/EnviarCorreoFactura`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, {correos: correos, correoDefault:correoDefault}), { headers })

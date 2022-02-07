@@ -17,6 +17,7 @@ import Indicadores from './Views/Indicadores';
 import Tracking from './Views/Seguimiento/Tracking';
 import cabeceraRoutes from "./routesCabecera";
 import LoginExterno from "./Components/Login/LoginExterno";
+import {IdleTimeOutModal} from "./Components/Login/IdleTimeOutModal";
 
 
 class App extends Component {
@@ -28,10 +29,20 @@ class App extends Component {
 render(){
   return (
   <AplicationProvider>
+
     <AplicationConsumer>{(value) => {
       return(
         localStorage.getItem(ACCESS_TOKEN) ? (
+            <div>
+
+              <IdleTimeOutModal
+                  showModal={value.showModal}
+                  handleClose={value.handleClose}
+                  handleLogout={value.handleLogout}
+              />
+
           <Switch>
+
             <Route path="/loginERP" component={LoginExterno} />
             <Route path="/Indicadores" component={Indicadores} />
             <Route path="/Configuracion" component={Configuracion} />
@@ -50,6 +61,7 @@ render(){
             })}
             <Redirect from="/" to="/Indicadores"/>
           </Switch>
+            </div>
         ) : (
           <div className="app">
             {/*<div className="app-top-box">*/}

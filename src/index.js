@@ -12,6 +12,7 @@ import {ThemeProvider, CssBaseline} from '@material-ui/core';
 import Themes from "./Assets/themes";
 import {MuiPickersUtilsProvider} from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
+import IdleTimer from 'react-idle-timer'
 
 const hist = createBrowserHistory();
 
