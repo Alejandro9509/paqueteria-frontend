@@ -33,6 +33,10 @@ import {TabContext, TabPanel} from "@material-ui/lab";
 import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import {obtenerTipoCobro} from "../../Util/Contexts/TipoCobroContext";
+import Correos from "./Correos";
+import {EditorState,ContentState,convertToRaw} from "draft-js";
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 //-------------------------------------------STYLES---------------------------------------------------------------------
 const useStyles = makeStyles({
     subtitulo: {
@@ -41,7 +45,7 @@ const useStyles = makeStyles({
         letterSpacing: "0.21px",
         padding: "5px",
     },
-});
+})
 
 function showSuccess(mensaje) {
     new Noty({
@@ -123,7 +127,9 @@ function ParametrosConfiguracion2() {
             DetectarTipoCobro: configuraciones.detectarTipoCobro,
             LimpiarProducto: configuraciones.limpiarProducto,
             TipoCobro: configuraciones.tipoCobro,
-            TiposCobroActivos: configuraciones.idsTiposCobroSeleccionString
+            TiposCobroActivos: configuraciones.idsTiposCobroSeleccionString,
+            CorreoFacturacionViaje: draftToHtml(convertToRaw(configuraciones.correoFacturaViaje.getCurrentContent())),
+            CorreoFacturacionUltimaMilla: draftToHtml(convertToRaw(configuraciones.correoFacturaUltimaMilla.getCurrentContent()))
         }
 
         modificarParametrosConfiguracion(params)
@@ -139,7 +145,6 @@ function ParametrosConfiguracion2() {
 
     async function getParametrosConfiguracion() {
         obtenerParametrosConfiguracion().then(respuesta => {
-            console.log(respuesta)
             setConfiguraciones((config) => {
                 return {
                     ...config,
@@ -157,6 +162,10 @@ function ParametrosConfiguracion2() {
                     tipoCobro: respuesta.data.TipoCobro,
                     idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
                     idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
+                    correoFacturaViaje: EditorState.createWithContent(
+                        ContentState.createFromBlockArray(htmlToDraft(respuesta.data.CorreoFacturaViaje))),
+                    correoFacturaUltimaMilla: EditorState.createWithContent(
+                        ContentState.createFromBlockArray(htmlToDraft(respuesta.data.CorreoFacturaUltimaMilla)))
                 }
             })
         })
@@ -214,6 +223,9 @@ function ParametrosConfiguracion2() {
         });
     }
 
+    function modificarCorreo(data, variable){
+        setConfiguraciones({...configuraciones, [variable]: data})
+    }
 
 
 
@@ -261,6 +273,7 @@ function ParametrosConfiguracion2() {
                         <Tab label="Recoleccion" value="2"/>
                         <Tab label="Guia" value="3"/>
                         <Tab label="Tarifas" value="4"/>
+                        <Tab label="Correos" value="5"/>
                     </Tabs>
 
                 </Paper>
@@ -269,12 +282,7 @@ function ParametrosConfiguracion2() {
 
                             <TabPanel value="1">
 
-                                <Box margin={"0 auto"}>
-                                    <Button variant="contained" color="primary" style={{width: "100px"}}
-                                            onClick={onSubmit}>
-                                        Modificar
-                                    </Button>
-                                </Box>
+
                                     <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
                                          flexDirection="column">
                                         <Box width="40%" p={1} my={0.5} display="flex">
@@ -455,6 +463,12 @@ function ParametrosConfiguracion2() {
                                                 />
                                             </Box>
                                         </Box>
+                                        <Box margin={"0 auto"}>
+                                            <Button variant="contained" color="primary" style={{width: "100px"}}
+                                                    onClick={onSubmit}>
+                                                Modificar
+                                            </Button>
+                                        </Box>
                                     </Box>
 
 
@@ -623,6 +637,15 @@ function ParametrosConfiguracion2() {
                                 </Box>
 
                             </TabPanel>
+
+                        <TabPanel value="5">
+                            <Correos data={[configuraciones.correoFacturaViaje, configuraciones.correoFacturaUltimaMilla]} modficarCorreo={modificarCorreo}>
+                                <Button variant="contained" color="primary" style={{width: "100px"}}
+                                        onClick={onSubmit}>
+                                    Modificar
+                                </Button>
+                            </Correos>
+                        </TabPanel>
                     </div>
                 </section>
 

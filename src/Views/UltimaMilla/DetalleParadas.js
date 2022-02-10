@@ -54,7 +54,13 @@ import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import CancelIcon from '@material-ui/icons/Cancel';
 import {ReactComponent as EmbarqueIcon} from "../../iconos/Menu/IconoEmbarque/iconoEmbarque.svg";
 import CancelarSAT from "../SAT/CancelarSAT";
-import {cancelarInformeCFDI, cancelarUltimaMillaCFDI} from "../../Util/Contexts/SATContext";
+import {
+    cancelarInformeCFDI,
+    cancelarUltimaMillaCFDI,
+    enviarCorreoCFDIUltimaMilla,
+    enviarCorreoCFDIViaje
+} from "../../Util/Contexts/SATContext";
+import EnvioCorreoDialogo from "../SAT/EnvioCorreoDialogo";
 function showError(mensaje) {
     new Noty({
         type: "warning",
@@ -101,6 +107,7 @@ class DetalleParadas extends Component {
         this.generarCFDI = this.generarCFDI.bind(this)
         this.showCancelarCFDI = this.showCancelarCFDI.bind(this)
         this.cancelarCFDI = this.cancelarCFDI.bind(this)
+        this.envioCorreoAction = this.envioCorreoAction.bind(this)
 
     }
 
@@ -218,29 +225,29 @@ class DetalleParadas extends Component {
             }
     }
     generarCFDI(id,esRecoleccion, folio) {
-        obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
-            if (esRecoleccion){
-                obtenerReporteCFDIRecoleccion(id).then(({data}) => {
-                    console.log(data)
-                    let pdfWindow = window.open("");
-                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-                    pdfWindow.document.body.style.margin = "0px";
-                    pdfWindow.document.title = "CFDI_ " + folio;
-                })
-            }else{
-                obtenerReporteCFDIGuia(id).then(({data}) => {
-                    let pdfWindow = window.open("");
-                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-                    pdfWindow.document.body.style.margin = "0px";
-                    pdfWindow.document.title = "CFDI_ " + folio;
-                })
-            }
-            this.props.refresh()
-        }).catch((error) => {
-            if (error.response){
-                showError(error.response.data)
-            }
+        confirmAlert({
+            title: 'Confirmar Timbrado',
+            message: '¿Está seguro de realizar esta operación, el CFDI de traslada se timbrara ante el SAT?',
+            buttons: [
+                {
+                    label: 'Sí',
+                    onClick: () => {
+
+                        obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
+                            this.setState({idParada: id, esRecoleccion: esRecoleccion, openEnvioCorreo: true, folio: folio})
+                        }).catch((error) => {
+                            if (error.response){
+                                showError(error.response.data)
+                            }
+                        })
+                    }
+                },
+                {
+                    label: 'No',
+                }
+            ]
         })
+
 
     }
     confirmUbicacionParada(id,esRecoleccion, data) {
@@ -387,6 +394,16 @@ class DetalleParadas extends Component {
         });
 
     }
+
+    envioCorreoAction(data){
+        enviarCorreoCFDIUltimaMilla(this.state.idParada, data.correos,data.correoDefault,this.state.esRecoleccion).then(({data}) => {
+            showSuccess(data);
+            this.obtenerPDFCFDI(this.state.idParada,this.state.esRecoleccion,this.state.folio)
+            this.setState({ openEnvioCorreo: false})
+            this.props.refresh()
+        })
+    }
+
     render() {
         var d = new Date();
         d.setHours(0,0,0,0);
@@ -395,7 +412,10 @@ class DetalleParadas extends Component {
         const allGuias = [].concat(...this.props.tour.m_arrClsParadaUltimaMilla.filter(t => t.m_bActiva).map(a => a.m_arrClsProGuia)) || []
         return (
             <div>
-
+                {
+                    this.state.openEnvioCorreo &&
+                    <EnvioCorreoDialogo onSubmit={this.envioCorreoAction} open={this.state.openEnvioCorreo} close={()=> {this.props.refresh();this.obtenerPDFCFDI(this.state.idParada,this.state.esRecoleccion,this.state.folio);this.setState({openEnvioCorreo:false});}}/>
+                }
                 {this.state.openCancelarSAT &&
                     <CancelarSAT open={this.state.openCancelarSAT} onSubmit={this.cancelarCFDI} data={{folioSustituye: this.state.paqueteSeleccionado.m_sFolioFiscalUUID,m_sFolio: this.state.paqueteSeleccionado.m_sFolio, folioCancelar: this.state.paqueteSeleccionado.m_sFolioFiscalUUIDSustituido || this.state.paqueteSeleccionado.m_sFolioFiscalUUID
                     }} close={() => this.setState({openCancelarSAT: false})}/>
@@ -769,7 +789,7 @@ class DetalleParadas extends Component {
                                                                                                         }
 
                                                                                                         {
-                                                                                                            g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
                                                                                                                 aria-label="delete">
                                                                                                                 <Tooltip

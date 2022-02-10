@@ -220,3 +220,12 @@ export const TICKET_ZABRA_TAMPLATE = (guia, paquete, index) => (
 ^XZ`)
 
 
+export const TOOLBAR_OPTIONS = {
+    options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'remove', 'history'],
+    inline: { inDropdown: true },
+    list: { inDropdown: true },
+    textAlign: { inDropdown: true },
+    link: { inDropdown: true },
+    history: { inDropdown: true },
+};
+

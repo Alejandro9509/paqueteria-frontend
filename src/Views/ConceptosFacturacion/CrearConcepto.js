@@ -35,7 +35,8 @@ function CrearConceptoSAT(props) {
         openDialog: false,
         catalogo: "",
         busqueda: "",
-        dataSat: []
+        dataSat: [],
+        titulo:""
     });
     const [errores, setErrores] = useState({
         errorCantidad:false,
@@ -110,7 +111,7 @@ function CrearConceptoSAT(props) {
                     maxWidth="xl"
                     onClose={() => setState({...state,openDialog: false, catalogo: ""})}
                 >
-                    <DialogTitle>Claves Productos y Servicios</DialogTitle>
+                    <DialogTitle>{state.titulo}</DialogTitle>
                     <DialogContent>
 
                             <ClavesCFDI
@@ -204,7 +205,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({...state,catalogo: "c_ClaveProdServCP", busqueda: "", complementoSAT: 1})}>
+                                    onClick={() => setState({...state,catalogo: "c_ClaveProdServCP", busqueda: "", complementoSAT: 1,titulo:"Producto o Servicio"})}>
                                     Seleccionar
                                 </button>
                             </Grid>
@@ -250,7 +251,7 @@ function CrearConceptoSAT(props) {
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
                                     onClick={() =>
-                                        setState({...state, catalogo: "c_ClaveUnidad", busqueda: "", complementoSAT: 2})
+                                        setState({...state, catalogo: "c_ClaveUnidad", busqueda: "", complementoSAT: 2,titulo:"Unidad medida"})
                                     }
                                 >
                                     Seleccionar
@@ -320,7 +321,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({...state,catalogo: "c_MaterialPeligroso", busqueda: "", complementoSAT: 5})}>
+                                    onClick={() => setState({...state,catalogo: "c_MaterialPeligroso", busqueda: "", complementoSAT: 5,titulo:"Material peligroso"})}>
                                     Seleccionar
                                 </button>
                             </Grid>
@@ -371,7 +372,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({...state,catalogo: "c_TipoEmbalaje", busqueda: "", complementoSAT: 3})}>
+                                    onClick={() => setState({...state,catalogo: "c_TipoEmbalaje", busqueda: "", complementoSAT: 3,titulo:"Embalaje"})}>
                                     Seleccionar
                                 </button>
                             </Grid>
@@ -397,7 +398,7 @@ function CrearConceptoSAT(props) {
                                     margin="dense"
                                     className="form-control"
                                     type="text"
-                                    label="Fracción aracelaria"
+                                    label="Fracción arancelaria"
                                     aria-readonly={true}
                                     value={props.dataComplemento.fraccionSAT}
                                     name="fraccionSAT"
@@ -408,7 +409,7 @@ function CrearConceptoSAT(props) {
                                     type="button"
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
-                                    onClick={() => setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4})}>
+                                    onClick={() => setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"})}>
                                     Seleccionar
                                 </button>
                             </Grid>
