@@ -238,8 +238,6 @@ class UltimaMilla extends Component {
             })
             if (unidadYaAsignada){
                 showSuccess("Una de las unidades seleccionadas ya se encuentra asignada y ocupada. Seleccione otra.")
-                debugger
-
             }else{
                 let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
                 obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
