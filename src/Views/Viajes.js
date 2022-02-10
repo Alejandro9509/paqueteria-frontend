@@ -938,6 +938,10 @@ function Viajes() {
         });
     };
 
+    const handleClick = (itemKey) => {
+        setIndexOpen(itemKey === indexOpen ? -1 : itemKey);
+    };
+
     return (
         <div>
             {state.openCancelarSAT &&
@@ -1159,7 +1163,7 @@ function Viajes() {
 
                                                             return (
                                                                 <div>
-                                                                    <ListItem
+                                                                    <ListItem button key={index} onClick={() => handleClick(index)}
                                                                     >
 
                                                                         <ListItemText primary={`Ruta: ${p.m_sOrigen}  - ${p.m_sDestino}`}/>
@@ -1185,9 +1189,9 @@ function Viajes() {
                                                                         }
                                                                         {indexOpen === index ?
                                                                             <ExpandLess style={{cursor: "pointer"}}
-                                                                                        onClick={() => setIndexOpen(index === indexOpen ? -1 : index)}/> :
+                                                                                        onClick={() => handleClick(index)}/> :
                                                                             <ExpandMore style={{cursor: "pointer"}}
-                                                                                        onClick={() => setIndexOpen(index === indexOpen ? -1 : index)}/>}
+                                                                                        onClick={() => handleClick(index)}/>}
                                                                     </ListItem>
                                                                     <Collapse in={indexOpen === index}
                                                                               timeout="auto" unmountOnExit>
