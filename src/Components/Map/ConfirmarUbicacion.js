@@ -107,7 +107,8 @@ class ConfirmarUbicacion extends Component {
     cargarMapa(map) {
         if (this.props.ultimaMilla) {
             this.setState({
-                coordenadas: {map: map, lat: this.props.lat, lng: this.props.lng}
+                coordenadas: {map: map, lat: this.props.lat, lng: this.props.lng},
+                map: map
             })
             map.setView([this.props.lat, this.props.lng], 18)
             return
@@ -223,8 +224,7 @@ class ConfirmarUbicacion extends Component {
                     </Grid>
                     <br/>
                     <MapContainer style={{width: "100%", height: "500px"}} center={[32.62781, -115.44632]} zoom={18}
-                                  scrollWheelZoom={false} whenCreated={m => this.cargarMapa(
-                        m)}>
+                                  scrollWheelZoom={false} whenCreated={m => this.cargarMapa(m)}>
                         <TileLayer style={{width: "100%", height: "500px"}}
                                    url="https://xserver2-america.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es&amp;xtok={token}"
                                    token="51FA3E8E-8BF3-49EF-AB82-59D807A0645C"
