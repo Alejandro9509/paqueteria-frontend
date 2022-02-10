@@ -14,13 +14,13 @@ import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
 import * as XLSX from "xlsx";
-
 import {
     obtenerSATEmbalajes, obtenerSATFraccionArancelaria, obtenerSATMaterialPeligroso, obtenerSATPaginado,
     obtenerSATServicios,
     obtenerSATUnidades,
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import { confirmAlert } from "react-confirm-alert";
+import e from "cors";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -97,9 +97,31 @@ function ComplementosSAT(props) {
 
         const handleOpenClick = (event) => {
             event.stopPropagation();
-            setDataComplemento(row);
+            resetDataComplemento()
+           
+            obtenerSATPaginado(1, 0,"c_ClaveUnidad", row.claveUnidad).then((respuesta) => {
+              row.UnidadSAT = respuesta.data[0].m_sDescripcion
+            
+                obtenerSATPaginado(1, 0,"c_ClaveProdServCP", row.claveProducto).then((respuesta) => {
+                    row.ProductoSAT = respuesta.data[0].m_sDescripcion
+                    if(row.esPeligroso){
+                    obtenerSATPaginado(1, 0,"c_MaterialPeligroso", row.claveMaterialPeligroso).then((respuesta) => {
+                        row.materialPeligrosoSAT = respuesta.data[0].m_sDescripcion
+                        obtenerSATPaginado(1, 0,"c_TipoEmbalaje", row.claveEmbalaje).then((respuesta) => {
+                            row.embalajeSAT = respuesta.data[0].m_sDescripcion
+                            setDataComplemento(row);
+                            setOpenDialog(true);
+                          }) 
+                      }) 
+                    }else{
+                        setDataComplemento(row);
+                        setOpenDialog(true);
+                    }
+                  }) 
+         
+            }) 
             console.log(row);
-            setOpenDialog(true);
+          
         };
 
         return (
@@ -386,6 +408,9 @@ function ComplementosSAT(props) {
         readExcel(file);
     }
 
+    const handleCleanExcel= (e)=>{
+        e.target.value=null
+    }
     const readExcel = (file) => {
         const promise = new Promise((resolve, reject) => {
             const fileReader = new FileReader();
@@ -415,12 +440,17 @@ function ComplementosSAT(props) {
 
         promise.then((d) => {
             console.log(d);
-            const newArray = d.map(item => ({
+            const newArray = d.map(item => (
+                {
                 id: Math.floor(Math.random() * 10000),
                 cantidad: item.Cantidad,
+                peso: item['Peso']?item['Peso']:0,
                 claveProducto: item['Clave productos y servicios'],
                 claveUnidad: item['Clave Unidad'],
-                esPeligroso: item['Es material peligroso'] !== "NO",
+                esPeligroso:  item['Es material peligroso']? item['Es material peligroso'] !== "NO" : false,
+                claveMaterialPeligroso: item['Es material peligroso'] == "SI"? item['Clave material peligroso']:0,
+                claveEmbalaje:item['Es material peligroso'] == "SI"? item['Tipo embalaje']:0,
+                descripcionEmbalajeSAT:item['Es material peligroso'] == "SI"?item['Descripción embalaje']:""
             }))
             console.log(newArray)
             // props.dataList.push(newArray)
@@ -457,7 +487,7 @@ function ComplementosSAT(props) {
                     </IconButton>
                 </Grid>
                 <Grid item xs={1}>
-                    <input id={"icon-button-file"} type={"file"} accept={"xlsx"} onChange={handleImportClick} style={{ padding: "0px",display: "none" }} disabled={props.disabled}/>
+                    <input id={"icon-button-file"} type={"file"} accept={"xlsx"} onChange={handleImportClick} onClick={handleCleanExcel} style={{ padding: "0px",display: "none" }} disabled={props.disabled}/>
                     <label htmlFor="icon-button-file">
                         <IconButton color="primary" aria-label="upload file" component="span" style={{ padding: "0px" }} disabled={props.disabled}>
                             <PublishIcon style={{ fill: "blue", fontSize: "xx-large" }}/>

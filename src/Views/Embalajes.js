@@ -13,6 +13,7 @@ import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
 import { agregarEmbalajes, modificarEmbalajes, eliminarEmbalajes, obtenerEmbalajesId, obtenerEmbalajes,validarEliminarEmbalajes } from "../Util/Contexts/EmbalajesContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import { confirmAlert } from "react-confirm-alert";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -104,6 +105,13 @@ function Embalaje() {
 
     function handleEliminar(id) {
         var derecho;
+        confirmAlert({
+            title: 'Confirmar Eliminar',
+            message: '¿Está seguro de eliminar este embalaje?',
+            buttons: [
+                {
+                    label: 'Si',
+                    onClick: () => {
         validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
             console.log(respuesta.data)
@@ -128,6 +136,15 @@ function Embalaje() {
         }).catch(err => {
             showSuccess(err)
         });
+
+                    }
+                },
+                {
+                    label: 'No',
+                }
+            ]
+        })
+       
     }
 
     function handleShowModificar(id) {

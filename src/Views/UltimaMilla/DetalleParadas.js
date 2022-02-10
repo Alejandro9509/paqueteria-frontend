@@ -342,7 +342,8 @@ class DetalleParadas extends Component {
                     label: 'Sí',
                     onClick: () => {
                         cancelarUltimaMillaCFDI(this.state.paqueteSeleccionado.m_nId,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado,this.state.paqueteSeleccionado.m_bEsRecoleccion).then((result) => {
-                            showSuccess(result.data)
+                            // showSuccess(result.data)
+                            showSuccess("Se canceló ante el SAT con éxito.")
                             this.props.refresh()
                         }).catch((error) => {
                             if (error.response){
