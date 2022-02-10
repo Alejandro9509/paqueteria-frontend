@@ -496,8 +496,8 @@ class FiltersMap extends Component {
                                         openTo="date"
                                         format="dd/MMM/yyyy hh:mm a"
                                         value={this.state.fecha}
-                                        disableFuture={!this.props.data.modoPlaneacion}
-                                        disablePast={this.props.data.modoPlaneacion}
+                                        disableFuture={this.props.data.modoPlaneacion}
+                                        disablePast={!this.props.data.modoPlaneacion}
                                         onChange={this.changeDateConsult}
                                     />
                                 </MuiPickersUtilsProvider>
