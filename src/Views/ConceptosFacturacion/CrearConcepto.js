@@ -397,7 +397,7 @@ function CrearConceptoSAT(props) {
                                     margin="dense"
                                     className="form-control"
                                     type="text"
-                                    label="Fracción aracelaria"
+                                    label="Fracción arancelaria"
                                     aria-readonly={true}
                                     value={props.dataComplemento.fraccionSAT}
                                     name="fraccionSAT"
