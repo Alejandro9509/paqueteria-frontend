@@ -758,23 +758,17 @@ function Viajes() {
     function getParadasListado(row) {
         setState({...state, idViaje: row.m_nIdViaje})
         obtenerDetalleParadasIdViaje(row.m_nIdViaje).then(respuesta => {
-            var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdDestino")
+            /**Se agrega una variable a cada item del listado donde se concatena el origen y destino para despues sirva para agruparlos por origen y destino*/
+            respuesta.data.forEach(a => a.ruta = `${a.m_sOrigen} - ${a.m_sDestino}`)
+            let arrayInformes = getUniqueListBy(respuesta.data, "ruta")
             arrayInformes.forEach(a => {
-                a["informes"] = respuesta.data.filter(r => r.m_nIdOrigen === a.m_nIdOrigen && r.m_nIdDestino === a.m_nIdDestino)
+                a["informes"] = respuesta.data.filter(r => r.ruta === a.ruta)
                 a.origenDestino = `${a.m_sOrigen} - ${a.m_sDestino}`
             })
             setViajeSeleccionado(row)
             setParadasListado(arrayInformes);
         });
     }
-/*
-    function getInventarioUnidades() {
-        const url = `${process.env.REACT_APP_API_URL}/InventarioUnidades/GetListado`;
-        axios.get(url, {headers}).then(({data}) => {
-            setEquipoListado(data)
-        });
-    }*/
-
 
     const showSalidaDialog = (data) => {
         console.log(data);
