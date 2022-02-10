@@ -7,7 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import {Button, Dialog, DialogTitle, List, ListItem} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogTitle, List, ListItem} from "@material-ui/core";
 import InformacionPaquete from "./InformacionPaquete";
 
 const StyledTableCell = withStyles((theme) => ({
@@ -174,6 +174,9 @@ function SimpleDialog(props) {
                     )
                 }
             </List>
+            <DialogActions>
+                <Button onClick={onClose}>Cerrar</Button>
+            </DialogActions>
         </Dialog>
     );
 }
