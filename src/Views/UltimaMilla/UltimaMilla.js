@@ -227,22 +227,41 @@ class UltimaMilla extends Component {
     async generarRuta(data) {
         this.setState({tour: null})
         if (data.paquetesSeleccionadas.length !== 0 || data.unidadesSeleccionadas.length !== 0) {
-            var guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
-            var unidades = data.unidadesSeleccionadas
-            obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
-                if (results) {
-                    if (results.vehicleIdsNotPlanned) {
-                        if (results.vehicleIdsNotPlanned.length > 0) {
-                            unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
-                        }
-                    }
-                    results.tours.map(t => t.color = randomColor(10))
-
-                    console.log(guias)
-                    this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
+            let unidades = data.unidadesSeleccionadas
+            let unidadYaAsignada = false
+            let varible
+            unidades.forEach(u => {
+                varible = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(p => p.m_nIdUnidad === u.m_nIdUnidad && !this.ultimaMillaCompletada(p))
+                if (varible){
+                    unidadYaAsignada = true
                 }
             })
+            if (unidadYaAsignada){
+                showSuccess("Una de las unidades seleccionadas ya se encuentra asignada y ocupada. Seleccione otra.")
+                debugger
+
+            }else{
+                let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
+                obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
+                    if (results) {
+                        if (results.vehicleIdsNotPlanned) {
+                            if (results.vehicleIdsNotPlanned.length > 0) {
+                                unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
+                            }
+                        }
+                        results.tours.map(t => t.color = randomColor(10))
+
+                        console.log(guias)
+                        this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
+                    }
+                })
+            }
+
         }
+    }
+
+    ultimaMillaCompletada(ultimaMilla){
+        return !ultimaMilla.m_arrClsProGuia.find(i => i.m_nEstatusUlimaMilla !== 3)
     }
 
 
