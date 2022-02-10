@@ -89,6 +89,7 @@ class AgregarViaje extends Component {
             idCiudadDestino: {},
             dataCiudad: [],
             dataUnidades: [],
+            dataRemolques: [],
             dataRutas: [],
             dataCodigoPostal: [],
             dataSucursal: [],
@@ -172,6 +173,7 @@ class AgregarViaje extends Component {
         this.getAllOperadores = this.getAllOperadores.bind(this);
         this.handleUnidadFiltro = this.handleUnidadFiltro.bind(this);
         this.handleShowDialog = this.handleShowDialog.bind(this);
+        this.getAllRemolques = this.getAllRemolques.bind(this);
 
     }
 
@@ -182,6 +184,7 @@ class AgregarViaje extends Component {
         this.getAllSucursales()
         this.getAllEstatusViaje();
         this.getAllUnidades();
+        this.getAllRemolques();
         this.getAllOperadores();
     }
 
@@ -479,6 +482,14 @@ class AgregarViaje extends Component {
         });
     }
 
+    getAllRemolques() {
+        obtenerUnidades().then((respuesta) => {
+            this.setState({
+                dataRemolques: respuesta.data,
+            })
+        });
+    }
+
     getAllOperadores() {
         obtenerOperadores().then((respuesta) => {
             this.setState({
@@ -547,77 +558,96 @@ class AgregarViaje extends Component {
 
     handleRemolqueUnoFiltro(event, newValue) {
         event.preventDefault();
-        obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
-            if (resultado.data.m_sEstatus === "DISPONIBLE"){
-                if (!this.isUnidadAvailable(newValue, "REMOLQUE1")){
-                    showSuccess("La unidad elegida ya se encuentra seleccionada.");
+        if (newValue){
+            obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
+                if (resultado.data.m_sEstatus === "DISPONIBLE"){
+                    if (!this.isUnidadAvailable(newValue, "REMOLQUE1")){
+                        showSuccess("La unidad elegida ya se encuentra seleccionada.");
+                        this.setState({
+                            IdRemolque1: null,
+                            placasRemolque1: "",
+                            colorRemolque1: "",
+                            estatusRemolque1: ""
+                        })
+                        return
+                    }
+                    this.setState({
+                        IdRemolque1: newValue,
+                        placasRemolque1: newValue.m_sPlacas,
+                        colorRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                        estatusRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
+                    })
+                }else {
+                    showSuccess("La unidad seleccionada no está disponible")
                     this.setState({
                         IdRemolque1: null,
                         placasRemolque1: "",
                         colorRemolque1: "",
                         estatusRemolque1: ""
                     })
-                    return
                 }
-                this.setState({
-                    IdRemolque1: newValue,
-                    placasRemolque1: newValue.m_sPlacas,
-                    colorRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sColor,
-                    estatusRemolque1: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
-                })
-            }else {
-                showSuccess("La unidad seleccionada no está disponible")
-                this.setState({
-                    IdRemolque1: null,
-                    placasRemolque1: "",
-                    colorRemolque1: "",
-                    estatusRemolque1: ""
-                })
+
+            })
+            if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && newValue.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
+
+                this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
+                    newValue.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
             }
 
-        })
-        if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && newValue.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
-
-            this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
-                newValue.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
+        }else{
+            this.setState({
+                IdRemolque1: null,
+                placasRemolque1: "",
+                colorRemolque1: "",
+                estatusRemolque1: ""
+            })
         }
     }
 
     handleRemolqueDosFiltro(event, newValue) {
         event.preventDefault();
-        obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
-            if (resultado.data.m_sEstatus === "DISPONIBLE"){
-                if (!this.isUnidadAvailable(newValue, "REMOLQUE2")){
-                    showSuccess("La unidad elegida ya se encuentra seleccionada.");
+        if (newValue){
+            obtenerEstatusUnidadeId(newValue.m_nIdUnidad).then((resultado) => {
+                if (resultado.data.m_sEstatus === "DISPONIBLE"){
+                    if (!this.isUnidadAvailable(newValue, "REMOLQUE2")){
+                        showSuccess("La unidad elegida ya se encuentra seleccionada.");
+                        this.setState({
+                            IdRemolque2: null,
+                            placasRemolque2: "",
+                            colorRemolque2: "",
+                            estatusRemolque2: ""
+                        })
+                        return
+                    }
+                    this.setState({
+                        IdRemolque2: newValue,
+                        placasRemolque2: newValue.m_sPlacas,
+                        colorRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sColor,
+                        estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
+                    })
+                }else{
+                    showSuccess("La unidad seleccionada no está disponible")
                     this.setState({
                         IdRemolque2: null,
                         placasRemolque2: "",
                         colorRemolque2: "",
                         estatusRemolque2: ""
                     })
-                    return
                 }
-                this.setState({
-                    IdRemolque2: newValue,
-                    placasRemolque2: newValue.m_sPlacas,
-                    colorRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sColor,
-                    estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
-                })
-            }else{
-                showSuccess("La unidad seleccionada no está disponible")
-                this.setState({
-                    IdRemolque2: null,
-                    placasRemolque2: "",
-                    colorRemolque2: "",
-                    estatusRemolque2: ""
-                })
+            })
+
+            if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
+
+                this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
+                    this.state.IdRemolque1.m_nIdUnidad, newValue.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
             }
-        })
-
-        if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && newValue.m_nIdUnidad && this.state.IdDolly.m_nIdUnidad) {
-
-            this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
-                this.state.IdRemolque1.m_nIdUnidad, newValue.m_nIdUnidad, this.state.IdDolly.m_nIdUnidad)
+        }else{
+            this.setState({
+                IdRemolque2: null,
+                placasRemolque2: "",
+                colorRemolque2: "",
+                estatusRemolque2: ""
+            })
         }
     }
 
@@ -1306,147 +1336,11 @@ class AgregarViaje extends Component {
                                     </div>
                                 </div>
 
-                                {/*{
-                                    !this.props.consult &&
-                                    <div>
-                                        <div className="widget-header">
-                                            <h2 color={'#717171'}>Informes para asignación</h2>
-                                            <br/>
-                                            <div className="row" style={{display: "flex"}}>
-                                                <div className="col-sm-12 col-md-12 unit">
-                                                    <div className="input">
-                                                        <Autocomplete
-                                                            freeSolo
-                                                            onChange={this.handleOrigenFiltro}
-                                                            value={this.state.origen}
-                                                            //disabled={state.agregar == "Consultar"}
-                                                            id="origenRemitente"
-                                                            disableClearable
-                                                            forcePopupIcon={false}
-                                                            options={this.state.dataCiudad}
-                                                            getOptionLabel={(option) =>
-                                                                option.m_sCiudad
-                                                            }
-                                                            style={{
-                                                                transform: "translate(14px, 10px) scale(1) !important"
-                                                            }}
-                                                            renderInput={(params) => (
-                                                                <div>
-                                                                    <TextField
-                                                                        label="Origen"
-                                                                        margin="dense"
-                                                                        variant="outlined"
-                                                                        {...params}
-                                                                    />
-                                                                </div>
-                                                            )}
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div className="col-sm-12 col-md-12 unit">
-                                                    <div className="input">
-                                                        <Autocomplete
-                                                            freeSolo
-                                                            onChange={this.handleDestinoFiltro}
-
-                                                            value={this.state.destino}
-                                                            //disabled={state.agregar == "Consultar"}
-                                                            id="destino"
-                                                            disableClearable
-                                                            forcePopupIcon={false}
-                                                            options={this.state.dataCiudad}
-                                                            getOptionLabel={(option) =>
-                                                                option.m_sCiudad
-                                                            }
-                                                            style={{
-                                                                transform: "translate(14px, 10px) scale(1) !important"
-                                                            }}
-                                                            renderInput={(params) => (
-                                                                <div>
-                                                                    <TextField
-                                                                        label="Destino"
-                                                                        margin="dense"
-                                                                        variant="outlined"
-                                                                        {...params}
-                                                                    />
-                                                                </div>
-                                                            )}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="row" style={{height: "200px", width: '100%'}}>
-                                            <DataGrid
-                                                localeText={dataGridLocaleText}
-                                                rows={this.state.dataInformesPorAsignar}
-                                                columns={columnspRorAsignar}
-                                                density="compact"
-                                                pageSize={Math.floor((this.state.height - 310) / 30)}
-                                                getRowId={(row) => row.m_nIdInforme}
-                                                onRowSelected={(row) => {
-                                                    this.setState({
-                                                        idInforme: row.data.m_nIdInforme
-
-                                                    })
-                                                }}
-                                                hideFooter
-                                            />
-
-                                        </div>
-                                    </div>
-                                }*/}
-
-
-
                                 <div className="row">
                                     <div className="widget-header">
                                         <h2>Operador</h2>
                                     </div>
                                     <Grid container spacing={2}>
-                                        {/*<Grid item xs={6}>
-                        <TextField
-                            margin={"dense"}
-                            variant={"outlined"}
-                            label={"Origen"}
-                            disabled
-                            value={data.origen}/>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            margin={"dense"}
-                            variant={"outlined"}
-                            label={"Destino"}
-                            disabled
-                            value={data.destino}/>
-                    </Grid>*/}
-                                        {/*<Grid item xs={3}>
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        checked={this.state.cargadoVacioRemolqueUno}
-                                                        onChange={this.handleChangeCheckbox}
-                                                        name="cargadoVacioRemolqueUno"
-                                                        //disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
-                                                    />
-                                                }
-                                                label={"Cargado/Vacío Remolque 1"}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={3}>
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        checked={this.state.cargadoVacioRemolqueDos}
-                                                        onChange={this.handleChangeCheckbox}
-                                                        name="cargadoVacioRemolqueDos"
-                                                        //disabled={!(this.state.dataInformesAsignados.length !== 0 && !this.props.consult)}
-                                                    />
-                                                }
-                                                label={"Cargado/Vacío Remolque 2"}
-                                            />
-                                        </Grid>*/}
-                                        {/*<Grid item xs={6}/>*/}
                                         <Grid item xs={6}>
                                             <Autocomplete
                                                 freeSolo
@@ -1489,7 +1383,7 @@ class AgregarViaje extends Component {
                                                 id="unidad"
                                                 // disableClearable
                                                 // forcePopupIcon={false}
-                                                options={this.state.dataUnidades.filter(i => i.m_bActivo && (this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
+                                                options={this.state.dataUnidades.filter(i => i.m_bActivo && (i.m_nIdentificador === 1 || i.m_nIdentificador === 2) && (this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})` : ""
                                                 }
@@ -1529,36 +1423,6 @@ class AgregarViaje extends Component {
                                         </Grid>
                                         <Grid item xs={1}/>
 
-                                        {/*<Grid item xs={3}>
-                                            <TextField
-                                                margin={"dense"}
-                                                variant={"outlined"}
-                                                label={"Referencia"}
-                                                onChange={this.handleChange}
-                                                value={this.state.referencia}
-                                                name={"referencia"}
-                                                disabled={!(this.state.dataInformesAsignados.length > 0 && !this.props.consult)}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={3}>
-                                            <TextField
-                                                margin={"dense"}
-                                                variant={"outlined"}
-                                                label={"Kilómetros"}
-                                                disabled
-                                                // onChange={(e) => setData({...data, kms: e.target.value})}
-                                                value={this.state.kms}/>
-                                        </Grid>
-                                        <Grid item xs={2}>
-                                            <TextField
-                                                margin={"dense"}
-                                                variant={"outlined"}
-                                                label={"Horas"}
-                                                disabled
-                                                // onChange={(e) => setData({...data, horas: e.target.value})}
-                                                value={this.state.horas}/>
-                                        </Grid>*/}
-                                        {/*<Grid item xs={4}/>*/}
                                     </Grid>
                                 </div>
 
@@ -1583,7 +1447,7 @@ class AgregarViaje extends Component {
                                                     // disableClearable
                                                     disabled={this.props.consult}
                                                     // forcePopupIcon={false}
-                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo && (this.state.unidad ? this.state.unidad.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
+                                                    options={this.state.dataRemolques.filter(i => i.m_bActivo && i.m_nIdTipoUnidad !== 28 && (this.state.unidad ? this.state.unidad.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
                                                     getOptionLabel={(option) =>
                                                         `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                                     }
@@ -1647,7 +1511,7 @@ class AgregarViaje extends Component {
                                                     // disableClearable
                                                     disabled={this.props.consult}
                                                     // forcePopupIcon={false}
-                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo && (this.state.unidad ? this.state.unidad.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
+                                                    options={this.state.dataRemolques.filter(i => i.m_bActivo && i.m_nIdTipoUnidad !== 28 && (this.state.unidad ? this.state.unidad.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
                                                     getOptionLabel={(option) =>
                                                         `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})`
                                                     }
@@ -1709,7 +1573,7 @@ class AgregarViaje extends Component {
                                                     // disableClearable
                                                     disabled={this.props.consult}
                                                     // forcePopupIcon={false}
-                                                    options={this.state.dataUnidades.filter(i => i.m_bActivo && i.m_nIdTipoUnidad === 28)}
+                                                    options={this.state.dataRemolques.filter(i => i.m_bActivo && i.m_nIdTipoUnidad === 28)}
                                                     getOptionLabel={(option) =>
                                                         option ? `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})` : ""
                                                     }
