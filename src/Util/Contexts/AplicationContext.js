@@ -59,7 +59,7 @@ export class AplicationProvider extends Component{
         );
     }
     handleAction(e) {
-        console.log('user did something', e)
+        // console.log('user did something', e)
         this.setState({isTimedOut: false})
     }
     handleClose() {
