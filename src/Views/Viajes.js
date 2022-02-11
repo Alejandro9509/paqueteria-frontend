@@ -467,7 +467,6 @@ function Viajes() {
                 {
                     label: 'Sí',
                     onClick: () => {
-
                         obtenerCFDI(id,sustituir).then((result) => {
                             setState({...state, openEnvioCorreo: true, idInforme: id, folio: folio, idViaje: idViaje})
                         }).catch((error) => {
@@ -757,7 +756,9 @@ function Viajes() {
     const [paradaData, setParadaData] = React.useState();
 
     function getParadasListado(row) {
-        setState({...state, idViaje: row.m_nIdViaje})
+        setState(state => {
+            return {...state, idViaje: row.m_nIdViaje}
+        })
         obtenerDetalleParadasIdViaje(row.m_nIdViaje).then(respuesta => {
             /**Se agrega una variable a cada item del listado donde se concatena el origen y destino para despues sirva para agruparlos por origen y destino*/
             respuesta.data.forEach(a => a.ruta = `${a.m_sOrigen} - ${a.m_sDestino}`)
@@ -928,7 +929,9 @@ function Viajes() {
         enviarCorreoCFDIViaje(state.idInforme, data.correos,data.correoDefault).then(({data}) => {
             showSuccess(data);
             descargarPDF(state.idInforme, state.folio)
-            setState({...state, openEnvioCorreo: false})
+            setState(state => {
+                return {...state, openEnvioCorreo: false}
+            })
             getParadasListado({m_nIdViaje:state.idViaje})
 
         })
