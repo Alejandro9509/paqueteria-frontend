@@ -45,7 +45,7 @@ export class AplicationProvider extends Component{
                     <IdleTimer
                         element={document}
                         ref={ref => { this.idleTimer = ref }}
-                        timeout={1000 * 60 * .25}
+                        timeout={1000 * 60 * 5}
                         onActive={this.handleOnActive}
                         onIdle={this.handleOnIdle}
                         onAction={this.handleAction}
