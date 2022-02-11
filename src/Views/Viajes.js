@@ -467,15 +467,13 @@ function Viajes() {
                 {
                     label: 'Sí',
                     onClick: () => {
-                        setState({...state, openEnvioCorreo: true})
-
-                        /*obtenerCFDI(id,sustituir).then((result) => {
+                        obtenerCFDI(id,sustituir).then((result) => {
                             setState({...state, openEnvioCorreo: true, idInforme: id, folio: folio, idViaje: idViaje})
                         }).catch((error) => {
                             if (error.response){
                                 showError(error.response.data)
                             }
-                        })*/
+                        })
                     }
                 },
                 {
