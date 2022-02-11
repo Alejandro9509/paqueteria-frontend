@@ -230,12 +230,14 @@ class UltimaMilla extends Component {
             let unidades = data.unidadesSeleccionadas
             let unidadYaAsignada = false
             let varible
-            unidades.forEach(u => {
-                varible = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(p => p.m_nIdUnidad === u.m_nIdUnidad && !this.ultimaMillaCompletada(p))
-                if (varible){
-                    unidadYaAsignada = true
-                }
-            })
+            if(this.state.ultimaMilla) {
+                unidades.forEach(u => {
+                    varible = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(p => p.m_nIdUnidad === u.m_nIdUnidad && !this.ultimaMillaCompletada(p))
+                    if (varible) {
+                        unidadYaAsignada = true
+                    }
+                })
+            }
             if (unidadYaAsignada){
                 showSuccess("Una de las unidades seleccionadas ya se encuentra asignada y ocupada. Seleccione otra.")
             }else{
