@@ -11,7 +11,7 @@ import {
     Typography
 } from "@material-ui/core";
 
-class MyComponent extends Component {
+class EnvioCorreoDialogo extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -58,6 +58,6 @@ class MyComponent extends Component {
     }
 }
 
-MyComponent.propTypes = {};
+EnvioCorreoDialogo.propTypes = {};
 
-export default MyComponent;
+export default EnvioCorreoDialogo;
