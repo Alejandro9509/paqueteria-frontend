@@ -163,6 +163,11 @@ function Viajes() {
     }
 
     function handleShowModificar(id) {
+        let viaje = data.find(i => i.m_nIdViaje === id)
+        if ( viaje?.m_nIdEstatusViaje === 6 || viaje?.m_nIdEstatusViaje === 10 ){
+            showSuccess("No se puede editar un viaje terminado o cancelado")
+            return
+        }
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
