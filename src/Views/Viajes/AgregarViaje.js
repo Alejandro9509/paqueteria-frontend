@@ -44,7 +44,7 @@ import {ContactsOutlined} from "@material-ui/icons";
 import {obtenerInformesDisponiblesViajes} from "../../Util/Contexts/InformesContext";
 import InformesPorAsignar from "./InformesPorAsignar";
 import Noty from "noty";
-import {obtenerEstatusUnidadeId, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
+import {obtenerEstatusUnidadeId, obtenerRemolques, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 import {obtenerOperadores, obtenerOperadoresId} from "../../Util/Contexts/OperadoresContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 
@@ -483,7 +483,7 @@ class AgregarViaje extends Component {
     }
 
     getAllRemolques() {
-        obtenerUnidades().then((respuesta) => {
+        obtenerRemolques().then((respuesta) => {
             this.setState({
                 dataRemolques: respuesta.data,
             })
