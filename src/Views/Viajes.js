@@ -342,13 +342,25 @@ function Viajes() {
             field: "m_sUnidad",
             width: 200,
         },{
-            headerName: "Remolque1",
+            headerName: "Remolque 1",
             field: "m_sRemolque1",
             width: 200,
         },{
             headerName: "Remolque2",
             field: "m_sRemolque2",
             width: 200,
+        },{
+            headerName: "Fecha Cancelación",
+            field: "FechaCancelacion",
+            width: 200,
+        },{
+            headerName: "Motivo de Cancelación",
+            field: "MotivoCancelacion",
+            width: 250,
+        },{
+            headerName: "Usuario de cancelación",
+            field: "UsuarioCancelacion",
+            width: 250,
         }
         //   {
         //   headerName: "Origen",
