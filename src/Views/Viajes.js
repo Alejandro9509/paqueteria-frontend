@@ -457,7 +457,7 @@ function Viajes() {
     function generarCFDI(id, folio, idViaje, sustituir) {
         confirmAlert({
             title: 'Confirmar Timbrado',
-            message: '¿Está seguro de realizar esta operación, el CFDI de traslada se timbrara ante el SAT?',
+            message: '¿Está seguro de realizar esta operación, el CFDI de traslada se timbrará ante el SAT?',
             buttons: [
                 {
                     label: 'Sí',

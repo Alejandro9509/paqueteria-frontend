@@ -1656,7 +1656,7 @@ function Informes({history}) {
                                                     <div
                                                         className="widget-header">
                                                         <div className="pull-left">
-                                                            <h3>Información De Envio</h3>
+                                                            <h3>Información De Envío</h3>
                                                         </div>
                                                     </div>
 
@@ -2273,7 +2273,7 @@ function Informes({history}) {
                                         <div className="widget-wrap">
                                             <div className="widget-header">
                                                 <div className="pull-left">
-                                                    <h3>Detalles de Guias</h3>
+                                                    <h3>Detalles de Guías</h3>
                                                 </div>
                                             </div>
                                             <div className="widget-container">

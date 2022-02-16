@@ -656,7 +656,7 @@ class CrearTarifa extends Component {
 
                                         <div className="col-md-4 col-sm-4" style={{ padding: "5px" }}>
                                             <label className="checkbox">
-                                                Region
+                                                Región
                                                 <input type="checkbox"
                                                        checked={this.state.porRegion}
                                                        onChange={this.handleChangeTipoTarifa}

@@ -1209,7 +1209,7 @@ function Recoleccion() {
             console.log("ENTRO")
             confirmAlert({
                 title: 'Confirmación',
-                message: '¿Desea crear esta recoleccion?',
+                message: '¿Desea crear esta recolección?',
                 buttons: [
                     {
                         label: 'Sí',
@@ -1222,7 +1222,7 @@ function Recoleccion() {
                                 limpiarInputsAgregar()
                                 confirmAlert({
                                     title: 'Confirmación',
-                                    message: '¿Desea crear otra recoleccion?',
+                                    message: '¿Desea crear otra recolección?',
                                     buttons: [
                                         {
                                             label: 'Sí',
