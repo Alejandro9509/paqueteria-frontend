@@ -3749,7 +3749,7 @@ function Embarque(props) {
                                                                                        onChange={handleChangeEntregaDD}
                                                                                        className="form-control"
                                                                                        type="text"
-                                                                                       label="Domicilio"
+                                                                                       label="Calle y número"
                                                                                        value={entregaDD.domicilioEnt}
                                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                                        id="domicilioEnt"

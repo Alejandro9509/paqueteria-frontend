@@ -4373,7 +4373,7 @@ function Recoleccion() {
                                                                                    onChange={handleChangeRecoleccionDD}
                                                                                    className="form-control"
                                                                                    type="text"
-                                                                                   label="Domicilio"
+                                                                                   label="Calle y número"
                                                                                    value={recoleccionDD.domicilioRec}
                                                                                    disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                                                                    id="domicilioRec"

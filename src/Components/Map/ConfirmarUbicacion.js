@@ -45,7 +45,8 @@ class ConfirmarUbicacion extends Component {
         if (this.props.remitente) {//si es recoleccion entrara y evaluara si es informacion solo de recoleccion de remitente o si es de diferente direccion de recoleccion
             if (this.props.esDiferenteRecoleccion) {//si es diferente de recoleccion consulta los valores de recoleccionDD
                 let municipioTexto = this.props.dataMunicipiosRecoleccionDD.filter(m => m.m_sCodigoMunicipio == this.props.recoleccionDD.municipioRec)[0].m_sMunicipio
-                searchLocationAddress(`${this.props.recoleccionDD.domicilioRec},${this.props.recoleccionDD.codigoPostalRec.m_sCP},${municipioTexto}`).then(data => {
+                //this.props.recoleccionDD.domicilioRec es calle y numero
+                searchLocationAddress(`${this.props.recoleccionDD.domicilioRec},${this.props.recoleccionDD.codigoPostalRec.m_sColonia},${this.props.recoleccionDD.codigoPostalRec.m_sCP} ${municipioTexto},${this.props.recoleccionDD.zonaOperativaRec.m_sEstado}`).then(data => {
 
                     this.setState({
                         coordenadas: {lat: data.y, lng: data.x}
@@ -75,7 +76,7 @@ class ConfirmarUbicacion extends Component {
             if (this.props.esDiferenteDomicilio) {//si es diferente domicilio de entrega tomara los valores del form del diferente domicilio de entrega
                 // debugger
                 let municipioTexto = this.props.dataMunicipiosEntregaDD.find(m => m.m_sCodigoMunicipio == parseInt(this.props.direccion.municipioEnt))?.m_sMunicipio
-                searchLocationAddress(`${this.props.direccion.domicilioEnt},${this.props.direccion.codigoPostalEnt.m_sCP},${municipioTexto}`).then(data => {
+                searchLocationAddress(`${this.props.direccion.domicilioEnt},${this.props.entregaDD.codigoPostalEnt.m_sColonia},${this.props.direccion.codigoPostalEnt.m_sCP},${municipioTexto},${this.props.entregaDD.zonaOperativaEnt.m_sEstado}`).then(data => {
 
                     this.setState({
                         coordenadas: {lat: data.y, lng: data.x}
