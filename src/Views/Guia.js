@@ -861,7 +861,7 @@ function Guia(props) {
                 $('#Agregar').addClass('in show');
                  //setDataMoneda(props.location.dataMoneda)
                  //setDataSucursal(props.location.dataSucursal)
-                 //setDataTipoCobro(props.location.dataTipoCobro)
+                 setDataTipoCobro(props.location.dataTipoCobro)
                  //setDataTipoCambio(props.location.dataTipoCambio)
                 // setDataCiudadF(props.location.dataCiudades)
                 getDataParaEditar()
