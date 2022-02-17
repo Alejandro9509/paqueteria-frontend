@@ -59,7 +59,6 @@ export class AplicationProvider extends Component{
         );
     }
     handleAction(e) {
-        console.log('user did something', e)
         this.setState({isTimedOut: false})
     }
     handleClose() {
@@ -71,13 +70,10 @@ export class AplicationProvider extends Component{
         this.props.history.push('/')
     }
     handleOnActive (event) {
-        console.log('user is active', event)
         this.setState({isTimedOut: false})
     }
 
     handleOnIdle (event) {
-        console.log('user is idle', event)
-        console.log(this.state.isTimedOut)
         const isTimedOut = this.state.isTimedOut
         if (isTimedOut) {
             localStorage.removeItem("accessToken");
