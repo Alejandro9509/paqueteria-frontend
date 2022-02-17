@@ -403,6 +403,7 @@ function Viajes() {
             obtenerFechaFinal().then((respuestaDos) => {
                 obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
                     setData(respuesta.data)
+                    setViajeSeleccionado(null)
                 })
             })
         })
@@ -835,8 +836,7 @@ function Viajes() {
         agregarViajeSalida(params)
             .then((respuesta) => {
                 showSuccess(respuesta.data);
-                getParadasListado(paradaData)
-                setViajeSeleccionado(null)
+                //getParadasListado(paradaData)
                 getAllData()
             })
             .catch((err) => {
@@ -878,8 +878,7 @@ function Viajes() {
             .then((respuesta) => {
                 showSuccess(respuesta.data);
                 console.log(respuesta.data);
-                getParadasListado(paradaData)
-                setViajeSeleccionado(null)
+                //getParadasListado(paradaData)
                 getAllData()
 
             })
@@ -1166,7 +1165,7 @@ function Viajes() {
                                                 <List>
                                                     {
                                                         viajeSeleccionado && viajeSeleccionado.m_arrTrayectos.map((p, index) => {
-                                                            const informesFiltrados = paradasListado.filter(i => (i.m_nIdDestino === p.m_nIdDestino && i.m_nIdOrigen === p.m_nIdOrigen) || (paradasListado.length === index && !paradasListado.map(i => i.m_nIdOrigen).includes(i.m_nIdOrigen) && !paradasListado.map(i => i.m_nIdDestino).includes(i.m_nIdDestino) ))
+                                                            const informesFiltrados = paradasListado.filter((i,ind) => ((i.m_nIdDestino === p.m_nIdDestino) || (parseInt(viajeSeleccionado.m_arrTrayectos.length) == parseInt(index) )))
 
                                                             return (
                                                                 <div>
