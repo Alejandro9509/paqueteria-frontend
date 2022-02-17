@@ -232,6 +232,7 @@ class UltimaMilla extends Component {
 
 
     async generarRuta(data) {
+        console.log(data)
         this.setState({tour: null})
         if (data.paquetesSeleccionadas.length !== 0 || data.unidadesSeleccionadas.length !== 0) {
             let unidades = data.unidadesSeleccionadas
@@ -251,7 +252,7 @@ class UltimaMilla extends Component {
                 let unidadesDisponibles = true
                 let fechaActual = data.finishDate
                 for (let i = 0; i < data.unidadesSeleccionadas.length ; i++){
-                    let resultado = await validarUnidadOcupada(i.m_nIdUnidad, fechaActual, data.sucursalSeleccionada.m_nIdSucursal)
+                    let resultado = await validarUnidadOcupada(data.unidadesSeleccionadas[i].m_nIdUnidad, fechaActual, data.sucursalSeleccionada.m_nIdSucursal)
                     unidadesDisponibles = resultado.data.UnidadDisponible
                 }
                 if (unidadesDisponibles){

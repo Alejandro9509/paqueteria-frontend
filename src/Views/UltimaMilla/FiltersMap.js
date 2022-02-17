@@ -666,7 +666,8 @@ class FiltersMap extends Component {
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
                                 disabled={this.state.sucursalSeleccionada == null}
-                                onClick={() => this.props.generarRuta(this.state)}
+                                onClick={() => 
+                                    this.props.generarRuta(this.state)}
                             />
                         </Tooltip>
 
