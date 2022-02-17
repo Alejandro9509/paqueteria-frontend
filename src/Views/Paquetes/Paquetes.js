@@ -161,7 +161,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
             width: 120,
         },
         {
-            headerName: "Descripcion",
+            headerName: "Descripción",
             field: "m_sDescripcion",
             width: 200,
         },

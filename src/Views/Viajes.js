@@ -163,6 +163,11 @@ function Viajes() {
     }
 
     function handleShowModificar(id) {
+        let viaje = data.find(i => i.m_nIdViaje === id)
+        if ( viaje?.m_nIdEstatusViaje === 6 || viaje?.m_nIdEstatusViaje === 10 ){
+            showSuccess("No se puede editar un viaje terminado o cancelado")
+            return
+        }
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -469,12 +474,11 @@ function Viajes() {
     function generarCFDI(id, folio, idViaje, sustituir) {
         confirmAlert({
             title: 'Confirmar Timbrado',
-            message: '¿Está seguro de realizar esta operación, el CFDI de traslada se timbrara ante el SAT?',
+            message: '¿Está seguro de realizar esta operación, el CFDI de traslada se timbrará ante el SAT?',
             buttons: [
                 {
                     label: 'Sí',
                     onClick: () => {
-
                         obtenerCFDI(id,sustituir).then((result) => {
                             setState({...state, openEnvioCorreo: true, idInforme: id, folio: folio, idViaje: idViaje})
                         }).catch((error) => {
@@ -760,7 +764,9 @@ function Viajes() {
     const [paradaData, setParadaData] = React.useState();
 
     function getParadasListado(row) {
-        setState({...state, idViaje: row.m_nIdViaje})
+        setState(state => {
+            return {...state, idViaje: row.m_nIdViaje}
+        })
         obtenerDetalleParadasIdViaje(row.m_nIdViaje).then(respuesta => {
             setViajeSeleccionado(row)
             setParadasListado(respuesta.data);
@@ -926,7 +932,9 @@ function Viajes() {
         enviarCorreoCFDIViaje(state.idInforme, data.correos,data.correoDefault).then(({data}) => {
             showSuccess(data);
             descargarPDF(state.idInforme, state.folio)
-            setState({...state, openEnvioCorreo: false})
+            setState(state => {
+                return {...state, openEnvioCorreo: false}
+            })
             getParadasListado({m_nIdViaje:state.idViaje})
 
         })

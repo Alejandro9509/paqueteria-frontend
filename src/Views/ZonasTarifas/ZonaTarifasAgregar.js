@@ -220,7 +220,7 @@ function ZonaTarifasAgregar({idZona, consult}) {
                                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                             <Tabs value={value} onChange={handleChangeTab} aria-label="basic tabs example">
                                                 <Tab label="Códigos Postales" {...a11yProps(0)} />
-                                                <Tab label="Recoleccion" {...a11yProps(1)} />
+                                                <Tab label="Recolección" {...a11yProps(1)} />
                                                 <Tab label="Entrega" {...a11yProps(2)} />
                                             </Tabs>
                                         </Box>

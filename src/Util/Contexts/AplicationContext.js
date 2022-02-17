@@ -66,8 +66,9 @@ export class AplicationProvider extends Component{
     }
 
     handleLogout() {
+        localStorage.removeItem("accessToken");
         this.setState({showModal: false})
-        this.props.history.push('/')
+        // this.props.history.push('/')
     }
     handleOnActive (event) {
         this.setState({isTimedOut: false})

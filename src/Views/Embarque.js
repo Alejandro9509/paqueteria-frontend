@@ -273,7 +273,8 @@ function Embarque(props) {
                     <div>
                         <Tooltip title="Modificar">
                             <a
-                                onClick={() => handleShowModificar(row.row.m_nIdEmbarque)}
+                                onClick={() => {
+                                    handleShowModificar(row.row,row.row.m_nIdEmbarque)}}
                                 className="btn btn-default btn-xs"
                             >
                                 <i
@@ -1476,7 +1477,11 @@ function Embarque(props) {
         setTabActiva(1)
     }
 
-    function handleShowModificar(id) {
+    function handleShowModificar(filaEmbarque,id) {
+        if(filaEmbarque.m_nIdEstatusEmbarque==21){
+            showSuccess("El embarque no puede ser modificado ya que se encuentra cancelado")
+            return
+        }     
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -3744,7 +3749,7 @@ function Embarque(props) {
                                                                                        onChange={handleChangeEntregaDD}
                                                                                        className="form-control"
                                                                                        type="text"
-                                                                                       label="Domicilio"
+                                                                                       label="Calle y número"
                                                                                        value={entregaDD.domicilioEnt}
                                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                                        id="domicilioEnt"

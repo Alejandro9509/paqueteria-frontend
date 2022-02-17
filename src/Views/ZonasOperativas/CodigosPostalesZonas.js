@@ -269,7 +269,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                     </Grid>
                     <Grid item xs={2}>
                         <button type={"button"} className="btn btn-primary primary-btn" onClick={handleGetCPS} disabled={consult}>
-                            Buscar Codigos Postales
+                            Buscar Códigos Postales
                         </button>
                     </Grid>
                 </Grid>

@@ -41,7 +41,7 @@ export default function SeleccionarRuta(props){
             width: 300,
         },
         {
-            headerName: "Kilometros",
+            headerName: "Kilómetros",
             field: "Kilometros",
             width: 150,
         },

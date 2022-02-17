@@ -539,6 +539,14 @@ function obtenerReporteCFDIRecoleccion(id){
     );
     return result
 }
+async function validarUnidadOcupada(idUnidad, fecha, idSucursal){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/ValidarUnidad/${idUnidad}/${fecha}/${idSucursal}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
 export {
     cancelarRuta,
     obtenerXMLPermisionario,
@@ -563,7 +571,8 @@ export {
     obtenerPaquetesUnidadOperador,
     calcularRutaUltimaMilla,
     searchAdressWithCoordinates,
-    validarUnidadesSeleccionadas
+    validarUnidadesSeleccionadas,
+    validarUnidadOcupada
 }
 
 
