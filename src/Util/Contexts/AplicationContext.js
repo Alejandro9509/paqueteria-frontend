@@ -59,7 +59,7 @@ export class AplicationProvider extends Component{
         );
     }
     handleAction(e) {
-        console.log('user did something', e)
+        // console.log('user did something', e)
         this.setState({isTimedOut: false})
     }
     handleClose() {
@@ -67,8 +67,9 @@ export class AplicationProvider extends Component{
     }
 
     handleLogout() {
+        localStorage.removeItem("accessToken");
         this.setState({showModal: false})
-        this.props.history.push('/')
+        // this.props.history.push('/')
     }
     handleOnActive (event) {
         console.log('user is active', event)
