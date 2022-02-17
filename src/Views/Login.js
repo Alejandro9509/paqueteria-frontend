@@ -59,7 +59,7 @@ function Login() {
           window.location.replace("indicadores");
         }
         else {
-          showSuccess(respuesta.data);
+          showSuccess("Usuario/Contraseña inválida");
         }
       } catch {
         showSuccess(respuesta.data);
