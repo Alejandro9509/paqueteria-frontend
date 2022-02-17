@@ -19,10 +19,10 @@ const useStyles = makeStyles(() => ({
 export default function SalidaParadas(props){
     const classes = useStyles();
     const [data, setData] = React.useState({
-        sucursal: props.data.m_sSucursalEmisora,
+        sucursal: props.data.m_sSucursal,
         recorrido: props.data.m_sFolioViaje,
-        fecha: props.data.m_dFecha,
-        hora: props.data.m_tHora,
+        fecha: props.data.m_dFechaRegistro,
+        hora: props.data.m_tHoraRegistro,
         cliente: "",
         ruta: props.data.m_sRuta,
         fechaEntrega: "",
@@ -38,10 +38,10 @@ export default function SalidaParadas(props){
         idEstatusRemolqueDos: 0,
         nameEstatusRemolqueDos: "",
         dolly: props.data.m_sDolly,
-        origen: props.data.m_sCiudadOrigen,
-        destino: props.data.m_sCiudadDestino,
-        operador: props.data.m_sNombreCompleto,
-        unidad: props.data.m_sUnidadIdentificador +' - '+ props.data.m_sUnidad,
+        origen: props.data.m_sOringen,
+        destino: props.data.m_sDestino,
+        operador: props.data.m_sOperador,
+        unidad: props.data.m_sUnidad,
         placasUnidad: props.data.m_sPlacasUnidad,
         fechaSalida: props.data.m_dFechaSalida || getCurrentDate(),
         horaSalida: props.data.m_dHoraSalida || getCurrentTime(),
@@ -337,7 +337,7 @@ export default function SalidaParadas(props){
                         value={ data.unidad}
                     />
                 </Grid>
-                <Grid item xs={1}>
+                <Grid item xs={3}>
                     <TextField
                         id={"placas"}
                         InputProps={{readOnly: true}}
@@ -348,9 +348,9 @@ export default function SalidaParadas(props){
                         value={data.placasUnidad}
                     />
                 </Grid>
-                <Grid item xs={6}/>
+                <Grid item xs={4}/>
 
-                <Grid item xs={2}>
+                <Grid item xs={3}>
                     <TextField
                         id={"fechaSalida"}
                         type={"date"}
@@ -375,7 +375,7 @@ export default function SalidaParadas(props){
                         onChange={handleChangeHoraSalida}
                     />
                 </Grid>
-                <Grid item xs={8}/>
+                <Grid item xs={7}/>
 
                 <Grid item xs={4}>
                     <TextField

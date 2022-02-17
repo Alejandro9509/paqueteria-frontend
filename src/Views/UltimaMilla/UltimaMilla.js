@@ -25,7 +25,12 @@ import {
     obtenerGuiasUbicacion,
     randomColor,
     searchLocationWeb,
-    generarRuta, agregarRuta, searchLocationAddress, obtenerUltimaMillaFecha,validarUnidadesSeleccionadas
+    generarRuta,
+    agregarRuta,
+    searchLocationAddress,
+    obtenerUltimaMillaFecha,
+    validarUnidadesSeleccionadas,
+    validarUnidadOcupada
 } from "../../Util/Contexts/UltimaMillaContext";
 import Tour from "./Tour";
 import Mensajes from "./Mensajes";
@@ -42,7 +47,9 @@ import Select from "@material-ui/core/Select";
 import Buttons from "../../Util/CarruselButtons";
 import {reasignarGuia} from "../../Util/Contexts/GuiaContext";
 import L from "leaflet";
-import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png"; // Import css
+import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
+import {forEach} from "react-bootstrap/ElementChildren";
+import {getCurrentDate} from "../../Util/Util"; // Import css
 
 
 function showSuccess(mensaje) {
@@ -241,20 +248,31 @@ class UltimaMilla extends Component {
             if (unidadYaAsignada){
                 showSuccess("Una de las unidades seleccionadas ya se encuentra asignada y ocupada. Seleccione otra.")
             }else{
-                let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
-                obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
-                    if (results) {
-                        if (results.vehicleIdsNotPlanned) {
-                            if (results.vehicleIdsNotPlanned.length > 0) {
-                                unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
+                let unidadesDisponibles = true
+                let fechaActual = data.finishDate
+                for (let i = 0; i < data.unidadesSeleccionadas.length ; i++){
+                    let resultado = await validarUnidadOcupada(i.m_nIdUnidad, fechaActual, data.sucursalSeleccionada.m_nIdSucursal)
+                    unidadesDisponibles = resultado.data.UnidadDisponible
+                }
+                if (unidadesDisponibles){
+                    let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
+                    obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
+                        if (results) {
+                            if (results.vehicleIdsNotPlanned) {
+                                if (results.vehicleIdsNotPlanned.length > 0) {
+                                    unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
+                                }
                             }
-                        }
-                        results.tours.map(t => t.color = randomColor(10))
+                            results.tours.map(t => t.color = randomColor(10))
 
-                        console.log(guias)
-                        this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
-                    }
-                })
+                            console.log(guias)
+                            this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
+                        }
+                    })
+                }else{
+                    showSuccess("Una de las unidades seleccionadas ya se encuentra asignada y ocupada. Seleccione otra.")
+                }
+
             }
 
         }

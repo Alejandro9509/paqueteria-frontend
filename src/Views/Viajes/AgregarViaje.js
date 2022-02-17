@@ -47,6 +47,8 @@ import Noty from "noty";
 import {obtenerEstatusUnidadeId, obtenerRemolques, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 import {obtenerOperadores, obtenerOperadoresId} from "../../Util/Contexts/OperadoresContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
+import {obtenerRutasByOrigenDestinoPublicoGeneral} from "../../Util/Contexts/RutasContext";
+import SeleccionarRuta from "../Rutas/SeleccionarRuta";
 
 const headers = API_HEADERS
 
@@ -90,7 +92,6 @@ class AgregarViaje extends Component {
             dataCiudad: [],
             dataUnidades: [],
             dataRemolques: [],
-            dataRutas: [],
             dataCodigoPostal: [],
             dataSucursal: [],
             dataEstatusViaje: [],
@@ -101,6 +102,7 @@ class AgregarViaje extends Component {
             showDialog: false,
             identificadorModal: "",
             tipoModal: 0,
+            dataRutas: [],
             idSucursalAgregar: localStorage.getItem("Sucursal"),
             folioViaje: "",
             viajeCliente: "",
@@ -151,7 +153,6 @@ class AgregarViaje extends Component {
         }
 
         this.getAllCiudades = this.getAllCiudades.bind(this);
-        this.getAllRutas = this.getAllRutas.bind(this);
         this.getAllCodigosPostales = this.getAllCodigosPostales.bind(this);
         this.getAllSucursales = this.getAllSucursales.bind(this);
         this.getAllEstatusViaje = this.getAllEstatusViaje.bind(this);
@@ -174,6 +175,7 @@ class AgregarViaje extends Component {
         this.handleUnidadFiltro = this.handleUnidadFiltro.bind(this);
         this.handleShowDialog = this.handleShowDialog.bind(this);
         this.getAllRemolques = this.getAllRemolques.bind(this);
+        this.handleChangeRuta = this.handleChangeRuta.bind(this);
 
     }
 
@@ -285,6 +287,7 @@ class AgregarViaje extends Component {
             IdRemolque1: this.state.IdRemolque1.m_nIdUnidad,
             IdRemolque2: this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0,
             IdDolly: this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0,
+            m_nIdRuta: this.state.idRuta,
             asignacionUnidad: {
                 idUnidad: this.state.unidad.m_nIdUnidad,
                 idOperador: this.state.operador.m_nIdOperador,
@@ -451,12 +454,6 @@ class AgregarViaje extends Component {
         });
     }
 
-    getAllRutas() {
-        const url = `${process.env.REACT_APP_API_URL}/Rutas/GetListado`;
-        axios.get(url, {headers}).then((respuesta) => {
-            this.setState({dataRuta: respuesta.data})
-        });
-    }
 
     getAllCodigosPostales() {
         obtenerCodigoPostal().then((respuesta) => {
@@ -481,6 +478,8 @@ class AgregarViaje extends Component {
             })
         });
     }
+
+
 
     getAllRemolques() {
         obtenerRemolques().then((respuesta) => {
@@ -746,6 +745,12 @@ class AgregarViaje extends Component {
         this.setState({
             [input]: value
         });
+    }
+
+    handleChangeRuta (idRuta) {
+        this.setState( {
+            idRuta: idRuta
+        })
     }
 
     handleChangeCheckbox = (e) => {
@@ -1333,6 +1338,18 @@ class AgregarViaje extends Component {
                                                 )}
                                             />
                                         </div>
+                                    </div>
+                                    <div className="col-sm-12 col-md-12 unit">
+                                    <SeleccionarRuta
+                                        IdRuta={this.state.idRuta}
+                                        IdOrigen={this.state.idCiudadOrigen.m_nIdCiudad ? this.state.idCiudadOrigen.m_nIdCiudad : '' }
+                                        IdDestino={this.state.idCiudadDestino.m_nIdCiudad ? this.state.idCiudadDestino.m_nIdCiudad : '' }
+                                        IdCliente={0}
+                                        viaje={true}
+                                        disabled={this.state.consult}
+                                        onChangeRuta={this.handleChangeRuta}
+                                        EsConsulta={this.state.consult}
+                                    />
                                     </div>
                                 </div>
 
