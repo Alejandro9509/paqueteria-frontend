@@ -818,7 +818,7 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 aria-label="Timbrar SAT">
                                                                                                                 <Tooltip
-                                                                                                                    title={"Generar CFDI Traslada"}>
+                                                                                                                    title={"Generar CFDI Traslado"}>
                                                                                                                     <DescriptionIcon
                                                                                                                         onClick={() => this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
                                                                                                                         fontSize="default"/>
@@ -830,7 +830,7 @@ class DetalleParadas extends Component {
                                                                                                             <IconButton
                                                                                                                 aria-label="XML SAT">
                                                                                                                 <Tooltip
-                                                                                                                    title={"Descargar XML Traslada"}>
+                                                                                                                    title={"Descargar XML Traslado"}>
                                                                                                                     <GetAppIcon
                                                                                                                         onClick={() => this.descargarXMLCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
                                                                                                                         fontSize="default"/>
@@ -840,7 +840,7 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !r.m_bUnidadPermisionario && g.m_bTimbrado &&
                                                                                                             <IconButton
-                                                                                                                aria-label="PDF TASLADA">
+                                                                                                                aria-label="PDF TASLADO">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar PDF"}>
                                                                                                                     <PictureAsPdfIcon
