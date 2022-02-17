@@ -305,7 +305,7 @@ class AgregarViaje extends Component {
             }
         }
         console.log(params)
-       /*if (this.props.modificar) {
+       if (this.props.modificar) {
             modificarViaje(this.props.id, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data)
@@ -336,7 +336,7 @@ class AgregarViaje extends Component {
                     console.log(err);
                     showSuccess(err);
                 });
-        }*/
+        }
 
 
     };

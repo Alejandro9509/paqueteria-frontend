@@ -193,7 +193,12 @@ function Informes({history}) {
         {
             headerName: "Estatus",
             field: "m_sEstatusInforme",
-            width: 200,
+            width: 125,
+        },
+        {
+            headerName: "Ubicación actual",
+            field: "m_sUbicacionActual",
+            width: 150,
         },
         {
             headerName: "Viaje",
