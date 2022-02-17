@@ -769,7 +769,7 @@ function Viajes() {
             return {...state, idViaje: row.m_nIdViaje}
         })
         obtenerDetalleParadasIdViaje(row.m_nIdViaje).then(respuesta => {
-            setViajeSeleccionado(row)
+            //setViajeSeleccionado(row)
             setParadasListado(respuesta.data);
         });
     }
@@ -1144,6 +1144,7 @@ function Viajes() {
                                                      ...state,
                                                      idViaje: row.data.m_nIdViaje
                                                  }) */
+                                                setViajeSeleccionado(row.data)
                                                 getParadasListado(row.data)
                                             }}
                                         />
