@@ -1165,7 +1165,7 @@ function Viajes() {
                                                 <List>
                                                     {
                                                         viajeSeleccionado && viajeSeleccionado.m_arrTrayectos.map((p, index) => {
-                                                            const informesFiltrados = paradasListado.filter((i,ind) => ((i.m_nIdDestino === p.m_nIdDestino) || (parseInt(viajeSeleccionado.m_arrTrayectos.length) == parseInt(index) )))
+                                                            const informesFiltrados = paradasListado.filter((i,ind) => ((i.m_nIdDestino === p.m_nIdDestino) || ((viajeSeleccionado.m_arrTrayectos.length - 1) === index && !viajeSeleccionado.m_arrTrayectos.map(t => t.m_nIdDestino).includes(i.m_nIdDestino) )))
 
                                                             return (
                                                                 <div>
