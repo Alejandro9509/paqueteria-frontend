@@ -227,7 +227,7 @@ class DetalleParadas extends Component {
     generarCFDI(id,esRecoleccion, folio) {
         confirmAlert({
             title: 'Confirmar Timbrado',
-            message: '¿Está seguro de realizar esta operación, el CFDI de traslada se timbrara ante el SAT?',
+            message: '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?',
             buttons: [
                 {
                     label: 'Sí',
