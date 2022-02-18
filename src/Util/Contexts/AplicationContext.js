@@ -43,9 +43,9 @@ export class AplicationProvider extends Component{
                 {
                     localStorage.getItem(ACCESS_TOKEN) &&
                     <IdleTimer
-                        element={document}
+                        crossTab={true}
                         ref={ref => { this.idleTimer = ref }}
-                        timeout={1000 * 60 * 15}
+                        timeout={1000 * 60 * 8}
                         onActive={this.handleOnActive}
                         onIdle={this.handleOnIdle}
                         onAction={this.handleAction}
