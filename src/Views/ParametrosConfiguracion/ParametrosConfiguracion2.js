@@ -7,7 +7,7 @@ import {
     Button,
     Checkbox,
     FormControl, Grid,
-    InputLabel,
+    InputLabel, MenuItem,
     Paper,
     Select,
     Tab,
@@ -37,6 +37,7 @@ import Correos from "./Correos";
 import {EditorState,ContentState,convertToRaw} from "draft-js";
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
+import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
 //-------------------------------------------STYLES---------------------------------------------------------------------
 const useStyles = makeStyles({
     subtitulo: {
@@ -76,6 +77,7 @@ function ParametrosConfiguracion2() {
             width: 200,
         }
     ]
+    const [dataConceptos, setDataConceptos] = useState([]);
 
 
     //variables de valores por defecto
@@ -93,7 +95,15 @@ function ParametrosConfiguracion2() {
         tipoCobro:0,
         limpiarProducto: false,
         idsTiposCobroSeleccionArray: [],
-        idsTiposCobroSeleccionString: ''
+        idsTiposCobroSeleccionString: '',
+        idConceptoFlete: 0,
+        idConceptoCarga: 0,
+        idConceptoDescarga: 0,
+        idConceptoRecoleccion: 0,
+        idConceptoEntrega: 0,
+        idConceptoSeguro: 0,
+        idConceptoCita:0
+
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -165,7 +175,14 @@ function ParametrosConfiguracion2() {
                     correoFacturaViaje: EditorState.createWithContent(
                         ContentState.createFromBlockArray(htmlToDraft(respuesta.data.CorreoFacturaViaje))),
                     correoFacturaUltimaMilla: EditorState.createWithContent(
-                        ContentState.createFromBlockArray(htmlToDraft(respuesta.data.CorreoFacturaUltimaMilla)))
+                        ContentState.createFromBlockArray(htmlToDraft(respuesta.data.CorreoFacturaUltimaMilla))),
+                    idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
+                    idConceptoCarga: respuesta.data.IdConceptoCarga || 0,
+                    idConceptoDescarga: respuesta.data.IdConceptoDescarga || 0,
+                    idConceptoRecoleccion: respuesta.data.IdConceptoRecoleccion || 0,
+                    idConceptoEntrega: respuesta.data.IdConceptoEntrega || 0,
+                    idConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
+                    idConceptoCita: respuesta.data.IdConceptoCita || 0
                 }
             })
         })
@@ -223,8 +240,78 @@ function ParametrosConfiguracion2() {
         });
     }
 
+    async function getConceptosConfiguracion(){
+        obtenerConceptosFacturacion().then(respuesta => {
+            setDataConceptos(respuesta.data);
+        });
+    }
+
     function modificarCorreo(data, variable){
         setConfiguraciones({...configuraciones, [variable]: data})
+    }
+
+    const esConceptoDisponible = (c, parent) => {
+        /**No se usa !== para que convierta string a int y pueda comparar.*/
+        switch (parent) {
+            case 'idConceptoFlete':
+                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCita
+            case 'idConceptoCarga':
+                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCita
+            case 'idConceptoDescarga':
+                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCita
+            case 'idConceptoRecoleccion':
+                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCita
+            case 'idConceptoEntrega':
+                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCita
+            case 'idConceptoSeguro':
+                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCita
+            case 'idConceptoCita':
+                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
+            default:
+                return c.m_nIdConceptosFacturacion != configuraciones.idConceptoFlete
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoCarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoDescarga
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoRecoleccion
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoEntrega
+                    && c.m_nIdConceptosFacturacion != configuraciones.idConceptoSeguro
+
+        }
+
     }
 
 
@@ -238,6 +325,7 @@ function ParametrosConfiguracion2() {
         getTipoCambio()
         getTipoCobro()
         getAllEstatusGuia()
+        getConceptosConfiguracion()
     }, [])
     return (
 
@@ -278,368 +366,540 @@ function ParametrosConfiguracion2() {
 
                 </Paper>
                 <section className="main-container">
-                    <div className="container-fluid" >
+                    <div className="container-fluid">
 
-                            <TabPanel value="1">
+                        <TabPanel value="1">
 
 
-                                    <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
-                                         flexDirection="column">
-                                        <Box width="40%" p={1} my={0.5} display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Estatus por defecto</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" width="25%">
-                                                    <InputLabel id="idEmbarqueLabel">Estatus</InputLabel>
-                                                    <Select
-                                                        labelId="estatusEmbarqueLabel"
-                                                        className="form-control"
-                                                        required
-                                                        onChange={handleChange}
-                                                        value={configuraciones.estatusEmbarque}
-                                                        label="Estatus"
-                                                        id="estatusEmbarque"
-                                                        name="estatusEmbarque"
-                                                    >
-                                                        {dataEstatusEmbarque.map((estatus) => (
-                                                            <option key={estatus.m_nIdEstatusEmbarque}
-                                                                    value={estatus.m_nIdEstatusEmbarque}
-                                                            >
-                                                                {estatus.m_sEstatus}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
-                                        </Box>
-                                        <Box width="40%" p={1} my={0.5} display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Modenada predeterminada</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined"
-                                                             margin="dense">
-                                                    <InputLabel id="idMonedaLabel">Moneda</InputLabel>
-                                                    <Select
-                                                        labelId={"idMonedaLabel"}
-                                                        label={"Moneda"}
-                                                        name="monedaPredeterminadaEmbarque"
-                                                        className="form-control"
-                                                        required
-                                                        onChange={handleChange}
-                                                        value={configuraciones.monedaPredeterminadaEmbarque}
-                                                        id="monedaPredeterminadaEmbarque"
-                                                        InputProps={{
-                                                            name: "monedaPredeterminadaEmbarque"
-                                                        }}
-                                                    >
-                                                        {dataMonedaEmbarque.map((moneda) => (
-                                                            <option
-                                                                key={moneda.m_nIdMoneda}
-                                                                value={moneda.m_nIdMoneda}
-                                                            >
-                                                                {moneda.m_sMoneda}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-
-                                            </Box>
-                                        </Box>
-                                        <Box width="40%" p={1} my={0.5} display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Tipo de cambio por defecto</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-
-                                                <FormControl fullWidth
-                                                             variant="outlined"
-                                                             required
-                                                             margin="dense">
-                                                    <InputLabel id="tipoCambioLabel">Tipo de
-                                                        Cambio</InputLabel>
-                                                    <Select
-                                                        labelId="tipoCambioLabel"
-                                                        label="Tipo de Cambio"
-                                                        className="form-control"
-                                                        name="tipoCambioEmbarque"
-                                                        value={configuraciones.tipoCambioEmbarque}
-                                                        id="tipoCambioEmbarque"
-                                                        onChange={handleChange}
-                                                    >
-                                                        {dataTipoCambioEmbarque.map((cambio) => (
-                                                            <option
-                                                                key={cambio.m_nIdTipoCambio}
-                                                                value={cambio.m_nIdTipoCambio}
-                                                            >
-                                                                {cambio.m_cTipoCambio}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
-                                        </Box>
-                                        <Box width="40%" p={1} my={0.5} display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Tipo de cobro por defecto</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-
-                                                <FormControl fullWidth
-                                                             variant="outlined"
-                                                             required
-                                                             margin="dense">
-                                                    <InputLabel id="tipoCobroLabel">Tipo de Cobro</InputLabel>
-                                                    <Select
-                                                        labelId="tipoCambioLabel"
-                                                        label="Tipo de Cobro"
-                                                        className="form-control"
-                                                        name="tipoCobro"
-                                                        value={configuraciones.tipoCobro}
-                                                        id="tipoCobro"
-                                                        onChange={handleChange}
-                                                    >
-                                                        {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((cambio) => (
-                                                            <option
-                                                                key={cambio.m_nIdTipoCobro}
-                                                                value={cambio.m_nIdTipoCobro}
-                                                            >
-                                                                {cambio.m_sDescripcion}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
-                                        </Box>
-                                        <Box width="40%" p={1} my={0.5} display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <h2>Detectar tipo de cobro de cliente</h2>
-                                            </Box>
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <Checkbox
-                                                    checked={configuraciones.detectarTipoCobro}
-                                                    onChange={handleChecked}
-                                                    color="primary"
-                                                    style={{transform: "scale(2)"}}
-                                                    inputProps={{'aria-label': 'primary checkbox'}}
-                                                    name="detectarTipoCobro"
-                                                />
-                                            </Box>
-                                        </Box>
-                                        <Box width="40%" p={1} my={0.5} display="flex">
-                                            <Box width="40%"  p={1} my={0.5}>
-                                                <h2>Tipos de cobro a mostrar</h2>
-                                            </Box>
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div style={{ display: 'flex', height: '100%' }}>
-                                                    <DataGrid
-                                                        localeText={dataGridLocaleText}
-                                                        rows={dataTipoCobro}
-                                                        columns={columnasTipoCobro}
-                                                        density="compact"
-                                                        getRowId={(row) => row.m_nCodigo}
-                                                        checkboxSelection
-                                                        hideFooter
-                                                        autoHeight {...{dataSet:'Commodity', rowLength: 4, maxColumns: 6}}
-                                                        onSelectionModelChange={handleTiposCobroSeleccionados}
-                                                        selectionModel={configuraciones.idsTiposCobroSeleccionArray}
-                                                    />
-                                                </div>
-                                            </Box>
-                                        </Box>
-                                        <Box width="40%" p={1} my={0.5} display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <h2>Limpiar producto al crear</h2>
-                                            </Box>
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <Checkbox
-                                                    checked={configuraciones.limpiarProducto}
-                                                    onChange={handleChecked}
-                                                    color="primary"
-                                                    style={{transform: "scale(2)"}}
-                                                    inputProps={{'aria-label': 'primary checkbox'}}
-                                                    name="limpiarProducto"
-                                                />
-                                            </Box>
-                                        </Box>
-                                        <Box margin={"0 auto"}>
-                                            <Button variant="contained" color="primary" style={{width: "100px"}}
-                                                    onClick={onSubmit}>
-                                                Modificar
-                                            </Button>
-                                        </Box>
+                            <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
+                                 flexDirection="column">
+                                <Box width="40%" p={1} my={0.5} display="flex">
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <div className={classes.subtitulo}>Estatus por defecto</div>
                                     </Box>
-
-
-                            </TabPanel>
-                            <TabPanel value="2">
-                                <Box p={1}>
-                                    <Box display="flex" p={1} my={0.5} flexDirection="column">
-                                        <h2 className={classes.subtitulo}>Recolección</h2>
-                                        <Box width="40%" p={1} my={0.5} display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Estatus por defecto</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" width="25%">
-                                                    <InputLabel id="idRecoleccionLabel">Estatus</InputLabel>
-                                                    <Select
-                                                        labelId="estatusRecoleccionLabel"
-                                                        className="form-control"
-                                                        required
-                                                        value={configuraciones.estatusRecoleccion}
-                                                        label="Estatus"
-                                                        id="estatusRecoleccion"
-                                                        name="estatusRecoleccion"
-                                                        onChange={handleChange}
+                                    <Box width="60%" p={1} my={0.5}>
+                                        <FormControl fullWidth variant="outlined" width="25%">
+                                            <InputLabel id="idEmbarqueLabel">Estatus</InputLabel>
+                                            <Select
+                                                labelId="estatusEmbarqueLabel"
+                                                className="form-control"
+                                                required
+                                                onChange={handleChange}
+                                                value={configuraciones.estatusEmbarque}
+                                                label="Estatus"
+                                                id="estatusEmbarque"
+                                                name="estatusEmbarque"
+                                            >
+                                                {dataEstatusEmbarque.map((estatus) => (
+                                                    <option key={estatus.m_nIdEstatusEmbarque}
+                                                            value={estatus.m_nIdEstatusEmbarque}
                                                     >
-                                                        {dataEstatusRecoleccion.map((estatus) => (
-                                                            <option key={estatus.m_nIdEstatusRecoleccion}
-                                                                    value={estatus.m_nIdEstatusRecoleccion}
-                                                            >
-                                                                {estatus.m_sEstatus}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
-                                        </Box>
-                                    </Box>
-                                    <Box margin={"0 auto"}>
-                                        <Button variant="contained" color="primary" style={{width: "100px"}}
-                                                onClick={onSubmit}>
-                                            Modificar
-                                        </Button>
-                                    </Box>
-                                </Box></TabPanel>
-                            <TabPanel value="3">
-                                <Box p={1}>
-                                    <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
-                                         flexDirection="column">
-                                        <h2 className={classes.subtitulo}>Guias</h2>
-                                        <Box width="40%" p={1} my={0.5} display="flex">
-                                            <Box width="40%" p={1} my={0.5}>
-                                                <div className={classes.subtitulo}>Estatus por defecto</div>
-                                            </Box>
-                                            <Box width="60%" p={1} my={0.5}>
-                                                <FormControl fullWidth variant="outlined" width="25%">
-                                                    <InputLabel id="idGuiaLabel">Estatus</InputLabel>
-                                                    <Select
-                                                        labelId="estatusGuiaLabel"
-                                                        className="form-control"
-                                                        required
-                                                        value={configuraciones.estatusGuia}
-                                                        label="Estatus"
-                                                        id="estatusGuia"
-                                                        name="estatusGuia"
-                                                        onChange={handleChange}
-                                                    >
-                                                        {dataEstatusGuia.map((estatus) => (
-                                                            <option key={estatus.m_nIdEstatusGuia}
-                                                                    value={estatus.m_nIdEstatusGuia}>
-                                                                {estatus.m_sEstatus}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </Box>
-                                        </Box>
-                                    </Box>
-                                    <Box margin={"0 auto"}>
-                                        <Button variant="contained" color="primary" style={{width: "100px"}}
-                                                onClick={onSubmit}>
-                                            Modificar
-                                        </Button>
-                                    </Box>
-                                </Box></TabPanel>
-                            <TabPanel value="4">
-                                <Box p={1}>
-                                    <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
-                                         flexDirection="column">
-                                        <h2 className={classes.subtitulo}>Tarifas</h2>
-                                        <Box display="flex" p={1} my={0.5} flexDirection="column">
-                                            <Box width="40%" p={1} my={0.5} display="flex">
-                                                <Box width="40%" p={1} my={0.5}>
-                                                    <div className={classes.subtitulo}>Tipo de tarifa por defecto</div>
-                                                </Box>
-                                                <Box width="60%" p={1} my={0.5}>
-                                                    <FormControl fullWidth variant="outlined"
-                                                                 margin="dense" required>
-                                                        <InputLabel> Tipo de Tarifa</InputLabel>
-                                                        <Select
-                                                            native
-                                                            label="Tipo de Tarifa"
-                                                            className="form-control"
-                                                            name="tipoTarifa"
-                                                            read="true"
-                                                            onChange={handleChange}
-                                                            value={configuraciones.tipoTarifa}
-                                                        >
-                                                            <option value="1">Por peso o volumen</option>
-                                                            <option value="2">Por rango</option>
-                                                            <option value="3">Por región</option>
-                                                        </Select>
-                                                    </FormControl>
-                                                </Box>
-                                            </Box>
-                                            <Box width="40%" p={1} my={0.5} display="flex">
-                                                <Box width="40%" p={1} my={0.5}>
-                                                    <div className={classes.subtitulo}>Cobro de cita</div>
-                                                </Box>
-                                                <Box width="60%" p={1} my={0.5} display="flex">
-                                                    <Checkbox
-                                                        checked={configuraciones.cobrarCita}
-                                                        onChange={handleChecked}
-                                                        color="primary"
-                                                        style={{transform: "scale(2)"}}
-                                                        inputProps={{'aria-label': 'primary checkbox'}}
-                                                        name="cobrarCita"
-                                                    />
-                                                    <TextField variant="outlined" margin="dense"
-                                                               label="Costo($) "
-                                                               className="form-control"
-                                                               type="text"
-                                                               disabled={!configuraciones.cobrarCita}
-                                                               onChange={handleChange}
-                                                               value={configuraciones.costoCita}
-                                                               name="costoCita"
-                                                               placeholder="$"
-                                                    />
-
-
-                                                </Box>
-                                            </Box>
-                                            <Box width="40%" p={1} my={0.5} display="flex">
-                                                <Box width="60%" p={1} my={0.5}>
-                                                    <div className={classes.subtitulo}>Cobro carga y descarga</div>
-                                                </Box>
-                                                <Box width="40%" p={1} my={0.5}>
-                                                    <Checkbox
-                                                        checked={configuraciones.cobroCargaDescarga}
-                                                        onChange={handleChecked}
-                                                        color="primary"
-                                                        style={{transform: "scale(2)"}}
-                                                        inputProps={{'aria-label': 'primary checkbox'}}
-                                                        name="cobroCargaDescarga"
-                                                    />
-                                                </Box>
-                                            </Box>
-                                        </Box>
+                                                        {estatus.m_sEstatus}
+                                                    </option>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
                                     </Box>
                                 </Box>
+                                <Box width="40%" p={1} my={0.5} display="flex">
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <div className={classes.subtitulo}>Modenada predeterminada</div>
+                                    </Box>
+                                    <Box width="60%" p={1} my={0.5}>
+                                        <FormControl fullWidth variant="outlined"
+                                                     margin="dense">
+                                            <InputLabel id="idMonedaLabel">Moneda</InputLabel>
+                                            <Select
+                                                labelId={"idMonedaLabel"}
+                                                label={"Moneda"}
+                                                name="monedaPredeterminadaEmbarque"
+                                                className="form-control"
+                                                required
+                                                onChange={handleChange}
+                                                value={configuraciones.monedaPredeterminadaEmbarque}
+                                                id="monedaPredeterminadaEmbarque"
+                                                InputProps={{
+                                                    name: "monedaPredeterminadaEmbarque"
+                                                }}
+                                            >
+                                                {dataMonedaEmbarque.map((moneda) => (
+                                                    <option
+                                                        key={moneda.m_nIdMoneda}
+                                                        value={moneda.m_nIdMoneda}
+                                                    >
+                                                        {moneda.m_sMoneda}
+                                                    </option>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
 
+                                    </Box>
+                                </Box>
+                                <Box width="40%" p={1} my={0.5} display="flex">
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <div className={classes.subtitulo}>Tipo de cambio por defecto</div>
+                                    </Box>
+                                    <Box width="60%" p={1} my={0.5}>
+
+                                        <FormControl fullWidth
+                                                     variant="outlined"
+                                                     required
+                                                     margin="dense">
+                                            <InputLabel id="tipoCambioLabel">Tipo de
+                                                Cambio</InputLabel>
+                                            <Select
+                                                labelId="tipoCambioLabel"
+                                                label="Tipo de Cambio"
+                                                className="form-control"
+                                                name="tipoCambioEmbarque"
+                                                value={configuraciones.tipoCambioEmbarque}
+                                                id="tipoCambioEmbarque"
+                                                onChange={handleChange}
+                                            >
+                                                {dataTipoCambioEmbarque.map((cambio) => (
+                                                    <option
+                                                        key={cambio.m_nIdTipoCambio}
+                                                        value={cambio.m_nIdTipoCambio}
+                                                    >
+                                                        {cambio.m_cTipoCambio}
+                                                    </option>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
+                                </Box>
+                                <Box width="40%" p={1} my={0.5} display="flex">
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <div className={classes.subtitulo}>Tipo de cobro por defecto</div>
+                                    </Box>
+                                    <Box width="60%" p={1} my={0.5}>
+
+                                        <FormControl fullWidth
+                                                     variant="outlined"
+                                                     required
+                                                     margin="dense">
+                                            <InputLabel id="tipoCobroLabel">Tipo de Cobro</InputLabel>
+                                            <Select
+                                                labelId="tipoCambioLabel"
+                                                label="Tipo de Cobro"
+                                                className="form-control"
+                                                name="tipoCobro"
+                                                value={configuraciones.tipoCobro}
+                                                id="tipoCobro"
+                                                onChange={handleChange}
+                                            >
+                                                {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((cambio) => (
+                                                    <option
+                                                        key={cambio.m_nIdTipoCobro}
+                                                        value={cambio.m_nIdTipoCobro}
+                                                    >
+                                                        {cambio.m_sDescripcion}
+                                                    </option>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
+                                </Box>
+                                <Box width="40%" p={1} my={0.5} display="flex">
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <h2>Detectar tipo de cobro de cliente</h2>
+                                    </Box>
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <Checkbox
+                                            checked={configuraciones.detectarTipoCobro}
+                                            onChange={handleChecked}
+                                            color="primary"
+                                            style={{transform: "scale(2)"}}
+                                            inputProps={{'aria-label': 'primary checkbox'}}
+                                            name="detectarTipoCobro"
+                                        />
+                                    </Box>
+                                </Box>
+                                <Box width="40%" p={1} my={0.5} display="flex">
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <h2>Tipos de cobro a mostrar</h2>
+                                    </Box>
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <div style={{display: 'flex', height: '100%'}}>
+                                            <DataGrid
+                                                localeText={dataGridLocaleText}
+                                                rows={dataTipoCobro}
+                                                columns={columnasTipoCobro}
+                                                density="compact"
+                                                getRowId={(row) => row.m_nCodigo}
+                                                checkboxSelection
+                                                hideFooter
+                                                autoHeight {...{dataSet: 'Commodity', rowLength: 4, maxColumns: 6}}
+                                                onSelectionModelChange={handleTiposCobroSeleccionados}
+                                                selectionModel={configuraciones.idsTiposCobroSeleccionArray}
+                                            />
+                                        </div>
+                                    </Box>
+                                </Box>
+                                <Box width="40%" p={1} my={0.5} display="flex">
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <h2>Limpiar producto al crear</h2>
+                                    </Box>
+                                    <Box width="40%" p={1} my={0.5}>
+                                        <Checkbox
+                                            checked={configuraciones.limpiarProducto}
+                                            onChange={handleChecked}
+                                            color="primary"
+                                            style={{transform: "scale(2)"}}
+                                            inputProps={{'aria-label': 'primary checkbox'}}
+                                            name="limpiarProducto"
+                                        />
+                                    </Box>
+                                </Box>
                                 <Box margin={"0 auto"}>
                                     <Button variant="contained" color="primary" style={{width: "100px"}}
                                             onClick={onSubmit}>
                                         Modificar
                                     </Button>
                                 </Box>
+                            </Box>
 
-                            </TabPanel>
+
+                        </TabPanel>
+                        <TabPanel value="2">
+                            <Box p={1}>
+                                <Box display="flex" p={1} my={0.5} flexDirection="column">
+                                    <h2 className={classes.subtitulo}>Recolección</h2>
+                                    <Box width="40%" p={1} my={0.5} display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Estatus por defecto</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <FormControl fullWidth variant="outlined" width="25%">
+                                                <InputLabel id="idRecoleccionLabel">Estatus</InputLabel>
+                                                <Select
+                                                    labelId="estatusRecoleccionLabel"
+                                                    className="form-control"
+                                                    required
+                                                    value={configuraciones.estatusRecoleccion}
+                                                    label="Estatus"
+                                                    id="estatusRecoleccion"
+                                                    name="estatusRecoleccion"
+                                                    onChange={handleChange}
+                                                >
+                                                    {dataEstatusRecoleccion.map((estatus) => (
+                                                        <option key={estatus.m_nIdEstatusRecoleccion}
+                                                                value={estatus.m_nIdEstatusRecoleccion}
+                                                        >
+                                                            {estatus.m_sEstatus}
+                                                        </option>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                                <Box margin={"0 auto"}>
+                                    <Button variant="contained" color="primary" style={{width: "100px"}}
+                                            onClick={onSubmit}>
+                                        Modificar
+                                    </Button>
+                                </Box>
+                            </Box></TabPanel>
+                        <TabPanel value="3">
+                            <Box p={1}>
+                                <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
+                                     flexDirection="column">
+                                    <h2 className={classes.subtitulo}>Guias</h2>
+                                    <Box width="40%" p={1} my={0.5} display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <div className={classes.subtitulo}>Estatus por defecto</div>
+                                        </Box>
+                                        <Box width="60%" p={1} my={0.5}>
+                                            <FormControl fullWidth variant="outlined" width="25%">
+                                                <InputLabel id="idGuiaLabel">Estatus</InputLabel>
+                                                <Select
+                                                    labelId="estatusGuiaLabel"
+                                                    className="form-control"
+                                                    required
+                                                    value={configuraciones.estatusGuia}
+                                                    label="Estatus"
+                                                    id="estatusGuia"
+                                                    name="estatusGuia"
+                                                    onChange={handleChange}
+                                                >
+                                                    {dataEstatusGuia.map((estatus) => (
+                                                        <option key={estatus.m_nIdEstatusGuia}
+                                                                value={estatus.m_nIdEstatusGuia}>
+                                                            {estatus.m_sEstatus}
+                                                        </option>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                                <Box margin={"0 auto"}>
+                                    <Button variant="contained" color="primary" style={{width: "100px"}}
+                                            onClick={onSubmit}>
+                                        Modificar
+                                    </Button>
+                                </Box>
+                            </Box>
+                        </TabPanel>
+                        <TabPanel value="4">
+                            <Box p={1}>
+                                <Box display="flex" p={1} my={0.5} bgcolor="background.paper"
+                                     flexDirection="column">
+                                    <h2 className={classes.subtitulo}>Tarifas</h2>
+                                    <Box display="flex" flexDirection="column">
+                                        <Box width="40%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Tipo de tarifa por defecto</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5}>
+                                                <FormControl fullWidth variant="outlined"
+                                                             margin="dense" required>
+                                                    <InputLabel> Tipo de Tarifa</InputLabel>
+                                                    <Select
+                                                        native
+                                                        label="Tipo de Tarifa"
+                                                        className="form-control"
+                                                        name="tipoTarifa"
+                                                        read="true"
+                                                        onChange={handleChange}
+                                                        value={configuraciones.tipoTarifa}
+                                                    >
+                                                        <option value="1">Por peso o volumen</option>
+                                                        <option value="2">Por rango</option>
+                                                        <option value="3">Por región</option>
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Cobro de cita</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5} display="flex">
+                                                <Checkbox
+                                                    checked={configuraciones.cobrarCita}
+                                                    onChange={handleChecked}
+                                                    color="primary"
+                                                    style={{transform: "scale(2)"}}
+                                                    inputProps={{'aria-label': 'primary checkbox'}}
+                                                    name="cobrarCita"
+                                                />
+                                                <TextField variant="outlined" margin="dense"
+                                                           label="Costo($) "
+                                                           className="form-control"
+                                                           type="text"
+                                                           disabled={!configuraciones.cobrarCita}
+                                                           onChange={handleChange}
+                                                           value={configuraciones.costoCita}
+                                                           name="costoCita"
+                                                           placeholder="$"
+                                                />
+
+
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Cobro carga y descarga</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5}>
+                                                <Checkbox
+                                                    checked={configuraciones.cobroCargaDescarga}
+                                                    onChange={handleChecked}
+                                                    color="primary"
+                                                    style={{transform: "scale(2)"}}
+                                                    inputProps={{'aria-label': 'primary checkbox'}}
+                                                    name="cobroCargaDescarga"
+                                                />
+                                            </Box>
+                                        </Box>
+                                        {/*Conceptos*/}
+                                        <Box width="40%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Concepto de flete</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5}>
+                                                <FormControl fullWidth variant="outlined" margin="dense" required>
+                                                    <InputLabel htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                    <Select
+                                                        native
+                                                        className="form-control"
+                                                        name="idConceptoFlete"
+                                                        read="true"
+                                                        label="Seleccionar"
+                                                        onChange={handleChange}
+                                                        value={configuraciones.idConceptoFlete}
+                                                    >
+                                                        <option aria-label="None" value="" />
+                                                        {dataConceptos.filter(c => esConceptoDisponible(c,'idConceptoFlete')).map(i => (
+                                                            <option key={i.m_nIdConceptosFacturacion} value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Concepto de carga</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5}>
+                                                <FormControl fullWidth variant="outlined" margin="dense" required={configuraciones.cobroCargaDescarga}>
+                                                    <InputLabel htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                    <Select
+                                                        native
+                                                        className="form-control"
+                                                        name="idConceptoCarga"
+                                                        read="true"
+                                                        label="Seleccionar"
+                                                        onChange={handleChange}
+                                                        value={configuraciones.idConceptoCarga}
+                                                    >
+                                                        <option aria-label="None" value="" />
+                                                        {dataConceptos.filter(c => esConceptoDisponible(c,'idConceptoCarga')).map(i => (
+                                                            <option key={i.m_nIdConceptosFacturacion} value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Concepto de descarga</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5}>
+                                                <FormControl fullWidth variant="outlined" margin="dense" required={configuraciones.cobroCargaDescarga}>
+                                                    <InputLabel htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                    <Select
+                                                        native
+                                                        className="form-control"
+                                                        name="idConceptoDescarga"
+                                                        read="true"
+                                                        label="Seleccionar"
+                                                        onChange={handleChange}
+                                                        value={configuraciones.idConceptoDescarga}
+                                                    >
+                                                        <option aria-label="None" value="" />
+                                                        {dataConceptos.filter(c => esConceptoDisponible(c,'idConceptoDescarga')).map(i => (
+                                                            <option key={i.m_nIdConceptosFacturacion} value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Concepto de recolección</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5}>
+                                                <FormControl fullWidth variant="outlined" margin="dense" required>
+                                                    <InputLabel htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                    <Select
+                                                        native
+                                                        className="form-control"
+                                                        name="idConceptoRecoleccion"
+                                                        read="true"
+                                                        label="Seleccionar"
+                                                        onChange={handleChange}
+                                                        value={configuraciones.idConceptoRecoleccion}
+                                                    >
+                                                        <option aria-label="None" value="" />
+                                                        {dataConceptos.filter(c => esConceptoDisponible(c,'idConceptoRecoleccion')).map(i => (
+                                                            <option key={i.m_nIdConceptosFacturacion} value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Concepto de entrega</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5}>
+                                                <FormControl fullWidth variant="outlined" margin="dense" required>
+                                                    <InputLabel htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                    <Select
+                                                        native
+                                                        className="form-control"
+                                                        name="idConceptoEntrega"
+                                                        read="true"
+                                                        label="Seleccionar"
+                                                        onChange={handleChange}
+                                                        value={configuraciones.idConceptoEntrega}
+                                                    >
+                                                        <option aria-label="None" value="" />
+                                                        {dataConceptos.filter(c => esConceptoDisponible(c,'idConceptoEntrega')).map(i => (
+                                                            <option key={i.m_nIdConceptosFacturacion} value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Concepto de seguro</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5}>
+                                                <FormControl fullWidth variant="outlined" margin="dense" required>
+                                                    <InputLabel htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                    <Select
+                                                        native
+                                                        className="form-control"
+                                                        name="idConceptoSeguro"
+                                                        read="true"
+                                                        label="Seleccionar"
+                                                        onChange={handleChange}
+                                                        value={configuraciones.idConceptoSeguro}
+                                                    >
+                                                        <option aria-label="None" value="" />
+                                                        {dataConceptos.filter(c => esConceptoDisponible(c,'idConceptoSeguro')).map(i => (
+                                                            <option key={i.m_nIdConceptosFacturacion} value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
+                                        </Box>
+                                        <Box width="40%" display="flex">
+                                            <Box width="40%" p={1} my={0.5}>
+                                                <div className={classes.subtitulo}>Concepto de cita</div>
+                                            </Box>
+                                            <Box width="60%" p={1} my={0.5}>
+                                                <FormControl fullWidth variant="outlined" margin="dense" required={configuraciones.cobrarCita}>
+                                                    <InputLabel htmlFor="outlined-age-native-simple">Seleccionar</InputLabel>
+                                                    <Select
+                                                        native
+                                                        className="form-control"
+                                                        name="idConceptoCita"
+                                                        read="true"
+                                                        label="Seleccionar"
+                                                        onChange={handleChange}
+                                                        value={configuraciones.idConceptoCita}
+                                                    >
+                                                        <option aria-label="None" value="" />
+                                                        {dataConceptos.filter(c => esConceptoDisponible(c,'idConceptoCita')).map(i => (
+                                                            <option key={i.m_nIdConceptosFacturacion} value={i.m_nIdConceptosFacturacion}>{i.m_sCodigo}.- {i.m_sConcepto}</option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            </Box>
+
+                            <Box margin={"0 auto"}>
+                                <Button variant="contained" color="primary" style={{width: "100px"}}
+                                        onClick={onSubmit}>
+                                    Modificar
+                                </Button>
+                            </Box>
+
+                        </TabPanel>
 
                         <TabPanel value="5">
-                            <Correos data={[configuraciones.correoFacturaViaje, configuraciones.correoFacturaUltimaMilla]} modficarCorreo={modificarCorreo}>
+                            <Correos
+                                data={[configuraciones.correoFacturaViaje, configuraciones.correoFacturaUltimaMilla]}
+                                modficarCorreo={modificarCorreo}>
                                 <Button variant="contained" color="primary" style={{width: "100px"}}
                                         onClick={onSubmit}>
                                     Modificar
@@ -650,12 +910,12 @@ function ParametrosConfiguracion2() {
                 </section>
 
             </TabContext>
-            <section className="main-container">
+            {/*<section className="main-container">
                 <div className="container-fluid" style={{width: "70%"}}>
 
 
                 </div>
-            </section>
+            </section>*/}
         </div>
 
     );
