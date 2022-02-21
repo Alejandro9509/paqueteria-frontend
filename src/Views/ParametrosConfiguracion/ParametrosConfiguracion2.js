@@ -139,7 +139,14 @@ function ParametrosConfiguracion2() {
             TipoCobro: configuraciones.tipoCobro,
             TiposCobroActivos: configuraciones.idsTiposCobroSeleccionString,
             CorreoFacturacionViaje: draftToHtml(convertToRaw(configuraciones.correoFacturaViaje.getCurrentContent())),
-            CorreoFacturacionUltimaMilla: draftToHtml(convertToRaw(configuraciones.correoFacturaUltimaMilla.getCurrentContent()))
+            CorreoFacturacionUltimaMilla: draftToHtml(convertToRaw(configuraciones.correoFacturaUltimaMilla.getCurrentContent())),
+            IdConceptoFlete: configuraciones.idConceptoFlete,
+            IdConceptoCarga: configuraciones.idConceptoCarga,
+            IdConceptoDescarga: configuraciones.idConceptoDescarga,
+            IdConceptoRecoleccion: configuraciones.idConceptoRecoleccion,
+            IdConceptoEntrega: configuraciones.idConceptoEntrega,
+            IdConceptoSeguro: configuraciones.idConceptoSeguro,
+            IdConceptoCita: configuraciones.idConceptoCita
         }
 
         modificarParametrosConfiguracion(params)
@@ -240,7 +247,7 @@ function ParametrosConfiguracion2() {
         });
     }
 
-    async function getConceptosConfiguracion(){
+    async function getConceptosFacturacion(){
         obtenerConceptosFacturacion().then(respuesta => {
             setDataConceptos(respuesta.data);
         });
@@ -325,7 +332,7 @@ function ParametrosConfiguracion2() {
         getTipoCambio()
         getTipoCobro()
         getAllEstatusGuia()
-        getConceptosConfiguracion()
+        getConceptosFacturacion()
     }, [])
     return (
 
