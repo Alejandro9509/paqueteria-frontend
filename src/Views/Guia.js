@@ -2079,8 +2079,8 @@ function Guia(props) {
                                                                 </FormControl>
                                                             </label>
                                                         </Grid>
-                                                        <Grid item xs>
-                                                            <div className="input">
+                                                      {/*  <Grid item xs>
+                                                          <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
                                                                            className="form-control"
                                                                            type="text"
@@ -2093,8 +2093,8 @@ function Guia(props) {
                                                                            name="FolioGuiaRelacionada"
                                                                            disabled
                                                                 />
-                                                            </div>
-                                                        </Grid>
+                                                            </div> 
+                                                        </Grid>*/} 
                                                         <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
