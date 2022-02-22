@@ -22,6 +22,9 @@ class MyComponent extends Component {
         this.handleChangeDataOcurre = this.handleChangeDataOcurre.bind(this)
 
     }
+    componentDidUpdate(){
+        console.log("Se refresca el componente Ocurre")
+    }
 
     handleFechaOcurre(event) {
         event.preventDefault()
