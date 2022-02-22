@@ -20,6 +20,7 @@ import SvgIcon from "@material-ui/core/SvgIcon";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import {getUniqueListBy} from "../../Util/Util";
+import DialogCheckbox from "./DialogCheckbox";
 
 export default function CrearTarifaRangos(props) {
     const [state, setState] = useState({
@@ -293,6 +294,9 @@ function ViajeLocal(props) {
                 <Grid item xs={12}>
                     <SimpleAccordion
                         titulo={props.viaje.zonasSeleccionadas.map(i=> i.m_sCodigoZona).join(', ')}
+                        rows={[]}
+                        columns={[]}
+                        rowId={null}
                     />
                 </Grid>
             </Grid>
@@ -301,7 +305,9 @@ function ViajeLocal(props) {
 }
 
 function SimpleAccordion(props) {
-
+    const [state, setState] = useState({
+        height: window.innerHeight,
+    })
     return (
         <div>
             <Accordion>
@@ -313,10 +319,22 @@ function SimpleAccordion(props) {
                     <Typography>{props.titulo}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Typography>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                        sit amet blandit leo lobortis eget.
-                    </Typography>
+                    <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                        <DataGrid
+                            localeText={dataGridLocaleText}
+                            rows={props.rows}
+                            columns={props.columns}
+                            density="compact"
+                            pageSize={Math.floor((state.height - 310) / 30)}
+                            getRowId={(row) => row[props.rowId]}
+                            /*onRowSelected={(row) => {
+                                setState({
+                                    ...state,
+                                    idTarifa: row.data.m_nIdTarifa
+                                })
+                            }}*/
+                        />
+                    </div>
                 </AccordionDetails>
             </Accordion>
 
@@ -324,68 +342,5 @@ function SimpleAccordion(props) {
     );
 }
 
-function DialogCheckbox(props) {
-    /** Props
-     * handleShowDialog() - Controla si se abre o cierra el dialogo.
-     * handleOnConfirmSelection() - Retorna al padre los items seleccionados.
-     * openDialog Boolean - Controla si se abre o cierra el dialogo
-     * rowId string - identificador para item de la lista que se usara en el datagrid
-     * selection array - Lista de item seleccionados del datagrid
-     * rows - lista de registros a mostrar en la tabla
-     * columns - columnas que se veran en la tabla
-     * */
-    const [state, setState] = useState({
-        height: window.innerHeight,
-    })
 
-    const [selection, setSelection] = useState(props.selection || [])
-
-    const handleShowDialog = () => {
-        props.handleShowDialog(null, false)
-    }
-    const handleConfirmSelection = () => {
-        console.log(selection)
-        props.handleOnConfirmSelection(selection)
-    }
-    const handleOnSelectionChange = (event) => {
-        console.log(event.selectionModel)
-        setSelection(event.selectionModel)
-    }
-
-    return(
-        <Dialog
-            fullWidth={true}
-            maxWidth={'xl'}
-            open={props.openDialog}
-            onClose={handleShowDialog}
-            aria-labelledby="max-width-dialog-title"
-        >
-            <DialogContent>
-                <div style={{ display: 'flex', height: '800px' }}>
-                    <DataGrid
-                        localeText={dataGridLocaleText}
-                        rows={props.rows}
-                        columns={props.columns}
-                        density="compact"
-                        pageSize={Math.floor((state.height - 310) / 30)}
-                        getRowId={(row) => row[props.rowId]}
-                        checkboxSelection
-                        onSelectionModelChange={(e) => handleOnSelectionChange(e)}
-                        selectionModel={props.selection}
-                    />
-                </div>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleShowDialog} color="primary">
-                    Close
-                </Button>
-                <Button onClick={handleConfirmSelection} color="primary" autoFocus>
-                    Aceptar
-                </Button>
-
-            </DialogActions>
-        </Dialog>
-    )
-
-}
 
