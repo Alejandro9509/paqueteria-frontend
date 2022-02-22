@@ -367,7 +367,9 @@ class Tarifas extends Component {
 
                 {
                     configuraciones?.TipoTarifaTarifas === 2 ?
-                        <TarifasRangos/>
+                        <TarifasRangos
+                            configuraciones={configuraciones}
+                        />
                         :
                         <section className="main-container">
                             <div className="container-fluid">

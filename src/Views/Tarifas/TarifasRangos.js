@@ -8,6 +8,7 @@ import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import {validarPermisos} from "../../Util/Contexts/UsuarioContext";
 import axios from "axios";
+import CrearTarifaRangos from "./CrearTarifaRangos";
 window.jQuery = window.$ = $;
 
 export default function TarifasRangos(props) {
@@ -106,7 +107,7 @@ export default function TarifasRangos(props) {
         if (event){
             event.stopPropagation();
         }
-        setState({pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
+        setState({...state,pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -117,7 +118,7 @@ export default function TarifasRangos(props) {
         if (event){
             event.stopPropagation();
         }
-        setState({pantalla: 2, edit: false, consult: false, agregar: "Agregar"});
+        setState({...state,pantalla: 2, edit: false, consult: false, agregar: "Agregar"});
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -126,6 +127,7 @@ export default function TarifasRangos(props) {
 
     const handleShowConsultar = (idTarifa) => {
         setState({
+            ...state,
             pantalla: 2,
             agregar: "Consultar",
             openDialog: true,
@@ -140,7 +142,9 @@ export default function TarifasRangos(props) {
     }
 
     const handleShowModificar = (idTarifa) => {
-        setState({pantalla: 2,
+        setState({
+            ...state,
+            pantalla: 2,
             openDialog: true,
             agregar: "Modificar",
             edit: true,
@@ -197,51 +201,52 @@ export default function TarifasRangos(props) {
     }
 
     return(
-        <div>
-            <section className="main-container">
-                <div className="container-fluid">
-                    <ul className="nav navStatica nav-tabs">
-                        <li className="active">
-                            <a onClick={(event) => handleShowListado(event)}>
-                                <i className="fa fa-list"/> Listado
-                            </a>
-                        </li>
-                        <li >
-                            <a onClick={(event) => handleShowAgregar(event)}>
-                                <i className="fa fa-plus-circle"/> {state.agregar}
-                            </a>
-                        </li>
-                    </ul>
+        <section className="main-container">
+            <div className="container-fluid">
+                <ul className="nav navStatica nav-tabs">
+                    <li className="active">
+                        <a onClick={(event) => handleShowListado(event)}>
+                            <i className="fa fa-list"/> Listado
+                        </a>
+                    </li>
+                    <li >
+                        <a onClick={(event) => handleShowAgregar()}>
+                            <i className="fa fa-plus-circle"/> {state.agregar}
+                        </a>
+                    </li>
+                </ul>
 
-
-                    <div className="row" className="tab-content" style={{ paddingLeft: "-15px" }}>
-                        <div id="Listado" className="tab-pane fade in show">
-                            <div className="widget-wrap">
-                                <div className="widget-content">
-                                    <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                                        <DataGrid
-                                            localeText={dataGridLocaleText}
-                                            rows={state.tarifas}
-                                            columns={state.columns}
-                                            density="compact"
-                                            pageSize={Math.floor((state.height - 310) / 30)}
-                                            getRowId={(row) => row.m_nIdTarifa}
-                                            onRowSelected={(row) => {
-                                                setState({
-                                                    ...state,
-                                                    idTarifa: row.data.m_nIdTarifa
-                                                })
-                                            }}
-                                        />
-                                    </div>
+                <div className="row tab-content">
+                    <div id="Listado" className="tab-pane fade in show">
+                        <div className="widget-wrap">
+                            <div className="widget-content">
+                                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                                    <DataGrid
+                                        localeText={dataGridLocaleText}
+                                        rows={state.tarifas}
+                                        columns={state.columns}
+                                        density="compact"
+                                        pageSize={Math.floor((state.height - 310) / 30)}
+                                        getRowId={(row) => row.m_nIdTarifa}
+                                        onRowSelected={(row) => {
+                                            setState({
+                                                ...state,
+                                                idTarifa: row.data.m_nIdTarifa
+                                            })
+                                        }}
+                                    />
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div id="Agregar" className="tab-pane fade">
-                            {/*{
-                                state.pantalla == 2 &&
-                                <CrearTarifa edit={state.edit} consult={state.consult} select={state.selected}
+                    <div id="Agregar" className="tab-pane fade">
+                        {
+                                state.pantalla === 2 &&
+                                    <CrearTarifaRangos
+                                        configuraciones={props.configuraciones}
+                                    />
+                                /*<CrearTarifa edit={state.edit} consult={state.consult} select={state.selected}
                                              onSubmit={handleAceptar} onCancel={(event) => {
                                     event.stopPropagation();
                                     setState({
@@ -253,14 +258,13 @@ export default function TarifasRangos(props) {
                                     $('#Listado').addClass('in show');
                                 }}
                                              listaCiudades={state.dataCiudades}
-                                />
-                            }*/}
-
-                        </div>
+                                />*/
+                        }
 
                     </div>
+
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
     )
 }
