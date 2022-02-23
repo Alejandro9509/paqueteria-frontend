@@ -18,7 +18,6 @@ export default function DialogTransferList(props) {
      * handleShowDialog() - Controla si se abre o cierra el dialogo.
      * handleOnConfirmSelection() - Retorna al padre los items seleccionados.
      * openDialog Boolean - Controla si se abre o cierra el dialogo
-     * rowId string - identificador para item de la lista que se usara en el datagrid
      * selection array - Lista de item seleccionados del datagrid
      * rows - lista de registros a mostrar en la tabla
      * columns - columnas que se veran en la tabla
