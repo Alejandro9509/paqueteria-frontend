@@ -572,7 +572,8 @@ export {
     calcularRutaUltimaMilla,
     searchAdressWithCoordinates,
     validarUnidadesSeleccionadas,
-    validarUnidadOcupada
+    validarUnidadOcupada,
+    searchLocationGuia
 }
 
 
