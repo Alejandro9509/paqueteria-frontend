@@ -98,10 +98,9 @@ function ComplementosSAT(props) {
         const handleOpenClick = (event) => {
             event.stopPropagation();
             resetDataComplemento()
-           
+           console.log("fila"+JSON.stringify(row))
             obtenerSATPaginado(1, 0,"c_ClaveUnidad", row.claveUnidad).then((respuesta) => {
-              row.UnidadSAT = respuesta.data[0].m_sDescripcion
-            
+              row.UnidadSAT = respuesta.data[0].m_sDescripcion   
                 obtenerSATPaginado(1, 0,"c_ClaveProdServCP", row.claveProducto).then((respuesta) => {
                     row.ProductoSAT = respuesta.data[0].m_sDescripcion
                     if(row.esPeligroso){
@@ -109,8 +108,11 @@ function ComplementosSAT(props) {
                         row.materialPeligrosoSAT = respuesta.data[0].m_sDescripcion
                         obtenerSATPaginado(1, 0,"c_TipoEmbalaje", row.claveEmbalaje).then((respuesta) => {
                             row.embalajeSAT = respuesta.data[0].m_sDescripcion
-                            setDataComplemento(row);
-                            setOpenDialog(true);
+                            obtenerSATPaginado(1, 0,"c_FraccionArancelaria", row.claveFraccion).then((respuesta)=>{
+                                row.fraccionSAT = respuesta.data[0].m_sDescripcion
+                                setDataComplemento(row);
+                                setOpenDialog(true);
+                            })
                           }) 
                       }) 
                     }else{
@@ -119,7 +121,7 @@ function ComplementosSAT(props) {
                     }
                   }) 
          
-            }) 
+            })
             console.log(row);
           
         };
@@ -450,7 +452,8 @@ function ComplementosSAT(props) {
                 esPeligroso:  item['Es material peligroso']? item['Es material peligroso'] !== "NO" : false,
                 claveMaterialPeligroso: item['Es material peligroso'] == "SI"? item['Clave material peligroso']:0,
                 claveEmbalaje:item['Es material peligroso'] == "SI"? item['Tipo embalaje']:0,
-                descripcionEmbalajeSAT:item['Es material peligroso'] == "SI"?item['Descripción embalaje']:""
+                descripcionEmbalajeSAT:item['Es material peligroso'] == "SI"?item['Descripción embalaje']:"",
+                claveFraccion:item['Es material peligroso'] == "SI"? item['Clave Fraccion']:""
             }))
             console.log(newArray)
             // props.dataList.push(newArray)
