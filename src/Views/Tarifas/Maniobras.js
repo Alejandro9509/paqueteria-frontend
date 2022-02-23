@@ -3,10 +3,16 @@ import DialogoNuevoRango from "./DialogoNuevoRango";
 import {Button, Grid} from "@material-ui/core";
 import RangosTarifa from "./RangosTarifa";
 
-
+/**PROPS
+ * rangos array = listado de rangos a mostrar en datagrid
+ * handleChangeManiobras = funcion que recibe los registros de rangos actualizados
+ * conceptosListado array = listado de conceptos de facturacion
+ * tiposCalculoListado = array de tipos de calculo
+ * unidadesMedidaListado = array de unidades de medida
+ * */
 export default function Maniobras(props){
     const [state, setState] = useState({
-        rangos:props.rangos || []
+        rangos: props.rangos || []
     })
     const [dialogRangos, setDialogRangos] = useState({
         showDialog: false,
