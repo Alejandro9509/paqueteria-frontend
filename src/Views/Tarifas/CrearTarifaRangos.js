@@ -35,6 +35,7 @@ import DialogoNuevoConcepto from "./DialogoNuevoConcepto";
 import ViajeLocal from "./ViajeLocal";
 import RangosTarifa from "./RangosTarifa";
 import Maniobras from "./Maniobras";
+import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 
 export default function CrearTarifaRangos(props) {
     const [state, setState] = useState({
@@ -70,6 +71,7 @@ export default function CrearTarifaRangos(props) {
             UnidadMedida: 'TONS'
         },
     ])
+    const [productosListado, setProductosListado] = useState([])
 
 
 
@@ -105,12 +107,21 @@ export default function CrearTarifaRangos(props) {
             setZonasListado(respuesta.data)
         })
     }
+    const getAllProductos = () => {
+        if (productosListado.length > 0){
+            return
+        }
+        obtenerProductos().then(respuestas => {
+            setProductosListado(respuestas.data)
+        })
+    }
 
     useEffect(value => {
         getAllSucursales()
         getAllConceptos()
         getZonasBySucursal()
         getAllTiposCalculo()
+        getAllProductos()
     }, [])
 
     const handleChangeViajeLocal = (viaje) => {
@@ -187,16 +198,13 @@ export default function CrearTarifaRangos(props) {
                             handleDeleteViajeLocal={handleDeleteViajeLocal}
                             zonasListado={zonasListado}
                             onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
+                            productosListado={productosListado}
                         />
                     )
                 }
-                <Grid container spacing={2}>
-                    <Grid item xs={10}>
-                        <Typography variant="h3" component="h2">
-                            Maniobras
-                        </Typography>
-                    </Grid>
-                </Grid>
+                <Typography variant="h3" component="h2">
+                    Maniobras
+                </Typography>
                 <Maniobras
                     handleChangeManiobras={handleChangeManiobras}
                     conceptosListado={conceptosListado.filter(concepto => esConceptoManiobra(concepto))}

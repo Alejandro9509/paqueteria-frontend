@@ -1,10 +1,23 @@
 import React, {useEffect, useState} from "react";
 import DialogoNuevoRango from "./DialogoNuevoRango";
-import {Accordion, AccordionDetails, AccordionSummary, Button, Grid, MenuItem, TextField} from "@material-ui/core";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Button, Card, Checkbox,
+    Dialog, DialogActions, DialogContent,
+    Grid, List, ListItem, ListItemIcon, ListItemText, makeStyles,
+    MenuItem,
+    TextField
+} from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import RangosTarifa from "./RangosTarifa";
 import DialogCheckbox from "./DialogCheckbox";
+import {DataGrid} from "@material-ui/data-grid";
+import {dataGridLocaleText} from "../../Constants";
+import CardHeader from "@material-ui/core/CardHeader";
+import Divider from "@material-ui/core/Divider";
 
 
 export default function ViajeLocal(props) {
@@ -42,6 +55,10 @@ export default function ViajeLocal(props) {
         selection: null,
         idViaje: null,
         isEdit: false
+    })
+    const [dialogProdutos, setDialogProdutos] = useState({
+        showDialog: false,
+        selection: [],
     })
 
     const handleChangeViajeLocal = (event) => {
@@ -94,12 +111,31 @@ export default function ViajeLocal(props) {
         }
     }
 
+    const handleShowDialogProductos = (show) => {
+        if (show){
+            setDialogProdutos({
+                ...dialogProdutos,
+                showDialog: show,
+                selection: state.productosSeleccionados
+            })
+        }else {
+            setDialogProdutos({
+                ...dialogProdutos,
+                showDialog: show,
+                selection: []
+            })
+        }
+    }
+
     const handleConfirmZonas = (zonasSeleccion) => {
         let zonas = []
         zonasSeleccion.forEach(i => {
             zonas.push(props.zonasListado.find(j => j.m_nIdZona === parseInt(i)))
         })
-        state.zonasSeleccionadas = zonas
+        setState({
+            ...state,
+            zonasSeleccionadas: zonas
+        })
 
         setDialogZonas({
             ...dialogZonas,
@@ -130,6 +166,19 @@ export default function ViajeLocal(props) {
             selection: null,
             isEdit: false
         })
+    }
+
+    const handleConfirmProductos = (productosSeleccion) => {
+        setState({
+            ...state,
+            productosSeleccionados: productosSeleccion
+        })
+        setDialogProdutos({
+            ...dialogProdutos,
+            showDialog: false,
+            selection: []
+        })
+
     }
 
     const handleOnDeleteRow = (row) => {
@@ -180,6 +229,18 @@ export default function ViajeLocal(props) {
 
                 />
             }
+            {
+                dialogProdutos.showDialog &&
+                <DialogTransferList
+                    handleShowDialog={handleShowDialogProductos}
+                    handleOnConfirmSelection={handleConfirmProductos}
+                    openDialog={dialogProdutos.showDialog}
+                    selection={dialogProdutos.selection}
+                    rows={props.productosListado}
+                    columns={dialogProdutos.columns}
+                />
+            }
+
             <Grid container spacing={2}>
                 <Grid item xs>
                     <TextField
@@ -220,6 +281,11 @@ export default function ViajeLocal(props) {
                 <Grid item xs>
                     <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas}>
                         Zonas
+                    </Button>
+                </Grid>
+                <Grid item xs>
+                    <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos}>
+                        Productos
                     </Button>
                 </Grid>
                 <Grid item xs>
@@ -272,5 +338,217 @@ function SimpleAccordion(props) {
             </Accordion>
 
         </div>
+    );
+}
+
+function DialogTransferList(props) {
+    /** Props
+     * handleShowDialog() - Controla si se abre o cierra el dialogo.
+     * handleOnConfirmSelection() - Retorna al padre los items seleccionados.
+     * openDialog Boolean - Controla si se abre o cierra el dialogo
+     * rowId string - identificador para item de la lista que se usara en el datagrid
+     * selection array - Lista de item seleccionados del datagrid
+     * rows - lista de registros a mostrar en la tabla
+     * columns - columnas que se veran en la tabla
+     * */
+    const [state, setState] = useState({
+        height: window.innerHeight,
+    })
+
+    const [selection, setSelection] = useState(props.selection || [])
+
+    const handleShowDialog = () => {
+        props.handleShowDialog(false)
+    }
+    const handleConfirmSelection = () => {
+        console.log(selection)
+        props.handleOnConfirmSelection(selection)
+    }
+    const handleOnSelectionChange = (newSelection) => {
+        console.log(newSelection)
+        setSelection(newSelection)
+    }
+
+    return(
+        <Dialog
+            fullWidth={true}
+            maxWidth={'xl'}
+            open={props.openDialog}
+            onClose={handleShowDialog}
+            aria-labelledby="max-width-dialog-title"
+        >
+            <DialogContent>
+                <TransferList
+                    onSelectionChange={handleOnSelectionChange}
+                    leftList={props.rows}
+                    rightList={selection}
+                />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleShowDialog} color="primary">
+                    Close
+                </Button>
+                <Button onClick={handleConfirmSelection} color="primary" autoFocus>
+                    Aceptar
+                </Button>
+
+            </DialogActions>
+        </Dialog>
+    )
+
+}
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        margin: 'auto',
+    },
+    cardHeader: {
+        padding: theme.spacing(1, 2),
+    },
+    list: {
+        height: '500px',
+        backgroundColor: theme.palette.background.paper,
+        overflow: 'auto',
+    },
+    button: {
+        margin: theme.spacing(0.5, 0),
+    },
+}));
+
+function not(a, b) {
+    return a.filter((value) => b.indexOf(value) === -1);
+}
+
+function intersection(a, b) {
+    return a.filter((value) => b.indexOf(value) !== -1);
+}
+
+function union(a, b) {
+    return [...a, ...not(b, a)];
+}
+
+function TransferList(props) {
+    const classes = useStyles();
+    const [checked, setChecked] = React.useState([]);
+    const [left, setLeft] = React.useState(props.leftList);
+    const [right, setRight] = React.useState(props.rightList);
+
+    const leftChecked = intersection(checked, left);
+    const rightChecked = intersection(checked, right);
+
+    const handleToggle = (value) => () => {
+        const currentIndex = checked.indexOf(value);
+        const newChecked = [...checked];
+
+        if (currentIndex === -1) {
+            newChecked.push(value);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+
+        setChecked(newChecked);
+    };
+
+    const numberOfChecked = (items) => intersection(checked, items).length;
+
+    const handleToggleAll = (items) => () => {
+        if (numberOfChecked(items) === items.length) {
+            setChecked(not(checked, items));
+        } else {
+            setChecked(union(checked, items));
+        }
+    };
+
+    const handleCheckedRight = () => {
+        setRight(right.concat(leftChecked));
+        setLeft(not(left, leftChecked));
+        setChecked(not(checked, leftChecked));
+    };
+
+    const handleCheckedLeft = () => {
+        setLeft(left.concat(rightChecked));
+        setRight(not(right, rightChecked));
+        setChecked(not(checked, rightChecked));
+    };
+
+    useEffect(value => {
+        props.onSelectionChange(right)
+    }, [left, right])
+
+    const customList = (title, items) => (
+        <Card>
+            <CardHeader
+                className={classes.cardHeader}
+                avatar={
+                    <Checkbox
+                        onClick={handleToggleAll(items)}
+                        checked={numberOfChecked(items) === items.length && items.length !== 0}
+                        indeterminate={numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0}
+                        disabled={items.length === 0}
+                        inputProps={{ 'aria-label': 'all items selected' }}
+                    />
+                }
+                title={title}
+                subheader={`${numberOfChecked(items)}/${items.length} selected`}
+            />
+            <Divider />
+            <List className={classes.list} dense component="div" role="list">
+                {items.map((value) => {
+                    const labelId = `transfer-list-all-item-${value}-label`;
+
+                    return (
+                        <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+                            <ListItemIcon>
+                                <Checkbox
+                                    checked={checked.indexOf(value) !== -1}
+                                    tabIndex={-1}
+                                    disableRipple
+                                    inputProps={{ 'aria-labelledby': labelId }}
+                                />
+                            </ListItemIcon>
+                            <ListItemText id={labelId} primary={`${value.m_nIdProducto}.- ${value.m_sDescripcion}`} />
+                        </ListItem>
+                    );
+                })}
+                <ListItem />
+            </List>
+        </Card>
+    );
+
+    return (
+        <Grid
+            container
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
+            className={classes.root}
+        >
+            <Grid item xs={5}>{customList('No seleccionados', left)}</Grid>
+            <Grid item xs={2}>
+                <Grid container direction="column" alignItems="center">
+                    <Button
+                        fullWidth
+                        variant="outlined"
+                        className={classes.button}
+                        onClick={handleCheckedRight}
+                        disabled={leftChecked.length === 0}
+                        aria-label="move selected right"
+                    >
+                        &gt;
+                    </Button>
+                    <Button
+                        fullWidth
+                        variant="outlined"
+                        className={classes.button}
+                        onClick={handleCheckedLeft}
+                        disabled={rightChecked.length === 0}
+                        aria-label="move selected left"
+                    >
+                        &lt;
+                    </Button>
+                </Grid>
+            </Grid>
+            <Grid item xs={5}>{customList('Seleccionados', right)}</Grid>
+        </Grid>
     );
 }
