@@ -29,12 +29,14 @@ export default function ViajeLocal(props) {
             [event.target.name]: event.target.value
         })
     }
+
     const handleChangeRangosViaje = (newRangos) => {
         setState({
             ...state,
             rangos: newRangos
         })
     }
+
     const handleShowDialogZonas = (event) => {
         props.handleShowDialogZonas(props.viaje, true)
     }
@@ -113,6 +115,7 @@ export default function ViajeLocal(props) {
                     unidadesMedidaListado={props.unidadesMedidaListado}
                     handleShowDialog={handleShowDialogRangos}
                     openDialog={dialogRangos.showDialog}
+
                 />
             }
             <Grid container spacing={2}>

@@ -41,7 +41,12 @@ export default function RangosTarifa(props) {
     }
 
     const columns = React.useMemo(() => [
+        props.seccionPadre === 'MANIOBRAS' &&
         {
+            headerName: "Maniobra",
+            field: "concepto",
+            width: 150,
+        },{
             headerName: "Medida",
             field: "unidadMedida",
             width: 150,

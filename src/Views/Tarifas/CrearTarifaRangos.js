@@ -33,6 +33,8 @@ import {obtenerImpuestos} from "../../Util/Contexts/ImpuestosContext";
 import axios from "axios";
 import DialogoNuevoConcepto from "./DialogoNuevoConcepto";
 import ViajeLocal from "./ViajeLocal";
+import RangosTarifa from "./RangosTarifa";
+import Maniobras from "./Maniobras";
 
 export default function CrearTarifaRangos(props) {
     const [state, setState] = useState({
@@ -54,6 +56,7 @@ export default function CrearTarifaRangos(props) {
         productosSeleccionados: []
     }
     ])
+    const [maniobrasTarifa,setManiobrasTarifa] = useState([])
     const [sucursalesListado, setSucursalesListado] = useState([])
     const [conceptosListado, setConceptosListado] = useState([])
     const [zonasListado, setZonasListado] = useState([])
@@ -106,6 +109,7 @@ export default function CrearTarifaRangos(props) {
             setConceptosListado(respuesta.data)
         })
     }
+
     const getAllTiposCalculo = () => {
         if (tiposCalculoListado.length > 0){
             return
@@ -147,6 +151,9 @@ export default function CrearTarifaRangos(props) {
         })
         setViajesLocalesListado(newViajes)
     }
+    const handleChangeManiobras = (maniobras) => {
+        setManiobrasTarifa(maniobras)
+    }
 
     const handleDeleteViajeLocal = (viaje) => {
         let newViajes = []
@@ -156,6 +163,7 @@ export default function CrearTarifaRangos(props) {
 
         setViajesLocalesListado(newViajes.filter(i => i.idViaje !== viaje.idViaje))
     }
+
     const handleShowDialogZonas = (viaje, show) => {
         if (show){
             obtenerListadoZonaOperativaBySucursal(viaje.idSucursal).then(respuesta => {
@@ -198,9 +206,12 @@ export default function CrearTarifaRangos(props) {
 
     }
 
-
-
     const esConceptoViajeLocal = (concepto) => {
+        /*return concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoRecoleccion
+        || concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoEntrega*/
+        return true
+    }
+    const esConceptoManiobra = (concepto) => {
         /*return concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoRecoleccion
         || concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoEntrega*/
         return true
@@ -244,14 +255,29 @@ export default function CrearTarifaRangos(props) {
                             unidadesMedidaListado={unidadesMedidaListado}
                             handleDeleteViajeLocal={handleDeleteViajeLocal}
                             handleShowDialogZonas={handleShowDialogZonas}
-                            // handleShowDialogRangos={handleShowDialogRangos}
                         />
                     )
                 }
+                <Grid container spacing={2}>
+                    <Grid item xs={10}>
+                        <Typography variant="h3" component="h2">
+                            Maniobras
+                        </Typography>
+                    </Grid>
+                </Grid>
+                <Maniobras
+                    handleChangeManiobras={handleChangeManiobras}
+                    conceptosListado={conceptosListado.filter(concepto => esConceptoManiobra(concepto))}
+                    tiposCalculoListado={tiposCalculoListado}
+                    unidadesMedidaListado={unidadesMedidaListado}
+                    rangos={maniobrasTarifa}
+                />
             </Paper>
 
         </div>
     )
 }
+
+
 
 

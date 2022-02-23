@@ -20,6 +20,8 @@ export default function DialogoNuevoRango(props) {
 
     const [rango, setRango] = useState({
         id: props.rango?.id || Math.floor(Math.random() * 10000),
+        idConcepto: props.rango?.idConcepto || null,
+        concepto: props.rango?.concepto || '',
         importe: props.rango?.importe || 0,
         minimo: props.rango?.minimo || 0,
         maximo: props.rango?.maximo || 0,
@@ -48,6 +50,12 @@ export default function DialogoNuevoRango(props) {
                 [event.target.name]: event.target.value,
                 tipoCalculo: props.tiposCalculoListado.find(i => i.m_nIdTarifaTipoCalculo == event.target.value).m_sTarifaTipoCalculo
             })
+        }else if (event.target.name === 'idConcepto'){
+            setRango({
+                ...rango,
+                [event.target.name]: event.target.value,
+                concepto: props.conceptosListado.find(i => i.m_nIdConceptosFacturacion == event.target.value).m_sConcepto
+            })
         }else{
             setRango({
                 ...rango,
@@ -66,6 +74,27 @@ export default function DialogoNuevoRango(props) {
         >
             <DialogContent>
                 <Grid container spacing={1}>
+                    {
+                        props.seccionPadre === 'MANIOBRAS' &&
+                        <Grid item xs={12}>
+                            <TextField
+                                id="idConcepto"
+                                select
+                                label="Maniobra"
+                                value={rango.idConcepto}
+                                onChange={handleOnDataChange}
+                                name="idConcepto"
+                                variant="outlined"
+                                margin={"dense"}
+                            >
+                                {props.conceptosListado.map((option) => (
+                                    <MenuItem key={option.m_nIdConceptosFacturacion} value={option.m_nIdConceptosFacturacion}>
+                                        {option.m_sConcepto}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                    }
                     <Grid item xs={12}>
                         <TextField
                             id="idUnidadMedida"
