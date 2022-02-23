@@ -112,7 +112,8 @@ export default function CrearTarifaRangos(props) {
             return
         }
         obtenerProductos().then(respuestas => {
-            setProductosListado(respuestas.data)
+            respuestas.data.forEach(i => i.numeroDescripcion = `${i.m_nNoProducto}.- ${i.m_sDescripcion}`)
+            setProductosListado(respuestas.data.filter(i => i.m_bActivo))
         })
     }
 
