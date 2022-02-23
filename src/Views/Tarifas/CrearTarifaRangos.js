@@ -70,26 +70,7 @@ export default function CrearTarifaRangos(props) {
             UnidadMedida: 'TONS'
         },
     ])
-    const [dialogZonas, setDialogZonas] = useState({
-        showDialogZonas: false,
-        selection: [],
-        rowId: 'm_nIdZona',
-        idViaje: null,
-        columns: [
-            {
-                headerName: "Código Zona",
-                field: 'm_sCodigoZona',
-                minWidth: 200,
-                flex: 1
-            },
-            {
-                headerName: "Sucursal",
-                field: 'm_nIdSucursal',
-                minWidth: 200,
-                flex: 1
-            }
-        ]
-    })
+
 
 
     const getAllSucursales = () => {
@@ -100,7 +81,6 @@ export default function CrearTarifaRangos(props) {
             setSucursalesListado(respuesta.data)
         })
     }
-
     const getAllConceptos = () => {
         if (conceptosListado.length > 0){
             return
@@ -109,7 +89,6 @@ export default function CrearTarifaRangos(props) {
             setConceptosListado(respuesta.data)
         })
     }
-
     const getAllTiposCalculo = () => {
         if (tiposCalculoListado.length > 0){
             return
@@ -118,7 +97,6 @@ export default function CrearTarifaRangos(props) {
             setTiposCalculoListado(respuesta.data)
         })
     }
-
     const getZonasBySucursal = (idSucursal) => {
         if (zonasListado.length > 0){
             return
@@ -164,46 +142,10 @@ export default function CrearTarifaRangos(props) {
         setViajesLocalesListado(newViajes.filter(i => i.idViaje !== viaje.idViaje))
     }
 
-    const handleShowDialogZonas = (viaje, show) => {
-        if (show){
-            obtenerListadoZonaOperativaBySucursal(viaje.idSucursal).then(respuesta => {
-                setZonasListado(respuesta.data)
-                setDialogZonas({
-                    ...dialogZonas,
-                    showDialogZonas: show,
-                    idViaje: viaje.idViaje,
-                    selection: viaje.zonasSeleccionadas.map(i => i.m_nIdZona)
-                })
-            })
-        }else {
-            setDialogZonas({
-                ...dialogZonas,
-                showDialogZonas: false,
-                idViaje: null,
-                selection: []
-            })
-        }
-
-    }
-    
-    const handleConfirmZonas = (zonasSeleccion) => {
-        let zonas = []
-        zonasSeleccion.forEach(i => {
-            zonas.push(zonasListado.find(j => j.m_nIdZona === parseInt(i)))
+    const handleOnRequestZonasBySucursal = (idSucursal) => {
+        obtenerListadoZonaOperativaBySucursal(idSucursal).then(respuesta => {
+            setZonasListado(respuesta.data)
         })
-        viajesLocalesListado.forEach(i => {
-            if (i.idViaje === dialogZonas.idViaje){
-                i.zonasSeleccionadas = zonas
-            }
-        })
-
-        setDialogZonas({
-            ...dialogZonas,
-            showDialogZonas: false,
-            idViaje: null,
-            selection: []
-        })
-
     }
 
     const esConceptoViajeLocal = (concepto) => {
@@ -219,18 +161,7 @@ export default function CrearTarifaRangos(props) {
 
     return(
         <div>
-            {
-                dialogZonas.showDialogZonas &&
-                    <DialogCheckbox
-                        handleShowDialog={handleShowDialogZonas}
-                        handleOnConfirmSelection={handleConfirmZonas}
-                        openDialog={dialogZonas.showDialogZonas}
-                        rowId={dialogZonas.rowId}
-                        selection={dialogZonas.selection}
-                        rows={zonasListado}
-                        columns={dialogZonas.columns}
-                    />
-            }
+
             <Paper style={{padding: '20px'}}>
                 <Grid container spacing={2}>
                     <Grid item xs={10}>
@@ -254,7 +185,8 @@ export default function CrearTarifaRangos(props) {
                             tiposCalculoListado={tiposCalculoListado}
                             unidadesMedidaListado={unidadesMedidaListado}
                             handleDeleteViajeLocal={handleDeleteViajeLocal}
-                            handleShowDialogZonas={handleShowDialogZonas}
+                            zonasListado={zonasListado}
+                            onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
                         />
                     )
                 }

@@ -4,6 +4,7 @@ import {Accordion, AccordionDetails, AccordionSummary, Button, Grid, MenuItem, T
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import RangosTarifa from "./RangosTarifa";
+import DialogCheckbox from "./DialogCheckbox";
 
 
 export default function ViajeLocal(props) {
@@ -15,6 +16,26 @@ export default function ViajeLocal(props) {
         idConcepto: props.viaje.idConcepto || null,
         rangos: props.viaje.rangos || [],
         productosSeleccionados: props.viaje.productosSeleccionados || []
+    })
+    const [dialogZonas, setDialogZonas] = useState({
+        showDialogZonas: false,
+        selection: [],
+        rowId: 'm_nIdZona',
+        idViaje: null,
+        columns: [
+            {
+                headerName: "Código Zona",
+                field: 'm_sCodigoZona',
+                minWidth: 200,
+                flex: 1
+            },
+            {
+                headerName: "Sucursal",
+                field: 'm_nIdSucursal',
+                minWidth: 200,
+                flex: 1
+            }
+        ]
     })
     const [dialogRangos, setDialogRangos] = useState({
         showDialog: false,
@@ -37,8 +58,22 @@ export default function ViajeLocal(props) {
         })
     }
 
-    const handleShowDialogZonas = (event) => {
-        props.handleShowDialogZonas(props.viaje, true)
+    const handleShowDialogZonas = (show) => {
+
+        if (show){
+            props.onRequestZonasBySucursal(state.idSucursal)
+            setDialogZonas({
+                ...dialogZonas,
+                showDialogZonas: show,
+                selection: state.zonasSeleccionadas.map(i => i.m_nIdZona)
+            })
+        }else {
+            setDialogZonas({
+                ...dialogZonas,
+                showDialogZonas: false,
+                selection: []
+            })
+        }
     }
 
     const handleShowDialogRangos = (viaje, show) => {
@@ -57,6 +92,21 @@ export default function ViajeLocal(props) {
                 isEdit: false
             })
         }
+    }
+
+    const handleConfirmZonas = (zonasSeleccion) => {
+        let zonas = []
+        zonasSeleccion.forEach(i => {
+            zonas.push(props.zonasListado.find(j => j.m_nIdZona === parseInt(i)))
+        })
+        state.zonasSeleccionadas = zonas
+
+        setDialogZonas({
+            ...dialogZonas,
+            showDialogZonas: false,
+            selection: []
+        })
+
     }
 
     const handleConfirmRangos = (rango) => {
@@ -105,6 +155,18 @@ export default function ViajeLocal(props) {
 
     return(
         <div>
+            {
+                dialogZonas.showDialogZonas &&
+                <DialogCheckbox
+                    handleShowDialog={handleShowDialogZonas}
+                    handleOnConfirmSelection={handleConfirmZonas}
+                    openDialog={dialogZonas.showDialogZonas}
+                    rowId={dialogZonas.rowId}
+                    selection={dialogZonas.selection}
+                    rows={props.zonasListado}
+                    columns={dialogZonas.columns}
+                />
+            }
 
             {
                 dialogRangos.showDialog &&
@@ -167,11 +229,11 @@ export default function ViajeLocal(props) {
                 </Grid>
                 <Grid item xs={12}>
                     <SimpleAccordion
-                        titulo={props.viaje.zonasSeleccionadas.map(i=> i.m_sCodigoZona).join(', ')}>
+                        titulo={state.zonasSeleccionadas.map(i=> i.m_sCodigoZona).join(', ')}>
                         <Grid container spacing={2}>
                             <Grid item xs={10}>
                                 <RangosTarifa
-                                    rows={props.viaje.rangos}
+                                    rows={state.rangos}
                                     onEditRow={handleOnEditRow}
                                     onDeleteRow={handleOnDeleteRow}
                                     onChangeList={handleChangeRangosViaje}
