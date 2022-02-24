@@ -197,6 +197,9 @@ export default function ViajeForaneo(props) {
                         grupo={grupo}
                         onEditGrupo={handleOnEditGrupo}
                         onDeleteGrupo={handleOnDeleteGrupo}
+                        onRequestZonasByDestino={props.onRequestZonasByDestino}
+                        zonasListado={props.zonasListado}
+                        productosListado={props.productosListado}
                     />
                 )
             }
@@ -214,6 +217,7 @@ function GrupoViajeForaneo(props){
         rangos: props.grupo.rangos || [],
         productos: props.grupo.productos || []
     })
+
     const [dialogZonas, setDialogZonas] = useState({
         showDialogZonas: false,
         selection: [],
@@ -234,25 +238,13 @@ function GrupoViajeForaneo(props){
             }
         ]
     })
-    const [dialogRangos, setDialogRangos] = useState({
-        showDialog: false,
-        selection: null,
-        idViaje: null,
-        isEdit: false
-    })
-    const [dialogProdutos, setDialogProdutos] = useState({
-        showDialog: false,
-        selection: [],
-    })
-
     const handleShowDialogZonas = (show) => {
-
         if (show){
-            props.onRequestZonasBySucursal(state.idSucursal)
+            props.onRequestZonasByDestino(state.idDestino)
             setDialogZonas({
                 ...dialogZonas,
                 showDialogZonas: show,
-                selection: state.zonasSeleccionadas.map(i => i.m_nIdZona)
+                selection: state.zonas.map(i => i.m_nIdZona)
             })
         }else {
             setDialogZonas({
@@ -262,7 +254,30 @@ function GrupoViajeForaneo(props){
             })
         }
     }
+    const handleConfirmZonas = (zonasSeleccion) => {
+        let zonas = []
+        zonasSeleccion.forEach(i => {
+            zonas.push(props.zonasListado.find(j => j.m_nIdZona === parseInt(i)))
+        })
+        setState({
+            ...state,
+            zonas: zonas
+        })
 
+        setDialogZonas({
+            ...dialogZonas,
+            showDialogZonas: false,
+            selection: []
+        })
+
+    }
+
+    const [dialogRangos, setDialogRangos] = useState({
+        showDialog: false,
+        selection: null,
+        idViaje: null,
+        isEdit: false
+    })
     const handleShowDialogRangos = (viaje, show) => {
         if (show){
             setDialogRangos({
@@ -280,41 +295,6 @@ function GrupoViajeForaneo(props){
             })
         }
     }
-
-    const handleShowDialogProductos = (show) => {
-        if (show){
-            setDialogProdutos({
-                ...dialogProdutos,
-                showDialog: show,
-                selection: state.productosSeleccionados
-            })
-        }else {
-            setDialogProdutos({
-                ...dialogProdutos,
-                showDialog: show,
-                selection: []
-            })
-        }
-    }
-
-    const handleConfirmZonas = (zonasSeleccion) => {
-        let zonas = []
-        zonasSeleccion.forEach(i => {
-            zonas.push(props.zonasListado.find(j => j.m_nIdZona === parseInt(i)))
-        })
-        setState({
-            ...state,
-            zonasSeleccionadas: zonas
-        })
-
-        setDialogZonas({
-            ...dialogZonas,
-            showDialogZonas: false,
-            selection: []
-        })
-
-    }
-
     const handleConfirmRangos = (rango) => {
         let newRangos = []
         if (dialogRangos.isEdit){
@@ -338,6 +318,25 @@ function GrupoViajeForaneo(props){
         })
     }
 
+    const [dialogProdutos, setDialogProdutos] = useState({
+        showDialog: false,
+        selection: [],
+    })
+    const handleShowDialogProductos = (show) => {
+        if (show){
+            setDialogProdutos({
+                ...dialogProdutos,
+                showDialog: show,
+                selection: state.productosSeleccionados
+            })
+        }else {
+            setDialogProdutos({
+                ...dialogProdutos,
+                showDialog: show,
+                selection: []
+            })
+        }
+    }
     const handleConfirmProductos = (productosSeleccion) => {
         setState({
             ...state,
@@ -428,19 +427,14 @@ function GrupoViajeForaneo(props){
             }
             <SimpleAccordion titulo={props.grupo.nombre} onDeleteGrupo={handleOnDeleteGrupo} onEditGrupo={handleOnEditGrupo}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid item xs={6}>
                         <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas}>
                             Zonas
                         </Button>
                     </Grid>
-                    <Grid item xs>
+                    <Grid item xs={6}>
                         <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos}>
                             Productos
-                        </Button>
-                    </Grid>
-                    <Grid item xs>
-                        <Button fullWidth variant={"text"} onClick={() => props.handleDeleteViajeLocal(props.viaje)}>
-                            X
                         </Button>
                     </Grid>
                     <Grid item xs={10}>
@@ -478,13 +472,13 @@ function SimpleAccordion(props) {
                             <Typography>{props.titulo}</Typography>
                         </Grid>
                         <Grid item xs={1}>
-                            <IconButton onClick={props.onDeleteGrupo}>
-                                <DeleteIcon/>
+                            <IconButton onClick={props.onEditGrupo}>
+                                <EditIcon/>
                             </IconButton>
                         </Grid>
                         <Grid item xs={1}>
-                            <IconButton onClick={props.onEditGrupo}>
-                                <EditIcon/>
+                            <IconButton onClick={props.onDeleteGrupo}>
+                                <DeleteIcon/>
                             </IconButton>
                         </Grid>
                     </Grid>

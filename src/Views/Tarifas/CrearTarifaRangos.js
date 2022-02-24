@@ -205,8 +205,8 @@ export default function CrearTarifaRangos(props) {
         })
     }
 
-    const handleOnRequestZonasByDestino = (idSucursal) => {
-        obtenerListadoZonaOperativaBySucursal(idSucursal).then(respuesta => {
+    const handleOnRequestZonasByDestino = (idDestino) => {
+        obtenerListadoZonaOperativaBySucursal(1).then(respuesta => {
             setZonasListado(respuesta.data)
         })
     }
