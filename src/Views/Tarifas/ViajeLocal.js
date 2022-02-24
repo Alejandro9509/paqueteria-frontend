@@ -19,12 +19,13 @@ import {dataGridLocaleText} from "../../Constants";
 import CardHeader from "@material-ui/core/CardHeader";
 import Divider from "@material-ui/core/Divider";
 import DialogTransferList from "./DialogTransferList";
+import {getRandomId} from "../../Util/Util";
 
 
 export default function ViajeLocal(props) {
 
     const [state, setState] = useState({
-        idViaje: props.viaje.idViaje || 0,
+        idViaje: props.viaje.idViaje || getRandomId(),
         idSucursal: props.viaje.idSucursal || null,
         zonasSeleccionadas: props.viaje.zonasSeleccionadas || [],
         idConcepto: props.viaje.idConcepto || null,

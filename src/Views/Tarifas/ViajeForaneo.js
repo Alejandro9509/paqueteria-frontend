@@ -24,12 +24,13 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import EditIcon from '@material-ui/icons/Edit';
 import DialogTextView from "./DialogTextView";
 import GrupoViajeForaneo from "./GrupoViajeForaneo";
+import {getRandomId} from "../../Util/Util";
 
 
 export default function ViajeForaneo(props) {
 
     const [state, setState] = useState({
-        idViaje: props.viaje.idViaje || 0,
+        idViaje: props.viaje.idViaje || getRandomId(),
         idOrigen: props.viaje.idOrigen || null,
         idTipoMedida: props.viaje.idTipoMedida || null,
         idDestino: props.viaje.idDestino || null,

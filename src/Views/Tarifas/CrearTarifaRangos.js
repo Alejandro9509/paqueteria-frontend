@@ -22,7 +22,7 @@ import {dataGridLocaleText} from "../../Constants";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
-import {getUniqueListBy} from "../../Util/Util";
+import {getRandomId, getUniqueListBy} from "../../Util/Util";
 import DialogCheckbox from "./DialogCheckbox";
 import DialogoNuevoRango from "./DialogoNuevoRango";
 import {obtenerTiposCalculo} from "../../Util/Contexts/TipoCalculoContext";
@@ -43,30 +43,9 @@ export default function CrearTarifaRangos(props) {
     const [state, setState] = useState({
 
     })
-    const [viajesLocalesListado, setViajesLocalesListado] = useState([{
-        idViaje: 1,
-        idSucursal: null,
-        zonasSeleccionadas: [],
-        idConcepto: null,
-        rangos: [],
-        productosSeleccionados: []
-    },{
-        idViaje: 2,
-        idSucursal: null,
-        zonasSeleccionadas: [],
-        idConcepto: null,
-        rangos: [],
-        productosSeleccionados: []
-    }
-    ])
+    const [viajesLocalesListado, setViajesLocalesListado] = useState([])
     const [maniobrasTarifa,setManiobrasTarifa] = useState([])
-    const [viajesForaneosListado, setViajesForaneosListado] = useState([{
-        idViaje: 1,
-        idOrigen: null,
-        idTipoMedida: null,
-        idDestino: null,
-        gruposListado: [],
-    }])
+    const [viajesForaneosListado, setViajesForaneosListado] = useState([])
     const [sucursalesListado, setSucursalesListado] = useState([])
     const [conceptosListado, setConceptosListado] = useState([])
     const [zonasListado, setZonasListado] = useState([])
@@ -180,6 +159,18 @@ export default function CrearTarifaRangos(props) {
         setViajesForaneosListado(newViajes)
     }
 
+    const handleOnAgregarViajeLocal = () => {
+        viajesLocalesListado.push({
+            idViaje: getRandomId(),
+            idSucursal: null,
+            zonasSeleccionadas: [],
+            idConcepto: null,
+            rangos: [],
+            productosSeleccionados: []
+        })
+        setViajesLocalesListado(viajesLocalesListado)
+    }
+
     const handleDeleteViajeLocal = (viaje) => {
         let newViajes = []
         viajesLocalesListado.forEach(i => {
@@ -187,6 +178,17 @@ export default function CrearTarifaRangos(props) {
         })
 
         setViajesLocalesListado(newViajes.filter(i => i.idViaje !== viaje.idViaje))
+    }
+
+    const handleOnAgregarViajeForaneo = () => {
+        viajesForaneosListado.push({
+            idViaje: getRandomId(),
+            idOrigen: null,
+            idTipoMedida: null,
+            idDestino: null,
+            gruposListado: [],
+        })
+        setViajesForaneosListado(viajesForaneosListado)
     }
 
     const handleDeleteViajeForaneo = (viaje) => {
@@ -232,7 +234,7 @@ export default function CrearTarifaRangos(props) {
                         </Typography>
                     </Grid>
                     <Grid item xs={2}>
-                        <Button variant={"contained"} color={"primary"}>
+                        <Button variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeLocal}>
                             Agregar viaje
                         </Button>
                     </Grid>
@@ -270,7 +272,7 @@ export default function CrearTarifaRangos(props) {
                         </Typography>
                     </Grid>
                     <Grid item xs={2}>
-                        <Button variant={"contained"} color={"primary"}>
+                        <Button variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeForaneo}>
                             Agregar viaje
                         </Button>
                     </Grid>
