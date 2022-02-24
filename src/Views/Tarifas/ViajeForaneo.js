@@ -48,13 +48,6 @@ export default function ViajeForaneo(props) {
         })
     }
 
-    const handleChangeRangosViaje = (newRangos) => {
-        setState({
-            ...state,
-            rangos: newRangos
-        })
-    }
-
     const handleShowDialogGrupo = (show) => {
         if (show){
             setDialogGrupo({
@@ -118,9 +111,27 @@ export default function ViajeForaneo(props) {
         })
     }
 
+    const handleOnGrupoDataChange = (grupo) => {
+        state.gruposListado.forEach(i => {
+            if (i.idGrupo === grupo.idGrupo){
+                i.idGrupo = grupo.idGrupo
+                i.nombre = grupo.nombre
+                i.zonas = grupo.zonas
+                i.rangos = grupo.rangos
+                i.productos = grupo.productos
+            }
+        })
+        setState({
+            ...state,
+            gruposListado: state.gruposListado
+        })
+    }
+
     useEffect(value => {
         props.handleChangeViajeForaneo(state)
     }, [state])
+
+
 
     return(
         <div>
@@ -200,6 +211,9 @@ export default function ViajeForaneo(props) {
                         onRequestZonasByDestino={props.onRequestZonasByDestino}
                         zonasListado={props.zonasListado}
                         productosListado={props.productosListado}
+                        tiposCalculoListado={props.tiposCalculoListado}
+                        unidadesMedidaListado={props.unidadesMedidaListado}
+                        onGrupoDataChange={handleOnGrupoDataChange}
                     />
                 )
             }
@@ -275,21 +289,18 @@ function GrupoViajeForaneo(props){
     const [dialogRangos, setDialogRangos] = useState({
         showDialog: false,
         selection: null,
-        idViaje: null,
         isEdit: false
     })
-    const handleShowDialogRangos = (viaje, show) => {
+    const handleShowDialogRangos = (show) => {
         if (show){
             setDialogRangos({
                 ...dialogRangos,
                 showDialog: show,
-                idViaje: viaje.idViaje,
             })
         }else {
             setDialogRangos({
                 ...dialogRangos,
                 showDialog: false,
-                idViaje: null,
                 selection: null,
                 isEdit: false
             })
@@ -327,7 +338,7 @@ function GrupoViajeForaneo(props){
             setDialogProdutos({
                 ...dialogProdutos,
                 showDialog: show,
-                selection: state.productosSeleccionados
+                selection: state.productos
             })
         }else {
             setDialogProdutos({
@@ -340,7 +351,7 @@ function GrupoViajeForaneo(props){
     const handleConfirmProductos = (productosSeleccion) => {
         setState({
             ...state,
-            productosSeleccionados: productosSeleccion
+            productos: productosSeleccion
         })
         setDialogProdutos({
             ...dialogProdutos,
@@ -366,10 +377,10 @@ function GrupoViajeForaneo(props){
         })
     }
 
-    const handleOnChangeGrupo = (event) => {
+    const handleChangeRangosViaje = (newRangos) => {
         setState({
             ...state,
-            [event.target.name]: event.target.value
+            rangos: newRangos
         })
     }
 
@@ -386,6 +397,10 @@ function GrupoViajeForaneo(props){
         console.log(props.grupo)
         props.onEditGrupo(props.grupo)
     }
+
+    useEffect(() => {
+        props.onGrupoDataChange(state)
+    }, [state])
 
     return(
         <div>
@@ -442,13 +457,13 @@ function GrupoViajeForaneo(props){
                             rows={state.rangos}
                             onEditRow={handleOnEditRow}
                             onDeleteRow={handleOnDeleteRow}
-                            // onChangeList={handleChangeRangosViaje}
+                            onChangeList={handleChangeRangosViaje}
                             disabled={false}
                         />
                     </Grid>
                     <Grid item xs={2}>
                         <Button fullWidth variant={"contained"} color={"primary"}
-                                onClick={() => handleShowDialogRangos(props.viaje, true)}>
+                                onClick={() => handleShowDialogRangos( true)}>
                             Rangos
                         </Button>
                     </Grid>

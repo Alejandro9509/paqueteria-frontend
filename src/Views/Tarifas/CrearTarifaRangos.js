@@ -174,7 +174,6 @@ export default function CrearTarifaRangos(props) {
                 i.idOrigen = viaje.idOrigen
                 i.idTipoMedida = viaje.idTipoMedida
                 i.idDestino = viaje.idDestino
-                i.rangos = viaje.rangos
                 i.gruposListado = viaje.gruposListado
             }
         })
