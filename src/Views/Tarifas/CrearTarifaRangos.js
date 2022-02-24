@@ -36,6 +36,8 @@ import ViajeLocal from "./ViajeLocal";
 import RangosTarifa from "./RangosTarifa";
 import Maniobras from "./Maniobras";
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
+import ViajeForaneo from "./ViajeForaneo";
+import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 
 export default function CrearTarifaRangos(props) {
     const [state, setState] = useState({
@@ -58,10 +60,18 @@ export default function CrearTarifaRangos(props) {
     }
     ])
     const [maniobrasTarifa,setManiobrasTarifa] = useState([])
+    const [viajesForaneosListado, setViajesForaneosListado] = useState([{
+        idViaje: 1,
+        idOrigen: null,
+        idTipoMedida: null,
+        idDestino: null,
+        gruposListado: [],
+    }])
     const [sucursalesListado, setSucursalesListado] = useState([])
     const [conceptosListado, setConceptosListado] = useState([])
     const [zonasListado, setZonasListado] = useState([])
     const [tiposCalculoListado, setTiposCalculoListado] = useState([])
+    const [origenesDestinosListado, setOrigenesDestinosListado] = useState([])
     const [unidadesMedidaListado, setUnidadesMedidaListado] = useState([
         {
             IdUnidadMedida: 1,
@@ -107,6 +117,14 @@ export default function CrearTarifaRangos(props) {
             setZonasListado(respuesta.data)
         })
     }
+    const getOrigenesDestinos = () => {
+        if (origenesDestinosListado.length > 0){
+            return
+        }
+        obtenerCiudades().then(respuesta => {
+            setOrigenesDestinosListado(respuesta.data)
+        })
+    }
     const getAllProductos = () => {
         if (productosListado.length > 0){
             return
@@ -123,6 +141,7 @@ export default function CrearTarifaRangos(props) {
         getZonasBySucursal()
         getAllTiposCalculo()
         getAllProductos()
+        getOrigenesDestinos()
     }, [])
 
     const handleChangeViajeLocal = (viaje) => {
@@ -145,6 +164,23 @@ export default function CrearTarifaRangos(props) {
         setManiobrasTarifa(maniobras)
     }
 
+    const handleChangeViajeForaneo = (viaje) => {
+        let newViajes = []
+        viajesForaneosListado.forEach(i => {
+            newViajes.push(i)
+        })
+        newViajes.forEach(i => {
+            if (i.idViaje === viaje.idViaje ){
+                i.idOrigen = viaje.idOrigen
+                i.idTipoMedida = viaje.idTipoMedida
+                i.idDestino = viaje.idDestino
+                i.rangos = viaje.rangos
+                i.gruposListado = viaje.gruposListado
+            }
+        })
+        setViajesForaneosListado(newViajes)
+    }
+
     const handleDeleteViajeLocal = (viaje) => {
         let newViajes = []
         viajesLocalesListado.forEach(i => {
@@ -154,7 +190,22 @@ export default function CrearTarifaRangos(props) {
         setViajesLocalesListado(newViajes.filter(i => i.idViaje !== viaje.idViaje))
     }
 
+    const handleDeleteViajeForaneo = (viaje) => {
+        let newViajes = []
+        viajesForaneosListado.forEach(i => {
+            newViajes.push(i)
+        })
+
+        setViajesForaneosListado(newViajes.filter(i => i.idViaje !== viaje.idViaje))
+    }
+
     const handleOnRequestZonasBySucursal = (idSucursal) => {
+        obtenerListadoZonaOperativaBySucursal(idSucursal).then(respuesta => {
+            setZonasListado(respuesta.data)
+        })
+    }
+
+    const handleOnRequestZonasByDestino = (idSucursal) => {
         obtenerListadoZonaOperativaBySucursal(idSucursal).then(respuesta => {
             setZonasListado(respuesta.data)
         })
@@ -213,6 +264,33 @@ export default function CrearTarifaRangos(props) {
                     unidadesMedidaListado={unidadesMedidaListado}
                     rangos={maniobrasTarifa}
                 />
+                <Grid container spacing={2}>
+                    <Grid item xs={10}>
+                        <Typography variant="h3" component="h2">
+                            Viaje Foraneo
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Button variant={"contained"} color={"primary"}>
+                            Agregar viaje
+                        </Button>
+                    </Grid>
+                </Grid>
+                {
+                    viajesForaneosListado.map((viaje) =>
+                        <ViajeForaneo
+                            viaje={viaje}
+                            origenesDestinosListado={origenesDestinosListado}
+                            handleChangeViajeForaneo={handleChangeViajeForaneo}
+                            tiposCalculoListado={tiposCalculoListado}
+                            unidadesMedidaListado={unidadesMedidaListado}
+                            handleDeleteViajeForaneo={handleDeleteViajeForaneo}
+                            zonasListado={zonasListado}
+                            onRequestZonasByDestino={handleOnRequestZonasByDestino}
+                            productosListado={productosListado}
+                        />
+                    )
+                }
             </Paper>
 
         </div>
