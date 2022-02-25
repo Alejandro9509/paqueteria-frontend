@@ -18,7 +18,6 @@ export class AplicationProvider extends Component{
             isTimedOut:false
         };
         this.handleClose = this.handleClose.bind(this)
-        this.handleAction = this.handleAction.bind(this)
         this.handleLogout = this.handleLogout.bind(this)
         this.handleOnActive = this.handleOnActive.bind(this)
         this.handleOnIdle = this.handleOnIdle.bind(this)
@@ -48,7 +47,6 @@ export class AplicationProvider extends Component{
                         timeout={1000 * 60 * 8}
                         onActive={this.handleOnActive}
                         onIdle={this.handleOnIdle}
-                        onAction={this.handleAction}
                         debounce={250}
                     />
                 }
@@ -57,9 +55,6 @@ export class AplicationProvider extends Component{
                 {this.props.children}
             </AplicationContext.Provider>
         );
-    }
-    handleAction(e) {
-        this.setState({isTimedOut: false})
     }
     handleClose() {
         this.setState({showModal: false})
