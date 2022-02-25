@@ -20,6 +20,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Divider from "@material-ui/core/Divider";
 import DialogTransferList from "./DialogTransferList";
 import {getRandomId} from "../../Util/Util";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 
 export default function ViajeLocal(props) {
@@ -244,7 +245,7 @@ export default function ViajeLocal(props) {
             }
 
             <Grid container spacing={2}>
-                <Grid item xs>
+                <Grid item xs={3}>
                     <TextField
                         id="idSucursal"
                         select
@@ -262,7 +263,7 @@ export default function ViajeLocal(props) {
                         ))}
                     </TextField>
                 </Grid>
-                <Grid item xs>
+                <Grid item xs={3}>
                     <TextField
                         id="idConcepto"
                         select
@@ -280,19 +281,19 @@ export default function ViajeLocal(props) {
                         ))}
                     </TextField>
                 </Grid>
-                <Grid item xs>
+                <Grid item xs={3}>
                     <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas}>
                         Zonas
                     </Button>
                 </Grid>
-                <Grid item xs>
+                <Grid item xs={2}>
                     <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos}>
                         Productos
                     </Button>
                 </Grid>
-                <Grid item xs>
-                    <Button fullWidth variant={"text"} onClick={() => props.handleDeleteViajeLocal(props.viaje)}>
-                        X
+                <Grid item xs={1}>
+                    <Button fullWidth onClick={() => props.handleDeleteViajeLocal(props.viaje)}>
+                        <CancelIcon fontSize={'large'} color={'error'}/>
                     </Button>
                 </Grid>
                 <Grid item xs={12}>

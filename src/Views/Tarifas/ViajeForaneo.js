@@ -146,8 +146,8 @@ export default function ViajeForaneo(props) {
                     selection={dialogGrupo.selection}
                 />
             }
-            <Grid container spacing={2}>
-                <Grid item xs>
+            <Grid container spacing={2} justifyContent="center" direction="row">
+                <Grid item xs={3}>
                     <TextField
                         id="idOrigen"
                         select
@@ -165,7 +165,7 @@ export default function ViajeForaneo(props) {
                         ))}
                     </TextField>
                 </Grid>
-                <Grid item xs>
+                <Grid item xs={3}>
                     <TextField
                         id="idTipoMedida"
                         select
@@ -180,7 +180,7 @@ export default function ViajeForaneo(props) {
                         <MenuItem key={2} value={2}>Pieza</MenuItem>
                     </TextField>
                 </Grid>
-                <Grid item xs>
+                <Grid item xs={3}>
                     <TextField
                         id="idDestino"
                         select
@@ -198,11 +198,17 @@ export default function ViajeForaneo(props) {
                         ))}
                     </TextField>
                 </Grid>
-                <Grid item xs>
+                <Grid item xs={2}>
                     <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogGrupo}>
                         Agregar grupo
                     </Button>
                 </Grid>
+                <Grid item xs={1}>
+                    <Button fullWidth onClick={() => props.handleDeleteViajeForaneo(props.viaje)}>
+                        <CancelIcon fontSize={'large'} color={'error'}/>
+                    </Button>
+                </Grid>
+
             </Grid>
             {
                 state.gruposListado.map((grupo) =>
