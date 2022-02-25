@@ -814,13 +814,15 @@ class DetalleParadas extends Component {
                                                                                                             </IconButton>
                                                                                                         }
                                                                                                         {
-                                                                                                            !r.m_bUnidadPermisionario && !g.m_bTimbrado &&
+                                                                                                           g.m_sEstatusUltimaMilla!="Cancelado" && !r.m_bUnidadPermisionario && !g.m_bTimbrado &&
                                                                                                             <IconButton
                                                                                                                 aria-label="Timbrar SAT">
                                                                                                                 <Tooltip
                                                                                                                     title={"Generar CFDI Traslado"}>
                                                                                                                     <DescriptionIcon
-                                                                                                                        onClick={() => this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
+                                                                                                                        onClick={() => 
+                                                                                                                            this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)
+                                                                                                                        }
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
