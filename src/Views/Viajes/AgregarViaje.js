@@ -87,6 +87,7 @@ class AgregarViaje extends Component {
             IdRemolque2: null,
             IdDolly: null,
             idRuta: {},
+            arrayIdRutas:[],
             idCiudadOrigen: {},
             idCiudadDestino: {},
             dataCiudad: [],
@@ -192,7 +193,7 @@ class AgregarViaje extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state.id !== this.props.id && this.props.id > 0 && (this.props.consult || this.props.modificar)) {
-            // console.log(this.props.select)
+             console.log(this.props.select)
             this.setState(state => {
                 return {
                     ...state,
@@ -250,6 +251,7 @@ class AgregarViaje extends Component {
                     viajeCliente: this.props.select.m_sNumViajeCliente,
                     CreadoPor: this.props.select.CreadoPor,
                     dataInformesAsignados: this.props.select.m_arrInformes,
+                    arrayIdRutas:this.props.select.m_arrIdRutas
 
                 }
             })
@@ -1342,13 +1344,14 @@ class AgregarViaje extends Component {
                                     <div className="col-sm-12 col-md-12 unit">
                                     <SeleccionarRuta
                                         IdRuta={this.state.idRuta}
+                                        IdRutas={this.props.select.m_arrIdRutas}
                                         IdOrigen={this.state.idCiudadOrigen.m_nIdCiudad ? this.state.idCiudadOrigen.m_nIdCiudad : '' }
                                         IdDestino={this.state.idCiudadDestino.m_nIdCiudad ? this.state.idCiudadDestino.m_nIdCiudad : '' }
                                         IdCliente={0}
                                         viaje={true}
-                                        disabled={this.state.consult}
+                                        disabled={this.props.consult}
                                         onChangeRuta={this.handleChangeRuta}
-                                        EsConsulta={this.state.consult}
+                                        EsConsulta={this.props.consult}
                                     />
                                     </div>
                                 </div>
