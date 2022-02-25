@@ -282,12 +282,12 @@ export default function ViajeLocal(props) {
                         </TextField>
                     </Grid>
                     <Grid item xs={3}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas}>
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas} disabled={!state.idSucursal || !state.idConcepto}>
                             Zonas
                         </Button>
                     </Grid>
                     <Grid item xs={2}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos}>
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos} disabled={!state.idSucursal || !state.idConcepto}>
                             Productos
                         </Button>
                     </Grid>
@@ -315,8 +315,6 @@ export default function ViajeLocal(props) {
                                     </Button>
                                 </Grid>
                             </Grid>
-
-
                         </SimpleAccordion>
                     </Grid>
                 </Grid>
