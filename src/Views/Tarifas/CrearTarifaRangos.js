@@ -236,6 +236,21 @@ export default function CrearTarifaRangos(props) {
         console.log(tarifa)
     }
 
+    const filtrarZonasViajeLocal = (viaje) => {
+        let zonasDisponibles = []
+        zonasListado.forEach(i => {
+            zonasDisponibles.push(i)
+        })
+        let otrosViajes = viajesLocalesListado.filter(v => v.idViaje !== viaje.idViaje)
+        otrosViajes = otrosViajes.filter(v => v.idSucursal === viaje.idSucursal && v.idConcepto === viaje.idConcepto)
+        otrosViajes.forEach(v => {
+            v.zonasSeleccionadas.forEach(z => {
+                zonasDisponibles = zonasDisponibles.filter(j => j.m_nIdZona !== z.m_nIdZona)
+            })
+        })
+        return zonasDisponibles
+    }
+
     return(
         <div>
             <div>
@@ -262,7 +277,7 @@ export default function CrearTarifaRangos(props) {
                                 tiposCalculoListado={tiposCalculoListado}
                                 unidadesMedidaListado={unidadesMedidaListado}
                                 handleDeleteViajeLocal={handleDeleteViajeLocal}
-                                zonasListado={zonasListado}
+                                zonasListado={filtrarZonasViajeLocal(viaje)}
                                 onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
                                 productosListado={productosListado}
                             />
