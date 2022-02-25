@@ -330,6 +330,7 @@ function SimpleAccordion(props) {
         <div>
             <Accordion>
                 <AccordionSummary
+                    style={{backgroundColor: 'rgba(0, 0, 0, .03)'}}
                     expandIcon={<ExpandMoreIcon/>}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
