@@ -296,27 +296,30 @@ export default function ViajeLocal(props) {
                             <CancelIcon fontSize={'large'} color={'error'}/>
                         </Button>
                     </Grid>
-                    <Grid item xs={12}>
-                        <SimpleAccordion
-                            titulo={state.zonasSeleccionadas.map(i=> i.m_sCodigoZona).join(', ')}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={10}>
-                                    <RangosTarifa
-                                        rows={state.rangos}
-                                        onEditRow={handleOnEditRow}
-                                        onDeleteRow={handleOnDeleteRow}
-                                        onChangeList={handleChangeRangosViaje}
-                                        disabled={false}
-                                    />
+                    {
+                        state.zonasSeleccionadas.length > 0 &&
+                        <Grid item xs={12}>
+                            <SimpleAccordion
+                                titulo={state.zonasSeleccionadas.map(i=> i.m_sCodigoZona).join(', ')}>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={10}>
+                                        <RangosTarifa
+                                            rows={state.rangos}
+                                            onEditRow={handleOnEditRow}
+                                            onDeleteRow={handleOnDeleteRow}
+                                            onChangeList={handleChangeRangosViaje}
+                                            disabled={false}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <Button fullWidth variant={"contained"} color={"primary"} onClick={() => handleShowDialogRangos(props.viaje, true)}>
+                                            Rangos
+                                        </Button>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={2}>
-                                    <Button fullWidth variant={"contained"} color={"primary"} onClick={() => handleShowDialogRangos(props.viaje, true)}>
-                                        Rangos
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </SimpleAccordion>
-                    </Grid>
+                            </SimpleAccordion>
+                        </Grid>
+                    }
                 </Grid>
             </Paper>
         </div>
