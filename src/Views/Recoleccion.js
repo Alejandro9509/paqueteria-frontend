@@ -178,6 +178,7 @@ function Recoleccion() {
     const [controlErrores, setControlErrores] = useState({
         correo:false
     })
+    const [repetirConceptos,setRepetirConceptos] = React.useState(false)
     //variables de valores por defecto
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusRecoleccion: 0,
@@ -402,7 +403,6 @@ function Recoleccion() {
     })
 
     const handleChangeRemitente = (data) => {
-     //  console.log(data)
         setRemitente({
             idRemitente: data.id,
             aliasRemitente: data.alias,
@@ -834,6 +834,7 @@ function Recoleccion() {
             && dato !== "0";
 
     }
+
     const esRecoleccionValido = () => {
         let valid = false;
         /**INFORMACION GENERAÑ*/
@@ -955,7 +956,10 @@ function Recoleccion() {
     }
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
-
+        if(repetirConceptos){
+            showSuccess("Se requiere calcular tarifa otra vez")
+            return;
+        }
         if (!esRecoleccionValido()){
             return;
         }
@@ -1886,6 +1890,7 @@ function Recoleccion() {
         resetRecoleccionDD()
         resetEntregaDD()
         setDataRecoleccionConsulta(undefined)
+        setRepetirConceptos(false)
     }
     const handleChangeFiltros = (event) => {
         event.preventDefault()
@@ -1990,6 +1995,8 @@ function Recoleccion() {
     //setea si la entrega es en diferente direccion a la del destinatario
     const handleEntregaCheckboxChange = (event) => {
         // event.preventDefault();
+        console.log("ENTRA CHECKBOX")
+        setRepetirConceptos(true)
         setState({
             ...state,
             diferenteEntrega: !state.diferenteEntrega,
@@ -2423,6 +2430,10 @@ function Recoleccion() {
            // console.log('unidades listado: ', respuesta);
             setDataUnidad(respuesta.data);
         });
+    }
+
+    const seCalculaTarifa = () =>{
+        setRepetirConceptos(true)
     }
 
     const handleUpload = (e) => {
@@ -3068,6 +3079,8 @@ function Recoleccion() {
 
     }
     const handleListPaquetesChange = (newList) => {
+        console.log("ENTRA PAQUETES")
+        setRepetirConceptos(true)
         setDataPaquetes(newList)
     }
 
@@ -4005,6 +4018,7 @@ function Recoleccion() {
                                                                         handleDataChange={handleChangeRemitente}
                                                                         dataPadreConsulta={dataRecoleccionConsulta}
                                                                         limpiarRemDes={limpiarRemDes}
+                                                                        seCalculaTarifa={seCalculaTarifa}
                                                                     
                                                                     />
                                                                 }
@@ -4074,6 +4088,7 @@ function Recoleccion() {
                                                                         handleDataChange={handleChangeDestinatario}
                                                                         dataPadreConsulta={dataRecoleccionConsulta}
                                                                         limpiarRemDes={limpiarRemDes}
+                                                                        seCalculaTarifa={seCalculaTarifa}
                                                                     />
                                                                 }
                                                             <div className="row">
@@ -5002,6 +5017,7 @@ function Recoleccion() {
                                                    recoleccion={true}
                                                    mostrarCotizadorRec={mostrarCotizadorRec}
                                                    entregaDiferenteDom={entregaDD}
+                                                   setCalculoTarifa={()=>setRepetirConceptos(false)}
                                                    paquetes={dataPaquetes.map(p =>({
                                                        Tipo: p.m_nIdTipo,
                                                        Peso: p.m_rPeso,

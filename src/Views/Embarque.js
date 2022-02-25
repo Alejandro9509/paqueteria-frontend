@@ -209,6 +209,7 @@ function Embarque(props) {
         preventScroll: true,
     });
     const [tabActiva, setTabActiva] = useState(0);
+    const [repetirConceptos,setRepetirConceptos] = React.useState(false)
     const columnsRemitenteDestinatarios = React.useMemo(() => [
         {
             Name: "Número",
@@ -598,6 +599,7 @@ function Embarque(props) {
         resetEntregaDD()
         setDataConceptos([])
         setDataComplementosSAT([])
+        setRepetirConceptos(false)
         setConfiguraciones({
             estatusRecoleccion: 0,
             estatusEmbarque: 0,
@@ -1020,6 +1022,10 @@ function Embarque(props) {
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
 
+        if(repetirConceptos){
+            showSuccess("Se requiere calcular tarifa otra vez")
+            return;
+        }
         /**Se cierra el dialogo porque si no se quedará abierto despues de darle aceptar.*/
         mostrarDialogoMapa(false)
 
@@ -1903,6 +1909,7 @@ function Embarque(props) {
     };
 
     const handleEntregaCheckboxChange = (event) => {
+        setRepetirConceptos(true)
         setState({
             ...state,
             diferenteEntrega: !state.diferenteEntrega,
@@ -1911,6 +1918,7 @@ function Embarque(props) {
     };
 
     const handleEntregaEnSucursalCheckbox = (event) => {
+        setRepetirConceptos(true)
         setState({
             ...state,
             entregaEnSucursal: !state.entregaEnSucursal,
@@ -1920,12 +1928,16 @@ function Embarque(props) {
     };
 
     const handleEntregaConCitaCheckbox = (event) => {
+        setRepetirConceptos(true)
         setState({
             ...state,
             entregaEnSucursal: !state.entregaConCita && false,
             entregaConCita: !state.entregaConCita
         });
     };
+    const seCalculaTarifa = () =>{
+        setRepetirConceptos(true)
+    }
 
     const handleClickCiudad = (event) => {
         event.preventDefault()
@@ -2450,6 +2462,7 @@ function Embarque(props) {
     }
 
     const handleListPaquetesChange = (newList) => {
+          setRepetirConceptos(true)
         setDataPaquetes(newList)
     }
 
@@ -3407,6 +3420,7 @@ function Embarque(props) {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeRemitente}
                                                                         dataPadreConsulta={dataEmbarqueConsulta}
+                                                                        seCalculaTarifa={seCalculaTarifa}
                                                                         
                                                                     />
                                                                 }
@@ -3434,6 +3448,7 @@ function Embarque(props) {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeDestinatario}
                                                                         dataPadreConsulta={dataEmbarqueConsulta}
+                                                                        seCalculaTarifa={seCalculaTarifa}
                                                                       
                                                                     />
                                                                 }
@@ -3827,6 +3842,7 @@ function Embarque(props) {
                                                    recoleccion={false}
                                                    mostrarCotizadorRec={mostrarCotizadorRec}
                                                    saveIdCotizacion={saveIdCotizacion}
+                                                   setCalculoTarifa={()=>setRepetirConceptos(false)}
                                                    paquetes={dataPaquetes.map(p =>({
                                             Tipo: p.m_nIdTipo,
                                             Peso: p.m_rPeso,
