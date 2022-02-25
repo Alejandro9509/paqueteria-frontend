@@ -548,7 +548,7 @@ class FiltersMap extends Component {
                                         margin: "1px",
                                         boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                     }}
-                                    disabled={this.state.zonasSeleccionada.length === 0 }
+                                    disabled={this.state.zonasSeleccionada.length === 0  || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
                                     icon={<EmbarqueIcon
                                         style={{fill: "#F9A03E", paddingTop: "5px", paddingBottom: "5px"}}/>}
                                     label={`Paquetes (${this.state.paquetesSeleccionadas.length})`}
@@ -570,7 +570,7 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                disabled={this.state.zonasSeleccionada.length === 0}
+                                disabled={this.state.zonasSeleccionada.length === 0 }
                                 icon={<EmbarqueIcon
                                     style={{fill: "#F9A03E", paddingTop: "5px", paddingBottom: "5px"}}/>}
                                 label={`Paquetes (${this.state.paquetesSeleccionadas.length})`}
@@ -608,7 +608,7 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                disabled={this.state.sucursalSeleccionada == null}
+                                disabled={this.state.sucursalSeleccionada == null || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
                                 icon={<UnidadesIcon
                                     style={{fill: "#F9A03E", paddingTop: "10px", paddingBottom: "10px"}}/>}
                                 onClick={() => this.setState({
@@ -665,7 +665,7 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                disabled={this.state.sucursalSeleccionada == null}
+                                disabled={this.state.sucursalSeleccionada == null || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
                                 onClick={() => 
                                     this.props.generarRuta(this.state)}
                             />
@@ -674,6 +674,7 @@ class FiltersMap extends Component {
                         <Tooltip title={this.props.data.modoPlaneacion ? "Guardar ruta" : "Enviar ruta a operadores"}>
                             <IconButton
                                 onClick={() => {this.setState({unidadesSeleccionadas:[],paquetesSeleccionadas: []});this.props.guardarRuta()}}
+                                disabled={(moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
                                 style={{
                                     backgroundColor: "white",
                                     margin: "1px",
