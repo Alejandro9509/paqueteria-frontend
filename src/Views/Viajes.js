@@ -923,7 +923,7 @@ function Viajes() {
             fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
         };
         cancelarViaje(state.idViaje,params).then((respuesta) => {
-            showSuccess(respuesta.data)
+            showSuccess("El viaje ha sido cancelado")
             handleShowListado()
         });
     };
