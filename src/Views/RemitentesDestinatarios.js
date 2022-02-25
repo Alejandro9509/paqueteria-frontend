@@ -459,7 +459,7 @@ function RemitenteDestinatario(props) {
   );
 
   const handleChange = (event) => {
-
+    props.seCalculaTarifa()
     event.preventDefault();
     setState((state) => {
       return {
@@ -475,6 +475,7 @@ function RemitenteDestinatario(props) {
   };
 
   const handleChangeAutocomplete = (input, newValue) => {
+    props.seCalculaTarifa()
 if(input=="codigoPostal"){
   obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(
     ( zonaOperativa ) => {
@@ -532,6 +533,7 @@ if(input=="codigoPostal"){
   };
 
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
+    props.seCalculaTarifa()
     let estado = row.data.m_nIdEstado;
 
       obtenerMunicipiosByIdEstado(estado).then(({ data }) => {

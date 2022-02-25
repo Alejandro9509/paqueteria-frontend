@@ -124,6 +124,7 @@ class Cotizador extends Component {
                                 onClick={(e) => {
                                     e.preventDefault();
                                     this.calcularTarifa()
+                                    this.props.setCalculoTarifa()
                                 }}
                                 disabled={this.props.disabled}
                             >
