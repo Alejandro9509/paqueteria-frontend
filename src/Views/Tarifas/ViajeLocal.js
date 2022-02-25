@@ -7,7 +7,7 @@ import {
     Button, Card, Checkbox,
     Dialog, DialogActions, DialogContent,
     Grid, List, ListItem, ListItemIcon, ListItemText, makeStyles,
-    MenuItem,
+    MenuItem, Paper,
     TextField
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -207,119 +207,121 @@ export default function ViajeLocal(props) {
 
     return(
         <div>
-            {
-                dialogZonas.showDialogZonas &&
-                <DialogCheckbox
-                    handleShowDialog={handleShowDialogZonas}
-                    handleOnConfirmSelection={handleConfirmZonas}
-                    openDialog={dialogZonas.showDialogZonas}
-                    rowId={dialogZonas.rowId}
-                    selection={dialogZonas.selection}
-                    rows={props.zonasListado}
-                    columns={dialogZonas.columns}
-                />
-            }
+            <Paper variant={"outlined"} style={{padding: '10px', marginTop: '10px'}}>
+                {
+                    dialogZonas.showDialogZonas &&
+                    <DialogCheckbox
+                        handleShowDialog={handleShowDialogZonas}
+                        handleOnConfirmSelection={handleConfirmZonas}
+                        openDialog={dialogZonas.showDialogZonas}
+                        rowId={dialogZonas.rowId}
+                        selection={dialogZonas.selection}
+                        rows={props.zonasListado}
+                        columns={dialogZonas.columns}
+                    />
+                }
 
-            {
-                dialogRangos.showDialog &&
-                <DialogoNuevoRango
-                    handleOnConfirmData={handleConfirmRangos}
-                    rango={dialogRangos.selection}
-                    tiposCalculoListado={props.tiposCalculoListado}
-                    unidadesMedidaListado={props.unidadesMedidaListado}
-                    handleShowDialog={handleShowDialogRangos}
-                    openDialog={dialogRangos.showDialog}
+                {
+                    dialogRangos.showDialog &&
+                    <DialogoNuevoRango
+                        handleOnConfirmData={handleConfirmRangos}
+                        rango={dialogRangos.selection}
+                        tiposCalculoListado={props.tiposCalculoListado}
+                        unidadesMedidaListado={props.unidadesMedidaListado}
+                        handleShowDialog={handleShowDialogRangos}
+                        openDialog={dialogRangos.showDialog}
 
-                />
-            }
-            {
-                dialogProdutos.showDialog &&
-                <DialogTransferList
-                    handleShowDialog={handleShowDialogProductos}
-                    handleOnConfirmSelection={handleConfirmProductos}
-                    openDialog={dialogProdutos.showDialog}
-                    selection={dialogProdutos.selection}
-                    rows={props.productosListado}
-                    columns={dialogProdutos.columns}
-                />
-            }
+                    />
+                }
+                {
+                    dialogProdutos.showDialog &&
+                    <DialogTransferList
+                        handleShowDialog={handleShowDialogProductos}
+                        handleOnConfirmSelection={handleConfirmProductos}
+                        openDialog={dialogProdutos.showDialog}
+                        selection={dialogProdutos.selection}
+                        rows={props.productosListado}
+                        columns={dialogProdutos.columns}
+                    />
+                }
 
-            <Grid container spacing={2}>
-                <Grid item xs={3}>
-                    <TextField
-                        id="idSucursal"
-                        select
-                        label="Sucursal"
-                        value={props.viaje.idSucursal}
-                        onChange={handleChangeViajeLocal}
-                        name="idSucursal"
-                        variant="outlined"
-                        margin={"dense"}
-                    >
-                        {props.sucursalesListado.map((option) => (
-                            <MenuItem key={option.m_nIdSucursal} value={option.m_nIdSucursal}>
-                                {option.m_sSucursal}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </Grid>
-                <Grid item xs={3}>
-                    <TextField
-                        id="idConcepto"
-                        select
-                        label="Concepto"
-                        value={props.viaje.idConcepto}
-                        onChange={handleChangeViajeLocal}
-                        name="idConcepto"
-                        variant="outlined"
-                        margin={"dense"}
-                    >
-                        {props.conceptosListado.map((option) => (
-                            <MenuItem key={option.m_nIdConceptosFacturacion} value={option.m_nIdConceptosFacturacion}>
-                                {option.m_sConcepto}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </Grid>
-                <Grid item xs={3}>
-                    <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas}>
-                        Zonas
-                    </Button>
-                </Grid>
-                <Grid item xs={2}>
-                    <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos}>
-                        Productos
-                    </Button>
-                </Grid>
-                <Grid item xs={1}>
-                    <Button fullWidth onClick={() => props.handleDeleteViajeLocal(props.viaje)}>
-                        <CancelIcon fontSize={'large'} color={'error'}/>
-                    </Button>
-                </Grid>
-                <Grid item xs={12}>
-                    <SimpleAccordion
-                        titulo={state.zonasSeleccionadas.map(i=> i.m_sCodigoZona).join(', ')}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={10}>
-                                <RangosTarifa
-                                    rows={state.rangos}
-                                    onEditRow={handleOnEditRow}
-                                    onDeleteRow={handleOnDeleteRow}
-                                    onChangeList={handleChangeRangosViaje}
-                                    disabled={false}
-                                />
+                <Grid container spacing={2}>
+                    <Grid item xs={3}>
+                        <TextField
+                            id="idSucursal"
+                            select
+                            label="Sucursal"
+                            value={props.viaje.idSucursal}
+                            onChange={handleChangeViajeLocal}
+                            name="idSucursal"
+                            variant="outlined"
+                            margin={"dense"}
+                        >
+                            {props.sucursalesListado.map((option) => (
+                                <MenuItem key={option.m_nIdSucursal} value={option.m_nIdSucursal}>
+                                    {option.m_sSucursal}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <TextField
+                            id="idConcepto"
+                            select
+                            label="Concepto"
+                            value={props.viaje.idConcepto}
+                            onChange={handleChangeViajeLocal}
+                            name="idConcepto"
+                            variant="outlined"
+                            margin={"dense"}
+                        >
+                            {props.conceptosListado.map((option) => (
+                                <MenuItem key={option.m_nIdConceptosFacturacion} value={option.m_nIdConceptosFacturacion}>
+                                    {option.m_sConcepto}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas}>
+                            Zonas
+                        </Button>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos}>
+                            Productos
+                        </Button>
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Button fullWidth onClick={() => props.handleDeleteViajeLocal(props.viaje)}>
+                            <CancelIcon fontSize={'large'} color={'error'}/>
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <SimpleAccordion
+                            titulo={state.zonasSeleccionadas.map(i=> i.m_sCodigoZona).join(', ')}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={10}>
+                                    <RangosTarifa
+                                        rows={state.rangos}
+                                        onEditRow={handleOnEditRow}
+                                        onDeleteRow={handleOnDeleteRow}
+                                        onChangeList={handleChangeRangosViaje}
+                                        disabled={false}
+                                    />
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <Button fullWidth variant={"contained"} color={"primary"} onClick={() => handleShowDialogRangos(props.viaje, true)}>
+                                        Rangos
+                                    </Button>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={2}>
-                                <Button fullWidth variant={"contained"} color={"primary"} onClick={() => handleShowDialogRangos(props.viaje, true)}>
-                                    Rangos
-                                </Button>
-                            </Grid>
-                        </Grid>
 
 
-                    </SimpleAccordion>
+                        </SimpleAccordion>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </Paper>
         </div>
     )
 }
@@ -333,7 +335,7 @@ function SimpleAccordion(props) {
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
-                    <Typography>{props.titulo}</Typography>
+                    <Typography variant={"h4"} component={"h2"}>{props.titulo}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     {props.children}

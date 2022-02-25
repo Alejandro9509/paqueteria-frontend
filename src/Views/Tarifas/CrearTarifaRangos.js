@@ -38,6 +38,7 @@ import Maniobras from "./Maniobras";
 import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import ViajeForaneo from "./ViajeForaneo";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
+import AddIcon from '@material-ui/icons/AddBox';
 
 export default function CrearTarifaRangos(props) {
     const [state, setState] = useState({
@@ -225,74 +226,79 @@ export default function CrearTarifaRangos(props) {
 
     return(
         <div>
-
-            <Paper style={{padding: '20px'}}>
-                <Grid container spacing={2}>
-                    <Grid item xs={10}>
-                        <Typography variant="h3" component="h2">
-                            Viaje Local
-                        </Typography>
+            <div>
+                <Paper style={{padding: '20px', marginBottom: '10px'}}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={11}>
+                            <Typography variant="h3" component="h2">
+                                Viaje Local
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeLocal}>
+                                <AddIcon fontSize={'large'} />
+                            </Button>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={2}>
-                        <Button variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeLocal}>
-                            Agregar viaje
-                        </Button>
+                    {
+                        viajesLocalesListado.map((viaje) =>
+                            <ViajeLocal
+                                viaje={viaje}
+                                sucursalesListado={sucursalesListado}
+                                handleChangeViajeLocal={handleChangeViajeLocal}
+                                conceptosListado={conceptosListado.filter(concepto => esConceptoViajeLocal(concepto))}
+                                tiposCalculoListado={tiposCalculoListado}
+                                unidadesMedidaListado={unidadesMedidaListado}
+                                handleDeleteViajeLocal={handleDeleteViajeLocal}
+                                zonasListado={zonasListado}
+                                onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
+                                productosListado={productosListado}
+                            />
+                        )
+                    }
+                </Paper>
+                <Paper style={{padding: '20px', marginBottom: '10px'}}>
+                    <Typography variant="h3" component="h2">
+                        Maniobras
+                    </Typography>
+                    <Maniobras
+                        handleChangeManiobras={handleChangeManiobras}
+                        conceptosListado={conceptosListado.filter(concepto => esConceptoManiobra(concepto))}
+                        tiposCalculoListado={tiposCalculoListado}
+                        unidadesMedidaListado={unidadesMedidaListado}
+                        rangos={maniobrasTarifa}
+                    />
+                </Paper>
+                <Paper style={{padding: '20px'}}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={11}>
+                            <Typography variant="h3" component="h2">
+                                Viaje Foraneo
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeForaneo}>
+                                <AddIcon fontSize={'large'} />
+                            </Button>
+                        </Grid>
                     </Grid>
-                </Grid>
-                {
-                    viajesLocalesListado.map((viaje) =>
-                        <ViajeLocal
-                            viaje={viaje}
-                            sucursalesListado={sucursalesListado}
-                            handleChangeViajeLocal={handleChangeViajeLocal}
-                            conceptosListado={conceptosListado.filter(concepto => esConceptoViajeLocal(concepto))}
-                            tiposCalculoListado={tiposCalculoListado}
-                            unidadesMedidaListado={unidadesMedidaListado}
-                            handleDeleteViajeLocal={handleDeleteViajeLocal}
-                            zonasListado={zonasListado}
-                            onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
-                            productosListado={productosListado}
-                        />
-                    )
-                }
-                <Typography variant="h3" component="h2">
-                    Maniobras
-                </Typography>
-                <Maniobras
-                    handleChangeManiobras={handleChangeManiobras}
-                    conceptosListado={conceptosListado.filter(concepto => esConceptoManiobra(concepto))}
-                    tiposCalculoListado={tiposCalculoListado}
-                    unidadesMedidaListado={unidadesMedidaListado}
-                    rangos={maniobrasTarifa}
-                />
-                <Grid container spacing={2}>
-                    <Grid item xs={10}>
-                        <Typography variant="h3" component="h2">
-                            Viaje Foraneo
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <Button variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeForaneo}>
-                            Agregar viaje
-                        </Button>
-                    </Grid>
-                </Grid>
-                {
-                    viajesForaneosListado.map((viaje) =>
-                        <ViajeForaneo
-                            viaje={viaje}
-                            origenesDestinosListado={origenesDestinosListado}
-                            handleChangeViajeForaneo={handleChangeViajeForaneo}
-                            tiposCalculoListado={tiposCalculoListado}
-                            unidadesMedidaListado={unidadesMedidaListado}
-                            handleDeleteViajeForaneo={handleDeleteViajeForaneo}
-                            zonasListado={zonasListado}
-                            onRequestZonasByDestino={handleOnRequestZonasByDestino}
-                            productosListado={productosListado}
-                        />
-                    )
-                }
-            </Paper>
+                    {
+                        viajesForaneosListado.map((viaje) =>
+                            <ViajeForaneo
+                                viaje={viaje}
+                                origenesDestinosListado={origenesDestinosListado}
+                                handleChangeViajeForaneo={handleChangeViajeForaneo}
+                                tiposCalculoListado={tiposCalculoListado}
+                                unidadesMedidaListado={unidadesMedidaListado}
+                                handleDeleteViajeForaneo={handleDeleteViajeForaneo}
+                                zonasListado={zonasListado}
+                                onRequestZonasByDestino={handleOnRequestZonasByDestino}
+                                productosListado={productosListado}
+                            />
+                        )
+                    }
+                </Paper>
+            </div>
 
         </div>
     )

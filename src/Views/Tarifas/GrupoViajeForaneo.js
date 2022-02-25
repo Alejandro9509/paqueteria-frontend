@@ -270,18 +270,17 @@ function SimpleAccordion(props) {
                 >
                     <Grid container spacing={1}>
                         <Grid item xs={10}>
-                            <Typography>{props.titulo}</Typography>
+                            <Typography variant={"h4"} component={"h2"}>{props.titulo}</Typography>
                         </Grid>
-                        <Grid item xs={1}>
+                        <Grid item xs={2}>
                             <IconButton onClick={props.onEditGrupo}>
-                                <EditIcon/>
+                                <EditIcon fontSize={'large'}/>
                             </IconButton>
-                        </Grid>
-                        <Grid item xs={1}>
                             <IconButton onClick={props.onDeleteGrupo}>
-                                <DeleteIcon/>
+                                <DeleteIcon fontSize={'large'}/>
                             </IconButton>
                         </Grid>
+
                     </Grid>
                 </AccordionSummary>
                 <AccordionDetails>
