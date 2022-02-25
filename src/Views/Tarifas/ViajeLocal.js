@@ -201,7 +201,6 @@ export default function ViajeLocal(props) {
     }
 
     useEffect(value => {
-        console.log(state)
         props.handleChangeViajeLocal(state)
     }, [state])
 

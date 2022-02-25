@@ -261,10 +261,11 @@ export default function GrupoViajeForaneo(props){
 
 function SimpleAccordion(props) {
     return (
-        <div>
+        <div style={{marginTop: '10px'}}>
             <Accordion>
                 <AccordionSummary
-                    expandIcon={<ExpandMoreIcon/>}
+                    style={{backgroundColor: 'rgba(0, 0, 0, .03)'}}
+                    expandIcon={<ExpandMoreIcon fontSize={'large'}/>}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >

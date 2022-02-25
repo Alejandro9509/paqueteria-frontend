@@ -24,11 +24,9 @@ export default function DialogCheckbox(props) {
         props.handleShowDialog(false)
     }
     const handleConfirmSelection = () => {
-        console.log(selection)
         props.handleOnConfirmSelection(selection)
     }
     const handleOnSelectionChange = (event) => {
-        console.log(event.selectionModel)
         setSelection(event.selectionModel)
     }
 

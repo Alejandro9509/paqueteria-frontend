@@ -22,7 +22,7 @@ import {dataGridLocaleText} from "../../Constants";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
-import {getRandomId, getUniqueListBy} from "../../Util/Util";
+import {getCurrentDate, getRandomId, getUniqueListBy} from "../../Util/Util";
 import DialogCheckbox from "./DialogCheckbox";
 import DialogoNuevoRango from "./DialogoNuevoRango";
 import {obtenerTiposCalculo} from "../../Util/Contexts/TipoCalculoContext";
@@ -42,7 +42,9 @@ import AddIcon from '@material-ui/icons/AddBox';
 
 export default function CrearTarifaRangos(props) {
     const [state, setState] = useState({
-
+        idTarifa: props.selection?.idTarifa || 0,
+        vigencia: props.selection?.vigencia || getCurrentDate(),
+        activo: props.selection?.activo || true
     })
     const [viajesLocalesListado, setViajesLocalesListado] = useState([])
     const [maniobrasTarifa,setManiobrasTarifa] = useState([])
@@ -62,8 +64,6 @@ export default function CrearTarifaRangos(props) {
         },
     ])
     const [productosListado, setProductosListado] = useState([])
-
-
 
     const getAllSucursales = () => {
         if (sucursalesListado.length > 0){
@@ -224,6 +224,18 @@ export default function CrearTarifaRangos(props) {
         return true
     }
 
+    const handleGuardarTarifa = (event) => {
+        let tarifa = {
+            IdTarifa: state.idTarifa,
+            Vigencia: state.vigencia,
+            Activo: state.activo,
+            ViajesLocales: viajesLocalesListado,
+            Maniobras: maniobrasTarifa,
+            ViajesForaneos: viajesForaneosListado
+        }
+        console.log(tarifa)
+    }
+
     return(
         <div>
             <div>
@@ -298,6 +310,10 @@ export default function CrearTarifaRangos(props) {
                         )
                     }
                 </Paper>
+
+                <Button variant={"contained"} onClick={handleGuardarTarifa}>
+                    Guardar
+                </Button>
             </div>
 
         </div>

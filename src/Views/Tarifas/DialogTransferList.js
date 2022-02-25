@@ -34,11 +34,9 @@ export default function DialogTransferList(props) {
         props.handleShowDialog(false)
     }
     const handleConfirmSelection = () => {
-        console.log(selection)
         props.handleOnConfirmSelection(selection)
     }
     const handleOnSelectionChange = (newSelection) => {
-        console.log(newSelection)
         setSelection(newSelection)
     }
 
@@ -47,8 +45,6 @@ export default function DialogTransferList(props) {
     }
 
     const handleSearch = () => {
-        console.log(search)
-        console.log(props.rows.filter(i => i.numeroDescripcion.includes(search)))
         if (search.length === 0 ){
             setDataFiltered(props.rows)
         }else{
