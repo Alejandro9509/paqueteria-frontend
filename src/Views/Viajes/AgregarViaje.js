@@ -250,8 +250,7 @@ class AgregarViaje extends Component {
                     identificadorViaje: this.props.select.m_sIdentificador,
                     viajeCliente: this.props.select.m_sNumViajeCliente,
                     CreadoPor: this.props.select.CreadoPor,
-                    dataInformesAsignados: this.props.select.m_arrInformes,
-                    arrayIdRutas:this.props.select.m_arrIdRutas
+                    dataInformesAsignados: this.props.select.m_arrInformes
 
                 }
             })
@@ -1344,7 +1343,6 @@ class AgregarViaje extends Component {
                                     <div className="col-sm-12 col-md-12 unit">
                                     <SeleccionarRuta
                                         IdRuta={this.state.idRuta}
-                                        IdRutas={this.props.select.m_arrIdRutas}
                                         IdOrigen={this.state.idCiudadOrigen.m_nIdCiudad ? this.state.idCiudadOrigen.m_nIdCiudad : '' }
                                         IdDestino={this.state.idCiudadDestino.m_nIdCiudad ? this.state.idCiudadDestino.m_nIdCiudad : '' }
                                         IdCliente={0}
