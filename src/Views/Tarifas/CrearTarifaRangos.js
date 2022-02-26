@@ -131,6 +131,7 @@ export default function CrearTarifaRangos(props) {
         })
         newViajes.forEach(i => {
             if (i.idViaje === viaje.idViaje ){
+                i.idViaje = viaje.idViaje
                 i.idSucursal = viaje.idSucursal
                 i.zonasSeleccionadas = viaje.zonasSeleccionadas
                 i.idConcepto = viaje.idConcepto
@@ -173,12 +174,7 @@ export default function CrearTarifaRangos(props) {
     }
 
     const handleDeleteViajeLocal = (viaje) => {
-        let newViajes = []
-        viajesLocalesListado.forEach(i => {
-            newViajes.push(i)
-        })
-
-        setViajesLocalesListado(newViajes.filter(i => i.idViaje !== viaje.idViaje))
+        setViajesLocalesListado(viajesLocalesListado.filter(i => i.idViaje !== viaje.idViaje))
     }
 
     const handleOnAgregarViajeForaneo = () => {
@@ -270,6 +266,7 @@ export default function CrearTarifaRangos(props) {
                     {
                         viajesLocalesListado.map((viaje) =>
                             <ViajeLocal
+                                key={viaje.idViaje}
                                 viaje={viaje}
                                 sucursalesListado={sucursalesListado}
                                 handleChangeViajeLocal={handleChangeViajeLocal}
@@ -312,6 +309,7 @@ export default function CrearTarifaRangos(props) {
                     {
                         viajesForaneosListado.map((viaje) =>
                             <ViajeForaneo
+                                key={viaje.idViaje}
                                 viaje={viaje}
                                 origenesDestinosListado={origenesDestinosListado}
                                 handleChangeViajeForaneo={handleChangeViajeForaneo}

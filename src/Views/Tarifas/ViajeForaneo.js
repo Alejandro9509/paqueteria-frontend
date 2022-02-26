@@ -214,6 +214,7 @@ export default function ViajeForaneo(props) {
                 {
                     state.gruposListado.map((grupo) =>
                         <GrupoViajeForaneo
+                            key={grupo.idGrupo}
                             grupo={grupo}
                             onEditGrupo={handleOnEditGrupo}
                             onDeleteGrupo={handleOnDeleteGrupo}

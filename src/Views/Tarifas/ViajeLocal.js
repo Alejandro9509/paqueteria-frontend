@@ -292,7 +292,7 @@ export default function ViajeLocal(props) {
                         </Button>
                     </Grid>
                     <Grid item xs={1}>
-                        <Button fullWidth onClick={() => props.handleDeleteViajeLocal(props.viaje)}>
+                        <Button fullWidth onClick={() => props.handleDeleteViajeLocal(state)}>
                             <CancelIcon fontSize={'large'} color={'error'}/>
                         </Button>
                     </Grid>
