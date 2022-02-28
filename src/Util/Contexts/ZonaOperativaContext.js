@@ -41,7 +41,7 @@ function obtenerListadoZonaOperativa() {
     return result
 }
 function obtenerListadoZonaOperativaBySucursal(id) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/ZonaOperativa/GetListadoBySucursal/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetListadoBySucursal/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -49,7 +49,7 @@ function obtenerListadoZonaOperativaBySucursal(id) {
     return result
 }
 function obtenerListadoZonaOperativaByOrigenDestino(id) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/ZonaOperativa/GetByIdOrigenDestino/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/GetByIdOrigenDestino/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
