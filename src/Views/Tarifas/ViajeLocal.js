@@ -47,7 +47,7 @@ export default function ViajeLocal(props) {
             },
             {
                 headerName: "Sucursal",
-                field: 'm_nIdSucursal',
+                field: 'm_sSucursal',
                 minWidth: 200,
                 flex: 1
             }
@@ -342,7 +342,7 @@ function SimpleAccordion(props) {
         <div>
             <Accordion>
                 <AccordionSummary
-                    style={{backgroundColor: 'rgba(0, 0, 0, .03)'}}
+                    style={{backgroundColor: '#E6E6E6'}}
                     expandIcon={<ExpandMoreIcon/>}
                     aria-controls="panel1a-content"
                     id="panel1a-header"

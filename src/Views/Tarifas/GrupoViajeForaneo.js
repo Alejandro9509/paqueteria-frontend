@@ -31,8 +31,8 @@ export default function GrupoViajeForaneo(props){
                 flex: 1
             },
             {
-                headerName: "Sucursal",
-                field: 'm_nIdSucursal',
+                headerName: "Destino",
+                field: 'm_sOrigenDestino',
                 minWidth: 200,
                 flex: 1
             }
@@ -265,7 +265,7 @@ function SimpleAccordion(props) {
         <div style={{marginTop: '10px'}}>
             <Accordion>
                 <AccordionSummary
-                    style={{backgroundColor: 'rgba(0, 0, 0, .03)'}}
+                    style={{backgroundColor: '#E6E6E6'}}
                     expandIcon={<ExpandMoreIcon fontSize={'large'}/>}
                     aria-controls="panel1a-content"
                     id="panel1a-header"

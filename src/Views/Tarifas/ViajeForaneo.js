@@ -143,6 +143,21 @@ export default function ViajeForaneo(props) {
             props.unidadesMedidaListado.filter(i => i.IdUnidadMedida === 1 || i.IdUnidadMedida === 2) :
             props.unidadesMedidaListado
 
+    /**Filtra las zonas para que solo queden las que no se han usado en otro viaje local con la misma sucursal y concepto*/
+    const filtrarZonasViajeForaneo = (grupo) => {
+        let zonasDisponibles = []
+        props.zonasListado.forEach(i => {
+            zonasDisponibles.push(i)
+        })
+        let otrosGrupos = state.gruposListado.filter(v => v.idGrupo !== grupo.idGrupo)
+        otrosGrupos.forEach(v => {
+            v.zonas.forEach(z => {
+                zonasDisponibles = zonasDisponibles.filter(j => j.m_nIdZona !== z.m_nIdZona)
+            })
+        })
+        return zonasDisponibles
+    }
+
     return(
         <div>
             <Paper variant={"outlined"} style={{padding: '10px', marginTop: '10px'}}>
@@ -230,7 +245,7 @@ export default function ViajeForaneo(props) {
                             onEditGrupo={handleOnEditGrupo}
                             onDeleteGrupo={handleOnDeleteGrupo}
                             onRequestZonasByDestino={() => props.onRequestZonasByDestino(state.idDestino)}
-                            zonasListado={props.zonasListado}
+                            zonasListado={filtrarZonasViajeForaneo(grupo)}
                             productosListado={props.productosListado}
                             tiposCalculoListado={filtrarTiposCalculoViajeForaneo}
                             unidadesMedidaListado={filtrarUnidadesMedidaViajeForaneo}

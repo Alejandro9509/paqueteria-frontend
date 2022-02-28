@@ -149,7 +149,7 @@ export default function CrearTarifaRangos(props) {
             if (i.idViaje === viaje.idViaje ){
                 i.idViaje = viaje.idViaje
                 i.idSucursal = viaje.idSucursal
-                i.zonasSeleccionadas = viaje.zonasSeleccionadas
+                i.zonas = viaje.zonas
                 i.idConcepto = viaje.idConcepto
                 i.rangos = viaje.rangos
                 i.productosSeleccionados = viaje.productosSeleccionados
@@ -181,7 +181,7 @@ export default function CrearTarifaRangos(props) {
         viajesLocalesListado.push({
             idViaje: getRandomId(),
             idSucursal: null,
-            zonasSeleccionadas: [],
+            zonas: [],
             idConcepto: null,
             rangos: [],
             productosSeleccionados: []
@@ -245,7 +245,7 @@ export default function CrearTarifaRangos(props) {
         let otrosViajes = viajesLocalesListado.filter(v => v.idViaje !== viaje.idViaje)
         otrosViajes = otrosViajes.filter(v => v.idSucursal === viaje.idSucursal && v.idConcepto === viaje.idConcepto)
         otrosViajes.forEach(v => {
-            v.zonasSeleccionadas.forEach(z => {
+            v.zonas.forEach(z => {
                 zonasDisponibles = zonasDisponibles.filter(j => j.m_nIdZona !== z.m_nIdZona)
             })
         })
