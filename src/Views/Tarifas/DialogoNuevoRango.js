@@ -89,7 +89,7 @@ export default function DialogoNuevoRango(props) {
             })
             valid = false
         }
-        if (!(rango.minimo > 0) || rango.minimo > rango.maximo){
+        if (!(parseFloat(rango.minimo) > 0) || parseFloat(rango.minimo) > parseFloat(rango.maximo)){
             setErrores(errores=>{
                 return {
                     ...errores,
@@ -99,7 +99,7 @@ export default function DialogoNuevoRango(props) {
             })
             valid = false
         }
-        if (!(rango.maximo > 0 || rango.minimo > rango.maximo)){
+        if (!(parseFloat(rango.maximo) > 0 || parseFloat(rango.minimo) > parseFloat(rango.maximo))){
             setErrores(errores=>{
                 return {
                     ...errores,
@@ -109,7 +109,7 @@ export default function DialogoNuevoRango(props) {
             })
             valid = false
         }
-        if (!(rango.importe > 0)){
+        if (!(parseFloat(rango.importe) > 0)){
             setErrores(errores=>{
                 return {
                     ...errores,

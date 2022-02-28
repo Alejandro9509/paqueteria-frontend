@@ -285,6 +285,39 @@ export default function CrearTarifaRangos(props) {
             showSuccess("No pueden guardar viajes foraneos sin origen, destino o tipo de medida")
             return
         }
+        let todosConceptos = []
+        let conceptosLocales = []
+        viajesLocalesListado.forEach(v => {
+            conceptosLocales = conceptosLocales.concat(
+               v.rangos.map(rango => ({
+                       idConcepto: v.idConcepto,
+                       importe: rango.importe,
+                       minimo: rango.minimo,
+                       maximo: rango.maximo,
+                       idTipoCalculo: rango.idTipoCalculo,
+                       idUnidadMedida: rango.idUnidadMedida
+                   })
+               )
+           )
+        })
+        let conceptosForaneos = []
+        viajesForaneosListado.forEach(v => {
+            v.gruposListado.forEach(g => {
+                conceptosForaneos = conceptosForaneos.concat(
+                    g.rangos.map(rango => ({
+                        idConcepto: props.configuraciones.IdConceptoFlete,
+                        importe: rango.importe,
+                        minimo: rango.minimo,
+                        maximo: rango.maximo,
+                        idTipoCalculo: rango.idTipoCalculo,
+                        idUnidadMedida: rango.idUnidadMedida
+                    }))
+                )
+            })
+        })
+        todosConceptos = todosConceptos.concat(conceptosLocales)
+        todosConceptos = todosConceptos.concat(maniobrasTarifa)
+        todosConceptos = todosConceptos.concat(conceptosForaneos)
 
         let tarifa = {
             IdTarifa: state.idTarifa,
@@ -292,7 +325,8 @@ export default function CrearTarifaRangos(props) {
             Activo: state.activo,
             ViajesLocales: viajesLocalesListado,
             Maniobras: maniobrasTarifa,
-            ViajesForaneos: viajesForaneosListado
+            ViajesForaneos: viajesForaneosListado,
+            conceptosFacturacion: todosConceptos
         }
         console.log(tarifa)
     }
@@ -373,10 +407,11 @@ export default function CrearTarifaRangos(props) {
                         )
                     }
                 </Paper>
-
-                <Button variant={"contained"} onClick={handleGuardarTarifa}>
+                <br/>
+                <Button fullWidth variant={"contained"} onClick={handleGuardarTarifa} color={"primary"}>
                     Guardar
                 </Button>
+
             </div>
 
         </div>
