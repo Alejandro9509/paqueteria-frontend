@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, Dialog, DialogActions, DialogContent, TextField} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@material-ui/core";
 
 export default function DialogTextView(props) {
     /** Props
@@ -13,11 +13,46 @@ export default function DialogTextView(props) {
         nombre: props.selection?.nombre ||  '',
     })
 
+    const [errores, setErrores] = useState({
+        nombre: null,
+        descripcionError: null
+    })
+
     const handleShowDialog = () => {
         props.handleShowDialog(false)
     }
-    const handleConfirmSelection = () => {
-        props.handleOnConfirmSelection(state)
+
+    const validarData = () => {
+        setErrores(errores => {
+            return {
+                ...errores,
+                nombre: null,
+                descripcionError: null
+            }
+        })
+        let valid = true
+        if (state.nombre.length === 0){
+            valid = false
+            setErrores(errores => {
+                return {
+                        ...errores,
+                        nombre: true,
+                        descripcionError: 'Campo obligatorio'
+                }
+            })
+        }
+        return valid
+    }
+    const handleConfirmSelection = (event) => {
+        if (validarData()){
+            if (event.code === 'Enter'){
+                event.preventDefault()
+                props.handleOnConfirmSelection(state)
+            }else{
+                props.handleOnConfirmSelection(state)
+            }
+        }
+
     }
     const handleOnDataChange = (event) => {
         setState({
@@ -34,24 +69,37 @@ export default function DialogTextView(props) {
             onClose={handleShowDialog}
             aria-labelledby="max-width-dialog-title"
         >
-            <DialogContent>
-                <TextField variant="outlined" margin="dense"
-                           onChange={handleOnDataChange}
-                           fullWidth
-                           label="Nombre"
-                           value={state.nombre}
-                           name="nombre"
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleShowDialog} color="primary">
-                    Close
-                </Button>
-                <Button onClick={handleConfirmSelection} color="primary" autoFocus>
-                    Aceptar
-                </Button>
+            <form onKeyDown={e => {
+                if (e.key === 'Enter') {
+                    handleConfirmSelection(e)
+                }}}>
+                <DialogTitle>
+                    Agregar nuevo grupo
+                </DialogTitle>
+                <DialogContent>
+                    <TextField variant="outlined" margin="dense"
+                               onChange={handleOnDataChange}
+                               fullWidth
+                               label="Nombre del grupo"
+                               value={state.nombre}
+                               name="nombre"
+                               required
+                               inputRef={input => input && input.focus()}
+                               error={errores.nombre}
+                               helperText={errores.nombre ? errores.descripcionError : null}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleShowDialog} color="primary">
+                        Close
+                    </Button>
+                    <Button type={"submit"} onClick={handleConfirmSelection} color="primary" autoFocus>
+                        Aceptar
+                    </Button>
 
-            </DialogActions>
+                </DialogActions>
+            </form>
+
         </Dialog>
     )
 

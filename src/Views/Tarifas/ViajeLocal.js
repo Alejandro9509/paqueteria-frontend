@@ -28,10 +28,10 @@ export default function ViajeLocal(props) {
     const [state, setState] = useState({
         idViaje: props.viaje.idViaje || getRandomId(),
         idSucursal: props.viaje.idSucursal || null,
-        zonasSeleccionadas: props.viaje.zonasSeleccionadas || [],
+        zonas: props.viaje.zonas || [],
         idConcepto: props.viaje.idConcepto || null,
         rangos: props.viaje.rangos || [],
-        productosSeleccionados: props.viaje.productosSeleccionados || []
+        productos: props.viaje.productos || []
     })
     const [dialogZonas, setDialogZonas] = useState({
         showDialogZonas: false,
@@ -69,7 +69,7 @@ export default function ViajeLocal(props) {
             setState({
                 ...state,
                 [event.target.name]: event.target.value,
-                zonasSeleccionadas: [],
+                zonas: [],
             })
         }else{
             setState({
@@ -94,7 +94,7 @@ export default function ViajeLocal(props) {
             setDialogZonas({
                 ...dialogZonas,
                 showDialogZonas: show,
-                selection: state.zonasSeleccionadas.map(i => i.m_nIdZona)
+                selection: state.zonas.map(i => i.m_nIdZona)
             })
         }else {
             setDialogZonas({
@@ -128,7 +128,7 @@ export default function ViajeLocal(props) {
             setDialogProdutos({
                 ...dialogProdutos,
                 showDialog: show,
-                selection: state.productosSeleccionados
+                selection: state.productos
             })
         }else {
             setDialogProdutos({
@@ -146,7 +146,7 @@ export default function ViajeLocal(props) {
         })
         setState({
             ...state,
-            zonasSeleccionadas: zonas
+            zonas: zonas
         })
 
         setDialogZonas({
@@ -183,7 +183,7 @@ export default function ViajeLocal(props) {
     const handleConfirmProductos = (productosSeleccion) => {
         setState({
             ...state,
-            productosSeleccionados: productosSeleccion
+            productos: productosSeleccion
         })
         setDialogProdutos({
             ...dialogProdutos,
@@ -294,12 +294,12 @@ export default function ViajeLocal(props) {
                     </Grid>
                     <Grid item xs={3}>
                         <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas} disabled={!state.idSucursal || !state.idConcepto}>
-                            Zonas
+                            {`Zonas (${state.zonas.length})`}
                         </Button>
                     </Grid>
                     <Grid item xs={2}>
                         <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos} disabled={!state.idSucursal || !state.idConcepto}>
-                            Productos
+                            {`Productos (${state.productos.length})`}
                         </Button>
                     </Grid>
                     <Grid item xs={1}>
@@ -308,10 +308,10 @@ export default function ViajeLocal(props) {
                         </Button>
                     </Grid>
                     {
-                        state.zonasSeleccionadas.length > 0 &&
+                        state.zonas.length > 0 &&
                         <Grid item xs={12}>
                             <SimpleAccordion
-                                titulo={state.zonasSeleccionadas.map(i=> i.m_sCodigoZona).join(', ')}>
+                                titulo={state.zonas.map(i=> i.m_sCodigoZona).join(', ')}>
                                 <Grid container spacing={2}>
                                     <Grid item xs={10}>
                                         <RangosTarifa

@@ -71,6 +71,9 @@ export default function CrearTarifaRangos(props) {
         },{
             IdUnidadMedida: 2,
             UnidadMedida: 'TONS'
+        },{
+            IdUnidadMedida: 3,
+            UnidadMedida: 'PIEZA'
         },
     ])
     const [productosListado, setProductosListado] = useState([])
@@ -263,9 +266,23 @@ export default function CrearTarifaRangos(props) {
         return valid
     }
 
+    const validarOrigenDestinoMedidaViajeForaneo = () => {
+        let valid = true
+        viajesForaneosListado.forEach(v => {
+            if (!v.idOrigen || !v.idTipoMedida || !v.idDestino){
+                valid = false
+            }
+        })
+        return valid
+    }
+
     const handleGuardarTarifa = (event) => {
         if (!validarSucursalYConceptoViajeLocal()){
             showSuccess("No pueden guardar viajes locales sin sucursal o concepto")
+            return
+        }
+        if (!validarOrigenDestinoMedidaViajeForaneo()){
+            showSuccess("No pueden guardar viajes foraneos sin origen, destino o tipo de medida")
             return
         }
 

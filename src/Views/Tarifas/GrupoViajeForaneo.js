@@ -230,12 +230,12 @@ export default function GrupoViajeForaneo(props){
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
                         <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas}>
-                            Zonas
+                            {`Zonas (${state.zonas.length})`}
                         </Button>
                     </Grid>
                     <Grid item xs={6}>
                         <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos}>
-                            Productos
+                            {`Productos (${state.productos.length})`}
                         </Button>
                     </Grid>
                     <Grid item xs={10}>
