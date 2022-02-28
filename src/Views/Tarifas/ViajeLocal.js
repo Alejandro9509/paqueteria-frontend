@@ -65,10 +65,19 @@ export default function ViajeLocal(props) {
     })
 
     const handleChangeViajeLocal = (event) => {
-        setState({
-            ...state,
-            [event.target.name]: event.target.value
-        })
+        if (event.target.name === "idSucursal"){
+            setState({
+                ...state,
+                [event.target.name]: event.target.value,
+                zonasSeleccionadas: [],
+            })
+        }else{
+            setState({
+                ...state,
+                [event.target.name]: event.target.value
+            })
+        }
+
     }
 
     const handleChangeRangosViaje = (newRangos) => {
@@ -255,6 +264,7 @@ export default function ViajeLocal(props) {
                             name="idSucursal"
                             variant="outlined"
                             margin={"dense"}
+                            required
                         >
                             {props.sucursalesListado.map((option) => (
                                 <MenuItem key={option.m_nIdSucursal} value={option.m_nIdSucursal}>
@@ -273,6 +283,7 @@ export default function ViajeLocal(props) {
                             name="idConcepto"
                             variant="outlined"
                             margin={"dense"}
+                            required
                         >
                             {props.conceptosListado.map((option) => (
                                 <MenuItem key={option.m_nIdConceptosFacturacion} value={option.m_nIdConceptosFacturacion}>

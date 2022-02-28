@@ -39,6 +39,16 @@ import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import ViajeForaneo from "./ViajeForaneo";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import AddIcon from '@material-ui/icons/AddBox';
+import Noty from "noty";
+
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
+}
 
 export default function CrearTarifaRangos(props) {
     const [state, setState] = useState({
@@ -209,29 +219,18 @@ export default function CrearTarifaRangos(props) {
         })
     }
 
+    /**Valida que el concepto recibido sea uno de los configurados(en parametros de configuracion) como recoleccion o entrega*/
     const esConceptoViajeLocal = (concepto) => {
-        /*return concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoRecoleccion
-        || concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoEntrega*/
-        return true
+        return concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoRecoleccion
+        || concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoEntrega
     }
+
     const esConceptoManiobra = (concepto) => {
-        /*return concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoRecoleccion
-        || concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoEntrega*/
-        return true
+        return concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoCarga
+        || concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoDescarga
     }
 
-    const handleGuardarTarifa = (event) => {
-        let tarifa = {
-            IdTarifa: state.idTarifa,
-            Vigencia: state.vigencia,
-            Activo: state.activo,
-            ViajesLocales: viajesLocalesListado,
-            Maniobras: maniobrasTarifa,
-            ViajesForaneos: viajesForaneosListado
-        }
-        console.log(tarifa)
-    }
-
+    /**Filtra las zonas para que solo queden las que no se han usado en otro viaje local con la misma sucursal y concepto*/
     const filtrarZonasViajeLocal = (viaje) => {
         let zonasDisponibles = []
         zonasListado.forEach(i => {
@@ -245,6 +244,40 @@ export default function CrearTarifaRangos(props) {
             })
         })
         return zonasDisponibles
+    }
+
+    /**Filtra los conceptos para que solo queden las que no se han usado en otro viaje local con la misma sucursal*/
+    const filtrarConceptosViajeLocal = conceptosListado.filter(concepto => esConceptoViajeLocal(concepto))
+
+    const filtrarUnidadesMedidaViajeLocal = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 1 || i.IdUnidadMedida === 2)
+
+    const filtrarTiposCalculoViajeLocal = tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2)
+
+    const validarSucursalYConceptoViajeLocal = () => {
+        let valid = true
+        viajesLocalesListado.forEach(v => {
+            if (!v.idSucursal || !v.idConcepto){
+                valid = false
+            }
+        })
+        return valid
+    }
+
+    const handleGuardarTarifa = (event) => {
+        if (!validarSucursalYConceptoViajeLocal()){
+            showSuccess("No pueden guardar viajes locales sin sucursal o concepto")
+            return
+        }
+
+        let tarifa = {
+            IdTarifa: state.idTarifa,
+            Vigencia: state.vigencia,
+            Activo: state.activo,
+            ViajesLocales: viajesLocalesListado,
+            Maniobras: maniobrasTarifa,
+            ViajesForaneos: viajesForaneosListado
+        }
+        console.log(tarifa)
     }
 
     return(
@@ -270,9 +303,9 @@ export default function CrearTarifaRangos(props) {
                                 viaje={viaje}
                                 sucursalesListado={sucursalesListado}
                                 handleChangeViajeLocal={handleChangeViajeLocal}
-                                conceptosListado={conceptosListado.filter(concepto => esConceptoViajeLocal(concepto))}
-                                tiposCalculoListado={tiposCalculoListado}
-                                unidadesMedidaListado={unidadesMedidaListado}
+                                conceptosListado={filtrarConceptosViajeLocal}
+                                tiposCalculoListado={filtrarTiposCalculoViajeLocal}
+                                unidadesMedidaListado={filtrarUnidadesMedidaViajeLocal}
                                 handleDeleteViajeLocal={handleDeleteViajeLocal}
                                 zonasListado={filtrarZonasViajeLocal(viaje)}
                                 onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
