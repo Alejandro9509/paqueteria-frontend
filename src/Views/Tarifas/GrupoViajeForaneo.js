@@ -40,7 +40,8 @@ export default function GrupoViajeForaneo(props){
     })
     const handleShowDialogZonas = (show) => {
         if (show){
-            props.onRequestZonasByDestino(state.idDestino)
+            console.log(state.idDestino)
+            props.onRequestZonasByDestino()
             setDialogZonas({
                 ...dialogZonas,
                 showDialogZonas: show,

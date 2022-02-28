@@ -16,7 +16,10 @@ import {
     obtenerImpuestosByConceptosFacturacion
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {obtenerListadoZonaOperativaBySucursal} from "../../Util/Contexts/ZonaOperativaContext";
+import {
+    obtenerListadoZonaOperativaByOrigenDestino,
+    obtenerListadoZonaOperativaBySucursal
+} from "../../Util/Contexts/ZonaOperativaContext";
 import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import SvgIcon from "@material-ui/core/SvgIcon";
@@ -217,7 +220,7 @@ export default function CrearTarifaRangos(props) {
     }
 
     const handleOnRequestZonasByDestino = (idDestino) => {
-        obtenerListadoZonaOperativaBySucursal(1).then(respuesta => {
+        obtenerListadoZonaOperativaByOrigenDestino(idDestino).then(respuesta => {
             setZonasListado(respuesta.data)
         })
     }

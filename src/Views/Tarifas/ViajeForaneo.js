@@ -229,7 +229,7 @@ export default function ViajeForaneo(props) {
                             grupo={grupo}
                             onEditGrupo={handleOnEditGrupo}
                             onDeleteGrupo={handleOnDeleteGrupo}
-                            onRequestZonasByDestino={props.onRequestZonasByDestino}
+                            onRequestZonasByDestino={() => props.onRequestZonasByDestino(state.idDestino)}
                             zonasListado={props.zonasListado}
                             productosListado={props.productosListado}
                             tiposCalculoListado={filtrarTiposCalculoViajeForaneo}
