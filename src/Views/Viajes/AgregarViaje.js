@@ -10,7 +10,7 @@ import {
     Checkbox,
     Dialog,
     DialogActions,
-    DialogContent,
+    DialogContent, DialogTitle,
     FormControlLabel,
     Grid,
     Tooltip
@@ -47,7 +47,7 @@ import Noty from "noty";
 import {obtenerEstatusUnidadeId, obtenerRemolques, obtenerUnidades} from "../../Util/Contexts/UnidadesContext";
 import {obtenerOperadores, obtenerOperadoresId} from "../../Util/Contexts/OperadoresContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
-import {obtenerRutasByOrigenDestinoPublicoGeneral} from "../../Util/Contexts/RutasContext";
+import {obtenerRutasByOrigenDestinoPublicoGeneral, obtenerTrayectosByRuta} from "../../Util/Contexts/RutasContext";
 import SeleccionarRuta from "../Rutas/SeleccionarRuta";
 
 const headers = API_HEADERS
@@ -177,6 +177,7 @@ class AgregarViaje extends Component {
         this.handleShowDialog = this.handleShowDialog.bind(this);
         this.getAllRemolques = this.getAllRemolques.bind(this);
         this.handleChangeRuta = this.handleChangeRuta.bind(this);
+        this.onSubmitDestinoInforme = this.onSubmitDestinoInforme.bind(this);
 
     }
 
@@ -725,8 +726,15 @@ class AgregarViaje extends Component {
 
     handleAgregarInforme(id) {
         if (this.state.dataInformesAsignados.find(i => i.m_nIdInforme === id) === undefined){
-            var arrayInformesAsignados = this.state.dataInformesAsignados
             var informeAsignar = this.state.dataInformesPorAsignar.find(i => i.m_nIdInforme === id)
+            if (this.state.trayectos.map(t => t.m_nIdDestino).includes(informeAsignar.m_nIdDestino)) {
+                this.setState({openDestino: true, idInformeSeleccionado: id})
+                return
+            }
+            var arrayInformesAsignados = this.state.dataInformesAsignados
+            informeAsignar.m_nDestinoSeleccionado = informeAsignar.m_nIdDestino
+            informeAsignar.m_sDestinoSeleccionado = informeAsignar.m_sCiudadDestino
+
             arrayInformesAsignados.push(informeAsignar)
             this.setState({dataInformesAsignados: arrayInformesAsignados})
             showSuccess("El informe "+informeAsignar.m_sFolioInforme+" fue agregado con exito.")
@@ -749,9 +757,14 @@ class AgregarViaje extends Component {
     }
 
     handleChangeRuta (idRuta) {
-        this.setState( {
-            idRuta: idRuta
+
+        obtenerTrayectosByRuta(idRuta).then(({data}) => {
+            this.setState( {
+                idRuta: idRuta,
+                trayectos: data
+            })
         })
+
     }
 
     handleChangeCheckbox = (e) => {
@@ -766,7 +779,16 @@ class AgregarViaje extends Component {
             openDialogInformes: !this.state.openDialogInformes,
         })
     };
-
+    onSubmitDestinoInforme(e){
+        e.preventDefault()
+        var informeAsignar = this.state.dataInformesPorAsignar.find(i => i.m_nIdInforme === this.state.idInformeSeleccionado)
+        var arrayInformesAsignados = this.state.dataInformesAsignados
+        informeAsignar.m_nDestinoSeleccionado = this.state.destinoSeleccionado.IdDestino
+        informeAsignar.m_sDestinoSeleccionado =  this.state.destinoSeleccionado.Destino
+        arrayInformesAsignados.push(informeAsignar)
+        this.setState({dataInformesAsignados: arrayInformesAsignados, openDestino: false})
+        showSuccess("El informe "+informeAsignar.m_sFolioInforme+" fue agregado con exito.")
+    }
     //Funcion para reaccionar al seleccionar una tarifa del LISTADO DE DIALOGO
     handleTarifasSeleccionadas = (e) => {
         if (this.state.dataRequerida === "Tarifas"){
@@ -795,7 +817,7 @@ class AgregarViaje extends Component {
                 flex: 1,
             },
             {
-                headerName: "Origen",
+                headerName: "Ubicación actual",
                 field: "m_sCiudadOrigen",
                 flex: 1,
             },
@@ -858,6 +880,11 @@ class AgregarViaje extends Component {
                 flex: 1,
             },
             {
+                headerName: "Destino seleccionado",
+                field: "m_sDestinoSeleccionado",
+                flex: 1,
+            },
+            {
                 headerName: "Remolque 1",
                 field: "m_sRemolque1",
                 flex: 1,
@@ -889,6 +916,7 @@ class AgregarViaje extends Component {
             }
 
         ]
+
 
 
         return (
@@ -1006,6 +1034,51 @@ class AgregarViaje extends Component {
                         </DialogContent>
                     </Dialog>
                 }*/}
+                <Dialog
+                    fullWidth={true}
+                    maxWidth={'xl'}
+                    open={this.state.openDestino}
+                    onClose={() => this.setState({openDestino: false})}
+                    aria-labelledby="max-width-dialog-title"
+                >
+                    <DialogTitle>Seleccione el destino al cual llegara el informe</DialogTitle>
+                    <DialogContent>
+                        <form onSubmit={this.onSubmitDestinoInforme}>
+                        <div className="input">
+                            <Autocomplete
+                                freeSolo
+                                onChange={(e,newValue) => this.setState({destinoSeleccionado: newValue}) }
+                                value={this.state.destinoSeleccionado}
+                                //disabled={state.agregar == "Consultar"}
+                                id="origenRemitente"
+                                disableClearable
+                                forcePopupIcon={false}
+                                options={this.state.trayectos}
+                                getOptionLabel={(option) =>
+                                    option.Destino
+                                }
+                                style={{
+                                    transform: "translate(14px, 10px) scale(1) !important"
+                                }}
+                                renderInput={(params) => (
+                                    <div>
+                                        <TextField
+                                            label="Origen"
+                                            margin="dense"
+                                            variant="outlined"
+                                            {...params}
+                                        />
+                                    </div>
+                                )}
+                            />
+                        </div>
+                        <DialogActions>
+                            <Button type={"submit"}>Aceptar</Button>
+                        </DialogActions>
+                        </form>
+                    </DialogContent>
+
+                </Dialog>
                 <Dialog
                     fullWidth={true}
                     maxWidth={'xl'}
