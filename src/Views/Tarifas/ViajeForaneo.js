@@ -133,7 +133,30 @@ export default function ViajeForaneo(props) {
         props.handleChangeViajeForaneo(state)
     }, [state])
 
+    const filtrarTiposCalculoViajeForaneo =
+        state.idTipoMedida === 1 ?
+            props.tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2) :
+            props.tiposCalculoListado
 
+    const filtrarUnidadesMedidaViajeForaneo =
+        state.idTipoMedida === 1 ?
+            props.unidadesMedidaListado.filter(i => i.IdUnidadMedida === 1 || i.IdUnidadMedida === 2) :
+            props.unidadesMedidaListado
+
+    /**Filtra las zonas para que solo queden las que no se han usado en otro viaje local con la misma sucursal y concepto*/
+    const filtrarZonasViajeForaneo = (grupo) => {
+        let zonasDisponibles = []
+        props.zonasListado.forEach(i => {
+            zonasDisponibles.push(i)
+        })
+        let otrosGrupos = state.gruposListado.filter(v => v.idGrupo !== grupo.idGrupo)
+        otrosGrupos.forEach(v => {
+            v.zonas.forEach(z => {
+                zonasDisponibles = zonasDisponibles.filter(j => j.m_nIdZona !== z.m_nIdZona)
+            })
+        })
+        return zonasDisponibles
+    }
 
     return(
         <div>
@@ -158,6 +181,7 @@ export default function ViajeForaneo(props) {
                             name="idOrigen"
                             variant="outlined"
                             margin={"dense"}
+                            required
                         >
                             {props.origenesDestinosListado.map((option) => (
                                 <MenuItem key={option.m_nIdCiudad} value={option.m_nIdCiudad}>
@@ -176,6 +200,7 @@ export default function ViajeForaneo(props) {
                             name="idTipoMedida"
                             variant="outlined"
                             margin={"dense"}
+                            required
                         >
                             <MenuItem key={1} value={1}>Peso</MenuItem>
                             <MenuItem key={2} value={2}>Pieza</MenuItem>
@@ -191,6 +216,7 @@ export default function ViajeForaneo(props) {
                             name="idDestino"
                             variant="outlined"
                             margin={"dense"}
+                            required
                         >
                             {props.origenesDestinosListado.map((option) => (
                                 <MenuItem key={option.m_nIdCiudad} value={option.m_nIdCiudad}>
@@ -200,7 +226,7 @@ export default function ViajeForaneo(props) {
                         </TextField>
                     </Grid>
                     <Grid item xs={2}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogGrupo}>
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogGrupo} disabled={!props.viaje.idDestino || !props.viaje.idOrigen || !props.viaje.idTipoMedida}>
                             Agregar grupo
                         </Button>
                     </Grid>
@@ -214,14 +240,15 @@ export default function ViajeForaneo(props) {
                 {
                     state.gruposListado.map((grupo) =>
                         <GrupoViajeForaneo
+                            key={grupo.idGrupo}
                             grupo={grupo}
                             onEditGrupo={handleOnEditGrupo}
                             onDeleteGrupo={handleOnDeleteGrupo}
-                            onRequestZonasByDestino={props.onRequestZonasByDestino}
-                            zonasListado={props.zonasListado}
+                            onRequestZonasByDestino={() => props.onRequestZonasByDestino(state.idDestino)}
+                            zonasListado={filtrarZonasViajeForaneo(grupo)}
                             productosListado={props.productosListado}
-                            tiposCalculoListado={props.tiposCalculoListado}
-                            unidadesMedidaListado={props.unidadesMedidaListado}
+                            tiposCalculoListado={filtrarTiposCalculoViajeForaneo}
+                            unidadesMedidaListado={filtrarUnidadesMedidaViajeForaneo}
                             onGrupoDataChange={handleOnGrupoDataChange}
                         />
                     )

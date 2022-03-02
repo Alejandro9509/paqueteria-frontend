@@ -28,10 +28,10 @@ export default function ViajeLocal(props) {
     const [state, setState] = useState({
         idViaje: props.viaje.idViaje || getRandomId(),
         idSucursal: props.viaje.idSucursal || null,
-        zonasSeleccionadas: props.viaje.zonasSeleccionadas || [],
+        zonas: props.viaje.zonas || [],
         idConcepto: props.viaje.idConcepto || null,
         rangos: props.viaje.rangos || [],
-        productosSeleccionados: props.viaje.productosSeleccionados || []
+        productos: props.viaje.productos || []
     })
     const [dialogZonas, setDialogZonas] = useState({
         showDialogZonas: false,
@@ -47,7 +47,7 @@ export default function ViajeLocal(props) {
             },
             {
                 headerName: "Sucursal",
-                field: 'm_nIdSucursal',
+                field: 'm_sSucursal',
                 minWidth: 200,
                 flex: 1
             }
@@ -65,10 +65,19 @@ export default function ViajeLocal(props) {
     })
 
     const handleChangeViajeLocal = (event) => {
-        setState({
-            ...state,
-            [event.target.name]: event.target.value
-        })
+        if (event.target.name === "idSucursal"){
+            setState({
+                ...state,
+                [event.target.name]: event.target.value,
+                zonas: [],
+            })
+        }else{
+            setState({
+                ...state,
+                [event.target.name]: event.target.value
+            })
+        }
+
     }
 
     const handleChangeRangosViaje = (newRangos) => {
@@ -85,7 +94,7 @@ export default function ViajeLocal(props) {
             setDialogZonas({
                 ...dialogZonas,
                 showDialogZonas: show,
-                selection: state.zonasSeleccionadas.map(i => i.m_nIdZona)
+                selection: state.zonas.map(i => i.m_nIdZona)
             })
         }else {
             setDialogZonas({
@@ -119,7 +128,7 @@ export default function ViajeLocal(props) {
             setDialogProdutos({
                 ...dialogProdutos,
                 showDialog: show,
-                selection: state.productosSeleccionados
+                selection: state.productos
             })
         }else {
             setDialogProdutos({
@@ -137,7 +146,7 @@ export default function ViajeLocal(props) {
         })
         setState({
             ...state,
-            zonasSeleccionadas: zonas
+            zonas: zonas
         })
 
         setDialogZonas({
@@ -174,7 +183,7 @@ export default function ViajeLocal(props) {
     const handleConfirmProductos = (productosSeleccion) => {
         setState({
             ...state,
-            productosSeleccionados: productosSeleccion
+            productos: productosSeleccion
         })
         setDialogProdutos({
             ...dialogProdutos,
@@ -255,6 +264,7 @@ export default function ViajeLocal(props) {
                             name="idSucursal"
                             variant="outlined"
                             margin={"dense"}
+                            required
                         >
                             {props.sucursalesListado.map((option) => (
                                 <MenuItem key={option.m_nIdSucursal} value={option.m_nIdSucursal}>
@@ -273,6 +283,7 @@ export default function ViajeLocal(props) {
                             name="idConcepto"
                             variant="outlined"
                             margin={"dense"}
+                            required
                         >
                             {props.conceptosListado.map((option) => (
                                 <MenuItem key={option.m_nIdConceptosFacturacion} value={option.m_nIdConceptosFacturacion}>
@@ -282,43 +293,44 @@ export default function ViajeLocal(props) {
                         </TextField>
                     </Grid>
                     <Grid item xs={3}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas}>
-                            Zonas
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas} disabled={!state.idSucursal || !state.idConcepto}>
+                            {`Zonas (${state.zonas.length})`}
                         </Button>
                     </Grid>
                     <Grid item xs={2}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos}>
-                            Productos
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos} disabled={!state.idSucursal || !state.idConcepto}>
+                            {`Productos (${state.productos.length})`}
                         </Button>
                     </Grid>
                     <Grid item xs={1}>
-                        <Button fullWidth onClick={() => props.handleDeleteViajeLocal(props.viaje)}>
+                        <Button fullWidth onClick={() => props.handleDeleteViajeLocal(state)}>
                             <CancelIcon fontSize={'large'} color={'error'}/>
                         </Button>
                     </Grid>
-                    <Grid item xs={12}>
-                        <SimpleAccordion
-                            titulo={state.zonasSeleccionadas.map(i=> i.m_sCodigoZona).join(', ')}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={10}>
-                                    <RangosTarifa
-                                        rows={state.rangos}
-                                        onEditRow={handleOnEditRow}
-                                        onDeleteRow={handleOnDeleteRow}
-                                        onChangeList={handleChangeRangosViaje}
-                                        disabled={false}
-                                    />
+                    {
+                        state.zonas.length > 0 &&
+                        <Grid item xs={12}>
+                            <SimpleAccordion
+                                titulo={state.zonas.map(i=> i.m_sCodigoZona).join(', ')}>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={10}>
+                                        <RangosTarifa
+                                            rows={state.rangos}
+                                            onEditRow={handleOnEditRow}
+                                            onDeleteRow={handleOnDeleteRow}
+                                            onChangeList={handleChangeRangosViaje}
+                                            disabled={false}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <Button fullWidth variant={"contained"} color={"primary"} onClick={() => handleShowDialogRangos(props.viaje, true)}>
+                                            Rangos
+                                        </Button>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={2}>
-                                    <Button fullWidth variant={"contained"} color={"primary"} onClick={() => handleShowDialogRangos(props.viaje, true)}>
-                                        Rangos
-                                    </Button>
-                                </Grid>
-                            </Grid>
-
-
-                        </SimpleAccordion>
-                    </Grid>
+                            </SimpleAccordion>
+                        </Grid>
+                    }
                 </Grid>
             </Paper>
         </div>
@@ -330,7 +342,7 @@ function SimpleAccordion(props) {
         <div>
             <Accordion>
                 <AccordionSummary
-                    style={{backgroundColor: 'rgba(0, 0, 0, .03)'}}
+                    style={{backgroundColor: '#E6E6E6'}}
                     expandIcon={<ExpandMoreIcon/>}
                     aria-controls="panel1a-content"
                     id="panel1a-header"

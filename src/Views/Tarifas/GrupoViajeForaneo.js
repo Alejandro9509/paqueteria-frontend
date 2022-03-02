@@ -31,8 +31,8 @@ export default function GrupoViajeForaneo(props){
                 flex: 1
             },
             {
-                headerName: "Sucursal",
-                field: 'm_nIdSucursal',
+                headerName: "Destino",
+                field: 'm_sOrigenDestino',
                 minWidth: 200,
                 flex: 1
             }
@@ -40,7 +40,8 @@ export default function GrupoViajeForaneo(props){
     })
     const handleShowDialogZonas = (show) => {
         if (show){
-            props.onRequestZonasByDestino(state.idDestino)
+            console.log(state.idDestino)
+            props.onRequestZonasByDestino()
             setDialogZonas({
                 ...dialogZonas,
                 showDialogZonas: show,
@@ -230,12 +231,12 @@ export default function GrupoViajeForaneo(props){
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
                         <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas}>
-                            Zonas
+                            {`Zonas (${state.zonas.length})`}
                         </Button>
                     </Grid>
                     <Grid item xs={6}>
                         <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos}>
-                            Productos
+                            {`Productos (${state.productos.length})`}
                         </Button>
                     </Grid>
                     <Grid item xs={10}>
@@ -264,7 +265,7 @@ function SimpleAccordion(props) {
         <div style={{marginTop: '10px'}}>
             <Accordion>
                 <AccordionSummary
-                    style={{backgroundColor: 'rgba(0, 0, 0, .03)'}}
+                    style={{backgroundColor: '#E6E6E6'}}
                     expandIcon={<ExpandMoreIcon fontSize={'large'}/>}
                     aria-controls="panel1a-content"
                     id="panel1a-header"

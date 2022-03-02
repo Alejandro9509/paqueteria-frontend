@@ -16,7 +16,10 @@ import {
     obtenerImpuestosByConceptosFacturacion
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {obtenerListadoZonaOperativaBySucursal} from "../../Util/Contexts/ZonaOperativaContext";
+import {
+    obtenerListadoZonaOperativaByOrigenDestino,
+    obtenerListadoZonaOperativaBySucursal
+} from "../../Util/Contexts/ZonaOperativaContext";
 import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import SvgIcon from "@material-ui/core/SvgIcon";
@@ -39,6 +42,16 @@ import {obtenerProductos} from "../../Util/Contexts/ProductosContext";
 import ViajeForaneo from "./ViajeForaneo";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import AddIcon from '@material-ui/icons/AddBox';
+import Noty from "noty";
+
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
+}
 
 export default function CrearTarifaRangos(props) {
     const [state, setState] = useState({
@@ -61,6 +74,9 @@ export default function CrearTarifaRangos(props) {
         },{
             IdUnidadMedida: 2,
             UnidadMedida: 'TONS'
+        },{
+            IdUnidadMedida: 3,
+            UnidadMedida: 'PIEZA'
         },
     ])
     const [productosListado, setProductosListado] = useState([])
@@ -131,8 +147,9 @@ export default function CrearTarifaRangos(props) {
         })
         newViajes.forEach(i => {
             if (i.idViaje === viaje.idViaje ){
+                i.idViaje = viaje.idViaje
                 i.idSucursal = viaje.idSucursal
-                i.zonasSeleccionadas = viaje.zonasSeleccionadas
+                i.zonas = viaje.zonas
                 i.idConcepto = viaje.idConcepto
                 i.rangos = viaje.rangos
                 i.productosSeleccionados = viaje.productosSeleccionados
@@ -164,7 +181,7 @@ export default function CrearTarifaRangos(props) {
         viajesLocalesListado.push({
             idViaje: getRandomId(),
             idSucursal: null,
-            zonasSeleccionadas: [],
+            zonas: [],
             idConcepto: null,
             rangos: [],
             productosSeleccionados: []
@@ -173,12 +190,7 @@ export default function CrearTarifaRangos(props) {
     }
 
     const handleDeleteViajeLocal = (viaje) => {
-        let newViajes = []
-        viajesLocalesListado.forEach(i => {
-            newViajes.push(i)
-        })
-
-        setViajesLocalesListado(newViajes.filter(i => i.idViaje !== viaje.idViaje))
+        setViajesLocalesListado(viajesLocalesListado.filter(i => i.idViaje !== viaje.idViaje))
     }
 
     const handleOnAgregarViajeForaneo = () => {
@@ -208,30 +220,116 @@ export default function CrearTarifaRangos(props) {
     }
 
     const handleOnRequestZonasByDestino = (idDestino) => {
-        obtenerListadoZonaOperativaBySucursal(1).then(respuesta => {
+        obtenerListadoZonaOperativaByOrigenDestino(idDestino).then(respuesta => {
             setZonasListado(respuesta.data)
         })
     }
 
+    /**Valida que el concepto recibido sea uno de los configurados(en parametros de configuracion) como recoleccion o entrega*/
     const esConceptoViajeLocal = (concepto) => {
-        /*return concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoRecoleccion
-        || concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoEntrega*/
-        return true
+        return concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoRecoleccion
+        || concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoEntrega
     }
+
     const esConceptoManiobra = (concepto) => {
-        /*return concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoRecoleccion
-        || concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoEntrega*/
-        return true
+        return concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoCarga
+        || concepto.m_nIdConceptosFacturacion === props.configuraciones.IdConceptoDescarga
+    }
+
+    /**Filtra las zonas para que solo queden las que no se han usado en otro viaje local con la misma sucursal y concepto*/
+    const filtrarZonasViajeLocal = (viaje) => {
+        let zonasDisponibles = []
+        zonasListado.forEach(i => {
+            zonasDisponibles.push(i)
+        })
+        let otrosViajes = viajesLocalesListado.filter(v => v.idViaje !== viaje.idViaje)
+        otrosViajes = otrosViajes.filter(v => v.idSucursal === viaje.idSucursal && v.idConcepto === viaje.idConcepto)
+        otrosViajes.forEach(v => {
+            v.zonas.forEach(z => {
+                zonasDisponibles = zonasDisponibles.filter(j => j.m_nIdZona !== z.m_nIdZona)
+            })
+        })
+        return zonasDisponibles
+    }
+
+    /**Filtra los conceptos para que solo queden las que no se han usado en otro viaje local con la misma sucursal*/
+    const filtrarConceptosViajeLocal = conceptosListado.filter(concepto => esConceptoViajeLocal(concepto))
+
+    const filtrarUnidadesMedidaViajeLocal = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 1 || i.IdUnidadMedida === 2)
+
+    const filtrarTiposCalculoViajeLocal = tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2)
+
+    const validarSucursalYConceptoViajeLocal = () => {
+        let valid = true
+        viajesLocalesListado.forEach(v => {
+            if (!v.idSucursal || !v.idConcepto){
+                valid = false
+            }
+        })
+        return valid
+    }
+
+    const validarOrigenDestinoMedidaViajeForaneo = () => {
+        let valid = true
+        viajesForaneosListado.forEach(v => {
+            if (!v.idOrigen || !v.idTipoMedida || !v.idDestino){
+                valid = false
+            }
+        })
+        return valid
     }
 
     const handleGuardarTarifa = (event) => {
+        if (!validarSucursalYConceptoViajeLocal()){
+            showSuccess("No pueden guardar viajes locales sin sucursal o concepto")
+            return
+        }
+        if (!validarOrigenDestinoMedidaViajeForaneo()){
+            showSuccess("No pueden guardar viajes foraneos sin origen, destino o tipo de medida")
+            return
+        }
+        let todosConceptos = []
+        let conceptosLocales = []
+        viajesLocalesListado.forEach(v => {
+            conceptosLocales = conceptosLocales.concat(
+               v.rangos.map(rango => ({
+                       idConcepto: v.idConcepto,
+                       importe: rango.importe,
+                       minimo: rango.minimo,
+                       maximo: rango.maximo,
+                       idTipoCalculo: rango.idTipoCalculo,
+                       idUnidadMedida: rango.idUnidadMedida
+                   })
+               )
+           )
+        })
+        let conceptosForaneos = []
+        viajesForaneosListado.forEach(v => {
+            v.gruposListado.forEach(g => {
+                conceptosForaneos = conceptosForaneos.concat(
+                    g.rangos.map(rango => ({
+                        idConcepto: props.configuraciones.IdConceptoFlete,
+                        importe: rango.importe,
+                        minimo: rango.minimo,
+                        maximo: rango.maximo,
+                        idTipoCalculo: rango.idTipoCalculo,
+                        idUnidadMedida: rango.idUnidadMedida
+                    }))
+                )
+            })
+        })
+        todosConceptos = todosConceptos.concat(conceptosLocales)
+        todosConceptos = todosConceptos.concat(maniobrasTarifa)
+        todosConceptos = todosConceptos.concat(conceptosForaneos)
+
         let tarifa = {
             IdTarifa: state.idTarifa,
             Vigencia: state.vigencia,
             Activo: state.activo,
             ViajesLocales: viajesLocalesListado,
             Maniobras: maniobrasTarifa,
-            ViajesForaneos: viajesForaneosListado
+            ViajesForaneos: viajesForaneosListado,
+            conceptosFacturacion: todosConceptos
         }
         console.log(tarifa)
     }
@@ -255,14 +353,15 @@ export default function CrearTarifaRangos(props) {
                     {
                         viajesLocalesListado.map((viaje) =>
                             <ViajeLocal
+                                key={viaje.idViaje}
                                 viaje={viaje}
                                 sucursalesListado={sucursalesListado}
                                 handleChangeViajeLocal={handleChangeViajeLocal}
-                                conceptosListado={conceptosListado.filter(concepto => esConceptoViajeLocal(concepto))}
-                                tiposCalculoListado={tiposCalculoListado}
-                                unidadesMedidaListado={unidadesMedidaListado}
+                                conceptosListado={filtrarConceptosViajeLocal}
+                                tiposCalculoListado={filtrarTiposCalculoViajeLocal}
+                                unidadesMedidaListado={filtrarUnidadesMedidaViajeLocal}
                                 handleDeleteViajeLocal={handleDeleteViajeLocal}
-                                zonasListado={zonasListado}
+                                zonasListado={filtrarZonasViajeLocal(viaje)}
                                 onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
                                 productosListado={productosListado}
                             />
@@ -297,6 +396,7 @@ export default function CrearTarifaRangos(props) {
                     {
                         viajesForaneosListado.map((viaje) =>
                             <ViajeForaneo
+                                key={viaje.idViaje}
                                 viaje={viaje}
                                 origenesDestinosListado={origenesDestinosListado}
                                 handleChangeViajeForaneo={handleChangeViajeForaneo}
@@ -310,10 +410,11 @@ export default function CrearTarifaRangos(props) {
                         )
                     }
                 </Paper>
-
-                <Button variant={"contained"} onClick={handleGuardarTarifa}>
+                <br/>
+                <Button fullWidth variant={"contained"} onClick={handleGuardarTarifa} color={"primary"}>
                     Guardar
                 </Button>
+
             </div>
 
         </div>

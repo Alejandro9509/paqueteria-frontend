@@ -3,8 +3,16 @@ import {Button, Dialog, DialogActions, DialogContent, MenuItem, TextField} from 
 import {DataGrid} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
 import Grid from "@material-ui/core/Grid";
+import Noty from "noty";
 
-
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
+}
 export default function DialogoNuevoRango(props) {
     /** Props
      * handleShowDialog() - Controla si se abre o cierra el dialogo.
@@ -31,11 +39,103 @@ export default function DialogoNuevoRango(props) {
         unidadMedida: props.rango?.unidadMedida || '',
     })
 
+    const [errores, setErrores] = useState({
+        idConcepto: false,
+        importe: false,
+        minimo: false,
+        maximo: false,
+        idTipoCalculo: false,
+        idUnidadMedida: false,
+        descripcionError: null
+    })
+
     const handleShowDialog = () => {
         props.handleShowDialog(null, false)
     }
+
+    const validarData = () => {
+        setErrores(errores => {
+            return {
+                ...errores,
+                idConcepto: false,
+                importe: false,
+                minimo: false,
+                maximo: false,
+                idTipoCalculo: false,
+                idUnidadMedida: false,
+                descripcionError: null
+            }
+        })
+        let valid = true
+        if (props.seccionPadre === 'MANIOBRAS'){
+            if (!rango.idConcepto){
+                setErrores(errores => {
+                    return {
+                        ...errores,
+                        idConcepto: true,
+                        descripcionError: "El concepto es un campo requerido"
+                    }
+                })
+                valid = false
+            }
+        }
+        if (!rango.idUnidadMedida){
+            setErrores(errores => {
+                return {
+                    ...errores,
+                    idUnidadMedida: true,
+                    descripcionError: "La unidad de medida es un campo requerido"
+                }
+            })
+            valid = false
+        }
+        if (!(parseFloat(rango.minimo) > 0) || parseFloat(rango.minimo) > parseFloat(rango.maximo)){
+            setErrores(errores=>{
+                return {
+                    ...errores,
+                    minimo: true,
+                    descripcionError: "El valor mínimo debe ser mayor a cero y menor al maximo"
+                }
+            })
+            valid = false
+        }
+        if (!(parseFloat(rango.maximo) > 0 || parseFloat(rango.minimo) > parseFloat(rango.maximo))){
+            setErrores(errores=>{
+                return {
+                    ...errores,
+                    maximo: true,
+                    descripcionError: "El valor maximo debe ser mayor a cero y mayor al minimo"
+                }
+            })
+            valid = false
+        }
+        if (!(parseFloat(rango.importe) > 0)){
+            setErrores(errores=>{
+                return {
+                    ...errores,
+                    importe: true,
+                    descripcionError: "El importe debe ser mayor a cero"
+                }
+            })
+            valid = false
+        }
+        if (!rango.idTipoCalculo){
+            setErrores(errores => {
+                return {
+                    ...errores,
+                    idTipoCalculo: true,
+                    descripcionError: "El tipo de cálculo es un campo requerido"
+                }
+            })
+            valid = false
+        }
+        return valid
+    }
     const handleConfirmSelection = () => {
-        props.handleOnConfirmData(rango)
+        if (validarData()){
+            props.handleOnConfirmData(rango)
+        }
+
     }
     const handleOnDataChange = (event) => {
         if (event.target.name === 'idUnidadMedida'){
@@ -86,6 +186,8 @@ export default function DialogoNuevoRango(props) {
                                 name="idConcepto"
                                 variant="outlined"
                                 margin={"dense"}
+                                error={errores.idConcepto}
+                                helperText={errores.idConcepto ? errores.descripcionError : null}
                             >
                                 {props.conceptosListado.map((option) => (
                                     <MenuItem key={option.m_nIdConceptosFacturacion} value={option.m_nIdConceptosFacturacion}>
@@ -105,6 +207,8 @@ export default function DialogoNuevoRango(props) {
                             name="idUnidadMedida"
                             variant="outlined"
                             margin={"dense"}
+                            error={errores.idUnidadMedida}
+                            helperText={errores.idUnidadMedida ? errores.descripcionError : null}
                         >
                             {props.unidadesMedidaListado.map((option) => (
                                 <MenuItem key={option.IdUnidadMedida} value={option.IdUnidadMedida}>
@@ -123,6 +227,9 @@ export default function DialogoNuevoRango(props) {
                                    min="0"
                                    value={rango.minimo}
                                    name="minimo"
+                                   error={errores.minimo}
+                                   helperText={errores.minimo ? errores.descripcionError : null}
+
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -135,6 +242,8 @@ export default function DialogoNuevoRango(props) {
                                    min="0"
                                    value={rango.maximo}
                                    name="maximo"
+                                   error={errores.maximo}
+                                   helperText={errores.maximo ? errores.descripcionError : null}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -147,6 +256,8 @@ export default function DialogoNuevoRango(props) {
                                    min="0"
                                    value={rango.importe}
                                    name="importe"
+                                   error={errores.importe}
+                                   helperText={errores.importe ? errores.descripcionError : null}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -159,6 +270,8 @@ export default function DialogoNuevoRango(props) {
                             name="idTipoCalculo"
                             variant="outlined"
                             margin={"dense"}
+                            error={errores.idTipoCalculo}
+                            helperText={errores.idTipoCalculo ? errores.descripcionError : null}
                         >
                             {props.tiposCalculoListado.map((option) => (
                                 <MenuItem key={option.m_nIdTarifaTipoCalculo} value={option.m_nIdTarifaTipoCalculo}>
