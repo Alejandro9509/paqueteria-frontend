@@ -43,6 +43,7 @@ import ViajeForaneo from "./ViajeForaneo";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import AddIcon from '@material-ui/icons/AddBox';
 import Noty from "noty";
+import {agregarTarifaRangos, modificarTarifaRangos} from "../../Util/Contexts/TarifasContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -172,7 +173,7 @@ export default function CrearTarifaRangos(props) {
                 i.idOrigen = viaje.idOrigen
                 i.idTipoMedida = viaje.idTipoMedida
                 i.idDestino = viaje.idDestino
-                i.gruposListado = viaje.gruposListado
+                i.grupos = viaje.grupos
             }
         })
         setViajesForaneosListado(newViajes)
@@ -200,7 +201,7 @@ export default function CrearTarifaRangos(props) {
             idOrigen: null,
             idTipoMedida: null,
             idDestino: null,
-            gruposListado: [],
+            grupos: [],
         })
         setViajesForaneosListado(viajesForaneosListado)
     }
@@ -307,7 +308,7 @@ export default function CrearTarifaRangos(props) {
             })
         })
         viajesForaneosListado.forEach(v => {
-            v.gruposListado.forEach(g => {
+            v.grupos.forEach(g => {
                 g.conceptos = g.rangos.map(rango => ({
                         idConceptoFacturacion: props.configuraciones.IdConceptoFlete,
                         importe: rango.importe,
@@ -337,7 +338,7 @@ export default function CrearTarifaRangos(props) {
             })
         )
 
-        let tarifa = {
+        let params = {
             idTarifa: state.idTarifa,
             vigencia: state.vigencia,
             activo: state.activo,
@@ -346,7 +347,29 @@ export default function CrearTarifaRangos(props) {
             maniobras: maniobrasChidas,
             viajesForaneos: viajesForaneosListado,
         }
-        console.log(tarifa)
+        console.log(params)
+        console.log(JSON.stringify(params))
+
+        if (state.idTarifa === 0){
+            agregarTarifaRangos(params).then(respuesta => {
+                console.log(respuesta.data)
+                if (respuesta.data.Estatus){
+                    showSuccess("Se guardó la tarifa con éxito");
+                }else{
+                    showSuccess("Hubo un error al guardar");
+                }
+            })
+        }else{
+            modificarTarifaRangos(state.idTarifa,params).then(respuesta => {
+                console.log(respuesta.data)
+                if (respuesta.data.Estatus){
+                    showSuccess("Se guardó la tarifa con éxito");
+                }else{
+                    showSuccess("Hubo un error al guardar");
+                }
+            })
+        }
+
     }
 
     return(

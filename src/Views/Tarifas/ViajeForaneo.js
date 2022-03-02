@@ -34,7 +34,7 @@ export default function ViajeForaneo(props) {
         idOrigen: props.viaje.idOrigen || null,
         idTipoMedida: props.viaje.idTipoMedida || null,
         idDestino: props.viaje.idDestino || null,
-        gruposListado: props.viaje.gruposListado || [],
+        grupos: props.viaje.grupos || [],
     })
     const [dialogGrupo, setDialogGrupo] = useState({
         showDialog: false,
@@ -70,7 +70,7 @@ export default function ViajeForaneo(props) {
 
     const handleOnConfirmGrupoName = (data) => {
         if (dialogGrupo.isEdit){
-            state.gruposListado.forEach(i => {
+            state.grupos.forEach(i => {
                 if (i.idGrupo === data.idGrupo){
                     i.nombre = data.nombre
                 }
@@ -79,11 +79,11 @@ export default function ViajeForaneo(props) {
             data.zonas = []
             data.rangos = []
             data.productos = []
-            state.gruposListado.push(data)
+            state.grupos.push(data)
         }
         setState({
             ...state,
-            gruposListado: state.gruposListado
+            grupos: state.grupos
         })
 
         setDialogGrupo({
@@ -106,15 +106,15 @@ export default function ViajeForaneo(props) {
 
     const handleOnDeleteGrupo = (grupo) => {
         let newGrupos = []
-        state.gruposListado.forEach(i => newGrupos.push(i))
+        state.grupos.forEach(i => newGrupos.push(i))
         setState({
             ...state,
-            gruposListado: newGrupos.filter(i => i.idGrupo !== grupo.idGrupo)
+            grupos: newGrupos.filter(i => i.idGrupo !== grupo.idGrupo)
         })
     }
 
     const handleOnGrupoDataChange = (grupo) => {
-        state.gruposListado.forEach(i => {
+        state.grupos.forEach(i => {
             if (i.idGrupo === grupo.idGrupo){
                 i.idGrupo = grupo.idGrupo
                 i.nombre = grupo.nombre
@@ -125,7 +125,7 @@ export default function ViajeForaneo(props) {
         })
         setState({
             ...state,
-            gruposListado: state.gruposListado
+            grupos: state.grupos
         })
     }
 
@@ -149,7 +149,7 @@ export default function ViajeForaneo(props) {
         props.zonasListado.forEach(i => {
             zonasDisponibles.push(i)
         })
-        let otrosGrupos = state.gruposListado.filter(v => v.idGrupo !== grupo.idGrupo)
+        let otrosGrupos = state.grupos.filter(v => v.idGrupo !== grupo.idGrupo)
         otrosGrupos.forEach(v => {
             v.zonas.forEach(z => {
                 zonasDisponibles = zonasDisponibles.filter(j => j.m_nIdZona !== z.m_nIdZona)
@@ -238,7 +238,7 @@ export default function ViajeForaneo(props) {
 
                 </Grid>
                 {
-                    state.gruposListado.map((grupo) =>
+                    state.grupos.map((grupo) =>
                         <GrupoViajeForaneo
                             key={grupo.idGrupo}
                             grupo={grupo}

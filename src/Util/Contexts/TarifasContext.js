@@ -15,10 +15,28 @@ function modificarCorte(id, params) {
 }
 
 function agregarTarifaRangos(params) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Tarifas/Rangos/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
+    );
+    return result
+}
+
+function modificarTarifaRangos(id,params) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/Modificar/`+ id;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, params), { headers })
+    );
+    return result
+}
+
+function eliminarTarifaRangos(id) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/Eliminar/`+ id;
+    let result;
+    trackPromise(
+        result =  axios.delete(url, { headers })
     );
     return result
 }
@@ -67,4 +85,4 @@ function obtenerTarifaRangosBy(id) {
     return result
 }
 
-export { obtenerTarifaBy,obtenerTarifas,agregarTarifaRangos,obtenerTarifasRangos,obtenerTarifaRangosBy}
+export { obtenerTarifaBy,obtenerTarifas,agregarTarifaRangos,obtenerTarifasRangos,obtenerTarifaRangosBy,modificarTarifaRangos,eliminarTarifaRangos}
