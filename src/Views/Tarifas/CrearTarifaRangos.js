@@ -57,7 +57,8 @@ export default function CrearTarifaRangos(props) {
     const [state, setState] = useState({
         idTarifa: props.selection?.idTarifa || 0,
         vigencia: props.selection?.vigencia || getCurrentDate(),
-        activo: props.selection?.activo || true
+        activo: props.selection?.activo || true,
+        idCliente: props.selection?.idCliente || 0
     })
     const [viajesLocalesListado, setViajesLocalesListado] = useState([])
     const [maniobrasTarifa,setManiobrasTarifa] = useState([])
@@ -152,7 +153,7 @@ export default function CrearTarifaRangos(props) {
                 i.zonas = viaje.zonas
                 i.idConcepto = viaje.idConcepto
                 i.rangos = viaje.rangos
-                i.productosSeleccionados = viaje.productosSeleccionados
+                i.productos = viaje.productos
             }
         })
         setViajesLocalesListado(newViajes)
@@ -184,7 +185,7 @@ export default function CrearTarifaRangos(props) {
             zonas: [],
             idConcepto: null,
             rangos: [],
-            productosSeleccionados: []
+            productos: []
         })
         setViajesLocalesListado(viajesLocalesListado)
     }
@@ -288,48 +289,62 @@ export default function CrearTarifaRangos(props) {
             showSuccess("No pueden guardar viajes foraneos sin origen, destino o tipo de medida")
             return
         }
-        let todosConceptos = []
-        let conceptosLocales = []
         viajesLocalesListado.forEach(v => {
-            conceptosLocales = conceptosLocales.concat(
-               v.rangos.map(rango => ({
-                       idConcepto: v.idConcepto,
-                       importe: rango.importe,
-                       minimo: rango.minimo,
-                       maximo: rango.maximo,
-                       idTipoCalculo: rango.idTipoCalculo,
-                       idUnidadMedida: rango.idUnidadMedida
-                   })
-               )
-           )
+            v.conceptos = v.rangos.map(rango => ({
+                    idConceptoFacturacion: v.idConcepto,
+                    importe: rango.importe,
+                    minimo: rango.minimo,
+                    maximo: rango.maximo,
+                    idTipoCalculo: rango.idTipoCalculo,
+                    idUnidadMedida: rango.idUnidadMedida
+                })
+            )
+            v.zonas.forEach(zona => {
+                zona.idZonaOperativa = zona.m_nIdZona
+            })
+            v.productos.forEach(prod => {
+                prod.idProducto = prod.m_nIdProducto
+            })
         })
-        let conceptosForaneos = []
         viajesForaneosListado.forEach(v => {
             v.gruposListado.forEach(g => {
-                conceptosForaneos = conceptosForaneos.concat(
-                    g.rangos.map(rango => ({
-                        idConcepto: props.configuraciones.IdConceptoFlete,
+                g.conceptos = g.rangos.map(rango => ({
+                        idConceptoFacturacion: props.configuraciones.IdConceptoFlete,
                         importe: rango.importe,
                         minimo: rango.minimo,
                         maximo: rango.maximo,
                         idTipoCalculo: rango.idTipoCalculo,
                         idUnidadMedida: rango.idUnidadMedida
-                    }))
+                    })
                 )
+                g.zonas.forEach(zona => {
+                    zona.idZonaOperativa = zona.m_nIdZona
+                })
+                g.productos.forEach(prod => {
+                    prod.idProducto = prod.m_nIdProducto
+                })
             })
         })
-        todosConceptos = todosConceptos.concat(conceptosLocales)
-        todosConceptos = todosConceptos.concat(maniobrasTarifa)
-        todosConceptos = todosConceptos.concat(conceptosForaneos)
+
+        let maniobrasChidas = []
+        maniobrasChidas = maniobrasTarifa.map(rango => ({
+                idConceptoFacturacion: rango.idConcepto,
+                importe: rango.importe,
+                minimo: rango.minimo,
+                maximo: rango.maximo,
+                idTipoCalculo: rango.idTipoCalculo,
+                idUnidadMedida: rango.idUnidadMedida
+            })
+        )
 
         let tarifa = {
-            IdTarifa: state.idTarifa,
-            Vigencia: state.vigencia,
-            Activo: state.activo,
-            ViajesLocales: viajesLocalesListado,
-            Maniobras: maniobrasTarifa,
-            ViajesForaneos: viajesForaneosListado,
-            conceptosFacturacion: todosConceptos
+            idTarifa: state.idTarifa,
+            vigencia: state.vigencia,
+            activo: state.activo,
+            idCliente: 123,
+            viajesLocales: viajesLocalesListado,
+            maniobras: maniobrasChidas,
+            viajesForaneos: viajesForaneosListado,
         }
         console.log(tarifa)
     }
