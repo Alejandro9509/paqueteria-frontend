@@ -53,7 +53,14 @@ import {
     modificarGuia,
     agregarGuia,
     imprimirGuia,
-    obtenerGuiaReporte, entregaOcurreGuia, cambiarTipoCobro, cambiarEstatusGuia, obtenerValidacionGuia, asignarTrayectos,validarEliminarGuia
+    obtenerGuiaReporte,
+    entregaOcurreGuia,
+    cambiarTipoCobro,
+    cambiarEstatusGuia,
+    obtenerValidacionGuia,
+    asignarTrayectos,
+    validarEliminarGuia,
+    obtenerGuiaReporteEtiqueta
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -734,6 +741,12 @@ function Guia(props) {
                                                                                  style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
+                        <Tooltip title="Imprimir etiquetas">
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i className="zmdi zmdi-print"
+                                                                                 style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
                         <Tooltip title="Eliminar">
                             <a className="btn btn-default btn-xs"
                                onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete"
@@ -835,7 +848,14 @@ function Guia(props) {
             pdfWindow.document.title = "Guía " + folio;
         })
     }
-
+    function generarReporteEtiqueta(id, folio) {
+        obtenerGuiaReporteEtiqueta(id).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Guía " + folio;
+        })
+    }
     /**Entreando a guias por primera vez*/
     useEffect(value => {
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
@@ -900,21 +920,7 @@ function Guia(props) {
     }, [])
 
     async function printTicket(id) {
-        /* EB = window.EB
-         EB.PrinterZebra.searchPrinters({
-             "deviceAddress": "192.148.1.143",
-             "devicePort": 9100,
-             "connectionType": EB.Printer.CONNECTION_TYPE_TCP
-         }, function (cb) {
 
-             var myPrinter = EB.PrinterZebra.getPrinterByID(cb.printerID)
-             myPrinter.connect(function (cb) {
-
-                 myPrinter.printRawString(TICKET_ZABRA_TAMPLATE, {}, function (cb) {
-
-                 })
-             })
-         })*/
         obtenerGuiaId(id).then(({data}) => {
             var guia = data
             var totalEtiquetas = guia.m_arrClsDetalle.reduce((a, b) => +a + +b.ctd, 0)
@@ -955,18 +961,6 @@ function Guia(props) {
                     }
                 })
             }
-
-
-            // console.log(contadorPaquetesTotales)
-            // console.log([Array(contadorPaquetesTotales).keys()])
-
-
-            /*[Array(contadorPaquetesTotales).keys()].forEach((i, count) => {
-                console.log('guia: ', guia)
-                console.log('paquete: ', p)
-                console.log('index: ', count+1)
-                selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, count), undefined, errorCallback);
-            })*/
 
 
         })
