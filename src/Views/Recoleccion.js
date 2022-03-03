@@ -956,7 +956,7 @@ function Recoleccion() {
     }
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
-        if(repetirConceptos){
+        if(repetirConceptos && state.mostrarCotizador){
             showSuccess("Se requiere calcular tarifa otra vez")
             return;
         }
