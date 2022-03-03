@@ -84,7 +84,7 @@ function obtenerInformesPorViaje(id){
 }
 
 function obtenerInformesDisponiblesViajes(idOrigen, idDestino, idRuta){
-    const url = `${process.env.REACT_APP_API_URL}/api/Informes/GetListadoDisponiblesViaje`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Informes/GetListadoDisponiblesViaje`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, {idOrigen: idOrigen, idDestino: idDestino, idRuta: idRuta }), { headers })
