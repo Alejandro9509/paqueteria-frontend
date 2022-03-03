@@ -13,6 +13,8 @@ import Paquetes from "../Paquetes/Paquetes";
 import Timeline from "react-time-line";
 import ConceptosFacturacionGuias from "../Tarifas/ConceptosFacturacionGuias";
 import {obtenerInformeFolioTipo} from "../../Util/Contexts/SeguimientoContext";
+import moment from "moment";
+import 'moment/locale/es';
 
 const events = [
     {ts: "2017-09-17T12:22:46.587Z", text: 'Logged in'},
@@ -55,6 +57,7 @@ class Seguimiento extends Component {
         })
     }
     render() {
+        moment.locale("es");
         return (<div>
             <header className="topbar clearfix">
                 <Cabecera titulo="Seguimiento">
@@ -146,7 +149,7 @@ class Seguimiento extends Component {
                             Object.keys(this.state.data).length !== 0 &&
                             <Grid container alignItems={"stretch"} justify={"flex-start"} spacing={1}>
                                 <Grid item md={6}>
-                                    <div style={{
+                                    <div lang={"es"} style={{
                                         marginTop: "4px",
                                         padding: "5px",
                                         borderStyle: "solid",
