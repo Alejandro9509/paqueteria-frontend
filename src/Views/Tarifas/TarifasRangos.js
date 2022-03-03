@@ -10,6 +10,7 @@ import {validarPermisos} from "../../Util/Contexts/UsuarioContext";
 import axios from "axios";
 import CrearTarifaRangos from "./CrearTarifaRangos";
 import {
+    agregarTarifaRangos,
     eliminarTarifaRangos,
     modificarTarifaRangos,
     obtenerTarifaRangosById,
@@ -304,6 +305,29 @@ export default function TarifasRangos(props) {
         })
     }
 
+    const handleAgregarTarifa = (params) => {
+        agregarTarifaRangos(params).then(respuesta => {
+            console.log(respuesta.data)
+            if (respuesta.data.Estatus){
+                showSuccess("Se guardó la tarifa con éxito");
+                handleShowListado()
+            }else{
+                showSuccess("Hubo un error al guardar");
+            }
+        })
+    }
+    const handleModificarTarifa = (params) => {
+        modificarTarifaRangos(params.idTarifa,params).then(respuesta => {
+            console.log(respuesta.data)
+            if (respuesta.data.Estatus){
+                showSuccess("Se guardó la tarifa con éxito");
+                handleShowListado()
+            }else{
+                showSuccess("Hubo un error al guardar");
+            }
+        })
+    }
+
     return(
         <section className="main-container">
             <div className="container-fluid">
@@ -351,6 +375,8 @@ export default function TarifasRangos(props) {
                                         configuraciones={props.configuraciones}
                                         selection={state.selected}
                                         disabled={state.consult}
+                                        agregarTarifa={handleAgregarTarifa}
+                                        modificarTarifa={handleModificarTarifa}
                                     />
                         }
 

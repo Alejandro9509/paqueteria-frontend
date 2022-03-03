@@ -402,23 +402,9 @@ export default function CrearTarifaRangos(props) {
         console.log(JSON.stringify(params))
 
         if (state.idTarifa === 0){
-            agregarTarifaRangos(params).then(respuesta => {
-                console.log(respuesta.data)
-                if (respuesta.data.Estatus){
-                    showSuccess("Se guardó la tarifa con éxito");
-                }else{
-                    showSuccess("Hubo un error al guardar");
-                }
-            })
+            props.agregarTarifa(params)
         }else{
-            modificarTarifaRangos(state.idTarifa,params).then(respuesta => {
-                console.log(respuesta.data)
-                if (respuesta.data.Estatus){
-                    showSuccess("Se guardó la tarifa con éxito");
-                }else{
-                    showSuccess("Hubo un error al guardar");
-                }
-            })
+            props.modificarTarifa(params)
         }
 
     }
