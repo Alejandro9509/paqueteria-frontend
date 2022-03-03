@@ -2595,7 +2595,7 @@ function Informes({history}) {
                                                                                     }}
                                                                                 >
                                                                                     <b style={{fontWeight: "bold"}}>
-                                                                                        Total Flete
+                                                                                        Total Flete:  ${dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(  curr.m_xTotal), 0)).toFixed(2)}` }
                                                                                     </b>
                                                                                 </Grid>
                                                                                 <Grid
@@ -2607,7 +2607,7 @@ function Informes({history}) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    ${dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(  curr.m_xTotal), 0)).toFixed(2)}` }
+                                                                                   
                                                                                 </Grid>
 
                                                                             </Grid>
@@ -2626,7 +2626,7 @@ function Informes({history}) {
                                                                             }}
                                                                         >
                                                                             Peso total :{" "}
-                                                                            {dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xTotal), 0))/100).toFixed(2)}` } t
+                                                                            {dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xTotal), 0))/100).toFixed(2)}` } kg
                                                                         </Grid>
 
                                                                     </Grid>

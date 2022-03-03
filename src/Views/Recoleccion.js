@@ -956,7 +956,7 @@ function Recoleccion() {
     }
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
-        if(repetirConceptos){
+        if(repetirConceptos && state.mostrarCotizador){
             showSuccess("Se requiere calcular tarifa otra vez")
             return;
         }
@@ -4009,6 +4009,7 @@ function Recoleccion() {
                                                                         remitente={true}
                                                                         componentePadre={"Recoleccion"}
                                                                         consulta={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                        modificar={state.agregar === "Modificar"}
                                                                         mostrarZonas={!state.diferenteRecoleccion}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}
@@ -4079,6 +4080,7 @@ function Recoleccion() {
                                                                         destinatario={true}
                                                                         componentePadre={"Recoleccion"}
                                                                         consulta={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                        modificar={state.agregar === "Modificar"}
                                                                         mostrarZonas={!state.diferenteEntrega && !state.entregaEnSucursal}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}

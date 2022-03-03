@@ -1022,7 +1022,7 @@ function Embarque(props) {
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
 
-        if(repetirConceptos){
+        if(repetirConceptos && state.mostrarCotizador){
             showSuccess("Se requiere calcular tarifa otra vez")
             return;
         }
@@ -3412,6 +3412,7 @@ function Embarque(props) {
                                                                         remitente={true}
                                                                         componentePadre={"Embarque"}
                                                                         consulta={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                        modificar={state.agregar === "Modificar"}
                                                                         mostrarZonas={false}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}
@@ -3440,6 +3441,7 @@ function Embarque(props) {
                                                                         destinatario={true}
                                                                         componentePadre={"Embarque"}
                                                                         consulta={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                        modificar={state.agregar === "Modificar"}
                                                                         mostrarZonas={!(state.diferenteEntrega || state.entregaEnSucursal)}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}

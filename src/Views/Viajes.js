@@ -398,6 +398,36 @@ function Viajes() {
         //getInventarioUnidades()
     }, []);
 
+
+    useEffect(value => {
+       
+        if(viajeSeleccionado){
+            let rutaActiva = true
+        viajeSeleccionado.m_arrTrayectos.map((p, index) => {
+            
+            if(p.m_nIdSalida && p.m_nIdLlegada){
+                p.deshabilitado = false
+            }
+            else if(!p.m_nIdSalida && rutaActiva){
+                p.deshabilitado = false
+                rutaActiva = false
+            }
+            else if(p.m_nIdSalida && rutaActiva){
+                p.deshabilitado = false
+                rutaActiva = false
+            }
+            else{
+                p.deshabilitado = true
+            }
+              console.log("p.m_nIdSalida"+p.m_nIdSalida+" p.m_nIdLlegada"+p.m_nIdLlegada+" "+" rutaActiva"+rutaActiva+" p.deshabilitado"+p.deshabilitado)
+        })
+
+        console.log(viajeSeleccionado.m_arrTrayectos) 
+    }
+    }, [viajeSeleccionado]);
+
+
+
     function getAllData() {
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
@@ -1166,14 +1196,16 @@ function Viajes() {
                                                 <List>
                                                     {
                                                         viajeSeleccionado && viajeSeleccionado.m_arrTrayectos.map((p, index) => {
-                                                            const informesFiltrados = paradasListado.filter((i,ind) => ((i.m_nIdDestino === p.m_nIdDestino) || ((viajeSeleccionado.m_arrTrayectos.length - 1) === index && !viajeSeleccionado.m_arrTrayectos.map(t => t.m_nIdDestino).includes(i.m_nIdDestino) )))
 
+                                                            const informesFiltrados = paradasListado.filter((i,ind) => ((i.m_nIdDestino === p.m_nIdDestino) || ( (viajeSeleccionado.m_arrTrayectos.length - 1) === index && !viajeSeleccionado.m_arrTrayectos.map(t => t.m_nIdDestino).includes(i.m_nIdDestino) )  ))
+                                                          
+                                                            console.log(p)
                                                             return (
                                                                 <div>
-                                                                    <ListItem button key={index} onClick={() => handleClick(index)}
+                                                                    <ListItem button key={index} disabled={p.deshabilitado} onClick={() => handleClick(index)}
                                                                     >
 
-                                                                        <ListItemText primary={`Ruta: ${p.m_sRuta}`}/>
+                                                                        <ListItemText primary={`Ruta: ${p.m_sRuta}`} />
                                                                         {
                                                                             !p.m_nIdSalida  &&
 
