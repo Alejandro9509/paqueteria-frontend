@@ -198,6 +198,7 @@ class AgregarViaje extends Component {
                 return {
                     ...state,
                     id: this.props.select.m_nIdViaje,
+                    idRuta: this.props.select.m_nIdRuta,
                     idCiudadOrigen: {
                         "m_sCiudad": this.props.select.m_sOrigen,
                         "m_nIdCiudad": this.props.select.m_nIdOrigen
@@ -320,7 +321,7 @@ class AgregarViaje extends Component {
                 })
                 .catch((err) => {
                     // console.log(err);
-                    showSuccess(err);
+                    showSuccess("Error al intentar modificar viaje");
                 });
         } else {
             agregarViaje(params)
@@ -335,7 +336,7 @@ class AgregarViaje extends Component {
                 })
                 .catch((err) => {
                     console.log(err);
-                    showSuccess(err);
+                    showSuccess("Error al intentar agregar viaje");
                 });
         }
 
