@@ -9,8 +9,23 @@ import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import {validarPermisos} from "../../Util/Contexts/UsuarioContext";
 import axios from "axios";
 import CrearTarifaRangos from "./CrearTarifaRangos";
+import {
+    eliminarTarifaRangos,
+    modificarTarifaRangos,
+    obtenerTarifaRangosById,
+    obtenerTarifasRangos
+} from "../../Util/Contexts/TarifasContext";
+import Noty from "noty";
 window.jQuery = window.$ = $;
 
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
+}
 export default function TarifasRangos(props) {
     const [state, setState] = useState({
         tarifas: [],
@@ -26,11 +41,11 @@ export default function TarifasRangos(props) {
     })
 
     useEffect(() => {
-        handleDefinirTarifas()
+        handleDefinirColumnas()
         getAllTarifas()
     }, [])
 
-    const handleDefinirTarifas = () => {
+    const handleDefinirColumnas = () => {
         let columns = []
         columns.push(
             {
@@ -42,25 +57,20 @@ export default function TarifasRangos(props) {
                     return (
                         <div>
                             <Tooltip title="Modificar">
-                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.IdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                             </Tooltip>
                             <Tooltip title="Consultar">
-                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdTarifa))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.IdTarifa))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                             </Tooltip>
                             <Tooltip title="Eliminar">
-                                <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.IdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                             </Tooltip>
 
                         </div>
                     )
                 }
-            },
-            {
-                headerName: "Código",
-                field: "m_sCodigo",
-                width: 300,
             },
             {
                 headerName: "Cliente",
@@ -107,6 +117,7 @@ export default function TarifasRangos(props) {
         if (event){
             event.stopPropagation();
         }
+        getAllTarifas()
         setState({...state,pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
@@ -126,7 +137,11 @@ export default function TarifasRangos(props) {
     }
 
     const handleShowConsultar = (idTarifa) => {
-        setState({
+        obtenerTarifaRangosById(idTarifa).then(respuesta => {
+            console.log(respuesta.data)
+        })
+
+        /*setState({
             ...state,
             pantalla: 2,
             agregar: "Consultar",
@@ -138,11 +153,15 @@ export default function TarifasRangos(props) {
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
-        $('#Agregar').addClass('in show');
+        $('#Agregar').addClass('in show');*/
     }
 
     const handleShowModificar = (idTarifa) => {
-        setState({
+        obtenerTarifaRangosById(idTarifa).then(respuesta => {
+            console.log(respuesta.data)
+        })
+
+        /*setState({
             ...state,
             pantalla: 2,
             openDialog: true,
@@ -154,49 +173,38 @@ export default function TarifasRangos(props) {
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
-        $('#Agregar').addClass('in show');
+        $('#Agregar').addClass('in show');*/
     }
 
     const handleEliminar = (idTarifa) => {
+
         var derecho;
-        /*validarPermisos(this.state).then(respuesta => {
+        validarPermisos(state).then(respuesta => {
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
 
-            const url = `${process.env.REACT_APP_API_URL}/Tarifas/Eliminar/` + id + `/${this.state.ModificadoPor}`;
-            axios.delete(url, { headers }).then(respuesta => {
-                console.log(respuesta);
-                this.getAllData();
-            }).catch(err => {
-                showSuccess(err)
-            });
+            eliminarTarifaRangos(idTarifa).then(respuesta => {
+                if (respuesta.data.Estatus){
+                    showSuccess("Tarifa eliminada con éxito.")
+                    getAllTarifas();
+                }
+            })
         }).catch(err => {
             showSuccess(err)
-        });*/
+        });
     }
 
     const getAllTarifas = () => {
-        setState(state => {
-            return {
-                ...state,
-                tarifas: [{
-                    m_nIdTarifa: 1,
-                    IdCliente: 1,
-                    Cliente: 'PUBLICO GENERAL',
-                    Vigencia: '2023-02-21',
-                    m_bActivo: true
-                },
-                {
-                    m_nIdTarifa: 2,
-                    IdCliente: 2,
-                    Cliente: 'PUBLICO GENERAL',
-                    Vigencia: '2022-02-20',
-                    m_bActivo: false
-                }]
-            }
+        obtenerTarifasRangos().then(respuesta => {
+            setState(state => {
+                return{
+                    ...state,
+                    tarifas: respuesta.data
+                }
+            })
         })
     }
 
@@ -227,11 +235,11 @@ export default function TarifasRangos(props) {
                                         columns={state.columns}
                                         density="compact"
                                         pageSize={Math.floor((state.height - 310) / 30)}
-                                        getRowId={(row) => row.m_nIdTarifa}
+                                        getRowId={(row) => row.IdTarifa}
                                         onRowSelected={(row) => {
                                             setState({
                                                 ...state,
-                                                idTarifa: row.data.m_nIdTarifa
+                                                idTarifa: row.data.IdTarifa
                                             })
                                         }}
                                     />
@@ -246,19 +254,6 @@ export default function TarifasRangos(props) {
                                     <CrearTarifaRangos
                                         configuraciones={props.configuraciones}
                                     />
-                                /*<CrearTarifa edit={state.edit} consult={state.consult} select={state.selected}
-                                             onSubmit={handleAceptar} onCancel={(event) => {
-                                    event.stopPropagation();
-                                    setState({
-                                        ...state, pantalla: 1, edit: false, consult: false, agregar: "Agregar"
-                                    });
-                                    $('.nav-tabs li ').removeClass('active');
-                                    $('.nav-tabs li').eq(0).addClass('active');
-                                    $('.tab-content div ').removeClass('in show');
-                                    $('#Listado').addClass('in show');
-                                }}
-                                             listaCiudades={state.dataCiudades}
-                                />*/
                         }
 
                     </div>

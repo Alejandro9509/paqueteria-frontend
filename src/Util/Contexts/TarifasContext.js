@@ -60,7 +60,7 @@ function obtenerTarifas() {
     return result
 }
 function obtenerTarifasRangos() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Tarifas/Rangos/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -76,7 +76,7 @@ function obtenerTarifaBy(id) {
     );
     return result
 }
-function obtenerTarifaRangosBy(id) {
+function obtenerTarifaRangosById(id) {
     const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Tarifas/Rangos/GetById/` + id;
     let result;
     trackPromise(
@@ -85,4 +85,4 @@ function obtenerTarifaRangosBy(id) {
     return result
 }
 
-export { obtenerTarifaBy,obtenerTarifas,agregarTarifaRangos,obtenerTarifasRangos,obtenerTarifaRangosBy,modificarTarifaRangos,eliminarTarifaRangos}
+export { obtenerTarifaBy,obtenerTarifas,agregarTarifaRangos,obtenerTarifasRangos,obtenerTarifaRangosById,modificarTarifaRangos,eliminarTarifaRangos}

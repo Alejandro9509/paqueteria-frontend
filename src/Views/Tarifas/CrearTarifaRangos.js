@@ -44,6 +44,8 @@ import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import AddIcon from '@material-ui/icons/AddBox';
 import Noty from "noty";
 import {agregarTarifaRangos, modificarTarifaRangos} from "../../Util/Contexts/TarifasContext";
+import DialogTableClientes from "../Clientes/DialogTableClientes";
+import {obtenerClienteById} from "../../Util/Contexts/ClientesContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -59,7 +61,8 @@ export default function CrearTarifaRangos(props) {
         idTarifa: props.selection?.idTarifa || 0,
         vigencia: props.selection?.vigencia || getCurrentDate(),
         activo: props.selection?.activo || true,
-        idCliente: props.selection?.idCliente || 0
+        cliente: props.selection?.cliente || null,
+        showDialogClientes: false
     })
     const [viajesLocalesListado, setViajesLocalesListado] = useState([])
     const [maniobrasTarifa,setManiobrasTarifa] = useState([])
@@ -107,14 +110,6 @@ export default function CrearTarifaRangos(props) {
             setTiposCalculoListado(respuesta.data)
         })
     }
-    const getZonasBySucursal = (idSucursal) => {
-        if (zonasListado.length > 0){
-            return
-        }
-        obtenerListadoZonaOperativaBySucursal(idSucursal).then(respuesta => {
-            setZonasListado(respuesta.data)
-        })
-    }
     const getOrigenesDestinos = () => {
         if (origenesDestinosListado.length > 0){
             return
@@ -132,15 +127,47 @@ export default function CrearTarifaRangos(props) {
             setProductosListado(respuestas.data.filter(i => i.m_bActivo))
         })
     }
+    const getClienteGenerico = () => {
+        obtenerClienteById(3140).then(respuesta => {
+            setState({
+                ...state,
+                cliente: respuesta.data
+            })
+        })
+    }
 
     useEffect(value => {
         getAllSucursales()
         getAllConceptos()
-        getZonasBySucursal()
         getAllTiposCalculo()
         getAllProductos()
         getOrigenesDestinos()
+        getClienteGenerico()
     }, [])
+
+    const handleDialogVisible = (isVisible) => {
+        setState({
+            ...state,
+            showDialogClientes: isVisible,
+        });
+    };
+
+    const handlePatrocinadorSelected = (row) => {
+        console.log(row)
+        setState(() => ({
+            ...state,
+            cliente: row.data,
+            showDialogClientes: false,
+        }))
+    }
+
+    const handleOnChange = (event) => {
+        setState({
+            ...state,
+            [event.target.name]: event.target.value,
+        })
+
+    }
 
     const handleChangeViajeLocal = (viaje) => {
         let newViajes = []
@@ -261,7 +288,7 @@ export default function CrearTarifaRangos(props) {
 
     const filtrarTiposCalculoViajeLocal = tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2)
 
-    const validarSucursalYConceptoViajeLocal = () => {
+    const validaSucursalYConceptoViajeLocal = () => {
         let valid = true
         viajesLocalesListado.forEach(v => {
             if (!v.idSucursal || !v.idConcepto){
@@ -271,7 +298,7 @@ export default function CrearTarifaRangos(props) {
         return valid
     }
 
-    const validarOrigenDestinoMedidaViajeForaneo = () => {
+    const validaOrigenDestinoMedidaViajeForaneo = () => {
         let valid = true
         viajesForaneosListado.forEach(v => {
             if (!v.idOrigen || !v.idTipoMedida || !v.idDestino){
@@ -281,12 +308,28 @@ export default function CrearTarifaRangos(props) {
         return valid
     }
 
+    const validaCliente = () => {
+        return state.cliente?.m_nIdCliente > 0
+    }
+
+    const validaVigencia = () => {
+        return state.vigencia !== null
+    }
+
     const handleGuardarTarifa = (event) => {
-        if (!validarSucursalYConceptoViajeLocal()){
+        if (!validaCliente()){
+            showSuccess("El cliente es un dato necesario")
+            return
+        }
+        if (!validaVigencia()){
+            showSuccess("la vigencia")
+            return
+        }
+        if (!validaSucursalYConceptoViajeLocal()){
             showSuccess("No pueden guardar viajes locales sin sucursal o concepto")
             return
         }
-        if (!validarOrigenDestinoMedidaViajeForaneo()){
+        if (!validaOrigenDestinoMedidaViajeForaneo()){
             showSuccess("No pueden guardar viajes foraneos sin origen, destino o tipo de medida")
             return
         }
@@ -342,7 +385,7 @@ export default function CrearTarifaRangos(props) {
             idTarifa: state.idTarifa,
             vigencia: state.vigencia,
             activo: state.activo,
-            idCliente: 123,
+            idCliente: state.cliente.m_nIdCliente,
             viajesLocales: viajesLocalesListado,
             maniobras: maniobrasChidas,
             viajesForaneos: viajesForaneosListado,
@@ -374,7 +417,59 @@ export default function CrearTarifaRangos(props) {
 
     return(
         <div>
+            <Dialog
+                open={state.showDialogClientes}
+                onClose={() => setState({...state, openDialog: false})}
+                fullWidth maxWidth="md"
+            >
+                <DialogContent>
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <DialogTableClientes dialogVisible={handleDialogVisible } handlePatrocinadorSelected={handlePatrocinadorSelected}/>
+                    </div>
+                </DialogContent>
+            </Dialog>
             <div>
+                <Paper style={{padding: '20px', marginBottom: '10px'}}>
+
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <Typography variant="h3" component="h2">
+                                Tarifa
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <TextField
+                                variant="outlined"
+                                label="Responsable de pago"
+                                margin="dense"
+                                required
+                                value={state.cliente?.m_sNombreFiscal}
+                                placeholder={"No. Cliente: Nombre fiscal"}
+                                InputLabelProps={{shrink: true}}
+                                onClick={(props.disabled || !props.convenio)?
+                                    ()=>{return}:(()=>{ setState({ ...state, showDialogClientes: true})
+                                    })}
+                                disabled
+                            />
+                        </Grid>
+                        <Grid item xs={2}>
+                            <TextField
+                                variant="outlined"
+                                id="vigencia"
+                                name="vigencia"
+                                label="Vigencia"
+                                type="date"
+                                onChange={handleOnChange}
+                                value={state.vigencia}
+                                className={"form-control"}
+                                InputProps={{inputProps: { min: getCurrentDate()}}}
+                                disabled={props.disabled}
+                                InputLabelProps={{shrink: true,}}
+                                required
+                            />
+                        </Grid>
+                    </Grid>
+                </Paper>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
                     <Grid container spacing={2}>
                         <Grid item xs={11}>
