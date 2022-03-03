@@ -38,7 +38,8 @@ export default function TarifasRangos(props) {
         selected: null,
         DerechoBorrar: 1, //TODO: Definir id
         dataSucursal: [],
-        columns: []
+        columns: [],
+        consult: false
     })
 
     useEffect(() => {
@@ -148,7 +149,6 @@ export default function TarifasRangos(props) {
                     ...state,
                     pantalla: 2,
                     agregar: "Consultar",
-                    edit: true,
                     consult: true,
                     selected: setDataParaConsultar(respuesta.data)
                 }
@@ -170,7 +170,6 @@ export default function TarifasRangos(props) {
                     ...state,
                     pantalla: 2,
                     agregar: "Modificar",
-                    edit: true,
                     consult: false,
                     selected: setDataParaConsultar(respuesta.data)
                 }
@@ -351,6 +350,7 @@ export default function TarifasRangos(props) {
                                     <CrearTarifaRangos
                                         configuraciones={props.configuraciones}
                                         selection={state.selected}
+                                        disabled={state.consult}
                                     />
                         }
 

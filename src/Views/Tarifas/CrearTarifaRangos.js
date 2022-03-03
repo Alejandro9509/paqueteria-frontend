@@ -457,7 +457,7 @@ export default function CrearTarifaRangos(props) {
                                 onClick={(props.disabled || !props.convenio)?
                                     ()=>{return}:(()=>{ setState({ ...state, showDialogClientes: true})
                                     })}
-                                disabled
+                                disabled={props.disabled || !props.convenio}
                             />
                         </Grid>
                         <Grid item xs={2}>
@@ -486,7 +486,7 @@ export default function CrearTarifaRangos(props) {
                             </Typography>
                         </Grid>
                         <Grid item xs={1}>
-                            <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeLocal}>
+                            <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeLocal} disabled={props.disabled}>
                                 <AddIcon fontSize={'large'} />
                             </Button>
                         </Grid>
@@ -505,6 +505,7 @@ export default function CrearTarifaRangos(props) {
                                 zonasListado={filtrarZonasViajeLocal(viaje)}
                                 onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
                                 productosListado={productosListado}
+                                disabled={props.disabled}
                             />
                         )
                     }
@@ -519,6 +520,7 @@ export default function CrearTarifaRangos(props) {
                         tiposCalculoListado={filtrarTiposCalculoManiobras}
                         unidadesMedidaListado={filtrarUnidadesMedidaManiobras}
                         rangos={maniobrasTarifa}
+                        disabled={props.disabled}
                     />
                 </Paper>
                 <Paper style={{padding: '20px'}}>
@@ -529,7 +531,7 @@ export default function CrearTarifaRangos(props) {
                             </Typography>
                         </Grid>
                         <Grid item xs={1}>
-                            <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeForaneo}>
+                            <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeForaneo} disabled={props.disabled}>
                                 <AddIcon fontSize={'large'} />
                             </Button>
                         </Grid>
@@ -547,12 +549,13 @@ export default function CrearTarifaRangos(props) {
                                 zonasListado={zonasListado}
                                 onRequestZonasByDestino={handleOnRequestZonasByDestino}
                                 productosListado={productosListado}
+                                disabled={props.disabled}
                             />
                         )
                     }
                 </Paper>
                 <br/>
-                <Button fullWidth variant={"contained"} onClick={handleGuardarTarifa} color={"primary"}>
+                <Button fullWidth variant={"contained"} onClick={handleGuardarTarifa} color={"primary"} disabled={props.disabled}>
                     Guardar
                 </Button>
 

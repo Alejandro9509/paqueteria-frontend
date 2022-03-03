@@ -182,6 +182,7 @@ export default function ViajeForaneo(props) {
                             variant="outlined"
                             margin={"dense"}
                             required
+                            disabled={props.disabled}
                         >
                             {props.origenesDestinosListado.map((option) => (
                                 <MenuItem key={option.m_nIdCiudad} value={option.m_nIdCiudad}>
@@ -201,6 +202,7 @@ export default function ViajeForaneo(props) {
                             variant="outlined"
                             margin={"dense"}
                             required
+                            disabled={props.disabled}
                         >
                             <MenuItem key={1} value={1}>Peso</MenuItem>
                             <MenuItem key={2} value={2}>Pieza</MenuItem>
@@ -217,6 +219,7 @@ export default function ViajeForaneo(props) {
                             variant="outlined"
                             margin={"dense"}
                             required
+                            disabled={props.disabled}
                         >
                             {props.origenesDestinosListado.map((option) => (
                                 <MenuItem key={option.m_nIdCiudad} value={option.m_nIdCiudad}>
@@ -226,12 +229,12 @@ export default function ViajeForaneo(props) {
                         </TextField>
                     </Grid>
                     <Grid item xs={2}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogGrupo} disabled={!props.viaje.idDestino || !props.viaje.idOrigen || !props.viaje.idTipoMedida}>
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogGrupo} disabled={!props.viaje.idDestino || !props.viaje.idOrigen || !props.viaje.idTipoMedida || props.disabled}>
                             Agregar grupo
                         </Button>
                     </Grid>
                     <Grid item xs={1}>
-                        <Button fullWidth onClick={() => props.handleDeleteViajeForaneo(props.viaje)}>
+                        <Button fullWidth onClick={() => props.handleDeleteViajeForaneo(props.viaje)} disabled={props.disabled}>
                             <CancelIcon fontSize={'large'} color={'error'}/>
                         </Button>
                     </Grid>
@@ -250,6 +253,7 @@ export default function ViajeForaneo(props) {
                             tiposCalculoListado={filtrarTiposCalculoViajeForaneo}
                             unidadesMedidaListado={filtrarUnidadesMedidaViajeForaneo}
                             onGrupoDataChange={handleOnGrupoDataChange}
+                            disabled={props.disabled}
                         />
                     )
                 }

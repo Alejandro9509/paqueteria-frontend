@@ -82,13 +82,14 @@ export default function DialogTransferList(props) {
                     onSelectionChange={handleOnSelectionChange}
                     leftList={dataFiltered}
                     rightList={selection}
+                    disabled={props.disabled}
                 />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleShowDialog} color="primary">
                     Close
                 </Button>
-                <Button onClick={handleConfirmSelection} color="primary" autoFocus>
+                <Button onClick={handleConfirmSelection} color="primary" autoFocus disabled={props.disabled}>
                     Aceptar
                 </Button>
 
@@ -188,7 +189,7 @@ function TransferList(props) {
                         onClick={handleToggleAll(items)}
                         checked={numberOfChecked(items) === items.length && items.length !== 0}
                         indeterminate={numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0}
-                        disabled={items.length === 0}
+                        disabled={items.length === 0 || props.disabled}
                         inputProps={{ 'aria-label': 'all items selected' }}
                     />
                 }
@@ -201,13 +202,14 @@ function TransferList(props) {
                     const labelId = `transfer-list-all-item-${value}-label`;
 
                     return (
-                        <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)}>
+                        <ListItem key={value.m_nIdProducto} role="listitem" button onClick={handleToggle(value)} disabled={props.disabled}>
                             <ListItemIcon>
                                 <Checkbox
                                     checked={checked.indexOf(value) !== -1}
                                     tabIndex={-1}
                                     disableRipple
                                     inputProps={{ 'aria-labelledby': labelId }}
+                                    disabled={props.disabled}
                                 />
                             </ListItemIcon>
                             <ListItemText id={labelId} primary={`${value.m_nIdProducto}.- ${value.m_sDescripcion}`} />
@@ -235,7 +237,7 @@ function TransferList(props) {
                         variant="outlined"
                         className={classes.button}
                         onClick={handleCheckedRight}
-                        disabled={leftChecked.length === 0}
+                        disabled={leftChecked.length === 0 || props.disabled}
                         aria-label="move selected right"
                     >
                         &gt;
@@ -245,7 +247,7 @@ function TransferList(props) {
                         variant="outlined"
                         className={classes.button}
                         onClick={handleCheckedLeft}
-                        disabled={rightChecked.length === 0}
+                        disabled={rightChecked.length === 0  || props.disabled}
                         aria-label="move selected left"
                     >
                         &lt;
