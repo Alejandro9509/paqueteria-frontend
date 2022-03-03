@@ -4009,6 +4009,7 @@ function Recoleccion() {
                                                                         remitente={true}
                                                                         componentePadre={"Recoleccion"}
                                                                         consulta={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                        modificar={state.agregar === "Modificar"}
                                                                         mostrarZonas={!state.diferenteRecoleccion}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}
@@ -4079,6 +4080,7 @@ function Recoleccion() {
                                                                         destinatario={true}
                                                                         componentePadre={"Recoleccion"}
                                                                         consulta={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                        modificar={state.agregar === "Modificar"}
                                                                         mostrarZonas={!state.diferenteEntrega && !state.entregaEnSucursal}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}

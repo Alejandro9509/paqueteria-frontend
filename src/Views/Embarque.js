@@ -3412,6 +3412,7 @@ function Embarque(props) {
                                                                         remitente={true}
                                                                         componentePadre={"Embarque"}
                                                                         consulta={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                        modificar={state.agregar === "Modificar"}
                                                                         mostrarZonas={false}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}
@@ -3440,6 +3441,7 @@ function Embarque(props) {
                                                                         destinatario={true}
                                                                         componentePadre={"Embarque"}
                                                                         consulta={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                        modificar={state.agregar === "Modificar"}
                                                                         mostrarZonas={!(state.diferenteEntrega || state.entregaEnSucursal)}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}
