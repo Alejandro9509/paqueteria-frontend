@@ -140,7 +140,7 @@ export default function ViajeForaneo(props) {
 
     const filtrarUnidadesMedidaViajeForaneo =
         state.idTipoMedida === 1 ?
-            props.unidadesMedidaListado.filter(i => i.IdUnidadMedida === 1 || i.IdUnidadMedida === 2) :
+            props.unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48) :
             props.unidadesMedidaListado
 
     /**Filtra las zonas para que solo queden las que no se han usado en otro viaje local con la misma sucursal y concepto*/

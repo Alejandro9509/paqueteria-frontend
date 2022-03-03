@@ -46,6 +46,7 @@ import Noty from "noty";
 import {agregarTarifaRangos, modificarTarifaRangos} from "../../Util/Contexts/TarifasContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {obtenerClienteById} from "../../Util/Contexts/ClientesContext";
+import {obtenerUnidadesMedida} from "../../Util/Contexts/UnidadesMedidaContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -64,26 +65,15 @@ export default function CrearTarifaRangos(props) {
         cliente: props.selection?.cliente || null,
         showDialogClientes: false
     })
-    const [viajesLocalesListado, setViajesLocalesListado] = useState([])
-    const [maniobrasTarifa,setManiobrasTarifa] = useState([])
-    const [viajesForaneosListado, setViajesForaneosListado] = useState([])
+    const [viajesLocalesListado, setViajesLocalesListado] = useState(props.selection?.viajesLocales || [])
+    const [maniobrasTarifa,setManiobrasTarifa] = useState(props.selection?.maniobras || [])
+    const [viajesForaneosListado, setViajesForaneosListado] = useState(props.selection?.viajesForaneos || [])
     const [sucursalesListado, setSucursalesListado] = useState([])
     const [conceptosListado, setConceptosListado] = useState([])
     const [zonasListado, setZonasListado] = useState([])
     const [tiposCalculoListado, setTiposCalculoListado] = useState([])
     const [origenesDestinosListado, setOrigenesDestinosListado] = useState([])
-    const [unidadesMedidaListado, setUnidadesMedidaListado] = useState([
-        {
-            IdUnidadMedida: 1,
-            UnidadMedida: 'KG'
-        },{
-            IdUnidadMedida: 2,
-            UnidadMedida: 'TONS'
-        },{
-            IdUnidadMedida: 3,
-            UnidadMedida: 'PIEZA'
-        },
-    ])
+    const [unidadesMedidaListado, setUnidadesMedidaListado] = useState([])
     const [productosListado, setProductosListado] = useState([])
 
     const getAllSucursales = () => {
@@ -110,6 +100,14 @@ export default function CrearTarifaRangos(props) {
             setTiposCalculoListado(respuesta.data)
         })
     }
+    const getAllUnidadesMedida = () => {
+        if (unidadesMedidaListado.length > 0){
+            return
+        }
+        obtenerUnidadesMedida().then(respuesta => {
+            setUnidadesMedidaListado(respuesta.data.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38))
+        })
+    }
     const getOrigenesDestinos = () => {
         if (origenesDestinosListado.length > 0){
             return
@@ -123,8 +121,15 @@ export default function CrearTarifaRangos(props) {
             return
         }
         obtenerProductos().then(respuestas => {
-            respuestas.data.forEach(i => i.numeroDescripcion = `${i.m_nNoProducto}.- ${i.m_sDescripcion}`)
-            setProductosListado(respuestas.data.filter(i => i.m_bActivo))
+            let productosList = respuestas.data.map(p => ({
+                m_nIdProducto: p.m_nIdProducto,
+                m_nNoProducto: p.m_nNoProducto,
+                m_sDescripcion: p.m_sDescripcion,
+                m_bActivo: p.m_bActivo
+            }))
+
+            productosList.forEach(i => i.numeroDescripcion = `${i.m_nNoProducto}.- ${i.m_sDescripcion}`)
+            setProductosListado(productosList.filter(i => i.m_bActivo))
         })
     }
     const getClienteGenerico = () => {
@@ -140,6 +145,7 @@ export default function CrearTarifaRangos(props) {
         getAllSucursales()
         getAllConceptos()
         getAllTiposCalculo()
+        getAllUnidadesMedida()
         getAllProductos()
         getOrigenesDestinos()
         getClienteGenerico()
@@ -284,9 +290,11 @@ export default function CrearTarifaRangos(props) {
     /**Filtra los conceptos para que solo queden las que no se han usado en otro viaje local con la misma sucursal*/
     const filtrarConceptosViajeLocal = conceptosListado.filter(concepto => esConceptoViajeLocal(concepto))
 
-    const filtrarUnidadesMedidaViajeLocal = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 1 || i.IdUnidadMedida === 2)
+    const filtrarUnidadesMedidaViajeLocal = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48)
+    const filtrarUnidadesMedidaManiobras = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48)
 
     const filtrarTiposCalculoViajeLocal = tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2)
+    const filtrarTiposCalculoManiobras = tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2)
 
     const validaSucursalYConceptoViajeLocal = () => {
         let valid = true
@@ -508,8 +516,8 @@ export default function CrearTarifaRangos(props) {
                     <Maniobras
                         handleChangeManiobras={handleChangeManiobras}
                         conceptosListado={conceptosListado.filter(concepto => esConceptoManiobra(concepto))}
-                        tiposCalculoListado={tiposCalculoListado}
-                        unidadesMedidaListado={unidadesMedidaListado}
+                        tiposCalculoListado={filtrarTiposCalculoManiobras}
+                        unidadesMedidaListado={filtrarUnidadesMedidaManiobras}
                         rangos={maniobrasTarifa}
                     />
                 </Paper>
