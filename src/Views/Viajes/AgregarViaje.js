@@ -729,8 +729,7 @@ class AgregarViaje extends Component {
         if (this.state.dataInformesAsignados.find(i => i.m_nIdInforme === id) === undefined){
             var informeAsignar = this.state.dataInformesPorAsignar.find(i => i.m_nIdInforme === id)
             console.log(informeAsignar)
-
-            if (this.state.trayectos.map(t => t.m_nIdDestino).includes(informeAsignar.m_nIdDestino) === false) {
+            if (this.state.trayectos.map(t => t.IdDestino).includes(informeAsignar.m_nIdDestino) === false) {
                 this.setState({openDestino: true, idInformeSeleccionado: id})
                 return
             }
