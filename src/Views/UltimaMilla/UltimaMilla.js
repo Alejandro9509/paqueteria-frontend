@@ -240,7 +240,9 @@ class UltimaMilla extends Component {
             let varible
             if(this.state.ultimaMilla) {
                 unidades.forEach(u => {
-                    varible = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(p => p.m_nIdUnidad === u.m_nIdUnidad && !this.ultimaMillaCompletada(p))
+                    varible = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(p => p.m_nIdUnidad === u.m_nIdUnidad && !this.ultimaMillaCompletada(p) && p.m_bActiva)
+                  //  console.log("variable"+JSON.stringify(varible))
+                //    console.log("ultimaMilla.m_arrClsParadaUltimaMilla"+JSON.stringify(this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(p => p.m_nIdUnidad === u.m_nIdUnidad && !this.ultimaMillaCompletada(p) && !p.m_bActiva )))
                     if (varible) {
                         unidadYaAsignada = true
                     }
