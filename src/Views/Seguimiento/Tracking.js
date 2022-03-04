@@ -60,10 +60,10 @@ export default function Tracking(...props){
 
     useEffect(value =>{
         const { match: { params } } = props[0];
-        handleShowConsultar(params.esRecoleccion, params.id, params.rfc)
+        handleShowConsultar( params.id, params.rfc)
     }, []);
 
-    function handleShowConsultar(esRecoleccion,id,rfc) {
+    function handleShowConsultar(id,rfc) {
         headers.RFC = rfc
         const url = `${process.env.REACT_APP_API_URL}/GetParadasEsRecoleccion/${esRecoleccion}/${id}`;
         axios.get(url, { headers }).then(({data}) => {

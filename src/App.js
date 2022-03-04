@@ -46,7 +46,7 @@ render(){
             <Route path="/loginERP" component={LoginExterno} />
             <Route path="/Indicadores" component={Indicadores} />
             <Route path="/Configuracion" component={Configuracion} />
-            <Route exact path="/app/applications/:rfc/:esRecoleccion/:id/tracking" component={Tracking} />
+            <Route exact path="/app/applications/:rfc/:id/tracking" component={Tracking} />
             {dashboardRoutes.map((r, key) => {
                   return (<Route exact key={key} path={r.path}  component={r.component} />)
               })}
