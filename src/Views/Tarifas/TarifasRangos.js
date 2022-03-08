@@ -377,6 +377,7 @@ export default function TarifasRangos(props) {
                                         disabled={state.consult}
                                         agregarTarifa={handleAgregarTarifa}
                                         modificarTarifa={handleModificarTarifa}
+                                        convenio={props.convenio}
                                     />
                         }
 

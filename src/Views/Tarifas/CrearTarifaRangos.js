@@ -468,7 +468,7 @@ export default function CrearTarifaRangos(props) {
                     <Grid container spacing={2}>
                         <Grid item xs={11}>
                             <Typography variant="h3" component="h2">
-                                Viaje Local
+                                Primera Milla y Última Milla
                             </Typography>
                         </Grid>
                         <Grid item xs={1}>
@@ -513,7 +513,7 @@ export default function CrearTarifaRangos(props) {
                     <Grid container spacing={2}>
                         <Grid item xs={11}>
                             <Typography variant="h3" component="h2">
-                                Viaje Foraneo
+                                Milla Intermedia
                             </Typography>
                         </Grid>
                         <Grid item xs={1}>
