@@ -21,6 +21,8 @@ import Divider from "@material-ui/core/Divider";
 import DialogTransferList from "./DialogTransferList";
 import {getRandomId} from "../../Util/Util";
 import CancelIcon from "@material-ui/icons/Cancel";
+import AddIcon from "@material-ui/icons/AddBox";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 
 export default function ViajeLocal(props) {
@@ -296,7 +298,7 @@ export default function ViajeLocal(props) {
                             ))}
                         </TextField>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                         <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas} disabled={!state.idSucursal || !state.idConcepto}>
                             {`Zonas (${state.zonas.length})`}
                         </Button>
@@ -306,9 +308,10 @@ export default function ViajeLocal(props) {
                             {`Productos (${state.productos.length})`}
                         </Button>
                     </Grid>
-                    <Grid item xs={1}>
-                        <Button fullWidth onClick={() => props.handleDeleteViajeLocal(state)} disabled={props.disabled}>
-                            <CancelIcon fontSize={'large'} color={'error'}/>
+                    <Grid item xs={2}>
+                        <Button fullWidth onClick={() => props.handleDeleteViajeLocal(state)} disabled={props.disabled} style={{backgroundColor: '#F44336',color:'white'}} variant={"contained"}
+                                startIcon={<DeleteIcon fontSize={'large'} color={'inherit'}/>}>
+                            Eliminar Viaje
                         </Button>
                     </Grid>
                     {
@@ -328,7 +331,8 @@ export default function ViajeLocal(props) {
                                     </Grid>
                                     <Grid item xs={2}>
                                         <Button fullWidth variant={"contained"} color={"primary"} onClick={() => handleShowDialogRangos(props.viaje, true)} disabled={props.disabled}>
-                                            Rangos
+                                            <AddIcon fontSize={'large'} />
+                                            &nbsp;&nbsp;Agregar Rangos
                                         </Button>
                                     </Grid>
                                 </Grid>

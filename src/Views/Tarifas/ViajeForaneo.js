@@ -25,6 +25,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DialogTextView from "./DialogTextView";
 import GrupoViajeForaneo from "./GrupoViajeForaneo";
 import {getRandomId} from "../../Util/Util";
+import AddIcon from "@material-ui/icons/AddBox";
 
 
 export default function ViajeForaneo(props) {
@@ -191,7 +192,7 @@ export default function ViajeForaneo(props) {
                             ))}
                         </TextField>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                         <TextField
                             id="idTipoMedida"
                             select
@@ -230,12 +231,15 @@ export default function ViajeForaneo(props) {
                     </Grid>
                     <Grid item xs={2}>
                         <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogGrupo} disabled={!props.viaje.idDestino || !props.viaje.idOrigen || !props.viaje.idTipoMedida || props.disabled}>
-                            Agregar grupo
+                            <AddIcon fontSize={'large'} />
+                            &nbsp;&nbsp;Agregar grupo
                         </Button>
                     </Grid>
-                    <Grid item xs={1}>
-                        <Button fullWidth onClick={() => props.handleDeleteViajeForaneo(props.viaje)} disabled={props.disabled}>
-                            <CancelIcon fontSize={'large'} color={'error'}/>
+                    <Grid item xs={2}>
+                        <Button fullWidth onClick={() => props.handleDeleteViajeForaneo(props.viaje)}
+                                disabled={props.disabled} style={{backgroundColor: '#FFD7D7'}} variant={"contained"}
+                                startIcon={<DeleteIcon fontSize={'large'} color={'error'}/>}>
+                            Eliminar viaje
                         </Button>
                     </Grid>
 

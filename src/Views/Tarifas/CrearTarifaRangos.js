@@ -466,14 +466,15 @@ export default function CrearTarifaRangos(props) {
                 </Paper>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
                     <Grid container spacing={2}>
-                        <Grid item xs={11}>
+                        <Grid item xs={10}>
                             <Typography variant="h3" component="h2">
                                 Primera Milla y Última Milla
                             </Typography>
                         </Grid>
-                        <Grid item xs={1}>
+                        <Grid item xs={2}>
                             <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeLocal} disabled={props.disabled}>
                                 <AddIcon fontSize={'large'} />
+                                &nbsp;&nbsp;Agregar viaje
                             </Button>
                         </Grid>
                     </Grid>
@@ -511,14 +512,15 @@ export default function CrearTarifaRangos(props) {
                 </Paper>
                 <Paper style={{padding: '20px'}}>
                     <Grid container spacing={2}>
-                        <Grid item xs={11}>
+                        <Grid item xs={10}>
                             <Typography variant="h3" component="h2">
                                 Milla Intermedia
                             </Typography>
                         </Grid>
-                        <Grid item xs={1}>
+                        <Grid item xs={2}>
                             <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeForaneo} disabled={props.disabled}>
                                 <AddIcon fontSize={'large'} />
+                                &nbsp;&nbsp;Agregar viaje
                             </Button>
                         </Grid>
                     </Grid>

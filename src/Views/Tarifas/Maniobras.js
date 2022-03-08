@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import DialogoNuevoRango from "./DialogoNuevoRango";
 import {Button, Grid} from "@material-ui/core";
 import RangosTarifa from "./RangosTarifa";
+import AddIcon from "@material-ui/icons/AddBox";
 
 /**PROPS
  * rangos array = listado de rangos a mostrar en datagrid
@@ -114,7 +115,8 @@ export default function Maniobras(props){
                 </Grid>
                 <Grid item xs={2}>
                     <Button fullWidth variant={"contained"} color={"primary"} onClick={() => handleShowDialogRangos(true)} disabled={props.disabled}>
-                        Rangos
+                        <AddIcon fontSize={'large'} />
+                        &nbsp;&nbsp;Agregar Rangos
                     </Button>
                 </Grid>
             </Grid>

@@ -8,6 +8,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Typography from "@material-ui/core/Typography";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/AddBox";
 
 export default function GrupoViajeForaneo(props){
     const [state, setState] = useState({
@@ -253,7 +254,8 @@ export default function GrupoViajeForaneo(props){
                     <Grid item xs={2}>
                         <Button fullWidth variant={"contained"} color={"primary"}
                                 onClick={() => handleShowDialogRangos( true)} disabled={props.disabled}>
-                            Rangos
+                            <AddIcon fontSize={'large'} />
+                            &nbsp;&nbsp;Agregar Rangos
                         </Button>
                     </Grid>
                 </Grid>
