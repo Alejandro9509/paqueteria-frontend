@@ -108,12 +108,12 @@ export default function Maniobras(props){
                         onEditRow={handleOnEditRow}
                         onDeleteRow={handleOnDeleteRow}
                         onChangeList={handleChangeRangosViaje}
-                        disabled={false}
+                        disabled={props.disabled}
                         seccionPadre={'MANIOBRAS'}
                     />
                 </Grid>
                 <Grid item xs={2}>
-                    <Button fullWidth variant={"contained"} color={"primary"} onClick={() => handleShowDialogRangos(true)}>
+                    <Button fullWidth variant={"contained"} color={"primary"} onClick={() => handleShowDialogRangos(true)} disabled={props.disabled}>
                         Rangos
                     </Button>
                 </Grid>

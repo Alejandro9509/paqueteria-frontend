@@ -59,7 +59,6 @@ class Tarifas extends Component {
 
     componentDidMount() {
         this.getParametrosConfiguracion()
-        this.getAllData()
         this.handleDefinirTarifas()
     }
 
@@ -336,6 +335,9 @@ class Tarifas extends Component {
                     IdConceptoCita: respuesta.data.IdConceptoCita || 0
                 }
             })
+            if (respuesta.data.TipoTarifaTarifas !== 2){
+                this.getAllData()
+            }
         })
     }
 

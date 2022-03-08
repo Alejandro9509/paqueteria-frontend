@@ -50,6 +50,7 @@ export default function DialogCheckbox(props) {
                         checkboxSelection
                         onSelectionModelChange={(e) => handleOnSelectionChange(e)}
                         selectionModel={props.selection}
+                        disableSelectionOnClick={props.disabled}
                     />
                 </div>
             </DialogContent>
@@ -57,7 +58,7 @@ export default function DialogCheckbox(props) {
                 <Button onClick={handleShowDialog} color="primary">
                     Close
                 </Button>
-                <Button onClick={handleConfirmSelection} color="primary" autoFocus>
+                <Button onClick={handleConfirmSelection} color="primary" autoFocus disabled={props.disabled}>
                     Aceptar
                 </Button>
 

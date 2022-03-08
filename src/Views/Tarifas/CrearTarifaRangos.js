@@ -43,6 +43,10 @@ import ViajeForaneo from "./ViajeForaneo";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import AddIcon from '@material-ui/icons/AddBox';
 import Noty from "noty";
+import {agregarTarifaRangos, modificarTarifaRangos} from "../../Util/Contexts/TarifasContext";
+import DialogTableClientes from "../Clientes/DialogTableClientes";
+import {obtenerClienteById} from "../../Util/Contexts/ClientesContext";
+import {obtenerUnidadesMedida} from "../../Util/Contexts/UnidadesMedidaContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -57,28 +61,19 @@ export default function CrearTarifaRangos(props) {
     const [state, setState] = useState({
         idTarifa: props.selection?.idTarifa || 0,
         vigencia: props.selection?.vigencia || getCurrentDate(),
-        activo: props.selection?.activo || true
+        activo: props.selection?.activo || true,
+        cliente: props.selection?.cliente || null,
+        showDialogClientes: false
     })
-    const [viajesLocalesListado, setViajesLocalesListado] = useState([])
-    const [maniobrasTarifa,setManiobrasTarifa] = useState([])
-    const [viajesForaneosListado, setViajesForaneosListado] = useState([])
+    const [viajesLocalesListado, setViajesLocalesListado] = useState(props.selection?.viajesLocales || [])
+    const [maniobrasTarifa,setManiobrasTarifa] = useState(props.selection?.maniobras || [])
+    const [viajesForaneosListado, setViajesForaneosListado] = useState(props.selection?.viajesForaneos || [])
     const [sucursalesListado, setSucursalesListado] = useState([])
     const [conceptosListado, setConceptosListado] = useState([])
     const [zonasListado, setZonasListado] = useState([])
     const [tiposCalculoListado, setTiposCalculoListado] = useState([])
     const [origenesDestinosListado, setOrigenesDestinosListado] = useState([])
-    const [unidadesMedidaListado, setUnidadesMedidaListado] = useState([
-        {
-            IdUnidadMedida: 1,
-            UnidadMedida: 'KG'
-        },{
-            IdUnidadMedida: 2,
-            UnidadMedida: 'TONS'
-        },{
-            IdUnidadMedida: 3,
-            UnidadMedida: 'PIEZA'
-        },
-    ])
+    const [unidadesMedidaListado, setUnidadesMedidaListado] = useState([])
     const [productosListado, setProductosListado] = useState([])
 
     const getAllSucursales = () => {
@@ -105,12 +100,12 @@ export default function CrearTarifaRangos(props) {
             setTiposCalculoListado(respuesta.data)
         })
     }
-    const getZonasBySucursal = (idSucursal) => {
-        if (zonasListado.length > 0){
+    const getAllUnidadesMedida = () => {
+        if (unidadesMedidaListado.length > 0){
             return
         }
-        obtenerListadoZonaOperativaBySucursal(idSucursal).then(respuesta => {
-            setZonasListado(respuesta.data)
+        obtenerUnidadesMedida().then(respuesta => {
+            setUnidadesMedidaListado(respuesta.data.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48 || i.IdUnidadMedida === 38))
         })
     }
     const getOrigenesDestinos = () => {
@@ -126,19 +121,59 @@ export default function CrearTarifaRangos(props) {
             return
         }
         obtenerProductos().then(respuestas => {
-            respuestas.data.forEach(i => i.numeroDescripcion = `${i.m_nNoProducto}.- ${i.m_sDescripcion}`)
-            setProductosListado(respuestas.data.filter(i => i.m_bActivo))
+            let productosList = respuestas.data.map(p => ({
+                m_nIdProducto: p.m_nIdProducto,
+                m_nNoProducto: p.m_nNoProducto,
+                m_sDescripcion: p.m_sDescripcion,
+                m_bActivo: p.m_bActivo
+            }))
+
+            productosList.forEach(i => i.numeroDescripcion = `${i.m_nNoProducto}.- ${i.m_sDescripcion}`)
+            setProductosListado(productosList.filter(i => i.m_bActivo))
+        })
+    }
+    const getClienteGenerico = () => {
+        obtenerClienteById(3140).then(respuesta => {
+            setState({
+                ...state,
+                cliente: respuesta.data
+            })
         })
     }
 
     useEffect(value => {
         getAllSucursales()
         getAllConceptos()
-        getZonasBySucursal()
         getAllTiposCalculo()
+        getAllUnidadesMedida()
         getAllProductos()
         getOrigenesDestinos()
+        getClienteGenerico()
     }, [])
+
+    const handleDialogVisible = (isVisible) => {
+        setState({
+            ...state,
+            showDialogClientes: isVisible,
+        });
+    };
+
+    const handlePatrocinadorSelected = (row) => {
+        console.log(row)
+        setState(() => ({
+            ...state,
+            cliente: row.data,
+            showDialogClientes: false,
+        }))
+    }
+
+    const handleOnChange = (event) => {
+        setState({
+            ...state,
+            [event.target.name]: event.target.value,
+        })
+
+    }
 
     const handleChangeViajeLocal = (viaje) => {
         let newViajes = []
@@ -152,7 +187,7 @@ export default function CrearTarifaRangos(props) {
                 i.zonas = viaje.zonas
                 i.idConcepto = viaje.idConcepto
                 i.rangos = viaje.rangos
-                i.productosSeleccionados = viaje.productosSeleccionados
+                i.productos = viaje.productos
             }
         })
         setViajesLocalesListado(newViajes)
@@ -171,7 +206,7 @@ export default function CrearTarifaRangos(props) {
                 i.idOrigen = viaje.idOrigen
                 i.idTipoMedida = viaje.idTipoMedida
                 i.idDestino = viaje.idDestino
-                i.gruposListado = viaje.gruposListado
+                i.grupos = viaje.grupos
             }
         })
         setViajesForaneosListado(newViajes)
@@ -184,7 +219,7 @@ export default function CrearTarifaRangos(props) {
             zonas: [],
             idConcepto: null,
             rangos: [],
-            productosSeleccionados: []
+            productos: []
         })
         setViajesLocalesListado(viajesLocalesListado)
     }
@@ -199,7 +234,7 @@ export default function CrearTarifaRangos(props) {
             idOrigen: null,
             idTipoMedida: null,
             idDestino: null,
-            gruposListado: [],
+            grupos: [],
         })
         setViajesForaneosListado(viajesForaneosListado)
     }
@@ -255,11 +290,13 @@ export default function CrearTarifaRangos(props) {
     /**Filtra los conceptos para que solo queden las que no se han usado en otro viaje local con la misma sucursal*/
     const filtrarConceptosViajeLocal = conceptosListado.filter(concepto => esConceptoViajeLocal(concepto))
 
-    const filtrarUnidadesMedidaViajeLocal = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 1 || i.IdUnidadMedida === 2)
+    const filtrarUnidadesMedidaViajeLocal = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48)
+    const filtrarUnidadesMedidaManiobras = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48)
 
     const filtrarTiposCalculoViajeLocal = tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2)
+    const filtrarTiposCalculoManiobras = tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2)
 
-    const validarSucursalYConceptoViajeLocal = () => {
+    const validaSucursalYConceptoViajeLocal = () => {
         let valid = true
         viajesLocalesListado.forEach(v => {
             if (!v.idSucursal || !v.idConcepto){
@@ -269,7 +306,7 @@ export default function CrearTarifaRangos(props) {
         return valid
     }
 
-    const validarOrigenDestinoMedidaViajeForaneo = () => {
+    const validaOrigenDestinoMedidaViajeForaneo = () => {
         let valid = true
         viajesForaneosListado.forEach(v => {
             if (!v.idOrigen || !v.idTipoMedida || !v.idDestino){
@@ -279,64 +316,154 @@ export default function CrearTarifaRangos(props) {
         return valid
     }
 
+    const validaCliente = () => {
+        return state.cliente?.m_nIdCliente > 0
+    }
+
+    const validaVigencia = () => {
+        return state.vigencia !== null
+    }
+
     const handleGuardarTarifa = (event) => {
-        if (!validarSucursalYConceptoViajeLocal()){
+        if (!validaCliente()){
+            showSuccess("El cliente es un dato necesario")
+            return
+        }
+        if (!validaVigencia()){
+            showSuccess("la vigencia")
+            return
+        }
+        if (!validaSucursalYConceptoViajeLocal()){
             showSuccess("No pueden guardar viajes locales sin sucursal o concepto")
             return
         }
-        if (!validarOrigenDestinoMedidaViajeForaneo()){
+        if (!validaOrigenDestinoMedidaViajeForaneo()){
             showSuccess("No pueden guardar viajes foraneos sin origen, destino o tipo de medida")
             return
         }
-        let todosConceptos = []
-        let conceptosLocales = []
         viajesLocalesListado.forEach(v => {
-            conceptosLocales = conceptosLocales.concat(
-               v.rangos.map(rango => ({
-                       idConcepto: v.idConcepto,
-                       importe: rango.importe,
-                       minimo: rango.minimo,
-                       maximo: rango.maximo,
-                       idTipoCalculo: rango.idTipoCalculo,
-                       idUnidadMedida: rango.idUnidadMedida
-                   })
-               )
-           )
+            v.conceptos = v.rangos.map(rango => ({
+                    idConceptoFacturacion: v.idConcepto,
+                    importe: rango.importe,
+                    minimo: rango.minimo,
+                    maximo: rango.maximo,
+                    idTipoCalculo: rango.idTipoCalculo,
+                    idUnidadMedida: rango.idUnidadMedida
+                })
+            )
+            v.zonas.forEach(zona => {
+                zona.idZonaOperativa = zona.m_nIdZona
+            })
+            v.productos.forEach(prod => {
+                prod.idProducto = prod.m_nIdProducto
+            })
         })
-        let conceptosForaneos = []
         viajesForaneosListado.forEach(v => {
-            v.gruposListado.forEach(g => {
-                conceptosForaneos = conceptosForaneos.concat(
-                    g.rangos.map(rango => ({
-                        idConcepto: props.configuraciones.IdConceptoFlete,
+            v.grupos.forEach(g => {
+                g.conceptos = g.rangos.map(rango => ({
+                        idConceptoFacturacion: props.configuraciones.IdConceptoFlete,
                         importe: rango.importe,
                         minimo: rango.minimo,
                         maximo: rango.maximo,
                         idTipoCalculo: rango.idTipoCalculo,
                         idUnidadMedida: rango.idUnidadMedida
-                    }))
+                    })
                 )
+                g.zonas.forEach(zona => {
+                    zona.idZonaOperativa = zona.m_nIdZona
+                })
+                g.productos.forEach(prod => {
+                    prod.idProducto = prod.m_nIdProducto
+                })
             })
         })
-        todosConceptos = todosConceptos.concat(conceptosLocales)
-        todosConceptos = todosConceptos.concat(maniobrasTarifa)
-        todosConceptos = todosConceptos.concat(conceptosForaneos)
 
-        let tarifa = {
-            IdTarifa: state.idTarifa,
-            Vigencia: state.vigencia,
-            Activo: state.activo,
-            ViajesLocales: viajesLocalesListado,
-            Maniobras: maniobrasTarifa,
-            ViajesForaneos: viajesForaneosListado,
-            conceptosFacturacion: todosConceptos
+        let maniobrasChidas = []
+        maniobrasChidas = maniobrasTarifa.map(rango => ({
+                idConceptoFacturacion: rango.idConcepto,
+                importe: rango.importe,
+                minimo: rango.minimo,
+                maximo: rango.maximo,
+                idTipoCalculo: rango.idTipoCalculo,
+                idUnidadMedida: rango.idUnidadMedida
+            })
+        )
+
+        let params = {
+            idTarifa: state.idTarifa,
+            vigencia: state.vigencia,
+            activo: state.activo,
+            idCliente: state.cliente.m_nIdCliente,
+            viajesLocales: viajesLocalesListado,
+            maniobras: maniobrasChidas,
+            viajesForaneos: viajesForaneosListado,
         }
-        console.log(tarifa)
+        console.log(params)
+        console.log(JSON.stringify(params))
+
+        if (state.idTarifa === 0){
+            props.agregarTarifa(params)
+        }else{
+            props.modificarTarifa(params)
+        }
+
     }
 
     return(
         <div>
+            <Dialog
+                open={state.showDialogClientes}
+                onClose={() => setState({...state, openDialog: false})}
+                fullWidth maxWidth="md"
+            >
+                <DialogContent>
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <DialogTableClientes dialogVisible={handleDialogVisible } handlePatrocinadorSelected={handlePatrocinadorSelected}/>
+                    </div>
+                </DialogContent>
+            </Dialog>
             <div>
+                <Paper style={{padding: '20px', marginBottom: '10px'}}>
+
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <Typography variant="h3" component="h2">
+                                Tarifa
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <TextField
+                                variant="outlined"
+                                label="Responsable de pago"
+                                margin="dense"
+                                required
+                                value={state.cliente?.m_sNombreFiscal}
+                                placeholder={"No. Cliente: Nombre fiscal"}
+                                InputLabelProps={{shrink: true}}
+                                onClick={(props.disabled || !props.convenio)?
+                                    ()=>{return}:(()=>{ setState({ ...state, showDialogClientes: true})
+                                    })}
+                                disabled={props.disabled || !props.convenio}
+                            />
+                        </Grid>
+                        <Grid item xs={2}>
+                            <TextField
+                                variant="outlined"
+                                id="vigencia"
+                                name="vigencia"
+                                label="Vigencia"
+                                type="date"
+                                onChange={handleOnChange}
+                                value={state.vigencia}
+                                className={"form-control"}
+                                InputProps={{inputProps: { min: getCurrentDate()}}}
+                                disabled={props.disabled}
+                                InputLabelProps={{shrink: true,}}
+                                required
+                            />
+                        </Grid>
+                    </Grid>
+                </Paper>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
                     <Grid container spacing={2}>
                         <Grid item xs={11}>
@@ -345,7 +472,7 @@ export default function CrearTarifaRangos(props) {
                             </Typography>
                         </Grid>
                         <Grid item xs={1}>
-                            <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeLocal}>
+                            <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeLocal} disabled={props.disabled}>
                                 <AddIcon fontSize={'large'} />
                             </Button>
                         </Grid>
@@ -364,6 +491,7 @@ export default function CrearTarifaRangos(props) {
                                 zonasListado={filtrarZonasViajeLocal(viaje)}
                                 onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
                                 productosListado={productosListado}
+                                disabled={props.disabled}
                             />
                         )
                     }
@@ -375,9 +503,10 @@ export default function CrearTarifaRangos(props) {
                     <Maniobras
                         handleChangeManiobras={handleChangeManiobras}
                         conceptosListado={conceptosListado.filter(concepto => esConceptoManiobra(concepto))}
-                        tiposCalculoListado={tiposCalculoListado}
-                        unidadesMedidaListado={unidadesMedidaListado}
+                        tiposCalculoListado={filtrarTiposCalculoManiobras}
+                        unidadesMedidaListado={filtrarUnidadesMedidaManiobras}
                         rangos={maniobrasTarifa}
+                        disabled={props.disabled}
                     />
                 </Paper>
                 <Paper style={{padding: '20px'}}>
@@ -388,7 +517,7 @@ export default function CrearTarifaRangos(props) {
                             </Typography>
                         </Grid>
                         <Grid item xs={1}>
-                            <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeForaneo}>
+                            <Button fullWidth variant={"contained"} color={"primary"} onClick={handleOnAgregarViajeForaneo} disabled={props.disabled}>
                                 <AddIcon fontSize={'large'} />
                             </Button>
                         </Grid>
@@ -406,12 +535,13 @@ export default function CrearTarifaRangos(props) {
                                 zonasListado={zonasListado}
                                 onRequestZonasByDestino={handleOnRequestZonasByDestino}
                                 productosListado={productosListado}
+                                disabled={props.disabled}
                             />
                         )
                     }
                 </Paper>
                 <br/>
-                <Button fullWidth variant={"contained"} onClick={handleGuardarTarifa} color={"primary"}>
+                <Button fullWidth variant={"contained"} onClick={handleGuardarTarifa} color={"primary"} disabled={props.disabled}>
                     Guardar
                 </Button>
 

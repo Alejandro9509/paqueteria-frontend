@@ -226,6 +226,7 @@ export default function ViajeLocal(props) {
                         selection={dialogZonas.selection}
                         rows={props.zonasListado}
                         columns={dialogZonas.columns}
+                        disabled={props.disabled}
                     />
                 }
 
@@ -250,6 +251,7 @@ export default function ViajeLocal(props) {
                         selection={dialogProdutos.selection}
                         rows={props.productosListado}
                         columns={dialogProdutos.columns}
+                        disabled={props.disabled}
                     />
                 }
 
@@ -265,6 +267,7 @@ export default function ViajeLocal(props) {
                             variant="outlined"
                             margin={"dense"}
                             required
+                            disabled={props.disabled}
                         >
                             {props.sucursalesListado.map((option) => (
                                 <MenuItem key={option.m_nIdSucursal} value={option.m_nIdSucursal}>
@@ -284,6 +287,7 @@ export default function ViajeLocal(props) {
                             variant="outlined"
                             margin={"dense"}
                             required
+                            disabled={props.disabled}
                         >
                             {props.conceptosListado.map((option) => (
                                 <MenuItem key={option.m_nIdConceptosFacturacion} value={option.m_nIdConceptosFacturacion}>
@@ -303,7 +307,7 @@ export default function ViajeLocal(props) {
                         </Button>
                     </Grid>
                     <Grid item xs={1}>
-                        <Button fullWidth onClick={() => props.handleDeleteViajeLocal(state)}>
+                        <Button fullWidth onClick={() => props.handleDeleteViajeLocal(state)} disabled={props.disabled}>
                             <CancelIcon fontSize={'large'} color={'error'}/>
                         </Button>
                     </Grid>
@@ -319,11 +323,11 @@ export default function ViajeLocal(props) {
                                             onEditRow={handleOnEditRow}
                                             onDeleteRow={handleOnDeleteRow}
                                             onChangeList={handleChangeRangosViaje}
-                                            disabled={false}
+                                            disabled={props.disabled}
                                         />
                                     </Grid>
                                     <Grid item xs={2}>
-                                        <Button fullWidth variant={"contained"} color={"primary"} onClick={() => handleShowDialogRangos(props.viaje, true)}>
+                                        <Button fullWidth variant={"contained"} color={"primary"} onClick={() => handleShowDialogRangos(props.viaje, true)} disabled={props.disabled}>
                                             Rangos
                                         </Button>
                                     </Grid>

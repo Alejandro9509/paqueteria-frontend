@@ -201,6 +201,7 @@ export default function GrupoViajeForaneo(props){
                     selection={dialogZonas.selection}
                     rows={props.zonasListado}
                     columns={dialogZonas.columns}
+                    disabled={props.disabled}
                 />
             }
 
@@ -225,9 +226,10 @@ export default function GrupoViajeForaneo(props){
                     selection={dialogProdutos.selection}
                     rows={props.productosListado}
                     columns={dialogProdutos.columns}
+                    disabled={props.disabled}
                 />
             }
-            <SimpleAccordion titulo={props.grupo.nombre} onDeleteGrupo={handleOnDeleteGrupo} onEditGrupo={handleOnEditGrupo}>
+            <SimpleAccordion titulo={props.grupo.nombre} onDeleteGrupo={handleOnDeleteGrupo} onEditGrupo={handleOnEditGrupo} disabled={props.disabled}>
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
                         <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas}>
@@ -245,12 +247,12 @@ export default function GrupoViajeForaneo(props){
                             onEditRow={handleOnEditRow}
                             onDeleteRow={handleOnDeleteRow}
                             onChangeList={handleChangeRangosViaje}
-                            disabled={false}
+                            disabled={props.disabled}
                         />
                     </Grid>
                     <Grid item xs={2}>
                         <Button fullWidth variant={"contained"} color={"primary"}
-                                onClick={() => handleShowDialogRangos( true)}>
+                                onClick={() => handleShowDialogRangos( true)} disabled={props.disabled}>
                             Rangos
                         </Button>
                     </Grid>
@@ -275,10 +277,10 @@ function SimpleAccordion(props) {
                             <Typography variant={"h4"} component={"h2"}>{props.titulo}</Typography>
                         </Grid>
                         <Grid item xs={2}>
-                            <IconButton onClick={props.onEditGrupo}>
+                            <IconButton onClick={props.onEditGrupo} disabled={props.disabled}>
                                 <EditIcon fontSize={'large'}/>
                             </IconButton>
-                            <IconButton onClick={props.onDeleteGrupo}>
+                            <IconButton onClick={props.onDeleteGrupo} disabled={props.disabled}>
                                 <DeleteIcon fontSize={'large'}/>
                             </IconButton>
                         </Grid>

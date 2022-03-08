@@ -71,7 +71,7 @@ export default function RangosTarifa(props) {
             field: "tipoCalculo",
             width: 150,
         },
-        // !props.props.disabled &&
+        !props.disabled &&
         {
             field: 'complementos',
             headerName: 'Acciones',
@@ -90,71 +90,6 @@ export default function RangosTarifa(props) {
         style: 'currency',
         currency: 'USD',
     });
-    /*const [concepto, setConcepto] = useState({
-        id:Math.floor(Math.random() * 10000),
-        importe: 0,
-        rangoMinimo: 0,
-        rangoMaximo: 0,
-        idCalculo: null,
-        idMedida: null,
-    })
-    const [state, setState] = useState({
-        impuestos: [],
-        ivaTraslada: [],
-        ivaRetiene: [],
-        tiposCalculo: [],
-        columns: [],
-        aplicaDescuento: false,
-        aplicarDescuentoA: 'Concepto',
-    })
-    const [dialogRangos, setDialogRangos] = useState({
-        showDialog: false,
-        rango: {
-            id:Math.floor(Math.random() * 10000),
-            importe: 0,
-            minimo: 0,
-            maximo: 0,
-            tipoCalculo: 0,
-            tipoMedida: 0,
-        },
-        idViaje: null,
-    })
-
-    const resetPaquete = () =>{
-        setConcepto(concepto => {
-            return {
-                ...concepto,
-                id:Math.floor(Math.random() * 10000),
-                importe: 0,
-                rangoMinimo: 0,
-                rangoMaximo: 0,
-                idCalculo: null,
-                idMedida: null,
-            }
-        })
-    }
-
-    const addPaquetev2 = (data) => {
-        console.log(data)
-        let paq = data
-
-        const arraynew = []
-        if (props.rows.find(item => item.id === data.id)){
-            props.rows.forEach(item => {
-                if (item.id === data.id){
-                    item = data
-                }
-                arraynew.push(item)
-            })
-        }else{
-            props.rows.push(paq);
-            props.rows.forEach(item => {
-                arraynew.push(item)
-            })
-        }
-        props.onChangeList(arraynew)
-
-    }*/
 
     /**Reacciona al hacer clic en editar concepto*/
     const handleEditConcepto = (data) =>{

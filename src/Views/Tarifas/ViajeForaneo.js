@@ -34,7 +34,7 @@ export default function ViajeForaneo(props) {
         idOrigen: props.viaje.idOrigen || null,
         idTipoMedida: props.viaje.idTipoMedida || null,
         idDestino: props.viaje.idDestino || null,
-        gruposListado: props.viaje.gruposListado || [],
+        grupos: props.viaje.grupos || [],
     })
     const [dialogGrupo, setDialogGrupo] = useState({
         showDialog: false,
@@ -70,7 +70,7 @@ export default function ViajeForaneo(props) {
 
     const handleOnConfirmGrupoName = (data) => {
         if (dialogGrupo.isEdit){
-            state.gruposListado.forEach(i => {
+            state.grupos.forEach(i => {
                 if (i.idGrupo === data.idGrupo){
                     i.nombre = data.nombre
                 }
@@ -79,11 +79,11 @@ export default function ViajeForaneo(props) {
             data.zonas = []
             data.rangos = []
             data.productos = []
-            state.gruposListado.push(data)
+            state.grupos.push(data)
         }
         setState({
             ...state,
-            gruposListado: state.gruposListado
+            grupos: state.grupos
         })
 
         setDialogGrupo({
@@ -106,15 +106,15 @@ export default function ViajeForaneo(props) {
 
     const handleOnDeleteGrupo = (grupo) => {
         let newGrupos = []
-        state.gruposListado.forEach(i => newGrupos.push(i))
+        state.grupos.forEach(i => newGrupos.push(i))
         setState({
             ...state,
-            gruposListado: newGrupos.filter(i => i.idGrupo !== grupo.idGrupo)
+            grupos: newGrupos.filter(i => i.idGrupo !== grupo.idGrupo)
         })
     }
 
     const handleOnGrupoDataChange = (grupo) => {
-        state.gruposListado.forEach(i => {
+        state.grupos.forEach(i => {
             if (i.idGrupo === grupo.idGrupo){
                 i.idGrupo = grupo.idGrupo
                 i.nombre = grupo.nombre
@@ -125,7 +125,7 @@ export default function ViajeForaneo(props) {
         })
         setState({
             ...state,
-            gruposListado: state.gruposListado
+            grupos: state.grupos
         })
     }
 
@@ -140,7 +140,7 @@ export default function ViajeForaneo(props) {
 
     const filtrarUnidadesMedidaViajeForaneo =
         state.idTipoMedida === 1 ?
-            props.unidadesMedidaListado.filter(i => i.IdUnidadMedida === 1 || i.IdUnidadMedida === 2) :
+            props.unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48) :
             props.unidadesMedidaListado
 
     /**Filtra las zonas para que solo queden las que no se han usado en otro viaje local con la misma sucursal y concepto*/
@@ -149,7 +149,7 @@ export default function ViajeForaneo(props) {
         props.zonasListado.forEach(i => {
             zonasDisponibles.push(i)
         })
-        let otrosGrupos = state.gruposListado.filter(v => v.idGrupo !== grupo.idGrupo)
+        let otrosGrupos = state.grupos.filter(v => v.idGrupo !== grupo.idGrupo)
         otrosGrupos.forEach(v => {
             v.zonas.forEach(z => {
                 zonasDisponibles = zonasDisponibles.filter(j => j.m_nIdZona !== z.m_nIdZona)
@@ -182,6 +182,7 @@ export default function ViajeForaneo(props) {
                             variant="outlined"
                             margin={"dense"}
                             required
+                            disabled={props.disabled}
                         >
                             {props.origenesDestinosListado.map((option) => (
                                 <MenuItem key={option.m_nIdCiudad} value={option.m_nIdCiudad}>
@@ -201,6 +202,7 @@ export default function ViajeForaneo(props) {
                             variant="outlined"
                             margin={"dense"}
                             required
+                            disabled={props.disabled}
                         >
                             <MenuItem key={1} value={1}>Peso</MenuItem>
                             <MenuItem key={2} value={2}>Pieza</MenuItem>
@@ -217,6 +219,7 @@ export default function ViajeForaneo(props) {
                             variant="outlined"
                             margin={"dense"}
                             required
+                            disabled={props.disabled}
                         >
                             {props.origenesDestinosListado.map((option) => (
                                 <MenuItem key={option.m_nIdCiudad} value={option.m_nIdCiudad}>
@@ -226,19 +229,19 @@ export default function ViajeForaneo(props) {
                         </TextField>
                     </Grid>
                     <Grid item xs={2}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogGrupo} disabled={!props.viaje.idDestino || !props.viaje.idOrigen || !props.viaje.idTipoMedida}>
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogGrupo} disabled={!props.viaje.idDestino || !props.viaje.idOrigen || !props.viaje.idTipoMedida || props.disabled}>
                             Agregar grupo
                         </Button>
                     </Grid>
                     <Grid item xs={1}>
-                        <Button fullWidth onClick={() => props.handleDeleteViajeForaneo(props.viaje)}>
+                        <Button fullWidth onClick={() => props.handleDeleteViajeForaneo(props.viaje)} disabled={props.disabled}>
                             <CancelIcon fontSize={'large'} color={'error'}/>
                         </Button>
                     </Grid>
 
                 </Grid>
                 {
-                    state.gruposListado.map((grupo) =>
+                    state.grupos.map((grupo) =>
                         <GrupoViajeForaneo
                             key={grupo.idGrupo}
                             grupo={grupo}
@@ -250,6 +253,7 @@ export default function ViajeForaneo(props) {
                             tiposCalculoListado={filtrarTiposCalculoViajeForaneo}
                             unidadesMedidaListado={filtrarUnidadesMedidaViajeForaneo}
                             onGrupoDataChange={handleOnGrupoDataChange}
+                            disabled={props.disabled}
                         />
                     )
                 }
