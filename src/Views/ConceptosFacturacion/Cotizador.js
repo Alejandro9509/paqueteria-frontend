@@ -74,7 +74,7 @@ class Cotizador extends Component {
                         importeIVA: element.m_cImporteIva,
                         importeRet: element.m_cImporteRetiene,
                         nombreConcepto: element.m_sConcepto,
-                        descuento: element.m_c_Descuento,
+                        descuento: element.m_c_Descuento || 0,
                     })
                 }
             })
