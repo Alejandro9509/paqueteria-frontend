@@ -71,7 +71,7 @@ render(){
                 <Switch>
                   <Route exact path="/" component={Login} />
                   <Route path="/login" component={Login} />
-                  <Route exact path="/app/applications/:rfc/:esRecoleccion/:id/tracking" component={Tracking} />
+                  <Route exact path="/app/applications/:rfc/:id/tracking" component={Tracking} />
                   <Route path="/loginERP" component={LoginExterno} />
                   <Redirect from="/**" to="/login"/>
 
