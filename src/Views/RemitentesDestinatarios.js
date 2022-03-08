@@ -459,7 +459,9 @@ function RemitenteDestinatario(props) {
   );
 
   const handleChange = (event) => {
-    props.seCalculaTarifa()
+    if(!event.target.name === "telefono" || !event.target.name === "correo" || !event.target.name === "contacto"){
+       props.seCalculaTarifa()
+    }  
     event.preventDefault();
     setState((state) => {
       return {
