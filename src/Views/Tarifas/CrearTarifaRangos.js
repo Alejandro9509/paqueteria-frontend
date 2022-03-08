@@ -61,7 +61,7 @@ export default function CrearTarifaRangos(props) {
     const [state, setState] = useState({
         idTarifa: props.selection?.idTarifa || 0,
         vigencia: props.selection?.vigencia || getCurrentDate(),
-        activo: props.selection?.activo || true,
+        cuotaMensual: props.selection?.cuotaMensual || null,
         cliente: props.selection?.cliente || null,
         showDialogClientes: false
     })
@@ -392,7 +392,7 @@ export default function CrearTarifaRangos(props) {
         let params = {
             idTarifa: state.idTarifa,
             vigencia: state.vigencia,
-            activo: state.activo,
+            cuotaMensual: state.cuotaMensual,
             idCliente: state.cliente.m_nIdCliente,
             viajesLocales: viajesLocalesListado,
             maniobras: maniobrasChidas,
@@ -462,6 +462,23 @@ export default function CrearTarifaRangos(props) {
                                 required
                             />
                         </Grid>
+                        {
+                            props.convenio &&
+                            <Grid item xs={2}>
+                                <TextField
+                                    variant="outlined"
+                                    label="Cuota mensual"
+                                    margin="dense"
+                                    required
+                                    name={"cuotaMensual"}
+                                    type="number"
+                                    value={state.cuotaMensual}
+                                    disabled={props.disabled}
+                                    onChange={handleOnChange}
+                                />
+                            </Grid>
+                        }
+
                     </Grid>
                 </Paper>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>

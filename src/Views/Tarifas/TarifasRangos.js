@@ -264,6 +264,7 @@ export default function TarifasRangos(props) {
                 m_sNombreFiscal: data.Cliente
             },
             vigencia: data.Vigencia,
+            cuotaMensual: data.CuotaMensual,
             viajesLocales: viajesLocales,
             maniobras: maniobras,
             viajesForaneos: viajesForaneos
