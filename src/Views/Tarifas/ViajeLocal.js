@@ -309,8 +309,8 @@ export default function ViajeLocal(props) {
                         </Button>
                     </Grid>
                     <Grid item xs={2}>
-                        <Button fullWidth onClick={() => props.handleDeleteViajeLocal(state)} disabled={props.disabled} style={{backgroundColor: '#F44336',color:'white'}} variant={"contained"}
-                                startIcon={<DeleteIcon fontSize={'large'} color={'inherit'}/>}>
+                        <Button fullWidth onClick={() => props.handleDeleteViajeLocal(state)} disabled={props.disabled} style={{backgroundColor: '#FFD7D7'}} variant={"contained"}
+                                startIcon={<DeleteIcon fontSize={'large'} color={'error'}/>}>
                             Eliminar Viaje
                         </Button>
                     </Grid>
