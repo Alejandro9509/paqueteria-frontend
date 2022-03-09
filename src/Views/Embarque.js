@@ -772,6 +772,7 @@ function Embarque(props) {
     }
 
     const handleChangeEntregaDD = (event) => {
+        setRepetirConceptos(true)
         event.preventDefault();
         setEntregaDD(entregaDD => {
             return{

@@ -1152,8 +1152,8 @@ function Viajes() {
 
                     </ul>
 
-                    <div className="row" className="tab-content">
-                        <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
+                    <div className="row tab-content">
+                        <div className="widget-wrap tab-pane fade in show" id="Listado">
                             <div className="widget-wrap">
                                 <div className="widget-content">
 
@@ -1306,7 +1306,7 @@ function Viajes() {
 
                         </div>
 
-                        <div className="widget-wrap" id="Agregar" className="tab-pane fade">
+                        <div className="widget-wrap tab-pane fade" id="Agregar">
 
                             {
                                 state.open &&

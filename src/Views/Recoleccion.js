@@ -608,6 +608,7 @@ function Recoleccion() {
     }
 
     const handleChangeRecoleccionDD = (event) => {
+        setRepetirConceptos(true)
         event.preventDefault();
         setRecoleccionDD(recoleccionDD => {
             return {
@@ -773,8 +774,7 @@ function Recoleccion() {
         if (state.idRecoleccion != 0){
             /**Si es recoleccion diferente domicilio y no hay coordenadas guardadas*/
             if(state.diferenteRecoleccion
-                && !isValidText(recoleccionDD.latitudRec)
-                && !isValidText(recoleccionDD.longitudRec))
+                && coordenadas==undefined)
                 {
                 mostrarDialogoMapa(true)
                    
@@ -1022,6 +1022,7 @@ function Recoleccion() {
             showSuccess("Error al agregar recoleccion: El correo del remitente es un campo requerido")
         }
         if(!error){
+            console.log("entra y cierra")
         setState({
             ...state,
             showConfirmarUbicacion: false,
