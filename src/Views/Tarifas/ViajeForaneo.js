@@ -244,23 +244,26 @@ export default function ViajeForaneo(props) {
                     </Grid>
 
                 </Grid>
-                {
-                    state.grupos.map((grupo) =>
-                        <GrupoViajeForaneo
-                            key={grupo.idGrupo}
-                            grupo={grupo}
-                            onEditGrupo={handleOnEditGrupo}
-                            onDeleteGrupo={handleOnDeleteGrupo}
-                            onRequestZonasByDestino={() => props.onRequestZonasByDestino(state.idDestino)}
-                            zonasListado={filtrarZonasViajeForaneo(grupo)}
-                            productosListado={props.productosListado}
-                            tiposCalculoListado={filtrarTiposCalculoViajeForaneo}
-                            unidadesMedidaListado={filtrarUnidadesMedidaViajeForaneo}
-                            onGrupoDataChange={handleOnGrupoDataChange}
-                            disabled={props.disabled}
-                        />
-                    )
-                }
+                <div style={{height: '200px', overflow: 'scroll'}}>
+                    {
+                        state.grupos.map((grupo) =>
+                            <GrupoViajeForaneo
+                                key={grupo.idGrupo}
+                                grupo={grupo}
+                                onEditGrupo={handleOnEditGrupo}
+                                onDeleteGrupo={handleOnDeleteGrupo}
+                                onRequestZonasByDestino={() => props.onRequestZonasByDestino(state.idDestino)}
+                                zonasListado={filtrarZonasViajeForaneo(grupo)}
+                                productosListado={props.productosListado}
+                                tiposCalculoListado={filtrarTiposCalculoViajeForaneo}
+                                unidadesMedidaListado={filtrarUnidadesMedidaViajeForaneo}
+                                onGrupoDataChange={handleOnGrupoDataChange}
+                                disabled={props.disabled}
+                            />
+                        )
+                    }
+                </div>
+
             </Paper>
         </div>
     )

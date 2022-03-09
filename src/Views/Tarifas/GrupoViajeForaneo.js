@@ -269,12 +269,12 @@ function SimpleAccordion(props) {
         <div style={{marginTop: '10px'}}>
             <Accordion>
                 <AccordionSummary
-                    style={{backgroundColor: '#E6E6E6'}}
+                    style={{backgroundColor: '#E6E6E6',height:'20px'}}
                     expandIcon={<ExpandMoreIcon fontSize={'large'}/>}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
-                    <Grid container spacing={1}>
+                    <Grid container spacing={1} alignItems="center" direction="row">
                         <Grid item xs={10}>
                             <Typography variant={"h4"} component={"h2"}>{props.titulo}</Typography>
                         </Grid>
