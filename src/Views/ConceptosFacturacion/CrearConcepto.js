@@ -89,6 +89,7 @@ function CrearConceptoSAT(props) {
 
     const closeDialog = () => {
         setState({ ...state, openDialog: false, catalogo: "" });
+        setPagina(0)
     }
     
     function cargarDesdeServidor(pagina,numRegistros){

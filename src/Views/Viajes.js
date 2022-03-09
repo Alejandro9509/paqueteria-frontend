@@ -656,7 +656,7 @@ function Viajes() {
                 return (
                     <div>
                         {
-                            viajeSeleccionado.m_bEsPermisionario && viajeSeleccionado.m_bUnidadPermisionario &&
+                            (viajeSeleccionado.m_bEsPermisionario || viajeSeleccionado.m_bUnidadPermisionario) &&
                             <Tooltip title="Descargar XML">
                                 <a href="#" className="btn btn-default btn-xs"
                                    onClick={() => (descargarXML(row.row.m_nIdInforme, row.row.m_sFolioInforme))}><i className="zmdi zmdi-download"
@@ -1152,8 +1152,8 @@ function Viajes() {
 
                     </ul>
 
-                    <div className="row" className="tab-content">
-                        <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
+                    <div className="row tab-content">
+                        <div className="widget-wrap tab-pane fade in show" id="Listado">
                             <div className="widget-wrap">
                                 <div className="widget-content">
 
@@ -1199,7 +1199,7 @@ function Viajes() {
 
                                                             const informesFiltrados = paradasListado.filter((i,ind) => ((i.m_nIdDestino === p.m_nIdDestino) || ( (viajeSeleccionado.m_arrTrayectos.length - 1) === index && !viajeSeleccionado.m_arrTrayectos.map(t => t.m_nIdDestino).includes(i.m_nIdDestino) )  ))
                                                           
-                                                            console.log(p)
+                                                            console.log(viajeSeleccionado)
                                                             return (
                                                                 <div>
                                                                     <ListItem button key={index}  onClick={() => handleClick(index)}
@@ -1306,7 +1306,7 @@ function Viajes() {
 
                         </div>
 
-                        <div className="widget-wrap" id="Agregar" className="tab-pane fade">
+                        <div className="widget-wrap tab-pane fade" id="Agregar">
 
                             {
                                 state.open &&

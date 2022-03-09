@@ -1036,6 +1036,7 @@ function Informes({history}) {
     }
 
     function handleShowAgregar() {
+        setDataParaAgregar()
         getEmptyState()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
@@ -1098,6 +1099,10 @@ function Informes({history}) {
         });
     }
 
+    const setDataParaAgregar = () => {
+        setDataUnidades(dataUnidades.filter(m=>m.m_sTipoUnidad === "TORTON"))
+    //    setDataUnidades()
+    }
     function handleEliminar(id) {
         var derecho;
         validarPermisos(state)
@@ -2059,7 +2064,7 @@ function Informes({history}) {
                                                                                     forcePopupIcon={false}
                                                                                     options={dataUnidades}
                                                                                     getOptionLabel={(option) =>
-                                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion} - ${option.m_sTipoUnidad}` : ""
                                                                                     }
                                                                                     variant="outlined"
                                                                                     style={{
@@ -2123,7 +2128,7 @@ function Informes({history}) {
                                                                                     forcePopupIcon={false}
                                                                                     options={dataUnidades}
                                                                                     getOptionLabel={(option) =>
-                                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
+                                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion} - ${option.m_sTipoUnidad}` : ""
                                                                                     }
                                                                                     variant="outlined"
                                                                                     style={{
