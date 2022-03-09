@@ -3,8 +3,8 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
-    Button, Dialog, DialogActions, DialogContent,
-    Grid, makeStyles,
+    Button, Dialog, DialogActions, DialogContent, DialogTitle,
+    Grid, List, ListItem, ListItemText, makeStyles,
     MenuItem,
     Paper,
     TextField
@@ -43,7 +43,7 @@ import ViajeForaneo from "./ViajeForaneo";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
 import AddIcon from '@material-ui/icons/AddBox';
 import Noty from "noty";
-import {agregarTarifaRangos, modificarTarifaRangos} from "../../Util/Contexts/TarifasContext";
+import {agregarTarifaRangos, modificarTarifaRangos, obtenerTarifaRangosById} from "../../Util/Contexts/TarifasContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
 import {obtenerClienteById} from "../../Util/Contexts/ClientesContext";
 import {obtenerUnidadesMedida} from "../../Util/Contexts/UnidadesMedidaContext";
@@ -63,7 +63,8 @@ export default function CrearTarifaRangos(props) {
         vigencia: props.selection?.vigencia || getCurrentDate(),
         cuotaMensual: props.selection?.cuotaMensual || null,
         cliente: props.selection?.cliente || null,
-        showDialogClientes: false
+        showDialogClientes: false,
+        showDialogTarifas: false
     })
     const [viajesLocalesListado, setViajesLocalesListado] = useState(props.selection?.viajesLocales || [])
     const [maniobrasTarifa,setManiobrasTarifa] = useState(props.selection?.maniobras || [])
@@ -148,7 +149,9 @@ export default function CrearTarifaRangos(props) {
         getAllUnidadesMedida()
         getAllProductos()
         getOrigenesDestinos()
-        getClienteGenerico()
+        if (!props.convenio){
+            getClienteGenerico()
+        }
     }, [])
 
     const handleDialogVisible = (isVisible) => {
@@ -407,11 +410,124 @@ export default function CrearTarifaRangos(props) {
 
     }
 
+    const handleShowDialogTarifas = () => {
+
+        setState({...state, showDialogTarifas: true})
+
+    }
+    const handleCloseDialogTarifas = (value) => {
+        setState(state => {
+            return {...state, showDialogTarifas: false}
+        })
+        if (value !== null){
+            obtenerTarifaRangosById(value.IdTarifa).then(respuesta => {
+                let selection = setDataParaConsultar(respuesta.data)
+                console.log(selection)
+                setViajesLocalesListado(selection?.viajesLocales)
+                setManiobrasTarifa(selection?.maniobras)
+                setViajesForaneosListado(selection?.viajesForaneos)
+            })
+
+        }
+
+    }
+
+    const setDataParaConsultar = (data) => {
+        let viajesLocales = data.ViajesLocales.map(viaje => ({
+            idViaje: viaje.IdViajeLocal,
+            idSucursal: viaje.IdSucursal,
+            idTipoMedida: viaje.IdTipoMedida,
+            zonas: data.Zonas.filter(i => i.IdViajeLocal === viaje.IdViajeLocal).map(j => ({
+                m_nIdZona: j.IdZonaOperativa,
+                m_sCodigoZona: j.CodigoZona
+            })),
+            idConcepto: viaje.IdConcepto,
+            rangos: data.Conceptos.filter(i => i.IdViajeLocal === viaje.IdViajeLocal).map(rango => ({
+                id: rango?.IdTarifaConcepto || Math.floor(Math.random() * 10000),
+                idConcepto: rango.IdConceptoFacturacion || null,
+                concepto: rango.ConceptoFacturacion || '',
+                importe: rango.Importe || 0,
+                minimo: rango.Minimo || 0,
+                maximo: rango.Maximo || 0,
+                idTipoCalculo: rango.IdTipoCalculo || null,
+                idUnidadMedida: rango.IdUnidadMedida || null,
+                tipoCalculo: rango.TipoCalculo || '',
+                unidadMedida: rango.UnidadMedida || '',
+            })),
+            productos: data.Productos.filter(i => i.IdViajeLocal === viaje.IdViajeLocal).map(j => ({
+                m_nIdProducto: j.IdProducto,
+                m_sDescripcion: j.Descripcion,
+                m_nNoProducto: j.NoProducto,
+                m_bActivo: j.Activo
+            })),
+        }))
+        let maniobras = data.Conceptos.filter(i => i.IdTarifa === data.IdTarifa).map(rango => ({
+            id: rango?.IdTarifaConcepto || Math.floor(Math.random() * 10000),
+            idConcepto: rango.IdConceptoFacturacion || null,
+            concepto: rango.ConceptoFacturacion || '',
+            importe: rango.Importe || 0,
+            minimo: rango.Minimo || 0,
+            maximo: rango.Maximo || 0,
+            idTipoCalculo: rango.IdTipoCalculo || null,
+            idUnidadMedida: rango.IdUnidadMedida || null,
+            tipoCalculo: rango.TipoCalculo || '',
+            unidadMedida: rango.UnidadMedida || '',
+        }))
+
+        let viajesForaneos = data.ViajesForaneos.map(viaje => ({
+            idViaje: viaje.IdViajeForaneo || getRandomId(),
+            idOrigen: viaje.IdOrigen || null,
+            idTipoMedida: viaje.IdTipoMedida || null,
+            idDestino: viaje.IdDestino || null,
+            grupos: data.Grupos.filter(i => i.IdViajeForaneo === viaje.IdViajeForaneo).map(grupo => ({
+                idGrupo: grupo.IdViajeForaneoGrupo || Math.floor(Math.random() * 10000),
+                nombre: grupo.Referencia || '',
+                zonas: data.Zonas.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(j => ({
+                    m_nIdZona: j.IdZonaOperativa,
+                    m_sCodigoZona: j.CodigoZona
+                })),
+                rangos: data.Conceptos.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(rango => ({
+                    id: rango?.IdTarifaConcepto || Math.floor(Math.random() * 10000),
+                    idConcepto: rango.IdConceptoFacturacion || null,
+                    concepto: rango.ConceptoFacturacion || '',
+                    importe: rango.Importe || 0,
+                    minimo: rango.Minimo || 0,
+                    maximo: rango.Maximo || 0,
+                    idTipoCalculo: rango.IdTipoCalculo || null,
+                    idUnidadMedida: rango.IdUnidadMedida || null,
+                    tipoCalculo: rango.TipoCalculo || '',
+                    unidadMedida: rango.UnidadMedida || '',
+                })),
+                productos: data.Productos.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(j => ({
+                    m_nIdProducto: j.IdProducto,
+                    m_sDescripcion: j.Descripcion,
+                    m_nNoProducto: j.NoProducto,
+                    m_bActivo: j.Activo
+                })),
+            })),
+        }))
+        let tarifa = {
+            idTarifa: data.IdTarifa,
+            cliente: {
+                m_nIdCliente: data.IdCliente,
+                m_sNombreFiscal: data.Cliente
+            },
+            vigencia: data.Vigencia,
+            cuotaMensual: data.CuotaMensual,
+            viajesLocales: viajesLocales,
+            maniobras: maniobras,
+            viajesForaneos: viajesForaneos
+        }
+
+        return tarifa
+
+    }
+
     return(
         <div>
             <Dialog
                 open={state.showDialogClientes}
-                onClose={() => setState({...state, openDialog: false})}
+                onClose={() => setState({...state, showDialogClientes: false})}
                 fullWidth maxWidth="md"
             >
                 <DialogContent>
@@ -420,6 +536,11 @@ export default function CrearTarifaRangos(props) {
                     </div>
                 </DialogContent>
             </Dialog>
+            <DialogSelectList
+                open={state.showDialogTarifas}
+                onClose={handleCloseDialogTarifas}
+                rows={props.tarifasListado}
+            />
             <div>
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
 
@@ -476,6 +597,10 @@ export default function CrearTarifaRangos(props) {
                                 />
                             </Grid>
                         }
+                        <Grid item xs={2}>
+                            <Button onClick={handleShowDialogTarifas} variant={"outlined"} disabled={props.disabled} color={"primary"}
+                            >Importar tarifa existente</Button>
+                        </Grid>
 
                     </Grid>
                 </Paper>
@@ -566,6 +691,31 @@ export default function CrearTarifaRangos(props) {
 
         </div>
     )
+}
+
+function DialogSelectList(props) {
+    const { onClose, open } = props;
+
+    const handleClose = () => {
+        onClose(null);
+    };
+
+    const handleListItemClick = (value) => {
+        onClose(value);
+    };
+
+    return (
+        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
+            <DialogTitle id="simple-dialog-title">Selecciona la tarifa para importar los datos</DialogTitle>
+            <List>
+                {props.rows.map((row) => (
+                    <ListItem button onClick={() => handleListItemClick(row)} key={row.IdTarifa}>
+                        <ListItemText primary={row.Cliente} />
+                    </ListItem>
+                ))}
+            </List>
+        </Dialog>
+    );
 }
 
 

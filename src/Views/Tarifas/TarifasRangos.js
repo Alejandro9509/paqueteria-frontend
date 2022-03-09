@@ -330,6 +330,11 @@ export default function TarifasRangos(props) {
         })
     }
 
+    const filtrarTarifas =
+        props.convenio ?
+            state.tarifas.filter(i => i.IdCliente !== 3140)
+            : state.tarifas.filter(i => i.IdCliente === 3140)
+
     return(
         <section className="main-container">
             <div className="container-fluid">
@@ -353,7 +358,7 @@ export default function TarifasRangos(props) {
                                 <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                                     <DataGrid
                                         localeText={dataGridLocaleText}
-                                        rows={state.tarifas}
+                                        rows={filtrarTarifas}
                                         columns={state.columns}
                                         density="compact"
                                         pageSize={Math.floor((state.height - 310) / 30)}
@@ -380,6 +385,7 @@ export default function TarifasRangos(props) {
                                         agregarTarifa={handleAgregarTarifa}
                                         modificarTarifa={handleModificarTarifa}
                                         convenio={props.convenio}
+                                        tarifasListado={props.convenio ? state.tarifas : filtrarTarifas}
                                     />
                         }
 
