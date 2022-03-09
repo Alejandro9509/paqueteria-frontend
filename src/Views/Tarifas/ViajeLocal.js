@@ -30,6 +30,7 @@ export default function ViajeLocal(props) {
     const [state, setState] = useState({
         idViaje: props.viaje.idViaje || getRandomId(),
         idSucursal: props.viaje.idSucursal || null,
+        idTipoMedida: props.viaje.idTipoMedida || null,
         zonas: props.viaje.zonas || [],
         idConcepto: props.viaje.idConcepto || null,
         rangos: props.viaje.rangos || [],
@@ -215,6 +216,16 @@ export default function ViajeLocal(props) {
         props.handleChangeViajeLocal(state)
     }, [state])
 
+    const filtrarUnidadesMedidaViajeLocal =
+        state.idTipoMedida === 1 ?
+            props.unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48) :
+            props.unidadesMedidaListado
+
+    const filtrarTiposCalculoViajeLocal =
+        state.idTipoMedida === 1 ?
+            props.tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2) :
+            props.tiposCalculoListado
+
     return(
         <div>
             <Paper variant={"outlined"} style={{padding: '10px', marginTop: '10px'}}>
@@ -237,8 +248,8 @@ export default function ViajeLocal(props) {
                     <DialogoNuevoRango
                         handleOnConfirmData={handleConfirmRangos}
                         rango={dialogRangos.selection}
-                        tiposCalculoListado={props.tiposCalculoListado}
-                        unidadesMedidaListado={props.unidadesMedidaListado}
+                        tiposCalculoListado={filtrarTiposCalculoViajeLocal}
+                        unidadesMedidaListado={filtrarUnidadesMedidaViajeLocal}
                         handleShowDialog={handleShowDialogRangos}
                         openDialog={dialogRangos.showDialog}
 
@@ -258,7 +269,7 @@ export default function ViajeLocal(props) {
                 }
 
                 <Grid container spacing={2}>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                         <TextField
                             id="idSucursal"
                             select
@@ -278,7 +289,24 @@ export default function ViajeLocal(props) {
                             ))}
                         </TextField>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
+                        <TextField
+                            id="idTipoMedida"
+                            select
+                            label="Tipo medida"
+                            value={props.viaje.idTipoMedida}
+                            onChange={handleChangeViajeLocal}
+                            name="idTipoMedida"
+                            variant="outlined"
+                            margin={"dense"}
+                            required
+                            disabled={props.disabled}
+                        >
+                            <MenuItem key={1} value={1}>Peso</MenuItem>
+                            <MenuItem key={2} value={2}>Pieza</MenuItem>
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={2}>
                         <TextField
                             id="idConcepto"
                             select
@@ -299,12 +327,12 @@ export default function ViajeLocal(props) {
                         </TextField>
                     </Grid>
                     <Grid item xs={2}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas} disabled={!state.idSucursal || !state.idConcepto}>
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogZonas} disabled={!state.idSucursal || !state.idConcepto || !state.idTipoMedida}>
                             {`Zonas (${state.zonas.length})`}
                         </Button>
                     </Grid>
                     <Grid item xs={2}>
-                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos} disabled={!state.idSucursal || !state.idConcepto}>
+                        <Button fullWidth variant={"contained"} color={"primary"} onClick={handleShowDialogProductos} disabled={!state.idSucursal || !state.idConcepto || !state.idTipoMedida}>
                             {`Productos (${state.productos.length})`}
                         </Button>
                     </Grid>

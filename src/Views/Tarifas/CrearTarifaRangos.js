@@ -184,6 +184,7 @@ export default function CrearTarifaRangos(props) {
             if (i.idViaje === viaje.idViaje ){
                 i.idViaje = viaje.idViaje
                 i.idSucursal = viaje.idSucursal
+                i.idTipoMedida = viaje.idTipoMedida
                 i.zonas = viaje.zonas
                 i.idConcepto = viaje.idConcepto
                 i.rangos = viaje.rangos
@@ -290,16 +291,13 @@ export default function CrearTarifaRangos(props) {
     /**Filtra los conceptos para que solo queden las que no se han usado en otro viaje local con la misma sucursal*/
     const filtrarConceptosViajeLocal = conceptosListado.filter(concepto => esConceptoViajeLocal(concepto))
 
-    const filtrarUnidadesMedidaViajeLocal = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48)
     const filtrarUnidadesMedidaManiobras = unidadesMedidaListado.filter(i => i.IdUnidadMedida === 21 || i.IdUnidadMedida === 48)
-
-    const filtrarTiposCalculoViajeLocal = tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2)
     const filtrarTiposCalculoManiobras = tiposCalculoListado.filter(i => i.m_nIdTarifaTipoCalculo === 1 || i.m_nIdTarifaTipoCalculo === 2)
 
     const validaSucursalYConceptoViajeLocal = () => {
         let valid = true
         viajesLocalesListado.forEach(v => {
-            if (!v.idSucursal || !v.idConcepto){
+            if (!v.idSucursal || !v.idTipoMedida || !v.idConcepto){
                 valid = false
             }
         })
@@ -334,7 +332,7 @@ export default function CrearTarifaRangos(props) {
             return
         }
         if (!validaSucursalYConceptoViajeLocal()){
-            showSuccess("No pueden guardar viajes locales sin sucursal o concepto")
+            showSuccess("No pueden guardar viajes locales sin sucursal, tipo de medida o concepto")
             return
         }
         if (!validaOrigenDestinoMedidaViajeForaneo()){
@@ -503,8 +501,8 @@ export default function CrearTarifaRangos(props) {
                                 sucursalesListado={sucursalesListado}
                                 handleChangeViajeLocal={handleChangeViajeLocal}
                                 conceptosListado={filtrarConceptosViajeLocal}
-                                tiposCalculoListado={filtrarTiposCalculoViajeLocal}
-                                unidadesMedidaListado={filtrarUnidadesMedidaViajeLocal}
+                                tiposCalculoListado={tiposCalculoListado}
+                                unidadesMedidaListado={unidadesMedidaListado}
                                 handleDeleteViajeLocal={handleDeleteViajeLocal}
                                 zonasListado={filtrarZonasViajeLocal(viaje)}
                                 onRequestZonasBySucursal={handleOnRequestZonasBySucursal}

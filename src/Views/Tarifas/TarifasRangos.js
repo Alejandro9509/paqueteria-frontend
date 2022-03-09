@@ -188,6 +188,7 @@ export default function TarifasRangos(props) {
         let viajesLocales = data.ViajesLocales.map(viaje => ({
             idViaje: viaje.IdViajeLocal,
             idSucursal: viaje.IdSucursal,
+            idTipoMedida: viaje.IdTipoMedida,
             zonas: data.Zonas.filter(i => i.IdViajeLocal === viaje.IdViajeLocal).map(j => ({
                 m_nIdZona: j.IdZonaOperativa,
                 m_sCodigoZona: j.CodigoZona
