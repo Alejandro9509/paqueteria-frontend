@@ -1202,14 +1202,14 @@ function Viajes() {
                                                             console.log(viajeSeleccionado)
                                                             return (
                                                                 <div>
-                                                                    <ListItem button key={index} disabled={p.deshabilitado} onClick={() => handleClick(index)}
+                                                                    <ListItem button key={index}  onClick={() => handleClick(index)}
                                                                     >
 
                                                                         <ListItemText primary={`Ruta: ${p.m_sRuta}`} />
                                                                         {
-                                                                            !p.m_nIdSalida  &&
+                                                                            !p.m_nIdSalida && !p.deshabilitado  &&
 
-                                                                            <Link style={{cursor: "pointer"}}
+                                                                            <Link  style={{cursor: "pointer"}}
                                                                                   onClick={() => showSalidaDialog(p)}>Marcar
                                                                                 Salida</Link>
                                                                         }
@@ -1220,7 +1220,7 @@ function Viajes() {
 
 
                                                                         {
-                                                                            p.m_nIdSalida && !p.m_nIdLlegada &&
+                                                                            p.m_nIdSalida && !p.m_nIdLlegada && !p.deshabilitado  &&
 
                                                                             <Link style={{cursor: "pointer"}}
                                                                                   onClick={() => showLlegadaDialog(p)}>Marcar

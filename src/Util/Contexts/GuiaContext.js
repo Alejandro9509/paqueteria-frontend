@@ -140,6 +140,14 @@ function obtenerGuiaReporte(id) {
     );
     return result
 }
+function obtenerGuiaReporteEtiqueta(id) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/EtiquetasGuia/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
 function ultimoFolioGuia() {
     const url = `${process.env.REACT_APP_API_URL}/Guia/GetUltimoFolio`;
     let result;
@@ -224,5 +232,5 @@ function obtenerValidacionGuia(id){
 }
 
 export {actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
-    obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,
+    obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,obtenerGuiaReporteEtiqueta,
     obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia}

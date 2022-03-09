@@ -15,11 +15,11 @@ class RemitenteDestinatario extends Component {
     render() {
          const {data} = this.props
         return (
-            <Grid container direction="row"  >
+            <Grid container direction="row" >
                 <Grid item sm={12} md={6}>
                     <Grid container spacing={1}  >
                         <Grid item md={12}>
-                            <Typography variant={"h4"} style={{alignItems: "center", width:"100%"}}>Remitente </Typography>
+                            <Typography variant={"h5"} style={{alignItems: "center", width:"100%"}}>Remitente </Typography>
                         </Grid>
                         <Grid item md={8}>
                             <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Nombre: <Typography>{data.m_sNombreRemitente}</Typography></Typography>
@@ -39,7 +39,7 @@ class RemitenteDestinatario extends Component {
                 <Grid item sm={12} md={6}>
                     <Grid container spacing={1}  >
                         <Grid item md={12}>
-                            <Typography variant={"h4"}  style={{ alignItems: "center", width:"100%"}}>Destinatario </Typography>
+                            <Typography variant={"h5"}  style={{ alignItems: "center", width:"100%"}}>Destinatario </Typography>
                         </Grid>
                         <Grid item md={8}>
                             <Typography style={{fontWeight: "bold", display: "flex", alignItems: "center"}}>Nombre: <Typography>{data.m_sNombreDestinatario}</Typography></Typography>

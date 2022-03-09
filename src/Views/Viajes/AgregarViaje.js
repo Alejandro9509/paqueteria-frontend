@@ -728,7 +728,8 @@ class AgregarViaje extends Component {
     handleAgregarInforme(id) {
         if (this.state.dataInformesAsignados.find(i => i.m_nIdInforme === id) === undefined){
             var informeAsignar = this.state.dataInformesPorAsignar.find(i => i.m_nIdInforme === id)
-            if (this.state.trayectos.map(t => t.m_nIdDestino).includes(informeAsignar.m_nIdDestino)) {
+            console.log(informeAsignar)
+            if (this.state.trayectos.map(t => t.IdDestino).includes(informeAsignar.m_nIdDestino) === false) {
                 this.setState({openDestino: true, idInformeSeleccionado: id})
                 return
             }
@@ -1064,7 +1065,7 @@ class AgregarViaje extends Component {
                                 renderInput={(params) => (
                                     <div>
                                         <TextField
-                                            label="Origen"
+                                            label="Destino"
                                             margin="dense"
                                             variant="outlined"
                                             {...params}
@@ -1475,7 +1476,7 @@ class AgregarViaje extends Component {
                                                 id="unidad"
                                                 // disableClearable
                                                 // forcePopupIcon={false}
-                                                options={this.state.dataUnidades.filter(i => i.m_bActivo && (i.m_nIdentificador === 1 || i.m_nIdentificador === 2) && (this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
+                                                options={this.state.dataUnidades.filter(i => i.m_bActivo && i.m_nIdTipoUnidad !== 34 && (i.m_nIdentificador === 1 || i.m_nIdentificador === 2) && (this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0 ) !== i.m_nIdUnidad && (this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0 ) !== i.m_nIdUnidad)}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCodigo ? `${option.m_sCodigo} - ${option.m_sDescripcion} (${option.EstatusUnidad})` : ""
                                                 }
