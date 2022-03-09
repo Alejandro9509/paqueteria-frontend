@@ -72,6 +72,7 @@ class RemplazarPaqueteUltimaMilla extends Component {
                             rows={this.props.data}
                             columns={this.state.columns}
                             density="compact"
+                            isRowSelectable={(params) => params.row.isItemSelected}
                             pageSize={Math.floor((this.state.height - 310) / 30)}
                             getRowId={(row) => row.m_sFolio}
                             checkboxSelection={this.props.multiples}
