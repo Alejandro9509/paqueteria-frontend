@@ -1100,7 +1100,8 @@ function Informes({history}) {
     }
 
     const setDataParaAgregar = () => {
-        setDataUnidades(dataUnidades.filter(m=>m.m_sTipoUnidad === "TORTON"))
+        console.log(dataUnidades)
+        setDataUnidades(dataUnidades.filter(m=>m.m_nIdentificador == 1 || m.m_nIdentificador == 4))
     //    setDataUnidades()
     }
     function handleEliminar(id) {
@@ -2064,7 +2065,7 @@ function Informes({history}) {
                                                                                     forcePopupIcon={false}
                                                                                     options={dataUnidades}
                                                                                     getOptionLabel={(option) =>
-                                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion} - ${option.m_sTipoUnidad}` : ""
+                                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                                                     }
                                                                                     variant="outlined"
                                                                                     style={{
@@ -2128,7 +2129,7 @@ function Informes({history}) {
                                                                                     forcePopupIcon={false}
                                                                                     options={dataUnidades}
                                                                                     getOptionLabel={(option) =>
-                                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion} - ${option.m_sTipoUnidad}` : ""
+                                                                                        option ? `${option.m_sCodigo} - ${option.m_sDescripcion}` : ""
                                                                                     }
                                                                                     variant="outlined"
                                                                                     style={{
