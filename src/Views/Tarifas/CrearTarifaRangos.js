@@ -697,23 +697,58 @@ function DialogSelectList(props) {
     const { onClose, open } = props;
 
     const handleClose = () => {
+        setSearch("")
         onClose(null);
     };
 
     const handleListItemClick = (value) => {
+        setSearch("")
         onClose(value);
     };
 
+    const [search, setSearch] = useState("")
+    const [dataFiltered, setDataFiltered] = useState(props.rows)
+    const handleOnChangeSearch = (event) => {
+        setSearch(event.target.value)
+    }
+
+    const handleSearch = () => {
+        if (search.length === 0 ){
+            setDataFiltered(props.rows)
+        }else{
+            setDataFiltered(props.rows.filter(i => i.Cliente.toLowerCase().includes(search.toLowerCase())))
+        }
+    }
+
     return (
-        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
+        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} fullWidth={true}
+                maxWidth={'md'}>
             <DialogTitle id="simple-dialog-title">Selecciona la tarifa para importar los datos</DialogTitle>
-            <List>
-                {props.rows.map((row) => (
-                    <ListItem button onClick={() => handleListItemClick(row)} key={row.IdTarifa}>
-                        <ListItemText primary={row.Cliente} />
-                    </ListItem>
-                ))}
-            </List>
+            <DialogContent>
+                <Grid container spacing={1}>
+                    <Grid item xs={11}>
+                        <TextField variant="outlined" margin="dense"
+                                   onChange={handleOnChangeSearch}
+                                   label="Buscar"
+                                   value={search}
+                                   name="search"
+                        />
+                    </Grid>
+                    <Grid item xs={1}>
+                        <Button onClick={handleSearch} color="primary" variant={"contained"} fullWidth>
+                            Buscar
+                        </Button>
+                    </Grid>
+                </Grid>
+                <List>
+                    {dataFiltered.map((row) => (
+                        <ListItem button onClick={() => handleListItemClick(row)} key={row.IdTarifa}>
+                            <ListItemText primary={row.Cliente} />
+                        </ListItem>
+                    ))}
+                </List>
+            </DialogContent>
+
         </Dialog>
     );
 }

@@ -1,8 +1,8 @@
 import React, {Component, useEffect, useState} from 'react';
 import $ from "jquery";
-import {DataGrid} from "@material-ui/data-grid";
+import {DataGrid, GridToolbar} from "@material-ui/data-grid";
 import {dataGridLocaleText} from "../../Constants";
-import {Tooltip} from "@material-ui/core";
+import {Button, Grid, TextField, Tooltip} from "@material-ui/core";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
@@ -85,9 +85,9 @@ export default function TarifasRangos(props) {
                 field: "Vigencia",
                 width: 200,
             },
-            /*{
+            {
                 headerName: "Activo",
-                field: "m_bActivo",
+                field: "Activo",
                 width: 100,
                 renderCell: (row) => {
                     return (
@@ -95,10 +95,10 @@ export default function TarifasRangos(props) {
                             style={{
                                 width: "100%",
                                 textAlign: "center",
-                                color: row.row.m_bActivo == 'true' ? "green" : "red",
+                                color: row.row.Activo == 'true' ? "green" : "red",
                             }}
                         >
-                            {row.row.m_bActivo ? (
+                            {row.row.Activo ? (
                                 <SvgIcon component={Activo} />
                             ) : (
                                 <SvgIcon component={NoActivo} />
@@ -106,7 +106,7 @@ export default function TarifasRangos(props) {
                         </div>
                     );
                 },
-            },*/
+            },
         )
         setState(state => {
             return {
