@@ -255,3 +255,7 @@ export const getCurrentTime = () => {
     return `${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
 }
 
+export const getRandomId = () => {
+  return Math.floor(Math.random() * 10000)
+}
+

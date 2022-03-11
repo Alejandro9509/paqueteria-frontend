@@ -830,16 +830,15 @@ function Embarque(props) {
         if (state.idEmbarque != 0){
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
             if(state.diferenteEntrega
-                && !isValidText(entregaDD.latitudEnt)
-                && !isValidText(entregaDD.longitudEnt)
-                && !coordenadas){
+                && coordenadas==undefined){
                 mostrarDialogoMapa(true)
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas guardadas*/
             }else if (!state.diferenteEntrega
-                && !isValidText(destinatario.latitudD)
-                && !isValidText(destinatario.longitudD)
-                && !coordenadas) {
+                && !isValidText(remitente.latitudR)
+                && !isValidText(remitente.longitudR)
+                && !coordenadas
+                ) {
                 mostrarDialogoMapa(true)
                 return false
             }
