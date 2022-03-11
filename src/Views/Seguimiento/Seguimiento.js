@@ -29,7 +29,7 @@ class Seguimiento extends Component {
         super(props);
         this.state = {
             folioBusqueda: "",
-            tipoBusqueda: 1,
+            tipoBusqueda: "3",
             data:{}
         }
         this.handleChage = this.handleChage.bind(this)
@@ -113,6 +113,12 @@ class Seguimiento extends Component {
                                         />
                                         <FormControlLabel value="4" control={<Radio color="primary"/>}
                                                           label="Factura"/>
+                                        <FormControlLabel
+                                            value="5"
+                                            control={<Radio color="primary"/>}
+                                            label="Tracking"
+                                            labelPlacement="end"
+                                        />
                                     </RadioGroup>
                                 </Grid>
                                 <Grid item>
