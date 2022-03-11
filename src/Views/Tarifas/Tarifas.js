@@ -14,6 +14,10 @@ import {API_HEADERS, dataGridLocaleText} from '../../Constants';
 import { Tooltip } from '@material-ui/core';
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 import {obtenerTarifaBy} from "../../Util/Contexts/TarifasContext";
+import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
+import {ContentState, EditorState} from "draft-js";
+import htmlToDraft from "html-to-draftjs";
+import TarifasRangos from "./TarifasRangos";
 window.jQuery = window.$ = $;
 const headers = API_HEADERS
 function showSuccess(mensaje) {
@@ -40,7 +44,8 @@ class Tarifas extends Component {
             DerechoBorrar: 1, //TODO: Definir id
             dataSucursal: [],
             columns: [],
-            mostrarColumnasPesoVolumen: false
+            mostrarColumnasPesoVolumen: false,
+            configuraciones: undefined
         }
         this.cambiarPantalla = this.cambiarPantalla.bind(this)
         this.getAllData = this.getAllData.bind(this)
@@ -49,14 +54,12 @@ class Tarifas extends Component {
         this.handleEliminar = this.handleEliminar.bind(this)
         this.handleAceptar = this.handleAceptar.bind(this)
         this.handleDefinirTarifas = this.handleDefinirTarifas.bind(this)
+        this.getParametrosConfiguracion = this.getParametrosConfiguracion.bind(this)
     }
 
-
     componentDidMount() {
-        this.getAllData()
+        this.getParametrosConfiguracion()
         this.handleDefinirTarifas()
-
-
     }
 
     handleDefinirTarifas(){
@@ -318,9 +321,29 @@ class Tarifas extends Component {
         });
     }
 
+    getParametrosConfiguracion() {
+        obtenerParametrosConfiguracion().then(respuesta => {
+            this.setState({
+                configuraciones: {
+                    TipoTarifaTarifas: respuesta.data.TipoTarifaTarifas || 0,
+                    IdConceptoFlete: respuesta.data.IdConceptoFlete || 0,
+                    IdConceptoCarga: respuesta.data.IdConceptoCarga || 0,
+                    IdConceptoDescarga: respuesta.data.IdConceptoDescarga || 0,
+                    IdConceptoRecoleccion: respuesta.data.IdConceptoRecoleccion || 0,
+                    IdConceptoEntrega: respuesta.data.IdConceptoEntrega || 0,
+                    IdConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
+                    IdConceptoCita: respuesta.data.IdConceptoCita || 0
+                }
+            })
+            if (respuesta.data.TipoTarifaTarifas !== 2){
+                this.getAllData()
+            }
+        })
+    }
+
 
     render() {
-        const { height, data, columns, edit, consult } = this.state
+        const { height, data, columns, edit, consult, configuraciones } = this.state
 
         return (
             <div >
@@ -344,82 +367,90 @@ class Tarifas extends Component {
                     <BarraLateralIzquierda />
                 </aside>
 
-                <section className="main-container">
-                    <div className="container-fluid">
+                {
+                    configuraciones?.TipoTarifaTarifas === 2 ?
+                        <TarifasRangos
+                            configuraciones={configuraciones}
+                        />
+                        :
+                        <section className="main-container">
+                            <div className="container-fluid">
 
 
-                        <ul className="nav navStatica nav-tabs">
-                            <li className="active">
-                                <a onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
-                                    <i className="fa fa-list" /> Listado
-              </a>
-                            </li>
-                            <li >
-                                <a onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
-                                    <i className="fa fa-plus-circle" /> {this.state.agregar}
-                                </a>
-                            </li>
+                                <ul className="nav navStatica nav-tabs">
+                                    <li className="active">
+                                        <a onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                                            <i className="fa fa-list" /> Listado
+                                        </a>
+                                    </li>
+                                    <li >
+                                        <a onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
+                                            <i className="fa fa-plus-circle" /> {this.state.agregar}
+                                        </a>
+                                    </li>
 
-                            <li>
-                                <a data_id="3">
-                                    <i className="fa fa-times-circle" /> Imprimir
-                                </a>
-                            </li>
-
-
-
-                            {/**<button className="topbar-right pull-right">Boton</button>*/}
-                        </ul>
+                                    <li>
+                                        <a data_id="3">
+                                            <i className="fa fa-times-circle" /> Imprimir
+                                        </a>
+                                    </li>
 
 
-                        <div
-                            className="row"
-                            className="tab-content"
-                            style={{ paddingLeft: "-15px" }}
-                        >
-                            <div id="Listado" className="tab-pane fade in show">
-                                <div className="widget-wrap">
-                                    <div className="widget-content">
-                                        <div className="row" style={{ height: this.state.height - 250, width: '100%' }}>
-                                                <DataGrid
-                                                    localeText={dataGridLocaleText}
-                                                    rows={data}
-                                                    columns={columns}
-                                                    density="compact"
-                                                    pageSize={Math.floor((this.state.height - 310) / 30)}
-                                                    getRowId={(row) => row.m_nIdTarifa}
-                                                    onRowSelected={(row) => {
-                                                        this.setState({
-                                                            idTarifa: row.data.m_nIdTarifa
-                                                        })
-                                                    }}
-                                                />
+
+                                    {/**<button className="topbar-right pull-right">Boton</button>*/}
+                                </ul>
+
+
+                                <div
+                                    className="row"
+                                    className="tab-content"
+                                    style={{ paddingLeft: "-15px" }}
+                                >
+                                    <div id="Listado" className="tab-pane fade in show">
+                                        <div className="widget-wrap">
+                                            <div className="widget-content">
+                                                <div className="row" style={{ height: this.state.height - 250, width: '100%' }}>
+                                                    <DataGrid
+                                                        localeText={dataGridLocaleText}
+                                                        rows={data}
+                                                        columns={columns}
+                                                        density="compact"
+                                                        pageSize={Math.floor((this.state.height - 310) / 30)}
+                                                        getRowId={(row) => row.m_nIdTarifa}
+                                                        onRowSelected={(row) => {
+                                                            this.setState({
+                                                                idTarifa: row.data.m_nIdTarifa
+                                                            })
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <div id="Agregar" className="tab-pane fade">
+                                        {
+                                            this.state.pantalla == 2 &&
+                                            <CrearTarifa edit={edit} consult={consult} select={this.state.selected}
+                                                         onSubmit={this.handleAceptar} onCancel={(event) => {
+                                                event.stopPropagation();
+                                                this.setState({pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
+                                                $('.nav-tabs li ').removeClass('active');
+                                                $('.nav-tabs li').eq(0).addClass('active');
+                                                $('.tab-content div ').removeClass('in show');
+                                                $('#Listado').addClass('in show');
+                                            }}
+                                                         listaCiudades={this.state.dataCiudades}
+                                            />
+                                        }
+
+                                    </div>
+
                                 </div>
                             </div>
+                        </section>
+                }
 
-                            <div id="Agregar" className="tab-pane fade">
-                                {
-                                    this.state.pantalla == 2 &&
-                                    <CrearTarifa edit={edit} consult={consult} select={this.state.selected}
-                                                 onSubmit={this.handleAceptar} onCancel={(event) => {
-                                        event.stopPropagation();
-                                        this.setState({pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
-                                        $('.nav-tabs li ').removeClass('active');
-                                        $('.nav-tabs li').eq(0).addClass('active');
-                                        $('.tab-content div ').removeClass('in show');
-                                        $('#Listado').addClass('in show');
-                                    }}
-                                                 listaCiudades={this.state.dataCiudades}
-                                    />
-                                }
-
-                            </div>
-
-                        </div>
-                    </div>
-                </section>
             </div >
         );
     }

@@ -107,12 +107,12 @@ class TrackingEmail extends Component {
                     <Typography variant={"h5"}>Número de rastreo: <b>{this.props.data.m_sTracking}</b></Typography>
 
                     <Grid item sx={12} md={12}>
-                        <Typography align={"center"}  variant={"h3"}>{this.props.data.m_sEstatus}</Typography>
+                        <Typography align={"center"}  variant={"h3"}>{this.props.data.m_sEstatusSeguimiento}</Typography>
                     </Grid>
                 <Grid item sx={12} md={12}>
                     <Box sx={{ width: '100%' }}>
-                        <Stepper alternativeLabel activeStep={this.props.data.estatusActivo} connector={<QontoConnector />}>
-                            {["Recolectado","En ruta", "Entregado"].map((label) => (
+                        <Stepper alternativeLabel activeStep={this.props.data.m_nEstatusSeguimiento} connector={<QontoConnector />}>
+                            {[this.props.data.m_bAplicaRecoleccion ? "Recolectado" : "Documentado","En ruta", "Entregado"].map((label) => (
                                 <Step key={label}>
                                     <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
                                 </Step>
