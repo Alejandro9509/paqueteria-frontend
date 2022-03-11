@@ -12,18 +12,18 @@ import AddIcon from "@material-ui/icons/AddBox";
  * unidadesMedidaListado = array de unidades de medida
  * */
 export default function Maniobras(props){
-    const [state, setState] = useState({
+    /*const [state, setState] = useState({
         rangos: props.rangos || []
-    })
+    })*/
     const [dialogRangos, setDialogRangos] = useState({
         showDialog: false,
         selection: null,
         isEdit: false
     })
 
-    useEffect(value => {
+    /*useEffect(value => {
         props.handleChangeManiobras(state.rangos)
-    }, [state])
+    }, [state, props])*/
 
     const handleShowDialogRangos = (show) => {
         if (show){
@@ -44,16 +44,17 @@ export default function Maniobras(props){
     const handleConfirmRangos = (rango) => {
         let newRangos = []
         if (dialogRangos.isEdit){
-            newRangos = state.rangos.filter(i => i.id !== rango.id)
+            newRangos = props.rangos.filter(i => i.id !== rango.id)
             newRangos.push(rango)
         }else{
-            state.rangos.forEach(i => newRangos.push(i))
+            props.rangos.forEach(i => newRangos.push(i))
             newRangos.push(rango)
-        }
+        }/*
         setState({
             ...state,
             rangos: newRangos
-        })
+        })*/
+        props.handleChangeManiobras(newRangos)
 
         setDialogRangos({
             ...dialogRangos,
@@ -65,10 +66,16 @@ export default function Maniobras(props){
     }
 
     const handleOnDeleteRow = (row) => {
+        /*console.log(row)
+        console.log(prop.rangos)
+        console.log(prop.rangos.filter(i => i.id !== row.id))
+        let newRangos = []
+
         setState({
             ...state,
-            rangos: state.rangos.filter(i => i.id !== row.id)
-        })
+            rangos: prop.rangos.filter(i => i.id !== row.id)
+        })*/
+        props.handleChangeManiobras(props.rangos.filter(i => i.id !== row.id))
     }
 
     const handleOnEditRow = (row) => {
@@ -81,10 +88,7 @@ export default function Maniobras(props){
     }
 
     const handleChangeRangosViaje = (newRangos) => {
-        setState({
-            ...state,
-            rangos: newRangos
-        })
+        props.handleChangeManiobras(newRangos)
     }
     return(
         <div>
