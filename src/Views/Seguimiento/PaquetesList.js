@@ -46,7 +46,7 @@ class PaquetesList extends Component {
                         <Typography variant={"body1"}>Descripción: <b>{p.m_sDescripcion}</b></Typography>
                         </Grid>
                             <Grid item md={6}>
-                        <Typography variant={"body1"}>Cantidad: <b>{p.m_nCantidad}</b></Typography>
+                        <Typography variant={"body1"}>Cantidad: <b>{p.m_nCantidad} pzas</b></Typography>
                             </Grid>
                     </Grid>
                     <Divider orientation="horizontal" flexItem />

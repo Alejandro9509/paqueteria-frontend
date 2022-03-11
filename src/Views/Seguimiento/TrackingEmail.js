@@ -109,6 +109,13 @@ class TrackingEmail extends Component {
                     <Grid item sx={12} md={12}>
                         <Typography align={"center"}  variant={"h3"}>{this.props.data.m_sEstatusSeguimiento}</Typography>
                     </Grid>
+                    {
+                        this.props.data.m_nEstatusSeguimiento === 2 &&
+                        <Grid item sx={12} md={12}>
+                            <Typography align={"center"}  variant={"h3"}>Recibió: {this.props.data.m_sReceptor}</Typography>
+                        </Grid>
+                    }
+
                 <Grid item sx={12} md={12}>
                     <Box sx={{ width: '100%' }}>
                         <Stepper alternativeLabel activeStep={this.props.data.m_nEstatusSeguimiento} connector={<QontoConnector />}>
