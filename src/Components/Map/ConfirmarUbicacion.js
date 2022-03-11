@@ -60,7 +60,7 @@ class ConfirmarUbicacion extends Component {
                 let colonia = this.props.direccion.coloniaRemitente
                 let numeroExterior = this.props.direccion.numeroExtRemitente
                 let codigoPostal = this.props.direccion.codigoPostalRemitente.m_sCP
-                searchLocationAddress(`${calle} ${numeroExterior} ${colonia} ${codigoPostal} ${municipio}`).then(data => {
+                searchLocationGuia(`${municipio}`,`${calle} ${colonia}`,`${codigoPostal}`).then(data => {
                     this.setState({
                         coordenadas: {lat: data.y, lng: data.x}
                     })
@@ -90,8 +90,7 @@ class ConfirmarUbicacion extends Component {
                 let colonia = this.props.direccion.coloniaDestinatario;
                 let numeroExterior = this.props.direccion.numeroExtDestinatario
                 let codigoPostal = this.props.direccion.codigoPostalDestinatario.m_sCP
-
-                searchLocationAddress(`${calle} ${numeroExterior} ${colonia} ${codigoPostal} ${municipio}`).then(data => {
+                searchLocationGuia(`${municipio}`,`${calle} ${colonia}`,`${codigoPostal}`).then(data => {
                     this.setState({
                         coordenadas: {lat: data.y, lng: data.x}
                     })
