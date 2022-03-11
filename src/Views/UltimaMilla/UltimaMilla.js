@@ -94,7 +94,8 @@ class UltimaMilla extends Component {
             modoPlaneacion: false,
             ultimaMilla: null,
             openDialog: false,
-            closeFiltersMapDialogs: false
+            closeFiltersMapDialogs: false,
+            closeResumenParadas:false
 
         }
         this.generarRuta = this.generarRuta.bind(this)
@@ -112,6 +113,7 @@ class UltimaMilla extends Component {
         this.refreshUltimaMilla = this.refreshUltimaMilla.bind(this)
         this.refreshFilterUltimaMilla = this.refreshFilterUltimaMilla.bind(this)
         this.changeFiltersMapDialogsState = this.changeFiltersMapDialogsState.bind(this)
+        this.closeResumenParada = this.closeResumenParada.bind(this)
     }
 
 
@@ -327,6 +329,12 @@ class UltimaMilla extends Component {
         })
     }
 
+    closeResumenParada(isVisible){
+        this.setState({
+            closeResumenParadas:isVisible
+        })
+    }
+
     render() {
 
         return (
@@ -400,6 +408,7 @@ class UltimaMilla extends Component {
                                 {
                                     !this.state.fullScreen &&
                                     <FiltersMap refreshFilterUltimaMilla={this.refreshFilterUltimaMilla}
+                                                closeResumenParada={this.closeResumenParada}
                                                 closeFiltersMapDialogs={this.state.closeFiltersMapDialogs}
                                                 changeConfiguration={this.changeConfiguration}
                                                 searchLocation={this.searchLocation} generarRuta={this.generarRuta}
@@ -438,6 +447,7 @@ class UltimaMilla extends Component {
                                 {
                                     !this.state.modoEdicion && this.state.ultimaMilla && (this.state.fullScreen === false || this.state.resumenFullscreen) &&
                                     <DetalleParadas refresh={this.refreshUltimaMilla}
+                                    closeResumenParadas={this.state.closeResumenParadas}
                                     changeFiltersMapDialogsState={this.changeFiltersMapDialogsState}
                                                     fecha={this.state.fechaUltimaMilla} filtros={{
                                         zonasSeleccionada: this.state.zonasIds,
