@@ -285,7 +285,7 @@ export default function DialogoNuevoRango(props) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleShowDialog} color="primary">
-                    Close
+                    Cancelar
                 </Button>
                 <Button onClick={handleConfirmSelection} color="primary" autoFocus>
                     Aceptar

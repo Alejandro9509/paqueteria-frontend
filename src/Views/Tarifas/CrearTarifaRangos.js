@@ -153,7 +153,9 @@ export default function CrearTarifaRangos(props) {
             getClienteGenerico()
         }
     }, [])
-
+    useEffect(value => {
+        console.log(viajesLocalesListado)
+    }, [viajesLocalesListado])
     const handleDialogVisible = (isVisible) => {
         setState({
             ...state,
@@ -216,8 +218,12 @@ export default function CrearTarifaRangos(props) {
         setViajesForaneosListado(newViajes)
     }
 
-    const handleOnAgregarViajeLocal = () => {
-        viajesLocalesListado.push({
+    const handleOnAgregarViajeLocal = (e) => {
+        e.preventDefault()
+
+        var viajeLocal = [...viajesLocalesListado]
+        console.log(viajeLocal)
+        viajeLocal.push({
             idViaje: getRandomId(),
             idSucursal: null,
             zonas: [],
@@ -225,7 +231,7 @@ export default function CrearTarifaRangos(props) {
             rangos: [],
             productos: []
         })
-        setViajesLocalesListado(viajesLocalesListado)
+        setViajesLocalesListado(viajeLocal)
     }
 
     const handleDeleteViajeLocal = (viaje) => {
@@ -233,14 +239,15 @@ export default function CrearTarifaRangos(props) {
     }
 
     const handleOnAgregarViajeForaneo = () => {
-        viajesForaneosListado.push({
+        var viajeForaneo = [...viajesForaneosListado]
+        viajeForaneo.push({
             idViaje: getRandomId(),
             idOrigen: null,
             idTipoMedida: null,
             idDestino: null,
             grupos: [],
         })
-        setViajesForaneosListado(viajesForaneosListado)
+        setViajesForaneosListado(viajeForaneo)
     }
 
     const handleDeleteViajeForaneo = (viaje) => {
