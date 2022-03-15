@@ -287,7 +287,7 @@ export default function TarifasRangos(props) {
 
             eliminarTarifaRangos(idTarifa).then(respuesta => {
                 if (respuesta.data.Estatus){
-                    showSuccess("Tarifa eliminada con éxito.")
+                    showSuccess("Registro eliminado con éxito.")
                     getAllTarifas();
                 }
             })
@@ -311,7 +311,11 @@ export default function TarifasRangos(props) {
         agregarTarifaRangos(params).then(respuesta => {
             console.log(respuesta.data)
             if (respuesta.data.Estatus){
-                showSuccess("Se guardó la tarifa con éxito");
+                if (props.convenio){
+                    showSuccess("Se guardó el convenio con éxito");
+                }else{
+                    showSuccess("Se guardó la tarifa con éxito");
+                }
                 handleShowListado()
             }else{
                 showSuccess("Hubo un error al guardar");
@@ -322,7 +326,11 @@ export default function TarifasRangos(props) {
         modificarTarifaRangos(params.idTarifa,params).then(respuesta => {
             console.log(respuesta.data)
             if (respuesta.data.Estatus){
-                showSuccess("Se guardó la tarifa con éxito");
+                if (props.convenio){
+                    showSuccess("Se guardó el convenio con éxito");
+                }else{
+                    showSuccess("Se guardó la tarifa con éxito");
+                }
                 handleShowListado()
             }else{
                 showSuccess("Hubo un error al guardar");
