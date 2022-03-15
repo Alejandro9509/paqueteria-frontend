@@ -338,15 +338,27 @@ export default function CrearTarifaRangos(props) {
             return
         }
         if (!validaVigencia()){
-            showSuccess("la vigencia")
+            showSuccess("La vigencia es un dato necesario")
             return
         }
         if (!validaSucursalYConceptoViajeLocal()){
-            showSuccess("No pueden guardar viajes locales sin sucursal, tipo de medida o concepto")
+            showSuccess("No pueden guardar primera milla o última milla sin sucursal, tipo de medida o concepto")
             return
         }
         if (!validaOrigenDestinoMedidaViajeForaneo()){
-            showSuccess("No pueden guardar viajes foraneos sin origen, destino o tipo de medida")
+            showSuccess("No pueden guardar milla intermedia sin origen, destino o tipo de medida")
+            return
+        }
+        if (viajesLocalesListado.length === 0){
+            showSuccess("No puede guardar una tarifa sin primera o última milla")
+            return
+        }
+        if (maniobrasTarifa.length === 0){
+            showSuccess("No puede guardar una tarifa sin maniobras")
+            return
+        }
+        if (viajesForaneosListado.length === 0){
+            showSuccess("No puede guardar una tarifa sin milla intermedia")
             return
         }
         viajesLocalesListado.forEach(v => {
