@@ -587,8 +587,9 @@ function Guia(props) {
     //Muestra la pestaña de cancelar
     function handleShowCancelar(event) {
         event.preventDefault()
-        if(state.folioInforme || state.folioInforme != ""){
-      showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+state.folioInforme)
+        console.log(state.folioInforme)
+        if(state.folioInforme != undefined ){
+      showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+ state.folioInforme)
      }else if(state.folioInforme == undefined || state.folioInforme == ""){
           limpiarCamposAgregar()
         obtenerGuiaId(state.idGuia).then((respuesta) => {

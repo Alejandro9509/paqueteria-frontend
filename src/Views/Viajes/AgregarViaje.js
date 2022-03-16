@@ -208,27 +208,30 @@ class AgregarViaje extends Component {
                         "m_sCiudad": this.props.select.m_sDestino,
                         "m_nIdCiudad": this.props.select.m_nIdDestino
                     },
-                    IdRemolque1: {
+                    IdRemolque1: this.props.select.m_nIdRemolque1 ? {
                         m_nIdUnidad: this.props.select.m_nIdRemolque1,
                         m_sDescripcion: this.props.select.m_sDescripcionRemolque1,
                         m_sCodigo: this.props.select.m_sCodigoRemolque1,
-                    },
+                        EstatusUnidad: this.props.select.m_sEstatusRemolque1,
+
+                    } : null,
                     placasRemolque1: this.props.select.m_sPlacasRemolque1,
                     colorRemolque1: this.props.select.m_sColorRemolque1,
                     estatusRemolque1: this.props.select.m_sEstatusRemolque1,
-                    IdRemolque2: {
+                    IdRemolque2: this.props.select.m_nIdRemolque2 ? {
                         m_nIdUnidad: this.props.select.m_nIdRemolque2,
                         m_sDescripcion: this.props.select.m_sDescripcionRemolque2,
                         m_sCodigo: this.props.select.m_sCodigoRemolque2,
-                    },
+                        EstatusUnidad: this.props.select.m_sEstatusRemolque2,
+                    } : null,
                     placasRemolque2: this.props.select.m_sPlacasRemolque2,
                     colorRemolque2: this.props.select.m_sColorRemolque2,
                     estatusRemolque2: this.props.select.m_sEstatusRemolque2,
-                    IdDolly: {
+                    IdDolly: this.props.select.m_nIdDolly ? {
                         m_nIdUnidad: this.props.select.m_nIdDolly,
                         m_sDescripcion: this.props.select.m_sDescripcionDolly,
                         m_sCodigo: this.props.select.m_sCodigoDolly,
-                    },
+                    } : null,
                     placasDolly: this.props.select.m_sPlacasDolly,
                     operador: {
                         m_nIdOperador: this.props.select.m_nIdOperador,
@@ -237,7 +240,9 @@ class AgregarViaje extends Component {
                     unidad: {
                         m_nIdUnidad: this.props.select.m_nIdUnidad,
                         m_sCodigo: this.props.select.m_sCodigoUnidad,
-                        m_sDescripcion: this.props.select.m_sDescripcionUnidad
+                        m_sDescripcion: this.props.select.m_sDescripcionUnidad,
+                        EstatusUnidad: this.props.select.m_sEstatusUnidad,
+
                     },
                     placaIntUnidad: this.props.select.m_sPlacasUnidad,
                     estatusUnidad: this.props.select.m_sEstatusUnidad,
@@ -903,14 +908,18 @@ class AgregarViaje extends Component {
                 renderCell: (row) => {
                     return (
                         <div>
-                            <Tooltip title={"Desasignar"}>
-                                <a
-                                    onClick={() => this.handleEliminarInforme(row.row.m_nIdInforme)}
-                                    className="btn btn-default btn-xs">
-                                    <i className={"fa fa-trash"}
-                                       style={{color: "#F9A03E"}}/>
-                                </a>
-                            </Tooltip>
+                            {
+                                row.row.m_bSePuedeBorrar ?
+                                <Tooltip title={"Desasignar"}>
+                                    <a
+                                        onClick={() => this.handleEliminarInforme(row.row.m_nIdInforme)}
+                                        className="btn btn-default btn-xs">
+                                        <i className={"fa fa-trash"}
+                                           style={{color: "#F9A03E"}}/>
+                                    </a>
+                                </Tooltip> : ""
+                            }
+
                         </div>
                     );
                 },

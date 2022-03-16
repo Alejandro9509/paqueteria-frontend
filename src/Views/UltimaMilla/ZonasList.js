@@ -179,7 +179,7 @@ class ZonasList extends Component {
 
 
         return (
-            <TableContainer>
+            <TableContainer className={"j-forms"} style={{height:"300px"}}>
                 <TextField variant="outlined" size={"small"} placeholder={"Buscar"} style={{padding: "0px"}}
                            value={this.state.searchText}
                            onChange={(e) => this.setState({searchText: e.target.value})}

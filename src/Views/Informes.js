@@ -2631,8 +2631,8 @@ function Informes({history}) {
                                                                                 textAlign: "center",
                                                                             }}
                                                                         >
-                                                                            Peso total :{" "}
-                                                                            {dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xTotal), 0))/100).toFixed(2)}` } kg
+                                                                            Peso total : {" "}
+                                                                            {dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xPeso), 0))).toFixed(2)}` } kg
                                                                         </Grid>
 
                                                                     </Grid>
