@@ -261,6 +261,11 @@ class AgregarViaje extends Component {
 
                 }
             })
+            obtenerTrayectosByRuta(this.props.select.m_nIdRuta).then(({data}) => {
+                this.setState( {
+                    trayectos: data
+                })
+            })
         }
     }
 
@@ -733,7 +738,7 @@ class AgregarViaje extends Component {
     handleAgregarInforme(id) {
         if (this.state.dataInformesAsignados.find(i => i.m_nIdInforme === id) === undefined){
             var informeAsignar = this.state.dataInformesPorAsignar.find(i => i.m_nIdInforme === id)
-            console.log(informeAsignar)
+            informeAsignar.m_bSePuedeBorrar = true
             if (this.state.trayectos.map(t => t.IdDestino).includes(informeAsignar.m_nIdDestino) === false) {
                 this.setState({openDestino: true, idInformeSeleccionado: id})
                 return
