@@ -332,21 +332,48 @@ export default function CrearTarifaRangos(props) {
         return state.vigencia !== null
     }
 
+
+
     const handleGuardarTarifa = (event) => {
         if (!validaCliente()){
             showSuccess("El cliente es un dato necesario")
             return
         }
         if (!validaVigencia()){
-            showSuccess("la vigencia")
+            showSuccess("La vigencia es un dato necesario")
             return
         }
         if (!validaSucursalYConceptoViajeLocal()){
-            showSuccess("No pueden guardar viajes locales sin sucursal, tipo de medida o concepto")
+            showSuccess("No pueden guardar primera milla o última milla sin sucursal, tipo de medida o concepto")
             return
         }
         if (!validaOrigenDestinoMedidaViajeForaneo()){
-            showSuccess("No pueden guardar viajes foraneos sin origen, destino o tipo de medida")
+            showSuccess("No pueden guardar milla intermedia sin origen, destino o tipo de medida")
+            return
+        }
+        if (viajesLocalesListado.length === 0){
+            showSuccess("No puede guardar una tarifa sin primera o última milla")
+            return
+        }
+        const isConceptosEmpty = (element) => element.rangos.length === 0;
+        if (viajesLocalesListado.some(isConceptosEmpty)){
+            showSuccess("No puede guardar una primera o última milla sin rangos")
+            return
+        }
+        if (props.configuraciones.CobroCargaDescargaTarifa){
+            if (maniobrasTarifa.length === 0){
+                showSuccess("La configuración actual no permite guardar una tarifa sin maniobras.")
+                return
+            }
+        }
+        if (viajesForaneosListado.length === 0){
+            showSuccess("No puede guardar una tarifa sin milla intermedia")
+            return
+        }
+        const isGruposConceptosEmpty = (element) => element.rangos.length === 0;
+        const isGruposEmpty = (element) => element.grupos.length === 0 || element.grupos.some(isGruposConceptosEmpty);
+        if (viajesForaneosListado.some(isGruposEmpty)){
+            showSuccess("No puede guardar una milla intermedia sin rangos")
             return
         }
         viajesLocalesListado.forEach(v => {
@@ -385,7 +412,6 @@ export default function CrearTarifaRangos(props) {
                 })
             })
         })
-
         let maniobrasChidas = []
         maniobrasChidas = maniobrasTarifa.map(rango => ({
                 idConceptoFacturacion: rango.idConcepto,
