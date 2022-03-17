@@ -283,9 +283,10 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
         })
     }
 
-    const pesoTotalKg = (paquetes) => paquetes.reduce((previousValue, currentValue) => previousValue + (parseFloat(currentValue.m_rPeso) * parseFloat(currentValue.m_nCantidad)), 0)
-    const pesoTotalVol = (paquetes) => paquetes.reduce((previousValue, currentValue) => previousValue + (parseFloat(currentValue.m_nCantidad) * parseFloat(currentValue.m_rLargo) * parseFloat(currentValue.m_rAncho) * parseFloat(currentValue.m_rAlto) * 0.0005), 0)
+    const pesoTotalKgPaquete = (paquete) => parseFloat(paquete.m_rPeso) * parseFloat(paquete.m_nCantidad)
+    const pesoTotalVolPaquete = (paquete) => parseFloat(paquete.m_nCantidad) * parseFloat(paquete.m_rLargo) * parseFloat(paquete.m_rAncho) * parseFloat(paquete.m_rAlto) * 0.0005
 
+    const pesoFinalPorProducto = (paquetes) => paquetes.reduce((previousValue, currentValue) => previousValue + (pesoTotalKgPaquete(currentValue) > pesoTotalVolPaquete(currentValue) ? pesoTotalKgPaquete(currentValue) : pesoTotalVolPaquete(currentValue)),0)
     return(
         <div>
             <div className="row">
@@ -322,12 +323,8 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
                         dataPaquetes.length > 0 &&
                         groupByArray(dataPaquetes, 'm_nIdProducto').map(i => (
                             <div>
-                                Peso total de {i.values[0].m_sProducto} en KG : {pesoTotalKg(i.values).toFixed(2)}
+                                Peso final de {i.values[0].m_sProducto}: {pesoFinalPorProducto(i.values).toFixed(2)}
                                 <br/>
-                                Peso total de {i.values[0].m_sProducto} en volumétrico : {pesoTotalVol(i.values).toFixed(2)}
-                                <br/>
-                                <br/>
-
                             </div>
                         ))
                     }
