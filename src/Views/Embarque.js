@@ -788,6 +788,7 @@ function Embarque(props) {
     };
 
     const handleChangeAutocompleteEntregaDD = (input, newValue) => {
+        setRepetirConceptos(true)
         setEntregaDD({
             ...entregaDD,
             [input]: newValue

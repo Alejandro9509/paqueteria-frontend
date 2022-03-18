@@ -629,6 +629,7 @@ function Recoleccion() {
     };
 
     const handleChangeAutocompleteRecoleccionDD = (input, newValue) => {
+        setRepetirConceptos(true)
         setRecoleccionDD({
             ...recoleccionDD,
             [input]: newValue
