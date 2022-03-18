@@ -252,7 +252,7 @@ export default function ViajeLocal(props) {
                         unidadesMedidaListado={filtrarUnidadesMedidaViajeLocal}
                         handleShowDialog={handleShowDialogRangos}
                         openDialog={dialogRangos.showDialog}
-
+                        rows={props.viaje.rangos}
                     />
                 }
                 {

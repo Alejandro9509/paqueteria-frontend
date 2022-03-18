@@ -27,7 +27,6 @@ import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
 import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import {getCurrentDate, getRandomId, getUniqueListBy} from "../../Util/Util";
 import DialogCheckbox from "./DialogCheckbox";
-import DialogoNuevoRango from "./DialogoNuevoRango";
 import {obtenerTiposCalculo} from "../../Util/Contexts/TipoCalculoContext";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";

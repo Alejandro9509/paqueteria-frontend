@@ -3827,7 +3827,7 @@ function Embarque(props) {
                                         <div className="widget-wrap" id="citaEntrega">
                                             <Citas titulo={"Programar cita de la Entrega"}
                                                    onDataChange={handleChangeCita}
-                                                   data={state}
+                                                   dataPadreConsulta={dataEmbarqueConsulta}
                                                    embarque={true}
                                                    disabled={state.agregar === "Consultar"}
                                                    required={state.entregaConCita}

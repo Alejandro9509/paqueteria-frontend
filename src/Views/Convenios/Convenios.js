@@ -142,7 +142,8 @@ function Convenios(){
                 IdConceptoRecoleccion: respuesta.data.IdConceptoRecoleccion || 0,
                 IdConceptoEntrega: respuesta.data.IdConceptoEntrega || 0,
                 IdConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
-                IdConceptoCita: respuesta.data.IdConceptoCita || 0
+                IdConceptoCita: respuesta.data.IdConceptoCita || 0,
+                CobroCargaDescargaTarifa: respuesta.data.CobroCargaDescargaTarifa
             })
             if (respuesta.data.TipoTarifaTarifas !== 2){
                 getAllConvenios()
