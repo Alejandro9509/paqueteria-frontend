@@ -103,6 +103,7 @@ export default function Maniobras(props){
                     handleShowDialog={handleShowDialogRangos}
                     openDialog={dialogRangos.showDialog}
                     seccionPadre={'MANIOBRAS'}
+                    rows={props.rangos}
 
                 />
             }
