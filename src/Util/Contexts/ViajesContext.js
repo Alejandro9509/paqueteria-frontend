@@ -143,6 +143,16 @@ function cancelarViaje(id, params){
     return result
 }
 
+function validarSalidaParada(id){
+    const url = `${process.env.REACT_APP_API_URL}/Viajes/paradasTimbradas/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
+
+
 
 export {obtenerViajesByFiltro,agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje,
-    obtenerViajes, obtenerViajesEstatus, obtenerXML,obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje,cancelarCFDI,cancelarViaje}
+    obtenerViajes, obtenerViajesEstatus, obtenerXML,obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje,cancelarCFDI,cancelarViaje,validarSalidaParada}
