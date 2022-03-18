@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useMemo} from "react";
 import axios from "axios";
+import {getCurrentDateTime} from "../Util/Util"
 import Cabecera from "../Components/Template/Cabecera";
 import IconButton from "@material-ui/core/IconButton";
 import RestartAltIcon from '@material-ui/icons/Refresh';
@@ -20,7 +21,7 @@ import {getUniqueListBy, remove_array_element} from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
 import {DataGrid} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
-import {getCurrentDateTime} from "../Util/Util"
+
 import {
     obtenerZonaTarifaByIdCodigoPostal,
   } from "../Util/Contexts/ZonaTarifaContext";
@@ -60,7 +61,8 @@ import {
     obtenerValidacionGuia,
     asignarTrayectos,
     validarEliminarGuia,
-    obtenerGuiaReporteEtiqueta
+    obtenerGuiaReporteEtiqueta,
+    validarCancelarGuia
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -338,7 +340,7 @@ function Guia(props) {
         }
       //  console.log(state)
         console.log(JSON.stringify(params))
-        if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
+      if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
             agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 handleShowListado()
@@ -356,7 +358,7 @@ function Guia(props) {
                 showSuccess(err)
             });
 
-        }
+        } 
     }
 
     const handleEntregaOcurre = (dataOcurre) => {
@@ -588,9 +590,8 @@ function Guia(props) {
     function handleShowCancelar(event) {
         event.preventDefault()
         console.log(state.folioInforme)
-        if(state.folioInforme != undefined ){
-      showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+ state.folioInforme)
-     }else if(state.folioInforme == undefined || state.folioInforme == ""){
+        validarCancelarGuia(state.idGuia).then((respuesta)=>{
+        if(respuesta.data.sePuedeCancelar){
           limpiarCamposAgregar()
         obtenerGuiaId(state.idGuia).then((respuesta) => {
             setState({
@@ -607,16 +608,26 @@ function Guia(props) {
             $('.tab-content div ').removeClass('in show');
             $('#Cancelar').addClass('in show');
         })
-    }
+        }
+        else{
+     
+        showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
+        return
+        }
+        }).catch((err)=>{
+            showSuccess(err)
+        })
+      
+    
     }
 
     //Funcion para cancelar una guia. Se usa en pestaña cancelar.
     const handleCancelar = (e) => {
         e.preventDefault();
-        if(state.folioInforme || state.folioInforme != ""){
-            showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+state.folioInforme)
-           }else if(state.folioInforme == undefined || state.folioInforme == ""){
-        var params = {
+        //console.log(state.idGuia)
+       validarCancelarGuia(state.idGuia).then((respuesta)=>{
+            if(respuesta.data.sePuedeCancelar){
+          var params = {
             "motivoCancelacion": state.MotivoCancelacion,
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
             "fechaCancelacion": state.fechaCancelado
@@ -625,7 +636,15 @@ function Guia(props) {
             console.log(respuesta.data)
             showSuccess("La guia ha sido cancelada")
         })  
-    }
+            }
+            else{        
+            showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
+            return
+            }
+            }).catch((err)=>{
+                showSuccess(err)
+            })
+  
         
     }
 
@@ -1903,7 +1922,7 @@ function Guia(props) {
                         {/*</li>*/}
                     </ul>
 
-                    <div className="row" className="tab-content">
+                    <div className="row tab-content">
                         <div id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
@@ -2955,7 +2974,7 @@ function Guia(props) {
 
                                     </div>
 
-                                    <div className="form-footer" className="col-md-12">
+                                    <div className="form-footer col-md-12">
 
                                         {/*<button
                                                             href="#Listado"
@@ -3002,7 +3021,7 @@ function Guia(props) {
                                                     </div>
                                                 </div>
                                                 <br></br>
-                                                <div className="form-footer" className="col-md-12">
+                                                <div className="form-footer col-md-12">
                                                     <button className="btn btn-default btn-block ex-noty"
                                                             data-layout="topCenter" data-type="information">Notificación
                                                     </button>
@@ -3143,7 +3162,7 @@ function Guia(props) {
                                                         </div>
                                                     </div>
 
-                                                    <div className="form-footer" className="col-md-12">
+                                                    <div className="form-footer col-md-12">
                                                         {/*<button
                                                             href="#Listado"
                                                             role="tab"
