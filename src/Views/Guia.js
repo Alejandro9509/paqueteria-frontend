@@ -613,7 +613,7 @@ function Guia(props) {
     //Funcion para cancelar una guia. Se usa en pestaña cancelar.
     const handleCancelar = (e) => {
         e.preventDefault();
-        if(state.folioInforme || state.folioInforme != ""){
+        if(state.folioInforme != undefined ){
             showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+state.folioInforme)
            }else if(state.folioInforme == undefined || state.folioInforme == ""){
         var params = {
@@ -623,7 +623,8 @@ function Guia(props) {
         }
           cancelarGuia(state.idGuia, params).then((respuesta) => {
             console.log(respuesta.data)
-            showSuccess("La guia ha sido cancelada")
+            showSuccess("La guia ha sido cancelada");
+            handleShowListado()
         })  
     }
         
