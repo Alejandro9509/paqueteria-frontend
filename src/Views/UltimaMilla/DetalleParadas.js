@@ -841,7 +841,7 @@ class DetalleParadas extends Component {
                                                                                                             </IconButton>
                                                                                                         }
                                                                                                         {
-                                                                                                           g.m_sEstatusUltimaMilla!="Cancelado" && !r.m_bUnidadPermisionario && !g.m_bTimbrado &&
+                                                                                                           (tour.m_bActiva && !r.m_bUnidadPermisionario && !g.m_bTimbrado) &&
                                                                                                             <IconButton
                                                                                                                 aria-label="Timbrar SAT">
                                                                                                                 <Tooltip
