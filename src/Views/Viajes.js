@@ -805,17 +805,17 @@ function Viajes() {
     }
 
     const showSalidaDialog = (data) => {
-        validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
-            let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
-            if(encontrado){//si encontro valor falso en timbrado
-                showSuccess(`No se puede marcar salida ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
-            }else{
+        // validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
+        //     let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
+        //     if(encontrado){//si encontro valor falso en timbrado
+        //         showSuccess(`No se puede marcar salida ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
+        //     }else{
                  setParadaData(data);
               setEventOptions({...eventOptions, showSalidaParadasDialog: true});
-            }
-        }).catch((err)=>{
-            showSuccess(err)
-        })
+        //     }
+        // }).catch((err)=>{
+        //     showSuccess(err)
+        // })
     }
 
     const closeSalidaDialog = () => {
@@ -823,17 +823,17 @@ function Viajes() {
     }
 
     const showLlegadaDialog = (data) => {
-        validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
-            let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
-            if(encontrado){//si encontro valor falso en timbrado
-                showSuccess(`No se puede marcar llegada ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
-            }else{
+        // validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
+        //     let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
+        //     if(encontrado){//si encontro valor falso en timbrado
+        //         showSuccess(`No se puede marcar llegada ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
+        //     }else{
                 setParadaData(data);
                 setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
-            }
-        }).catch((err)=>{
-            showSuccess(err)
-        })
+            // }
+        //}).catch((err)=>{
+        //    showSuccess(err)
+       // })
 
     }
 
