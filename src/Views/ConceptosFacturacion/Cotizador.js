@@ -37,7 +37,6 @@ class Cotizador extends Component {
     }
 
     componentDidMount() {
-        console.log("Busqueda Concepto")
         obtenerConceptosFacturacion().then(respuesta => {
             this.setState({
                 conceptosBase: respuesta.data,
@@ -101,7 +100,6 @@ class Cotizador extends Component {
 
             ivaTraslada = getUniqueListBy(conceptosCast, "traslada").map(i => i.traslada);
             ivaRetiene = getUniqueListBy(conceptosCast, "retiene").map(i => i.retiene);
-            console.log(conceptosCast)
             this.props.onChangeConceptosList(conceptosCast)
             this.setState({
                 mostarConceptos: true,
@@ -140,7 +138,7 @@ class Cotizador extends Component {
                             <div className="widget-header">
                                 <h2>Conceptos de facturación
                                     {
-                                        this.state.showErrorIconButton &&
+                                        (this.props.embarque.mostrarCotizador && this.state.showErrorIconButton) &&
                                         <IconButton onClick={() => this.handleShowDialogError(true)}>
                                             <InfoOutlinedIcon color={"error"} fontSize={"large"} />
                                         </IconButton>

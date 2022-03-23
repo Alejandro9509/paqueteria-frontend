@@ -714,7 +714,7 @@ if(input=="codigoPostal"){
               required
               fullWidth
               value={state.RFC}
-              disabled={props.consulta || props.modificar}
+              disabled={props.consulta || props.modificar || props.agregar}
               name="RFC"
             />
           </div>
@@ -731,7 +731,7 @@ if(input=="codigoPostal"){
               required
               label="Domicilio"
               value={state.domicilio}
-              disabled={props.consulta || props.modificar}
+              disabled={props.consulta || props.modificar || props.agregar}
               name="domicilio"
             />
           </div>
@@ -748,7 +748,7 @@ if(input=="codigoPostal"){
               required
               label="Calle"
               value={state.calle}
-              disabled={props.consulta || props.modificar}
+              disabled={props.consulta || props.modificar || props.agregar}
               name="calle"
             />
           </div>
@@ -764,7 +764,7 @@ if(input=="codigoPostal"){
               type="text"
               label="Número interior"
               value={state.numeroInt}
-              disabled={props.consulta || props.modificar}
+              disabled={props.consulta || props.modificar || props.agregar}
               name="numeroInt"
             />
           </div>
@@ -780,7 +780,7 @@ if(input=="codigoPostal"){
               type="text"
               label="Número exterior"
               value={state.numeroExt}
-              disabled={props.consulta || props.modificar}
+              disabled={props.consulta || props.modificar || props.agregar}
               name="numeroExt"
             />
           </div>
@@ -797,7 +797,7 @@ if(input=="codigoPostal"){
               required
               label="Colonia"
               value={state.colonia}
-              disabled={props.consulta || props.modificar}
+              disabled={props.consulta || props.modificar || props.agregar}
               name="colonia"
             />
           </div>
@@ -815,7 +815,7 @@ if(input=="codigoPostal"){
                 value={state.estado}
                 onChange={handleChange}
                 name="estado"
-                disabled={props.consulta || props.modificar}
+                disabled={props.consulta || props.modificar || props.agregar}
               >
                 {dataEstados.map((estado) => (
                   <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
@@ -845,7 +845,7 @@ if(input=="codigoPostal"){
               value={state.municipio}
               onChange={handleChange}
               name="municipio"
-              disabled={props.consulta || props.modificar}
+              disabled={props.consulta || props.modificar || props.agregar}
               InputProps={{ name: "municipio" }}
             >
               {dataMunicipios.map((municipio) => (
@@ -868,7 +868,7 @@ if(input=="codigoPostal"){
                 handleChangeAutocomplete("codigoPostal", newValue)
               }
               value={state.codigoPostal}
-              disabled={props.consulta || props.modificar}
+              disabled={props.consulta || props.modificar || props.agregar}
               name="codigoPostal"
               disableClearable
               forcePopupIcon={false}
@@ -957,7 +957,7 @@ if(input=="codigoPostal"){
                   handleChangeAutocomplete("origen", newValue)
                 }
                 value={state.origen}
-                disabled={props.consulta || props.modificar}
+                disabled={props.consulta || props.modificar || props.agregar}
                 id="origenRemitente"
                 name="origenRemitente"
                 disableClearable
@@ -993,7 +993,7 @@ if(input=="codigoPostal"){
                   handleChangeAutocomplete("destino", newValue)
                 }
                 value={state.destino}
-                disabled={props.consulta}
+                disabled={props.consulta || props.modificar || props.agregar}
                 destino="destino"
                 disableClearable
                 forcePopupIcon={false}
@@ -1034,7 +1034,7 @@ if(input=="codigoPostal"){
                 disableClearable
                 forcePopupIcon={false}
                 options={dataZonasOperativas}
-                disabled={props.consulta || props.modificar}
+                disabled={props.consulta || props.modificar || props.agregar}
                 getOptionLabel={(option) =>
                   option
                     ? `${option.m_sCodigoZona} - CÓDIGO POSTAL:${state.codigoPostal.m_sCP}`|| "Código Postal sin zona asignada"
@@ -1074,7 +1074,7 @@ if(input=="codigoPostal"){
                 disableClearable
                 forcePopupIcon={false}
                 options={dataZonasTarifa}
-                disabled={props.consulta || props.modificar}
+                disabled={props.consulta || props.modificar || props.agregar}
                 getOptionLabel={(option) =>
                   option
                     ? option.m_sCodigoZona || "Código Postal sin zona asignada"

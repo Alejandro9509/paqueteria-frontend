@@ -788,6 +788,7 @@ function Embarque(props) {
     };
 
     const handleChangeAutocompleteEntregaDD = (input, newValue) => {
+        setRepetirConceptos(true)
         setEntregaDD({
             ...entregaDD,
             [input]: newValue
@@ -3413,6 +3414,7 @@ function Embarque(props) {
                                                                         componentePadre={"Embarque"}
                                                                         consulta={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                         modificar={state.agregar === "Modificar"}
+                                                                        agregar={state.agregar === "Agregar"}
                                                                         mostrarZonas={false}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}
@@ -3442,6 +3444,7 @@ function Embarque(props) {
                                                                         componentePadre={"Embarque"}
                                                                         consulta={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                         modificar={state.agregar === "Modificar"}
+                                                                        agregar={state.agregar === "Agregar"}
                                                                         mostrarZonas={!(state.diferenteEntrega || state.entregaEnSucursal)}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}

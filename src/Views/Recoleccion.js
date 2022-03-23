@@ -629,6 +629,7 @@ function Recoleccion() {
     };
 
     const handleChangeAutocompleteRecoleccionDD = (input, newValue) => {
+        setRepetirConceptos(true)
         setRecoleccionDD({
             ...recoleccionDD,
             [input]: newValue
@@ -4011,6 +4012,7 @@ function Recoleccion() {
                                                                         componentePadre={"Recoleccion"}
                                                                         consulta={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                                                         modificar={state.agregar === "Modificar"}
+                                                                        agregar={state.agregar === "Agregar"}
                                                                         mostrarZonas={!state.diferenteRecoleccion}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}
@@ -4082,6 +4084,7 @@ function Recoleccion() {
                                                                         componentePadre={"Recoleccion"}
                                                                         consulta={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                                                         modificar={state.agregar === "Modificar"}
+                                                                        agregar={state.agregar === "Agregar"}
                                                                         mostrarZonas={!state.diferenteEntrega && !state.entregaEnSucursal}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}

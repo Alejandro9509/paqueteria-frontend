@@ -181,8 +181,6 @@ export default function GrupoViajeForaneo(props){
     const handleOnEditGrupo = (event) => {
         event.preventDefault()
         event.stopPropagation()
-        console.log(state)
-        console.log(props.grupo)
         props.onEditGrupo(props.grupo)
     }
 
@@ -215,7 +213,7 @@ export default function GrupoViajeForaneo(props){
                     unidadesMedidaListado={props.unidadesMedidaListado}
                     handleShowDialog={handleShowDialogRangos}
                     openDialog={dialogRangos.showDialog}
-
+                    rows={props.grupo.rangos}
                 />
             }
             {

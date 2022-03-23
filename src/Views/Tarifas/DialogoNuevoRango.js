@@ -46,6 +46,7 @@ export default function DialogoNuevoRango(props) {
         maximo: false,
         idTipoCalculo: false,
         idUnidadMedida: false,
+        conceptoRepetido: false,
         descripcionError: null
     })
 
@@ -129,6 +130,18 @@ export default function DialogoNuevoRango(props) {
             })
             valid = false
         }
+        props.rows.forEach(i => {
+            if (i.idConcepto == rango.idConcepto &&
+                i.importe == rango.importe &&
+                i.minimo == rango.minimo &&
+                i.maximo == rango.maximo &&
+                i.idTipoCalculo == rango.idTipoCalculo &&
+                i.idUnidadMedida == rango.idUnidadMedida
+                ){
+                valid = false
+                showSuccess("Ese rango ya existe.")
+            }
+        })
         return valid
     }
     const handleConfirmSelection = () => {
