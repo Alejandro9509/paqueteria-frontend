@@ -317,7 +317,7 @@ class AgregarViaje extends Component {
                 horaEntrega: this.state.horaEntregaGeneral,
             }
         }
-        console.log(params)
+        //console.log(params)
        if (this.props.modificar) {
             modificarViaje(this.props.id, params)
                 .then((respuesta) => {
@@ -1118,7 +1118,7 @@ class AgregarViaje extends Component {
                                                 id="origenRemitente"
                                                 disableClearable
                                                 forcePopupIcon={false}
-                                                options={this.state.dataCiudad}
+                                                options={this.state.dataCiudad.filter(c => this.props.select ? !this.props.select.m_arrIdRutas.filter(t => t.Terminado).map(t => t.IdOrigen).includes(c.m_nIdCiudad) : true)}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCiudad
                                                 }
@@ -1149,7 +1149,7 @@ class AgregarViaje extends Component {
                                                 id="destino"
                                                 disableClearable
                                                 forcePopupIcon={false}
-                                                options={this.state.dataCiudad}
+                                                options={this.state.dataCiudad.filter(c => this.props.select ? !this.props.select.m_arrIdRutas.filter(t => t.Terminado).map(t => t.IdDestino).includes(c.m_nIdCiudad) : true)}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCiudad
                                                 }
@@ -1776,12 +1776,7 @@ class AgregarViaje extends Component {
                                                 fullWidth
                                                 type="button"
                                                 onClick={(event) => {
-                                                    event.stopPropagation();
-                                                    this.setState({...this.state, agregar: "Agregar"});
-                                                    $('.nav-tabs li ').removeClass('active');
-                                                    $('.nav-tabs li').eq(0).addClass('active');
-                                                    $('.tab-content div ').removeClass('in show');
-                                                    $('#Listado').addClass('in show');
+                                                    this.props.cancel()
                                                 }}
                                                 className="btn btn-secondary secondary-btn"
                                             >

@@ -358,7 +358,7 @@ function Guia(props) {
                 showSuccess(err)
             });
 
-        } 
+        }
     }
 
     const handleEntregaOcurre = (dataOcurre) => {
@@ -610,15 +610,15 @@ function Guia(props) {
         })
         }
         else{
-     
+
         showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
         return
         }
         }).catch((err)=>{
             showSuccess(err)
         })
-      
-    
+
+
     }
 
     //Funcion para cancelar una guia. Se usa en pestaña cancelar.
@@ -634,17 +634,18 @@ function Guia(props) {
         }
           cancelarGuia(state.idGuia, params).then((respuesta) => {
             console.log(respuesta.data)
-            showSuccess("La guia ha sido cancelada")
+            showSuccess("La guia ha sido cancelada");
+            handleShowListado()
         })  
             }
-            else{        
+            else{
             showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
             return
             }
             }).catch((err)=>{
                 showSuccess(err)
             })
-  
+
         
     }
 
