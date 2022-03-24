@@ -59,7 +59,7 @@ function cancelarGuia(id, params) {
 }
 
 function validarCancelarGuia(id){
-    const url = `${process.env.REACT_APP_API_URL}/Guia/ValidarCancelar/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/ValidarCancelar/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
