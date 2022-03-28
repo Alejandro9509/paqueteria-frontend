@@ -327,7 +327,7 @@ class AgregarViaje extends Component {
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
                     $('#Listado').addClass('in show');
-                    this.props.reload()
+                    this.props.cancel()
                     this.handleClearData()
                 })
                 .catch((err) => {
@@ -342,7 +342,7 @@ class AgregarViaje extends Component {
                     $('.nav-tabs li').eq(0).addClass('active');
                     $('.tab-content div ').removeClass('in show');
                     $('#Listado').addClass('in show');
-                    this.props.reload()
+                    this.props.cancel()
                     this.handleClearData()
                 })
                 .catch((err) => {
