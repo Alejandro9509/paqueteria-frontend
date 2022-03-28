@@ -5011,7 +5011,9 @@ function Recoleccion() {
                                         </div>*/}
 
                                     </div>
+  
 
+  
                                     <div className="row">
                                         <Cotizador embarque={state}
                                                    disabled={state.agregar === "Consultar"}
