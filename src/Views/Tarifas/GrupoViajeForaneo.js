@@ -54,6 +54,7 @@ export default function GrupoViajeForaneo(props){
                 showDialogZonas: false,
                 selection: []
             })
+            props.handleShowDialogZonas(false)
         }
     }
     const handleConfirmZonas = (zonasSeleccion) => {
@@ -65,13 +66,12 @@ export default function GrupoViajeForaneo(props){
             ...state,
             zonas: zonas
         })
-
         setDialogZonas({
             ...dialogZonas,
             showDialogZonas: false,
             selection: []
         })
-
+        props.handleShowDialogZonas(false)
     }
 
     const [dialogRangos, setDialogRangos] = useState({
@@ -191,7 +191,7 @@ export default function GrupoViajeForaneo(props){
     return(
         <div>
             {
-                dialogZonas.showDialogZonas &&
+                props.showDialogZonas &&
                 <DialogCheckbox
                     handleShowDialog={handleShowDialogZonas}
                     handleOnConfirmSelection={handleConfirmZonas}
