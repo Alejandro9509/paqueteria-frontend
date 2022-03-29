@@ -330,6 +330,7 @@ class UltimaMilla extends Component {
     }
 
     closeResumenParada(isVisible){
+        console.log("linea is visible"+isVisible)
         this.setState({
             closeResumenParadas:isVisible
         })

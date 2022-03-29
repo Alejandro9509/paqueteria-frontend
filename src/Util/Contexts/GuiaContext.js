@@ -58,6 +58,15 @@ function cancelarGuia(id, params) {
     return result
 }
 
+function validarCancelarGuia(id){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/ValidarCancelar/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
 function obtenerGuia() {
     const url = `${process.env.REACT_APP_API_URL}/Guia/GetListado`;
     let result;
@@ -233,4 +242,4 @@ function obtenerValidacionGuia(id){
 
 export {actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
     obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,obtenerGuiaReporteEtiqueta,
-    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia}
+    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia}

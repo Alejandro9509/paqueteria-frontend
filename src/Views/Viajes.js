@@ -45,7 +45,7 @@ import {
     agregarViajeLlegada,
     obetenerViajeId,
     obtenerViajes,
-    obtenerXML, obtenerViajesByFiltro, obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje, cancelarViaje
+    obtenerXML, obtenerViajesByFiltro, obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje, cancelarViaje,validarSalidaParada
 } from "../Util/Contexts/ViajesContext";
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -400,10 +400,11 @@ function Viajes() {
 
 
     useEffect(value => {
-       
+       console.log("Entro")
         if(viajeSeleccionado){
             let rutaActiva = true
         viajeSeleccionado.m_arrTrayectos.map((p, index) => {
+            console.log(viajeSeleccionado)
             
             if(p.m_nIdSalida && p.m_nIdLlegada){
                 p.deshabilitado = false
@@ -524,8 +525,6 @@ function Viajes() {
                 }
             ]
         })
-
-
     }
 
     function showCancelarCFDI(informe){
@@ -805,9 +804,17 @@ function Viajes() {
     }
 
     const showSalidaDialog = (data) => {
-        setParadaData(data);
-        setEventOptions({...eventOptions, showSalidaParadasDialog: true});
-
+         // validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
+         //     let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
+         //     if(encontrado){//si encontro valor falso en timbrado
+         //         showSuccess(`No se puede marcar salida ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
+         //     }else{
+                 setParadaData(data);
+              setEventOptions({...eventOptions, showSalidaParadasDialog: true});
+         //     }
+         // }).catch((err)=>{
+         //     showSuccess(err)
+         // })
     }
 
     const closeSalidaDialog = () => {
@@ -815,8 +822,18 @@ function Viajes() {
     }
 
     const showLlegadaDialog = (data) => {
-        setParadaData(data);
-        setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
+        // validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
+        //     let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
+        //     if(encontrado){//si encontro valor falso en timbrado
+        //         showSuccess(`No se puede marcar llegada ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
+        //     }else{
+                setParadaData(data);
+                setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
+        //    }
+       //  }).catch((err)=>{
+       //     showSuccess(err)
+       // })
+
     }
 
     const closeLlegadaDialog = () => {
@@ -1202,7 +1219,7 @@ function Viajes() {
                                                             console.log(viajeSeleccionado)
                                                             return (
                                                                 <div>
-                                                                    <ListItem button key={index}  onClick={() => handleClick(index)}
+                                                                    <ListItem button key={p.m_nIdDestino+index+p.m_nIdOrigen}  onClick={() => handleClick(index)}
                                                                     >
 
                                                                         <ListItemText primary={`Ruta: ${p.m_sRuta}`} />
@@ -1315,6 +1332,7 @@ function Viajes() {
                                     consult={state.agregar === "Consultar"}
                                     modificar={state.agregar === "Modificar"}
                                     select={state.selectViaje}
+                                    cancel={() => handleShowListado()}
                                     id={state.idViaje}/>
 
                             }
