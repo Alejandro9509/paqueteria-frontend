@@ -45,7 +45,14 @@ import {
     agregarViajeLlegada,
     obetenerViajeId,
     obtenerViajes,
-    obtenerXML, obtenerViajesByFiltro, obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje, cancelarViaje,validarSalidaParada
+    obtenerXML,
+    obtenerViajesByFiltro,
+    obtenerCFDI,
+    obtenerReporteCFDI,
+    obtenerReporteCFDIViaje,
+    cancelarViaje,
+    validarSalidaParada,
+    cancelarTrayecto
 } from "../Util/Contexts/ViajesContext";
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -66,6 +73,7 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import CancelarSAT from "./SAT/CancelarSAT";
 import {cancelarInformeCFDI, enviarCorreoCFDIViaje} from "../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "./SAT/EnvioCorreoDialogo";
+import CancelarTrayecto from "./Viajes/CancelarTrayecto";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -400,30 +408,31 @@ function Viajes() {
 
 
     useEffect(value => {
-       console.log("Entro")
+       //console.log("Entro")
         if(viajeSeleccionado){
             let rutaActiva = true
         viajeSeleccionado.m_arrTrayectos.map((p, index) => {
             console.log(viajeSeleccionado)
             
-            if(p.m_nIdSalida && p.m_nIdLlegada){
+            if(p.m_nIdSalida && !p.m_bSalidaCancelada && p.m_nIdLlegada  ){
                 p.deshabilitado = false
             }
-            else if(!p.m_nIdSalida && rutaActiva){
+            else if((!p.m_nIdSalida || p.m_bSalidaCancelada)  && rutaActiva){
                 p.deshabilitado = false
                 rutaActiva = false
             }
-            else if(p.m_nIdSalida && rutaActiva){
+            else if(p.m_nIdSalida && !p.m_bSalidaCancelada && rutaActiva){
                 p.deshabilitado = false
                 rutaActiva = false
             }
             else{
                 p.deshabilitado = true
             }
-              console.log("p.m_nIdSalida"+p.m_nIdSalida+" p.m_nIdLlegada"+p.m_nIdLlegada+" "+" rutaActiva"+rutaActiva+" p.deshabilitado"+p.deshabilitado)
+            console.log(p.deshabilitado)
+              //console.log("p.m_nIdSalida"+p.m_nIdSalida+" p.m_nIdLlegada"+p.m_nIdLlegada+" "+" rutaActiva"+rutaActiva+" p.deshabilitado"+p.deshabilitado)
         })
 
-        console.log(viajeSeleccionado.m_arrTrayectos) 
+        //console.log(viajeSeleccionado.m_arrTrayectos)
     }
     }, [viajeSeleccionado]);
 
@@ -802,7 +811,11 @@ function Viajes() {
             setParadasListado(respuesta.data);
         });
     }
+    const showCancelarDialog = (data) => {
+        setParadaData(data);
+        setEventOptions({...eventOptions, showCancelarParadasDialog: true});
 
+    }
     const showSalidaDialog = (data) => {
          // validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
          //     let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
@@ -819,6 +832,10 @@ function Viajes() {
 
     const closeSalidaDialog = () => {
         setEventOptions({...eventOptions, showSalidaParadasDialog: false});
+    }
+
+    const closeCancelarDialog = () => {
+        setEventOptions({...eventOptions, showCancelarParadasDialog: false});
     }
 
     const showLlegadaDialog = (data) => {
@@ -985,6 +1002,13 @@ function Viajes() {
 
         })
     }
+    function cancelarTrayectos(params){
+        cancelarTrayecto(params.id, params).then(({data}) => {
+            closeCancelarDialog()
+            handleShowListado()
+            showSuccess(data)
+        })
+    }
 
     const handleClick = (itemKey) => {
         setIndexOpen(itemKey === indexOpen ? -1 : itemKey);
@@ -1042,6 +1066,18 @@ function Viajes() {
                     </ActualizarDiponibilidadEquipo>
                 </DialogContent>
             </Dialog>*/}
+            {
+                paradaData &&
+                <CancelarTrayecto onSubmit={cancelarTrayectos} open={eventOptions.showCancelarParadasDialog} close={() => closeCancelarDialog()} data={paradaData}>
+                    <DialogActions>
+                        <Button
+                            variant={'contained'} color={'primary'}
+                            type="submit">Aceptar</Button>
+                        <Button variant={'outlined'} color={'primary'}
+                                onClick={closeCancelarDialog}>Cancelar</Button>
+                    </DialogActions>
+                </CancelarTrayecto>
+            }
             {
                 paradaData &&
                 <Dialog open={eventOptions.showSalidaParadasDialog}
@@ -1215,8 +1251,7 @@ function Viajes() {
                                                         viajeSeleccionado && viajeSeleccionado.m_arrTrayectos.map((p, index) => {
 
                                                             const informesFiltrados = paradasListado.filter((i,ind) => ((i.m_nIdDestino === p.m_nIdDestino) || ( (viajeSeleccionado.m_arrTrayectos.length - 1) === index && !viajeSeleccionado.m_arrTrayectos.map(t => t.m_nIdDestino).includes(i.m_nIdDestino) )  ))
-                                                          
-                                                            console.log(viajeSeleccionado)
+
                                                             return (
                                                                 <div>
                                                                     <ListItem button key={p.m_nIdDestino+index+p.m_nIdOrigen}  onClick={() => handleClick(index)}
@@ -1224,11 +1259,20 @@ function Viajes() {
 
                                                                         <ListItemText primary={`Ruta: ${p.m_sRuta}`} />
                                                                         {
-                                                                            !p.m_nIdSalida && !p.deshabilitado  &&
+                                                                            ((!p.m_nIdSalida || p.m_bSalidaCancelada) && !p.deshabilitado)  &&
 
                                                                             <Link  style={{cursor: "pointer"}}
                                                                                   onClick={() => showSalidaDialog(p)}>Marcar
                                                                                 Salida</Link>
+                                                                        }
+                                                                        {
+                                                                            p.m_nIdSalida && !p.m_nIdLlegada && !p.m_bSalidaCancelada && !p.deshabilitado  &&
+                                                                            <>
+                                                                                <Link  style={{cursor: "pointer"}}
+                                                                                       onClick={() => showCancelarDialog(p)}>Cancelar Salida</Link>
+                                                                                -
+                                                                            </>
+
                                                                         }
 
                                                                         {/*{!p.m_dFechaLlegada  && !p.m_dFechaSalida  &&
@@ -1237,7 +1281,7 @@ function Viajes() {
 
 
                                                                         {
-                                                                            p.m_nIdSalida && !p.m_nIdLlegada && !p.deshabilitado  &&
+                                                                            p.m_nIdSalida && !p.m_bSalidaCancelada && !p.m_nIdLlegada && !p.deshabilitado  &&
 
                                                                             <Link style={{cursor: "pointer"}}
                                                                                   onClick={() => showLlegadaDialog(p)}>Marcar

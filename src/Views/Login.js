@@ -47,7 +47,6 @@ function Login() {
       try {
         //debugger;
         if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
-          console.log(respuesta.data)
           localStorage.setItem("accessToken", true);
           localStorage.setItem("UsuarioId", respuesta.data.m_nIdUsuario);
           localStorage.setItem("RFC",rfc);
