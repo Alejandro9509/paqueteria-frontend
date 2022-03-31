@@ -533,11 +533,13 @@ function Recoleccion() {
             }
         });
         if (event.target.name === "estadoEnt") {
+            setRepetirConceptos(true)
             obtenerMunicipiosByIdEstado(event.target.value).then(({data}) => {
                 setDataMunicipiosEntregaDD(data)
             })
         }
         if (event.target.name === "municipioEnt") {
+            setRepetirConceptos(true)
             obtenerCodigosPostalesPorEstadoMunicipio(recoleccionDD.estadoRec, event.target.value).then(({data}) => {
                 setDataCodigosPostalesRecoleccionDD(data)
             })
@@ -608,7 +610,7 @@ function Recoleccion() {
     }
 
     const handleChangeRecoleccionDD = (event) => {
-        setRepetirConceptos(true)
+       
         event.preventDefault();
         setRecoleccionDD(recoleccionDD => {
             return {
@@ -617,11 +619,13 @@ function Recoleccion() {
             }
         });
         if (event.target.name === "estadoRec") {
+            setRepetirConceptos(true)
             obtenerMunicipiosByIdEstado(event.target.value).then(({data}) => {
                 setDataMunicipiosRecoleccionDD(data)
             })
         }
         if (event.target.name === "municipioRec") {
+            setRepetirConceptos(true)
             obtenerCodigosPostalesPorEstadoMunicipio(recoleccionDD.estadoRec, event.target.value).then(({data}) => {
                 setDataCodigosPostalesRecoleccionDD(data)
             })

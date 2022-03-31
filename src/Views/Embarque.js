@@ -12,7 +12,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import InputAdornment from "@material-ui/core/InputAdornment";
-import {getCurrentDateTime} from "../Util/Util"
+import {getCurrentDateTime,validarDerecho} from "../Util/Util"
 import {
     ReactTable,
     useTable,
@@ -272,7 +272,7 @@ function Embarque(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar">
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101423)}>
                             <a
                                 onClick={() => {
                                     handleShowModificar(row.row,row.row.m_nIdEmbarque)}}
@@ -772,7 +772,6 @@ function Embarque(props) {
     }
 
     const handleChangeEntregaDD = (event) => {
-        setRepetirConceptos(true)
         event.preventDefault();
         setEntregaDD(entregaDD => {
             return{
@@ -781,8 +780,15 @@ function Embarque(props) {
             }
         });
         if (event.target.name === "estadoEnt"){
+            setRepetirConceptos(true)
             obtenerMunicipiosByIdEstado(event.target.value).then(({data}) =>{
                 setDataMunicipiosEntregaDD(data)
+            })
+        }
+        if (event.target.name === "municipioEnt") {
+            setRepetirConceptos(true)
+            obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoRec, event.target.value).then(({data}) => {
+                setDataCodigosPostalesEntregaDD(data)
             })
         }
     };
