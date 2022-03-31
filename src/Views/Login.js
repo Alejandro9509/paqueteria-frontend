@@ -12,9 +12,11 @@ import Localizacion from "../iconos/Localizacion.png"
 import HombreCamion from "../iconos/HombreCamion.png"
 import AplicacionMovil from "../iconos/apps.png"
 import LogoPaqueteria from "../iconos/LogoPaqueteria.png"
+import { API_HEADERS } from "../Constants";
+
 
 import Noty from 'noty';
-
+const headers = API_HEADERS
 function showSuccess(mensaje) {
   new Noty({
     type: "information",
@@ -24,9 +26,6 @@ function showSuccess(mensaje) {
   }).show()
 }
 
-const headers = {
-  'Content-Type': 'application/json'
-}
 function Login() {
 
   const [state, setState] = React.useState({
@@ -42,12 +41,12 @@ function Login() {
     //const pass = sha512($("#password").val());
     const pass = $("#password").val();
 
-    const url = `${process.env.REACT_APP_API_URL}/Usuarios/ValidarLogin/` + user + "/" + pass + "/" + rfc;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/ValidarLogin/'${user}'/'${pass}' `;
     axios.get(url, { headers }).then(respuesta => {
       try {
         //debugger;
         if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
-          console.log(respuesta.data)
+          localStorage.setItem("Permisos",JSON.stringify(respuesta.data.m_arrayPermisos))
           localStorage.setItem("accessToken", true);
           localStorage.setItem("UsuarioId", respuesta.data.m_nIdUsuario);
           localStorage.setItem("RFC",rfc);

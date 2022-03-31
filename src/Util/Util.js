@@ -259,3 +259,6 @@ export const getRandomId = () => {
   return Math.floor(Math.random() * 10000)
 }
 
+export function validarDerecho(idDerecho){
+    return JSON.parse(localStorage.getItem("Permisos")).map(d => d.IdProcesos).includes(idDerecho)
+}
