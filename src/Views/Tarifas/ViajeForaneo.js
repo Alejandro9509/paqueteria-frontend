@@ -258,6 +258,8 @@ export default function ViajeForaneo(props) {
                                 unidadesMedidaListado={filtrarUnidadesMedidaViajeForaneo}
                                 onGrupoDataChange={handleOnGrupoDataChange}
                                 disabled={props.disabled}
+                                showDialogZonas={props.showDialogZonas}
+                                handleShowDialogZonas={props.handleShowDialogZonas}
                             />
                         )
                     }

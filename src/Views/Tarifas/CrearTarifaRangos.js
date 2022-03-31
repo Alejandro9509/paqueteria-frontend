@@ -258,15 +258,21 @@ export default function CrearTarifaRangos(props) {
         setViajesForaneosListado(newViajes.filter(i => i.idViaje !== viaje.idViaje))
     }
 
+    const [showDialogZonas, setShowDialogZonas] = useState(false)
+    const handleShowDialogZonas = (show) => {
+        setShowDialogZonas(show)
+    }
     const handleOnRequestZonasBySucursal = (idSucursal) => {
         obtenerListadoZonaOperativaBySucursal(idSucursal).then(respuesta => {
             setZonasListado(respuesta.data)
+            setShowDialogZonas(true)
         })
     }
 
     const handleOnRequestZonasByDestino = (idDestino) => {
         obtenerListadoZonaOperativaByOrigenDestino(idDestino).then(respuesta => {
             setZonasListado(respuesta.data)
+            setShowDialogZonas(true)
         })
     }
 
@@ -665,6 +671,8 @@ export default function CrearTarifaRangos(props) {
                                 onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
                                 productosListado={productosListado}
                                 disabled={props.disabled}
+                                showDialogZonas={showDialogZonas}
+                                handleShowDialogZonas={handleShowDialogZonas}
                             />
                         )
                     }
@@ -710,6 +718,8 @@ export default function CrearTarifaRangos(props) {
                                 onRequestZonasByDestino={handleOnRequestZonasByDestino}
                                 productosListado={productosListado}
                                 disabled={props.disabled}
+                                showDialogZonas={showDialogZonas}
+                                handleShowDialogZonas={handleShowDialogZonas}
                             />
                         )
                     }

@@ -400,7 +400,7 @@ function Viajes() {
 
 
     useEffect(value => {
-       
+       console.log("Entro")
         if(viajeSeleccionado){
             let rutaActiva = true
         viajeSeleccionado.m_arrTrayectos.map((p, index) => {
@@ -798,7 +798,6 @@ function Viajes() {
             return {...state, idViaje: row.m_nIdViaje}
         })
         obtenerDetalleParadasIdViaje(row.m_nIdViaje).then(respuesta => {
-            console.log(respuesta)
             //setViajeSeleccionado(row)
             setParadasListado(respuesta.data);
         });
@@ -1220,7 +1219,7 @@ function Viajes() {
                                                             console.log(viajeSeleccionado)
                                                             return (
                                                                 <div>
-                                                                    <ListItem button key={index}  onClick={() => handleClick(index)}
+                                                                    <ListItem button key={p.m_nIdDestino+index+p.m_nIdOrigen}  onClick={() => handleClick(index)}
                                                                     >
 
                                                                         <ListItemText primary={`Ruta: ${p.m_sRuta}`} />
