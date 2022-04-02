@@ -15,6 +15,7 @@ import { confirmAlert } from "react-confirm-alert";
 import { dataGridLocaleText } from "../../Constants";
 import { obtenerEmbalajes } from "../../Util/Contexts/EmbalajesContext";
 import $ from "jquery";
+import {validarDerecho} from "../../Util/Util"
 import {
   obtenerProductos,
   obtenerProductoById,
@@ -66,6 +67,7 @@ function Productos() {
                 data-toggle={"tab"}
                 onClick={() => handleShowModificar(row.row)}
                 className={"btn btn-default btn-xs"}
+                disabled={!validarDerecho(9101389)}
               >
                 <i
                   className={"fa fa-pencil-square-o"}

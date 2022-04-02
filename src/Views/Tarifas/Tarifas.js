@@ -18,6 +18,7 @@ import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConf
 import {ContentState, EditorState} from "draft-js";
 import htmlToDraft from "html-to-draftjs";
 import TarifasRangos from "./TarifasRangos";
+import {validarDerecho} from "../../Util/Util"
 window.jQuery = window.$ = $;
 const headers = API_HEADERS
 function showSuccess(mensaje) {

@@ -42,7 +42,7 @@ function Login() {
     const pass = $("#password").val();
 
     const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/ValidarLogin/'${user}'/'${pass}' `;
-    axios.get(url, { headers }).then(respuesta => {
+    axios.get(url, { headers: {...headers, RFC: rfc} }).then(respuesta => {
       try {
         //debugger;
         if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {

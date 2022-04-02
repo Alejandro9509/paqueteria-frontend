@@ -14,6 +14,7 @@ import { TextField, Tooltip } from "@material-ui/core";
 import { agregarTipoServicio, eliminarTipoServicio, modificarTipoServicio, obtenerTipoServicio, obtenerTipoServicioId } from "../Util/Contexts/TipoServiciosContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import $ from "jquery";
+import {validarDerecho} from "../Util/Util"
 window.jQuery = window.$ = $;
 function showSuccess(mensaje) {
     new Noty({
@@ -175,7 +176,8 @@ function TiposServicio() {
                     <div>
                         <Tooltip title="Modificar">
                             <a onClick={() => (handleShowModificar(row.row.m_nIdTipoServicio))}
-                               className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
+                               className="btn btn-default btn-xs"
+                               disabled={!validarDerecho(9101316)}><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
@@ -184,7 +186,8 @@ function TiposServicio() {
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoServicio))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoServicio))}
+                            disabled={!validarDerecho(9101317)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
                     </div>

@@ -1,5 +1,6 @@
 import React, {useEffect, useState, setData, useMemo, Component} from "react";
 import {cubicarGuias, remove_array_element} from "../Util/Util";
+import {validarDerecho} from "../Util/Util"
 import {
     ButtonBase,
     Checkbox,
@@ -151,6 +152,7 @@ function Informes({history}) {
                         <a
                             onClick={() => handleShowModificar(row.row.m_nIdInforme)}
                             className="btn btn-default btn-xs"
+                            disabled={!validarDerecho(9101433)}
                         >
                             <i
                                 className="fa fa-pencil-square-o"
@@ -160,12 +162,13 @@ function Informes({history}) {
                         <a
                             className="btn btn-default btn-xs"
                             onClick={() => handleShowConsultar(row.row.m_nIdInforme)}
+                            disabled={!validarDerecho(9101432)}
                         >
                             <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                         </a>
                         <Tooltip title="Reporte">
                             <a  className="btn btn-default btn-xs"
-                                onClick={() => generarReporte(row.row.m_nIdInforme, row.row.m_sFolioInforme)}><i className="zmdi zmdi-file"
+                                onClick={() => generarReporte(row.row.m_nIdInforme, row.row.m_sFolioInforme)}disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"
                                                                                                            style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
@@ -173,6 +176,7 @@ function Informes({history}) {
                             href="#"
                             className="btn btn-default btn-xs"
                             onClick={() => handleEliminar(row.row.m_nIdInforme)}
+                            disabled={!validarDerecho(9101434)}
                         >
                             <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>
                         </a>
@@ -2656,6 +2660,7 @@ function Informes({history}) {
                                                 type="button"
                                                 onClick={handleShowListado}
                                                 className="btn btn-secondary secondary-btn"
+                                                disabled={!validarDerecho(9101436)}
                                             >
                                                 Cancelar
                                             </Button>

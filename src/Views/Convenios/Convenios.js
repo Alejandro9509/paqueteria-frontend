@@ -16,6 +16,7 @@ import Noty from "noty";
 import {obtenerConvenios} from "../../Util/Contexts/ConveniosContext";
 import TarifasRangos from "../Tarifas/TarifasRangos";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
+import {validarDerecho} from "../../Util/Util"
 
 window.jQuery = window.$ = $;
 
@@ -40,7 +41,8 @@ function Convenios(){
                         <Tooltip title="Modificar">
                             <a href="#Agregar" role="tab" data-toggle="tab"
                                onClick={() => (handleShowModificar(row.row))}
-                               className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
+                               className="btn btn-default btn-xs"
+                               disabled={!validarDerecho(9101395)}><i className="fa fa-pencil-square-o"
                                                                      style={{ color: "#F9A03E" }} /></a>
                         </Tooltip>
                         <Tooltip title="Consultar">
@@ -61,7 +63,8 @@ function Convenios(){
                                            label: 'No',
                                        }
                                    ]
-                               })}><i className="zmdi zmdi-delete"
+                               })}
+                               disabled={!validarDerecho(9101396)}><i className="zmdi zmdi-delete"
                                       style={{ color: "#F30B0B" }} /></a>
                         </Tooltip>
 

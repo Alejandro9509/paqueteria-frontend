@@ -13,6 +13,8 @@ import L from 'leaflet';
 import { arrayPonts } from '../Util/Data';
 import MarkerImage from '../iconos/Mapa/marker.png';
 import {API_HEADERS} from "../Constants";
+import {validarDerecho} from "../Util/Util"
+
 
 const XTourClient = window.XTourClient;
 

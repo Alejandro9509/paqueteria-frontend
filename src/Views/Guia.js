@@ -17,7 +17,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import * as XLSX from 'xlsx';
 import {useTable, useFilters, useAsyncDebounce, useSortBy} from 'react-table'
 import $ from 'jquery';
-import {getUniqueListBy, remove_array_element} from "../Util/Util";
+import {getUniqueListBy, validarDerecho, remove_array_element} from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
 import {DataGrid} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
@@ -730,7 +730,7 @@ function Guia(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar">
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457)}>
                             <a 
                                onClick={() => (handleShowModificar(row.row.m_nIdGuia,row.row.m_nFolioGuia))}
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
@@ -743,32 +743,32 @@ function Guia(props) {
                                                                                            style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Reporte">
+                        <Tooltip title="Reporte" disabled={!validarDerecho(9101462)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => generarReporte(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i
                                 className="zmdi zmdi-file"
                                 style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Ocurre">
+                        <Tooltip title="Ocurre" disabled={!validarDerecho(9101463)}>
                             <a className="btn btn-default btn-xs"
                                onClick={(event) => mostrarDialogoOcurre(event, row.row.m_nIdGuia)}><i
                                 className="zmdi zmdi-sign-in" style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Imprimir">
+                        <Tooltip title="Imprimir" disabled={!validarDerecho(9101464)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => printTicket(row.row.m_nIdGuia)}><i className="zmdi zmdi-print"
                                                                                  style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Imprimir etiquetas">
+                        <Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i className="zmdi zmdi-print"
                                                                                  style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Eliminar">
+                        <Tooltip title="Eliminar" disabled={!validarDerecho(9101458)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete"
                                                                                       style={{color: "#F30B0B"}}/></a>
@@ -1857,9 +1857,9 @@ function Guia(props) {
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
-                        <li>
-                            <a onClick={() => handleShowAgregar()}>
-                                <i className="fa fa-plus-circle"/> {state.agregar}
+                        <li>     
+                            <a onClick={() => handleShowAgregar()} style = {{pointerEvents: validarDerecho(9101423)?"default":"none"}} >
+                                <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
                         {/*<li>*/}

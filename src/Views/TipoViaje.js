@@ -14,6 +14,7 @@ import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
 import { agregarTipoViaje, eliminarTipoViaje, modificarTipoViaje, obtenerTipoViaje, obtenerTipoViajeId } from "../Util/Contexts/TipoViajeContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import {validarDerecho} from "../Util/Util"
 
 function showSuccess(mensaje) {
     new Noty({
@@ -164,7 +165,8 @@ function TipoViaje() {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTipoViaje))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTipoViaje))} className="btn btn-default btn-xs"
+                            disabled={!validarDerecho(9101322)}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
@@ -172,7 +174,8 @@ function TipoViaje() {
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoViaje))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoViaje))}
+                            disabled={!validarDerecho(9101323)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
                     </div>
