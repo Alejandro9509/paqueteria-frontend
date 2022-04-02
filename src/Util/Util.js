@@ -260,5 +260,6 @@ export const getRandomId = () => {
 }
 
 export function validarDerecho(idDerecho){
-    return JSON.parse(localStorage.getItem("Permisos")).map(d => d.IdProcesos).includes(idDerecho)
+
+    return JSON.parse(localStorage.getItem("Permisos")).map(d => d.IdProceso).includes(idDerecho)
 }
