@@ -2006,6 +2006,7 @@ function Recoleccion() {
         });
     };
     const handleEntregaEnSucursalCheckbox = (event) => {
+        setRepetirConceptos(true)
         setState({
           ...state,
           entregaEnSucursal: !state.entregaEnSucursal,
