@@ -33,7 +33,7 @@ export default function DialogCheckbox(props) {
     return(
         <Dialog
             fullWidth={true}
-            maxWidth={'xl'}
+            maxWidth={'md'}
             open={props.openDialog}
             onClose={handleShowDialog}
             aria-labelledby="max-width-dialog-title"

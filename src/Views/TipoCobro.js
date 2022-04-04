@@ -10,7 +10,7 @@ import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
 import { agregarTipoCobro, eliminarTipoCobro, modificarTipoCobro, obtenerTipoCobroId, obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
-
+import {validarDerecho} from "../Util/Util"
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -128,7 +128,8 @@ function TipoCobro() {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTipoCobro))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTipoCobro))} className="btn btn-default btn-xs"
+                            disabled={!validarDerecho(9101351)}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
@@ -136,7 +137,8 @@ function TipoCobro() {
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoCobro))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoCobro))}
+                            disabled={!validarDerecho(9101352)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
                     </div>

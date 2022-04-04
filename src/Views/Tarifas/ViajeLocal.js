@@ -100,6 +100,7 @@ export default function ViajeLocal(props) {
                 selection: state.zonas.map(i => i.m_nIdZona)
             })
         }else {
+            props.handleShowDialogZonas(false)
             setDialogZonas({
                 ...dialogZonas,
                 showDialogZonas: false,
@@ -151,7 +152,7 @@ export default function ViajeLocal(props) {
             ...state,
             zonas: zonas
         })
-
+        props.handleShowDialogZonas(false)
         setDialogZonas({
             ...dialogZonas,
             showDialogZonas: false,
@@ -230,7 +231,7 @@ export default function ViajeLocal(props) {
         <div>
             <Paper variant={"outlined"} style={{padding: '10px', marginTop: '10px'}}>
                 {
-                    dialogZonas.showDialogZonas &&
+                    props.showDialogZonas &&
                     <DialogCheckbox
                         handleShowDialog={handleShowDialogZonas}
                         handleOnConfirmSelection={handleConfirmZonas}

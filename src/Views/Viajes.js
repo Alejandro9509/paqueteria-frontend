@@ -20,6 +20,7 @@ import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import {API_HEADERS, dataGridLocaleText} from "../Constants";
 import $ from "jquery";
+import {validarDerecho} from "../Util/Util"
 import {
     Button,
     Dialog,
@@ -303,20 +304,23 @@ function Viajes() {
                         <Tooltip title="Modificar">
                             <a
                                 onClick={() => (handleShowModificar(row.row.m_nIdViaje))}
-                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
+                                className="btn btn-default btn-xs"
+                                disabled={!validarDerecho(9101441)}><i className="fa fa-pencil-square-o"
                                                                       style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
                             <a className="btn btn-default btn-xs"
-                               onClick={() => (handleShowConsultar(row.row.m_nIdViaje))}><i className="fa fa-eye"
+                               onClick={() => (handleShowConsultar(row.row.m_nIdViaje))}
+                               disabled={!validarDerecho(9101440)}><i className="fa fa-eye"
                                                                                             style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
 
                         <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs"
-                               onClick={() => (handleEliminar(row.row.m_nIdViaje))}><i className="zmdi zmdi-delete"
+                               onClick={() => (handleEliminar(row.row.m_nIdViaje))}
+                               disabled={!validarDerecho(9101442)}><i className="zmdi zmdi-delete"
                                                                                        style={{color: "#F30B0B"}}/></a>
 
                         </Tooltip>
