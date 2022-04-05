@@ -15,6 +15,9 @@ import CrearTarifa from "../Tarifas/CrearTarifa";
 import AgregarClasificacionViaje from "./AgregarClasificacionViaje";
 import { eliminarClasificacionViaje, agregarClasificacionViaje, modificarClasificacionViaje, obtenerClasificacionViaje } from '../../Util/Contexts/ClasificacionViajeContext';
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
+import {validarDerecho} from "../../Util/Util"
+/* import {makeStyles} from "@material-ui/core/styles";
+ */
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -25,6 +28,14 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
+/* const styles = {
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    }
+};
+const useStyles = makeStyles(styles); */
 
 class ClasificacionViaje extends Component {
     constructor(props) {
@@ -49,11 +60,13 @@ class ClasificacionViaje extends Component {
                         return (
                             <div>
                                 <Tooltip title="Modificar">
-                                    <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (this.handleShowModificar(row.row.m_nIdClasificacionViajes))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                                    <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (this.handleShowModificar(row.row.m_nIdClasificacionViajes))} className="btn btn-default btn-xs"
+                                    disabled={!validarDerecho(9101328)}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                                 </Tooltip>
                                 <Tooltip title="Eliminar">
-                                    <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdClasificacionViajes))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                    <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdClasificacionViajes))}
+                                    disabled={!validarDerecho(9101329)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                                 </Tooltip>
                             </div>

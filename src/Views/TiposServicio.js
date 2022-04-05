@@ -31,7 +31,11 @@ const styles = {
     },
     noSeleccionado: {
         backgroundColor: "#FFFFFF",
-    }
+    },
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
 };
 const useStyles = makeStyles(styles);
 
@@ -433,7 +437,7 @@ function TiposServicio() {
                             </a>
                         </li>
                         <li>
-                            <a onClick={() => handleShowAgregar()}>
+                            <a className= {validarDerecho(9101315)? "":classes.disabled} onClick={() => handleShowAgregar()}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>

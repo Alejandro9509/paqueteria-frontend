@@ -1858,7 +1858,7 @@ function Guia(props) {
                             </a>
                         </li>
                         <li>     
-                            <a onClick={() => handleShowAgregar()} style = {{pointerEvents: validarDerecho(9101423)?"default":"none"}} >
+                            <a className= {validarDerecho(9101456)? "":classes.disabled} onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
@@ -1892,7 +1892,7 @@ function Guia(props) {
                             </li>
                         }
                         <li>
-                            <a className={(state.idGuia !== 0 && state.cambioCobro) ? "" : classes.disabled}
+                            <a className={(state.idGuia !== 0 && state.cambioCobro && validarDerecho(9101459))? "" : classes.disabled}
                                onClick={() => {
                                    getAllDataEstatusGuia()
                                    setState({...state, openCambiarEstatus: true})
@@ -1901,7 +1901,7 @@ function Guia(props) {
                             </a>
                         </li>
                         <li>
-                            <a className={(state.idGuia !== 0) ? "" : classes.disabled}
+                            <a className={(state.idGuia !== 0 && validarDerecho(9101460)) ? "" : classes.disabled}
                                onClick={() => {
                                    setState({...state, openAsignarTrayectos: true})
                                }}>
@@ -1911,7 +1911,7 @@ function Guia(props) {
 
                         <li>
                             <a data-toggle="tab"  onClick={handleShowCancelar}
-                               className={state.idGuia === 0 ? classes.disabled : ""}>
+                               className={state.idGuia === 0 && !validarDerecho(9101461)? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>

@@ -168,7 +168,7 @@ function Informes({history}) {
                         </a>
                         <Tooltip title="Reporte">
                             <a  className="btn btn-default btn-xs"
-                                onClick={() => generarReporte(row.row.m_nIdInforme, row.row.m_sFolioInforme)}disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"
+                                onClick={() => generarReporte(row.row.m_nIdInforme, row.row.m_sFolioInforme)} disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"
                                                                                                            style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
@@ -1391,8 +1391,8 @@ function Informes({history}) {
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
-                        <li>
-                            <a onClick={handleShowAgregar}>
+                        <li>                            
+                            <a className= {validarDerecho(9101431)? "":classes.disabled} onClick= {handleShowAgregar} >
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -1417,14 +1417,15 @@ function Informes({history}) {
                                 data-toggle="tab"
                                 href="#Cancelar"
                                 onClick={handleShowCancelar}
-                                className={state.IdInforme == 0 ? classes.disabled : ""}
+                                className={state.IdInforme == 0 && !validarDerecho(9101436)? classes.disabled : ""}
                             >
                                 <i className="fa fa-ban"/> Cancelar
                             </a>
                         </li>
 
                         <li>
-                            <a data-toggle="tab" href="#Cubicar" onClick={handleShowCubicar}>
+                            <a data-toggle="tab" href="#Cubicar" onClick={handleShowCubicar}
+                               className= {validarDerecho(9101437)? "":classes.disabled}>
                                 <i className="fa fa-adjust"/> Cubicar / Optimizar Rutas
                             </a>
                         </li>

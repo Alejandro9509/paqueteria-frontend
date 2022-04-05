@@ -11,6 +11,8 @@ import { TextField, Tooltip } from "@material-ui/core";
 import { agregarTipoCobro, eliminarTipoCobro, modificarTipoCobro, obtenerTipoCobroId, obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import {validarDerecho} from "../Util/Util"
+import {makeStyles} from "@material-ui/core/styles";
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -20,8 +22,16 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-function TipoCobro() {
+const styles = {
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    }
+};
+const useStyles = makeStyles(styles);
 
+function TipoCobro() {
+    const classes = useStyles();
     const [data, setData] = React.useState([])
     const [state, setState] = React.useState({
         idTipoCobro: 0,
@@ -228,7 +238,7 @@ const handleClickCancelar = () =>{
             </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                            <a className= {validarDerecho(9101350)? "":classes.disabled} data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
