@@ -17,7 +17,7 @@ import { eliminarClasificacionViaje, agregarClasificacionViaje, modificarClasifi
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 import {validarDerecho} from "../../Util/Util"
 /* import {makeStyles} from "@material-ui/core/styles";
- */
+import { withStyles } from '@material-ui/core/styles'; */
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -29,13 +29,14 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-/* const styles = {
+/* const styles = theme =>( {
     disabled: {
         pointerEvents: "none",
         cursor: "default",
     }
-};
-const useStyles = makeStyles(styles); */
+});
+
+const useStyles = makeStyles(styles);  */
 
 class ClasificacionViaje extends Component {
     constructor(props) {
@@ -243,6 +244,7 @@ class ClasificacionViaje extends Component {
     }
 
     render() {
+        /* const {classes} = this.props; */
         const { height, data, columns, edit, consult } = this.state
 
         return (
@@ -339,3 +341,4 @@ ClasificacionViaje.propTypes = {
 };
 
 export default ClasificacionViaje;
+/* export default withStyles(useStyles)(ClasificacionViaje); */

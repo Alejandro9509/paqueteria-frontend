@@ -93,7 +93,7 @@ const styles = {
     disabled: {
         pointerEvents: "none",
         cursor: "default",
-    }
+    },
 };
 const useStyles = makeStyles(styles);
 window.jQuery = window.$ = $;
@@ -1166,10 +1166,12 @@ function Viajes() {
                         </li>
                         <li>
                             <a
+                                
+                                className= {(state.idViaje === 0 || !validarDerecho(9101443))? classes.disabled : ""}
                                 data-toggle="tab"
                                 href="#Cancelar"
                                 onClick={handleShowCancelar}
-                                className={state.idViaje === 0 && !validarDerecho(9101443)? classes.disabled : ""}
+                                
                             >
                                 <i className="fa fa-ban"/> Cancelar
                             </a>

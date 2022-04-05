@@ -1911,7 +1911,7 @@ function Guia(props) {
 
                         <li>
                             <a data-toggle="tab"  onClick={handleShowCancelar}
-                               className={state.idGuia === 0 && !validarDerecho(9101461)? classes.disabled : ""}>
+                               className={(state.idGuia === 0 || !validarDerecho(9101461))? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>
