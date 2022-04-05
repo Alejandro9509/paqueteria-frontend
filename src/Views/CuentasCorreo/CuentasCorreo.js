@@ -9,6 +9,7 @@ import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
+import {validarDerecho} from "../../Util/Util"
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -274,7 +275,7 @@ class CuentasCorreo extends Component {
                 <div className={"row"}>
                     <button type="button" className="btn btn-secondary secondary-btn" onClick={this.props.closeDialog}>Cancelar</button>
 
-                    <button className="btn btn-primary primary-btn" type={"submit"} >Aceptar</button>
+                    <button disabled={!validarDerecho(9101272)} className="btn btn-primary primary-btn" type={"submit"} >Aceptar</button>
                 </div>
 
             </form>

@@ -12,7 +12,7 @@ import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
 import { agregarTipoCambio, eliminarTipoCambio, modificarTipoCambio, obtenerTipoCambio, obtenerTipoCambioId } from "../Util/Contexts/TipoCambioContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
-
+import {validarDerecho} from "../Util/Util"
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -28,6 +28,10 @@ const styles = {
     },
     noSeleccionado: {
         backgroundColor: "#FFFFFF",
+    },
+    disabled:{
+        pointerEvents:"none",
+        cursor:"default"
     }
 };
 const useStyles = makeStyles(styles);
@@ -147,7 +151,7 @@ function TipoCambio() {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar">
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101266)}>
                             <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTipoCambio))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
@@ -155,7 +159,7 @@ function TipoCambio() {
                             <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdTipoCambio))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
-                        <Tooltip title="Eliminar">
+                        <Tooltip title="Eliminar" disabled={!validarDerecho(9101267)}>
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
                                    title: 'Confirmar Eliminar',
@@ -341,7 +345,7 @@ function TipoCambio() {
             </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                            <a className={validarDerecho(9101265)?"":classes.disabled}  data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>

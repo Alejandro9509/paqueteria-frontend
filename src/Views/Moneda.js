@@ -12,7 +12,7 @@ import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
 import { agregarMonedas, eliminarMonedas, modificarMonedas, obtenerMonedas, obtenerMonedasId } from "../Util/Contexts/MonedaContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
-
+import {validarDerecho} from "../Util/Util"
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -28,6 +28,10 @@ const styles = {
     },
     noSeleccionado: {
         backgroundColor: "#FFFFFF",
+    },
+    disabled:{
+        pointerEvents:"none",
+        cursor:"default",
     }
 };
 const useStyles = makeStyles(styles);
@@ -151,16 +155,16 @@ function Moneda() {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdMoneda))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101269)}>
+                            <a   href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdMoneda))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
                             <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdMoneda))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
-                        <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdMoneda))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                        <Tooltip title="Eliminar" disabled={!validarDerecho(9101270)}>
+                            <a  href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdMoneda))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
                     </div>
@@ -263,7 +267,7 @@ function Moneda() {
             </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                            <a className={validarDerecho(9101268)?"":classes.disabled}  data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>

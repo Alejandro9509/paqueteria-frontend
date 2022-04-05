@@ -3,16 +3,19 @@ import PropTypes from 'prop-types';
 import Cabecera from '../../Components/Template/Cabecera';
 import BarraLateralIzquierda from '../../Components/Template/BarraLateralIzquierda';
 import Noty from 'noty';
+import { withStyles } from '@material-ui/core/styles';
 import axios from "axios";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
+import { Tooltip } from "@material-ui/core";
 import { Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core";
 import AgregarFolio from "./AgregarFolios";
 import { agregarFolios, eliminarFolios, obtenerFolios } from '../../Util/Contexts/FoliosContext';
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
+import {validarDerecho} from "../../Util/Util"
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -24,6 +27,12 @@ function showSuccess(mensaje) {
     }).show()
 }
 
+const useStyles = theme=>({
+    disabled:{
+        pointerEvents:"none",
+        cursor:"default",
+    }
+});
 
 class Folios extends Component {
     constructor(props) {
@@ -46,7 +55,9 @@ class Folios extends Component {
                     renderCell: (row) => {
                         return (
                             <div>
+                                   <Tooltip title="Modificar" disabled={!validarDerecho(9101264)}>
                                 <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdFolio))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                   </Tooltip>
                             </div>
                         )
                     }
@@ -163,6 +174,7 @@ class Folios extends Component {
     }
 
     render() {
+        const { classes } = this.props;
         const { height, data, columns, edit, consult } = this.state
 
         return (
@@ -208,7 +220,7 @@ class Folios extends Component {
                                 </a>
                             </li>
                             <li >
-                                <a data-toggle="tab" data_id="2" href="#Agregar" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
+                                <a className={validarDerecho(9101263)?"":classes.disabled} data-toggle="tab" data_id="2" href="#Agregar" onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
                                     <i className="fa fa-plus-circle" /> {this.state.agregar}
                                 </a>
                             </li>
@@ -266,4 +278,4 @@ Folios.propTypes = {
 
 };
 
-export default Folios;
+export default withStyles(useStyles)(Folios);
