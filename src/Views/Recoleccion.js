@@ -29,7 +29,7 @@ import {
     useSortBy,
 } from "react-table";
 import $ from "jquery";
-import {getCurrentDateTime} from "../Util/Util"
+import {getCurrentDateTime, validarDerecho} from "../Util/Util"
 import {remove_array_element} from "../Util/Util";
 import {useHistory, Redirect} from 'react-router-dom';
 import {confirmAlert} from 'react-confirm-alert'; // Import
@@ -2058,7 +2058,7 @@ function Recoleccion() {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar">
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101415)}>
                             <a data-toggle="tab"
                                onClick={() =>
                                  { if(row.row.m_nIdEstatusRecoleccion==1 ||row.row.m_nIdEstatusRecoleccion==6){
@@ -2078,19 +2078,19 @@ function Recoleccion() {
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
-                        <Tooltip title="Consultar">
+                        <Tooltip title="Consultar" disabled={!validarDerecho(9101419)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row.m_nIdRecoleccion))}><i className="fa fa-eye"
                                                                                                   style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
-                        <Tooltip title="Reporte">
+                        <Tooltip title="Reporte" disabled={!validarDerecho(9101418)}>
                             <a  className="btn btn-default btn-xs"
                                 onClick={() => generarReporte(row.row.m_nIdRecoleccion, row.row.m_sFolioRecoleccion)}><i className="zmdi zmdi-file"
                                                                                                                  style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
 
-                        <Tooltip title="Eliminar">
+                        <Tooltip title="Eliminar" disabled={!validarDerecho(9101416)}>
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
                                    title: 'Confirmar Eliminar',
@@ -3487,13 +3487,13 @@ function Recoleccion() {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" onClick={(event) => handleShowListado(event)}>
+                            <a   data-toggle="tab" onClick={(event) => handleShowListado(event)}>
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
 
                         <li>
-                            <a data-toggle="tab" onClick={handleShowAgregar}>
+                            <a className={validarDerecho(9101414)?"":classes.disabled} data-toggle="tab" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -3514,8 +3514,7 @@ function Recoleccion() {
                         </li>
 
                         <li>
-                            <a onClick={handleShowCancelar}
-                               className={state.idRecoleccion === 0 ? classes.disabled : ""}>
+                            <a className={(state.idRecoleccion === 0 || !validarDerecho(9101420)) ? classes.disabled : ""} onClick={handleShowCancelar}>
                                 <i className="zmdi zmdi-print"/> Cancelar
                             </a>
                         </li>
@@ -3535,7 +3534,7 @@ function Recoleccion() {
                         </li>
 
                         <li style={{float: "right"}}>
-                            <a data-toggle="tab" href="#" className={state.idRecoleccion === 0 ? classes.disabled : ""}
+                            <a  className={validarDerecho(9101417)?"":classes.disabled} data-toggle="tab" href="#" className={state.idRecoleccion === 0 ? classes.disabled : ""}
                                style={{textAlign: "right"}} onClick={() => setRedirect(true)}>
                                 Generar embarque
                             </a>
