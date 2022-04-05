@@ -8,6 +8,8 @@ import $ from "jquery";
 import {Tooltip} from "@material-ui/core";
 import {confirmAlert} from "react-confirm-alert";
 import {eliminarCorte, obtenerCortes} from "../../Util/Contexts/CorteCajaContext";
+import {validarDerecho} from "../../Util/Util"
+import {makeStyles} from "@material-ui/core/styles";
 import {
     agregarZonaOperativa, eliminarZonaOperativa,
     modificarZonaOperativa, obtenerByIdZonaOperativa,
@@ -26,7 +28,16 @@ function showSuccess(mensaje) {
     }).show()
 }
 
+const styles = {
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    }
+};
+const useStyles = makeStyles(styles);
+
 function ZonaOperativa() {
+    const classes = useStyles();
     const columns = useMemo(() => [
         {
             headerName: "Acciones",
@@ -35,7 +46,7 @@ function ZonaOperativa() {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar">
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101398)}>
                             <a href="#Agregar" role="tab" data-toggle="tab"
                                onClick={() => (handleShowModificar(row.row))}
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
@@ -45,7 +56,7 @@ function ZonaOperativa() {
                             <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
                         </Tooltip>
-                        <Tooltip title="Eliminar">
+                        <Tooltip title="Eliminar" disabled={!validarDerecho(9101399)}>
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
                                    title: 'Confirmar Eliminar',
@@ -213,7 +224,7 @@ function ZonaOperativa() {
                         </li>
 
                         <li>
-                            <a data-toggle="tab" onClick={handleShowAgregar}>
+                            <a className= {validarDerecho(9101397)? "":classes.disabled} data-toggle="tab" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>

@@ -17,7 +17,8 @@ import {obtenerConvenios} from "../../Util/Contexts/ConveniosContext";
 import TarifasRangos from "../Tarifas/TarifasRangos";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import {validarDerecho} from "../../Util/Util"
-
+import {makeStyles} from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core/styles';
 window.jQuery = window.$ = $;
 
 const headers = API_HEADERS
@@ -29,7 +30,17 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
+const styles = {
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    }
+};
+const useStyles = makeStyles(styles);
+
 function Convenios(){
+    const classes = useStyles();
     const columns = useMemo(() => [
         {
             headerName: "Acciones",
@@ -38,18 +49,17 @@ function Convenios(){
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar">
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101395)}>
                             <a href="#Agregar" role="tab" data-toggle="tab"
                                onClick={() => (handleShowModificar(row.row))}
-                               className="btn btn-default btn-xs"
-                               disabled={!validarDerecho(9101395)}><i className="fa fa-pencil-square-o"
+                               className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
                                                                      style={{ color: "#F9A03E" }} /></a>
                         </Tooltip>
                         <Tooltip title="Consultar">
                             <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
                         </Tooltip>
-                        <Tooltip title="Eliminar">
+                        <Tooltip title="Eliminar" disabled={!validarDerecho(9101396)}>
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
                                    title: 'Confirmar Eliminar',
@@ -63,8 +73,7 @@ function Convenios(){
                                            label: 'No',
                                        }
                                    ]
-                               })}
-                               disabled={!validarDerecho(9101396)}><i className="zmdi zmdi-delete"
+                               })}><i className="zmdi zmdi-delete"
                                       style={{ color: "#F30B0B" }} /></a>
                         </Tooltip>
 
@@ -268,7 +277,7 @@ function Convenios(){
                                 </li>
 
                                 <li>
-                                    <a data-toggle="tab" onClick={handleShowAgregar}>
+                                    <a className= {validarDerecho(9101394)? "":classes.disabled} data-toggle="tab" onClick={handleShowAgregar}>
                                         <i className="fa fa-plus-circle" /> {state.agregar}
                                     </a>
                                 </li>
