@@ -30,7 +30,11 @@ const styles = {
     },
     noSeleccionado: {
         backgroundColor: "#FFFFFF",
-    }
+    },
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
 };
 const useStyles = makeStyles(styles);
 
@@ -388,7 +392,7 @@ function EstatusViaje() {
             </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                            <a className= {validarDerecho(9101324)? "":classes.disabled} data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
