@@ -22,6 +22,7 @@ import {
     obtenerEstatusInforme,
     obtenerEstatusViaje
 } from "../../Util/Contexts/EstatusContext";
+import {validarDerecho} from "../../Util/Util"
 import {obtenerMonedas} from "../../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../../Util/Contexts/TipoCambioContext";
 import {
@@ -559,7 +560,7 @@ function ParametrosConfiguracion2() {
                                     </Box>
                                 </Box>
                                 <Box margin={"0 auto"}>
-                                    <Button variant="contained" color="primary" style={{width: "100px"}}
+                                    <Button disabled={!validarDerecho(9101408)} variant="contained" color="primary" style={{width: "100px"}}
                                             onClick={onSubmit}>
                                         Modificar
                                     </Button>
@@ -602,7 +603,7 @@ function ParametrosConfiguracion2() {
                                     </Box>
                                 </Box>
                                 <Box margin={"0 auto"}>
-                                    <Button variant="contained" color="primary" style={{width: "100px"}}
+                                    <Button disabled={!validarDerecho(9101409)} variant="contained" color="primary" style={{width: "100px"}}
                                             onClick={onSubmit}>
                                         Modificar
                                     </Button>
@@ -642,7 +643,7 @@ function ParametrosConfiguracion2() {
                                     </Box>
                                 </Box>
                                 <Box margin={"0 auto"}>
-                                    <Button variant="contained" color="primary" style={{width: "100px"}}
+                                    <Button disabled={!validarDerecho(9101410)} variant="contained" color="primary" style={{width: "100px"}}
                                             onClick={onSubmit}>
                                         Modificar
                                     </Button>
@@ -895,7 +896,7 @@ function ParametrosConfiguracion2() {
                             </Box>
 
                             <Box margin={"0 auto"}>
-                                <Button variant="contained" color="primary" style={{width: "100px"}}
+                                <Button disabled={!validarDerecho(9101411)} variant="contained" color="primary" style={{width: "100px"}}
                                         onClick={onSubmit}>
                                     Modificar
                                 </Button>
@@ -907,7 +908,7 @@ function ParametrosConfiguracion2() {
                             <Correos
                                 data={[configuraciones.correoFacturaViaje, configuraciones.correoFacturaUltimaMilla]}
                                 modficarCorreo={modificarCorreo}>
-                                <Button variant="contained" color="primary" style={{width: "100px"}}
+                                <Button disabled={!validarDerecho(9101412)} variant="contained" color="primary" style={{width: "100px"}}
                                         onClick={onSubmit}>
                                     Modificar
                                 </Button>
