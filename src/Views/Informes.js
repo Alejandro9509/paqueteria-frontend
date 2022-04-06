@@ -3,7 +3,7 @@ import {cubicarGuias, remove_array_element} from "../Util/Util";
 import {validarDerecho} from "../Util/Util"
 import {
     ButtonBase,
-    Checkbox,
+    Checkbox, Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -198,6 +198,17 @@ function Informes({history}) {
             headerName: "Estatus",
             field: "m_sEstatusInforme",
             width: 125,
+            renderCell: (row) => {
+                return (
+                    <div align={"center"} style={{width: "100%"}}>
+                        <Chip size="small" style={{
+                            backgroundColor: `${row.row.m_sColorEstatus}`,
+                            //color: row.row.m_nIdEstatusUnidad === 1 ? "black" : "white",
+                            padding: "1px"
+                        }} label={row.row.m_sEstatusInforme}/>
+                    </div>
+                )
+            }
         },
         {
             headerName: "Ubicación actual",

@@ -337,6 +337,17 @@ function Viajes() {
             headerName: "Estatus de Viaje",
             field: "m_sEstatus",
             width: 200,
+            renderCell: (row) => {
+                return (
+                    <div align={"center"} style={{width: "100%"}}>
+                        <Chip size="small" style={{
+                            backgroundColor: `${row.row.m_sColorEstatus}`,
+                            //color: row.row.m_nIdEstatusUnidad === 1 ? "black" : "white",
+                            padding: "1px"
+                        }} label={row.row.m_sEstatus}/>
+                    </div>
+                )
+            }
         },  {
             headerName: "Folio Viaje",
             field: "m_sFolioViaje",
