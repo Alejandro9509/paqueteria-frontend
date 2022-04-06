@@ -63,6 +63,9 @@ function Configuracion() {
 
                     <div style={{ display: "flex", flexWrap: "wrap" }}>
                         {configurationRoutes.map((r, index) => {
+                            if (!r.visible){
+                                return ""
+                            }
                             return (
                                 r.isDialog ?
                                     <div className="caja-boton">

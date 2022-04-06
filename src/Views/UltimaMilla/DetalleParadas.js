@@ -61,6 +61,7 @@ import {
     enviarCorreoCFDIViaje
 } from "../../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "../SAT/EnvioCorreoDialogo";
+import {validarDerecho} from "../../Util/Util";
 function showError(mensaje) {
     new Noty({
         type: "warning",
@@ -673,7 +674,7 @@ class DetalleParadas extends Component {
                                                                 <Grid item sm={2}>
                                                                     {
                                                                         tour.m_bActiva &&
-                                                                    <IconButton aria-label="file" onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}>
+                                                                    <IconButton disabled={!validarDerecho(9101454)} aria-label="file" onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}>
                                                                         <CancelIcon style={{fill:"red"}} fontSize={"large"}/>
                                                                     </IconButton>
                                                                     }
@@ -705,7 +706,7 @@ class DetalleParadas extends Component {
 
                                                         {
                                                             tour.m_bActiva &&
-                                                            <Button variant={"contained"} color={"primary"}
+                                                            <Button disabled={!validarDerecho(9101447)} variant={"contained"} color={"primary"}
                                                                     onClick={() => this.setState({
                                                                         paquetes: tour.m_arrClsProGuia,
                                                                         tour: tour,
@@ -805,11 +806,13 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
+                                                                                                                disabled={!validarDerecho(9101449)}
+                                                                                                                onClick={() => this.openRemplazarPaquete(tour, g)}
                                                                                                                 aria-label="reorder">
                                                                                                                 <Tooltip
                                                                                                                     title={"Remplazar"}>
                                                                                                                     <CachedIcon
-                                                                                                                        onClick={() => this.openRemplazarPaquete(tour, g)}
+
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
@@ -818,11 +821,13 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
+                                                                                                                disabled={!validarDerecho(9101450)}
+                                                                                                                onClick={() => this.confirmUbicacionParada( g.m_nId, g.m_bEsRecoleccion, g)}
                                                                                                                 aria-label="delete">
                                                                                                                 <Tooltip
                                                                                                                     title={"Cambiar ubicación"}>
                                                                                                                     <GpsFixedIcon
-                                                                                                                        onClick={() => this.confirmUbicacionParada( g.m_nId, g.m_bEsRecoleccion, g)}
+
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
@@ -831,11 +836,13 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             r.m_bEsPermisionario && r.m_bUnidadPermisionario &&
                                                                                                             <IconButton
+                                                                                                                disabled={!validarDerecho(9101452)}
+                                                                                                                onClick={() => this.descargarXMLCFDIPermisionario( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
                                                                                                                 aria-label="Descargar XML">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar XML Permisionario"}>
                                                                                                                     <GetAppIcon
-                                                                                                                        onClick={() => this.descargarXMLCFDIPermisionario( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
+
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
@@ -843,13 +850,15 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                            (tour.m_bActiva && !r.m_bUnidadPermisionario && !g.m_bTimbrado) &&
                                                                                                             <IconButton
+                                                                                                                disabled={!validarDerecho(9101451)}
+                                                                                                                onClick={() =>
+                                                                                                                    this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)
+                                                                                                                }
                                                                                                                 aria-label="Timbrar SAT">
                                                                                                                 <Tooltip
                                                                                                                     title={"Generar CFDI Traslado"}>
                                                                                                                     <DescriptionIcon
-                                                                                                                        onClick={() => 
-                                                                                                                            this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)
-                                                                                                                        }
+
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
@@ -857,11 +866,13 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !r.m_bUnidadPermisionario && !g.m_bTimbrado &&
                                                                                                             <IconButton
+                                                                                                                disabled={!validarDerecho(9101451)}
+                                                                                                                onClick={() => this.descargarXMLCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
                                                                                                                 aria-label="XML SAT">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar XML Traslado"}>
                                                                                                                     <GetAppIcon
-                                                                                                                        onClick={() => this.descargarXMLCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
+
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
@@ -893,11 +904,13 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             g.m_bTimbrado &&
                                                                                                             <IconButton
+                                                                                                                disabled={!validarDerecho(9101451)}
+                                                                                                                onClick={() => this.showCancelarCFDI(g)}
                                                                                                                 aria-label="Cancelar SAT">
                                                                                                                 <Tooltip
                                                                                                                     title={"Cancelar SAT"}>
                                                                                                                     <BlockIcon
-                                                                                                                        onClick={() => this.showCancelarCFDI(g)}
+
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
@@ -905,11 +918,12 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva && !g.m_bTimbrado &&
                                                                                                             <IconButton
+                                                                                                                disabled={!validarDerecho(9101453)}
+                                                                                                                onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
                                                                                                                 aria-label="delete">
                                                                                                                 <Tooltip
                                                                                                                     title={"Eliminar"}>
                                                                                                                     <DeleteIcon
-                                                                                                                        onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>

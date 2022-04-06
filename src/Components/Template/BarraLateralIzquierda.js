@@ -19,6 +19,9 @@ function BarraLateralDerecha() {
     <div className="iconic-aside-container">
       <ul className="list-accordion">
         {dashboardRoutes.map((r, index) => {
+            if (!r.visible){
+                return ""
+            }
           return !r.newWindow ? (
 
             <li  className="boton-de-menu">

@@ -42,6 +42,7 @@ import UpdateIcon from '@material-ui/icons/Update';
 import PaquetesPlaneacion from "./PaquetesPlaneacion";
 import {Autocomplete} from "@material-ui/lab";
 import AgregarRemolques from "./AgregarRemolques";
+import {validarDerecho} from "../../Util/Util";
 
 const useStyles = theme => ({
     search: {
@@ -689,7 +690,7 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                disabled={this.state.sucursalSeleccionada == null || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
+                                disabled={(this.state.sucursalSeleccionada == null || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))) && !validarDerecho(9101447)}
                                 onClick={() => 
                                     this.props.generarRuta(this.state)}
                             />
@@ -698,7 +699,7 @@ class FiltersMap extends Component {
                         <Tooltip title={this.props.data.modoPlaneacion ? "Guardar ruta" : "Enviar ruta a operadores"}>
                             <IconButton
                                 onClick={() => {this.setState({unidadesSeleccionadas:[],paquetesSeleccionadas: []});this.props.guardarRuta()}}
-                                disabled={(moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
+                                disabled={(moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD')) && !validarDerecho(9101448)}
                                 style={{
                                     backgroundColor: "white",
                                     margin: "1px",

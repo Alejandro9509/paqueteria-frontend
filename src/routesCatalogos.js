@@ -70,6 +70,7 @@ import {ReactComponent as ZonaTarifaIcon} from './iconos/Catalogos/Icono Zonas T
 import TipoUnidad from "./Views/TipoUnidad/TipoUnidad";
 import ZonaOperativa from "./Views/ZonasOperativas/ZonaOperativa";
 import ZonaTarifas from "./Views/ZonasTarifas/ZonaTarifas";
+import {validarDerecho} from "./Util/Util";
 
 
 const catalogRoutes = [
@@ -138,54 +139,63 @@ const catalogRoutes = [
     name: "Embalajes",
     icon: <EmbalajeIcon/>,
     component: EmbalajesPage,
+      visible: validarDerecho(9101225)
   },
   {
     path: "/TiposViaje",
     name: "Tipos Viaje",
     icon: <TViajeIcon/>,
     component: TiposViaje,
+      visible: validarDerecho(9101226)
   },
   {
     path: "/TiposServicio",
     name: "Tipos de Servicio",
     icon: <TServicioIcon/>,
     component: TipoServicioPage,
+      visible: validarDerecho(9101224)
   },
   {
     path: "/EstatusViaje",
     name: "Estatus Viaje",
     icon: <EViajeIcon/>,
     component: EstatusViajePage,
+      visible: validarDerecho(9101227)
   },
   {
     path: "/EstatusEmbarque",
     name: "Estatus Embarque",
     icon: <EEmbarqueIcon/>,
     component: EstatusEmbarquePage,
+      visible: validarDerecho(9101228)
   },
   {
     path: "/EstatusRecoleccion",
     name: "Estatus Recolección",
     icon: <ERecoleccionIcon/>,
     component: EstatusRecoleccionPage,
+      visible: validarDerecho(9101229)
   },
   {
     path: "/EstatusGuia",
     name: "Estatus Guías",
     icon: <EGuiaIcon/>,
     component: EstatusGuiaPage,
+      visible: validarDerecho(9101230)
   },
   {
     path: "/EstatusInforme",
     name: "Estatus Informe",
     icon: <EInformeIcon/>,
     component: EstatusInformePage,
+      visible: validarDerecho(9101231)
   },
   {
     path: "/EstatusDocumento",
     name: "Estatus Documentos",
     icon: <EDocumentosIcon/>,
     component: EstatusDocumentoPage,
+      visible: validarDerecho(9101232)
   },
 
   {
@@ -193,6 +203,7 @@ const catalogRoutes = [
     name: "Clasificación Viaje",
     icon: <ClasificacionIcon/>,
     component: ClasificacionViajePage,
+      visible: validarDerecho(9101233)
   },
   /*{
     path: "/Caseta",
@@ -223,24 +234,28 @@ const catalogRoutes = [
     name: "Tarifas",
     icon: <TarifasIcon/>,
     component: TarifasPage,
+      visible: validarDerecho(9101238)
   },
   {
     path: "/TipoCobro",
     name: "Tipos de Cobro",
     icon: <TCobreIcon/>,
     component: TipoCobroPage,
+      visible: validarDerecho(9101239)
   },
    {
     path: "/ParametrosConfiguracion",
     name: "Parámetros Configuración",
     icon: <PConfiguracionIcon/>,
     component: ParametrosConfiguracionPage,
+       visible: validarDerecho(9101202)
   },
   {
     path: "/PlantillaCorreo",
     name: "Plantilla de Correo",
     icon: <PCorreosIcon/>,
     component: PlantillaCorreo,
+      visible: validarDerecho(9101383)
   },
   /*  {
      path: "/CondicionesRecepcionEntrega",
@@ -253,24 +268,28 @@ const catalogRoutes = [
     name: "Productos",
     icon: <ProductosIcon/>,
     component: Productos,
+      visible: validarDerecho(9101384)
   },
   {
     path: "/Convenios",
     name: "Convenios",
     icon: <ConveniosIcon/>,
-    component: Convenios
+    component: Convenios,
+      visible: validarDerecho(9101385)
   },
   {
     path: "/ZonasOperativas",
     name: "Zonas Operativas",
     icon: <GeocercaIcon/>,
-    component: ZonaOperativa
+    component: ZonaOperativa,
+      visible: validarDerecho(9101387)
   },
   {
     path: "/ZonasTarifas",
     name: "Zonas Tarifas",
     icon: <ZonaTarifaIcon/>,
-    component: ZonaTarifas
+    component: ZonaTarifas,
+      visible: validarDerecho(9101225)
   }
 ];
 
