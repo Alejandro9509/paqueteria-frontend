@@ -9,6 +9,9 @@ import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
 import {validarPermisos} from "../../Util/Contexts/UsuarioContext";
 import axios from "axios";
 import CrearTarifaRangos from "./CrearTarifaRangos";
+import {validarDerecho} from "../../Util/Util"
+import {makeStyles} from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core/styles';
 import {
     agregarTarifaRangos,
     eliminarTarifaRangos,
@@ -28,7 +31,24 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
+const styles = {
+    seleccionado: {
+        backgroundColor: "#FCC88F",
+    },
+    noSeleccionado: {
+        backgroundColor: "#FFFFFF",
+    },
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
+};
+const useStyles = makeStyles(styles);
+
+
 export default function TarifasRangos(props) {
+    const classes = useStyles();
     const [state, setState] = useState({
         tarifas: [],
         agregar: "Agregar",
@@ -59,7 +79,7 @@ export default function TarifasRangos(props) {
                 renderCell: (row) => {
                     return (
                         <div>
-                            <Tooltip title="Modificar">
+                            <Tooltip title="Modificar" disabled={(!validarDerecho(9101347) && !props.convenio) || (!validarDerecho(9101395) && props.convenio)}>
                                 <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.IdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                             </Tooltip>
@@ -67,7 +87,7 @@ export default function TarifasRangos(props) {
                                 <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.IdTarifa))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                             </Tooltip>
-                            <Tooltip title="Eliminar">
+                            <Tooltip title="Eliminar" disabled={(!validarDerecho(9101348) && !props.convenio) || (!validarDerecho(9101396) && props.convenio)}>
                                 <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.IdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                             </Tooltip>
 
@@ -353,7 +373,7 @@ export default function TarifasRangos(props) {
                         </a>
                     </li>
                     <li >
-                        <a onClick={(event) => handleShowAgregar()}>
+                        <a className= {(validarDerecho(9101347) && !props.convenio) || (validarDerecho(9101395) && props.convenio)? "":classes.disabled} onClick={(event) => handleShowAgregar()}>
                             <i className="fa fa-plus-circle"/> {state.agregar}
                         </a>
                     </li>
