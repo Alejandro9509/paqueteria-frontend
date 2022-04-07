@@ -3534,7 +3534,7 @@ function Recoleccion() {
                         </li>
 
                         <li style={{float: "right"}}>
-                            <a  className={validarDerecho(9101417)?"":classes.disabled} data-toggle="tab" href="#" className={state.idRecoleccion === 0 ? classes.disabled : ""}
+                            <a data-toggle="tab" href="#" className={(state.idRecoleccion === 0 || !validarDerecho(9101417)) ? classes.disabled : ""}
                                style={{textAlign: "right"}} onClick={() => setRedirect(true)}>
                                 Generar embarque
                             </a>
@@ -3942,6 +3942,7 @@ function Recoleccion() {
                                                                                onChange={handleChange}
                                                                                value={state.porcentajeSeguro}
                                                                                placeholder="%"
+                                                                               id="porcentajeSeguro"
                                                                                name="porcentajeSeguro"
                                                                                InputProps={{
                                                                                    endAdornment: <InputAdornment position="start">%</InputAdornment>,
