@@ -2184,7 +2184,7 @@ function Guia(props) {
                                                                         }}
                                                                     >
                                                                         <option key={0} value="0">Seleccionar</option>
-                                                                        {dataEstatusGuia.filter(e => e.m_nIdEstatusGuia == 4).map(
+                                                                        {dataEstatusGuia.map(
                                                                             (estatusGuia) => (
                                                                                 <option
                                                                                     key={estatusGuia.m_nIdEstatusGuia}
