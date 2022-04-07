@@ -4358,7 +4358,7 @@ function Recoleccion() {
                                                                     </div>
 
                                                                 </div>
-                                                                <div className="col-sm-6 col-md-6 unit">
+                                                            { false && <div className="col-sm-6 col-md-6 unit">
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             value={recoleccionDD.zonaTarifaRec}
@@ -4390,6 +4390,7 @@ function Recoleccion() {
                                                                         />
                                                                     </div>
                                                                 </div>
+                                                                }
 
                                                                 <div className="col-sm-6 col-md-4  unit">
                                                                     <div className="input">
@@ -4589,7 +4590,7 @@ function Recoleccion() {
                                                                     </div>
 
                                                                 </div>
-                                                                <div className="col-sm-6 col-md-6 unit">
+                                                               { false && <div className="col-sm-6 col-md-6 unit">
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             value={entregaDD.zonaTarifaEnt}
@@ -4621,6 +4622,7 @@ function Recoleccion() {
                                                                         />
                                                                     </div>
                                                                 </div>
+                                                                    }
 
                                                                 <div className="col-sm-6 col-md-4  unit">
 

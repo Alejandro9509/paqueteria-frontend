@@ -2460,7 +2460,7 @@ function Guia(props) {
                                                                             </div>
                                                                         </div>
 
-                                                                        <div className="col-md-4 unit">
+                                                                      { false &&  <div className="col-md-4 unit">
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
@@ -2481,7 +2481,7 @@ function Guia(props) {
 
                                                                             </div>
                                                                         </div>
-
+                                                                            }
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
@@ -2652,7 +2652,7 @@ function Guia(props) {
                                                                             </div>
                                                                         </div>
 
-                                                                        <div className="col-md-4 unit">
+                                                                       { false && <div className="col-md-4 unit">
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
@@ -2670,6 +2670,7 @@ function Guia(props) {
                                                                                 />
                                                                             </div>
                                                                         </div>
+                                                                                    }
 
                                                                         <div className="col-md-4 unit">
 

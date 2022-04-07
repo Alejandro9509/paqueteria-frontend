@@ -3733,7 +3733,7 @@ function Embarque(props) {
                                                                         </div>
 
                                                                     </div>
-                                                                    <div className="col-sm-6 col-md-6 unit">
+                                                                   { false && <div className="col-sm-6 col-md-6 unit">
                                                                         <div className="input">
                                                                             <Autocomplete
                                                                                 value={entregaDD.zonaTarifaEnt}
@@ -3764,7 +3764,7 @@ function Embarque(props) {
                                                                                 }
                                                                             />
                                                                         </div>
-                                                                    </div>
+                                                                    </div>}
 
                                                                     <div className="col-sm-6 col-md-4  unit">
 
