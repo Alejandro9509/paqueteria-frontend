@@ -729,7 +729,7 @@ function Guia(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457)}>
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || row.row.m_nIdEstatusGuia == 8}>
                             <a 
                                onClick={() => (handleShowModificar(row.row.m_nIdGuia,row.row.m_nFolioGuia))}
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
@@ -1891,7 +1891,7 @@ function Guia(props) {
                             </li>
                         }
                         <li>
-                            <a className={(state.idGuia !== 0 && state.cambioCobro && validarDerecho(9101459))? "" : classes.disabled}
+                            <a className={(state.idGuia !== 0 && state.cambioCobro && validarDerecho(9101459)) && state.estatusGuia != 8? "" : classes.disabled}
                                onClick={() => {
                                    getAllDataEstatusGuia()
                                    setState({...state, openCambiarEstatus: true})
@@ -1910,7 +1910,7 @@ function Guia(props) {
 
                         <li>
                             <a data-toggle="tab"  onClick={handleShowCancelar}
-                               className={(state.idGuia === 0 || !validarDerecho(9101461))? classes.disabled : ""}>
+                               className={(state.idGuia === 0 || !validarDerecho(9101461) ||  state.estatusGuia == 8)? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>
@@ -1954,6 +1954,7 @@ function Guia(props) {
                                                 setState({
                                                     ...state,
                                                     idGuia: row.data.m_nIdGuia,
+                                                    estatusGuia:row.data.m_nIdEstatusGuia,
                                                     cambioCobro: true,
                                                     creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito,
                                                     folioInforme:row.data.m_sFolioInforme
