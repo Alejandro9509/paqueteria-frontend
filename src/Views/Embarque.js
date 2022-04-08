@@ -1900,6 +1900,9 @@ function Embarque(props) {
     }
 
     const handleChange = (event) => {
+        if(event.target.name == "porcentajeSeguro"){
+            setRepetirConceptos(true)
+        }
         setState({
             ...state,
             [event.target.name]: event.target.value,
@@ -2512,6 +2515,7 @@ function Embarque(props) {
     }
 
     const handleChangeTipoSeguro = (event) => {
+        setRepetirConceptos(true)
         setState({
             ...state,
             idTipoSeguro: event.target.value,
@@ -3320,6 +3324,7 @@ function Embarque(props) {
                                                                                value={state.porcentajeSeguro}
                                                                                placeholder="%"
                                                                                name="porcentajeSeguro"
+                                                                               id="porcentajeSeguro"
                                                                                InputProps={{
                                                                                    endAdornment: <InputAdornment position="start">%</InputAdornment>,
                                                                                }}
@@ -3336,6 +3341,7 @@ function Embarque(props) {
                                                                                label="Valor Declarado"
                                                                                onChange={(event) => {
                                                                                    event.preventDefault();
+                                                                                   setRepetirConceptos(true)
                                                                                    setState({
                                                                                        ...state,
                                                                                        valorDeclarado: event.target.value,

@@ -1963,6 +1963,9 @@ function Recoleccion() {
     }
     const handleChange = (event) => {
         event.preventDefault();
+        if(event.target.id == "porcentajeSeguro"){
+            setRepetirConceptos(true)
+        }
         setState({
             ...state,
             [event.target.id]: event.target.value,
@@ -1992,6 +1995,7 @@ function Recoleccion() {
 
     const handleCitaCheckboxChange = (event) => {
         // event.preventDefault();
+        setRepetirConceptos(true)
         setState({
             ...state,
             recoleccionConCita: !state.recoleccionConCita,
@@ -2010,6 +2014,7 @@ function Recoleccion() {
         });
     };
     const handleEntregaEnSucursalCheckbox = (event) => {
+        setRepetirConceptos(true)
         setState({
           ...state,
           entregaEnSucursal: !state.entregaEnSucursal,
@@ -3126,6 +3131,7 @@ function Recoleccion() {
     }
 
     const handleChangeTipoSeguro = (event) => {
+        setRepetirConceptos(true)
         setState({
             ...state,
             idTipoSeguro: event.target.value,
@@ -3906,6 +3912,7 @@ function Recoleccion() {
                                                                 <div className="input">
                                                                     <TextField
                                                                         name="idTipoSeguro"
+                                                                        id="idTipoSeguro"
                                                                         select
                                                                         required
                                                                         label="Tipo seguro"
@@ -3960,6 +3967,7 @@ function Recoleccion() {
                                                                                label="Valor Declarado"
                                                                                onChange={(event) => {
                                                                                    event.preventDefault();
+                                                                                   setRepetirConceptos(true)
                                                                                    setState({
                                                                                        ...state,
                                                                                        valorDeclarado: event.target.value,
@@ -3968,6 +3976,7 @@ function Recoleccion() {
                                                                                value={state.valorDeclarado}
                                                                                placeholder="$"
                                                                                name="valorDeclarado"
+                                                                               id="valorDeclarado"
                                                                                InputProps={{
                                                                                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
                                                                                }}
