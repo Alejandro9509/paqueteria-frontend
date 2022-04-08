@@ -610,7 +610,7 @@ function Guia(props) {
         })
         }
         else{
-        showSuccess("La guia no puede ser cancelada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
+        showSuccess("La guía no puede ser cancelada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
         return
         }
         }).catch((err)=>{
