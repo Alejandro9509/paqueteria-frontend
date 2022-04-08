@@ -87,7 +87,7 @@ export default function DialogTransferList(props) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleShowDialog} color="primary">
-                    Close
+                    Cancelar
                 </Button>
                 <Button onClick={handleConfirmSelection} color="primary" autoFocus disabled={props.disabled}>
                     Aceptar

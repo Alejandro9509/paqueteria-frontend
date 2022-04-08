@@ -91,7 +91,7 @@ export default function DialogTextView(props) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleShowDialog} color="primary">
-                        Close
+                        Cancelar
                     </Button>
                     <Button type={"submit"} onClick={handleConfirmSelection} color="primary" autoFocus>
                         Aceptar

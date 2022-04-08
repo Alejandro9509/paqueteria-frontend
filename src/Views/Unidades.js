@@ -2700,7 +2700,7 @@ function Unidades(props) {
                                                             <div className="row">
                                                                 <div className="col-sm-6 col-md-2-5 col-lg-2-5 unit">
                                                                     <div className="input">
-                                                                        <TextField variant="outlined" margin="dense" label="Calculo Reporte de Ingresos (%)"
+                                                                        <TextField variant="outlined" margin="dense" label="Cálculo Reporte de Ingresos (%)"
                                                                             onChange={handleChange}
                                                                             value={
                                                                                 state.porcentajeRepIngresos

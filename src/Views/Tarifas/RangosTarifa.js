@@ -67,7 +67,7 @@ export default function RangosTarifa(props) {
             width: 150,
             valueFormatter: ({value}) => currencyFormatter.format(Number(value)),
         },{
-            headerName: "Calculo",
+            headerName: "Cálculo",
             field: "tipoCalculo",
             width: 150,
         },

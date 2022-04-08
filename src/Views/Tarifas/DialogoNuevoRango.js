@@ -277,7 +277,7 @@ export default function DialogoNuevoRango(props) {
                         <TextField
                             id="idTipoCalculo"
                             select
-                            label="Calculo"
+                            label="Cálculo"
                             value={rango.idTipoCalculo}
                             onChange={handleOnDataChange}
                             name="idTipoCalculo"
