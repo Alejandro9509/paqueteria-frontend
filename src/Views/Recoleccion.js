@@ -926,10 +926,11 @@ function Recoleccion() {
             if (!esDatoValido(destinatario.zonaOperativaDestinatario?.m_nIdZona)) {
                 showSuccess("Verificar la zona operativa de destinatario")
                 return valid;
-            } else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
+            }
+          /*  else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
                 showSuccess("Verificar la zona tarifa de destinatario")
                 return valid;
-            }
+            }*/
         }
         if (state.entregaConCita){
             if (!state.citaPendiente){
@@ -971,12 +972,13 @@ function Recoleccion() {
         let error = false
         let params = {}
         if(state.diferenteEntrega){
-            if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
+            /*if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
                 error = true
                 showSuccess("Verificar la zona operativa de diferente domicilio entrega")
-            }else if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
+            }else */
+                if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
                 error = true
-                showSuccess("Verificar la zona tarifa de diferente domicilio entrega")
+                showSuccess("Verificar la zona operativa de diferente domicilio entrega")
             }else if(entregaDD.domicilioEnt==""){
                 error = true
                 showSuccess("Verificar el domicilio de entrega")
@@ -990,10 +992,11 @@ function Recoleccion() {
         }else if(destinatario.zonaOperativaDestinatario?.m_nIdZona==undefined){
             error = true
             showSuccess("Verificar la zona operativa de destinatario")
-         }else if(destinatario.zonaTarifaDestinatario?.m_nIdZona==undefined){
+         }
+        /*else if(destinatario.zonaTarifaDestinatario?.m_nIdZona==undefined){
             error = true
             showSuccess("Verificar la zona tarifa de destinatario")
-         }
+         }*/
           else if(destinatario.correoDestinatario == ""){
             error = true
             showSuccess("Error al agregar recoleccion: El correo del destinatario es un campo requerido")
@@ -1003,10 +1006,12 @@ function Recoleccion() {
             if(recoleccionDD.zonaOperativaRec?.m_nIdZona==undefined){
                 error = true
                 showSuccess("Verificar la zona operativa de diferente domicilio recoleccion")
-            }else if(recoleccionDD.zonaTarifaRec?.m_nIdZona==undefined){
+            }else
+               /* if(recoleccionDD.zonaTarifaRec?.m_nIdZona==undefined){
                 error = true
                 showSuccess("Verificar la zona tarifa de diferente domicilio recoleccion")
-            }else if(recoleccionDD.domicilioRec==""){
+            }else*/
+                if(recoleccionDD.domicilioRec==""){
                 error = true
                 showSuccess("Verificar el domicilio de recoleccion")
             }else if(recoleccionDD.recogerEnRec==""){
@@ -1019,10 +1024,12 @@ function Recoleccion() {
         }else if(remitente.zonaOperativaRemitente?.m_nIdZona==undefined){
             error = true
             showSuccess("Verificar la zona operativa de remitente")
-        } else if(remitente.zonaTarifaRemitente?.m_nIdZona==undefined){
+        } else
+          /*  if(remitente.zonaTarifaRemitente?.m_nIdZona==undefined){
             error = true
             showSuccess("Verificar la zona tarifa de remitente")
-        } else if(remitente.correoRemitente == "" ){
+        } else*/
+            if(remitente.correoRemitente == "" ){
             error = true
             showSuccess("Error al agregar recoleccion: El correo del remitente es un campo requerido")
         }

@@ -977,20 +977,21 @@ function Embarque(props) {
                 showSuccess("La zona operativa de entrega es un dato requerido");
                 return valid;
             }
-            if (!esDatoValido(entregaDD.zonaTarifaEnt?.m_nIdZona)){
+          /*  if (!esDatoValido(entregaDD.zonaTarifaEnt?.m_nIdZona)){
                 showSuccess("La zona de la tarifa de entrega es un dato requerido");
                 return valid;
-            }
+            }*/
 
         }else {
             /**Si es entrega en domicilio de destinatario*/
             if (!esDatoValido(destinatario.zonaOperativaDestinatario?.m_nIdZona)) {
                 showSuccess("Verificar la zona operativa de destinatario")
                 return valid;
-            } else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
+            }
+           /* else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
                 showSuccess("Verificar la zona tarifa de destinatario")
                 return valid;
-            }
+            }*/
         }
         if (state.entregaConCita){
             if (!state.citaPendiente){
