@@ -1061,7 +1061,7 @@ if(input=="codigoPostal"){
             </div>
           </div>
         )}
-        {props.mostrarZonas && (
+        {/*props.mostrarZonas*/false && (
           <div className="col-sm-12 col-md-12 unit">
             <div className="input">
               <Autocomplete

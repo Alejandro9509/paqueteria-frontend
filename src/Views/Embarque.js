@@ -284,7 +284,7 @@ function Embarque(props) {
                                 />
                             </a>
                         </Tooltip>
-                        <Tooltip title="Consultar">
+                        <Tooltip title="Consultar" disabled={!validarDerecho(9101426)}>
                             <a
                                 className="btn btn-default btn-xs"
                                 onClick={() => handleShowConsultar(row.row.m_nIdEmbarque)}
@@ -292,13 +292,13 @@ function Embarque(props) {
                                 <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                             </a>
                         </Tooltip>
-                        <Tooltip title="Reporte">
+                        <Tooltip title="Reporte" disabled={!validarDerecho(9101425)}>
                             <a  className="btn btn-default btn-xs"
                                 onClick={() => generarReporte(row.row.m_nIdEmbarque, row.row.m_sFolioEmbarque)}><i className="zmdi zmdi-file"
                                                                                                                  style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Eliminar">
+                        <Tooltip title="Eliminar" disabled={!validarDerecho(9101424)}>
                             <a
                                 href="#"
                                 className="btn btn-default btn-xs"
@@ -1900,6 +1900,9 @@ function Embarque(props) {
     }
 
     const handleChange = (event) => {
+        if(event.target.name == "porcentajeSeguro"){
+            setRepetirConceptos(true)
+        }
         setState({
             ...state,
             [event.target.name]: event.target.value,
@@ -2512,6 +2515,7 @@ function Embarque(props) {
     }
 
     const handleChangeTipoSeguro = (event) => {
+        setRepetirConceptos(true)
         setState({
             ...state,
             idTipoSeguro: event.target.value,
@@ -2904,7 +2908,7 @@ function Embarque(props) {
 
 
                         <li className={props.location.idRecoleccion != undefined ? "active" : ""}>
-                            <a onClick={() => handleShowAgregar()}>
+                            <a  className={validarDerecho(9101422)?"":classes.disabled} onClick={() => handleShowAgregar()}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -2925,20 +2929,19 @@ function Embarque(props) {
                             </a>
                         </li>
                         <li>
-                            <ExportCSV csvData={data} fileName="Embarque_Listado"/>
+                            <ExportCSV disabled={!validarDerecho(9101428)} csvData={data} fileName="Embarque_Listado"/>
                         </li>
                         <li>
                             <a
-
                                 onClick={handleShowCancelar}
-                                className={state.idEmbarque === 0 ? classes.disabled : ""}
+                                className={state.idEmbarque === 0 || !validarDerecho(9101427)? classes.disabled : ""}
                             >
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>
                         <li style={{float: "right"}}>
                             <a
-                                className={state.idEmbarque === 0 ? classes.disabled : ""}
+                                className={state.idEmbarque === 0 || !validarDerecho(9101429) ? classes.disabled : ""}
                                 style={{textAlign: "right"}}
                                 onClick={() => setRedirect(true)}
                             >
@@ -3321,6 +3324,7 @@ function Embarque(props) {
                                                                                value={state.porcentajeSeguro}
                                                                                placeholder="%"
                                                                                name="porcentajeSeguro"
+                                                                               id="porcentajeSeguro"
                                                                                InputProps={{
                                                                                    endAdornment: <InputAdornment position="start">%</InputAdornment>,
                                                                                }}
@@ -3337,6 +3341,7 @@ function Embarque(props) {
                                                                                label="Valor Declarado"
                                                                                onChange={(event) => {
                                                                                    event.preventDefault();
+                                                                                   setRepetirConceptos(true)
                                                                                    setState({
                                                                                        ...state,
                                                                                        valorDeclarado: event.target.value,
@@ -3734,7 +3739,7 @@ function Embarque(props) {
                                                                         </div>
 
                                                                     </div>
-                                                                    <div className="col-sm-6 col-md-6 unit">
+                                                                   { false && <div className="col-sm-6 col-md-6 unit">
                                                                         <div className="input">
                                                                             <Autocomplete
                                                                                 value={entregaDD.zonaTarifaEnt}
@@ -3765,7 +3770,7 @@ function Embarque(props) {
                                                                                 }
                                                                             />
                                                                         </div>
-                                                                    </div>
+                                                                    </div>}
 
                                                                     <div className="col-sm-6 col-md-4  unit">
 
