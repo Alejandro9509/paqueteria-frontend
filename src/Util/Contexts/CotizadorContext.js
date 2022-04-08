@@ -4,7 +4,7 @@ import { API_HEADERS } from "../../Constants";
 
 const headers = API_HEADERS
 
-function obtenerCotizacion( data, paquetes, remitente, destinatario, recoleccion, entregaDD) {
+function obtenerCotizacion( data, paquetes, remitente, destinatario, recoleccion, entregaDD, recoleccionDD) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Cotizador/Agregar`;
     let result;
     console.log(entregaDD)
@@ -14,7 +14,7 @@ function obtenerCotizacion( data, paquetes, remitente, destinatario, recoleccion
         idEmbarque: data.idEmbarque,
         idRecoleccion: data.idRecoleccion,
         idZonaEntrega: data.diferenteEntrega ? entregaDD.zonaOperativaEnt?.m_nIdZona : destinatario.zonaOperativaDestinatario?.m_nIdZona,
-        idZonaRecoleccion: remitente.zonaOperativaRemitente ? remitente.zonaOperativaRemitente.m_nIdZona : 0,
+        idZonaRecoleccion: remitente.zonaOperativaRemitente ? remitente.zonaOperativaRemitente.m_nIdZona : recoleccionDD ? recoleccionDD.zonaOperativaRec?.m_nIdZona || 0 : 0,
         idCliente: data.clientePaga.m_nIdCliente,
         entregaEnSucursal:  data.entregaEnSucursal,
         idSeguro: data.idTipoSeguro,

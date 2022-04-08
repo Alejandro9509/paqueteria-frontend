@@ -5038,6 +5038,7 @@ function Recoleccion() {
                                                    conceptos={dataConceptos}
                                                    saveIdCotizacion={saveIdCotizacion}
                                                    recoleccion={true}
+                                                   recoleccionDiferenteDom={recoleccionDD}
                                                    mostrarCotizadorRec={mostrarCotizadorRec}
                                                    entregaDiferenteDom={entregaDD}
                                                    setCalculoTarifa={()=>setRepetirConceptos(false)}

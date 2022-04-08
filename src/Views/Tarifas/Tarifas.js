@@ -19,6 +19,9 @@ import {ContentState, EditorState} from "draft-js";
 import htmlToDraft from "html-to-draftjs";
 import TarifasRangos from "./TarifasRangos";
 import {validarDerecho} from "../../Util/Util"
+import {makeStyles} from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core/styles';
+
 window.jQuery = window.$ = $;
 const headers = API_HEADERS
 function showSuccess(mensaje) {
@@ -30,6 +33,14 @@ function showSuccess(mensaje) {
     }).show()
 }
 
+const styles = theme =>( {
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    }
+});
+
+const useStyles = makeStyles(styles);
 
 class Tarifas extends Component {
     constructor(props) {
@@ -106,7 +117,7 @@ class Tarifas extends Component {
                 renderCell: (row) => {
                     return (
                         <div>
-                            <Tooltip title="Modificar">
+                            <Tooltip title="Modificar" >
                                 <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (this.handleShowModificar(row.row.m_nIdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                             </Tooltip>
@@ -345,6 +356,7 @@ class Tarifas extends Component {
 
 
     render() {
+        const {classes} = this.props; 
         const { height, data, columns, edit, consult, configuraciones } = this.state
 
         return (
@@ -386,7 +398,7 @@ class Tarifas extends Component {
                                         </a>
                                     </li>
                                     <li >
-                                        <a onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
+                                        <a className= {validarDerecho(9101346)? "":classes.disabled} onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
                                             <i className="fa fa-plus-circle" /> {this.state.agregar}
                                         </a>
                                     </li>
@@ -647,7 +659,7 @@ function Tarifa(props){
                 renderCell: (row) => {
                     return (
                         <div>
-                            <Tooltip title="Modificar">
+                            <Tooltip title="Modificar" disabled={(!validarDerecho(9101347) && !props.convenio) || (!validarDerecho(9101395) && props.convenio)}>
                                 <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                             </Tooltip>
@@ -655,7 +667,7 @@ function Tarifa(props){
                                 <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdTarifa))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                             </Tooltip>
-                            <Tooltip title="Eliminar">
+                            <Tooltip title="Eliminar" disabled={(!validarDerecho(9101348) && !props.convenio) || (!validarDerecho(9101396) && props.convenio)}>
                                 <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                             </Tooltip>
 
@@ -841,4 +853,5 @@ Tarifas.propTypes = {
 
 };
 
-export default Tarifas;
+/* export default Tarifas; */
+export default withStyles(useStyles)(Tarifas);

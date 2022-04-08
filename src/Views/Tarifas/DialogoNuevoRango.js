@@ -132,7 +132,6 @@ export default function DialogoNuevoRango(props) {
         }
         props.rows.forEach(i => {
             if (i.idConcepto == rango.idConcepto &&
-                i.importe == rango.importe &&
                 i.minimo == rango.minimo &&
                 i.maximo == rango.maximo &&
                 i.idTipoCalculo == rango.idTipoCalculo &&

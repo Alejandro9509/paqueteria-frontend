@@ -1118,7 +1118,7 @@ class AgregarViaje extends Component {
                                                 id="origenRemitente"
                                                 disableClearable
                                                 forcePopupIcon={false}
-                                                options={this.state.dataCiudad.filter(c => this.props.select ? !this.props.select.m_arrIdRutas.filter(t => t.Terminado).map(t => t.IdOrigen).includes(c.m_nIdCiudad) : true)}
+                                                options={this.state.dataCiudad.filter(c => this.props.select ? !this.props.select.m_arrIdRutas.filter(t => t.Terminado || t.Iniciado).map(t => t.IdOrigen).includes(c.m_nIdCiudad) : true)}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCiudad
                                                 }
@@ -1149,7 +1149,7 @@ class AgregarViaje extends Component {
                                                 id="destino"
                                                 disableClearable
                                                 forcePopupIcon={false}
-                                                options={this.state.dataCiudad.filter(c => this.props.select ? !this.props.select.m_arrIdRutas.filter(t => t.Terminado).map(t => t.IdDestino).includes(c.m_nIdCiudad) : true)}
+                                                options={this.state.dataCiudad.filter(c => this.props.select ? !this.props.select.m_arrIdRutas.filter(t => t.Terminado || t.Iniciado).map(t => t.IdDestino).includes(c.m_nIdCiudad) : true)}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCiudad
                                                 }

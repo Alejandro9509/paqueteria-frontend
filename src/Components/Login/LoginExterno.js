@@ -33,11 +33,12 @@ class MyComponent extends Component {
         const usuario = this.getUrlParameter('usuario');
         const contraseña = this.getUrlParameter('pass');
         if(rfc) {
-            const url = `${process.env.REACT_APP_API_URL}/Usuarios/ValidarLogin/` + usuario + "/" + contraseña + "/" + rfc;
+            const url = `${process.env.REACT_APP_REPORT_URL}/api/ValidarLogin/'${usuario}'/'${contraseña}' `;
             axios.get(url, { headers: {'Content-Type': 'application/json', 'RFC': rfc} }).then(respuesta => {
                 try {
                     if (respuesta.data != undefined && respuesta.data.m_sUsuario != undefined && respuesta.data.m_sUsuario != "") {
-                        console.log(respuesta.data)
+
+                        localStorage.setItem("Permisos",JSON.stringify(respuesta.data.m_arrayPermisos))
                         localStorage.setItem("accessToken", true);
                         localStorage.setItem("UsuarioId", respuesta.data.m_nIdUsuario);
                         localStorage.setItem("Sucursal", respuesta.data.m_nIdSucursal);

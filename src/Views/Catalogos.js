@@ -43,6 +43,9 @@ function Catalogo() {
 
                     <div style={{ display: "flex", flexWrap: "wrap" }}>
                         {catalogRoutes.map((r, index) => {
+                            if (!r.visible){
+                                return ""
+                            }
                             return (
                                 <Link to={r.path} key={index}>
                                     <div className="caja-boton">

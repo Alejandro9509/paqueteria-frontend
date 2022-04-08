@@ -26,6 +26,7 @@ import {ReactComponent as SeguimientoIcon} from './iconos/Menu/Icono Tracking/Tr
 import {ReactComponent as viajeIcon} from './iconos/Menu/IconoViajes/iconoViajes.svg';
 import {ReactComponent as corteCajaIcon} from './iconos/Menu/IconoCorteCaja/IconoCorteCaja.svg';
 import Seguimiento from "./Views/Seguimiento/Seguimiento";
+import {validarDerecho} from "./Util/Util";
 
 const dashboardRoutes = [
   {
@@ -34,7 +35,8 @@ const dashboardRoutes = [
     icon: IndicadoresIcon,
     component: InicadoresPage,
     single: true,
-    child:[]
+    child:[],
+    visible: validarDerecho(9101194)
   },
   {
     path: "/Configuracion",
@@ -42,7 +44,8 @@ const dashboardRoutes = [
     icon: ConfiguracionIcon,
     component: ConfiguracionPage,
     single: true,
-    child:[]
+    child:[],
+    visible: validarDerecho(9101195)
   },
   {
     path: "/Catalogos",
@@ -50,7 +53,8 @@ const dashboardRoutes = [
     icon: CatalogoIcon,
     component: CatalogosPage,
     single: true,
-    child:  [] 
+    child:  [],
+    visible: validarDerecho(9101196)
     },
   {
     path: "/Recoleccion",
@@ -58,7 +62,8 @@ const dashboardRoutes = [
     icon: RecolecionIcon,
     component: RecoleccionPage,
     single: true,
-    child:[]
+    child:[],
+    visible: validarDerecho(9101197)
   },
   {
     path: "/Embarque",
@@ -66,7 +71,8 @@ const dashboardRoutes = [
     icon: EmbarqueIcon,
     component: EmbarquePage,
     single: true,
-    child:[]
+    child:[],
+    visible: validarDerecho(9101198)
   },
   {
     path: "/Guia",
@@ -74,7 +80,8 @@ const dashboardRoutes = [
     icon: GuiasIcon,
     component: GuiaPage,
     single: true,
-    child:[]
+    child:[],
+    visible: validarDerecho(9101199)
   },
   {
     path: "/Informes",
@@ -82,7 +89,8 @@ const dashboardRoutes = [
     icon: InformeIcon ,
     component: InformesPage,
     single: true,
-    child:[]
+    child:[],
+    visible: validarDerecho(9101200)
   },
   {
     path: "/UltimaMilla",
@@ -91,7 +99,8 @@ const dashboardRoutes = [
     component: UltimaMillaPage,
     single: true,
     newWindow: true,
-    child:[]
+    child:[],
+    visible: validarDerecho(9101205)
   },
   {
     path: "/Viajes",
@@ -99,7 +108,8 @@ const dashboardRoutes = [
     icon: viajeIcon,
     component: ViajesPage,
     single: true,
-    child:[]
+    child:[],
+    visible: validarDerecho(9101201)
   },
   {
     path: "/CorteCaja",
@@ -107,7 +117,8 @@ const dashboardRoutes = [
     icon: corteCajaIcon,
     component: CorteCajaPage,
     single: true,
-    child:[]
+    child:[],
+    visible: validarDerecho(9101203)
   },
   {
     path: "/Segumiento",
@@ -115,7 +126,8 @@ const dashboardRoutes = [
     icon: SeguimientoIcon,
     component: Seguimiento,
     single: true,
-    child:[]
+    child:[],
+    visible: validarDerecho(9101204)
   },
   /*{
     path: "/Tutoriales",
