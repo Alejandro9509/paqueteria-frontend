@@ -140,6 +140,12 @@ class AgregarViaje extends Component {
             horaEntregaGeneral: "",
             horasEnRuta: "",
 
+            //PERMISIONARIO
+            esOperadorPermisionario: false,
+            licenciaPermisionario: null,
+            nombrePermisionario: null,
+            fechaVigenciaPermisionario: null,
+
             fechaInforme: "",
             horaInforme: "",
             folioInforme: "",
@@ -178,6 +184,7 @@ class AgregarViaje extends Component {
         this.getAllRemolques = this.getAllRemolques.bind(this);
         this.handleChangeRuta = this.handleChangeRuta.bind(this);
         this.onSubmitDestinoInforme = this.onSubmitDestinoInforme.bind(this);
+        this.handleChangeDataPermisionario = this.handleChangeDataPermisionario.bind(this);
 
     }
 
@@ -257,7 +264,12 @@ class AgregarViaje extends Component {
                     identificadorViaje: this.props.select.m_sIdentificador,
                     viajeCliente: this.props.select.m_sNumViajeCliente,
                     CreadoPor: this.props.select.CreadoPor,
-                    dataInformesAsignados: this.props.select.m_arrInformes
+                    dataInformesAsignados: this.props.select.m_arrInformes,
+
+                    esOperadorPermisionario: this.props.select.EsOperadorPermisionario,
+                    licenciaPermisionario: this.props.select.LicenciaPermisionario,
+                    nombrePermisionario: this.props.select.NombrePermisionario,
+                    fechaVigenciaPermisionario: this.props.select.FechaVigenciaPermisionario,
 
                 }
             })
@@ -315,7 +327,11 @@ class AgregarViaje extends Component {
                 horaInforme: this.state.horaInforme,
                 estatus: this.state.estatusInforme,
                 horaEntrega: this.state.horaEntregaGeneral,
-            }
+            },
+            EsOperadorPermisionario: this.state.EsOperadorPermisionario,
+            LicenciaPermisionario: this.state.LicenciaPermisionario,
+            NombrePermisionario: this.state.NombrePermisionario,
+            FechaVigenciaPermisionario: this.state.FechaVigenciaPermisionario,
         }
         //console.log(params)
        if (this.props.modificar) {
@@ -810,6 +826,28 @@ class AgregarViaje extends Component {
         }else{
             this.setState({
                 idsZonasSeleccionadas: e.selectionModel,
+            })
+        }
+
+    }
+
+    handleChangeDataPermisionario = (e) => {
+        if (e.target.name === "esOperadorPermisionario"){
+            if (e.target.checked){
+                this.setState({
+                    [e.target.name]: e.target.checked
+                })
+            }else{
+                this.setState({
+                    [e.target.name]: e.target.checked,
+                    licenciaPermisionario: null,
+                    nombrePermisionario: null,
+                    fechaVigenciaPermisionario: null,
+                })
+            }
+        }else{
+            this.setState({
+                [e.target.name]: e.target.value
             })
         }
 
@@ -1529,7 +1567,67 @@ class AgregarViaje extends Component {
                                                 value={this.state.estatusUnidad}/>
                                         </Grid>
                                         <Grid item xs={1}/>
-
+                                        <Grid item xs={2}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={this.state.esOperadorPermisionario}
+                                                        onChange={this.handleChangeDataPermisionario}
+                                                        name="esOperadorPermisionario"
+                                                        color="primary"
+                                                        size={"medium"}
+                                                    />
+                                                }
+                                                label="Es operador permisionario"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={10}/>
+                                        {
+                                            this.state.esOperadorPermisionario &&
+                                            <Grid item xs={2}>
+                                                <TextField
+                                                    margin={"dense"}
+                                                    variant={"outlined"}
+                                                    label={"No. de licencia"}
+                                                    name={"licenciaPermisionario"}
+                                                    type={"number"}
+                                                    required={this.state.esOperadorPermisionario}
+                                                    value={this.state.licenciaPermisionario}
+                                                    onChange={this.handleChangeDataPermisionario}
+                                                />
+                                            </Grid>
+                                        }
+                                        {
+                                            this.state.esOperadorPermisionario &&
+                                            <Grid item xs={2}>
+                                                <TextField
+                                                    margin={"dense"}
+                                                    variant={"outlined"}
+                                                    label={"Nombre completo"}
+                                                    name={"nombrePermisionario"}
+                                                    inputMode={"text"}
+                                                    required={this.state.esOperadorPermisionario}
+                                                    value={this.state.nombrePermisionario}
+                                                    onChange={this.handleChangeDataPermisionario}
+                                                />
+                                            </Grid>
+                                        }
+                                        {
+                                            this.state.esOperadorPermisionario &&
+                                            <Grid item xs={2}>
+                                                <TextField
+                                                    variant="outlined"
+                                                    name="fechaVigenciaPermisionario"
+                                                    label="Vigencia"
+                                                    type="date"
+                                                    onChange={this.handleChangeDataPermisionario}
+                                                    value={this.state.fechaVigenciaPermisionario}
+                                                    className={"form-control"}
+                                                    InputLabelProps={{shrink: true,}}
+                                                    required={this.state.esOperadorPermisionario}
+                                                />
+                                            </Grid>
+                                        }
                                     </Grid>
                                 </div>
 
