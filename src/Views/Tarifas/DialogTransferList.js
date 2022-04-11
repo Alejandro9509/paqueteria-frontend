@@ -48,7 +48,8 @@ export default function DialogTransferList(props) {
         if (search.length === 0 ){
             setDataFiltered(props.rows)
         }else{
-            setDataFiltered(props.rows.filter(i => i.numeroDescripcion.includes(search)))
+            console.log(props.rows)
+            setDataFiltered(props.rows.filter(i => i.numeroDescripcion.toUpperCase().includes(search.toUpperCase())))
         }
     }
 
@@ -87,7 +88,7 @@ export default function DialogTransferList(props) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleShowDialog} color="primary">
-                    Close
+                    Cancelar
                 </Button>
                 <Button onClick={handleConfirmSelection} color="primary" autoFocus disabled={props.disabled}>
                     Aceptar

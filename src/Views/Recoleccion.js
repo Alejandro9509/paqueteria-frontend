@@ -29,7 +29,7 @@ import {
     useSortBy,
 } from "react-table";
 import $ from "jquery";
-import {getCurrentDateTime} from "../Util/Util"
+import {getCurrentDateTime, validarDerecho} from "../Util/Util"
 import {remove_array_element} from "../Util/Util";
 import {useHistory, Redirect} from 'react-router-dom';
 import {confirmAlert} from 'react-confirm-alert'; // Import
@@ -926,10 +926,11 @@ function Recoleccion() {
             if (!esDatoValido(destinatario.zonaOperativaDestinatario?.m_nIdZona)) {
                 showSuccess("Verificar la zona operativa de destinatario")
                 return valid;
-            } else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
+            }
+          /*  else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
                 showSuccess("Verificar la zona tarifa de destinatario")
                 return valid;
-            }
+            }*/
         }
         if (state.entregaConCita){
             if (!state.citaPendiente){
@@ -971,12 +972,13 @@ function Recoleccion() {
         let error = false
         let params = {}
         if(state.diferenteEntrega){
-            if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
+            /*if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
                 error = true
                 showSuccess("Verificar la zona operativa de diferente domicilio entrega")
-            }else if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
+            }else */
+                if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
                 error = true
-                showSuccess("Verificar la zona tarifa de diferente domicilio entrega")
+                showSuccess("Verificar la zona operativa de diferente domicilio entrega")
             }else if(entregaDD.domicilioEnt==""){
                 error = true
                 showSuccess("Verificar el domicilio de entrega")
@@ -990,10 +992,11 @@ function Recoleccion() {
         }else if(destinatario.zonaOperativaDestinatario?.m_nIdZona==undefined){
             error = true
             showSuccess("Verificar la zona operativa de destinatario")
-         }else if(destinatario.zonaTarifaDestinatario?.m_nIdZona==undefined){
+         }
+        /*else if(destinatario.zonaTarifaDestinatario?.m_nIdZona==undefined){
             error = true
             showSuccess("Verificar la zona tarifa de destinatario")
-         }
+         }*/
           else if(destinatario.correoDestinatario == ""){
             error = true
             showSuccess("Error al agregar recoleccion: El correo del destinatario es un campo requerido")
@@ -1003,10 +1006,12 @@ function Recoleccion() {
             if(recoleccionDD.zonaOperativaRec?.m_nIdZona==undefined){
                 error = true
                 showSuccess("Verificar la zona operativa de diferente domicilio recoleccion")
-            }else if(recoleccionDD.zonaTarifaRec?.m_nIdZona==undefined){
+            }else
+               /* if(recoleccionDD.zonaTarifaRec?.m_nIdZona==undefined){
                 error = true
                 showSuccess("Verificar la zona tarifa de diferente domicilio recoleccion")
-            }else if(recoleccionDD.domicilioRec==""){
+            }else*/
+                if(recoleccionDD.domicilioRec==""){
                 error = true
                 showSuccess("Verificar el domicilio de recoleccion")
             }else if(recoleccionDD.recogerEnRec==""){
@@ -1019,10 +1024,12 @@ function Recoleccion() {
         }else if(remitente.zonaOperativaRemitente?.m_nIdZona==undefined){
             error = true
             showSuccess("Verificar la zona operativa de remitente")
-        } else if(remitente.zonaTarifaRemitente?.m_nIdZona==undefined){
+        } else
+          /*  if(remitente.zonaTarifaRemitente?.m_nIdZona==undefined){
             error = true
             showSuccess("Verificar la zona tarifa de remitente")
-        } else if(remitente.correoRemitente == "" ){
+        } else*/
+            if(remitente.correoRemitente == "" ){
             error = true
             showSuccess("Error al agregar recoleccion: El correo del remitente es un campo requerido")
         }
@@ -1963,6 +1970,9 @@ function Recoleccion() {
     }
     const handleChange = (event) => {
         event.preventDefault();
+        if(event.target.id == "porcentajeSeguro"){
+            setRepetirConceptos(true)
+        }
         setState({
             ...state,
             [event.target.id]: event.target.value,
@@ -1992,6 +2002,7 @@ function Recoleccion() {
 
     const handleCitaCheckboxChange = (event) => {
         // event.preventDefault();
+        setRepetirConceptos(true)
         setState({
             ...state,
             recoleccionConCita: !state.recoleccionConCita,
@@ -2059,7 +2070,7 @@ function Recoleccion() {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar">
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101415)}>
                             <a data-toggle="tab"
                                onClick={() =>
                                  { if(row.row.m_nIdEstatusRecoleccion==1 ||row.row.m_nIdEstatusRecoleccion==6){
@@ -2079,19 +2090,19 @@ function Recoleccion() {
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
-                        <Tooltip title="Consultar">
+                        <Tooltip title="Consultar" disabled={!validarDerecho(9101419)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row.m_nIdRecoleccion))}><i className="fa fa-eye"
                                                                                                   style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
-                        <Tooltip title="Reporte">
+                        <Tooltip title="Reporte" disabled={!validarDerecho(9101418)}>
                             <a  className="btn btn-default btn-xs"
                                 onClick={() => generarReporte(row.row.m_nIdRecoleccion, row.row.m_sFolioRecoleccion)}><i className="zmdi zmdi-file"
                                                                                                                  style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
 
-                        <Tooltip title="Eliminar">
+                        <Tooltip title="Eliminar" disabled={!validarDerecho(9101416)}>
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
                                    title: 'Confirmar Eliminar',
@@ -3127,6 +3138,7 @@ function Recoleccion() {
     }
 
     const handleChangeTipoSeguro = (event) => {
+        setRepetirConceptos(true)
         setState({
             ...state,
             idTipoSeguro: event.target.value,
@@ -3488,13 +3500,13 @@ function Recoleccion() {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" onClick={(event) => handleShowListado(event)}>
+                            <a   data-toggle="tab" onClick={(event) => handleShowListado(event)}>
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
 
                         <li>
-                            <a data-toggle="tab" onClick={handleShowAgregar}>
+                            <a className={validarDerecho(9101414)?"":classes.disabled} data-toggle="tab" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -3515,8 +3527,7 @@ function Recoleccion() {
                         </li>
 
                         <li>
-                            <a onClick={handleShowCancelar}
-                               className={state.idRecoleccion === 0 ? classes.disabled : ""}>
+                            <a className={(state.idRecoleccion === 0 || !validarDerecho(9101420)) ? classes.disabled : ""} onClick={handleShowCancelar}>
                                 <i className="zmdi zmdi-print"/> Cancelar
                             </a>
                         </li>
@@ -3536,7 +3547,7 @@ function Recoleccion() {
                         </li>
 
                         <li style={{float: "right"}}>
-                            <a data-toggle="tab" href="#" className={state.idRecoleccion === 0 ? classes.disabled : ""}
+                            <a data-toggle="tab" href="#" className={(state.idRecoleccion === 0 || !validarDerecho(9101417)) ? classes.disabled : ""}
                                style={{textAlign: "right"}} onClick={() => setRedirect(true)}>
                                 Generar embarque
                             </a>
@@ -3908,6 +3919,7 @@ function Recoleccion() {
                                                                 <div className="input">
                                                                     <TextField
                                                                         name="idTipoSeguro"
+                                                                        id="idTipoSeguro"
                                                                         select
                                                                         required
                                                                         label="Tipo seguro"
@@ -3944,6 +3956,7 @@ function Recoleccion() {
                                                                                onChange={handleChange}
                                                                                value={state.porcentajeSeguro}
                                                                                placeholder="%"
+                                                                               id="porcentajeSeguro"
                                                                                name="porcentajeSeguro"
                                                                                InputProps={{
                                                                                    endAdornment: <InputAdornment position="start">%</InputAdornment>,
@@ -3961,6 +3974,7 @@ function Recoleccion() {
                                                                                label="Valor Declarado"
                                                                                onChange={(event) => {
                                                                                    event.preventDefault();
+                                                                                   setRepetirConceptos(true)
                                                                                    setState({
                                                                                        ...state,
                                                                                        valorDeclarado: event.target.value,
@@ -3969,6 +3983,7 @@ function Recoleccion() {
                                                                                value={state.valorDeclarado}
                                                                                placeholder="$"
                                                                                name="valorDeclarado"
+                                                                               id="valorDeclarado"
                                                                                InputProps={{
                                                                                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
                                                                                }}
@@ -4359,7 +4374,7 @@ function Recoleccion() {
                                                                     </div>
 
                                                                 </div>
-                                                                <div className="col-sm-6 col-md-6 unit">
+                                                            { false && <div className="col-sm-6 col-md-6 unit">
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             value={recoleccionDD.zonaTarifaRec}
@@ -4391,6 +4406,7 @@ function Recoleccion() {
                                                                         />
                                                                     </div>
                                                                 </div>
+                                                                }
 
                                                                 <div className="col-sm-6 col-md-4  unit">
                                                                     <div className="input">
@@ -4590,7 +4606,7 @@ function Recoleccion() {
                                                                     </div>
 
                                                                 </div>
-                                                                <div className="col-sm-6 col-md-6 unit">
+                                                               { false && <div className="col-sm-6 col-md-6 unit">
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             value={entregaDD.zonaTarifaEnt}
@@ -4622,6 +4638,7 @@ function Recoleccion() {
                                                                         />
                                                                     </div>
                                                                 </div>
+                                                                    }
 
                                                                 <div className="col-sm-6 col-md-4  unit">
 
