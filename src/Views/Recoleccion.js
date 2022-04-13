@@ -916,10 +916,10 @@ function Recoleccion() {
                 showSuccess("La zona operativa de entrega es un dato requerido");
                 return valid;
             }
-            if (!esDatoValido(entregaDD.zonaTarifaEnt?.m_nIdZona)){
+         /*  if (!esDatoValido(entregaDD.zonaTarifaEnt?.m_nIdZona)){
                 showSuccess("La zona de la tarifa de entrega es un dato requerido");
                 return valid;
-            }
+            }*/ 
 
         }else {
             /**Si es entrega en domicilio de destinatario*/

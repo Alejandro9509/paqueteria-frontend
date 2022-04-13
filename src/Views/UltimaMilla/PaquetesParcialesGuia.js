@@ -26,6 +26,18 @@ class PaquetesParcialesGuia extends Component{
                     valueFormatter: (params) => `${params.row.m_bEsRecoleccion ? params.row.m_sNombreRemitente : params.row.m_sNombreDestinatario}`,
                     width: 250,
                 }
+            ],
+            paquetesEjemploNoEsParcial:[
+                {
+                    "Nombre": "LOTE",
+                    "Cantidad": 25,
+                    "Identificador": 5189
+                },
+                {
+                    "Nombre": "CAJAS",
+                    "Cantidad": 28,
+                    "Identificador": 5190
+                }
             ]
         }
         this.handlePaquetesSeleccionadas = this.handlePaquetesSeleccionadas.bind(this)
