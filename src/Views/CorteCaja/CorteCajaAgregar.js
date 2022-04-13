@@ -9,7 +9,7 @@ import {
     DialogContent,
     FormControl,
     Grid,
-    InputLabel,
+    InputLabel, MenuItem,
     Select,
     Tooltip
 } from "@material-ui/core";
@@ -55,8 +55,8 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
     });
     const columnsGuias = React.useMemo(() => [
         {
-            headerName: "Fecha/Hora Elaboración",
-            field: "m_dFecha",
+            headerName: "Fecha/Hora",
+            field: "m_sFechaHora",
             flex: 1,
         }, {
             headerName: "Folio Guia",
@@ -93,6 +93,12 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
         },{
             headerName: "Importe Retiene",
             field: "m_cImporteRetiene",
+            type:'number',
+            valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
+            flex: 1,
+        },{
+            headerName: "Descuento",
+            field: "m_cDescuento",
             type:'number',
             valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
             flex: 1,
@@ -445,27 +451,24 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                 ...state,
                 folioGuia: event.target.value,
             })
-            obtenerGuiasFiltro(0, 0, 0, 0, value).then(respuesta => {
+            obtenerGuiasFiltro(0, 0, 0, 0, value,0,0, 0).then(respuesta => {
                 if (respuesta.data == "Vacio") {
                     setDataGuiasAgregar([])
                 } else {
                     let totalTotal = 0.0
                     respuesta.data.forEach((i) => {
-                        let m_cImporte = 0
+                        /*let m_cImporte = 0
                         let m_cImporteIva = 0
                         let m_cImporteRetiene = 0
-                        let m_cTotal = 0
-                        i.m_arClsGuiaConceptos.forEach((j) => {
+                        let m_cTotal = 0*/
+                        /*i.m_arClsGuiaConceptos.forEach((j) => {
                             m_cImporte += parseFloat(j.m_cImporte)
                             m_cImporteIva += parseFloat(j.m_cImporteIva)
                             m_cImporteRetiene += parseFloat(j.m_cImporteRetiene)
                             m_cTotal += parseFloat(j.m_cTotal)
-                        })
-                        i.m_cImporte = m_cImporte
-                        i.m_cImporteIva = m_cImporteIva
-                        i.m_cImporteRetiene = m_cImporteRetiene
-                        i.m_cTotal = m_cTotal
-                        totalTotal += parseFloat(m_cTotal)
+                        })*/
+
+                        totalTotal += parseFloat(i.m_cTotal)
                     })
                     setState( state => {
                         return{
@@ -659,12 +662,12 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                                                                 InputProps={{name: "moneda"}}
                                                             >
                                                                 {dataTipoMoneda.map((moneda) => (
-                                                                    <option
+                                                                    <MenuItem
                                                                         key={moneda.m_nIdMoneda}
                                                                         value={moneda.m_nIdMoneda}
                                                                     >
                                                                         {moneda.m_sMoneda}
-                                                                    </option>
+                                                                    </MenuItem>
                                                                 ))}
                                                             </Select>
                                                         </FormControl>
@@ -685,12 +688,12 @@ function CorteCajaAgregar({pantallaActiva, select, consult}){
                                                                 InputProps={{name: "idTipoPago"}}
                                                             >
                                                                 {dataTipoPago.map((moneda) => (
-                                                                    <option
+                                                                    <MenuItem
                                                                         key={moneda.m_nIdTipoPago}
                                                                         value={moneda.m_nIdTipoPago}
                                                                     >
                                                                         {moneda.m_sTipoPago}
-                                                                    </option>
+                                                                    </MenuItem>
                                                                 ))}
                                                             </Select>
                                                         </FormControl>
