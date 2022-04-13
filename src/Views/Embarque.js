@@ -3466,6 +3466,7 @@ function Embarque(props) {
                                                                         handleDataChange={handleChangeDestinatario}
                                                                         dataPadreConsulta={dataEmbarqueConsulta}
                                                                         seCalculaTarifa={seCalculaTarifa}
+                                                                        entregaDomicilioDestinatario={!state.entregaEnSucursal && !state.diferenteEntrega}
                                                                       
                                                                     />
                                                                 }
