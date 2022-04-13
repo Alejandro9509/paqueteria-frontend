@@ -93,6 +93,7 @@ function ParametrosConfiguracion2() {
         cobrarCita: false,
         costoCita: "0",
         detectarTipoCobro: false,
+        validarInforme: false,
         tipoCobro:0,
         limpiarProducto: false,
         idsTiposCobroSeleccionArray: [],
@@ -136,6 +137,7 @@ function ParametrosConfiguracion2() {
             CobroCargaDescargaTarifa: configuraciones.cobroCargaDescarga,
             CobrarCita: configuraciones.cobrarCita,
             DetectarTipoCobro: configuraciones.detectarTipoCobro,
+            ValidarInforme: configuraciones.validarInforme,
             LimpiarProducto: configuraciones.limpiarProducto,
             TipoCobro: configuraciones.tipoCobro,
             TiposCobroActivos: configuraciones.idsTiposCobroSeleccionString,
@@ -176,6 +178,7 @@ function ParametrosConfiguracion2() {
                     cobrarCita: respuesta.data.esCobro,
                     costoCita: respuesta.data.CobroCitaTarifas || 0,
                     detectarTipoCobro: respuesta.data.DetectarTipoCobro,
+                    validarInforme: respuesta.data.ValidarInforme,
                     limpiarProducto: respuesta.data.LimpiarProducto,
                     tipoCobro: respuesta.data.TipoCobro,
                     idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
@@ -639,6 +642,21 @@ function ParametrosConfiguracion2() {
                                                     ))}
                                                 </Select>
                                             </FormControl>
+                                        </Box>                                      
+                                    </Box>
+                                    <Box width="40%" p={1} my={0.5} display="flex">
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <h2>Escanear  Paquetes al Cargar Informe en Remolque</h2>
+                                        </Box>
+                                        <Box width="40%" p={1} my={0.5}>
+                                            <Checkbox
+                                                checked={configuraciones.validarInforme}
+                                                onChange={handleChecked}
+                                                color="primary"
+                                                style={{transform: "scale(2)"}}
+                                                inputProps={{'aria-label': 'primary checkbox'}}
+                                                name="validaInforme"
+                                            />
                                         </Box>
                                     </Box>
                                 </Box>

@@ -602,6 +602,23 @@ if(input=="codigoPostal"){
 
     
   };
+
+  useEffect(() => {
+    handleEntregaEnDomicilioDestinatario()
+  }, [props.entregaDomicilioDestinatario])
+
+  const handleEntregaEnDomicilioDestinatario = () =>{
+    if (props.entregaDomicilioDestinatario && !state.zonaOperativa){
+      obtenerZonaOperativaByIdCodigoPostal(state.codigoPostal.m_sCP).then(( zonaOperativa ) => {
+            setState((state) => ({
+              ...state,
+              zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+            }));
+
+          })
+    }
+  }
+
   const dialogVisible = (isVisible) => {
     setState(() => ({
       ...state,

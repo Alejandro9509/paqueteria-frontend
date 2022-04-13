@@ -24,7 +24,7 @@ class PaquetesParcialesGuia extends Component{
                     headerName: "Embalaje",
                     field: "m_sNombreRemitente",
                     valueFormatter: (params) => `${params.row.m_bEsRecoleccion ? params.row.m_sNombreRemitente : params.row.m_sNombreDestinatario}`,
-                    width: 250,
+                    width: 150,
                 }
             ],
             paquetesEjemploNoEsParcial:[

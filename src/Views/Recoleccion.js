@@ -4115,6 +4115,7 @@ function Recoleccion() {
                                                                         dataPadreConsulta={dataRecoleccionConsulta}
                                                                         limpiarRemDes={limpiarRemDes}
                                                                         seCalculaTarifa={seCalculaTarifa}
+                                                                        entregaDomicilioDestinatario={!state.entregaEnSucursal && !state.diferenteEntrega}
                                                                     />
                                                                 }
                                                             <div className="row">
