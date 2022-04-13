@@ -28,9 +28,11 @@ import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unida
 import {PieChart} from 'react-minimal-pie-chart';
 import BlockIcon from '@material-ui/icons/Block';
 import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
+import PaquetesParcialesGuia from './PaquetesParcialesGuia';
 import AgregarPaqueteUltimaMilla from "./AgregarPaqueteUltimaMilla";
 import PaquetesList from "./PaquetesList";
 import GetAppIcon from '@material-ui/icons/GetApp';
+import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
 
 import {
     actualizarCoordenadasGuia,
@@ -62,6 +64,7 @@ import {
 } from "../../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "../SAT/EnvioCorreoDialogo";
 import {validarDerecho} from "../../Util/Util";
+
 function showError(mensaje) {
     new Noty({
         type: "warning",
@@ -93,12 +96,14 @@ class DetalleParadas extends Component {
             open: false,
             tour: null,
             openRemplazar: false,
+            openParciales: false,
             openAgregar: false,
 
         }
         this.searchRepartidor = this.searchRepartidor.bind(this)
         this.openDetail = this.openDetail.bind(this)
         this.openRemplazarPaquete = this.openRemplazarPaquete.bind(this)
+        this.openPaquetesParciales = this.openPaquetesParciales.bind(this)
         this.onSubmitRemplazarPaquete = this.onSubmitRemplazarPaquete.bind(this)
         this.onSubmitOrdenarPaquetes = this.onSubmitOrdenarPaquetes.bind(this)
         this.onSubmitBorrarPaquete = this.onSubmitBorrarPaquete.bind(this)
@@ -145,6 +150,10 @@ class DetalleParadas extends Component {
         obtenerGuiaUltimaMilla(this.props.filtros.zonasSeleccionada, parseInt(this.props.filtros.tipoBusqueda)).then(({data}) => {
             this.setState({paquetes: data, openRemplazar: true, tour: tour, paqueteSeleccionado: paquete})
         })
+    }
+
+    openPaquetesParciales(tour, paquete) {
+            this.setState({openParciales: true, tour: tour, paqueteSeleccionado: paquete})
     }
 
     confirmDeleteParada(idParada, idGuia, esRecoleccion) {
@@ -474,6 +483,11 @@ class DetalleParadas extends Component {
                                              onSubmit={this.onSubmitRemplazarPaquete}
                                              close={() => this.setState({openRemplazar: false})}
                                              data={this.state.paquetes}/>
+
+                <PaquetesParcialesGuia open={this.state.openParciales} multiples={false}
+                                             /* onSubmit={this.onSubmitRemplazarPaquete} */
+                                             close={() => this.setState({openParciales: false})}
+                                             data={this.state.paquetes} />
                 {
                     !this.state.openDetail &&
                     <IconButton
@@ -803,6 +817,22 @@ class DetalleParadas extends Component {
                                                                                                         disableElevation
                                                                                                         variant="contained"
                                                                                                         color="primary">
+                                                                                                        
+                                                                                                        {
+                                                                                                            !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            <IconButton
+                                                                                                                /* disabled={!validarDerecho(9101449)} */
+                                                                                                                onClick={() => this.openPaquetesParciales(tour, g)}
+                                                                                                                aria-label="reorder">
+                                                                                                                <Tooltip
+                                                                                                                    title={"Entregas Parciales"}>
+                                                                                                                    <DepartureBoardIcon
+
+                                                                                                                        fontSize="default"/>
+                                                                                                                </Tooltip>
+                                                                                                            </IconButton>
+                                                                                                        }
+                                                                                                        
                                                                                                         {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
@@ -818,6 +848,7 @@ class DetalleParadas extends Component {
                                                                                                             </IconButton>
                                                                                                         }
 
+                                                                                                    
                                                                                                         {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
