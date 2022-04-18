@@ -1153,21 +1153,20 @@ function Recoleccion() {
             params.m_nIdRemolque = state.unidad.m_nIdUnidad
             params.m_nCreadoPor = state.CreadoPor
             params.m_nModificadoPor = state.ModificadoPor
-
         if (state.diferenteRecoleccion) {
             params.m_nIdCPDetalleRecoleccion = recoleccionDD.codigoPostalRec.m_nIdCP
             params.m_sDomicilioDetalleRecoleccion = recoleccionDD.domicilioRec
             params.m_sRecogerEnDetalleRecoleccion = recoleccionDD.recogerEnRec
             params.m_sDatosAdicionalesDetalleRecoleccion = recoleccionDD.datosAdicionalesRec
             params.m_nIdZonaOperativa = recoleccionDD.zonaOperativaRec.m_nIdZona
-            params.m_nIdZonaTarifa = recoleccionDD.zonaTarifaRec.m_nIdZona
+            params.m_nIdZonaTarifa = recoleccionDD.zonaTarifaRec? recoleccionDD.zonaTarifaRec.m_nIdZona : 0
             params.m_nIdEstadoRecoleccion = recoleccionDD.estadoRec
             params.m_sCodigoMunicipioRecoleccion = recoleccionDD.municipioRec
             params.m_sLatitudR = coordenadas ? coordenadas.lat : recoleccionDD.latitudRec
             params.m_sLongitudR = coordenadas ? coordenadas.lng : recoleccionDD.longitudRec
         } else {
             params.m_nIdZonaOperativa = remitente.zonaOperativaRemitente.m_nIdZona
-            params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente.m_nIdZona
+            params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente? remitente.zonaTarifaRemitente.m_nIdZona : 0
             params.m_sLatitudR = coordenadas ? coordenadas.lat : remitente.latitudR
             params.m_sLongitudR = coordenadas ? coordenadas.lng : remitente.longitudR
         } 
@@ -1180,12 +1179,12 @@ function Recoleccion() {
             params.m_sEntregarEnDetalleEntrega = entregaDD.entregarEnEnt
             params.m_sDatosAdicionalesDetalleEntrega = entregaDD.datosAdicionalesEnt
             params.m_nIdZonaOperativaEntrega = entregaDD.zonaOperativaEnt.m_nIdZona
-            params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt.m_nIdZona
+            params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt? entregaDD.zonaTarifaEnt.m_nIdZona : 0
             params.m_nIdEstadoEntrega = entregaDD.estadoEnt
             params.m_sCodigoMunicipioEntrega = entregaDD.municipioEnt
         } else {
             params.m_nIdZonaOperativaEntrega = destinatario.zonaOperativaDestinatario.m_nIdZona
-            params.m_nIdZonaTarifaEntrega = destinatario.zonaTarifaDestinatario.m_nIdZona
+            params.m_nIdZonaTarifaEntrega = destinatario.zonaTarifaDestinatario ? destinatario.zonaTarifaDestinatario.m_nIdZona : 0
         }
 
 
