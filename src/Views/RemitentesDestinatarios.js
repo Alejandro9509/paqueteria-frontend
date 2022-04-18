@@ -572,8 +572,8 @@ if(input=="codigoPostal"){
                     colonia: row.data.m_sColonia || "No especificado",
                     latitud: row.data.m_sLatitud,
                     longitud: row.data.m_sLongitud,
-                    origen: zonaTarifa.data.length !== 0  ? {m_nIdCiudad: zonaTarifa.data[0].m_nIdSucursal, m_sCiudad: zonaTarifa.data[0].m_sSucursal} : null,
-                    destino: zonaTarifa.data.length !== 0  ? {m_nIdCiudad: zonaTarifa.data[0].m_nIdSucursal, m_sCiudad: zonaTarifa.data[0].m_sSucursal} : null,
+                    origen: zonaOperativa.data.length !== 0  ? {m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino, m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino} : null,
+                    destino: zonaOperativa.data.length !== 0  ? {m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino, m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino} : null,
                     openDialog: false,
                     zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
                     zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null
@@ -586,13 +586,13 @@ if(input=="codigoPostal"){
                       showSuccess("El codigo postal del destinatario no está registrado en ninguna zona operativa.")
                     }
                   }
-                  if (zonaTarifa.data.length === 0){
+                  /*if (zonaTarifa.data.length === 0){
                     if (props.remitente){
                       showSuccess("El codigo postal del remitente no está registrado en ninguna zona de tarifa.")
                     }else if (props.destinatario){
                       showSuccess("El codigo postal del destinatario no está registrado en ninguna zona de tarifa.")
                     }
-                  }
+                  }*/
                 }
             );
 

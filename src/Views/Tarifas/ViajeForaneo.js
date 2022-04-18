@@ -117,7 +117,6 @@ export default function ViajeForaneo(props) {
         state.grupos.forEach(i => {
             if (i.idGrupo === grupo.idGrupo){
                 i.idGrupo = grupo.idGrupo
-                i.nombre = grupo.nombre
                 i.zonas = grupo.zonas
                 i.rangos = grupo.rangos
                 i.productos = grupo.productos
