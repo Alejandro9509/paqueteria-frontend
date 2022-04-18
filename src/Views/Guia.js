@@ -854,7 +854,7 @@ function Guia(props) {
         },
         {
             headerName: "Usuario de Cancelación",
-            field: "m_nUsuarioCancelacion",
+            field: "m_sUsuarioCancelacion",
             width: 200,
         }
 
