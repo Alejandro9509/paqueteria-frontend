@@ -655,7 +655,7 @@ function ParametrosConfiguracion2() {
                                                 color="primary"
                                                 style={{transform: "scale(2)"}}
                                                 inputProps={{'aria-label': 'primary checkbox'}}
-                                                name="validaInforme"
+                                                name="validarInforme"
                                             />
                                         </Box>
                                     </Box>
