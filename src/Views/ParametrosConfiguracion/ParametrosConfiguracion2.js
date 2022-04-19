@@ -93,7 +93,6 @@ function ParametrosConfiguracion2() {
         cobrarCita: false,
         costoCita: "0",
         detectarTipoCobro: false,
-        validarInforme: false,
         tipoCobro:0,
         limpiarProducto: false,
         idsTiposCobroSeleccionArray: [],
@@ -104,8 +103,8 @@ function ParametrosConfiguracion2() {
         idConceptoRecoleccion: 0,
         idConceptoEntrega: 0,
         idConceptoSeguro: 0,
-        idConceptoCita:0
-
+        idConceptoCita:0,
+        validarInforme: false
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
@@ -137,7 +136,6 @@ function ParametrosConfiguracion2() {
             CobroCargaDescargaTarifa: configuraciones.cobroCargaDescarga,
             CobrarCita: configuraciones.cobrarCita,
             DetectarTipoCobro: configuraciones.detectarTipoCobro,
-            ValidarInforme: configuraciones.validarInforme,
             LimpiarProducto: configuraciones.limpiarProducto,
             TipoCobro: configuraciones.tipoCobro,
             TiposCobroActivos: configuraciones.idsTiposCobroSeleccionString,
@@ -149,7 +147,8 @@ function ParametrosConfiguracion2() {
             IdConceptoRecoleccion: configuraciones.idConceptoRecoleccion,
             IdConceptoEntrega: configuraciones.idConceptoEntrega,
             IdConceptoSeguro: configuraciones.idConceptoSeguro,
-            IdConceptoCita: configuraciones.idConceptoCita
+            IdConceptoCita: configuraciones.idConceptoCita,
+            ValidarInforme: configuraciones.validarInforme
         }
 
         modificarParametrosConfiguracion(params)
@@ -178,7 +177,6 @@ function ParametrosConfiguracion2() {
                     cobrarCita: respuesta.data.esCobro,
                     costoCita: respuesta.data.CobroCitaTarifas || 0,
                     detectarTipoCobro: respuesta.data.DetectarTipoCobro,
-                    validarInforme: respuesta.data.ValidarInforme,
                     limpiarProducto: respuesta.data.LimpiarProducto,
                     tipoCobro: respuesta.data.TipoCobro,
                     idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
@@ -193,7 +191,8 @@ function ParametrosConfiguracion2() {
                     idConceptoRecoleccion: respuesta.data.IdConceptoRecoleccion || 0,
                     idConceptoEntrega: respuesta.data.IdConceptoEntrega || 0,
                     idConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
-                    idConceptoCita: respuesta.data.IdConceptoCita || 0
+                    idConceptoCita: respuesta.data.IdConceptoCita || 0,
+                    validarInforme: respuesta.data.validarQR
                 }
             })
         })
