@@ -503,6 +503,7 @@ function Embarque(props) {
         entregaEnSucursal: false,
         idSucursalEntrega: '',
         diferenteEntrega: false,
+        zonaOperativaSucursal: null,
 
         //Cita de recoleccion
         entregaConCita: false,
@@ -1413,6 +1414,17 @@ function Embarque(props) {
         setDataTipoCobro(newTiposCobro)
     }, [state.entregaEnSucursal])
 
+    const getZonaOperativaByCodigoPostal = (codigoPostal) => {
+        obtenerZonaOperativaByIdCodigoPostal(codigoPostal).then(respuesta => {
+            setState(state => {
+                return{
+                    ...state,
+                    zonaOperativaSucursal: respuesta.data[0]
+                }
+            })
+        })
+    }
+
     function handleShowCancelar(e) {
         if (e){
             e.preventDefault()
@@ -1911,12 +1923,14 @@ function Embarque(props) {
     };
 
     const handleChangeSucursalEntrega = (event) => {
-        setState({
-            ...state,
-            [event.target.name]: event.target.value,
-            codigoPostalEntrega: dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_nIdCodigoPostal
-
+        //Evaluar si este setState se usa para algo
+        setState(state => {
+            return {
+                ...state,
+                [event.target.name]: event.target.value,
+            }
         });
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_sCodigoPostal)
     };
 
     const handleEntregaCheckboxChange = (event) => {

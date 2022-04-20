@@ -235,42 +235,6 @@ function Recoleccion() {
         tipoCobro: '',
         clientePaga: {},
 
-        //Remitente
-        /*idRemitente: '',
-        aliasRemitente: '',
-        nombreRemitente: '',
-        RFCRemitente: '',
-        domicilioRemitente: '',
-        calleRemitente: '',
-        numeroIntRemitente: '0',
-        numeroExtRemitente: '',
-        coloniaRemitente: '',
-        ciudadRemitente: '',
-        codigoPostalRemitente: '',
-        correoRemitente: '',
-        telefonoRemitente: '',
-        contactoRemitente: '',
-        origenRemitente: '',
-        zonaRemitente: {},*/
-
-        //Destinatario
-        /*idDestinatario: '',
-        aliasDestinatario: '',
-        nombreDestinatario: '',
-        RFCDestinatario: '',
-        domicilioDestinatario: '',
-        calleDestinatario: '',
-        numeroIntDestinatario: '0',
-        numeroExtDestinatario: '',
-        coloniaDestinatario: '',
-        ciudadDestinatario: '',
-        codigoPostalDestinatario: '',
-        correoDestinatario: '',
-        telefonoDestinatario: '',
-        contactoDestinatario: '',
-        destinoDestinatario: '',
-        zonaDestinatario: {},*/
-
         //Paquetes/Sobres
         countPaquetes: 1,
         countSobres: 1,
@@ -294,22 +258,10 @@ function Recoleccion() {
         diferenteEntrega: false,
         entregaEnSucursal: false,
         idSucursalEntrega: "",
-        /*ciudadEntrega: '',
-        codigoPostalEntrega: '',
-        zonaEntrega: '',
-        domicilioEntrega: '',
-        entregaEn: '',
-        datosAdicionalesEntrega: '',*/
+        zonaOperativaSucursal: null,
 
         //Recoleccion
         diferenteRecoleccion: false,
-        /*fechaRecoleccion: '',
-        ciudadRecoleccion: '',
-        codigoPostalRecoleccion: '',
-        zonaRecoleccion: '',
-        domicilioRecoleccion: '',
-        recogerEn: '',
-        datosAdicionalesRecoleccion: '',*/
 
         //Operador
         operador: '',
@@ -1985,11 +1937,25 @@ function Recoleccion() {
 
     }
     const handleChangeSucursalEntrega = (event) => {
-        setState({
-          ...state,
-          [event.target.name]: event.target.value
+        setState(state => {
+            return {
+                ...state,
+                [event.target.name]: event.target.value
+            }
         });
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_sCodigoPostal)
       };
+
+    const getZonaOperativaByCodigoPostal = (codigoPostal) => {
+        obtenerZonaOperativaByIdCodigoPostal(codigoPostal).then(respuesta => {
+            setState(state => {
+                return{
+                    ...state,
+                    zonaOperativaSucursal: respuesta.data[0]
+                }
+            })
+        })
+    }
     //setea si la recoleccion es en diferente direccion a la del remitente
     const handleRecoleccionCheckboxChange = (event) => {
         // event.preventDefault();
