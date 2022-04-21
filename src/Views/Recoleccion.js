@@ -1447,7 +1447,16 @@ function Recoleccion() {
                 })
             })
         }
-        if (respuesta.data.m_bEntregaDiferenteDomicilio){
+        if (respuesta.data.m_bEntregaEnSucursal){
+            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaOperativaSucursal: data
+                    }
+                })
+            })
+        }else if (respuesta.data.m_bEntregaDiferenteDomicilio){
             setEntregaDD(entregaDD =>{
                 return {
                     ...entregaDD,

@@ -1702,6 +1702,14 @@ function Embarque(props) {
                     diferenteEntrega: false,
                 }
             })
+            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaOperativaSucursal: data
+                    }
+                })
+            })
             /**Si es entrega es en diferente domicilio*/
         }else if (!respuesta.data.EntregarMismoDomicilio){
             let estado =  `${respuesta.data.m_nIdEstadoEntrega}`
