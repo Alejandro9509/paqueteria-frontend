@@ -511,7 +511,7 @@ function Guia(props) {
             ivaTraslada: ivaTraslada
         })
         setConceptosAdicionales(conceptosAdicionalesAux)
-        obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalRemitente).then(
+        /*obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalRemitente).then(
             ({ data }) => {
                 console.log(data)
                 setState(state => {
@@ -533,7 +533,7 @@ function Guia(props) {
 
                 })
             }
-          );
+          );*/
         setState(state => {
             return {
                 ...state,
@@ -1091,7 +1091,7 @@ function Guia(props) {
 
         // setDataConceptos(conceptosCast)
         setConceptosAdicionales(conceptosCast)
-        obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalRemitente).then(
+        /*obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalRemitente).then(
             ({ data }) => {
                 console.log(data)
                 setState(state => {
@@ -1113,7 +1113,7 @@ function Guia(props) {
 
                 })
             }
-          );
+          );*/
         setState(state => {
             return {
                 ...state,

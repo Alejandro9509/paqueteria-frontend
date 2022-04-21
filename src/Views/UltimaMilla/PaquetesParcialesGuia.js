@@ -13,32 +13,18 @@ class PaquetesParcialesGuia extends Component{
             columns: [
                 {
                     headerName: "Paquete",
-                    field: "m_sFolio",
+                    field: "ctd",
                     width: 150,
                 }, {
                     headerName: "Identificador",
-                    field: "IdTipoEmpaque",
-                    valueFormatter: (params) => `${params.value ? "Recolección" : "Entrega"}`,
+                    field: "m_nIdEmbarqueDetalle",
                     width: 250,
                 }, {
                     headerName: "Embalaje",
-                    field: "m_sNombreRemitente",
-                    valueFormatter: (params) => `${params.row.m_bEsRecoleccion ? params.row.m_sNombreRemitente : params.row.m_sNombreDestinatario}`,
+                    field: "m_sEmbalaje",
                     width: 150,
                 }
             ],
-            paquetesEjemploNoEsParcial:[
-                {
-                    "Nombre": "LOTE",
-                    "Cantidad": 25,
-                    "Identificador": 5189
-                },
-                {
-                    "Nombre": "CAJAS",
-                    "Cantidad": 28,
-                    "Identificador": 5190
-                }
-            ]
         }
         this.handlePaquetesSeleccionadas = this.handlePaquetesSeleccionadas.bind(this)
         this.onSubmitData = this.onSubmitData.bind(this)    
@@ -51,12 +37,12 @@ class PaquetesParcialesGuia extends Component{
     }
 
     componentDidMount() {
-
+        console.log("props"+JSON.stringify(this.props.guia))
     }
 
     onSubmitData(e){
         e.preventDefault()
-        this.props.onSubmit(this.props.data.filter(g => this.state.idsPaquetesSeleccionadas.includes(g.m_sFolio) ))
+        this.props.onSubmit(this.props.data.filter(g => this.state.idsPaquetesSeleccionadas.includes(g.m_nIdEmbarqueDetalle) ))
     }
         
     render() {
@@ -74,12 +60,12 @@ class PaquetesParcialesGuia extends Component{
                     <div style={{ display: 'flex', height: '300px' }}>
                         <DataGrid
                             localeText={dataGridLocaleText}
-                            rows={this.props.data}
                             columns={this.state.columns}
+                            rows={this.props.guia.m_arrPaquetes}
                             density="compact"
                             isRowSelectable={(params) => params.row.isItemSelected}
                             pageSize={Math.floor((this.state.height - 310) / 30)}
-                            getRowId={(row) => row.m_sFolio}
+                            getRowId={(row) => row.m_nIdEmbarqueDetalle}
                             checkboxSelection={true}
                             onSelectionModelChange={(e) => this.handlePaquetesSeleccionadas(e)}
                         />

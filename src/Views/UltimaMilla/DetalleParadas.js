@@ -484,10 +484,13 @@ class DetalleParadas extends Component {
                                              close={() => this.setState({openRemplazar: false})}
                                              data={this.state.paquetes}/>
 
+                {false &&
                 <PaquetesParcialesGuia open={this.state.openParciales} multiples={false}
-                                             /* onSubmit={this.onSubmitRemplazarPaquete} */
+                                             tour={this.state.tour}
+                                             guia={this.state.paqueteSeleccionado}
                                              close={() => this.setState({openParciales: false})}
                                              data={this.state.paquetes} />
+                }
                 {
                     !this.state.openDetail &&
                     <IconButton
@@ -822,7 +825,10 @@ class DetalleParadas extends Component {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
                                                                                                                 /* disabled={!validarDerecho(9101449)} */
-                                                                                                                onClick={() => this.openPaquetesParciales(tour, g)}
+                                                                                                                onClick={() => {
+                                                                                                                    console.log(JSON.stringify(g))
+                                                                                                                    this.openPaquetesParciales(tour, g)
+                                                                                                                }}
                                                                                                                 aria-label="reorder">
                                                                                                                 <Tooltip
                                                                                                                     title={"Entregas Parciales"}>
