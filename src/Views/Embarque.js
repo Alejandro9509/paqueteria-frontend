@@ -503,6 +503,7 @@ function Embarque(props) {
         entregaEnSucursal: false,
         idSucursalEntrega: '',
         diferenteEntrega: false,
+        zonaOperativaSucursal: null,
 
         //Cita de recoleccion
         entregaConCita: false,
@@ -834,6 +835,7 @@ function Embarque(props) {
 
     const validarCoordenadas = (coordenadas) => {
         /**Si es modificacion*/
+        debugger
         if (state.idEmbarque != 0){
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
             if(state.diferenteEntrega
@@ -842,8 +844,8 @@ function Embarque(props) {
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas guardadas*/
             }else if (!state.diferenteEntrega
-                && !isValidText(remitente.latitudR)
-                && !isValidText(remitente.longitudR)
+                && !isValidText(destinatario.latitudD)
+                && !isValidText(destinatario.longitudD)
                 && !coordenadas
                 ) {
                 mostrarDialogoMapa(true)
@@ -1297,8 +1299,6 @@ function Embarque(props) {
             });
         }
 
-        console.log(id);
-        console.log(state.identificadorModal);
     }
 
     function getTipoCambio() {
@@ -1362,7 +1362,6 @@ function Embarque(props) {
             if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataClientes.length > 0) {
                 obtenerRecoleccionId(props.location.idRecoleccion)
                     .then((respuesta) => {
-                        console.log('Recoleccion: ', respuesta.data);
                         setDataRecoleccionOnState(respuesta)
                     })
             }
@@ -1376,7 +1375,6 @@ function Embarque(props) {
         if (props.location.idRecoleccion !== undefined) {
         obtenerRecoleccionId(props.location.idRecoleccion)
             .then((respuesta) => {
-                console.log('Recoleccion: ', respuesta.data);
                 setDataRecoleccionOnState(respuesta)
                 setTabActiva(1)
             })
@@ -1413,6 +1411,17 @@ function Embarque(props) {
         setDataTipoCobro(newTiposCobro)
     }, [state.entregaEnSucursal])
 
+    const getZonaOperativaByCodigoPostal = (codigoPostal) => {
+        obtenerZonaOperativaByIdCodigoPostal(codigoPostal).then(respuesta => {
+            setState(state => {
+                return{
+                    ...state,
+                    zonaOperativaSucursal: respuesta.data[0]
+                }
+            })
+        })
+    }
+
     function handleShowCancelar(e) {
         if (e){
             e.preventDefault()
@@ -1446,7 +1455,6 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
-            console.log(JSON.stringify(respuesta.data))
             setState({
                 ...state,
                 agregar: "Consultar",
@@ -1464,7 +1472,6 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
-            console.log('Embarque: ', respuesta)
             setState({
                 ...state,
                 agregar: "Agregar",
@@ -1503,8 +1510,6 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
-            console.log("id"+id)
-            console.log(JSON.stringify(respuesta.data))
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -1689,6 +1694,14 @@ function Embarque(props) {
                     idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
                     diferenteEntrega: false,
                 }
+            })
+            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaOperativaSucursal: data
+                    }
+                })
             })
             /**Si es entrega es en diferente domicilio*/
         }else if (!respuesta.data.EntregarMismoDomicilio){
@@ -1911,12 +1924,14 @@ function Embarque(props) {
     };
 
     const handleChangeSucursalEntrega = (event) => {
-        setState({
-            ...state,
-            [event.target.name]: event.target.value,
-            codigoPostalEntrega: dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_nIdCodigoPostal
-
+        //Evaluar si este setState se usa para algo
+        setState(state => {
+            return {
+                ...state,
+                [event.target.name]: event.target.value,
+            }
         });
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_sCodigoPostal)
     };
 
     const handleEntregaCheckboxChange = (event) => {

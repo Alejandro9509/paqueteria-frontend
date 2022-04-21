@@ -13,7 +13,7 @@ function obtenerCotizacion( data, paquetes, remitente, destinatario, recoleccion
         idDestino: destinatario.destinoDestinatario.m_nIdCiudad,
         idEmbarque: data.idEmbarque,
         idRecoleccion: data.idRecoleccion,
-        idZonaEntrega: data.diferenteEntrega ? entregaDD.zonaOperativaEnt?.m_nIdZona : destinatario.zonaOperativaDestinatario?.m_nIdZona,
+        idZonaEntrega: data.entregaEnSucursal ? data.zonaOperativaSucursal.m_nIdZona : data.diferenteEntrega ? entregaDD.zonaOperativaEnt?.m_nIdZona : destinatario.zonaOperativaDestinatario?.m_nIdZona,
         idZonaRecoleccion: data.diferenteRecoleccion ? recoleccionDD.zonaOperativaRec?.m_nIdZona : remitente.zonaOperativaRemitente.m_nIdZona,
         idCliente: data.clientePaga.m_nIdCliente,
         entregaEnSucursal:  data.entregaEnSucursal,

@@ -133,6 +133,19 @@ class CuentasCorreo extends Component {
                 edit: !!cuenta
             })
         }
+        if (value === 3){
+            console.log(this.state.cuentaEnviarFacturacion)
+            let cuenta = this.state.cuentaEnviarFacturacion
+            this.setState({
+                idCuenta: cuenta ? cuenta.m_nIdCuentasCorreo : null,
+                idSeguridad: cuenta ? cuenta.m_nTipoCifrado : null,
+                servidor: cuenta ? cuenta.m_sServidor : '',
+                puerto: cuenta ? cuenta.m_nPuerto : '',
+                usuario: cuenta ? cuenta.m_sUsuario : '',
+                pass: cuenta ? cuenta.m_sContrasenia : '',
+                edit: !!cuenta
+            })
+        }
     };
 
     componentWillMount() {
@@ -145,10 +158,14 @@ class CuentasCorreo extends Component {
             let info = respuesta.data
             let cuentaEnviarViajes = info && info.length > 0 ? info.filter(cuenta => cuenta.m_nTipoCuenta === 1) : []
             let cuentaEnviarTracking =info && info.length > 0 ? info.filter(cuenta => cuenta.m_nTipoCuenta === 2) : []
+            let cuentaEnviarFacturacion =info && info.length > 0 ? info.filter(cuenta => cuenta.m_nTipoCuenta === 3) : []
+
             this.setState({
                 dataCuentas: info,
                 cuentaEnviarViajes: cuentaEnviarViajes && cuentaEnviarViajes.length > 0 ? cuentaEnviarViajes[0] : null,
                 cuentaEnviarTracking: cuentaEnviarTracking && cuentaEnviarTracking.length > 0 ? cuentaEnviarTracking[0] : null,
+                cuentaEnviarFacturacion: cuentaEnviarFacturacion && cuentaEnviarFacturacion.length > 0 ? cuentaEnviarFacturacion[0] : null,
+
             })
         });
     }

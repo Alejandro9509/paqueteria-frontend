@@ -1297,7 +1297,6 @@ function Guia(props) {
         getAllDataEstatusGuia()
         getAllDataTipoServicio()
         cargaEmbarqueMoneda(1)
-        getAllDataTipoPago()
         getAllConceptos()
         getParametrosConfiguracion()
     }
@@ -1745,6 +1744,7 @@ function Guia(props) {
 
     const mostrarDialogoOcurre = (event, id) => {
         event.stopPropagation();
+        getAllDataTipoPago()
         obtenerGuiaId(id).then(({data}) => {
             var guia = data
             if (guia.m_nIdEstatusGuia == 7) {
@@ -1892,15 +1892,14 @@ function Guia(props) {
                                 <i className="fa fa-upload"/> Importar
                             </a>
                         </li>
-                        {
-                            (localStorage.getItem("UsuarioId") === "11" || localStorage.getItem("UsuarioId") === "4") &&
+
                             <li>
-                                <a className={(state.idGuia !== 0 && state.cambioCobro) ? "" : classes.disabled}
+                                <a className={(state.idGuia !== 0 && state.cambioCobro) && validarDerecho(3900001) ? "" : classes.disabled}
                                    onClick={() => setState({...state, openTipoCobro: true})}>
                                     <i className="fa fa-refresh"/> Cambiar Tipo Cobro
                                 </a>
                             </li>
-                        }
+
                         <li>
                             <a className={(state.idGuia !== 0 && state.cambioCobro && validarDerecho(9101459)) && state.estatusGuia != 8? "" : classes.disabled}
                                onClick={() => {

@@ -105,7 +105,7 @@ export default function CPTransferList({allItems = [],selectedItems = [],onChang
                                     }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={`${value.m_sCP} - ${value.m_sColonia} - ${value.m_sMunicipio}`} />
+                            <ListItemText id={labelId} primary={`${value.m_sCP} - ${value.m_sColonia}`} />
                         </ListItem>
                     );
                 })}
