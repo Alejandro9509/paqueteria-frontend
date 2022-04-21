@@ -249,11 +249,11 @@ function RemitenteDestinatario(props) {
                 correo: respuesta.data.m_sCorreoDestinatario,
                 telefono: respuesta.data.m_sTelefonoDestinatario,
                 contacto: respuesta.data.m_sContactoDestinatario,
-                latitud: respuesta.data.m_sLatitud || "",
-                longitud: respuesta.data.m_sLongitud || "",
+                latitud: "",
+                longitud:  "",
               };
             });
-      
+      console.log(respuesta.data)
           obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
             setDataMunicipios(data);
           });
