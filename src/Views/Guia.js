@@ -1286,7 +1286,6 @@ function Guia(props) {
         getAllDataEstatusGuia()
         getAllDataTipoServicio()
         cargaEmbarqueMoneda(1)
-        getAllDataTipoPago()
         getAllConceptos()
         getParametrosConfiguracion()
     }
@@ -1734,6 +1733,7 @@ function Guia(props) {
 
     const mostrarDialogoOcurre = (event, id) => {
         event.stopPropagation();
+        getAllDataTipoPago()
         obtenerGuiaId(id).then(({data}) => {
             var guia = data
             if (guia.m_nIdEstatusGuia == 7) {
