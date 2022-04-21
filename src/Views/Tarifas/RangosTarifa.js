@@ -51,12 +51,12 @@ export default function RangosTarifa(props) {
             field: "unidadMedida",
             width: 150,
         },{
-            headerName: "Minimo",
+            headerName: "Mínimo",
             field: "minimo",
             type:'number',
             width: 150,
         },{
-            headerName: "Maximo",
+            headerName: "Máximo",
             field: "maximo",
             type:'number',
             width: 150,

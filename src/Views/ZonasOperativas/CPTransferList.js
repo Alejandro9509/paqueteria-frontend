@@ -105,7 +105,7 @@ export default function CPTransferList({allItems = [],selectedItems = [],onChang
                                     }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={`${value.m_sCP} - ${value.m_sColonia} - ${value.m_sMunicipio}`} />
+Correccion de acentos                             <ListItemText id={labelId} primary={`${value.m_sCP} - ${value.m_sColonia} - ${value.m_sLocalidad}`} />
                         </ListItem>
                     );
                 })}
