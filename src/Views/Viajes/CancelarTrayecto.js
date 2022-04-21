@@ -6,7 +6,6 @@ import Grid from "@material-ui/core/Grid";
 class CancelarTrayecto extends Component {
     constructor(props) {
         super(props);
-        console.log(props.data)
         this.state={
             id: props.data.m_nIdViajeTrayecto,
             fecha: props.data.m_dFechaSalida || "",

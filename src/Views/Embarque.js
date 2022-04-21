@@ -835,6 +835,7 @@ function Embarque(props) {
 
     const validarCoordenadas = (coordenadas) => {
         /**Si es modificacion*/
+        debugger
         if (state.idEmbarque != 0){
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
             if(state.diferenteEntrega
@@ -843,8 +844,8 @@ function Embarque(props) {
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas guardadas*/
             }else if (!state.diferenteEntrega
-                && !isValidText(remitente.latitudR)
-                && !isValidText(remitente.longitudR)
+                && !isValidText(destinatario.latitudD)
+                && !isValidText(destinatario.longitudD)
                 && !coordenadas
                 ) {
                 mostrarDialogoMapa(true)
@@ -1298,8 +1299,6 @@ function Embarque(props) {
             });
         }
 
-        console.log(id);
-        console.log(state.identificadorModal);
     }
 
     function getTipoCambio() {
@@ -1363,7 +1362,6 @@ function Embarque(props) {
             if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataClientes.length > 0) {
                 obtenerRecoleccionId(props.location.idRecoleccion)
                     .then((respuesta) => {
-                        console.log('Recoleccion: ', respuesta.data);
                         setDataRecoleccionOnState(respuesta)
                     })
             }
@@ -1377,7 +1375,6 @@ function Embarque(props) {
         if (props.location.idRecoleccion !== undefined) {
         obtenerRecoleccionId(props.location.idRecoleccion)
             .then((respuesta) => {
-                console.log('Recoleccion: ', respuesta.data);
                 setDataRecoleccionOnState(respuesta)
                 setTabActiva(1)
             })
@@ -1458,7 +1455,6 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
-            console.log(JSON.stringify(respuesta.data))
             setState({
                 ...state,
                 agregar: "Consultar",
@@ -1476,7 +1472,6 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
-            console.log('Embarque: ', respuesta)
             setState({
                 ...state,
                 agregar: "Agregar",
@@ -1515,8 +1510,6 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
-            console.log("id"+id)
-            console.log(JSON.stringify(respuesta.data))
             setState({
                 ...state,
                 agregar: "Modificar",
