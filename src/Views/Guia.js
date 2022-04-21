@@ -1883,7 +1883,7 @@ function Guia(props) {
                         </li>
 
                             <li>
-                                <a className={(state.idGuia !== 0 && state.cambioCobro) ? "" : classes.disabled}
+                                <a className={(state.idGuia !== 0 && state.cambioCobro) && validarDerecho(3900001) ? "" : classes.disabled}
                                    onClick={() => setState({...state, openTipoCobro: true})}>
                                     <i className="fa fa-refresh"/> Cambiar Tipo Cobro
                                 </a>
