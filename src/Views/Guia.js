@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useMemo} from "react";
 import axios from "axios";
-import {getCurrentDateTime} from "../Util/Util"
+import {getCurrentDateTime,getCurrentTime,getCurrentDate} from "../Util/Util"
 import Cabecera from "../Components/Template/Cabecera";
 import IconButton from "@material-ui/core/IconButton";
 import RestartAltIcon from '@material-ui/icons/Refresh';
@@ -629,13 +629,15 @@ function Guia(props) {
           var params = {
             "motivoCancelacion": state.MotivoCancelacion,
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
-            "fechaCancelacion": state.fechaCancelado
+            "fechaCancelacion": `${getCurrentDate()}`,
+            "HoraCancelacion": `${getCurrentTime()}`
         }
+        console.log(JSON.stringify(params))
           cancelarGuia(state.idGuia, params).then((respuesta) => {
             console.log(respuesta.data)
             showSuccess("La guia ha sido cancelada");
             handleShowListado()
-        })  
+        }) 
             }
             else{
             showSuccess("La guia no puede ser cancelada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
@@ -852,6 +854,15 @@ function Guia(props) {
             field: "m_dtFechaCancelacion",
             width: 200,
         },
+        {
+            field: 'Fecha de Cancelación',
+            headerName: 'Fecha de Cancelación',
+            width: 200,
+            valueGetter: (params) =>
+              `${params.getValue(params.m_nFolioGuia, 'm_dtFechaCancelacion') || ''} ${
+                params.getValue(params.m_nFolioGuia, 'm_sHoraCancelacion') || ''
+              }`,
+          },
         {
             headerName: "Usuario de Cancelación",
             field: "m_sUsuarioCancelacion",
