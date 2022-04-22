@@ -253,7 +253,7 @@ class UltimaMilla extends Component {
             if (unidadYaAsignada){
                 showSuccess("Una de las unidades seleccionadas ya se encuentra asignada y ocupada. Seleccione otra.")
             }else{
-                let unidadesDisponibles = true
+                /*let unidadesDisponibles = true
                 let fechaActual = data.finishDate
                 for (let i = 0; i < data.unidadesSeleccionadas.length ; i++){
                     let resultado = await validarUnidadOcupada(data.unidadesSeleccionadas[i].m_nIdUnidad, fechaActual, data.sucursalSeleccionada.m_nIdSucursal)
@@ -276,8 +276,21 @@ class UltimaMilla extends Component {
                     })
                 }else{
                     showSuccess("Una de las unidades seleccionadas ya se encuentra asignada y ocupada. Seleccione otra.")
-                }
+                }*/
+                let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
+                obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
+                    if (results) {
+                        if (results.vehicleIdsNotPlanned) {
+                            if (results.vehicleIdsNotPlanned.length > 0) {
+                                unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
+                            }
+                        }
+                        results.tours.map(t => t.color = randomColor(10))
 
+                        console.log(guias)
+                        this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
+                    }
+                })
             }
 
         }
