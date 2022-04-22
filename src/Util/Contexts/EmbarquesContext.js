@@ -105,7 +105,7 @@ function obtenerEmbarqueCancelado(state){
     return result
 }
 function obtenerEmbarquesId(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarque/GetById/${id}`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Embarque/GetById/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

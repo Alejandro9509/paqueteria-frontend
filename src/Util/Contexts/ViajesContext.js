@@ -159,7 +159,7 @@ function cancelarViaje(id, params){
 }
 
 function validarSalidaParada(id){
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/paradasTimbradas/${id}`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Viajes/paradasTimbradas/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url,  { headers })

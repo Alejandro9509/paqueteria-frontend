@@ -848,6 +848,11 @@ function Guia(props) {
             width: 150,
         },
         {
+            headerName: "Observaciones",
+            field: "m_sObservaciones",
+            width: 150,
+        },
+        {
             headerName: "Fecha de Cancelación",
             field: "m_dtFechaCancelacion",
             width: 200,

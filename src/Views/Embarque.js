@@ -493,6 +493,7 @@ function Embarque(props) {
         tipoCambio: '',
         tipoCobro: '',
         clientePaga: {},
+        observaciones: '', 
         valorDeclarado:0,
         idTipoSeguro:5,
         porcentajeSeguro: 0,
@@ -1100,6 +1101,7 @@ function Embarque(props) {
             m_sHora: getCurrentDateTime().substr(getCurrentDateTime().length - 5),
             m_nIdCliente: state.clientePaga.m_nIdCliente,
             ValorDeclarado: state.valorDeclarado,
+            m_sObservaciones: state.observaciones, 
             m_nIdTipoSeguro: state.idTipoSeguro,
             m_xPorcentajeSeguro: state.porcentajeSeguro,
             m_bAplicaSeguro: state.aplicaSeguro,
@@ -1667,7 +1669,9 @@ function Embarque(props) {
                 porcentajeSeguro: respuesta.data.m_bAplicaSeguro ? respuesta.data.m_xPorcentajeSeguro : 0,
                 aplicaSeguro: respuesta.data.m_bAplicaSeguro,
                 valorDeclarado: respuesta.data.m_xValorDeclarado,
-                recoleccionConCita: respuesta.data.m_bRecoleccionConCita
+                recoleccionConCita: respuesta.data.m_bRecoleccionConCita,
+                //observaciones
+                observaciones: respuesta.data.m_sObservaciones 
             }
         });
     }
@@ -1871,6 +1875,8 @@ function Embarque(props) {
                 countPaquetes: respuesta.data.m_nNoPaquetes,
                 countSobres: respuesta.data.m_nNoSobres,
                 fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+                //observaciones
+                observaciones: respuesta.data.m_sObservaciones 
             }
         });
 
@@ -3381,8 +3387,33 @@ function Embarque(props) {
                                                                 </label>
                                                             </Grid>
                                                         </Grid>
-
-
+                                                        <Grid container spacing={2} style={{marginBottom:'10px',paddingRight:'15px'}}>
+                                                        <Grid item xs>
+                                                                <div className="col-sm-12 col-md-12 col-lg-12 unit">
+                                                                    <div className="input">                       
+                                                                                    <TextField
+                                                                                        variant="outlined"
+                                                                                        label="Observaciones"
+                                                                                        margin="dense"
+                                                                                        type= "text"
+                                                                                        disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                                        value= {state.observaciones}
+                                                                                        onChange={(event) => {
+                                                                                            event.preventDefault();
+                                                                                            setState({
+                                                                                                ...state,
+                                                                                                observaciones: event.target.value,
+                                                                                            });
+                                                                                        }}
+                                                                                        name="observaciones"
+                                                                                        id="observaciones"
+                                                                                        placeholder={"sin observaciones"}
+                                                                                        InputLabelProps={{shrink: true}}                                                                
+                                                                                    />
+                                                                    </div>
+                                                                </div>
+                                                            </Grid>                                                                            
+                                                        </Grid> 
                                                 </div>
                                             </div>
                                         </div>
