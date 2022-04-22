@@ -110,12 +110,12 @@ export default function DialogoNuevoRango(props) {
             })
             valid = false
         }
-        if (!(parseFloat(rango.importe) > 0)){
+        if ((parseFloat(rango.importe) < 0)){
             setErrores(errores=>{
                 return {
                     ...errores,
                     importe: true,
-                    descripcionError: "El importe debe ser mayor a cero"
+                    descripcionError: "El importe debe ser igual o mayor a cero"
                 }
             })
             valid = false

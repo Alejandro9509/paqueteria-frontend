@@ -123,12 +123,12 @@ export default function DialogoNuevoConcepto(props) {
         
        }
        
-       if(concepto.importe<=0){
+       if(parseFloat(concepto.importe)<0){
         setErrores(errores=>{
             return{
                 ...errores,
             errorImporte:true,
-            errorTextoImporte:'El importe debe ser mayor a 0'
+            errorTextoImporte:'El importe debe ser igual o mayor a 0'
             }
            
         })
