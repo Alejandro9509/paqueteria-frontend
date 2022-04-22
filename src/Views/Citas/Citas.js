@@ -25,8 +25,8 @@ export default function Citas(props){
         setState({
             ...state,
             fechaCita: respuesta.data.m_sFechaCita,
-            horaCitaMinima: respuesta.data.m_sHoraCitaMinima,
-            horaCitaMaxima: respuesta.data.m_sHoraCitaMaxima,
+            horaCitaMinima:'',
+            horaCitaMaxima:'',
             citaPendiente: respuesta.data.m_bCitaPendiente
 
         })

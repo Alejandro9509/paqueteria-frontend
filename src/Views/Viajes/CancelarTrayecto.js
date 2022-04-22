@@ -3,13 +3,18 @@ import PropTypes from 'prop-types';
 import {Dialog, DialogContent, DialogTitle, TextField} from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 
+const getCurrentDateTime = () => {
+    return `${new Date().getFullYear()}-${`${new Date().getMonth() +
+    1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
+}
+
 class CancelarTrayecto extends Component {
     constructor(props) {
         super(props);
         this.state={
             id: props.data.m_nIdViajeTrayecto,
             fecha: props.data.m_dFechaSalida || "",
-            hora:props.data.m_tHoraSalida || "",
+            hora:  getCurrentDateTime().substr(getCurrentDateTime().length - 5) || "",
             trayecto:props.data.m_sRuta || "",
             folioVijae:"",
             motivo:""
