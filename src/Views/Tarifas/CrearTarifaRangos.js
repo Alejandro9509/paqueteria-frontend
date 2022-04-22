@@ -311,11 +311,18 @@ export default function CrearTarifaRangos(props) {
         let otrosViajes = viajesLocalesListado.filter(v => v.idViaje !== viaje.idViaje)
         otrosViajes = otrosViajes.filter(v => v.idSucursal === viaje.idSucursal && v.idConcepto === viaje.idConcepto)
 
-        otrosViajes.forEach(v => {
-            v.productos.forEach(z => {
-                productosDisponibles = productosDisponibles.filter(j => j.m_nIdProducto !== z.m_nIdProducto)
+        viaje.zonas.forEach(zonaViajeActual => {
+            otrosViajes.forEach(v => {
+                if (v.zonas.some(i => i.m_nIdZona === zonaViajeActual.m_nIdZona)){
+                    otrosViajes.forEach(v => {
+                        v.productos.forEach(z => {
+                            productosDisponibles = productosDisponibles.filter(j => j.m_nIdProducto !== z.m_nIdProducto)
+                        })
+                    })
+                }
             })
         })
+
         return productosDisponibles
     }
 
