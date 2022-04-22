@@ -111,6 +111,12 @@ function CorteCaja(){
             flex: 1
         },
         {
+            headerName: "Tipo de pago",
+            field: 'm_sTipoPago',
+            minWidth: 200,
+            flex: 1
+        },
+        {
             headerName: "Fecha Registro",
             field: 'm_sFechaRegistro',
             minWidth: 200,
@@ -124,7 +130,7 @@ function CorteCaja(){
             flex: 1
         },
         {
-            headerName: "Estado",
+            headerName: "Estatus",
             field: 'm_sEstatusCorte',
             minWidth: 200,
             flex: 1

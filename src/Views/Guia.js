@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useMemo} from "react";
 import axios from "axios";
-import {getCurrentDateTime} from "../Util/Util"
+import {getCurrentDateTime,getCurrentTime,getCurrentDate} from "../Util/Util"
 import Cabecera from "../Components/Template/Cabecera";
 import IconButton from "@material-ui/core/IconButton";
 import RestartAltIcon from '@material-ui/icons/Refresh';
@@ -177,6 +177,7 @@ function Guia(props) {
         usuarioCancelacion: 0,
         estatusGuia: "",
         MotivoCancelacion: "",
+        folioEmbarque:"",
         //VARIABLES PARA AGREGAR GUIA
         //Informacion General
         idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -415,6 +416,7 @@ function Guia(props) {
     }
 
     function handleShowModificar(id,folioGuia) {
+        
         obtenerValidacionGuia(id).then(respuesta=>{
             console.log(respuesta)
             if(respuesta.data.valor){//Entrega un 1 si la guia no es modificable
@@ -549,7 +551,7 @@ function Guia(props) {
                 idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
                 fecha: respuesta.data.m_dFecha + 'T' + respuesta.data.m_sHora.substr(0,5),
                 creadoEl: respuesta.data.m_dCreadoEl,
-
+                folioEmbarque:respuesta.data.m_sFolioEmbarque,
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
@@ -629,13 +631,15 @@ function Guia(props) {
           var params = {
             "motivoCancelacion": state.MotivoCancelacion,
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
-            "fechaCancelacion": state.fechaCancelado
+            "fechaCancelacion": `${getCurrentDate()}`,
+            "HoraCancelacion": `${getCurrentTime()}`
         }
+        console.log(JSON.stringify(params))
           cancelarGuia(state.idGuia, params).then((respuesta) => {
             console.log(respuesta.data)
             showSuccess("La guia ha sido cancelada");
             handleShowListado()
-        })  
+        }) 
             }
             else{
             showSuccess("La guia no puede ser cancelada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
@@ -858,8 +862,17 @@ function Guia(props) {
             width: 200,
         },
         {
+            field: 'Fecha de Cancelación',
+            headerName: 'Fecha de Cancelación',
+            width: 200,
+            valueGetter: (params) =>
+              `${params.getValue(params.m_nFolioGuia, 'm_dtFechaCancelacion') || ''} ${
+                params.getValue(params.m_nFolioGuia, 'm_sHoraCancelacion') || ''
+              }`,
+          },
+        {
             headerName: "Usuario de Cancelación",
-            field: "m_nUsuarioCancelacion",
+            field: "m_sUsuarioCancelacion",
             width: 200,
         }
 
@@ -1291,7 +1304,6 @@ function Guia(props) {
         getAllDataEstatusGuia()
         getAllDataTipoServicio()
         cargaEmbarqueMoneda(1)
-        getAllDataTipoPago()
         getAllConceptos()
         getParametrosConfiguracion()
     }
@@ -1739,6 +1751,7 @@ function Guia(props) {
 
     const mostrarDialogoOcurre = (event, id) => {
         event.stopPropagation();
+        getAllDataTipoPago()
         obtenerGuiaId(id).then(({data}) => {
             var guia = data
             if (guia.m_nIdEstatusGuia == 7) {
@@ -1886,15 +1899,14 @@ function Guia(props) {
                                 <i className="fa fa-upload"/> Importar
                             </a>
                         </li>
-                        {
-                            (localStorage.getItem("UsuarioId") === "11" || localStorage.getItem("UsuarioId") === "4") &&
+
                             <li>
-                                <a className={(state.idGuia !== 0 && state.cambioCobro) ? "" : classes.disabled}
+                                <a className={(state.idGuia !== 0 && state.cambioCobro) && validarDerecho(3900001) ? "" : classes.disabled}
                                    onClick={() => setState({...state, openTipoCobro: true})}>
                                     <i className="fa fa-refresh"/> Cambiar Tipo Cobro
                                 </a>
                             </li>
-                        }
+
                         <li>
                             <a className={(state.idGuia !== 0 && state.cambioCobro && validarDerecho(9101459)) && state.estatusGuia != 8? "" : classes.disabled}
                                onClick={() => {
@@ -2065,7 +2077,8 @@ function Guia(props) {
                                                         </Grid>
                                                         <Grid item xs>
                                                             <label className="label">
-                                                                <FormControl fullWidth variant="outlined"
+                                                             {state.agregar == "Agregar" &&  
+                                                              <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
                                                                     <InputLabel id="idEmbarqueLabel">Folio
                                                                         Embarque</InputLabel>
@@ -2097,6 +2110,22 @@ function Guia(props) {
                                                                         )}
                                                                     </Select>
                                                                 </FormControl>
+                                                                }
+                                                                {state.agregar != "Agregar" &&
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                    native
+                                                                    labelId="idEmbarqueLabel"
+                                                                    label="Folio Embarque"
+                                                                    className="form-control"
+                                                                    required
+                                                                    id="idEmbarque"
+                                                                    read="true"
+                                                                    value={state.folioEmbarque}
+                                                                    disabled
+                                                         />
+                                                                
+                                                                
+                                                                }
                                                             </label>
                                                         </Grid>
                                                       {/*  <Grid item xs>
