@@ -134,15 +134,78 @@ export default function DialogoNuevoRango(props) {
             if (i.id != rango.id &&
                 i.idConcepto == rango.idConcepto &&
                 i.minimo == rango.minimo &&
-                i.maximo == rango.maximo &&
-                i.idTipoCalculo == rango.idTipoCalculo &&
-                i.idUnidadMedida == rango.idUnidadMedida
+                i.maximo == rango.maximo
+                // i.idTipoCalculo == rango.idTipoCalculo &&
+                // i.idUnidadMedida == rango.idUnidadMedida
                 ){
                 valid = false
                 showSuccess("Ese rango ya existe.")
             }
         })
+        props.rows.forEach(i => {
+            if (i.id != rango.id &&
+                i.idConcepto == rango.idConcepto
+                // i.idTipoCalculo == rango.idTipoCalculo &&
+                // i.idUnidadMedida == rango.idUnidadMedida
+            ){
+                if(isRangoOcupado(i, rango)){
+                    valid = false
+                    showSuccess("El concepto tiene un rango ya ocupado.")
+
+                }
+            }
+
+        })
         return valid
+    }
+
+    const isRangoOcupado = (conceptoUno, conceptoDos) => {
+        /**conceptoUno es un concepto del listado. conceptoDos es el concepto nuevo*/
+        debugger
+        let ocupado = false
+        /*if (conceptoDos.minimo >= conceptoUno.minimo && conceptoDos.maximo <= conceptoUno.maximo){
+            ocupado = true
+        }*/
+        if (conceptoDos.unidadMedida === "KILOGRAMOS"){
+            if (conceptoUno.unidadMedida === "TONELADAS"){
+                conceptoUno.minimo = conceptoUno.minimo*1000
+                conceptoUno.maximo = conceptoUno.maximo*1000
+            }
+        }
+        if (conceptoDos.unidadMedida === "TONELADAS"){
+            if (conceptoUno.unidadMedida === "KILOGRAMOS"){
+                conceptoUno.minimo = conceptoUno.minimo/1000
+                conceptoUno.maximo = conceptoUno.maximo/1000
+            }
+        }
+        if (conceptoDos.minimo >= conceptoUno.minimo && conceptoDos.minimo <= conceptoUno.maximo){
+            ocupado = true
+        }
+        if (conceptoDos.maximo >= conceptoUno.minimo && conceptoDos.maximo <= conceptoUno.maximo){
+            ocupado = true
+        }
+        if (conceptoUno.minimo >= conceptoDos.minimo && conceptoUno.minimo <= conceptoDos.maximo){
+            ocupado = true
+        }
+        if (conceptoUno.maximo >= conceptoDos.minimo && conceptoUno.maximo <= conceptoDos.maximo){
+            ocupado = true
+        }
+        /*if (conceptoDos.minimo <= conceptoUno.minimo && conceptoDos.maximo >= conceptoUno.minimo && conceptoDos.maximo <= conceptoUno.maximo){
+            ocupado =  true
+        }
+        if (conceptoDos.minimo <= conceptoUno.minimo && conceptoDos.maximo >= conceptoUno.maximo){
+            ocupado = true
+        }*/
+
+        /*if (conceptoDos.minimo < conceptoUno.minimo){
+            ocupado = conceptoDos.maximo < conceptoUno.minimo
+        }else{
+            ocupado = conceptoDos.minimo < conceptoUno.maximo
+            if (ocupado){
+                ocupado = conceptoDos.maximo > conceptoUno.maximo
+            }
+        }*/
+        return ocupado
     }
     const handleConfirmSelection = () => {
         if (validarData()){

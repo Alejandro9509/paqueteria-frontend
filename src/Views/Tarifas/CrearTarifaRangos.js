@@ -302,6 +302,22 @@ export default function CrearTarifaRangos(props) {
         })
         return zonasDisponibles
     }
+    /**Filtra los productos para que solo queden los que no se han usado en otro viaje local con la misma sucursal, concepto y zona*/
+    const filtrarProductosViajeLocal = (viaje) => {
+        let zonasDisponibles = []
+        zonasListado.forEach(i => {
+            zonasDisponibles.push(i)
+        })
+        let otrosViajes = viajesLocalesListado.filter(v => v.idViaje !== viaje.idViaje)
+        otrosViajes = otrosViajes.filter(v => v.idSucursal === viaje.idSucursal && v.idConcepto === viaje.idConcepto)
+
+        otrosViajes.forEach(v => {
+            v.zonas.forEach(z => {
+                zonasDisponibles = zonasDisponibles.filter(j => j.m_nIdZona !== z.m_nIdZona)
+            })
+        })
+        return zonasDisponibles
+    }
 
     /**Filtra los conceptos para que solo queden las que no se han usado en otro viaje local con la misma sucursal*/
     const filtrarConceptosViajeLocal = conceptosListado.filter(concepto => esConceptoViajeLocal(concepto))
