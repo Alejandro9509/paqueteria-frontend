@@ -177,6 +177,7 @@ function Guia(props) {
         usuarioCancelacion: 0,
         estatusGuia: "",
         MotivoCancelacion: "",
+        folioEmbarque:"",
         //VARIABLES PARA AGREGAR GUIA
         //Informacion General
         idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -415,6 +416,7 @@ function Guia(props) {
     }
 
     function handleShowModificar(id,folioGuia) {
+        
         obtenerValidacionGuia(id).then(respuesta=>{
             console.log(respuesta)
             if(respuesta.data.valor){//Entrega un 1 si la guia no es modificable
@@ -549,7 +551,7 @@ function Guia(props) {
                 idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
                 fecha: respuesta.data.m_dFecha + 'T' + respuesta.data.m_sHora.substr(0,5),
                 creadoEl: respuesta.data.m_dCreadoEl,
-
+                folioEmbarque:respuesta.data.m_sFolioEmbarque,
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
@@ -2070,7 +2072,8 @@ function Guia(props) {
                                                         </Grid>
                                                         <Grid item xs>
                                                             <label className="label">
-                                                                <FormControl fullWidth variant="outlined"
+                                                             {state.agregar == "Agregar" &&  
+                                                              <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
                                                                     <InputLabel id="idEmbarqueLabel">Folio
                                                                         Embarque</InputLabel>
@@ -2102,6 +2105,22 @@ function Guia(props) {
                                                                         )}
                                                                     </Select>
                                                                 </FormControl>
+                                                                }
+                                                                {state.agregar != "Agregar" &&
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                    native
+                                                                    labelId="idEmbarqueLabel"
+                                                                    label="Folio Embarque"
+                                                                    className="form-control"
+                                                                    required
+                                                                    id="idEmbarque"
+                                                                    read="true"
+                                                                    value={state.folioEmbarque}
+                                                                    disabled
+                                                         />
+                                                                
+                                                                
+                                                                }
                                                             </label>
                                                         </Grid>
                                                       {/*  <Grid item xs>
