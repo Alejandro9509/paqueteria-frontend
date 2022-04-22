@@ -44,7 +44,7 @@ import AddIcon from '@material-ui/icons/AddBox';
 import Noty from "noty";
 import {agregarTarifaRangos, modificarTarifaRangos, obtenerTarifaRangosById} from "../../Util/Contexts/TarifasContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
-import {obtenerClienteById} from "../../Util/Contexts/ClientesContext";
+import {obtenerClienteById, obtenerClientePublicoGeneral} from "../../Util/Contexts/ClientesContext";
 import {obtenerUnidadesMedida} from "../../Util/Contexts/UnidadesMedidaContext";
 
 function showSuccess(mensaje) {
@@ -133,7 +133,7 @@ export default function CrearTarifaRangos(props) {
         })
     }
     const getClienteGenerico = () => {
-        obtenerClienteById(3140).then(respuesta => {
+        obtenerClientePublicoGeneral().then(respuesta => {
             setState({
                 ...state,
                 cliente: respuesta.data
