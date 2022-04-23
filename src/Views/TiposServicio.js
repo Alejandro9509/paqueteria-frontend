@@ -14,6 +14,7 @@ import { TextField, Tooltip } from "@material-ui/core";
 import { agregarTipoServicio, eliminarTipoServicio, modificarTipoServicio, obtenerTipoServicio, obtenerTipoServicioId } from "../Util/Contexts/TipoServiciosContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import $ from "jquery";
+import {validarDerecho} from "../Util/Util"
 window.jQuery = window.$ = $;
 function showSuccess(mensaje) {
     new Noty({
@@ -30,7 +31,11 @@ const styles = {
     },
     noSeleccionado: {
         backgroundColor: "#FFFFFF",
-    }
+    },
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
 };
 const useStyles = makeStyles(styles);
 
@@ -129,6 +134,26 @@ function TiposServicio() {
         $('.tab-content div ').removeClass('in show');
         $('#Agregar').addClass('in show');
     }
+    function handleShowConsultar(id) {
+        console.log(id)
+        obtenerTipoServicioId(id).then(respuesta => {
+            console.log(respuesta.data)
+            setState({
+                ...state,
+                agregar: "Consultar",
+                showPopUp: true,
+                IdTipoServicio: id,
+                Descripcion: respuesta.data.m_sDescripcion,
+                DiasHabiles: respuesta.data.m_nDiashabiles,
+                Activo: respuesta.data.m_bActivo,
+                Costo: respuesta.data.m_cCosto
+            })
+        });
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
+    }
 
     const handleChange = event => {
         console.log(event.target.id + " : " + event.target.value)
@@ -155,16 +180,18 @@ function TiposServicio() {
                     <div>
                         <Tooltip title="Modificar">
                             <a onClick={() => (handleShowModificar(row.row.m_nIdTipoServicio))}
-                               className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
+                               className="btn btn-default btn-xs"
+                               disabled={!validarDerecho(9101316)}><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdTipoServicio))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                            <a className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdTipoServicio))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoServicio))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoServicio))}
+                            disabled={!validarDerecho(9101317)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
                     </div>
@@ -329,7 +356,7 @@ function TiposServicio() {
                                         <td>
                                             <div>
                                                 <a onClick={() => (handleShowModificar(row.original.m_nIdTipoServicio))} className="btn btn-default btn-sm"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
-                                                <a onClick={() => (handleShowModificar(row.original.m_nIdTipoServicio))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                                                <a onClick={() => (handleShowConsultar(row.original.m_nIdTipoServicio))} className="btn btn-default btn-sm"><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
                                                 <a className="btn btn-default btn-sm" onClick={() => (handleEliminar(row.original.m_nIdTipoServicio))}><i className="zmdi zmdi-delete" style={{ color: "#F9A03E" }} /></a>
                                             </div>
                                         </td>
@@ -410,7 +437,7 @@ function TiposServicio() {
                             </a>
                         </li>
                         <li>
-                            <a onClick={() => handleShowAgregar()}>
+                            <a className= {validarDerecho(9101315)? "":classes.disabled} onClick={() => handleShowAgregar()}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
@@ -448,7 +475,7 @@ function TiposServicio() {
                                 <div className="widget-content">
                                     <div className="row">
                                         <div className="col-md-12">
-                                            <form className="j-forms" onSubmit={handleAceptar}>
+                                            <form className="j-forms" onSubmit={handleAceptar} id="formulario">
                                                 <div className="form-content">
                                                     {/*****************************************Descripcion************************************************************/}
                                                     <div className="col-sm-12 col-md-6 unit">
@@ -462,6 +489,7 @@ function TiposServicio() {
                                                                        required
                                                                        value={state.Descripcion}
                                                                        id="Descripcion"
+                                                                       disabled={state.agregar == "Consultar"}
                                                             />
                                                         </div>
                                                     </div>
@@ -477,6 +505,7 @@ function TiposServicio() {
                                                                        step="1"
                                                                        value={state.DiasHabiles}
                                                                        id="DiasHabiles"
+                                                                       disabled={state.agregar == "Consultar"}
                                                             />
                                                         </div>
                                                     </div>
@@ -496,6 +525,7 @@ function TiposServicio() {
                                                                     name="activo"
                                                                     type="checkbox"
                                                                     id="activo"
+                                                                    disabled={state.agregar == "Consultar"}
                                                                 />
                                                                 <i/>
                                                                 Activo
@@ -516,6 +546,7 @@ function TiposServicio() {
                                                                        required
                                                                        value={state.Costo}
                                                                        id="Costo"
+                                                                       disabled={state.agregar == "Consultar"}
                                                             />
                                                         </div>
                                                     </div>
@@ -523,15 +554,16 @@ function TiposServicio() {
 
                                                 </div>
                                                 <br></br>
-                                                <div className="form-footer" className="col-md-12">
-                                                    <button className="btn btn-secondary secondary-btn">
+                                                
+                                            </form> 
+                                           <div style={{display:"flex", justifyContent: "flex-end",margin:'5px'}}>
+                                                    <button className="btn btn-secondary secondary-btn" style={{marginRight:'5px'}} disabled={state.agregar == "Consultar"} onClick={handleShowListado}>
                                                         Cancelar
                                                     </button>
-                                                    <button type={'submit'}
+                                                    <button type="submit" form="formulario" disabled={state.agregar == "Consultar"}
                                                             className="btn btn-primary primary-btn">Aceptar
                                                     </button>
                                                 </div>
-                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -554,10 +586,8 @@ function TiposServicio() {
                                                 <br></br>
                                                 <div className="form-footer" className="col-md-12">
                                                     <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
-                                                    <button className="btn btn-secondary secondary-btn"
-                                                    >
-                                                        Cancelar</button>
-                                                    <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                                                    <button className="btn btn-secondary secondary-btn"  disabled={state.agregar == "Consultar"}>Cancelar</button>
+                                                    <button onClick={handleAceptar} className="btn btn-primary primary-btn"  disabled={state.agregar == "Consultar"}>Aceptar</button>
                                                 </div>
                                             </form>
                                         </div>

@@ -15,6 +15,9 @@ import { confirmAlert } from "react-confirm-alert";
 import { dataGridLocaleText } from "../../Constants";
 import { obtenerEmbalajes } from "../../Util/Contexts/EmbalajesContext";
 import $ from "jquery";
+import {validarDerecho} from "../../Util/Util"
+import {makeStyles} from "@material-ui/core/styles";
+
 import {
   obtenerProductos,
   obtenerProductoById,
@@ -29,6 +32,14 @@ function showSuccess(mensaje) {
     timeout: "3000",
   }).show();
 }
+
+const styles = {
+  disabled: {
+      pointerEvents: "none",
+      cursor: "default",
+  }
+};
+const useStyles = makeStyles(styles);
 
 function Productos() {
   /*-=---------------------------------------------Variables------------------------------------------------=-*/
@@ -50,6 +61,7 @@ function Productos() {
     NoProducto: "",
     predeterminado: false
   });
+  const classes = useStyles();
   const [productos, setProductos] = React.useState([]);
   const [dataEmbalaje, setDataEmbalaje] = React.useState([]);
   const columns = React.useMemo(() => [
@@ -66,6 +78,7 @@ function Productos() {
                 data-toggle={"tab"}
                 onClick={() => handleShowModificar(row.row)}
                 className={"btn btn-default btn-xs"}
+                disabled={!validarDerecho(9101389)}
               >
                 <i
                   className={"fa fa-pencil-square-o"}
@@ -357,7 +370,7 @@ console.log(params)
               <a d onClick={handleShowListado}><i className={"fa fa-list"} /> Listado</a>
             </li>
             <li>
-              <a  onClick={handleShowAgregar}><i className={"fa fa-plus-circle"} /> {state.agregar}</a>
+              <a className= {validarDerecho(9101388)? "":classes.disabled} onClick={handleShowAgregar}><i className={"fa fa-plus-circle"} /> {state.agregar}</a>
             </li>
           </ul>
 

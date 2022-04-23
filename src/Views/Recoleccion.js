@@ -29,7 +29,7 @@ import {
     useSortBy,
 } from "react-table";
 import $ from "jquery";
-import {getCurrentDateTime} from "../Util/Util"
+import {getCurrentDateTime, validarDerecho} from "../Util/Util"
 import {remove_array_element} from "../Util/Util";
 import {useHistory, Redirect} from 'react-router-dom';
 import {confirmAlert} from 'react-confirm-alert'; // Import
@@ -178,6 +178,7 @@ function Recoleccion() {
     const [controlErrores, setControlErrores] = useState({
         correo:false
     })
+    const [repetirConceptos,setRepetirConceptos] = React.useState(false)
     //variables de valores por defecto
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusRecoleccion: 0,
@@ -233,42 +234,7 @@ function Recoleccion() {
         tipoCambio: '',
         tipoCobro: '',
         clientePaga: {},
-
-        //Remitente
-        /*idRemitente: '',
-        aliasRemitente: '',
-        nombreRemitente: '',
-        RFCRemitente: '',
-        domicilioRemitente: '',
-        calleRemitente: '',
-        numeroIntRemitente: '0',
-        numeroExtRemitente: '',
-        coloniaRemitente: '',
-        ciudadRemitente: '',
-        codigoPostalRemitente: '',
-        correoRemitente: '',
-        telefonoRemitente: '',
-        contactoRemitente: '',
-        origenRemitente: '',
-        zonaRemitente: {},*/
-
-        //Destinatario
-        /*idDestinatario: '',
-        aliasDestinatario: '',
-        nombreDestinatario: '',
-        RFCDestinatario: '',
-        domicilioDestinatario: '',
-        calleDestinatario: '',
-        numeroIntDestinatario: '0',
-        numeroExtDestinatario: '',
-        coloniaDestinatario: '',
-        ciudadDestinatario: '',
-        codigoPostalDestinatario: '',
-        correoDestinatario: '',
-        telefonoDestinatario: '',
-        contactoDestinatario: '',
-        destinoDestinatario: '',
-        zonaDestinatario: {},*/
+        observaciones: '', 
 
         //Paquetes/Sobres
         countPaquetes: 1,
@@ -293,22 +259,10 @@ function Recoleccion() {
         diferenteEntrega: false,
         entregaEnSucursal: false,
         idSucursalEntrega: "",
-        /*ciudadEntrega: '',
-        codigoPostalEntrega: '',
-        zonaEntrega: '',
-        domicilioEntrega: '',
-        entregaEn: '',
-        datosAdicionalesEntrega: '',*/
+        zonaOperativaSucursal: null,
 
         //Recoleccion
         diferenteRecoleccion: false,
-        /*fechaRecoleccion: '',
-        ciudadRecoleccion: '',
-        codigoPostalRecoleccion: '',
-        zonaRecoleccion: '',
-        domicilioRecoleccion: '',
-        recogerEn: '',
-        datosAdicionalesRecoleccion: '',*/
 
         //Operador
         operador: '',
@@ -377,6 +331,7 @@ function Recoleccion() {
     const [tabActiva, setTabActiva] = useState(0);
     const [isAgregar, setIsAgregar] = useState(false);
     const [isModificar, setIsModificar] = useState(false);
+    const [pagina, setPagina] = useState(0);
     const [remitente, setRemitente] = useState({
         idRemitente: '',
         aliasRemitente: '',
@@ -401,7 +356,6 @@ function Recoleccion() {
     })
 
     const handleChangeRemitente = (data) => {
-     //  console.log(data)
         setRemitente({
             idRemitente: data.id,
             aliasRemitente: data.alias,
@@ -532,11 +486,13 @@ function Recoleccion() {
             }
         });
         if (event.target.name === "estadoEnt") {
+            setRepetirConceptos(true)
             obtenerMunicipiosByIdEstado(event.target.value).then(({data}) => {
                 setDataMunicipiosEntregaDD(data)
             })
         }
         if (event.target.name === "municipioEnt") {
+            setRepetirConceptos(true)
             obtenerCodigosPostalesPorEstadoMunicipio(recoleccionDD.estadoRec, event.target.value).then(({data}) => {
                 setDataCodigosPostalesRecoleccionDD(data)
             })
@@ -607,6 +563,7 @@ function Recoleccion() {
     }
 
     const handleChangeRecoleccionDD = (event) => {
+       
         event.preventDefault();
         setRecoleccionDD(recoleccionDD => {
             return {
@@ -615,11 +572,13 @@ function Recoleccion() {
             }
         });
         if (event.target.name === "estadoRec") {
+            setRepetirConceptos(true)
             obtenerMunicipiosByIdEstado(event.target.value).then(({data}) => {
                 setDataMunicipiosRecoleccionDD(data)
             })
         }
         if (event.target.name === "municipioRec") {
+            setRepetirConceptos(true)
             obtenerCodigosPostalesPorEstadoMunicipio(recoleccionDD.estadoRec, event.target.value).then(({data}) => {
                 setDataCodigosPostalesRecoleccionDD(data)
             })
@@ -627,6 +586,7 @@ function Recoleccion() {
     };
 
     const handleChangeAutocompleteRecoleccionDD = (input, newValue) => {
+        setRepetirConceptos(true)
         setRecoleccionDD({
             ...recoleccionDD,
             [input]: newValue
@@ -767,15 +727,15 @@ function Recoleccion() {
     }
 
     const validarCoordenadas = (coordenadas) => {
+        console.log("coordenadas"+coordenadas)
         /**Si es modificacion*/
         if (state.idRecoleccion != 0){
             /**Si es recoleccion diferente domicilio y no hay coordenadas guardadas*/
             if(state.diferenteRecoleccion
-                && !isValidText(recoleccionDD.latitudRec)
-                && !isValidText(recoleccionDD.longitudRec)
-                && !coordenadas){
+                && coordenadas==undefined)
+                {
                 mostrarDialogoMapa(true)
-
+                   
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas guardadas*/
             }else if (!state.diferenteRecoleccion
@@ -783,24 +743,24 @@ function Recoleccion() {
                 && !isValidText(remitente.longitudR)
                 && !coordenadas) {
                 mostrarDialogoMapa(true)
-
+                
                 return false
             }
             /**Si es agregar*/
         }else{
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
-            if (state.diferenteRecoleccion  && !coordenadas){
+            if (state.diferenteRecoleccion && coordenadas==undefined ){
                 mostrarDialogoMapa(true)
-
+                
                 return false
                 /**Si es recoleccion en el domicilio del remitente y no hay coordenadas*/
                 debugger;
             }else if (!state.diferenteRecoleccion
-                && !isValidText(remitente.latitudR)
+                && !isValidText(remitente.latitudR) 
                 && !isValidText(remitente.longitudR)
                 && !coordenadas){
                 mostrarDialogoMapa(true)
-
+                
                 return false
             }
         }
@@ -818,9 +778,11 @@ function Recoleccion() {
     }
 
     const mostrarCotizadorRec = (isVisible) =>{
-        setState({
-            ...state,
-            mostrarCotizador:isVisible
+        setState(state => {
+            return {
+                ...state,
+                mostrarCotizador:isVisible
+            }
         })
     }
     const esDatoValido = (dato) => {
@@ -830,6 +792,7 @@ function Recoleccion() {
             && dato !== "0";
 
     }
+
     const esRecoleccionValido = () => {
         let valid = false;
         /**INFORMACION GENERAÑ*/
@@ -906,20 +869,21 @@ function Recoleccion() {
                 showSuccess("La zona operativa de entrega es un dato requerido");
                 return valid;
             }
-            if (!esDatoValido(entregaDD.zonaTarifaEnt?.m_nIdZona)){
+         /*  if (!esDatoValido(entregaDD.zonaTarifaEnt?.m_nIdZona)){
                 showSuccess("La zona de la tarifa de entrega es un dato requerido");
                 return valid;
-            }
+            }*/ 
 
         }else {
             /**Si es entrega en domicilio de destinatario*/
             if (!esDatoValido(destinatario.zonaOperativaDestinatario?.m_nIdZona)) {
                 showSuccess("Verificar la zona operativa de destinatario")
                 return valid;
-            } else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
+            }
+          /*  else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
                 showSuccess("Verificar la zona tarifa de destinatario")
                 return valid;
-            }
+            }*/
         }
         if (state.entregaConCita){
             if (!state.citaPendiente){
@@ -951,19 +915,23 @@ function Recoleccion() {
     }
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
-
+        if(repetirConceptos && state.mostrarCotizador){
+            showSuccess("Se requiere calcular tarifa otra vez")
+            return;
+        }
         if (!esRecoleccionValido()){
             return;
         }
         let error = false
         let params = {}
         if(state.diferenteEntrega){
-            if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
+            /*if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
                 error = true
                 showSuccess("Verificar la zona operativa de diferente domicilio entrega")
-            }else if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
+            }else */
+                if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
                 error = true
-                showSuccess("Verificar la zona tarifa de diferente domicilio entrega")
+                showSuccess("Verificar la zona operativa de diferente domicilio entrega")
             }else if(entregaDD.domicilioEnt==""){
                 error = true
                 showSuccess("Verificar el domicilio de entrega")
@@ -977,10 +945,11 @@ function Recoleccion() {
         }else if(destinatario.zonaOperativaDestinatario?.m_nIdZona==undefined){
             error = true
             showSuccess("Verificar la zona operativa de destinatario")
-         }else if(destinatario.zonaTarifaDestinatario?.m_nIdZona==undefined){
+         }
+        /*else if(destinatario.zonaTarifaDestinatario?.m_nIdZona==undefined){
             error = true
             showSuccess("Verificar la zona tarifa de destinatario")
-         }
+         }*/
           else if(destinatario.correoDestinatario == ""){
             error = true
             showSuccess("Error al agregar recoleccion: El correo del destinatario es un campo requerido")
@@ -990,10 +959,12 @@ function Recoleccion() {
             if(recoleccionDD.zonaOperativaRec?.m_nIdZona==undefined){
                 error = true
                 showSuccess("Verificar la zona operativa de diferente domicilio recoleccion")
-            }else if(recoleccionDD.zonaTarifaRec?.m_nIdZona==undefined){
+            }else
+               /* if(recoleccionDD.zonaTarifaRec?.m_nIdZona==undefined){
                 error = true
                 showSuccess("Verificar la zona tarifa de diferente domicilio recoleccion")
-            }else if(recoleccionDD.domicilioRec==""){
+            }else*/
+                if(recoleccionDD.domicilioRec==""){
                 error = true
                 showSuccess("Verificar el domicilio de recoleccion")
             }else if(recoleccionDD.recogerEnRec==""){
@@ -1006,14 +977,17 @@ function Recoleccion() {
         }else if(remitente.zonaOperativaRemitente?.m_nIdZona==undefined){
             error = true
             showSuccess("Verificar la zona operativa de remitente")
-        } else if(remitente.zonaTarifaRemitente?.m_nIdZona==undefined){
+        } else
+          /*  if(remitente.zonaTarifaRemitente?.m_nIdZona==undefined){
             error = true
             showSuccess("Verificar la zona tarifa de remitente")
-        } else if(remitente.correoRemitente == "" ){
+        } else*/
+            if(remitente.correoRemitente == "" ){
             error = true
             showSuccess("Error al agregar recoleccion: El correo del remitente es un campo requerido")
         }
         if(!error){
+            console.log("entra y cierra")
         setState({
             ...state,
             showConfirmarUbicacion: false,
@@ -1062,6 +1036,7 @@ function Recoleccion() {
             params.m_nIdTipoDeCobro = state.tipoCobro
             params.m_nIdCliente = state.clientePaga.m_nIdCliente
             params.ValorDeclarado = state.valorDeclarado
+            params.m_sObservaciones = state.observaciones 
             params.m_nIdTipoSeguro = state.idTipoSeguro
             params.m_xPorcentajeSeguro = state.porcentajeSeguro
             params.m_bAplicaSeguro = state.aplicaSeguro
@@ -1132,21 +1107,20 @@ function Recoleccion() {
             params.m_nIdRemolque = state.unidad.m_nIdUnidad
             params.m_nCreadoPor = state.CreadoPor
             params.m_nModificadoPor = state.ModificadoPor
-
         if (state.diferenteRecoleccion) {
             params.m_nIdCPDetalleRecoleccion = recoleccionDD.codigoPostalRec.m_nIdCP
             params.m_sDomicilioDetalleRecoleccion = recoleccionDD.domicilioRec
             params.m_sRecogerEnDetalleRecoleccion = recoleccionDD.recogerEnRec
             params.m_sDatosAdicionalesDetalleRecoleccion = recoleccionDD.datosAdicionalesRec
             params.m_nIdZonaOperativa = recoleccionDD.zonaOperativaRec.m_nIdZona
-            params.m_nIdZonaTarifa = recoleccionDD.zonaTarifaRec.m_nIdZona
+            params.m_nIdZonaTarifa = recoleccionDD.zonaTarifaRec? recoleccionDD.zonaTarifaRec.m_nIdZona : 0
             params.m_nIdEstadoRecoleccion = recoleccionDD.estadoRec
             params.m_sCodigoMunicipioRecoleccion = recoleccionDD.municipioRec
             params.m_sLatitudR = coordenadas ? coordenadas.lat : recoleccionDD.latitudRec
             params.m_sLongitudR = coordenadas ? coordenadas.lng : recoleccionDD.longitudRec
         } else {
             params.m_nIdZonaOperativa = remitente.zonaOperativaRemitente.m_nIdZona
-            params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente.m_nIdZona
+            params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente? remitente.zonaTarifaRemitente.m_nIdZona : 0
             params.m_sLatitudR = coordenadas ? coordenadas.lat : remitente.latitudR
             params.m_sLongitudR = coordenadas ? coordenadas.lng : remitente.longitudR
         } 
@@ -1159,12 +1133,12 @@ function Recoleccion() {
             params.m_sEntregarEnDetalleEntrega = entregaDD.entregarEnEnt
             params.m_sDatosAdicionalesDetalleEntrega = entregaDD.datosAdicionalesEnt
             params.m_nIdZonaOperativaEntrega = entregaDD.zonaOperativaEnt.m_nIdZona
-            params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt.m_nIdZona
+            params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt? entregaDD.zonaTarifaEnt.m_nIdZona : 0
             params.m_nIdEstadoEntrega = entregaDD.estadoEnt
             params.m_sCodigoMunicipioEntrega = entregaDD.municipioEnt
         } else {
             params.m_nIdZonaOperativaEntrega = destinatario.zonaOperativaDestinatario.m_nIdZona
-            params.m_nIdZonaTarifaEntrega = destinatario.zonaTarifaDestinatario.m_nIdZona
+            params.m_nIdZonaTarifaEntrega = destinatario.zonaTarifaDestinatario ? destinatario.zonaTarifaDestinatario.m_nIdZona : 0
         }
 
 
@@ -1205,7 +1179,7 @@ function Recoleccion() {
             console.log("ENTRO")
             confirmAlert({
                 title: 'Confirmación',
-                message: '¿Desea crear esta recoleccion?',
+                message: '¿Desea crear esta recolección?',
                 buttons: [
                     {
                         label: 'Sí',
@@ -1213,11 +1187,12 @@ function Recoleccion() {
                             agregarRecoleccion(params)
                             .then((respuesta) => {
                              //   console.log(respuesta.data);
-                                showSuccess(respuesta.data);
+                             //    showSuccess(respuesta.data);
+                                showSuccess("Recolección creada con folio: "+respuesta.data.m_sFolioRecoleccion);
                                 limpiarInputsAgregar()
                                 confirmAlert({
                                     title: 'Confirmación',
-                                    message: '¿Desea crear otra recoleccion?',
+                                    message: '¿Desea crear otra recolección?',
                                     buttons: [
                                         {
                                             label: 'Sí',
@@ -1340,8 +1315,11 @@ function Recoleccion() {
             });
     }
 
-    function handleShowModificar(id) {
+    function handleShowModificar(id,row) {
         setIsModificar(true);
+        if(row.m_nTimbrado){
+            showSuccess("La recoleccion no puede ser modificada ya que se encuentra timbrada")
+        }else{
         obtenerRecoleccionId(id).then((respuesta) => {
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(1).addClass('active');
@@ -1358,7 +1336,7 @@ function Recoleccion() {
             })
             setRecoleccionDataParaConsultaModificacion(respuesta,"Modificar")
         });
-
+    }
     }
 
     function handleShowConsultar(id) {
@@ -1471,7 +1449,16 @@ function Recoleccion() {
                 })
             })
         }
-        if (respuesta.data.m_bEntregaDiferenteDomicilio){
+        if (respuesta.data.m_bEntregaEnSucursal){
+            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaOperativaSucursal: data
+                    }
+                })
+            })
+        }else if (respuesta.data.m_bEntregaDiferenteDomicilio){
             setEntregaDD(entregaDD =>{
                 return {
                     ...entregaDD,
@@ -1550,10 +1537,11 @@ function Recoleccion() {
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
                 folioEmbarque: respuesta.data.m_sFolioEmbarque,
                 valorDeclarado: respuesta.data.m_xValorDeclarado,
+                observaciones: respuesta.data.m_sObservaciones, 
                 folioGuia: respuesta.data.m_sFolioGuia,
                 idCotizacion: respuesta.data.m_nIdCotizacion,
                 folioInforme: respuesta.data.m_nIdInforme,
-                fechaHoraRegistro: respuesta.data.m_dFechaRegistro + "T" + respuesta.data.m_tHoraRegistro.slice(0, 5),
+                fechaHoraRegistro: respuesta.data.m_dFechaRegistro + "T" + respuesta.data.m_tHora.slice(0, 5),
                 estatusRecoleccion: respuesta.data.m_nIdEstatusRecoleccion,
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
@@ -1772,6 +1760,7 @@ function Recoleccion() {
                 tipoCobro: '10',
                 idTipoSeguro: 5,
                 valorDeclarado: 0,
+                observaciones: '',
                 porcentajeSeguro: 0,
                 clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
                 showConfirmarUbicacion:false,
@@ -1878,6 +1867,7 @@ function Recoleccion() {
         resetRecoleccionDD()
         resetEntregaDD()
         setDataRecoleccionConsulta(undefined)
+        setRepetirConceptos(false)
     }
     const handleChangeFiltros = (event) => {
         event.preventDefault()
@@ -1944,6 +1934,9 @@ function Recoleccion() {
     }
     const handleChange = (event) => {
         event.preventDefault();
+        if(event.target.id == "porcentajeSeguro"){
+            setRepetirConceptos(true)
+        }
         setState({
             ...state,
             [event.target.id]: event.target.value,
@@ -1957,11 +1950,25 @@ function Recoleccion() {
 
     }
     const handleChangeSucursalEntrega = (event) => {
-        setState({
-          ...state,
-          [event.target.name]: event.target.value
+        setState(state => {
+            return {
+                ...state,
+                [event.target.name]: event.target.value
+            }
         });
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_sCodigoPostal)
       };
+
+    const getZonaOperativaByCodigoPostal = (codigoPostal) => {
+        obtenerZonaOperativaByIdCodigoPostal(codigoPostal).then(respuesta => {
+            setState(state => {
+                return{
+                    ...state,
+                    zonaOperativaSucursal: respuesta.data[0]
+                }
+            })
+        })
+    }
     //setea si la recoleccion es en diferente direccion a la del remitente
     const handleRecoleccionCheckboxChange = (event) => {
         // event.preventDefault();
@@ -1973,6 +1980,7 @@ function Recoleccion() {
 
     const handleCitaCheckboxChange = (event) => {
         // event.preventDefault();
+        setRepetirConceptos(true)
         setState({
             ...state,
             recoleccionConCita: !state.recoleccionConCita,
@@ -1982,6 +1990,8 @@ function Recoleccion() {
     //setea si la entrega es en diferente direccion a la del destinatario
     const handleEntregaCheckboxChange = (event) => {
         // event.preventDefault();
+        console.log("ENTRA CHECKBOX")
+        setRepetirConceptos(true)
         setState({
             ...state,
             diferenteEntrega: !state.diferenteEntrega,
@@ -1989,6 +1999,7 @@ function Recoleccion() {
         });
     };
     const handleEntregaEnSucursalCheckbox = (event) => {
+        setRepetirConceptos(true)
         setState({
           ...state,
           entregaEnSucursal: !state.entregaEnSucursal,
@@ -2037,11 +2048,11 @@ function Recoleccion() {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar">
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101415)}>
                             <a data-toggle="tab"
                                onClick={() =>
                                  { if(row.row.m_nIdEstatusRecoleccion==1 ||row.row.m_nIdEstatusRecoleccion==6){
-                                     handleShowModificar(row.row.m_nIdRecoleccion)
+                                     handleShowModificar(row.row.m_nIdRecoleccion,row.row)
                                  }else{
                                      showSuccess(`La recoleccion solo puede ser modificada en Estatus: Pendiente, Estatus Actual: ${row.row.m_sEstatusRecoleccion}`)
                                  }
@@ -2057,19 +2068,19 @@ function Recoleccion() {
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
-                        <Tooltip title="Consultar">
+                        <Tooltip title="Consultar" disabled={!validarDerecho(9101419)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row.m_nIdRecoleccion))}><i className="fa fa-eye"
                                                                                                   style={{color: "#F9A03E"}}/></a>
                         </Tooltip>
-                        <Tooltip title="Reporte">
+                        <Tooltip title="Reporte" disabled={!validarDerecho(9101418)}>
                             <a  className="btn btn-default btn-xs"
                                 onClick={() => generarReporte(row.row.m_nIdRecoleccion, row.row.m_sFolioRecoleccion)}><i className="zmdi zmdi-file"
                                                                                                                  style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
 
-                        <Tooltip title="Eliminar">
+                        <Tooltip title="Eliminar" disabled={!validarDerecho(9101416)}>
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
                                    title: 'Confirmar Eliminar',
@@ -2105,6 +2116,17 @@ function Recoleccion() {
             headerName: "Folio Recolección",
             field: "m_sFolioRecoleccion",
             width: 150,
+            renderCell:(row)=>{
+                return(
+                    <div>
+                     <Tooltip title= {row.row.m_sObservaciones}>
+                         <field>{row.row.m_sFolioRecoleccion}</field>
+                     </Tooltip>
+                </div>
+
+                );
+                
+            }
         },
         {
             headerName: "Estatus",
@@ -2300,6 +2322,7 @@ function Recoleccion() {
             obtenerFechaFinal().then((respuestaDos) => {
                 obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
                     setData(respuesta.data);
+                    console.log(respuesta.data)
                 })
             })
 
@@ -2415,6 +2438,10 @@ function Recoleccion() {
            // console.log('unidades listado: ', respuesta);
             setDataUnidad(respuesta.data);
         });
+    }
+
+    const seCalculaTarifa = () =>{
+        setRepetirConceptos(true)
     }
 
     const handleUpload = (e) => {
@@ -3060,6 +3087,8 @@ function Recoleccion() {
 
     }
     const handleListPaquetesChange = (newList) => {
+        console.log("ENTRA PAQUETES")
+        setRepetirConceptos(true)
         setDataPaquetes(newList)
     }
 
@@ -3083,6 +3112,7 @@ function Recoleccion() {
       };
 
     const setDataListado = (listado) => {
+        setPagina(0)
         setData(listado)
     }
 
@@ -3098,6 +3128,7 @@ function Recoleccion() {
     }
 
     const handleChangeTipoSeguro = (event) => {
+        setRepetirConceptos(true)
         setState({
             ...state,
             idTipoSeguro: event.target.value,
@@ -3459,13 +3490,13 @@ function Recoleccion() {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" onClick={(event) => handleShowListado(event)}>
+                            <a   data-toggle="tab" onClick={(event) => handleShowListado(event)}>
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
 
                         <li>
-                            <a data-toggle="tab" onClick={handleShowAgregar}>
+                            <a className={validarDerecho(9101414)?"":classes.disabled} data-toggle="tab" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -3486,8 +3517,7 @@ function Recoleccion() {
                         </li>
 
                         <li>
-                            <a onClick={handleShowCancelar}
-                               className={state.idRecoleccion === 0 ? classes.disabled : ""}>
+                            <a className={(state.idRecoleccion === 0 || !validarDerecho(9101420)) ? classes.disabled : ""} onClick={handleShowCancelar}>
                                 <i className="zmdi zmdi-print"/> Cancelar
                             </a>
                         </li>
@@ -3507,7 +3537,7 @@ function Recoleccion() {
                         </li>
 
                         <li style={{float: "right"}}>
-                            <a data-toggle="tab" href="#" className={state.idRecoleccion === 0 ? classes.disabled : ""}
+                            <a data-toggle="tab" href="#" className={(state.idRecoleccion === 0 || !validarDerecho(9101417)) ? classes.disabled : ""}
                                style={{textAlign: "right"}} onClick={() => setRedirect(true)}>
                                 Generar embarque
                             </a>
@@ -3543,6 +3573,11 @@ function Recoleccion() {
                                         }}
                                         onSortModelChange={(model) => setSortModel(model)}
                                         rows={data}
+                                        pagination
+                                        page={pagina}
+                                        onPageChange={(newPage) => {
+                                            setPagina(newPage.page)
+                                        }}
                                         columns={columns}
                                         density="compact"
                                         pageSize={Math.floor((state.height - 310) / 30)}
@@ -3805,7 +3840,7 @@ function Recoleccion() {
                                                                                 key={cambio.m_nIdTipoCambio}
                                                                                 value={cambio.m_nIdTipoCambio}
                                                                             >
-                                                                                {cambio.m_cTipoCambio}
+                                                                                {cambio.m_cTipoCambio.toFixed(4)}
                                                                             </option>
                                                                         ))}
                                                                     </Select>
@@ -3874,6 +3909,7 @@ function Recoleccion() {
                                                                 <div className="input">
                                                                     <TextField
                                                                         name="idTipoSeguro"
+                                                                        id="idTipoSeguro"
                                                                         select
                                                                         required
                                                                         label="Tipo seguro"
@@ -3910,6 +3946,7 @@ function Recoleccion() {
                                                                                onChange={handleChange}
                                                                                value={state.porcentajeSeguro}
                                                                                placeholder="%"
+                                                                               id="porcentajeSeguro"
                                                                                name="porcentajeSeguro"
                                                                                InputProps={{
                                                                                    endAdornment: <InputAdornment position="start">%</InputAdornment>,
@@ -3927,6 +3964,7 @@ function Recoleccion() {
                                                                                label="Valor Declarado"
                                                                                onChange={(event) => {
                                                                                    event.preventDefault();
+                                                                                   setRepetirConceptos(true)
                                                                                    setState({
                                                                                        ...state,
                                                                                        valorDeclarado: event.target.value,
@@ -3935,14 +3973,42 @@ function Recoleccion() {
                                                                                value={state.valorDeclarado}
                                                                                placeholder="$"
                                                                                name="valorDeclarado"
+                                                                               id="valorDeclarado"
                                                                                InputProps={{
                                                                                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
                                                                                }}
                                                                     />
                                                                 </div>
                                                             </Grid>
-                                                        </Grid>
-
+                                                        </Grid>                         
+                                                        <Grid container style={{marginBottom:'10px'}}>
+                                                            <Grid item xs>
+                                                                <div className="col-sm-12 col-md-12 col-lg-12 unit">
+                                                                    <div className="input">                       
+                                                                                    <TextField
+                                                                                        variant="outlined"
+                                                                                        margin="dense"
+                                                                                        className="form-control"
+                                                                                        type= "text"
+                                                                                        label="Observaciones"
+                                                                                        value={state.observaciones}
+                                                                                        onChange={(event) => {
+                                                                                            event.preventDefault();
+                                                                                            setState({
+                                                                                                ...state,
+                                                                                                observaciones: event.target.value,
+                                                                                            });
+                                                                                        }}
+                                                                                        disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                                        id="observaciones"
+                                                                                        name="observaciones"
+                                                                                        placeholder={"sin observaciones"}
+                                                                                        InputLabelProps={{shrink: true}}                                                                
+                                                                                    />
+                                                                    </div>
+                                                                </div>
+                                                            </Grid>
+                                                        </Grid> 
                                                 </div>
                                             </div>
                                         </div>
@@ -3982,6 +4048,8 @@ function Recoleccion() {
                                                                         remitente={true}
                                                                         componentePadre={"Recoleccion"}
                                                                         consulta={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                        modificar={state.agregar === "Modificar"}
+                                                                        agregar={state.agregar === "Agregar"}
                                                                         mostrarZonas={!state.diferenteRecoleccion}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}
@@ -3991,6 +4059,7 @@ function Recoleccion() {
                                                                         handleDataChange={handleChangeRemitente}
                                                                         dataPadreConsulta={dataRecoleccionConsulta}
                                                                         limpiarRemDes={limpiarRemDes}
+                                                                        seCalculaTarifa={seCalculaTarifa}
                                                                     
                                                                     />
                                                                 }
@@ -4051,6 +4120,8 @@ function Recoleccion() {
                                                                         destinatario={true}
                                                                         componentePadre={"Recoleccion"}
                                                                         consulta={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                        modificar={state.agregar === "Modificar"}
+                                                                        agregar={state.agregar === "Agregar"}
                                                                         mostrarZonas={!state.diferenteEntrega && !state.entregaEnSucursal}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}
@@ -4060,6 +4131,8 @@ function Recoleccion() {
                                                                         handleDataChange={handleChangeDestinatario}
                                                                         dataPadreConsulta={dataRecoleccionConsulta}
                                                                         limpiarRemDes={limpiarRemDes}
+                                                                        seCalculaTarifa={seCalculaTarifa}
+                                                                        entregaDomicilioDestinatario={!state.entregaEnSucursal && !state.diferenteEntrega}
                                                                     />
                                                                 }
                                                             <div className="row">
@@ -4319,7 +4392,7 @@ function Recoleccion() {
                                                                     </div>
 
                                                                 </div>
-                                                                <div className="col-sm-6 col-md-6 unit">
+                                                            { false && <div className="col-sm-6 col-md-6 unit">
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             value={recoleccionDD.zonaTarifaRec}
@@ -4351,6 +4424,7 @@ function Recoleccion() {
                                                                         />
                                                                     </div>
                                                                 </div>
+                                                                }
 
                                                                 <div className="col-sm-6 col-md-4  unit">
                                                                     <div className="input">
@@ -4359,7 +4433,7 @@ function Recoleccion() {
                                                                                    onChange={handleChangeRecoleccionDD}
                                                                                    className="form-control"
                                                                                    type="text"
-                                                                                   label="Domicilio"
+                                                                                   label="Calle y número"
                                                                                    value={recoleccionDD.domicilioRec}
                                                                                    disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                                                                    id="domicilioRec"
@@ -4550,7 +4624,7 @@ function Recoleccion() {
                                                                     </div>
 
                                                                 </div>
-                                                                <div className="col-sm-6 col-md-6 unit">
+                                                               { false && <div className="col-sm-6 col-md-6 unit">
                                                                     <div className="input">
                                                                         <Autocomplete
                                                                             value={entregaDD.zonaTarifaEnt}
@@ -4582,6 +4656,7 @@ function Recoleccion() {
                                                                         />
                                                                     </div>
                                                                 </div>
+                                                                    }
 
                                                                 <div className="col-sm-6 col-md-4  unit">
 
@@ -4976,7 +5051,9 @@ function Recoleccion() {
                                         </div>*/}
 
                                     </div>
+  
 
+  
                                     <div className="row">
                                         <Cotizador embarque={state}
                                                    disabled={state.agregar === "Consultar"}
@@ -4986,7 +5063,10 @@ function Recoleccion() {
                                                    conceptos={dataConceptos}
                                                    saveIdCotizacion={saveIdCotizacion}
                                                    recoleccion={true}
+                                                   recoleccionDiferenteDom={recoleccionDD}
                                                    mostrarCotizadorRec={mostrarCotizadorRec}
+                                                   entregaDiferenteDom={entregaDD}
+                                                   setCalculoTarifa={()=>setRepetirConceptos(false)}
                                                    paquetes={dataPaquetes.map(p =>({
                                                        Tipo: p.m_nIdTipo,
                                                        Peso: p.m_rPeso,

@@ -12,7 +12,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import RestartAltIcon from '@material-ui/icons/Refresh';
 import InputAdornment from "@material-ui/core/InputAdornment";
-import {getCurrentDateTime} from "../Util/Util"
+import {getCurrentDateTime,validarDerecho} from "../Util/Util"
 import {
     ReactTable,
     useTable,
@@ -209,6 +209,7 @@ function Embarque(props) {
         preventScroll: true,
     });
     const [tabActiva, setTabActiva] = useState(0);
+    const [repetirConceptos,setRepetirConceptos] = React.useState(false)
     const columnsRemitenteDestinatarios = React.useMemo(() => [
         {
             Name: "Número",
@@ -271,9 +272,10 @@ function Embarque(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar">
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101423)}>
                             <a
-                                onClick={() => handleShowModificar(row.row.m_nIdEmbarque)}
+                                onClick={() => {
+                                    handleShowModificar(row.row,row.row.m_nIdEmbarque)}}
                                 className="btn btn-default btn-xs"
                             >
                                 <i
@@ -282,7 +284,7 @@ function Embarque(props) {
                                 />
                             </a>
                         </Tooltip>
-                        <Tooltip title="Consultar">
+                        <Tooltip title="Consultar" disabled={!validarDerecho(9101426)}>
                             <a
                                 className="btn btn-default btn-xs"
                                 onClick={() => handleShowConsultar(row.row.m_nIdEmbarque)}
@@ -290,13 +292,13 @@ function Embarque(props) {
                                 <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                             </a>
                         </Tooltip>
-                        <Tooltip title="Reporte">
+                        <Tooltip title="Reporte" disabled={!validarDerecho(9101425)}>
                             <a  className="btn btn-default btn-xs"
                                 onClick={() => generarReporte(row.row.m_nIdEmbarque, row.row.m_sFolioEmbarque)}><i className="zmdi zmdi-file"
                                                                                                                  style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Eliminar">
+                        <Tooltip title="Eliminar" disabled={!validarDerecho(9101424)}>
                             <a
                                 href="#"
                                 className="btn btn-default btn-xs"
@@ -339,6 +341,17 @@ function Embarque(props) {
             headerName: "Folio Embarque",
             field: "m_nFolioEmbarque",
             width: 125,
+            renderCell:(row)=>{
+                return(
+                    <div>
+                     <Tooltip title= {row.row.m_sObservaciones}>
+                         <field>{row.row.m_nFolioEmbarque}</field>
+                     </Tooltip>
+                </div>
+
+                );
+                
+            }
         },
         {
             headerName: "Estatus de la Orden",
@@ -491,6 +504,7 @@ function Embarque(props) {
         tipoCambio: '',
         tipoCobro: '',
         clientePaga: {},
+        observaciones: '', 
         valorDeclarado:0,
         idTipoSeguro:5,
         porcentajeSeguro: 0,
@@ -501,6 +515,7 @@ function Embarque(props) {
         entregaEnSucursal: false,
         idSucursalEntrega: '',
         diferenteEntrega: false,
+        zonaOperativaSucursal: null,
 
         //Cita de recoleccion
         entregaConCita: false,
@@ -597,6 +612,7 @@ function Embarque(props) {
         resetEntregaDD()
         setDataConceptos([])
         setDataComplementosSAT([])
+        setRepetirConceptos(false)
         setConfiguraciones({
             estatusRecoleccion: 0,
             estatusEmbarque: 0,
@@ -777,13 +793,21 @@ function Embarque(props) {
             }
         });
         if (event.target.name === "estadoEnt"){
+            setRepetirConceptos(true)
             obtenerMunicipiosByIdEstado(event.target.value).then(({data}) =>{
                 setDataMunicipiosEntregaDD(data)
+            })
+        }
+        if (event.target.name === "municipioEnt") {
+            setRepetirConceptos(true)
+            obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoRec, event.target.value).then(({data}) => {
+                setDataCodigosPostalesEntregaDD(data)
             })
         }
     };
 
     const handleChangeAutocompleteEntregaDD = (input, newValue) => {
+        setRepetirConceptos(true)
         setEntregaDD({
             ...entregaDD,
             [input]: newValue
@@ -823,26 +847,26 @@ function Embarque(props) {
 
     const validarCoordenadas = (coordenadas) => {
         /**Si es modificacion*/
+        debugger
         if (state.idEmbarque != 0){
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
             if(state.diferenteEntrega
-                && !isValidText(entregaDD.latitudEnt)
-                && !isValidText(entregaDD.longitudEnt)
-                && !coordenadas){
+                && coordenadas==undefined){
                 mostrarDialogoMapa(true)
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas guardadas*/
             }else if (!state.diferenteEntrega
                 && !isValidText(destinatario.latitudD)
                 && !isValidText(destinatario.longitudD)
-                && !coordenadas) {
+                && !coordenadas
+                ) {
                 mostrarDialogoMapa(true)
                 return false
             }
             /**Si es agregar*/
         }else{
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
-            if (state.diferenteEntrega  && !coordenadas){
+            if (state.diferenteEntrega && coordenadas==undefined){
                 mostrarDialogoMapa(true)
                 return false
                 /**Si es entrega en el domicilio del destinatario y no hay coordenadas*/
@@ -858,16 +882,20 @@ function Embarque(props) {
     }
 
     const mostrarDialogoMapa = (isVisible) => {
-        setState({
-            ...state,
-            showConfirmarUbicacion: isVisible,
-            titulo: "entrega"
+        setState(state => {
+            return {
+                ...state,
+                showConfirmarUbicacion: isVisible,
+                titulo: "entrega"
+            }
         })
     }
     const mostrarCotizadorRec = (isVisible) =>{
-        setState({
-            ...state,
-            mostrarCotizador:isVisible
+        setState(state => {
+            return {
+                ...state,
+                mostrarCotizador:isVisible
+            }
         })
     }
     /*const getCurrentDateTime = () => {
@@ -963,20 +991,21 @@ function Embarque(props) {
                 showSuccess("La zona operativa de entrega es un dato requerido");
                 return valid;
             }
-            if (!esDatoValido(entregaDD.zonaTarifaEnt?.m_nIdZona)){
+          /*  if (!esDatoValido(entregaDD.zonaTarifaEnt?.m_nIdZona)){
                 showSuccess("La zona de la tarifa de entrega es un dato requerido");
                 return valid;
-            }
+            }*/
 
         }else {
             /**Si es entrega en domicilio de destinatario*/
             if (!esDatoValido(destinatario.zonaOperativaDestinatario?.m_nIdZona)) {
                 showSuccess("Verificar la zona operativa de destinatario")
                 return valid;
-            } else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
+            }
+           /* else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
                 showSuccess("Verificar la zona tarifa de destinatario")
                 return valid;
-            }
+            }*/
         }
         if (state.entregaConCita){
             if (!state.citaPendiente){
@@ -1015,11 +1044,12 @@ function Embarque(props) {
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
 
+        if(repetirConceptos && state.mostrarCotizador){
+            showSuccess("Se requiere calcular tarifa otra vez")
+            return;
+        }
         /**Se cierra el dialogo porque si no se quedará abierto despues de darle aceptar.*/
-        setState({
-            ...state,
-            showConfirmarUbicacion: false
-        })
+        mostrarDialogoMapa(false)
 
         if (!esEmbarqueValido()){
             return;
@@ -1084,6 +1114,7 @@ function Embarque(props) {
             m_sHora: getCurrentDateTime().substr(getCurrentDateTime().length - 5),
             m_nIdCliente: state.clientePaga.m_nIdCliente,
             ValorDeclarado: state.valorDeclarado,
+            m_sObservaciones: state.observaciones, 
             m_nIdTipoSeguro: state.idTipoSeguro,
             m_xPorcentajeSeguro: state.porcentajeSeguro,
             m_bAplicaSeguro: state.aplicaSeguro,
@@ -1281,8 +1312,6 @@ function Embarque(props) {
             });
         }
 
-        console.log(id);
-        console.log(state.identificadorModal);
     }
 
     function getTipoCambio() {
@@ -1346,7 +1375,6 @@ function Embarque(props) {
             if (dataRemitenteDestinatario.length > 0 && dataCiudad.length > 0 && dataClientes.length > 0) {
                 obtenerRecoleccionId(props.location.idRecoleccion)
                     .then((respuesta) => {
-                        console.log('Recoleccion: ', respuesta.data);
                         setDataRecoleccionOnState(respuesta)
                     })
             }
@@ -1360,7 +1388,6 @@ function Embarque(props) {
         if (props.location.idRecoleccion !== undefined) {
         obtenerRecoleccionId(props.location.idRecoleccion)
             .then((respuesta) => {
-                console.log('Recoleccion: ', respuesta.data);
                 setDataRecoleccionOnState(respuesta)
                 setTabActiva(1)
             })
@@ -1397,6 +1424,17 @@ function Embarque(props) {
         setDataTipoCobro(newTiposCobro)
     }, [state.entregaEnSucursal])
 
+    const getZonaOperativaByCodigoPostal = (codigoPostal) => {
+        obtenerZonaOperativaByIdCodigoPostal(codigoPostal).then(respuesta => {
+            setState(state => {
+                return{
+                    ...state,
+                    zonaOperativaSucursal: respuesta.data[0]
+                }
+            })
+        })
+    }
+
     function handleShowCancelar(e) {
         if (e){
             e.preventDefault()
@@ -1430,7 +1468,6 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
-            console.log(JSON.stringify(respuesta.data))
             setState({
                 ...state,
                 agregar: "Consultar",
@@ -1448,7 +1485,6 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
-            console.log('Embarque: ', respuesta)
             setState({
                 ...state,
                 agregar: "Agregar",
@@ -1475,7 +1511,11 @@ function Embarque(props) {
         setTabActiva(1)
     }
 
-    function handleShowModificar(id) {
+    function handleShowModificar(filaEmbarque,id) {
+        if(filaEmbarque.m_nIdEstatusEmbarque==21){
+            showSuccess("El embarque no puede ser modificado ya que se encuentra cancelado")
+            return
+        }     
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -1483,8 +1523,6 @@ function Embarque(props) {
         limpiarCamposAgregar()
         setTabActiva(1)
         obtenerEmbarquesId(id).then((respuesta) => {
-            console.log("id"+id)
-            console.log(JSON.stringify(respuesta.data))
             setState({
                 ...state,
                 agregar: "Modificar",
@@ -1647,7 +1685,9 @@ function Embarque(props) {
                 porcentajeSeguro: respuesta.data.m_bAplicaSeguro ? respuesta.data.m_xPorcentajeSeguro : 0,
                 aplicaSeguro: respuesta.data.m_bAplicaSeguro,
                 valorDeclarado: respuesta.data.m_xValorDeclarado,
-                recoleccionConCita: respuesta.data.m_bRecoleccionConCita
+                recoleccionConCita: respuesta.data.m_bRecoleccionConCita,
+                //observaciones
+                observaciones: respuesta.data.m_sObservaciones 
             }
         });
     }
@@ -1669,6 +1709,14 @@ function Embarque(props) {
                     idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
                     diferenteEntrega: false,
                 }
+            })
+            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaOperativaSucursal: data
+                    }
+                })
             })
             /**Si es entrega es en diferente domicilio*/
         }else if (!respuesta.data.EntregarMismoDomicilio){
@@ -1851,6 +1899,8 @@ function Embarque(props) {
                 countPaquetes: respuesta.data.m_nNoPaquetes,
                 countSobres: respuesta.data.m_nNoSobres,
                 fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
+                //observaciones
+                observaciones: respuesta.data.m_sObservaciones 
             }
         });
 
@@ -1881,6 +1931,9 @@ function Embarque(props) {
     }
 
     const handleChange = (event) => {
+        if(event.target.name == "porcentajeSeguro"){
+            setRepetirConceptos(true)
+        }
         setState({
             ...state,
             [event.target.name]: event.target.value,
@@ -1888,15 +1941,18 @@ function Embarque(props) {
     };
 
     const handleChangeSucursalEntrega = (event) => {
-        setState({
-            ...state,
-            [event.target.name]: event.target.value,
-            codigoPostalEntrega: dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_nIdCodigoPostal
-
+        //Evaluar si este setState se usa para algo
+        setState(state => {
+            return {
+                ...state,
+                [event.target.name]: event.target.value,
+            }
         });
+        getZonaOperativaByCodigoPostal(dataSucursal.find(c => c.m_nIdSucursal == event.target.value).m_sCodigoPostal)
     };
 
     const handleEntregaCheckboxChange = (event) => {
+        setRepetirConceptos(true)
         setState({
             ...state,
             diferenteEntrega: !state.diferenteEntrega,
@@ -1905,6 +1961,7 @@ function Embarque(props) {
     };
 
     const handleEntregaEnSucursalCheckbox = (event) => {
+        setRepetirConceptos(true)
         setState({
             ...state,
             entregaEnSucursal: !state.entregaEnSucursal,
@@ -1914,12 +1971,16 @@ function Embarque(props) {
     };
 
     const handleEntregaConCitaCheckbox = (event) => {
+        setRepetirConceptos(true)
         setState({
             ...state,
             entregaEnSucursal: !state.entregaConCita && false,
             entregaConCita: !state.entregaConCita
         });
     };
+    const seCalculaTarifa = () =>{
+        setRepetirConceptos(true)
+    }
 
     const handleClickCiudad = (event) => {
         event.preventDefault()
@@ -2444,6 +2505,7 @@ function Embarque(props) {
     }
 
     const handleListPaquetesChange = (newList) => {
+          setRepetirConceptos(true)
         setDataPaquetes(newList)
     }
 
@@ -2486,6 +2548,7 @@ function Embarque(props) {
     }
 
     const handleChangeTipoSeguro = (event) => {
+        setRepetirConceptos(true)
         setState({
             ...state,
             idTipoSeguro: event.target.value,
@@ -2878,7 +2941,7 @@ function Embarque(props) {
 
 
                         <li className={props.location.idRecoleccion != undefined ? "active" : ""}>
-                            <a onClick={() => handleShowAgregar()}>
+                            <a  className={validarDerecho(9101422)?"":classes.disabled} onClick={() => handleShowAgregar()}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -2899,20 +2962,19 @@ function Embarque(props) {
                             </a>
                         </li>
                         <li>
-                            <ExportCSV csvData={data} fileName="Embarque_Listado"/>
+                            <ExportCSV disabled={!validarDerecho(9101428)} csvData={data} fileName="Embarque_Listado"/>
                         </li>
                         <li>
                             <a
-
                                 onClick={handleShowCancelar}
-                                className={state.idEmbarque === 0 ? classes.disabled : ""}
+                                className={state.idEmbarque === 0 || !validarDerecho(9101427)? classes.disabled : ""}
                             >
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>
                         <li style={{float: "right"}}>
                             <a
-                                className={state.idEmbarque === 0 ? classes.disabled : ""}
+                                className={state.idEmbarque === 0 || !validarDerecho(9101429) ? classes.disabled : ""}
                                 style={{textAlign: "right"}}
                                 onClick={() => setRedirect(true)}
                             >
@@ -3197,7 +3259,7 @@ function Embarque(props) {
                                                                                 key={cambio.m_nIdTipoCambio}
                                                                                 value={cambio.m_nIdTipoCambio}
                                                                             >
-                                                                                {cambio.m_cTipoCambio}
+                                                                                {cambio.m_cTipoCambio.toFixed(4)}
                                                                             </option>
                                                                         ))}
                                                                     </Select>
@@ -3295,6 +3357,7 @@ function Embarque(props) {
                                                                                value={state.porcentajeSeguro}
                                                                                placeholder="%"
                                                                                name="porcentajeSeguro"
+                                                                               id="porcentajeSeguro"
                                                                                InputProps={{
                                                                                    endAdornment: <InputAdornment position="start">%</InputAdornment>,
                                                                                }}
@@ -3311,6 +3374,7 @@ function Embarque(props) {
                                                                                label="Valor Declarado"
                                                                                onChange={(event) => {
                                                                                    event.preventDefault();
+                                                                                   setRepetirConceptos(true)
                                                                                    setState({
                                                                                        ...state,
                                                                                        valorDeclarado: event.target.value,
@@ -3349,8 +3413,33 @@ function Embarque(props) {
                                                                 </label>
                                                             </Grid>
                                                         </Grid>
-
-
+                                                        <Grid container spacing={2} style={{marginBottom:'10px',paddingRight:'15px'}}>
+                                                        <Grid item xs>
+                                                                <div className="col-sm-12 col-md-12 col-lg-12 unit">
+                                                                    <div className="input">                       
+                                                                                    <TextField
+                                                                                        variant="outlined"
+                                                                                        label="Observaciones"
+                                                                                        margin="dense"
+                                                                                        type= "text"
+                                                                                        disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
+                                                                                        value= {state.observaciones}
+                                                                                        onChange={(event) => {
+                                                                                            event.preventDefault();
+                                                                                            setState({
+                                                                                                ...state,
+                                                                                                observaciones: event.target.value,
+                                                                                            });
+                                                                                        }}
+                                                                                        name="observaciones"
+                                                                                        id="observaciones"
+                                                                                        placeholder={"sin observaciones"}
+                                                                                        InputLabelProps={{shrink: true}}                                                                
+                                                                                    />
+                                                                    </div>
+                                                                </div>
+                                                            </Grid>                                                                            
+                                                        </Grid> 
                                                 </div>
                                             </div>
                                         </div>
@@ -3393,6 +3482,8 @@ function Embarque(props) {
                                                                         remitente={true}
                                                                         componentePadre={"Embarque"}
                                                                         consulta={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                        modificar={state.agregar === "Modificar"}
+                                                                        agregar={state.agregar === "Agregar"}
                                                                         mostrarZonas={false}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}
@@ -3401,6 +3492,7 @@ function Embarque(props) {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeRemitente}
                                                                         dataPadreConsulta={dataEmbarqueConsulta}
+                                                                        seCalculaTarifa={seCalculaTarifa}
                                                                         
                                                                     />
                                                                 }
@@ -3420,6 +3512,8 @@ function Embarque(props) {
                                                                         destinatario={true}
                                                                         componentePadre={"Embarque"}
                                                                         consulta={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                        modificar={state.agregar === "Modificar"}
+                                                                        agregar={state.agregar === "Agregar"}
                                                                         mostrarZonas={!(state.diferenteEntrega || state.entregaEnSucursal)}
                                                                         dataRemitenteDestinatario={dataRemitenteDestinatario}
                                                                         dataEstados={dataEstados}
@@ -3428,6 +3522,8 @@ function Embarque(props) {
                                                                         handleClickCiudad={handleClickCiudad}
                                                                         handleDataChange={handleChangeDestinatario}
                                                                         dataPadreConsulta={dataEmbarqueConsulta}
+                                                                        seCalculaTarifa={seCalculaTarifa}
+                                                                        entregaDomicilioDestinatario={!state.entregaEnSucursal && !state.diferenteEntrega}
                                                                       
                                                                     />
                                                                 }
@@ -3702,7 +3798,7 @@ function Embarque(props) {
                                                                         </div>
 
                                                                     </div>
-                                                                    <div className="col-sm-6 col-md-6 unit">
+                                                                   { false && <div className="col-sm-6 col-md-6 unit">
                                                                         <div className="input">
                                                                             <Autocomplete
                                                                                 value={entregaDD.zonaTarifaEnt}
@@ -3733,7 +3829,7 @@ function Embarque(props) {
                                                                                 }
                                                                             />
                                                                         </div>
-                                                                    </div>
+                                                                    </div>}
 
                                                                     <div className="col-sm-6 col-md-4  unit">
 
@@ -3743,7 +3839,7 @@ function Embarque(props) {
                                                                                        onChange={handleChangeEntregaDD}
                                                                                        className="form-control"
                                                                                        type="text"
-                                                                                       label="Domicilio"
+                                                                                       label="Calle y número"
                                                                                        value={entregaDD.domicilioEnt}
                                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                                        id="domicilioEnt"
@@ -3801,7 +3897,7 @@ function Embarque(props) {
                                         <div className="widget-wrap" id="citaEntrega">
                                             <Citas titulo={"Programar cita de la Entrega"}
                                                    onDataChange={handleChangeCita}
-                                                   data={state}
+                                                   dataPadreConsulta={dataEmbarqueConsulta}
                                                    embarque={true}
                                                    disabled={state.agregar === "Consultar"}
                                                    required={state.entregaConCita}
@@ -3821,6 +3917,7 @@ function Embarque(props) {
                                                    recoleccion={false}
                                                    mostrarCotizadorRec={mostrarCotizadorRec}
                                                    saveIdCotizacion={saveIdCotizacion}
+                                                   setCalculoTarifa={()=>setRepetirConceptos(false)}
                                                    paquetes={dataPaquetes.map(p =>({
                                             Tipo: p.m_nIdTipo,
                                             Peso: p.m_rPeso,

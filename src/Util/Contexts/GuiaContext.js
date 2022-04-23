@@ -40,11 +40,29 @@ function eliminarGuia(id, idEliminadoPor) {
         );
     return result
 }
+function validarEliminarGuia(id){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/ValidarEliminar/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
+
 function cancelarGuia(id, params) {
     const url = `${process.env.REACT_APP_API_URL}/Guia/Cancelar/${id}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
+        );
+    return result
+}
+
+function validarCancelarGuia(id){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/ValidarCancelar/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
         );
     return result
 }
@@ -125,6 +143,14 @@ function obtenerGuiaPendientes(idOrigen, idDestino) {
 }
 function obtenerGuiaReporte(id) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/Guia/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+function obtenerGuiaReporteEtiqueta(id) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/GenerarReporte/EtiquetasGuia/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -215,5 +241,5 @@ function obtenerValidacionGuia(id){
 }
 
 export {actualizarCoordenadasGuia,cambiarEstatusGuia, obtenerGuiasFiltroCorteCaja, entregaOcurreGuia, modificarGuia, agregarGuia, eliminarGuia, obtenerGuiaId,
-    obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,
-    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos}
+    obtenerGuia, ultimoFolioGuia, cancelarGuia, obtenerGuiasFiltro, obtenerGuiaPendientes, imprimirGuia,obtenerGuiaReporteEtiqueta,
+    obtenerGuiaUltimaMilla, reasignarGuia, obtenerGuiaReporte , cambiarTipoCobro, obtenerValidacionGuia,asignarTrayectos,validarEliminarGuia,validarCancelarGuia}

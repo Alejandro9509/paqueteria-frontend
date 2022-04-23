@@ -52,7 +52,7 @@ function obtenerCorteId(id) {
 }
 
 function obtenerCortesByFiltros(fecha, idSucursal) {
-    const url = `${process.env.REACT_APP_API_URL}/CorteCaja/GetListadoByFiltros/` + fecha +`/` + idSucursal;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CorteCaja/GetListadoByFiltros/` + fecha +`/` + idSucursal;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

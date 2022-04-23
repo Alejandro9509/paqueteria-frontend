@@ -1,6 +1,7 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
 import { API_HEADERS } from "../../Constants";
+import {getCurrentDateTime} from "../Util";
 
 const headers = API_HEADERS
 
@@ -133,6 +134,20 @@ function obetenerViajeId( id){
     return result
 }
 
+function cancelarTrayecto(id, params){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Viajes/cancelarTrayecto/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, {
+            usuarioId: localStorage.getItem("UsuarioId"),
+            motivo: params.motivo,
+            tipo:1,
+            fecha:getCurrentDateTime().substr(0, 10),
+            hora: getCurrentDateTime().substr(getCurrentDateTime().length - 5)
+        }), { headers })
+    );
+    return result
+}
 
 function cancelarViaje(id, params){
     const url = `${process.env.REACT_APP_API_URL}/Viajes/CancelarViaje/${id}`;
@@ -143,6 +158,16 @@ function cancelarViaje(id, params){
     return result
 }
 
+function validarSalidaParada(id){
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Viajes/paradasTimbradas/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
 
-export {obtenerViajesByFiltro,agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje,
-    obtenerViajes, obtenerViajesEstatus, obtenerXML,obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje,cancelarCFDI,cancelarViaje}
+
+
+export {obtenerViajesByFiltro,agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje,cancelarTrayecto,
+    obtenerViajes, obtenerViajesEstatus, obtenerXML,obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje,cancelarCFDI,cancelarViaje,validarSalidaParada}

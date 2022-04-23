@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {FormControl, Grid, InputLabel, Select} from "@material-ui/core";
+import {FormControl, Grid, InputLabel, MenuItem, Select} from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {obtenerEstadosPais} from "../../Util/Contexts/EstadosContext";
@@ -7,6 +7,8 @@ import CPTransferList from "./CPTransferList";
 import {obtenerMunicipiosByIdEstado} from "../../Util/Contexts/MunicipiosContext";
 import {obtenerCodigosPostalesPorEstadoMunicipio} from "../../Util/Contexts/CodigoPostalContext";
 import {obtenerCiudades} from "../../Util/Contexts/CiudadesContext";
+import {Autocomplete} from "@material-ui/lab";
+import Button from "@material-ui/core/Button";
 
 function not(a, b) {
     return a.filter((value) => b.find(v => v.m_nIdCP == value.m_nIdCP) === undefined);
@@ -20,16 +22,19 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
         idEstado: '',
         idMunicipio: '',
         selectedCP: [],
+        idOrigenDestino: ''
     })
 
     const [allCP, setAllCP] = useState([])
     const [dataSucursal, setDataSucursal] = useState([])
     const [dataEstados, setDataEstados] = useState([])
     const [dataMunicipio, setDataMunicipios] = useState([])
+    const [dataCiudades, setDataCiudades] = useState([])
 
     useEffect(value => {
         getAllSucursales()
         getAllEstados()
+        getAllCiudades()
     }, [])
 
     useEffect( value => {
@@ -41,6 +46,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                 idEstado: seleccion.m_sIdEstado ? seleccion.m_sIdEstado: '',
                 estado: seleccion.m_sEstado ? seleccion.m_sEstado : '',
                 selectedCP: seleccion.m_arrCPs ? seleccion.m_arrCPs : [],
+                idOrigenDestino: seleccion.m_nIdOrigenDestino || ''
             }
         })
         if (!seleccion.m_arrCPs){
@@ -68,6 +74,13 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                 setDataSucursal(respuesta.data);
             });
         }
+
+    }
+
+    const getAllCiudades = () => {
+        obtenerCiudades().then((respuesta) => {
+            setDataCiudades(respuesta.data);
+        });
 
     }
 
@@ -140,7 +153,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
         <div>
             <div className="row">
                 <Grid container spacing={2}>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                         <div className="input">
                             <TextField
                                 fullWidth
@@ -158,7 +171,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                             />
                         </div>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                         {
                             tarifa ? (
                                 <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
@@ -176,12 +189,12 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                                         name="idSucursal"
                                     >
                                         {dataSucursal.map((sucursal) => (
-                                            <option
+                                            <MenuItem
                                                 key={sucursal.m_nIdCiudad}
                                                 value={sucursal.m_nIdCiudad}
                                             >
                                                 {sucursal.m_sCiudad}
-                                            </option>
+                                            </MenuItem>
                                         ))}
                                     </Select>
                                 </FormControl>
@@ -199,6 +212,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                                         onChange={handleChangeState}
                                         id="idSucursal"
                                         name="idSucursal"
+                                        disabled={consult}
                                     >
                                         {dataSucursal.map((sucursal) => (
                                             <option
@@ -213,6 +227,31 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                             )
                         }
 
+                    </Grid>
+                    <Grid item xs={2}>
+                        <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
+                            <InputLabel
+                                id="idOrigenDestino">Origen/Destino</InputLabel>
+                            <Select
+                                fullWidth
+                                label="Origen/Destino"
+                                className="form-control"
+                                required
+                                value={state.idOrigenDestino}
+                                onChange={handleChangeState}
+                                id="idOrigenDestino"
+                                name="idOrigenDestino"
+                            >
+                                {dataCiudades.map((ciudades) => (
+                                    <MenuItem
+                                        key={ciudades.m_nIdCiudad}
+                                        value={ciudades.m_nIdCiudad}
+                                    >
+                                        {ciudades.m_sCiudad}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </Grid>
                     <Grid item xs={2}>
                         <FormControl className="input select" fullWidth variant="outlined" margin="dense" required>
@@ -267,9 +306,9 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                         </FormControl>
                     </Grid>
                     <Grid item xs={2}>
-                        <button type={"button"} className="btn btn-primary primary-btn" onClick={handleGetCPS} disabled={consult}>
-                            Buscar Codigos Postales
-                        </button>
+                        <Button fullWidth type={"button"} className="btn btn-primary primary-btn" onClick={handleGetCPS} disabled={consult}>
+                            Buscar Códigos Postales
+                        </Button>
                     </Grid>
                 </Grid>
             </div>

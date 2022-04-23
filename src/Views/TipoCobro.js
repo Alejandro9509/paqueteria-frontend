@@ -10,6 +10,8 @@ import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
 import { agregarTipoCobro, eliminarTipoCobro, modificarTipoCobro, obtenerTipoCobroId, obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import {validarDerecho} from "../Util/Util"
+import {makeStyles} from "@material-ui/core/styles";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -20,8 +22,16 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-function TipoCobro() {
+const styles = {
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    }
+};
+const useStyles = makeStyles(styles);
 
+function TipoCobro() {
+    const classes = useStyles();
     const [data, setData] = React.useState([])
     const [state, setState] = React.useState({
         idTipoCobro: 0,
@@ -128,7 +138,8 @@ function TipoCobro() {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTipoCobro))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTipoCobro))} className="btn btn-default btn-xs"
+                            disabled={!validarDerecho(9101351)}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
@@ -136,7 +147,8 @@ function TipoCobro() {
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoCobro))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoCobro))}
+                            disabled={!validarDerecho(9101352)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
                     </div>
@@ -185,7 +197,9 @@ function TipoCobro() {
             setData(respuesta.data)
         });
     };
-
+const handleClickCancelar = () =>{
+    getAllData();
+}
 
 
     return (
@@ -224,7 +238,7 @@ function TipoCobro() {
             </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                            <a className= {validarDerecho(9101350)? "":classes.disabled} data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
@@ -296,7 +310,7 @@ function TipoCobro() {
                                                 </div>
                                                 <br></br>
                                                 <div className="form-footer" className="col-md-12">
-                                                    <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+                                                    <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn" onClick={handleClickCancelar}
                                                     >
                                                         Cancelar</button>
                                                     <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>

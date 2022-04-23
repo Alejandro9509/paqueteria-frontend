@@ -25,7 +25,12 @@ import {
     obtenerGuiasUbicacion,
     randomColor,
     searchLocationWeb,
-    generarRuta, agregarRuta, searchLocationAddress, obtenerUltimaMillaFecha
+    generarRuta,
+    agregarRuta,
+    searchLocationAddress,
+    obtenerUltimaMillaFecha,
+    validarUnidadesSeleccionadas,
+    validarUnidadOcupada
 } from "../../Util/Contexts/UltimaMillaContext";
 import Tour from "./Tour";
 import Mensajes from "./Mensajes";
@@ -42,7 +47,9 @@ import Select from "@material-ui/core/Select";
 import Buttons from "../../Util/CarruselButtons";
 import {reasignarGuia} from "../../Util/Contexts/GuiaContext";
 import L from "leaflet";
-import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png"; // Import css
+import MarkerImage from "../../iconos/Mapa/sucursalMarcador.png";
+import {forEach} from "react-bootstrap/ElementChildren";
+import {getCurrentDate} from "../../Util/Util"; // Import css
 
 
 function showSuccess(mensaje) {
@@ -87,6 +94,8 @@ class UltimaMilla extends Component {
             modoPlaneacion: false,
             ultimaMilla: null,
             openDialog: false,
+            closeFiltersMapDialogs: false,
+            closeResumenParadas:false
 
         }
         this.generarRuta = this.generarRuta.bind(this)
@@ -103,6 +112,8 @@ class UltimaMilla extends Component {
         this.reasignarParada = this.reasignarParada.bind(this)
         this.refreshUltimaMilla = this.refreshUltimaMilla.bind(this)
         this.refreshFilterUltimaMilla = this.refreshFilterUltimaMilla.bind(this)
+        this.changeFiltersMapDialogsState = this.changeFiltersMapDialogsState.bind(this)
+        this.closeResumenParada = this.closeResumenParada.bind(this)
     }
 
 
@@ -187,7 +198,16 @@ class UltimaMilla extends Component {
 
     guardarRuta() {
         if (this.state.ultimaMilla) {
-            if (this.state.tour) {
+            if (this.state.tour) { 
+                console.log("unidades"+Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad)))
+              
+             /*   validarUnidadesSeleccionadas(Object.values(this.state.tour.unidades.map(unidades => unidades.m_nIdUnidad))).then(respuesta=>{
+                    if(respuesta.data.sePuedeSeleccionar){
+                        showSuccess("se puede seleccionar")
+                    }else{
+                        showSuccess("No se puede seleccionar la unidad")
+                    }
+                })*/
                 agregarRuta(this.state.ultimaMilla.m_nIdUltimaMilla, this.state.tour, this.state.filtros).then((data) => {
                     showSuccess("Se guardo la información con éxito")
                     actualizar = true
@@ -197,7 +217,7 @@ class UltimaMilla extends Component {
             }
         } else {
             if (this.state.tour) {
-                agregarRuta(0, this.state.tour, this.state.filtros).then((data) => {
+                  agregarRuta(0, this.state.tour, this.state.filtros).then((data) => {
                     showSuccess("Se guardo la información con éxito")
                     actualizar = true
                     this.setState({tour: null})
@@ -214,24 +234,70 @@ class UltimaMilla extends Component {
 
 
     async generarRuta(data) {
+        console.log(data)
         this.setState({tour: null})
         if (data.paquetesSeleccionadas.length !== 0 || data.unidadesSeleccionadas.length !== 0) {
-            var guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
-            var unidades = data.unidadesSeleccionadas
-            obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
-                if (results) {
-                    if (results.vehicleIdsNotPlanned) {
-                        if (results.vehicleIdsNotPlanned.length > 0) {
-                            unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
-                        }
+            let unidades = data.unidadesSeleccionadas
+            let unidadYaAsignada = false
+            let varible
+            if(this.state.ultimaMilla) {
+                unidades.forEach(u => {
+                    varible = this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(p => p.m_nIdUnidad === u.m_nIdUnidad && !this.ultimaMillaCompletada(p) && p.m_bActiva)
+                  //  console.log("variable"+JSON.stringify(varible))
+                //    console.log("ultimaMilla.m_arrClsParadaUltimaMilla"+JSON.stringify(this.state.ultimaMilla.m_arrClsParadaUltimaMilla.find(p => p.m_nIdUnidad === u.m_nIdUnidad && !this.ultimaMillaCompletada(p) && !p.m_bActiva )))
+                    if (varible) {
+                        unidadYaAsignada = true
                     }
-                    results.tours.map(t => t.color = randomColor(10))
-
-                    console.log(guias)
-                    this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
+                })
+            }
+            if (unidadYaAsignada){
+                showSuccess("Una de las unidades seleccionadas ya se encuentra asignada y ocupada. Seleccione otra.")
+            }else{
+                /*let unidadesDisponibles = true
+                let fechaActual = data.finishDate
+                for (let i = 0; i < data.unidadesSeleccionadas.length ; i++){
+                    let resultado = await validarUnidadOcupada(data.unidadesSeleccionadas[i].m_nIdUnidad, fechaActual, data.sucursalSeleccionada.m_nIdSucursal)
+                    unidadesDisponibles = resultado.data.UnidadDisponible
                 }
-            })
+                if (unidadesDisponibles){
+                    let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
+                    obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
+                        if (results) {
+                            if (results.vehicleIdsNotPlanned) {
+                                if (results.vehicleIdsNotPlanned.length > 0) {
+                                    unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
+                                }
+                            }
+                            results.tours.map(t => t.color = randomColor(10))
+
+                            console.log(guias)
+                            this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
+                        }
+                    })
+                }else{
+                    showSuccess("Una de las unidades seleccionadas ya se encuentra asignada y ocupada. Seleccione otra.")
+                }*/
+                let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
+                obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
+                    if (results) {
+                        if (results.vehicleIdsNotPlanned) {
+                            if (results.vehicleIdsNotPlanned.length > 0) {
+                                unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
+                            }
+                        }
+                        results.tours.map(t => t.color = randomColor(10))
+
+                        console.log(guias)
+                        this.setState({tour: {tour: results, paquetes: guias, unidades: unidades}, filtros: data})
+                    }
+                })
+            }
+
         }
+    }
+
+    ultimaMillaCompletada(ultimaMilla){
+        return !ultimaMilla.m_arrClsProGuia.find(i => i.m_nEstatusUlimaMilla !== 3)
     }
 
 
@@ -267,6 +333,19 @@ class UltimaMilla extends Component {
         event.preventDefault()
         reasignarGuia(this.state.unidadSeleccionada, this.state.paradaFuente, this.state.idGuia).then((data) => {
             showSuccess("Se realizó el cambio de operador")
+        })
+    }
+
+    changeFiltersMapDialogsState(isVisible){
+        this.setState({
+            closeFiltersMapDialogs:isVisible
+        })
+    }
+
+    closeResumenParada(isVisible){
+        console.log("linea is visible"+isVisible)
+        this.setState({
+            closeResumenParadas:isVisible
         })
     }
 
@@ -343,6 +422,8 @@ class UltimaMilla extends Component {
                                 {
                                     !this.state.fullScreen &&
                                     <FiltersMap refreshFilterUltimaMilla={this.refreshFilterUltimaMilla}
+                                                closeResumenParada={this.closeResumenParada}
+                                                closeFiltersMapDialogs={this.state.closeFiltersMapDialogs}
                                                 changeConfiguration={this.changeConfiguration}
                                                 searchLocation={this.searchLocation} generarRuta={this.generarRuta}
                                                 guardarRuta={this.guardarRuta}
@@ -380,6 +461,8 @@ class UltimaMilla extends Component {
                                 {
                                     !this.state.modoEdicion && this.state.ultimaMilla && (this.state.fullScreen === false || this.state.resumenFullscreen) &&
                                     <DetalleParadas refresh={this.refreshUltimaMilla}
+                                    closeResumenParadas={this.state.closeResumenParadas}
+                                    changeFiltersMapDialogsState={this.changeFiltersMapDialogsState}
                                                     fecha={this.state.fechaUltimaMilla} filtros={{
                                         zonasSeleccionada: this.state.zonasIds,
                                         tipoBusqueda: this.state.tipoBusqueda,

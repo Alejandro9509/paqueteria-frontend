@@ -28,9 +28,11 @@ import {ReactComponent as UnidadesIcon} from "../../iconos/Catalogos/Icono Unida
 import {PieChart} from 'react-minimal-pie-chart';
 import BlockIcon from '@material-ui/icons/Block';
 import RemplazarPaqueteUltimaMilla from "./RemplazarPaqueteUltimaMilla";
+import PaquetesParcialesGuia from './PaquetesParcialesGuia';
 import AgregarPaqueteUltimaMilla from "./AgregarPaqueteUltimaMilla";
 import PaquetesList from "./PaquetesList";
 import GetAppIcon from '@material-ui/icons/GetApp';
+import DepartureBoardIcon from '@material-ui/icons/DepartureBoard';
 
 import {
     actualizarCoordenadasGuia,
@@ -54,7 +56,15 @@ import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import CancelIcon from '@material-ui/icons/Cancel';
 import {ReactComponent as EmbarqueIcon} from "../../iconos/Menu/IconoEmbarque/iconoEmbarque.svg";
 import CancelarSAT from "../SAT/CancelarSAT";
-import {cancelarInformeCFDI, cancelarUltimaMillaCFDI} from "../../Util/Contexts/SATContext";
+import {
+    cancelarInformeCFDI,
+    cancelarUltimaMillaCFDI,
+    enviarCorreoCFDIUltimaMilla,
+    enviarCorreoCFDIViaje
+} from "../../Util/Contexts/SATContext";
+import EnvioCorreoDialogo from "../SAT/EnvioCorreoDialogo";
+import {validarDerecho} from "../../Util/Util";
+
 function showError(mensaje) {
     new Noty({
         type: "warning",
@@ -86,12 +96,14 @@ class DetalleParadas extends Component {
             open: false,
             tour: null,
             openRemplazar: false,
+            openParciales: false,
             openAgregar: false,
 
         }
         this.searchRepartidor = this.searchRepartidor.bind(this)
         this.openDetail = this.openDetail.bind(this)
         this.openRemplazarPaquete = this.openRemplazarPaquete.bind(this)
+        this.openPaquetesParciales = this.openPaquetesParciales.bind(this)
         this.onSubmitRemplazarPaquete = this.onSubmitRemplazarPaquete.bind(this)
         this.onSubmitOrdenarPaquetes = this.onSubmitOrdenarPaquetes.bind(this)
         this.onSubmitBorrarPaquete = this.onSubmitBorrarPaquete.bind(this)
@@ -101,6 +113,7 @@ class DetalleParadas extends Component {
         this.generarCFDI = this.generarCFDI.bind(this)
         this.showCancelarCFDI = this.showCancelarCFDI.bind(this)
         this.cancelarCFDI = this.cancelarCFDI.bind(this)
+        this.envioCorreoAction = this.envioCorreoAction.bind(this)
 
     }
 
@@ -109,6 +122,12 @@ class DetalleParadas extends Component {
         if (this.props.tour.m_nIdUltimaMilla !== prevProps.tour.m_nIdUltimaMilla || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + d.m_nEstatusUlimaMilla, 0), 0) ||  this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + (b.m_bActivo ? 1 : 0), 0) || this.props.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1: 0), 0), 0) !== prevProps.tour.m_arrClsParadaUltimaMilla.reduce((a, b) => +a + b.m_arrClsProGuia.reduce((c, d) => +c + (d.m_bTimbrado ? 1 : 0), 0), 0)) {
             this.setState({repartidoresFiltrados: this.props.tour.m_arrClsParadaUltimaMilla})
         }
+
+        if(this.props.closeResumenParadas!=prevProps.closeResumenParadas){//Cierra todas las ventanas
+            this.setState({
+                openDetail: false
+            })
+           }
     }
 
     searchRepartidor(event) {
@@ -131,6 +150,10 @@ class DetalleParadas extends Component {
         obtenerGuiaUltimaMilla(this.props.filtros.zonasSeleccionada, parseInt(this.props.filtros.tipoBusqueda)).then(({data}) => {
             this.setState({paquetes: data, openRemplazar: true, tour: tour, paqueteSeleccionado: paquete})
         })
+    }
+
+    openPaquetesParciales(tour, paquete) {
+            this.setState({openParciales: true, tour: tour, paqueteSeleccionado: paquete})
     }
 
     confirmDeleteParada(idParada, idGuia, esRecoleccion) {
@@ -218,29 +241,29 @@ class DetalleParadas extends Component {
             }
     }
     generarCFDI(id,esRecoleccion, folio) {
-        obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
-            if (esRecoleccion){
-                obtenerReporteCFDIRecoleccion(id).then(({data}) => {
-                    console.log(data)
-                    let pdfWindow = window.open("");
-                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-                    pdfWindow.document.body.style.margin = "0px";
-                    pdfWindow.document.title = "CFDI_ " + folio;
-                })
-            }else{
-                obtenerReporteCFDIGuia(id).then(({data}) => {
-                    let pdfWindow = window.open("");
-                    pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-                    pdfWindow.document.body.style.margin = "0px";
-                    pdfWindow.document.title = "CFDI_ " + folio;
-                })
-            }
+        confirmAlert({
+            title: 'Confirmar Timbrado',
+            message: '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?',
+            buttons: [
+                {
+                    label: 'Sí',
+                    onClick: () => {
 
-        }).catch((error) => {
-            if (error.response){
-                showError(error.response.data)
-            }
+                        obtenerCFDI(id,esRecoleccion, this.props.filtros.idSucursal).then((result) => {
+                            this.setState({idParada: id, esRecoleccion: esRecoleccion, openEnvioCorreo: true, folio: folio})
+                        }).catch((error) => {
+                            if (error.response){
+                                showError(error.response.data)
+                            }
+                        })
+                    }
+                },
+                {
+                    label: 'No',
+                }
+            ]
         })
+
 
     }
     confirmUbicacionParada(id,esRecoleccion, data) {
@@ -335,7 +358,8 @@ class DetalleParadas extends Component {
                     label: 'Sí',
                     onClick: () => {
                         cancelarUltimaMillaCFDI(this.state.paqueteSeleccionado.m_nId,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado,this.state.paqueteSeleccionado.m_bEsRecoleccion).then((result) => {
-                            showSuccess(result.data)
+                            // showSuccess(result.data)
+                            showSuccess("Se canceló ante el SAT con éxito.")
                             this.props.refresh()
                         }).catch((error) => {
                             if (error.response){
@@ -386,6 +410,37 @@ class DetalleParadas extends Component {
         });
 
     }
+
+    envioCorreoAction(data){
+        enviarCorreoCFDIUltimaMilla(this.state.idParada, data.correos,data.correoDefault,this.state.esRecoleccion).then(({data}) => {
+            showSuccess(data);
+            this.obtenerPDFCFDI(this.state.idParada,this.state.esRecoleccion,this.state.folio)
+            this.setState({ openEnvioCorreo: false})
+            this.props.refresh()
+        })
+    }
+
+    validarPaquetes(paquetes){
+        return this.stableSort(this.state.paquetes, this.getComparator("asc", "m_sDescripcion")).map((u, index) =>{  
+            u.isItemSelected = this.props.paquetesSeleccionadas.find(a => a.m_nId === u.m_nId) != null;
+            return u})
+    }
+
+    stableSort(array, comparator) {
+        const stabilizedThis = array.map((el, index) => [el, index]);
+        stabilizedThis.sort((a, b) => {
+            const order = comparator(a[0], b[0]);
+            if (order !== 0) return order;
+            return a[1] - b[1];
+        });
+        return stabilizedThis.map((el) => el[0]);
+    }
+
+    getComparator(order, orderBy) {
+        return order === 'desc'
+            ? (a, b) => this.descendingComparator(a, b, orderBy)
+            : (a, b) => -this.descendingComparator(a, b, orderBy);
+    }
     render() {
         var d = new Date();
         d.setHours(0,0,0,0);
@@ -394,7 +449,10 @@ class DetalleParadas extends Component {
         const allGuias = [].concat(...this.props.tour.m_arrClsParadaUltimaMilla.filter(t => t.m_bActiva).map(a => a.m_arrClsProGuia)) || []
         return (
             <div>
-
+                {
+                    this.state.openEnvioCorreo &&
+                    <EnvioCorreoDialogo onSubmit={this.envioCorreoAction} open={this.state.openEnvioCorreo} close={()=> {this.props.refresh();this.obtenerPDFCFDI(this.state.idParada,this.state.esRecoleccion,this.state.folio);this.setState({openEnvioCorreo:false});}}/>
+                }
                 {this.state.openCancelarSAT &&
                     <CancelarSAT open={this.state.openCancelarSAT} onSubmit={this.cancelarCFDI} data={{folioSustituye: this.state.paqueteSeleccionado.m_sFolioFiscalUUID,m_sFolio: this.state.paqueteSeleccionado.m_sFolio, folioCancelar: this.state.paqueteSeleccionado.m_sFolioFiscalUUIDSustituido || this.state.paqueteSeleccionado.m_sFolioFiscalUUID
                     }} close={() => this.setState({openCancelarSAT: false})}/>
@@ -422,13 +480,22 @@ class DetalleParadas extends Component {
                 }
 
                 <RemplazarPaqueteUltimaMilla open={this.state.openRemplazar} multiples={false}
-                                             onSubmit={this.onSubmitRemplazarPaquete}
+                                             onshowSubmit={this.onSubmitRemplazarPaquete}
                                              close={() => this.setState({openRemplazar: false})}
                                              data={this.state.paquetes}/>
+
+                {this.state.openParciales &&
+                <PaquetesParcialesGuia open={this.state.openParciales} multiples={false}
+                                             tour={this.state.tour}
+                                             guia={this.state.paqueteSeleccionado}
+                                             close={() => this.setState({openParciales: false})}
+                                             data={this.state.paquetes} />
+                }
                 {
                     !this.state.openDetail &&
                     <IconButton
-                        onClick={() => this.setState({openDetail: true})}
+                        onClick={(e) => { this.setState({openDetail: true}); 
+                        this.props.changeFiltersMapDialogsState(e)} }
                         style={{
                             color: "white",
                             borderRadius: "10px",
@@ -482,7 +549,8 @@ class DetalleParadas extends Component {
                             <div style={{float: "right"}}>
                                 <IconButton
                                     style={{height: "30px"}}
-                                    onClick={() => this.setState({openDetail: false})}
+                                    onClick={(e) => {this.setState({openDetail: false})
+                                    this.props.changeFiltersMapDialogsState(e)}}
                                 >
                                     <CloseIcon style={{fill: "white"}}/>
                                 </IconButton>
@@ -623,7 +691,7 @@ class DetalleParadas extends Component {
                                                                 <Grid item sm={2}>
                                                                     {
                                                                         tour.m_bActiva &&
-                                                                    <IconButton aria-label="file" onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}>
+                                                                    <IconButton disabled={!validarDerecho(9101454)} aria-label="file" onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}>
                                                                         <CancelIcon style={{fill:"red"}} fontSize={"large"}/>
                                                                     </IconButton>
                                                                     }
@@ -655,7 +723,7 @@ class DetalleParadas extends Component {
 
                                                         {
                                                             tour.m_bActiva &&
-                                                            <Button variant={"contained"} color={"primary"}
+                                                            <Button disabled={!validarDerecho(9101447)} variant={"contained"} color={"primary"}
                                                                     onClick={() => this.setState({
                                                                         paquetes: tour.m_arrClsProGuia,
                                                                         tour: tour,
@@ -752,27 +820,51 @@ class DetalleParadas extends Component {
                                                                                                         disableElevation
                                                                                                         variant="contained"
                                                                                                         color="primary">
+                                                                                                        
                                                                                                         {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
+                                                                                                                /* disabled={!validarDerecho(9101449)} */
+                                                                                                                onClick={() => {
+                                                                                                                    console.log(JSON.stringify(g))
+                                                                                                                    this.openPaquetesParciales(tour, g)
+                                                                                                                }}
+                                                                                                                aria-label="reorder">
+                                                                                                                <Tooltip
+                                                                                                                    title={"Entregas Parciales"}>
+                                                                                                                    <DepartureBoardIcon
+
+                                                                                                                        fontSize="default"/>
+                                                                                                                </Tooltip>
+                                                                                                            </IconButton>
+                                                                                                        }
+                                                                                                        
+                                                                                                        {
+                                                                                                            !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            <IconButton
+                                                                                                                disabled={!validarDerecho(9101449)}
+                                                                                                                onClick={() => this.openRemplazarPaquete(tour, g)}
                                                                                                                 aria-label="reorder">
                                                                                                                 <Tooltip
                                                                                                                     title={"Remplazar"}>
                                                                                                                     <CachedIcon
-                                                                                                                        onClick={() => this.openRemplazarPaquete(tour, g)}
+
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
                                                                                                         }
 
+                                                                                                    
                                                                                                         {
-                                                                                                            g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
+                                                                                                            !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva &&
                                                                                                             <IconButton
+                                                                                                                disabled={!validarDerecho(9101450)}
+                                                                                                                onClick={() => this.confirmUbicacionParada( g.m_nId, g.m_bEsRecoleccion, g)}
                                                                                                                 aria-label="delete">
                                                                                                                 <Tooltip
                                                                                                                     title={"Cambiar ubicación"}>
                                                                                                                     <GpsFixedIcon
-                                                                                                                        onClick={() => this.confirmUbicacionParada( g.m_nId, g.m_bEsRecoleccion, g)}
+
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
@@ -781,23 +873,29 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             r.m_bEsPermisionario && r.m_bUnidadPermisionario &&
                                                                                                             <IconButton
+                                                                                                                disabled={!validarDerecho(9101452)}
+                                                                                                                onClick={() => this.descargarXMLCFDIPermisionario( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
                                                                                                                 aria-label="Descargar XML">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar XML Permisionario"}>
                                                                                                                     <GetAppIcon
-                                                                                                                        onClick={() => this.descargarXMLCFDIPermisionario( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
+
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
                                                                                                         }
                                                                                                         {
-                                                                                                            !r.m_bUnidadPermisionario && !g.m_bTimbrado &&
+                                                                                                           (tour.m_bActiva && !r.m_bUnidadPermisionario && !g.m_bTimbrado) &&
                                                                                                             <IconButton
+                                                                                                                disabled={!validarDerecho(9101451)}
+                                                                                                                onClick={() =>
+                                                                                                                    this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)
+                                                                                                                }
                                                                                                                 aria-label="Timbrar SAT">
                                                                                                                 <Tooltip
-                                                                                                                    title={"Generar CFDI Traslada"}>
+                                                                                                                    title={"Generar CFDI Traslado"}>
                                                                                                                     <DescriptionIcon
-                                                                                                                        onClick={() => this.generarCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
+
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
@@ -805,11 +903,13 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !r.m_bUnidadPermisionario && !g.m_bTimbrado &&
                                                                                                             <IconButton
+                                                                                                                disabled={!validarDerecho(9101451)}
+                                                                                                                onClick={() => this.descargarXMLCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
                                                                                                                 aria-label="XML SAT">
                                                                                                                 <Tooltip
-                                                                                                                    title={"Descargar XML Traslada"}>
+                                                                                                                    title={"Descargar XML Traslado"}>
                                                                                                                     <GetAppIcon
-                                                                                                                        onClick={() => this.descargarXMLCFDI( g.m_nId, g.m_bEsRecoleccion,g.m_sFolio)}
+
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
@@ -817,7 +917,7 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !r.m_bUnidadPermisionario && g.m_bTimbrado &&
                                                                                                             <IconButton
-                                                                                                                aria-label="PDF TASLADA">
+                                                                                                                aria-label="PDF TASLADO">
                                                                                                                 <Tooltip
                                                                                                                     title={"Descargar PDF"}>
                                                                                                                     <PictureAsPdfIcon
@@ -841,11 +941,13 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             g.m_bTimbrado &&
                                                                                                             <IconButton
+                                                                                                                disabled={!validarDerecho(9101451)}
+                                                                                                                onClick={() => this.showCancelarCFDI(g)}
                                                                                                                 aria-label="Cancelar SAT">
                                                                                                                 <Tooltip
                                                                                                                     title={"Cancelar SAT"}>
                                                                                                                     <BlockIcon
-                                                                                                                        onClick={() => this.showCancelarCFDI(g)}
+
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>
@@ -853,11 +955,12 @@ class DetalleParadas extends Component {
                                                                                                         {
                                                                                                             !g.m_bTimbrado && g.m_nEstatusUlimaMilla !== 4 && g.m_nEstatusUlimaMilla !== 3 && tour.m_bActiva && !g.m_bTimbrado &&
                                                                                                             <IconButton
+                                                                                                                disabled={!validarDerecho(9101453)}
+                                                                                                                onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
                                                                                                                 aria-label="delete">
                                                                                                                 <Tooltip
                                                                                                                     title={"Eliminar"}>
                                                                                                                     <DeleteIcon
-                                                                                                                        onClick={() => this.confirmDeleteParada(tour.m_nIdParadaUltimaMilla, g.m_nId, g.m_bEsRecoleccion)}
                                                                                                                         fontSize="default"/>
                                                                                                                 </Tooltip>
                                                                                                             </IconButton>

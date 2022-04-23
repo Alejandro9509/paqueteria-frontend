@@ -42,6 +42,7 @@ import UpdateIcon from '@material-ui/icons/Update';
 import PaquetesPlaneacion from "./PaquetesPlaneacion";
 import {Autocomplete} from "@material-ui/lab";
 import AgregarRemolques from "./AgregarRemolques";
+import {validarDerecho} from "../../Util/Util";
 
 const useStyles = theme => ({
     search: {
@@ -178,6 +179,15 @@ class FiltersMap extends Component {
         if (prevState.fecha !== this.state.fecha || prevState.zonasSeleccionada.length !== this.state.zonasSeleccionada.length || prevState.unidadesSeleccionadas.length !== this.state.unidadesSeleccionadas.length || prevState.zonasSeleccionada.length !== this.state.zonasSeleccionada.length || prevState.sucursalSeleccionada !== this.state.sucursalSeleccionada) {
             this.props.guardarFiltros(this.state)
         }
+
+       if(this.props.closeFiltersMapDialogs!=prevProps.closeFiltersMapDialogs){//Cierra todas las ventanas
+        this.setState({
+            openSucursales: false,
+            openZona: false,
+            openDate: false,
+            openUnidades: false,
+            openPaquetes: false, openConfiguration: false})
+       }
     }
 
     getAllGuias() {
@@ -315,6 +325,7 @@ class FiltersMap extends Component {
 
     }
 
+
     render() {
         const {classes} = this.props;
         return (
@@ -378,7 +389,9 @@ class FiltersMap extends Component {
                             PopperProps={{
                                 disablePortal: false,
                             }}
-                            onClose={() => this.setState({openSucursales: false})}
+                            onClose={(e) =>{
+                            this.setState({openSucursales: false})
+                             this.props.closeResumenParada(e)}}
                             open={this.state.openSucursales}
                             disableFocusListener
                             disableHoverListener
@@ -411,7 +424,9 @@ class FiltersMap extends Component {
                                 >
                                     {
                                         this.state.sucursalesFiltradas.map((c, index) =>
-                                            <ListItem button onClick={() => this.selectCiudad(c)} key={c.m_nIdSucursal}>
+                                            <ListItem button onClick={(e) =>{ 
+                                            this.selectCiudad(c) 
+                                            this.props.closeResumenParada(e)}} key={c.m_nIdSucursal}>
                                                 <ListItemText id={c.m_nIdSucursal} primary={c.m_sSucursal}/>
                                             </ListItem>)
                                     }
@@ -424,13 +439,16 @@ class FiltersMap extends Component {
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
                                 label={this.state.sucursalSeleccionada ? this.state.sucursalSeleccionada.m_sSucursal : "Sucursal"}
-                                onDelete={() => this.setState({
+                                onDelete={(e) =>{ this.setState({
                                     openSucursales: !this.state.openSucursales,
                                     openZona: false,
                                     openUnidades: false,
                                     openDate: false,
                                     openPaquetes: false, openConfiguration: false
-                                })}
+                                
+                                })
+                                this.props.closeResumenParada(e)
+                            }}
                                 deleteIcon={<KeyboardArrowDownIcon color={"primary"}/>}
                                 variant="outlined"
                             />
@@ -446,6 +464,7 @@ class FiltersMap extends Component {
                             disableTouchListener
                             title={
                                 <ZonasList zonasSeleccionadas={this.state.zonasSeleccionada}
+                                           closeResumen={this.props.closeResumenParada}
                                            selectZona={this.selectZona}
                                            sucursalSeleccionada={this.state.sucursalSeleccionada ? this.state.sucursalSeleccionada.m_nIdSucursal : 0}/>
                             }>
@@ -458,12 +477,16 @@ class FiltersMap extends Component {
                                 }}
                                 label={this.state.zonasSeleccionada.length !== 0 ? this.state.zonasSeleccionada.map(z => z.m_sCodigoZona).join(", ") : "Zona"}
                                 disabled={this.state.sucursalSeleccionada == null}
-                                onDelete={() => this.setState({
+                                onDelete={(e) =>{ this.setState({
                                     openZona: !this.state.openZona, openSucursales: false,
                                     openUnidades: false,
                                     openDate: false,
                                     openPaquetes: false, openConfiguration: false
-                                })}
+                                })
+                                this.props.closeResumenParada(e)
+                            }
+                            
+                            }
                                 deleteIcon={<KeyboardArrowDownIcon color={"primary"}/>}
                                 variant="outlined"
                             />
@@ -503,11 +526,14 @@ class FiltersMap extends Component {
                                 disabled={this.state.sucursalSeleccionada == null}
                                 label={moment(this.state.fecha).format('MMMM DD')}
 
-                                onClick={() => this.setState({
+                                onClick={(e) =>{ this.setState({
                                     openPaquetes: false, openSucursales: false,
                                     openZona: false,
                                     openUnidades: false, openConfiguration: false, openDate: !this.state.openDate
-                                })}
+                                }) 
+                                this.props.closeResumenParada(e)}
+                               
+                            }
                                 variant="outlined"
                             />
                         </BootstrapTooltip>
@@ -538,16 +564,19 @@ class FiltersMap extends Component {
                                         margin: "1px",
                                         boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                     }}
-                                    disabled={this.state.zonasSeleccionada.length === 0 }
+                                    disabled={this.state.zonasSeleccionada.length === 0  || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
                                     icon={<EmbarqueIcon
                                         style={{fill: "#F9A03E", paddingTop: "5px", paddingBottom: "5px"}}/>}
                                     label={`Paquetes (${this.state.paquetesSeleccionadas.length})`}
-                                    onClick={() => this.setState({
+                                    onClick={(e) => {this.setState({
                                         openPaquetes: !this.state.openPaquetes, openSucursales: false,
                                         openZona: false,
                                         openDate: false,
                                         openUnidades: false, openConfiguration: false
-                                    })}
+                                    })
+                                    this.props.closeResumenParada(e)
+                                }
+                                }
                                     variant="outlined"
                                 />
                             </BootstrapTooltip>
@@ -560,16 +589,18 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                disabled={this.state.zonasSeleccionada.length === 0}
+                                disabled={this.state.zonasSeleccionada.length === 0 }
                                 icon={<EmbarqueIcon
                                     style={{fill: "#F9A03E", paddingTop: "5px", paddingBottom: "5px"}}/>}
                                 label={`Paquetes (${this.state.paquetesSeleccionadas.length})`}
-                                onClick={() => this.setState({
+                                onClick={(e) =>{ this.setState({
                                     openPaquetes: !this.state.openPaquetes, openSucursales: false,
                                     openZona: false,
                                     openDate: false,
                                     openUnidades: false, openConfiguration: false
-                                })}
+                                })
+                                this.props.closeResumenParada(e)
+                            }}
                                 variant="outlined"
                             />
                         }
@@ -598,14 +629,16 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                disabled={this.state.sucursalSeleccionada == null}
+                                disabled={this.state.sucursalSeleccionada == null || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))}
                                 icon={<UnidadesIcon
                                     style={{fill: "#F9A03E", paddingTop: "10px", paddingBottom: "10px"}}/>}
-                                onClick={() => this.setState({
+                                onClick={(e) => {this.setState({
                                     openUnidades: !this.state.openUnidades, openSucursales: false,
                                     openZona: false, openDate: false,
                                     openPaquetes: false, openConfiguration: false
-                                })}
+                                })
+                                this.props.closeResumenParada(e)
+                            }}
                                 variant="outlined"
                             />
                         </BootstrapTooltip>
@@ -634,12 +667,14 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                onClick={() => this.setState({
+                                onClick={(e) => {this.setState({
                                     openConfiguration: !this.state.openConfiguration, openSucursales: false,
                                     openZona: false, openDate: false,
                                     openUnidades: false,
                                     openPaquetes: false,
-                                })}
+                                })
+                                this.props.closeResumenParada(e)
+                            }}
                                 variant="outlined"
                             />
                         </BootstrapTooltip>
@@ -655,14 +690,16 @@ class FiltersMap extends Component {
                                     margin: "1px",
                                     boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
                                 }}
-                                disabled={this.state.sucursalSeleccionada == null}
-                                onClick={() => this.props.generarRuta(this.state)}
+                                disabled={(this.state.sucursalSeleccionada == null || (moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD'))) && !validarDerecho(9101447)}
+                                onClick={() => 
+                                    this.props.generarRuta(this.state)}
                             />
                         </Tooltip>
 
                         <Tooltip title={this.props.data.modoPlaneacion ? "Guardar ruta" : "Enviar ruta a operadores"}>
                             <IconButton
                                 onClick={() => {this.setState({unidadesSeleccionadas:[],paquetesSeleccionadas: []});this.props.guardarRuta()}}
+                                disabled={(moment(this.state.fecha).format('yyyy-MM-DD')<moment(new Date()).format('yyyy-MM-DD')) && !validarDerecho(9101448)}
                                 style={{
                                     backgroundColor: "white",
                                     margin: "1px",

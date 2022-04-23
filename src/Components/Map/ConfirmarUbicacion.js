@@ -18,7 +18,7 @@ import {obtenerUbicacion} from "../../Util/Contexts/RemitenteDestinatarioContext
 import L from "leaflet";
 import MarkerImage from "../../iconos/Mapa/marker.png";
 import SearchIcon from "@material-ui/icons/Search";
-import {searchLocationAddress} from "../../Util/Contexts/UltimaMillaContext";
+import {searchLocationAddress,searchAdressWithCoordinates, searchLocationGuia} from "../../Util/Contexts/UltimaMillaContext";
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -45,7 +45,8 @@ class ConfirmarUbicacion extends Component {
         if (this.props.remitente) {//si es recoleccion entrara y evaluara si es informacion solo de recoleccion de remitente o si es de diferente direccion de recoleccion
             if (this.props.esDiferenteRecoleccion) {//si es diferente de recoleccion consulta los valores de recoleccionDD
                 let municipioTexto = this.props.dataMunicipiosRecoleccionDD.filter(m => m.m_sCodigoMunicipio == this.props.recoleccionDD.municipioRec)[0].m_sMunicipio
-                searchLocationAddress(`${this.props.recoleccionDD.domicilioRec},${this.props.recoleccionDD.codigoPostalRec},${municipioTexto}`).then(data => {
+                //this.props.recoleccionDD.domicilioRec es calle y numero
+                searchLocationGuia(`${municipioTexto}`,`${this.props.recoleccionDD.domicilioRec} ${this.props.recoleccionDD.codigoPostalRec.m_sColonia}`,`${this.props.recoleccionDD.codigoPostalRec.m_sCP}`).then(data => {
 
                     this.setState({
                         coordenadas: {lat: data.y, lng: data.x}
@@ -59,7 +60,7 @@ class ConfirmarUbicacion extends Component {
                 let colonia = this.props.direccion.coloniaRemitente
                 let numeroExterior = this.props.direccion.numeroExtRemitente
                 let codigoPostal = this.props.direccion.codigoPostalRemitente.m_sCP
-                searchLocationAddress(`${calle} ${numeroExterior} ${colonia} ${codigoPostal} ${municipio}`).then(data => {
+                searchLocationGuia(`${municipio}`,`${calle} ${colonia}`,`${codigoPostal}`).then(data => {
                     this.setState({
                         coordenadas: {lat: data.y, lng: data.x}
                     })
@@ -75,7 +76,7 @@ class ConfirmarUbicacion extends Component {
             if (this.props.esDiferenteDomicilio) {//si es diferente domicilio de entrega tomara los valores del form del diferente domicilio de entrega
                 // debugger
                 let municipioTexto = this.props.dataMunicipiosEntregaDD.find(m => m.m_sCodigoMunicipio == parseInt(this.props.direccion.municipioEnt))?.m_sMunicipio
-                searchLocationAddress(`${this.props.direccion.domicilioEnt},${this.props.direccion.codigoPostalEnt},${municipioTexto}`).then(data => {
+                searchLocationGuia(`${municipioTexto}`,`${this.props.direccion.domicilioEnt} ${this.props.entregaDD.codigoPostalEnt.m_sColonia}`,`${this.props.direccion.codigoPostalEnt.m_sCP}`).then(data => {
 
                     this.setState({
                         coordenadas: {lat: data.y, lng: data.x}
@@ -89,8 +90,7 @@ class ConfirmarUbicacion extends Component {
                 let colonia = this.props.direccion.coloniaDestinatario;
                 let numeroExterior = this.props.direccion.numeroExtDestinatario
                 let codigoPostal = this.props.direccion.codigoPostalDestinatario.m_sCP
-
-                searchLocationAddress(`${calle} ${numeroExterior} ${colonia} ${codigoPostal} ${municipio}`).then(data => {
+                searchLocationGuia(`${municipio}`,`${calle} ${colonia}`,`${codigoPostal}`).then(data => {
                     this.setState({
                         coordenadas: {lat: data.y, lng: data.x}
                     })
@@ -107,7 +107,8 @@ class ConfirmarUbicacion extends Component {
     cargarMapa(map) {
         if (this.props.ultimaMilla) {
             this.setState({
-                coordenadas: {map: map, lat: this.props.lat, lng: this.props.lng}
+                coordenadas: {map: map, lat: this.props.lat, lng: this.props.lng},
+                map: map
             })
             map.setView([this.props.lat, this.props.lng], 18)
             return
@@ -116,10 +117,18 @@ class ConfirmarUbicacion extends Component {
         }
     }
 
-    cambiarCordenadas(posicion) {
+    cambiarCordenadas(posicion) { 
+        var popup = L.popup()
+        .setLatLng([posicion.lat,posicion.lng])
+        .setContent(`Latitud: ${posicion.lat} <br/> Longitud: ${posicion.lng}`)
+        .openOn(this.state.map);
+
+        searchAdressWithCoordinates(5,6)
         this.setState({
             coordenadas: posicion
         })
+     
+          
     }
 
     confirmarUbicacion(e) {
@@ -134,6 +143,7 @@ class ConfirmarUbicacion extends Component {
                 coordenadas: {lat: data.y, lng: data.x}
             })
             this.state.map.setView([data.y, data.x], 18)
+            
         })
     }
 
@@ -157,6 +167,7 @@ class ConfirmarUbicacion extends Component {
                 <DialogContent>
                     <Typography variant={"h4"}>Es importante selecciónar la ubicación exacta de
                         la {this.props.titulo} para facilitar el trabajo de los operadores</Typography>
+                    
                     <br/>
                     <Grid container>
                         {!this.props.ultimaMilla &&
@@ -180,7 +191,12 @@ class ConfirmarUbicacion extends Component {
                                 </Typography>
                             </Grid>
                         }
-
+                        <br/>
+                        <br/>
+                        <Grid item sm={12}> 
+                        <Typography variant={"h4"}>{(this.state.coordenadas.lat==0 && this.state.coordenadas.lng==0)?"No hay coordenadas seleccionadas":(`Latitud: ${this.state.coordenadas.lat}   Longitud: ${this.state.coordenadas.lng}`)}</Typography>
+                        </Grid>
+                   
 
                     </Grid>
                     <br/>
@@ -208,8 +224,7 @@ class ConfirmarUbicacion extends Component {
                     </Grid>
                     <br/>
                     <MapContainer style={{width: "100%", height: "500px"}} center={[32.62781, -115.44632]} zoom={18}
-                                  scrollWheelZoom={false} whenCreated={m => this.cargarMapa(
-                        m)}>
+                                  scrollWheelZoom={false} whenCreated={m => this.cargarMapa(m)}>
                         <TileLayer style={{width: "100%", height: "500px"}}
                                    url="https://xserver2-america.cloud.ptvgroup.com/services/rest/XMap/tile/{z}/{x}/{y}?userLanguage=es&amp;xtok={token}"
                                    token="51FA3E8E-8BF3-49EF-AB82-59D807A0645C"

@@ -27,6 +27,7 @@ import {
     obtenerSATUnidades,
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import DialogoNuevoPaquete from "./DialogoNuevoPaquete";
+import { confirmAlert } from "react-confirm-alert";
 const headers = API_HEADERS
 
 function showSuccess(mensaje) {
@@ -48,7 +49,19 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
             let row = dataPaquetes.find((p) => p.m_nIdPaquete === id);
             console.log(row)
             if (row){
-                handleDelete(row);
+                confirmAlert({
+                    title: 'Confirmar Eliminar',
+                    message: '¿Está seguro de eliminar el paquete?',
+                    buttons: [
+                        {
+                            label: 'Si',
+                            onClick: () => handleDelete(row)
+                        },
+                        {
+                            label: 'No',
+                        }
+                    ]
+                })
             }
 
         };
@@ -148,7 +161,7 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
             width: 120,
         },
         {
-            headerName: "Descripcion",
+            headerName: "Descripción",
             field: "m_sDescripcion",
             width: 200,
         },
@@ -192,9 +205,31 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
         m_sClaveSATUnidad:'',
     })
 
+    let groupBy = function(xs, key) {
+        return xs.reduce(function(rv, x) {
+            (rv[x[key]] = rv[x[key]] || []).push(x);
+            return rv;
+        }, {});
+    };
+    let groupByArray = function (xs, key) {
+        return xs.reduce(function (rv, x) {
+            let v = key instanceof Function ? key(x) : x[key];
+            let el = rv.find((r) => r && r.key === v);
+            if (el) {
+                el.values.push(x);
+            } else {
+                rv.push({key: v, values: [x]});
+            }
+            return rv;
+        }, []);
+    }
+
+
     const addPaquetev2 = (data) => {
 
         console.log(data)
+        console.log(groupBy(dataPaquetes, 'm_nIdProducto'));
+        console.log(groupByArray(dataPaquetes, 'm_nIdProducto'));
         let paq = data
         /*if (validarPaquetes(paq)){
             paq.m_nIdPaquete = paq.m_nIdPaquete != 0 ? paq.m_nIdPaquete : dataPaquetes.length + 1
@@ -248,6 +283,10 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
         })
     }
 
+    const pesoTotalKgPaquete = (paquete) => parseFloat(paquete.m_rPeso) * parseFloat(paquete.m_nCantidad)
+    const pesoTotalVolPaquete = (paquete) => parseFloat(paquete.m_nCantidad) * parseFloat(paquete.m_rLargo) * parseFloat(paquete.m_rAncho) * parseFloat(paquete.m_rAlto) * 0.0005
+
+    const pesoFinalPorProducto = (paquetes) => paquetes.reduce((previousValue, currentValue) => previousValue + (pesoTotalKgPaquete(currentValue) > pesoTotalVolPaquete(currentValue) ? pesoTotalKgPaquete(currentValue) : pesoTotalVolPaquete(currentValue)),0)
     return(
         <div>
             <div className="row">
@@ -280,7 +319,15 @@ function Paquetes({dataPaquetes = [],onChangeList, disabled, cliente = null,Limp
                         )
 
                     }
-
+                    {
+                        dataPaquetes.length > 0 &&
+                        groupByArray(dataPaquetes, 'm_nIdProducto').map(i => (
+                            <div>
+                                Peso final de {i.values[0].m_sProducto}: {pesoFinalPorProducto(i.values).toFixed(2)}
+                                <br/>
+                            </div>
+                        ))
+                    }
 
                 </div>
             </div>

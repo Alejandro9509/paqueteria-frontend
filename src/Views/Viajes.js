@@ -20,6 +20,7 @@ import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import {API_HEADERS, dataGridLocaleText} from "../Constants";
 import $ from "jquery";
+import {validarDerecho} from "../Util/Util"
 import {
     Button,
     Dialog,
@@ -45,7 +46,14 @@ import {
     agregarViajeLlegada,
     obetenerViajeId,
     obtenerViajes,
-    obtenerXML, obtenerViajesByFiltro, obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje, cancelarViaje
+    obtenerXML,
+    obtenerViajesByFiltro,
+    obtenerCFDI,
+    obtenerReporteCFDI,
+    obtenerReporteCFDIViaje,
+    cancelarViaje,
+    validarSalidaParada,
+    cancelarTrayecto
 } from "../Util/Contexts/ViajesContext";
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -64,7 +72,9 @@ import {obtenerFechaFinal, obtenerFechaInicio} from "../Util/Contexts/UtileriasC
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import CancelarSAT from "./SAT/CancelarSAT";
-import {cancelarInformeCFDI} from "../Util/Contexts/SATContext";
+import {cancelarInformeCFDI, enviarCorreoCFDIViaje} from "../Util/Contexts/SATContext";
+import EnvioCorreoDialogo from "./SAT/EnvioCorreoDialogo";
+import CancelarTrayecto from "./Viajes/CancelarTrayecto";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -87,7 +97,11 @@ const styles = {
     },
     noSeleccionado: {
         backgroundColor: "#FFFFFF",
-    }
+    },
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
 };
 const useStyles = makeStyles(styles);
 window.jQuery = window.$ = $;
@@ -162,6 +176,11 @@ function Viajes() {
     }
 
     function handleShowModificar(id) {
+        let viaje = data.find(i => i.m_nIdViaje === id)
+        if ( viaje?.m_nIdEstatusViaje === 6 || viaje?.m_nIdEstatusViaje === 10 ){
+            showSuccess("No se puede editar un viaje terminado o cancelado")
+            return
+        }
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
         $('.tab-content div ').removeClass('in show');
@@ -289,20 +308,23 @@ function Viajes() {
                         <Tooltip title="Modificar">
                             <a
                                 onClick={() => (handleShowModificar(row.row.m_nIdViaje))}
-                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
+                                className="btn btn-default btn-xs"
+                                disabled={!validarDerecho(9101441)}><i className="fa fa-pencil-square-o"
                                                                       style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
                             <a className="btn btn-default btn-xs"
-                               onClick={() => (handleShowConsultar(row.row.m_nIdViaje))}><i className="fa fa-eye"
+                               onClick={() => (handleShowConsultar(row.row.m_nIdViaje))}
+                               disabled={!validarDerecho(9101440)}><i className="fa fa-eye"
                                                                                             style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
 
                         <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs"
-                               onClick={() => (handleEliminar(row.row.m_nIdViaje))}><i className="zmdi zmdi-delete"
+                               onClick={() => (handleEliminar(row.row.m_nIdViaje))}
+                               disabled={!validarDerecho(9101442)}><i className="zmdi zmdi-delete"
                                                                                        style={{color: "#F30B0B"}}/></a>
 
                         </Tooltip>
@@ -319,6 +341,17 @@ function Viajes() {
             headerName: "Estatus de Viaje",
             field: "m_sEstatus",
             width: 200,
+            renderCell: (row) => {
+                return (
+                    <div align={"center"} style={{width: "100%"}}>
+                        <Chip size="small" style={{
+                            backgroundColor: `${row.row.m_sColorEstatus}`,
+                            //color: row.row.m_nIdEstatusUnidad === 1 ? "black" : "white",
+                            padding: "1px"
+                        }} label={row.row.m_sEstatus}/>
+                    </div>
+                )
+            }
         },  {
             headerName: "Folio Viaje",
             field: "m_sFolioViaje",
@@ -341,13 +374,25 @@ function Viajes() {
             field: "m_sUnidad",
             width: 200,
         },{
-            headerName: "Remolque1",
+            headerName: "Remolque 1",
             field: "m_sRemolque1",
             width: 200,
         },{
             headerName: "Remolque2",
             field: "m_sRemolque2",
             width: 200,
+        },{
+            headerName: "Fecha Cancelación",
+            field: "FechaCancelacion",
+            width: 200,
+        },{
+            headerName: "Motivo de Cancelación",
+            field: "MotivoCancelacion",
+            width: 250,
+        },{
+            headerName: "Usuario de cancelación",
+            field: "UsuarioCancelacion",
+            width: 250,
         }
         //   {
         //   headerName: "Origen",
@@ -380,11 +425,44 @@ function Viajes() {
         //getInventarioUnidades()
     }, []);
 
+
+    useEffect(value => {
+       //console.log("Entro")
+        if(viajeSeleccionado){
+            let rutaActiva = true
+        viajeSeleccionado.m_arrTrayectos.map((p, index) => {
+            console.log(viajeSeleccionado)
+            
+            if(p.m_nIdSalida && !p.m_bSalidaCancelada && p.m_nIdLlegada  ){
+                p.deshabilitado = false
+            }
+            else if((!p.m_nIdSalida || p.m_bSalidaCancelada)  && rutaActiva){
+                p.deshabilitado = false
+                rutaActiva = false
+            }
+            else if(p.m_nIdSalida && !p.m_bSalidaCancelada && rutaActiva){
+                p.deshabilitado = false
+                rutaActiva = false
+            }
+            else{
+                p.deshabilitado = true
+            }
+            console.log(p.deshabilitado)
+              //console.log("p.m_nIdSalida"+p.m_nIdSalida+" p.m_nIdLlegada"+p.m_nIdLlegada+" "+" rutaActiva"+rutaActiva+" p.deshabilitado"+p.deshabilitado)
+        })
+
+        //console.log(viajeSeleccionado.m_arrTrayectos)
+    }
+    }, [viajeSeleccionado]);
+
+
+
     function getAllData() {
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
                 obtenerViajesByFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0).then((respuesta) => {
                     setData(respuesta.data)
+                    setViajeSeleccionado(null)
                 })
             })
         })
@@ -456,19 +534,13 @@ function Viajes() {
     function generarCFDI(id, folio, idViaje, sustituir) {
         confirmAlert({
             title: 'Confirmar Timbrado',
-            message: '¿Está seguro de realizar esta operación, se timbrara ante el SAT?',
+            message: '¿Está seguro de realizar esta operación, el CFDI de traslado se timbrará ante el SAT?',
             buttons: [
                 {
                     label: 'Sí',
                     onClick: () => {
                         obtenerCFDI(id,sustituir).then((result) => {
-                            obtenerReporteCFDIViaje(id).then(({data}) => {
-                                let pdfWindow = window.open("");
-                                pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
-                                pdfWindow.document.body.style.margin = "0px";
-                                pdfWindow.document.title = "CFDI_ " + folio;
-                            })
-                            getParadasListado({m_nIdViaje:idViaje})
+                            setState({...state, openEnvioCorreo: true, idInforme: id, folio: folio, idViaje: idViaje})
                         }).catch((error) => {
                             if (error.response){
                                 showError(error.response.data)
@@ -481,8 +553,6 @@ function Viajes() {
                 }
             ]
         })
-
-
     }
 
     function showCancelarCFDI(informe){
@@ -497,7 +567,7 @@ function Viajes() {
                 {
                     label: 'Sí',
                     onClick: () => {
-                        cancelarInformeCFDI(state.informe.m_clsInforme.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
+                        cancelarInformeCFDI(state.informe.m_nIdInforme,data.idCancelacionSAT,data.motivoSAT,data.motivoCancelacion,data.folioRelacionado).then((result) => {
                             getParadasListado(state.informe)
                             showSuccess(result.data)
                         }).catch((error) => {
@@ -613,61 +683,61 @@ function Viajes() {
                 return (
                     <div>
                         {
-                            viajeSeleccionado.m_bEsPermisionario && viajeSeleccionado.m_bUnidadPermisionario &&
+                            (viajeSeleccionado.m_bEsPermisionario || viajeSeleccionado.m_bUnidadPermisionario) &&
                             <Tooltip title="Descargar XML">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarXML(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-download"
+                                   onClick={() => (descargarXML(row.row.m_nIdInforme, row.row.m_sFolioInforme))}><i className="zmdi zmdi-download"
                                                                                                                 style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
 
                         {
-                            !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_clsInforme.m_bTimbrado &&
+                            !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_bTimbrado &&
                             <Tooltip title="Generar CFDI">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (generarCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme, row.row.m_nIdViaje, false))}><i className="zmdi zmdi-file-text"
+                                   onClick={() => (generarCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme, row.row.m_nIdViaje, false))}><i className="zmdi zmdi-file-text"
                                                                                                                                              style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
                         {
-                            !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_clsInforme.m_bTimbrado &&
+                            !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_bTimbrado &&
                             <Tooltip title="Descargar XML">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarXMLCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme))}><i className="zmdi zmdi-download" style={{color: "#F9A03E"}}/></a>
+                                   onClick={() => (descargarXMLCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme))}><i className="zmdi zmdi-download" style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
                         {
-                            !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_clsInforme.m_bTimbrado &&
+                            !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Sustituir CFDI">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (generarCFDI(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioInforme, row.row.m_nIdViaje, true))}><i className="zmdi zmdi-refresh"
+                                   onClick={() => (generarCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme, row.row.m_nIdViaje, true))}><i className="zmdi zmdi-refresh"
                                                                                                                                                                         style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
                         {
-                            !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_clsInforme.m_bTimbrado &&
+                            !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Descargar PDF">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarPDF(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioFiscalUUID))}><i className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>
+                                   onClick={() => (descargarPDF(row.row.m_nIdInforme, row.row.m_sFolioFiscalUUID))}><i className="zmdi zmdi-collection-pdf" style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
 
                         {
-                            !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_clsInforme.m_bTimbrado &&
+                            !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Descargar XML">
                                 <a href="#" className="btn btn-default btn-xs"
-                                   onClick={() => (descargarXMLCFDITimbrado(row.row.m_clsInforme.m_nIdInforme, row.row.m_clsInforme.m_sFolioFiscalUUID,row.row.m_clsInforme.m_sXMLTraslada))}><i className="zmdi zmdi-file-text" style={{color: "#F9A03E"}}/></a>
+                                   onClick={() => (descargarXMLCFDITimbrado(row.row.m_nIdInforme, row.row.m_sFolioFiscalUUID,row.row.m_sXMLTraslada))}><i className="zmdi zmdi-file-text" style={{color: "#F9A03E"}}/></a>
 
                             </Tooltip>
                         }
 
                         {
-                            !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_clsInforme.m_bTimbrado &&
+                            !viajeSeleccionado.m_bUnidadPermisionario && row.row.m_bTimbrado &&
                             <Tooltip title="Cancelar Timbrado SAT">
                                 <a href="#" className="btn btn-default btn-xs"
                                    onClick={() => (showCancelarCFDI(row.row))}><i className="zmdi zmdi-card-off" style={{color: "#F9A03E"}}/></a>
@@ -683,29 +753,26 @@ function Viajes() {
         },
         {
             headerName: "Folio Informe",
-            field: "m_clsInforme",
+            field: "m_sFolioInforme",
             width: 130,
-            valueFormatter: row => {
-                return (row.value.m_sFolioInforme)
-            }
         },
         {
             headerName: "Origen - Destino",
             field: "origenDestino",
             width: 200,
             valueFormatter: row => {
-                return (`${row.row.m_clsInforme.m_sCiudadOrigen} - ${row.row.m_clsInforme.m_sCiudadDestino}`)
+                return (`${row.row.m_sCiudadOrigen} - ${row.row.m_sCiudadDestino}`)
             }
         },
         {
             headerName: "Salida",
-            field: "m_dFechaSalida",
+            field: "m_sFechaSalidaFormat",
             width: 130,
             valueFormatter: row => !row.value ? "Sin definir" : row.value
         },
         {
             headerName: "Llegada",
-            field: "m_dFechaLlegada",
+            field: "m_sFechaLlegadaFormat",
             width: 130,
             valueFormatter: row => !row.value ? "Sin definir" : row.value
         },
@@ -735,15 +802,14 @@ function Viajes() {
         },
         {
             headerName: "Folio Fiscal",
-            field: "m_nIdDestino",
+            field: "m_sFolioFiscalUUID",
             width: 300,
-            valueFormatter: row => row.row.m_clsInforme.m_sFolioFiscalUUID || " "
         },
         {
             headerName: "Folio Fiscal sustituido",
             field: "m_nIdOrigen",
             width: 300,
-            valueFormatter: row => row.row.m_clsInforme.m_sFolioFiscalUUIDSustituido || row.row.m_clsInforme.m_sUltimoFolioFiscalUUIDSustituido || " "
+            valueFormatter: row => row.row.m_sFolioFiscalUUIDSustituido || row.row.m_sUltimoFolioFiscalUUIDSustituido || " "
         },
         // {
         //     headerName: "Liq",
@@ -756,40 +822,60 @@ function Viajes() {
     const [paradaData, setParadaData] = React.useState();
 
     function getParadasListado(row) {
-        setState({...state, idViaje: row.m_nIdViaje})
+        setState(state => {
+            return {...state, idViaje: row.m_nIdViaje}
+        })
         obtenerDetalleParadasIdViaje(row.m_nIdViaje).then(respuesta => {
-            var arrayInformes = getUniqueListBy(respuesta.data, "m_nIdDestino")
-            arrayInformes.forEach(a => {
-                a["informes"] = respuesta.data.filter(r => r.m_nIdOrigen === a.m_nIdOrigen && r.m_nIdDestino === a.m_nIdDestino)
-                a.origenDestino = `${a.m_sOrigen} - ${a.m_sDestino}`
-            })
-            setViajeSeleccionado(row)
-            setParadasListado(arrayInformes);
+            //setViajeSeleccionado(row)
+            setParadasListado(respuesta.data);
         });
     }
-/*
-    function getInventarioUnidades() {
-        const url = `${process.env.REACT_APP_API_URL}/InventarioUnidades/GetListado`;
-        axios.get(url, {headers}).then(({data}) => {
-            setEquipoListado(data)
-        });
-    }*/
-
-
-    const showSalidaDialog = (data) => {
-        console.log(data);
+    const showCancelarDialog = (data) => {
         setParadaData(data);
-        setEventOptions({...eventOptions, showSalidaParadasDialog: true});
+        setEventOptions({...eventOptions, showCancelarParadasDialog: true});
 
+    }
+    const showSalidaDialog = (data) => {
+          validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
+              let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
+              let qr = respuesta.data.find(parada=>parada.QR==false)
+
+              if(encontrado){//si encontro valor falso en timbrado
+                  showSuccess(`No se puede marcar salida ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
+              }
+
+              if(qr){//si encontro valor falso en qr
+                showSuccess(`No se puede marcar salida ya que no se ha escaneado los paquetes en el remolque: ${qr.FolioInforme}`)
+            }else{
+               setParadaData(data);
+            setEventOptions({...eventOptions, showSalidaParadasDialog: true});
+            }
+          }).catch((err)=>{
+              showSuccess(err)
+          }) 
     }
 
     const closeSalidaDialog = () => {
         setEventOptions({...eventOptions, showSalidaParadasDialog: false});
     }
 
+    const closeCancelarDialog = () => {
+        setEventOptions({...eventOptions, showCancelarParadasDialog: false});
+    }
+
     const showLlegadaDialog = (data) => {
-        setParadaData(data);
-        setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
+        // validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
+        //     let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
+        //     if(encontrado){//si encontro valor falso en timbrado
+        //         showSuccess(`No se puede marcar llegada ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
+        //     }else{
+                setParadaData(data);
+                setEventOptions({...eventOptions, showLlegadaParadasDialog: true});
+        //    }
+       //  }).catch((err)=>{
+       //     showSuccess(err)
+       // })
+
     }
 
     const closeLlegadaDialog = () => {
@@ -817,8 +903,10 @@ function Viajes() {
             m_nMillasViaje: data.millas,
             m_sMotivoRetraso: data.motivoRetraso,
             m_nIdCiudadOrigen: paradaData.m_nIdOrigen,
+            m_nIdCiudadDestino: paradaData.m_nIdDestino,
 
-            IdRuta: paradaData.m_nIdRuta,
+
+            m_nIdRuta: paradaData.m_nIdViajeTrayecto,
 
 
             // m_nIdEstatusViaje: this.state.estatusListado,
@@ -833,25 +921,20 @@ function Viajes() {
         }
 
         console.log(params)
-        console.log(JSON.stringify(params))
 
         agregarViajeSalida(params)
             .then((respuesta) => {
                 showSuccess(respuesta.data);
-                console.log(respuesta.data);
-                getParadasListado(paradaData)
+                //getParadasListado(paradaData)
                 getAllData()
             })
             .catch((err) => {
-                console.log(err);
                 showSuccess(err);
             });
 
     }
 
     function updateLlegada(data) {
-        console.log("Actualizar datos de llegada");
-        console.log(data);
 
         var params = {
             //m_dFecha: state.fechaHoraRegistro.split("T")[0],
@@ -867,7 +950,7 @@ function Viajes() {
             m_nMillasViaje: data.millas,
             m_nIdCiudadOrigen: paradaData.m_nIdOrigen,
             m_nIdCiudadDestino: paradaData.m_nIdDestino,
-            IdRuta: paradaData.m_nIdRuta,
+            m_nIdRuta: paradaData.m_nIdViajeTrayecto,
             m_nIdViaje: paradaData.m_nIdViaje,
             m_sMotivoRetraso: data.motivoRetraso,
             m_nPesoCarga: data.pesoDescarga,
@@ -878,14 +961,13 @@ function Viajes() {
             m_tHoraLlegada: data.horaLlegada,
             m_nTipoCambio: data.tipoDeCambioOrigen
         }
-
         console.log(params)
-        console.log(JSON.stringify(params))
+
         agregarViajeLlegada(params)
             .then((respuesta) => {
                 showSuccess(respuesta.data);
                 console.log(respuesta.data);
-                getParadasListado(paradaData)
+                //getParadasListado(paradaData)
                 getAllData()
 
             })
@@ -929,19 +1011,42 @@ function Viajes() {
             usuarioCancelacion: localStorage.getItem("UsuarioId"),
             fechaCancelacion: state.fechaCancelacion.replace('T', ' '),
         };
-        console.log(params)
-        console.log(JSON.stringify(params))
         cancelarViaje(state.idViaje,params).then((respuesta) => {
-            console.log(respuesta.data);
-            showSuccess(respuesta.data)
+            showSuccess("El viaje ha sido cancelado")
             handleShowListado()
         });
+    };
+    function envioCorreoAction(data){
+        enviarCorreoCFDIViaje(state.idInforme, data.correos,data.correoDefault).then(({data}) => {
+            showSuccess(data);
+            descargarPDF(state.idInforme, state.folio)
+            setState(state => {
+                return {...state, openEnvioCorreo: false}
+            })
+            getParadasListado({m_nIdViaje:state.idViaje})
+
+        })
+    }
+    function cancelarTrayectos(params){
+        cancelarTrayecto(params.id, params).then(({data}) => {
+            closeCancelarDialog()
+            handleShowListado()
+            showSuccess(data)
+        })
+    }
+
+    const handleClick = (itemKey) => {
+        setIndexOpen(itemKey === indexOpen ? -1 : itemKey);
     };
 
     return (
         <div>
+            {
+                state.openEnvioCorreo &&
+                <EnvioCorreoDialogo onSubmit={envioCorreoAction} open={state.openEnvioCorreo} close={()=> {setState({...state, openEnvioCorreo:false}); descargarPDF(state.idInforme, state.folio);getParadasListado({m_nIdViaje:state.idViaje})}}/>
+            }
             {state.openCancelarSAT &&
-                <CancelarSAT open={state.openCancelarSAT} onSubmit={cancelarCFDI} data={{folioSustituye: state.informe.m_clsInforme.m_sFolioFiscalUUID,m_sFolio: state.informe.m_clsInforme.m_sFolioInforme, folioCancelar: state.informe.m_clsInforme.m_sFolioFiscalUUIDSustituido || state.informe.m_clsInforme.m_sFolioFiscalUUID
+                <CancelarSAT open={state.openCancelarSAT} onSubmit={cancelarCFDI} data={{folioSustituye: state.informe.m_sFolioFiscalUUID,m_sFolio: state.informe.m_sFolioInforme, folioCancelar: state.informe.m_sFolioFiscalUUIDSustituido || state.informe.m_sFolioFiscalUUID
                 }} close={() => setState({...state,openCancelarSAT: false})}/>
             }
             {
@@ -951,10 +1056,10 @@ function Viajes() {
                         fullWidth={true}
                         maxWidth={'md'}>
                     <DialogTitle>
-                        Detalle de Informe - {informeSeleccionado.m_clsInforme.m_sFolioInforme}
+                        Detalle de Informe - {informeSeleccionado.m_sFolioInforme}
                     </DialogTitle>
                     <DialogContent>
-                        <DetalleInforme guias={informeSeleccionado.m_clsInforme.m_arrClsProGuia}>
+                        <DetalleInforme guias={informeSeleccionado.m_arrClsProGuia}>
                             <DialogActions>
                                 <Button
                                     variant={'contained'} color={'primary'}
@@ -988,13 +1093,25 @@ function Viajes() {
             </Dialog>*/}
             {
                 paradaData &&
+                <CancelarTrayecto onSubmit={cancelarTrayectos} open={eventOptions.showCancelarParadasDialog} close={() => closeCancelarDialog()} data={paradaData}>
+                    <DialogActions>
+                        <Button
+                            variant={'contained'} color={'primary'}
+                            type="submit">Aceptar</Button>
+                        <Button variant={'outlined'} color={'primary'}
+                                onClick={closeCancelarDialog}>Cancelar</Button>
+                    </DialogActions>
+                </CancelarTrayecto>
+            }
+            {
+                paradaData &&
                 <Dialog open={eventOptions.showSalidaParadasDialog}
                         onClose={closeSalidaDialog}
                         fullWidth={true}
                         maxWidth={'xl'}>
                     <DialogTitle><h2>Salida de Paradas</h2></DialogTitle>
                     <DialogContent>
-                        <SalidaParadas onSubmit={updateSalida} data={paradaData.m_clsInforme}>
+                        <SalidaParadas onSubmit={updateSalida} data={viajeSeleccionado}>
                             <DialogActions>
                                 <Button
                                     variant={'contained'} color={'primary'}
@@ -1015,7 +1132,7 @@ function Viajes() {
                         maxWidth={'xl'}>
                     <DialogTitle><h2>Llegada de Paradas</h2></DialogTitle>
                     <DialogContent>
-                        <LlegadaParadas onSubmit={updateLlegada} data={paradaData.m_clsInforme} viaje={viajeSeleccionado} parada={paradaData}>
+                        <LlegadaParadas onSubmit={updateLlegada} viaje={viajeSeleccionado} parada={paradaData}>
                             <DialogActions>
                                 <Button
                                     variant={'contained'} color={'primary'}
@@ -1083,12 +1200,12 @@ function Viajes() {
                             </a>
                         </li>
                         <li>
-                            <a onClick={handleShowAgregar}>
+                            <a className= {validarDerecho(9101439)? "":classes.disabled} onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
                         <li>
-                            <a onClick={() => {
+                            <a className= {validarDerecho(9101444)? "":classes.disabled} onClick={() => {
                                 setState({
                                     ...state,
                                     identificadorModal:
@@ -1102,10 +1219,12 @@ function Viajes() {
                         </li>
                         <li>
                             <a
+                                
+                                className= {(state.idViaje === 0 || !validarDerecho(9101443))? classes.disabled : ""}
                                 data-toggle="tab"
                                 href="#Cancelar"
                                 onClick={handleShowCancelar}
-                                className={state.idViaje === 0 ? classes.disabled : ""}
+                                
                             >
                                 <i className="fa fa-ban"/> Cancelar
                             </a>
@@ -1113,8 +1232,8 @@ function Viajes() {
 
                     </ul>
 
-                    <div className="row" className="tab-content">
-                        <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
+                    <div className="row tab-content">
+                        <div className="widget-wrap tab-pane fade in show" id="Listado">
                             <div className="widget-wrap">
                                 <div className="widget-content">
 
@@ -1135,6 +1254,7 @@ function Viajes() {
                                                      ...state,
                                                      idViaje: row.data.m_nIdViaje
                                                  }) */
+                                                setViajeSeleccionado(row.data)
                                                 getParadasListado(row.data)
                                             }}
                                         />
@@ -1155,20 +1275,31 @@ function Viajes() {
                                                  >
                                                 <List>
                                                     {
-                                                        paradasListado.map((p, index) => {
+                                                        viajeSeleccionado && viajeSeleccionado.m_arrTrayectos.map((p, index) => {
+
+                                                            const informesFiltrados = paradasListado.filter((i,ind) => ((i.m_nIdDestino === p.m_nIdDestino) || ( (viajeSeleccionado.m_arrTrayectos.length - 1) === index && !viajeSeleccionado.m_arrTrayectos.map(t => t.m_nIdDestino).includes(i.m_nIdDestino) )  ))
 
                                                             return (
                                                                 <div>
-                                                                    <ListItem
+                                                                    <ListItem button key={p.m_nIdDestino+index+p.m_nIdOrigen}  onClick={() => handleClick(index)}
                                                                     >
 
-                                                                        <ListItemText primary={`Ruta: ${p.m_sOrigen}  - ${p.m_sDestino}`}/>
+                                                                        <ListItemText primary={`Ruta: ${p.m_sRuta}`} />
                                                                         {
-                                                                            !p.m_dFechaSalida  &&
+                                                                            ((!p.m_nIdSalida || p.m_bSalidaCancelada) && !p.deshabilitado)  &&
 
-                                                                            <Link style={{cursor: "pointer"}}
+                                                                            <Link  style={{cursor: "pointer"}}
                                                                                   onClick={() => showSalidaDialog(p)}>Marcar
                                                                                 Salida</Link>
+                                                                        }
+                                                                        {
+                                                                            p.m_nIdSalida && !p.m_nIdLlegada && !p.m_bSalidaCancelada && !p.deshabilitado  &&
+                                                                            <>
+                                                                                <Link  style={{cursor: "pointer"}}
+                                                                                       onClick={() => showCancelarDialog(p)}>Cancelar Salida</Link>
+                                                                                -
+                                                                            </>
+
                                                                         }
 
                                                                         {/*{!p.m_dFechaLlegada  && !p.m_dFechaSalida  &&
@@ -1177,7 +1308,7 @@ function Viajes() {
 
 
                                                                         {
-                                                                            p.m_dFechaSalida && !p.m_dFechaLlegada &&
+                                                                            p.m_nIdSalida && !p.m_bSalidaCancelada && !p.m_nIdLlegada && !p.deshabilitado  &&
 
                                                                             <Link style={{cursor: "pointer"}}
                                                                                   onClick={() => showLlegadaDialog(p)}>Marcar
@@ -1185,16 +1316,16 @@ function Viajes() {
                                                                         }
                                                                         {indexOpen === index ?
                                                                             <ExpandLess style={{cursor: "pointer"}}
-                                                                                        onClick={() => setIndexOpen(index === indexOpen ? -1 : index)}/> :
+                                                                                        onClick={() => handleClick(index)}/> :
                                                                             <ExpandMore style={{cursor: "pointer"}}
-                                                                                        onClick={() => setIndexOpen(index === indexOpen ? -1 : index)}/>}
+                                                                                        onClick={() => handleClick(index)}/>}
                                                                     </ListItem>
                                                                     <Collapse in={indexOpen === index}
                                                                               timeout="auto" unmountOnExit>
-                                                                        <div style={{height: `${70 + (p.informes.length * 30)}px`}}>
+                                                                        <div style={{height: `${70 + (informesFiltrados.length * 30)}px`}}>
                                                                             <DataGrid
                                                                                 localeText={dataGridLocaleText}
-                                                                                rows={p.informes}
+                                                                                rows={informesFiltrados}
                                                                                 columns={columnsParadas}
                                                                                 density="compact"
                                                                                 getRowId={(row) => row.m_nIdInforme}
@@ -1263,7 +1394,7 @@ function Viajes() {
 
                         </div>
 
-                        <div className="widget-wrap" id="Agregar" className="tab-pane fade">
+                        <div className="widget-wrap tab-pane fade" id="Agregar">
 
                             {
                                 state.open &&
@@ -1272,6 +1403,7 @@ function Viajes() {
                                     consult={state.agregar === "Consultar"}
                                     modificar={state.agregar === "Modificar"}
                                     select={state.selectViaje}
+                                    cancel={() => handleShowListado()}
                                     id={state.idViaje}/>
 
                             }

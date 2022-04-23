@@ -259,7 +259,10 @@ async function searchLocationGuia(city, address, postalCode) {
     }
 }
 
-
+function searchAdressWithCoordinates(x,y){
+   
+console.log("searching...")
+}
 function searchLocationWeb(city, address, subdistrict, number, code) {
     var result;
     trackPromise(
@@ -363,6 +366,25 @@ function agregarRuta(idUltimaMilla, tour, data) {
     return result
 }
 
+function validarUnidadesSeleccionadas(unidades){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/ValidarUnidades`;
+    let result;
+    var config = {
+        method: 'post',
+        url: url,
+        headers: { 
+          'RFC': 'ADI880815DA7', 
+          'Content-Type': 'application/json'
+        },
+        data : JSON.stringify(unidades)
+      };
+    trackPromise(
+        result = axios(config)
+    )
+    ;
+    return result
+
+}
 async function ordenarParada(idParada, guias) {
     const url = `${process.env.REACT_APP_API_URL}/UltimaMilla/OrdenarParada/${idParada}`;
     let result;
@@ -517,6 +539,14 @@ function obtenerReporteCFDIRecoleccion(id){
     );
     return result
 }
+async function validarUnidadOcupada(idUnidad, fecha, idSucursal){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/ValidarUnidad/${idUnidad}/${fecha}/${idSucursal}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url,  { headers })
+    );
+    return result
+}
 export {
     cancelarRuta,
     obtenerXMLPermisionario,
@@ -539,7 +569,11 @@ export {
     obtenerPaquetesInforme,
     obtenerPaquetesViaje,
     obtenerPaquetesUnidadOperador,
-    calcularRutaUltimaMilla
+    calcularRutaUltimaMilla,
+    searchAdressWithCoordinates,
+    validarUnidadesSeleccionadas,
+    validarUnidadOcupada,
+    searchLocationGuia
 }
 
 

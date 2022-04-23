@@ -41,7 +41,7 @@ export default function SeleccionarRuta(props){
             width: 300,
         },
         {
-            headerName: "Kilometros",
+            headerName: "Kilómetros",
             field: "Kilometros",
             width: 150,
         },
@@ -127,7 +127,7 @@ export default function SeleccionarRuta(props){
                 fullWidth
                 disabled={props.disabled}
                 onChange={handleChange}
-                helperText="Selecciona la ruta que tomará la guía"
+                helperText={"Selecciona la ruta que tomará " + (props.viaje ? "el viaje" :  "la guía")}
             >
                 {dataRutas.map((option) => (
                     <MenuItem key={option.IdRuta} value={option.IdRuta}>

@@ -179,7 +179,7 @@ class ZonasList extends Component {
 
 
         return (
-            <TableContainer>
+            <TableContainer className={"j-forms"} style={{height:"300px"}}>
                 <TextField variant="outlined" size={"small"} placeholder={"Buscar"} style={{padding: "0px"}}
                            value={this.state.searchText}
                            onChange={(e) => this.setState({searchText: e.target.value})}
@@ -230,7 +230,9 @@ class ZonasList extends Component {
                                     <TableRow>
                                         <TableCell padding="checkbox">
                                             <Checkbox
-                                                onClick={(event) => this.handleClick(event, u)}
+                                                onClick={(event) => {this.handleClick(event, u)
+                                                    this.props.closeResumen(false)
+                                                }}
                                                 checked={isItemSelected}
                                                 inputProps={{'aria-labelledby': labelId}}
                                             />

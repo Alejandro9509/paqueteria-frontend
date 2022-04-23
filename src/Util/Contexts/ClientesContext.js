@@ -66,4 +66,22 @@ function obtenerClienteId(id){
     return result
 }
 
-export {modificarCliente, agregarCliente, eliminarCliente, obtenerCliente, obtenerClienteId, validarNumeroCliente,obtenerClientePaginado}
+function obtenerClienteById(id){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/GetById/${id}`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+function obtenerClientePublicoGeneral(){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/GetPublicoGeneral`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+export {modificarCliente, agregarCliente, eliminarCliente, obtenerCliente, obtenerClienteId, validarNumeroCliente,obtenerClientePaginado,obtenerClienteById,obtenerClientePublicoGeneral}

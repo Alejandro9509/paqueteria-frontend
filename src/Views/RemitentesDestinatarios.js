@@ -249,11 +249,11 @@ function RemitenteDestinatario(props) {
                 correo: respuesta.data.m_sCorreoDestinatario,
                 telefono: respuesta.data.m_sTelefonoDestinatario,
                 contacto: respuesta.data.m_sContactoDestinatario,
-                latitud: respuesta.data.m_sLatitud || "",
-                longitud: respuesta.data.m_sLongitud || "",
+                latitud: "",
+                longitud:  "",
               };
             });
-      
+      console.log(respuesta.data)
           obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
             setDataMunicipios(data);
           });
@@ -459,7 +459,9 @@ function RemitenteDestinatario(props) {
   );
 
   const handleChange = (event) => {
-
+    if(!event.target.name === "telefono" || !event.target.name === "correo" || !event.target.name === "contacto"){
+       props.seCalculaTarifa()
+    }  
     event.preventDefault();
     setState((state) => {
       return {
@@ -475,11 +477,15 @@ function RemitenteDestinatario(props) {
   };
 
   const handleChangeAutocomplete = (input, newValue) => {
+    props.seCalculaTarifa()
 if(input=="codigoPostal"){
   obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(
     ( zonaOperativa ) => {
       obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(
           ( zonaTarifa ) => {
+            if(zonaOperativa.data.length == 0){
+              showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa, favor de seleccionar otro")
+            }         
             setState((state) => ({
               ...state,
               zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
@@ -529,6 +535,7 @@ if(input=="codigoPostal"){
   };
 
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
+    props.seCalculaTarifa()
     let estado = row.data.m_nIdEstado;
 
       obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
@@ -565,8 +572,8 @@ if(input=="codigoPostal"){
                     colonia: row.data.m_sColonia || "No especificado",
                     latitud: row.data.m_sLatitud,
                     longitud: row.data.m_sLongitud,
-                    origen: zonaTarifa.data.length !== 0  ? {m_nIdCiudad: zonaTarifa.data[0].m_nIdSucursal, m_sCiudad: zonaTarifa.data[0].m_sSucursal} : null,
-                    destino: zonaTarifa.data.length !== 0  ? {m_nIdCiudad: zonaTarifa.data[0].m_nIdSucursal, m_sCiudad: zonaTarifa.data[0].m_sSucursal} : null,
+                    origen: zonaOperativa.data.length !== 0  ? {m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino, m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino} : null,
+                    destino: zonaOperativa.data.length !== 0  ? {m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino, m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino} : null,
                     openDialog: false,
                     zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
                     zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null
@@ -579,13 +586,13 @@ if(input=="codigoPostal"){
                       showSuccess("El codigo postal del destinatario no está registrado en ninguna zona operativa.")
                     }
                   }
-                  if (zonaTarifa.data.length === 0){
+                  /*if (zonaTarifa.data.length === 0){
                     if (props.remitente){
                       showSuccess("El codigo postal del remitente no está registrado en ninguna zona de tarifa.")
                     }else if (props.destinatario){
                       showSuccess("El codigo postal del destinatario no está registrado en ninguna zona de tarifa.")
                     }
-                  }
+                  }*/
                 }
             );
 
@@ -595,6 +602,23 @@ if(input=="codigoPostal"){
 
     
   };
+
+  useEffect(() => {
+    handleEntregaEnDomicilioDestinatario()
+  }, [props.entregaDomicilioDestinatario])
+
+  const handleEntregaEnDomicilioDestinatario = () =>{
+    if (props.entregaDomicilioDestinatario && !state.zonaOperativa){
+      obtenerZonaOperativaByIdCodigoPostal(state.codigoPostal.m_sCP).then(( zonaOperativa ) => {
+            setState((state) => ({
+              ...state,
+              zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+            }));
+
+          })
+    }
+  }
+
   const dialogVisible = (isVisible) => {
     setState(() => ({
       ...state,
@@ -707,7 +731,7 @@ if(input=="codigoPostal"){
               required
               fullWidth
               value={state.RFC}
-              disabled={props.consulta}
+              disabled={props.consulta || props.modificar || props.agregar}
               name="RFC"
             />
           </div>
@@ -724,7 +748,7 @@ if(input=="codigoPostal"){
               required
               label="Domicilio"
               value={state.domicilio}
-              disabled={props.consulta}
+              disabled={props.consulta || props.modificar || props.agregar}
               name="domicilio"
             />
           </div>
@@ -741,7 +765,7 @@ if(input=="codigoPostal"){
               required
               label="Calle"
               value={state.calle}
-              disabled={props.consulta}
+              disabled={props.consulta || props.modificar || props.agregar}
               name="calle"
             />
           </div>
@@ -757,7 +781,7 @@ if(input=="codigoPostal"){
               type="text"
               label="Número interior"
               value={state.numeroInt}
-              disabled={props.consulta}
+              disabled={props.consulta || props.modificar || props.agregar}
               name="numeroInt"
             />
           </div>
@@ -773,7 +797,7 @@ if(input=="codigoPostal"){
               type="text"
               label="Número exterior"
               value={state.numeroExt}
-              disabled={props.consulta}
+              disabled={props.consulta || props.modificar || props.agregar}
               name="numeroExt"
             />
           </div>
@@ -790,7 +814,7 @@ if(input=="codigoPostal"){
               required
               label="Colonia"
               value={state.colonia}
-              disabled={props.consulta}
+              disabled={props.consulta || props.modificar || props.agregar}
               name="colonia"
             />
           </div>
@@ -808,7 +832,7 @@ if(input=="codigoPostal"){
                 value={state.estado}
                 onChange={handleChange}
                 name="estado"
-                disabled={props.consulta}
+                disabled={props.consulta || props.modificar || props.agregar}
               >
                 {dataEstados.map((estado) => (
                   <option key={estado.m_nIdEstado} value={estado.m_nIdEstado}>
@@ -838,7 +862,7 @@ if(input=="codigoPostal"){
               value={state.municipio}
               onChange={handleChange}
               name="municipio"
-              disabled={props.consulta}
+              disabled={props.consulta || props.modificar || props.agregar}
               InputProps={{ name: "municipio" }}
             >
               {dataMunicipios.map((municipio) => (
@@ -861,7 +885,7 @@ if(input=="codigoPostal"){
                 handleChangeAutocomplete("codigoPostal", newValue)
               }
               value={state.codigoPostal}
-              disabled={props.consulta}
+              disabled={props.consulta || props.modificar || props.agregar}
               name="codigoPostal"
               disableClearable
               forcePopupIcon={false}
@@ -918,7 +942,7 @@ if(input=="codigoPostal"){
               label="Teléfono"
               required
               value={state.telefono}
-              disabled={props.consulta}
+              disabled={props.consulta }
               name="telefono"
             />
           </div>
@@ -950,7 +974,7 @@ if(input=="codigoPostal"){
                   handleChangeAutocomplete("origen", newValue)
                 }
                 value={state.origen}
-                disabled={props.consulta}
+                disabled={props.consulta || props.modificar || props.agregar}
                 id="origenRemitente"
                 name="origenRemitente"
                 disableClearable
@@ -986,7 +1010,7 @@ if(input=="codigoPostal"){
                   handleChangeAutocomplete("destino", newValue)
                 }
                 value={state.destino}
-                disabled={props.consulta}
+                disabled={props.consulta || props.modificar || props.agregar}
                 destino="destino"
                 disableClearable
                 forcePopupIcon={false}
@@ -1027,7 +1051,7 @@ if(input=="codigoPostal"){
                 disableClearable
                 forcePopupIcon={false}
                 options={dataZonasOperativas}
-                disabled={props.consulta}
+                disabled={props.consulta || props.modificar || props.agregar}
                 getOptionLabel={(option) =>
                   option
                     ? `${option.m_sCodigoZona} - CÓDIGO POSTAL:${state.codigoPostal.m_sCP}`|| "Código Postal sin zona asignada"
@@ -1054,7 +1078,7 @@ if(input=="codigoPostal"){
             </div>
           </div>
         )}
-        {props.mostrarZonas && (
+        {/*props.mostrarZonas*/false && (
           <div className="col-sm-12 col-md-12 unit">
             <div className="input">
               <Autocomplete
@@ -1067,7 +1091,7 @@ if(input=="codigoPostal"){
                 disableClearable
                 forcePopupIcon={false}
                 options={dataZonasTarifa}
-                disabled={props.consulta}
+                disabled={props.consulta || props.modificar || props.agregar}
                 getOptionLabel={(option) =>
                   option
                     ? option.m_sCodigoZona || "Código Postal sin zona asignada"

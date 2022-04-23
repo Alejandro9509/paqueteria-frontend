@@ -14,7 +14,7 @@ function showSuccess(mensaje) {
     timeout: "3000",
   }).show();
 }
-
+let rowSelect
 function DialogTableClientes(props) {
     let {dialogVisible,handlePatrocinadorSelected} = props
 
@@ -36,7 +36,7 @@ const columns = [
         flex: 1,
       },
   ]
-let rowSelect
+
 let registros=7
 //----------------------------->Hooks useState <----------------------------------------------------------------------
 const [rows, setRow] = React.useState([])

@@ -24,6 +24,7 @@ import {ReactComponent as GCuentaCorreoIcon} from './iconos/Configuracion/Icono 
 import {ReactComponent as GBitacoraIcon} from './iconos/Configuracion/Icono Bitacora/icono_bitacora.svg';
 import Folios from "./Views/Folios/Folios";
 import CuentasCorreo from "./Views/CuentasCorreo/CuentasCorreo";
+import {validarDerecho} from "./Util/Util";
 
 const configurationRoutes = [
 
@@ -81,28 +82,32 @@ const configurationRoutes = [
     name: "Folios",
     icon:  <GFoliosIcon/>,
     component: Folios,
-    isDialog: false
+    isDialog: false,
+    visible: validarDerecho(9101209)
   },
   {
     path: "/TipoDeCambio",
     name: "Tipo de Cambio",
     icon:  <GTipoCambioIcon/>,
     component: TipoCambio,
-    isDialog: false
+    isDialog: false,
+    visible: validarDerecho(9101210)
   },
   {
     path: "/Moneda",
     name: "Moneda",
     icon:  <GMonedaIcon/>,
     component: MonedaPage,
-    isDialog: false
+    isDialog: false,
+    visible: validarDerecho(9101211)
   },
   {
     path: "/CuentasCorreo",
     name: "Cuentas Correo",
     icon:  <GCuentaCorreoIcon/>,
     component: CuentasCorreo,
-    isDialog: true
+    isDialog: true,
+    visible: validarDerecho(9101212)
   },
   /*  {
      path: "/BitacoraProcesos",

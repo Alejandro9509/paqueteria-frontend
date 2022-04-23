@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useMemo} from "react";
 import axios from "axios";
+import {getCurrentDateTime,getCurrentTime,getCurrentDate} from "../Util/Util"
 import Cabecera from "../Components/Template/Cabecera";
 import IconButton from "@material-ui/core/IconButton";
 import RestartAltIcon from '@material-ui/icons/Refresh';
@@ -16,11 +17,11 @@ import {makeStyles} from "@material-ui/core/styles";
 import * as XLSX from 'xlsx';
 import {useTable, useFilters, useAsyncDebounce, useSortBy} from 'react-table'
 import $ from 'jquery';
-import {getUniqueListBy, remove_array_element} from "../Util/Util";
+import {getUniqueListBy, validarDerecho, remove_array_element} from "../Util/Util";
 import Barra from "../Util/jquery-barcode"
 import {DataGrid} from '@material-ui/data-grid';
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
-import {getCurrentDateTime} from "../Util/Util"
+
 import {
     obtenerZonaTarifaByIdCodigoPostal,
   } from "../Util/Contexts/ZonaTarifaContext";
@@ -53,7 +54,15 @@ import {
     modificarGuia,
     agregarGuia,
     imprimirGuia,
-    obtenerGuiaReporte, entregaOcurreGuia, cambiarTipoCobro, cambiarEstatusGuia, obtenerValidacionGuia, asignarTrayectos
+    obtenerGuiaReporte,
+    entregaOcurreGuia,
+    cambiarTipoCobro,
+    cambiarEstatusGuia,
+    obtenerValidacionGuia,
+    asignarTrayectos,
+    validarEliminarGuia,
+    obtenerGuiaReporteEtiqueta,
+    validarCancelarGuia
 } from "../Util/Contexts/GuiaContext";
 import {obtenerMonedas} from "../Util/Contexts/MonedaContext";
 import {obtenerTipoCambio} from "../Util/Contexts/TipoCambioContext";
@@ -168,6 +177,7 @@ function Guia(props) {
         usuarioCancelacion: 0,
         estatusGuia: "",
         MotivoCancelacion: "",
+        folioEmbarque:"",
         //VARIABLES PARA AGREGAR GUIA
         //Informacion General
         idSucursalAgregar: localStorage.getItem("Sucursal"),
@@ -331,7 +341,7 @@ function Guia(props) {
         }
       //  console.log(state)
         console.log(JSON.stringify(params))
-        if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
+      if (state.idGuia == 0 || state.idGuia == '' || state.idGuia == undefined) {
             agregarGuia(params).then(respuesta => {
                 showSuccess(respuesta.data)
                 handleShowListado()
@@ -385,8 +395,9 @@ function Guia(props) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-
-            eliminarGuia(id, state.modificadoPor).then(respuesta => {
+            validarEliminarGuia(id).then(respuesta=>{
+               if(respuesta.data.sePuedeEliminar){
+                eliminarGuia(id, state.modificadoPor).then(respuesta => {
                 showSuccess(respuesta.data)
                 //console.log(respuesta)
                 if (respuesta.data.indexOf("fracaso:") <= 0)
@@ -394,12 +405,18 @@ function Guia(props) {
             }).catch(function (err) {
                 console.log(err.data)
             });
+               }else{
+                   showSuccess("La guia no puede ser eliminada a menos que se cancele")
+               }
+            })
+           
         }).catch(err => {
             showSuccess(err)
         });
     }
 
     function handleShowModificar(id,folioGuia) {
+        
         obtenerValidacionGuia(id).then(respuesta=>{
             console.log(respuesta)
             if(respuesta.data.valor){//Entrega un 1 si la guia no es modificable
@@ -496,7 +513,7 @@ function Guia(props) {
             ivaTraslada: ivaTraslada
         })
         setConceptosAdicionales(conceptosAdicionalesAux)
-        obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalRemitente).then(
+        /*obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalRemitente).then(
             ({ data }) => {
                 console.log(data)
                 setState(state => {
@@ -518,7 +535,7 @@ function Guia(props) {
 
                 })
             }
-          );
+          );*/
         setState(state => {
             return {
                 ...state,
@@ -526,7 +543,7 @@ function Guia(props) {
                 idSucursalAgregar: respuesta.data.IdSucursal,
                 idMoneda: respuesta.data.m_nIdMoneda,
                 tipoCambio: respuesta.data.m_cTIpoCambio,
-                folioInforme: respuesta.data.m_nFolioInforme,
+                folioInforme: respuesta.data.m_sFolioInforme,
                 tracking: respuesta.data.m_nTracking,
                 folioGuia: respuesta.data.m_nFolioGuia,
                 idGuia: respuesta.data.m_nIdGuia,
@@ -534,7 +551,7 @@ function Guia(props) {
                 idEstatusGuia: respuesta.data.m_nIdEstatusGuia,
                 fecha: respuesta.data.m_dFecha + 'T' + respuesta.data.m_sHora.substr(0,5),
                 creadoEl: respuesta.data.m_dCreadoEl,
-
+                folioEmbarque:respuesta.data.m_sFolioEmbarque,
                 nombreRemitente: respuesta.data.m_sNOmbreRemitente,
                 RFCRemitente: respuesta.data.m_sRFCRemitente,
                 domicilioRemitente: respuesta.data.m_sDomicilioRemitente,
@@ -574,9 +591,9 @@ function Guia(props) {
     //Muestra la pestaña de cancelar
     function handleShowCancelar(event) {
         event.preventDefault()
-        if(state.folioInforme && state.folioInforme != ""){
-      showSuccess("La guia no puede ser eliminada ya que esta siendo usada en el informe: "+state.folioInforme)
-    }else if(state.folioInforme == undefined || state.folioInforme == ""){
+        console.log(state.folioInforme)
+        validarCancelarGuia(state.idGuia).then((respuesta)=>{
+        if(respuesta.data.sePuedeCancelar){
           limpiarCamposAgregar()
         obtenerGuiaId(state.idGuia).then((respuesta) => {
             setState({
@@ -593,22 +610,45 @@ function Guia(props) {
             $('.tab-content div ').removeClass('in show');
             $('#Cancelar').addClass('in show');
         })
-    }
+        }
+        else{
+        showSuccess("La guía no puede ser cancelada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
+        return
+        }
+        }).catch((err)=>{
+            showSuccess(err)
+        })
+
+
     }
 
     //Funcion para cancelar una guia. Se usa en pestaña cancelar.
     const handleCancelar = (e) => {
         e.preventDefault();
-        var params = {
+        //console.log(state.idGuia)
+       validarCancelarGuia(state.idGuia).then((respuesta)=>{
+            if(respuesta.data.sePuedeCancelar){
+          var params = {
             "motivoCancelacion": state.MotivoCancelacion,
             "usuarioCancelacion": localStorage.getItem("UsuarioId"),
-            "fechaCancelacion": state.fechaCancelado
+            "fechaCancelacion": `${getCurrentDate()}`,
+            "HoraCancelacion": `${getCurrentTime()}`
         }
+        console.log(JSON.stringify(params))
           cancelarGuia(state.idGuia, params).then((respuesta) => {
             console.log(respuesta.data)
-            showSuccess("La guia ha sido cancelada")
-        })  
-        
+            showSuccess("La guia ha sido cancelada");
+            handleShowListado()
+        }) 
+            }
+            else{
+            showSuccess("La guia no puede ser cancelada ya que esta siendo usada en el informe: "+ respuesta.data.FolioInforme)
+            return
+            }
+            }).catch((err)=>{
+                showSuccess(err)
+            })
+
         
     }
 
@@ -693,8 +733,8 @@ function Guia(props) {
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar">
-                            <a data-toggle="tab"
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101457) || row.row.m_nIdEstatusGuia == 8}>
+                            <a 
                                onClick={() => (handleShowModificar(row.row.m_nIdGuia,row.row.m_nFolioGuia))}
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
                                                                      style={{color: "#F9A03E"}}/></a>
@@ -706,26 +746,32 @@ function Guia(props) {
                                                                                            style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Reporte">
+                        <Tooltip title="Reporte" disabled={!validarDerecho(9101462)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => generarReporte(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i
                                 className="zmdi zmdi-file"
                                 style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Ocurre">
+                        <Tooltip title="Ocurre" disabled={!validarDerecho(9101463)}>
                             <a className="btn btn-default btn-xs"
                                onClick={(event) => mostrarDialogoOcurre(event, row.row.m_nIdGuia)}><i
                                 className="zmdi zmdi-sign-in" style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Imprimir">
+                        <Tooltip title="Imprimir" disabled={!validarDerecho(9101464)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => printTicket(row.row.m_nIdGuia)}><i className="zmdi zmdi-print"
                                                                                  style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
-                        <Tooltip title="Eliminar">
+                        <Tooltip title="Imprimir etiquetas" disabled={!validarDerecho(9101465)}>
+                            <a className="btn btn-default btn-xs"
+                               onClick={() => generarReporteEtiqueta(row.row.m_nIdGuia, row.row.m_nFolioGuia)}><i className="zmdi zmdi-print"
+                                                                                 style={{color: "#F9A03E"}}/></a>
+
+                        </Tooltip>
+                        <Tooltip title="Eliminar" disabled={!validarDerecho(9101458)}>
                             <a className="btn btn-default btn-xs"
                                onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete"
                                                                                       style={{color: "#F30B0B"}}/></a>
@@ -743,12 +789,12 @@ function Guia(props) {
             width: 200,
         },
         {
-            headerName: "Folio Guia",
+            headerName: "Folio Guía",
             field: "m_nFolioGuia",
             width: 125,
         },
         {
-            headerName: "Estatus Guia",
+            headerName: "Estatus Guía",
             field: "m_sEstatusGuia",
             width: 200,
         },
@@ -805,14 +851,28 @@ function Guia(props) {
             field: "m_sFolioEmbarque",
             width: 150,
         },
+        /* {
+            headerName: "Observaciones",
+            field: "m_sObservaciones",
+            width: 150,
+        }, */
         {
-            headerName: "Fecha de Cancelacion",
+            headerName: "Fecha de Cancelación",
             field: "m_dtFechaCancelacion",
             width: 200,
         },
         {
-            headerName: "Usuario de Cancelacion",
-            field: "m_nUsuarioCancelacion",
+            field: 'Fecha de Cancelación',
+            headerName: 'Fecha de Cancelación',
+            width: 200,
+            valueGetter: (params) =>
+              `${params.getValue(params.m_nFolioGuia, 'm_dtFechaCancelacion') || ''} ${
+                params.getValue(params.m_nFolioGuia, 'm_sHoraCancelacion') || ''
+              }`,
+          },
+        {
+            headerName: "Usuario de Cancelación",
+            field: "m_sUsuarioCancelacion",
             width: 200,
         }
 
@@ -826,7 +886,14 @@ function Guia(props) {
             pdfWindow.document.title = "Guía " + folio;
         })
     }
-
+    function generarReporteEtiqueta(id, folio) {
+        obtenerGuiaReporteEtiqueta(id).then(({data}) => {
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data) + "'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Guía " + folio;
+        })
+    }
     /**Entreando a guias por primera vez*/
     useEffect(value => {
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
@@ -852,7 +919,7 @@ function Guia(props) {
                 $('#Agregar').addClass('in show');
                  //setDataMoneda(props.location.dataMoneda)
                  //setDataSucursal(props.location.dataSucursal)
-                 //setDataTipoCobro(props.location.dataTipoCobro)
+                 setDataTipoCobro(props.location.dataTipoCobro)
                  //setDataTipoCambio(props.location.dataTipoCambio)
                 // setDataCiudadF(props.location.dataCiudades)
                 getDataParaEditar()
@@ -891,21 +958,7 @@ function Guia(props) {
     }, [])
 
     async function printTicket(id) {
-        /* EB = window.EB
-         EB.PrinterZebra.searchPrinters({
-             "deviceAddress": "192.148.1.143",
-             "devicePort": 9100,
-             "connectionType": EB.Printer.CONNECTION_TYPE_TCP
-         }, function (cb) {
 
-             var myPrinter = EB.PrinterZebra.getPrinterByID(cb.printerID)
-             myPrinter.connect(function (cb) {
-
-                 myPrinter.printRawString(TICKET_ZABRA_TAMPLATE, {}, function (cb) {
-
-                 })
-             })
-         })*/
         obtenerGuiaId(id).then(({data}) => {
             var guia = data
             var totalEtiquetas = guia.m_arrClsDetalle.reduce((a, b) => +a + +b.ctd, 0)
@@ -946,18 +999,6 @@ function Guia(props) {
                     }
                 })
             }
-
-
-            // console.log(contadorPaquetesTotales)
-            // console.log([Array(contadorPaquetesTotales).keys()])
-
-
-            /*[Array(contadorPaquetesTotales).keys()].forEach((i, count) => {
-                console.log('guia: ', guia)
-                console.log('paquete: ', p)
-                console.log('index: ', count+1)
-                selected_device.send(TICKET_ZABRA_TAMPLATE(guia, p, count), undefined, errorCallback);
-            })*/
 
 
         })
@@ -1068,7 +1109,7 @@ function Guia(props) {
 
         // setDataConceptos(conceptosCast)
         setConceptosAdicionales(conceptosCast)
-        obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalRemitente).then(
+        /*obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalRemitente).then(
             ({ data }) => {
                 console.log(data)
                 setState(state => {
@@ -1090,7 +1131,7 @@ function Guia(props) {
 
                 })
             }
-          );
+          );*/
         setState(state => {
             return {
                 ...state,
@@ -1263,7 +1304,6 @@ function Guia(props) {
         getAllDataEstatusGuia()
         getAllDataTipoServicio()
         cargaEmbarqueMoneda(1)
-        getAllDataTipoPago()
         getAllConceptos()
         getParametrosConfiguracion()
     }
@@ -1711,6 +1751,7 @@ function Guia(props) {
 
     const mostrarDialogoOcurre = (event, id) => {
         event.stopPropagation();
+        getAllDataTipoPago()
         obtenerGuiaId(id).then(({data}) => {
             var guia = data
             if (guia.m_nIdEstatusGuia == 7) {
@@ -1833,9 +1874,9 @@ function Guia(props) {
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
-                        <li>
-                            <a onClick={() => handleShowAgregar()}>
-                                <i className="fa fa-plus-circle"/> {state.agregar}
+                        <li>     
+                            <a className= {validarDerecho(9101456)? "":classes.disabled} onClick={handleShowAgregar}>
+                                <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>
                         {/*<li>*/}
@@ -1858,17 +1899,16 @@ function Guia(props) {
                                 <i className="fa fa-upload"/> Importar
                             </a>
                         </li>
-                        {
-                            (localStorage.getItem("UsuarioId") === "11" || localStorage.getItem("UsuarioId") === "4") &&
+
                             <li>
-                                <a className={(state.idGuia !== 0 && state.cambioCobro) ? "" : classes.disabled}
+                                <a className={(state.idGuia !== 0 && state.cambioCobro) && validarDerecho(3900001) ? "" : classes.disabled}
                                    onClick={() => setState({...state, openTipoCobro: true})}>
                                     <i className="fa fa-refresh"/> Cambiar Tipo Cobro
                                 </a>
                             </li>
-                        }
+
                         <li>
-                            <a className={(state.idGuia !== 0 && state.cambioCobro) ? "" : classes.disabled}
+                            <a className={(state.idGuia !== 0 && state.cambioCobro && validarDerecho(9101459)) && state.estatusGuia != 8? "" : classes.disabled}
                                onClick={() => {
                                    getAllDataEstatusGuia()
                                    setState({...state, openCambiarEstatus: true})
@@ -1877,7 +1917,7 @@ function Guia(props) {
                             </a>
                         </li>
                         <li>
-                            <a className={(state.idGuia !== 0) ? "" : classes.disabled}
+                            <a className={(state.idGuia !== 0 && validarDerecho(9101460)) ? "" : classes.disabled}
                                onClick={() => {
                                    setState({...state, openAsignarTrayectos: true})
                                }}>
@@ -1887,7 +1927,7 @@ function Guia(props) {
 
                         <li>
                             <a data-toggle="tab"  onClick={handleShowCancelar}
-                               className={state.idGuia === 0 ? classes.disabled : ""}>
+                               className={(state.idGuia === 0 || !validarDerecho(9101461) ||  state.estatusGuia == 8)? classes.disabled : ""}>
                                 <i className="fa fa-times-circle"/> Cancelar
                             </a>
                         </li>
@@ -1899,7 +1939,7 @@ function Guia(props) {
                         {/*</li>*/}
                     </ul>
 
-                    <div className="row" className="tab-content">
+                    <div className="row tab-content">
                         <div id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
@@ -1931,6 +1971,7 @@ function Guia(props) {
                                                 setState({
                                                     ...state,
                                                     idGuia: row.data.m_nIdGuia,
+                                                    estatusGuia:row.data.m_nIdEstatusGuia,
                                                     cambioCobro: true,
                                                     creditoVencido: row.data.m_bCreditoVencido && !row.data.m_bSinCredito,
                                                     folioInforme:row.data.m_sFolioInforme
@@ -2036,7 +2077,8 @@ function Guia(props) {
                                                         </Grid>
                                                         <Grid item xs>
                                                             <label className="label">
-                                                                <FormControl fullWidth variant="outlined"
+                                                             {state.agregar == "Agregar" &&  
+                                                              <FormControl fullWidth variant="outlined"
                                                                              margin="dense">
                                                                     <InputLabel id="idEmbarqueLabel">Folio
                                                                         Embarque</InputLabel>
@@ -2068,10 +2110,26 @@ function Guia(props) {
                                                                         )}
                                                                     </Select>
                                                                 </FormControl>
+                                                                }
+                                                                {state.agregar != "Agregar" &&
+                                                                    <TextField variant="outlined" margin="dense"
+                                                                    native
+                                                                    labelId="idEmbarqueLabel"
+                                                                    label="Folio Embarque"
+                                                                    className="form-control"
+                                                                    required
+                                                                    id="idEmbarque"
+                                                                    read="true"
+                                                                    value={state.folioEmbarque}
+                                                                    disabled
+                                                         />
+                                                                
+                                                                
+                                                                }
                                                             </label>
                                                         </Grid>
-                                                        <Grid item xs>
-                                                            <div className="input">
+                                                      {/*  <Grid item xs>
+                                                          <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
                                                                            className="form-control"
                                                                            type="text"
@@ -2084,8 +2142,8 @@ function Guia(props) {
                                                                            name="FolioGuiaRelacionada"
                                                                            disabled
                                                                 />
-                                                            </div>
-                                                        </Grid>
+                                                            </div> 
+                                                        </Grid>*/} 
                                                         <Grid item xs>
                                                             <div className="input">
                                                                 <TextField variant="outlined" margin="dense"
@@ -2093,7 +2151,8 @@ function Guia(props) {
                                                                            className="form-control"
                                                                            type="text"
                                                                            label="Folio Informe"
-                                                                           placeholder={state.folioInforme}
+                                                                           //placeholder={state.folioInforme}
+                                                                           value={state.folioInforme}
                                                                            readOnly={state.agregar == "Consultar"}
                                                                            id="folioInforme"
                                                                            name="folioInforme"
@@ -2160,7 +2219,7 @@ function Guia(props) {
                                                                         }}
                                                                     >
                                                                         <option key={0} value="0">Seleccionar</option>
-                                                                        {dataEstatusGuia.filter(e => e.m_nIdEstatusGuia == 4).map(
+                                                                        {dataEstatusGuia.map(
                                                                             (estatusGuia) => (
                                                                                 <option
                                                                                     key={estatusGuia.m_nIdEstatusGuia}
@@ -2233,7 +2292,7 @@ function Guia(props) {
                                                                                 key={cambio.m_nIdTipoCambio}
                                                                                 value={cambio.m_nIdTipoCambio}
                                                                             >
-                                                                                {cambio.m_cTipoCambio}
+                                                                                {cambio.m_cTipoCambio.toFixed(4)}
                                                                             </option>
                                                                         ))}
                                                                     </Select>
@@ -2436,7 +2495,7 @@ function Guia(props) {
                                                                             </div>
                                                                         </div>
 
-                                                                        <div className="col-md-4 unit">
+                                                                      { false &&  <div className="col-md-4 unit">
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
@@ -2457,7 +2516,7 @@ function Guia(props) {
 
                                                                             </div>
                                                                         </div>
-
+                                                                            }
                                                                         <div className="col-md-4 unit">
 
                                                                             <div className="input">
@@ -2628,7 +2687,7 @@ function Guia(props) {
                                                                             </div>
                                                                         </div>
 
-                                                                        <div className="col-md-4 unit">
+                                                                       { false && <div className="col-md-4 unit">
 
                                                                             <div className="input">
                                                                                 <TextField variant="outlined"
@@ -2646,6 +2705,7 @@ function Guia(props) {
                                                                                 />
                                                                             </div>
                                                                         </div>
+                                                                                    }
 
                                                                         <div className="col-md-4 unit">
 
@@ -2950,7 +3010,7 @@ function Guia(props) {
 
                                     </div>
 
-                                    <div className="form-footer" className="col-md-12">
+                                    <div className="form-footer col-md-12">
 
                                         {/*<button
                                                             href="#Listado"
@@ -2997,7 +3057,7 @@ function Guia(props) {
                                                     </div>
                                                 </div>
                                                 <br></br>
-                                                <div className="form-footer" className="col-md-12">
+                                                <div className="form-footer col-md-12">
                                                     <button className="btn btn-default btn-block ex-noty"
                                                             data-layout="topCenter" data-type="information">Notificación
                                                     </button>
@@ -3138,7 +3198,7 @@ function Guia(props) {
                                                         </div>
                                                     </div>
 
-                                                    <div className="form-footer" className="col-md-12">
+                                                    <div className="form-footer col-md-12">
                                                         {/*<button
                                                             href="#Listado"
                                                             role="tab"

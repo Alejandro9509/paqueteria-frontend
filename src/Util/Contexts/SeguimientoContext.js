@@ -4,11 +4,12 @@ import { API_HEADERS } from "../../Constants";
 
 const headers = API_HEADERS
 
-function obtenerInformeFolioTipo(folio, tipo ) {
+function obtenerInformeFolioTipo(folio, tipo, headersAux ) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Seguimeinto/folio/${folio}/tipo/${tipo}`;
     let result;
+
     trackPromise(
-        result = axios.get(url, { headers })
+        result = axios.get(url, { headers: headersAux ? headersAux : headers })
     );
     return result
 }

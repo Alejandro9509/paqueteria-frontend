@@ -14,7 +14,7 @@ function showSuccess(mensaje) {
     timeout: "3000",
   }).show();
 }
-
+let rowSelect
 function DialogTableRemDes(props) {
     let {dialogVisible,handleChangeAutoCompleteRemitenteDestinatario} = props
 
@@ -36,7 +36,7 @@ const columns = [
         width: 500,
       },
   ]
-let rowSelect
+
 let registros=10
 //----------------------------->Hooks useState <----------------------------------------------------------------------
 const [rows, setRow] = React.useState([])
@@ -113,6 +113,7 @@ function cargarDesdeServidor(pagina,registros){
                 </button>
                 <button
                     onClick={() => {
+                        console.log(rowSelect)
                         if(rowSelect !=null){
                           handleChangeAutoCompleteRemitenteDestinatario(rowSelect);}
                         }}

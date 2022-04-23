@@ -11,8 +11,10 @@ import $ from "jquery";
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import { TextField, Tooltip } from "@material-ui/core";
-import { agregarEmbalajes, modificarEmbalajes, eliminarEmbalajes, obtenerEmbalajesId, obtenerEmbalajes } from "../Util/Contexts/EmbalajesContext";
+import { agregarEmbalajes, modificarEmbalajes, eliminarEmbalajes, obtenerEmbalajesId, obtenerEmbalajes,validarEliminarEmbalajes } from "../Util/Contexts/EmbalajesContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
+import { confirmAlert } from "react-confirm-alert";
+import {validarDerecho} from "../Util/Util"
 
 function showSuccess(mensaje) {
     new Noty({
@@ -29,7 +31,11 @@ const styles = {
     },
     noSeleccionado: {
         backgroundColor: "#FFFFFF",
-    }
+    },
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
 };
 const useStyles = makeStyles(styles);
 window.jQuery = window.$ = $;
@@ -104,6 +110,13 @@ function Embalaje() {
 
     function handleEliminar(id) {
         var derecho;
+        confirmAlert({
+            title: 'Confirmar Eliminar',
+            message: '¿Está seguro de eliminar este embalaje?',
+            buttons: [
+                {
+                    label: 'Si',
+                    onClick: () => {
         validarPermisos(state).then(respuesta => {
             //showSuccess(respuesta.data)
             console.log(respuesta.data)
@@ -112,16 +125,31 @@ function Embalaje() {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
+            validarEliminarEmbalajes(id).then(respuesta=>{
+                if(respuesta.data.sePuedeEliminar){
+                    eliminarEmbalajes(id, state.CreadoPor).then(respuesta => {
+                        showSuccess("Eliminacion de embalaje exitoso")
+                        getAllData()
+                    }).catch(err => {
+                        showSuccess(err)
+                    });                   
+                }else{
+                    showSuccess("El embalaje no puede ser eliminado ya que se encuentra relacionado a por lo menos una recoleccion o embarque")
+                }
+            })
 
-            eliminarEmbalajes(id, state.CreadoPor).then(respuesta => {
-                console.log(respuesta)
-                getAllData()
-            }).catch(err => {
-                showSuccess(err)
-            });
         }).catch(err => {
             showSuccess(err)
         });
+
+                    }
+                },
+                {
+                    label: 'No',
+                }
+            ]
+        })
+       
     }
 
     function handleShowModificar(id) {
@@ -194,7 +222,8 @@ function Embalaje() {
                 return (
                     <div>
                         <Tooltip title="Modificar">
-                            <a  onClick={() => (handleShowModificar(row.row.m_nIdEmbalaje))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <a  onClick={() => (handleShowModificar(row.row.m_nIdEmbalaje))} className="btn btn-default btn-xs"
+                            disabled={!validarDerecho(9101319)}><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Consultar">
@@ -202,7 +231,8 @@ function Embalaje() {
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdEmbalaje))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdEmbalaje))}
+                            disabled={!validarDerecho(9101320)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>
                     </div>
@@ -315,7 +345,7 @@ function Embalaje() {
             </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
+                            <a className= {validarDerecho(9101318)? "":classes.disabled} data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle" /> {state.agregar}
                             </a>
                         </li>

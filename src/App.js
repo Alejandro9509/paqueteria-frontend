@@ -17,6 +17,7 @@ import Indicadores from './Views/Indicadores';
 import Tracking from './Views/Seguimiento/Tracking';
 import cabeceraRoutes from "./routesCabecera";
 import LoginExterno from "./Components/Login/LoginExterno";
+import {IdleTimeOutModal} from "./Components/Login/IdleTimeOutModal";
 
 
 class App extends Component {
@@ -29,28 +30,39 @@ class App extends Component {
 render(){
   return (
   <AplicationProvider>
+
     <AplicationConsumer>{(value) => {
       return(
         localStorage.getItem(ACCESS_TOKEN) ? (
+            <div>
+
+              <IdleTimeOutModal
+                  showModal={value.showModal}
+                  handleClose={value.handleClose}
+                  handleLogout={value.handleLogout}
+              />
+
           <Switch>
+
             <Route path="/loginERP" component={LoginExterno} />
             <Route path="/Indicadores" component={Indicadores} />
             <Route path="/Configuracion" component={Configuracion} />
-            <Route exact path="/app/applications/:rfc/:esRecoleccion/:id/tracking" component={Tracking} />
+            <Route exact path="/app/applications/:rfc/:id/tracking" component={Tracking} />
             {dashboardRoutes.map((r, key) => {
-                  return (<Route exact key={key} path={r.path}  component={r.component} />)
+                  return r.visible ? (<Route exact key={key} path={r.path}  component={r.component} />): ""
               })}
             {catalogdRoutes.map((r, key) => {
-                return (<Route exact key={r.path} path={r.path} component={r.component} />)
+                return r.visible ? (<Route exact key={r.path} path={r.path} component={r.component} />) : ""
             })}
             {configuracionRoutes.map((r, key) => {
-                return (<Route exact key={r.path} path={r.path} component={r.component} />)
+                return r.visible ? (<Route exact key={r.path} path={r.path} component={r.component} />) : ""
             })}
             {cabeceraRoutes.map((r, key) => {
-              return (<Route exact key={r.path} path={r.path} component={r.component} />)
+              return  (<Route exact key={r.path} path={r.path} component={r.component} />)
             })}
             <Redirect from="/" to="/Indicadores"/>
           </Switch>
+            </div>
         ) : (
           <div className="app">
             {/*<div className="app-top-box">*/}
@@ -60,7 +72,7 @@ render(){
                 <Switch>
                   <Route exact path="/" component={Login} />
                   <Route path="/login" component={Login} />
-                  <Route exact path="/app/applications/:rfc/:esRecoleccion/:id/tracking" component={Tracking} />
+                  <Route exact path="/app/applications/:rfc/:id/tracking" component={Tracking} />
                   <Route path="/loginERP" component={LoginExterno} />
                   <Redirect from="/**" to="/login"/>
 

@@ -28,5 +28,20 @@ function obtenerClavesCancelacionSAT( ) {
     );
     return result
 }
-
-export {cancelarInformeCFDI,obtenerClavesCancelacionSAT,cancelarUltimaMillaCFDI}
+function enviarCorreoCFDIViaje(id, correos, correoDefault){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/Informe/${id}/EnviarCorreoFactura`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, {correos: correos, correoDefault:correoDefault}), { headers })
+    );
+    return result
+}
+function enviarCorreoCFDIUltimaMilla(id, correos, correoDefault, esRecoleccion){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SAT/UltimaMilla/${id}/${esRecoleccion ? 1 : 0}/EnviarCorreoFactura`;
+    let result;
+    trackPromise(
+        result =  axios.post(url, Object.assign({}, {correos: correos, correoDefault:correoDefault}), { headers })
+    );
+    return result
+}
+export {cancelarInformeCFDI,obtenerClavesCancelacionSAT,cancelarUltimaMillaCFDI,enviarCorreoCFDIViaje,enviarCorreoCFDIUltimaMilla}

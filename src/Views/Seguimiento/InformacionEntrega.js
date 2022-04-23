@@ -7,7 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import {Button, Dialog, DialogTitle, List, ListItem} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogTitle, List, ListItem} from "@material-ui/core";
 import InformacionPaquete from "./InformacionPaquete";
 
 const StyledTableCell = withStyles((theme) => ({
@@ -64,13 +64,13 @@ export default function InformacionEntrega(props) {
     ];
     const rowsBitacora =[]
     if (guia.m_dFechaRegistro)
-        rowsBitacora.push(createData(guia.m_dFechaRegistro,'Se registró la carga' ))
+        rowsBitacora.push(createData(`${guia.m_dFechaRegistro} ${guia.m_dHoraInforme}`,'Se registró la carga' ))
     if (guia.m_dFechaRegistroInforme)
-        rowsBitacora.push(createData(guia.m_dFechaRegistroInforme,'Se agregó la guia a un informe' ))
+        rowsBitacora.push(createData(`${guia.m_dFechaRegistroInforme} ${guia.m_dHoraLlegadaViaje}`,'Se agregó la guia a un informe' ))
     if (guia.m_dFechaRegistroViaje)
-        rowsBitacora.push(createData(guia.m_dFechaRegistroViaje,'Viaje generado' ))
+        rowsBitacora.push(createData(`${guia.m_dFechaRegistroViaje} ${guia.m_dHoraRegistroViaje}`,'Viaje generado' ))
     if (guia.m_dFechaSalidaViaje)
-        rowsBitacora.push(createData(guia.m_dFechaSalidaViaje,'La carga salió de la surcursal de origen' ))
+        rowsBitacora.push(createData(`${guia.m_dFechaSalidaViaje} ${guia.m_dHoraSalidaViaje}`,'La carga salió de la surcursal de origen' ))
     if (guia.m_dFechaLlegadaViaje)
         rowsBitacora.push(createData(guia.m_dFechaLlegadaViaje,'La carga llegó de la surcursal de destino' ))
     if (guia.m_dFechaUltimaMilla){
@@ -174,6 +174,9 @@ function SimpleDialog(props) {
                     )
                 }
             </List>
+            <DialogActions>
+                <Button onClick={onClose}>Cerrar</Button>
+            </DialogActions>
         </Dialog>
     );
 }

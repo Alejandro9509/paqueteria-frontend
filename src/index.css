@@ -18,5 +18,19 @@ code {
     monospace;
 }
 
+.time-line > .time-label > span {
+  background-color: #f9a03e !important;
+}
+.time-line-ctnr .time-line:before {
+  background-color: #f9a03e !important;
+}
+.time-line-ctnr .time-line > li > .fa {
+  border: 2px solid #f9a03e !important;
+}
+
+.MuiStepIcon-text {
+  font-size: 16px !important;
+}
+
 
 

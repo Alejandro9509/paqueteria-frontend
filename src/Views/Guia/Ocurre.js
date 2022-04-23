@@ -22,6 +22,9 @@ class MyComponent extends Component {
         this.handleChangeDataOcurre = this.handleChangeDataOcurre.bind(this)
 
     }
+    componentDidUpdate(){
+        console.log("Se refresca el componente Ocurre")
+    }
 
     handleFechaOcurre(event) {
         event.preventDefault()
@@ -128,7 +131,6 @@ class MyComponent extends Component {
                                 />
                             </FormControl>
                         </Grid>
-                        {(this.state.tipoCobroOcurre == 10 || this.state.tipoCobroOcurre == 3 || this.state.tipoCobroOcurre == 11) &&
                         <Grid item xs={12}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="idTipoPagoLabel">Tipo Pago</InputLabel>
@@ -157,7 +159,6 @@ class MyComponent extends Component {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        }
                         {(this.state.tipoPago == 1) &&
                         <Grid item xs={6}>
                             <TextField variant="outlined" margin="dense" label="Importe recibido"
@@ -177,11 +178,9 @@ class MyComponent extends Component {
                             }}> {`Cambio: $${this.state.importeOcurre ? parseFloat(this.state.importeTotal) - parseFloat(this.state.importeOcurre) : 0.0}`}</p>
                         </Grid>
                         }
-                        {this.props.dataOcurre.tipoPago == 1 &&
                         <Grid item xs={6}>
                             <p> {`Importe a pagar: $${parseFloat(this.state.importeTotal)}`}</p>
                         </Grid>
-                        }
 
 
                     </Grid>

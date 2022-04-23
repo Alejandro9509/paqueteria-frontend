@@ -255,3 +255,13 @@ export const getCurrentTime = () => {
     return `${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
 }
 
+export const getRandomId = () => {
+  return Math.floor(Math.random() * 10000)
+}
+
+export function validarDerecho(idDerecho){
+if (!JSON.parse(localStorage.getItem("Permisos"))){
+    return false
+}
+    return (JSON.parse(localStorage.getItem("Permisos")).map(d => d.IdProceso).includes(idDerecho) || parseInt(localStorage.getItem("TipoUsuario")) === 1)
+}

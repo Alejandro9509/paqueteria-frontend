@@ -2,6 +2,7 @@ import React from 'react';
 import Cabecera from "../Components/Template/Cabecera";
 import BarraLateralIzquierda from "../Components/Template/BarraLateralIzquierda";
 import {Checkbox, makeStyles} from '@material-ui/core';
+import {validarDerecho} from "../Util/Util"
 
 const useStyle = makeStyles({
     title:{
@@ -60,19 +61,19 @@ export default function PlantillaCorreo() {
                                 <h3 className={classess.title}>Opciones de dirección de entrega</h3>
                                 <div className={classess.item}>
                                     <span>Mostrar dirección de entrega.</span>
-                                    <Checkbox checked={state.direccionEntrega} onChange={handleChanche} name="direccionEntrega"/>
+                                    <Checkbox disabled={!validarDerecho(9101390)} checked={state.direccionEntrega} onChange={handleChanche} name="direccionEntrega"/>
                                 </div>
                                 <div className={classess.item}>
                                     <span>Mostrar estatus de guía.</span>
-                                    <Checkbox checked={state.estatusGuia} onChange={handleChanche} name="estatusGuia"/>
+                                    <Checkbox disabled={!validarDerecho(9101391)} checked={state.estatusGuia} onChange={handleChanche} name="estatusGuia"/>
                                 </div>
                                 <div className={classess.item}>
                                     <span>Mostrar paquetes de guía.</span>
-                                    <Checkbox checked={state.paquetesGuia} onChange={handleChanche} name="paquetesGuia"/>
+                                    <Checkbox disabled={!validarDerecho(9101392)} checked={state.paquetesGuia} onChange={handleChanche} name="paquetesGuia"/>
                                 </div>
                                 <div className={classess.item}>
                                     <span>Mostrar folio.</span>
-                                    <Checkbox checked={state.folio} onChange={handleChanche} name="folio"/>
+                                    <Checkbox disabled={!validarDerecho(9101393)} checked={state.folio} onChange={handleChanche} name="folio"/>
                                 </div>
                             </div>
                         </div>

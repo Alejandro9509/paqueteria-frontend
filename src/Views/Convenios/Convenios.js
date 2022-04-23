@@ -14,7 +14,11 @@ import {confirmAlert} from "react-confirm-alert";
 import axios from "axios";
 import Noty from "noty";
 import {obtenerConvenios} from "../../Util/Contexts/ConveniosContext";
-
+import TarifasRangos from "../Tarifas/TarifasRangos";
+import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
+import {validarDerecho} from "../../Util/Util"
+import {makeStyles} from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core/styles';
 window.jQuery = window.$ = $;
 
 const headers = API_HEADERS
@@ -26,7 +30,17 @@ function showSuccess(mensaje) {
         timeout: "3000"
     }).show()
 }
+
+const styles = {
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    }
+};
+const useStyles = makeStyles(styles);
+
 function Convenios(){
+    const classes = useStyles();
     const columns = useMemo(() => [
         {
             headerName: "Acciones",
@@ -35,7 +49,7 @@ function Convenios(){
             renderCell: (row) => {
                 return (
                     <div>
-                        <Tooltip title="Modificar">
+                        <Tooltip title="Modificar" disabled={!validarDerecho(9101395)}>
                             <a href="#Agregar" role="tab" data-toggle="tab"
                                onClick={() => (handleShowModificar(row.row))}
                                className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o"
@@ -45,7 +59,7 @@ function Convenios(){
                             <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs"
                                onClick={() => (handleShowConsultar(row.row))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
                         </Tooltip>
-                        <Tooltip title="Eliminar">
+                        <Tooltip title="Eliminar" disabled={!validarDerecho(9101396)}>
                             <a href="#" className="btn btn-default btn-xs"
                                onClick={() => confirmAlert({
                                    title: 'Confirmar Eliminar',
@@ -113,6 +127,7 @@ function Convenios(){
     const [convenioSeleccionado, setConvenioSeleccionado] = useState(0)
     const [pantallaActiva, setPantallaActiva ] = useState(1)
     const [consult, setConsult] = useState(false)
+    const [configuraciones, setConfiguraciones] = useState(null)
     const [state, setState] = useState({
         agregar: "Agregar",
         height: window. innerHeight,
@@ -120,13 +135,32 @@ function Convenios(){
 
 
     useEffect(value => {
-        getAllConvenios()
+        getParametrosConfiguracion()
     }, [])
 
     const getAllConvenios = () => {
         obtenerConvenios().then(respuesta => {
             setListaConvenios(respuesta.data)
         });
+    }
+
+    const getParametrosConfiguracion = () => {
+        obtenerParametrosConfiguracion().then(respuesta => {
+            setConfiguraciones({
+                TipoTarifaTarifas: respuesta.data.TipoTarifaTarifas || 0,
+                IdConceptoFlete: respuesta.data.IdConceptoFlete || 0,
+                IdConceptoCarga: respuesta.data.IdConceptoCarga || 0,
+                IdConceptoDescarga: respuesta.data.IdConceptoDescarga || 0,
+                IdConceptoRecoleccion: respuesta.data.IdConceptoRecoleccion || 0,
+                IdConceptoEntrega: respuesta.data.IdConceptoEntrega || 0,
+                IdConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
+                IdConceptoCita: respuesta.data.IdConceptoCita || 0,
+                CobroCargaDescargaTarifa: respuesta.data.CobroCargaDescargaTarifa
+            })
+            if (respuesta.data.TipoTarifaTarifas !== 2){
+                getAllConvenios()
+            }
+        })
     }
 
     const handleShowListado = (event) => {
@@ -226,55 +260,62 @@ function Convenios(){
                 <BarraLateralIzquierda />
             </aside>
             {/*Leftbar End Here*/}
-            <section className={"main-container"}>
-                <div className={"content-fluid"}>
-                    <ul className={"nav navStatica nav-tabs"}>
-                        <li className={"active"}>
-                            <a data-toggle={"tab"} onClick={handleShowListado}>
-                                <i className={"fa fa-list"}/> Listado
-                            </a>
-                        </li>
+            {
+                configuraciones?.TipoTarifaTarifas === 2 ?
+                    <TarifasRangos
+                        configuraciones={configuraciones}
+                        convenio={true}
+                    />
+                    :
+                    <section className={"main-container"}>
+                        <div className={"content-fluid"}>
+                            <ul className={"nav navStatica nav-tabs"}>
+                                <li className={"active"}>
+                                    <a data-toggle={"tab"} onClick={handleShowListado}>
+                                        <i className={"fa fa-list"}/> Listado
+                                    </a>
+                                </li>
 
-                        <li>
-                            <a data-toggle="tab" onClick={handleShowAgregar}>
-                                <i className="fa fa-plus-circle" /> {state.agregar}
-                            </a>
-                        </li>
-                        {/*<li>
+                                <li>
+                                    <a className= {validarDerecho(9101394)? "":classes.disabled} data-toggle="tab" onClick={handleShowAgregar}>
+                                        <i className="fa fa-plus-circle" /> {state.agregar}
+                                    </a>
+                                </li>
+                                {/*<li>
                                 <a  onClick={handleShowImprimir}>
                                     <i className="fa fa-print" /> Imprimir
                                 </a>
                             </li>*/}
-                    </ul>
+                            </ul>
 
-                    <div className={"row"} className={"tab-content"}>
-                        <div id="Listado" className="tab-pane fade in show">
-                            <div className="widget-wrap">
-                                <div className="widget-content">
-                                    <div className={"row"} style={{height: state.height -250, width: '100%'}}>
-                                        <DataGrid columns={columns} rows={listaConvenios}
-                                                  locateText={dataGridLocaleText}
-                                                  density={"compact"}
-                                                  pageSize={Math.floor((state.height - 310) / 30)}
-                                                  components={{
-                                                      Toolbar: GridToolbar,
-                                                  }}
-                                                  getRowId={(row => row.m_nIdConvenio)}
-                                                  disableColumnSelector
-                                                  disableDensitySelector
-                                                  filterModel={{
-                                                      items: [
-                                                          { columnField: '', operatorValue: '', value: '' },
-                                                      ],
-                                                  }}
-                                        />
+                            <div className={"row"} className={"tab-content"}>
+                                <div id="Listado" className="tab-pane fade in show">
+                                    <div className="widget-wrap">
+                                        <div className="widget-content">
+                                            <div className={"row"} style={{height: state.height -250, width: '100%'}}>
+                                                <DataGrid columns={columns} rows={listaConvenios}
+                                                          locateText={dataGridLocaleText}
+                                                          density={"compact"}
+                                                          pageSize={Math.floor((state.height - 310) / 30)}
+                                                          components={{
+                                                              Toolbar: GridToolbar,
+                                                          }}
+                                                          getRowId={(row => row.m_nIdConvenio)}
+                                                          disableColumnSelector
+                                                          disableDensitySelector
+                                                          filterModel={{
+                                                              items: [
+                                                                  { columnField: '', operatorValue: '', value: '' },
+                                                              ],
+                                                          }}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div id="Agregar" className="tab-pane fade">
-                            {/*{
+                                <div id="Agregar" className="tab-pane fade">
+                                    {/*{
                                 this.state.pantalla == 2 &&
                                 <CrearTarifa edit={edit} consult={consult} select={this.state.selected}
                                              onSubmit={this.handleAceptar} onCancel={(event) => {
@@ -287,17 +328,18 @@ function Convenios(){
                                 }}></CrearTarifa>
                             }*/}
 
-                                <EscribirConvenio
-                                    select={convenioSeleccionado}
-                                    consult={consult}
-                                    pantallaActiva={pantallaActiva}
-                                />
+                                    <EscribirConvenio
+                                        select={convenioSeleccionado}
+                                        consult={consult}
+                                        pantallaActiva={pantallaActiva}
+                                    />
 
 
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </section>
+                    </section>
+            }
         </div>
     )
 }

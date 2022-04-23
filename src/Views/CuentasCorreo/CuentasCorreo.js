@@ -9,6 +9,7 @@ import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
+import {validarDerecho} from "../../Util/Util"
 import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -37,7 +38,7 @@ class CuentasCorreo extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dataTipoCuenta: [{id: 1, name: 'Para Enviar Viajes'}, {id: 2, name: 'Para Enviar Tracking'}],
+            dataTipoCuenta: [{id: 1, name: 'Para Enviar Viajes'}, {id: 2, name: 'Para Enviar Tracking'},{id: 3, name: 'Para Facturación'}],
             dataSeguridad: [{id: 1, name: 'Cifrada SSL'}, {id: 2, name: 'Cifrada TLS'}],
             idTipoCuenta: '',
             idSeguridad: '',
@@ -132,6 +133,19 @@ class CuentasCorreo extends Component {
                 edit: !!cuenta
             })
         }
+        if (value === 3){
+            console.log(this.state.cuentaEnviarFacturacion)
+            let cuenta = this.state.cuentaEnviarFacturacion
+            this.setState({
+                idCuenta: cuenta ? cuenta.m_nIdCuentasCorreo : null,
+                idSeguridad: cuenta ? cuenta.m_nTipoCifrado : null,
+                servidor: cuenta ? cuenta.m_sServidor : '',
+                puerto: cuenta ? cuenta.m_nPuerto : '',
+                usuario: cuenta ? cuenta.m_sUsuario : '',
+                pass: cuenta ? cuenta.m_sContrasenia : '',
+                edit: !!cuenta
+            })
+        }
     };
 
     componentWillMount() {
@@ -144,10 +158,14 @@ class CuentasCorreo extends Component {
             let info = respuesta.data
             let cuentaEnviarViajes = info && info.length > 0 ? info.filter(cuenta => cuenta.m_nTipoCuenta === 1) : []
             let cuentaEnviarTracking =info && info.length > 0 ? info.filter(cuenta => cuenta.m_nTipoCuenta === 2) : []
+            let cuentaEnviarFacturacion =info && info.length > 0 ? info.filter(cuenta => cuenta.m_nTipoCuenta === 3) : []
+
             this.setState({
                 dataCuentas: info,
                 cuentaEnviarViajes: cuentaEnviarViajes && cuentaEnviarViajes.length > 0 ? cuentaEnviarViajes[0] : null,
                 cuentaEnviarTracking: cuentaEnviarTracking && cuentaEnviarTracking.length > 0 ? cuentaEnviarTracking[0] : null,
+                cuentaEnviarFacturacion: cuentaEnviarFacturacion && cuentaEnviarFacturacion.length > 0 ? cuentaEnviarFacturacion[0] : null,
+
             })
         });
     }
@@ -274,7 +292,7 @@ class CuentasCorreo extends Component {
                 <div className={"row"}>
                     <button type="button" className="btn btn-secondary secondary-btn" onClick={this.props.closeDialog}>Cancelar</button>
 
-                    <button className="btn btn-primary primary-btn" type={"submit"} >Aceptar</button>
+                    <button disabled={!validarDerecho(9101272)} className="btn btn-primary primary-btn" type={"submit"} >Aceptar</button>
                 </div>
 
             </form>

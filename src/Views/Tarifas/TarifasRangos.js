@@ -1,0 +1,426 @@
+import React, {Component, useEffect, useState} from 'react';
+import $ from "jquery";
+import {DataGrid, GridToolbar} from "@material-ui/data-grid";
+import {dataGridLocaleText} from "../../Constants";
+import {Button, Grid, TextField, Tooltip} from "@material-ui/core";
+import SvgIcon from "@material-ui/core/SvgIcon";
+import {ReactComponent as Activo} from "../../iconos/Menu/palomita.svg";
+import {ReactComponent as NoActivo} from "../../iconos/Menu/cruz.svg";
+import {validarPermisos} from "../../Util/Contexts/UsuarioContext";
+import axios from "axios";
+import CrearTarifaRangos from "./CrearTarifaRangos";
+import {validarDerecho} from "../../Util/Util"
+import {makeStyles} from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core/styles';
+import {
+    agregarTarifaRangos,
+    eliminarTarifaRangos,
+    modificarTarifaRangos,
+    obtenerTarifaRangosById,
+    obtenerTarifasRangos
+} from "../../Util/Contexts/TarifasContext";
+import Noty from "noty";
+import {getRandomId} from "../../Util/Util";
+window.jQuery = window.$ = $;
+
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "3000"
+    }).show()
+}
+
+const styles = {
+    seleccionado: {
+        backgroundColor: "#FCC88F",
+    },
+    noSeleccionado: {
+        backgroundColor: "#FFFFFF",
+    },
+    disabled: {
+        pointerEvents: "none",
+        cursor: "default",
+    },
+};
+const useStyles = makeStyles(styles);
+
+
+export default function TarifasRangos(props) {
+    const classes = useStyles();
+    const [state, setState] = useState({
+        tarifas: [],
+        agregar: "Agregar",
+        height: window.innerHeight,
+        CreadoPor: localStorage.getItem("UsuarioId"),
+        ModificadoPor: localStorage.getItem("UsuarioId"),
+        pantalla: 1,
+        selected: null,
+        DerechoBorrar: 1, //TODO: Definir id
+        dataSucursal: [],
+        columns: [],
+        consult: false
+    })
+
+    useEffect(() => {
+        handleDefinirColumnas()
+        getAllTarifas()
+    }, [])
+
+    const handleDefinirColumnas = () => {
+        let columns = []
+        columns.push(
+            {
+                headerName: "Acciones",
+                sortable: false, filterable: false,
+                field: "",
+                minWidth: 250,
+                renderCell: (row) => {
+                    return (
+                        <div>
+                            <Tooltip title="Modificar" disabled={(!validarDerecho(9101347) && !props.convenio) || (!validarDerecho(9101395) && props.convenio)}>
+                                <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.IdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+
+                            </Tooltip>
+                            <Tooltip title="Consultar">
+                                <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.IdTarifa))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+
+                            </Tooltip>
+                            <Tooltip title="Eliminar" disabled={(!validarDerecho(9101348) && !props.convenio) || (!validarDerecho(9101396) && props.convenio)}>
+                                <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.IdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                            </Tooltip>
+
+                        </div>
+                    )
+                }
+            },
+            {
+                headerName: "Cliente",
+                field: "Cliente",
+                width: 500,
+            },
+            {
+                headerName: "Vigencia",
+                field: "Vigencia",
+                width: 200,
+            },
+            {
+                headerName: "Activo",
+                field: "Activo",
+                width: 100,
+                renderCell: (row) => {
+                    return (
+                        <div
+                            style={{
+                                width: "100%",
+                                textAlign: "center",
+                                color: row.row.Activo == 'true' ? "green" : "red",
+                            }}
+                        >
+                            {row.row.Activo ? (
+                                <SvgIcon component={Activo} />
+                            ) : (
+                                <SvgIcon component={NoActivo} />
+                            )}
+                        </div>
+                    );
+                },
+            },
+        )
+        setState(state => {
+            return {
+                ...state,
+                columns: columns
+            }
+        })
+    }
+
+    const handleShowListado = (event) => {
+        if (event){
+            event.stopPropagation();
+        }
+        getAllTarifas()
+        setState(state =>{
+            return {...state,pantalla: 1, edit: false, consult: false, agregar: "Agregar",selected: null}
+        });
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(0).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Listado').addClass('in show');
+    }
+
+    const handleShowAgregar = (event) => {
+        if (event){
+            event.stopPropagation();
+        }
+        setState({...state,pantalla: 2, edit: false, consult: false, agregar: "Agregar"});
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
+    }
+
+    const handleShowConsultar = (idTarifa) => {
+        obtenerTarifaRangosById(idTarifa).then(respuesta => {
+            console.log(respuesta.data)
+            setDataParaConsultar(respuesta.data)
+            setState(state => {
+                return {
+                    ...state,
+                    pantalla: 2,
+                    agregar: "Consultar",
+                    consult: true,
+                    selected: setDataParaConsultar(respuesta.data)
+                }
+            });
+        })
+
+
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
+    }
+
+    const handleShowModificar = (idTarifa) => {
+        obtenerTarifaRangosById(idTarifa).then(respuesta => {
+            console.log(respuesta.data)
+            setState(state =>{
+                return {
+                    ...state,
+                    pantalla: 2,
+                    agregar: "Modificar",
+                    consult: false,
+                    selected: setDataParaConsultar(respuesta.data)
+                }
+            });
+        })
+
+
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
+    }
+
+    const setDataParaConsultar = (data) => {
+        let viajesLocales = data.ViajesLocales.map(viaje => ({
+            idViaje: viaje.IdViajeLocal,
+            idSucursal: viaje.IdSucursal,
+            idTipoMedida: viaje.IdTipoMedida,
+            zonas: data.Zonas.filter(i => i.IdViajeLocal === viaje.IdViajeLocal).map(j => ({
+                m_nIdZona: j.IdZonaOperativa,
+                m_sCodigoZona: j.CodigoZona
+            })),
+            idConcepto: viaje.IdConcepto,
+            rangos: data.Conceptos.filter(i => i.IdViajeLocal === viaje.IdViajeLocal).map(rango => ({
+                id: rango?.IdTarifaConcepto || Math.floor(Math.random() * 10000),
+                idConcepto: rango.IdConceptoFacturacion || null,
+                concepto: rango.ConceptoFacturacion || '',
+                importe: rango.Importe || 0,
+                minimo: rango.Minimo || 0,
+                maximo: rango.Maximo || 0,
+                idTipoCalculo: rango.IdTipoCalculo || null,
+                idUnidadMedida: rango.IdUnidadMedida || null,
+                tipoCalculo: rango.TipoCalculo || '',
+                unidadMedida: rango.UnidadMedida || '',
+            })),
+            productos: data.Productos.filter(i => i.IdViajeLocal === viaje.IdViajeLocal).map(j => ({
+                m_nIdProducto: j.IdProducto,
+                m_sDescripcion: j.Descripcion,
+                m_nNoProducto: j.NoProducto,
+                m_bActivo: j.Activo
+            })),
+        }))
+        let maniobras = data.Conceptos.filter(i => i.IdTarifa === data.IdTarifa).map(rango => ({
+                id: rango?.IdTarifaConcepto || Math.floor(Math.random() * 10000),
+                idConcepto: rango.IdConceptoFacturacion || null,
+                concepto: rango.ConceptoFacturacion || '',
+                importe: rango.Importe || 0,
+                minimo: rango.Minimo || 0,
+                maximo: rango.Maximo || 0,
+                idTipoCalculo: rango.IdTipoCalculo || null,
+                idUnidadMedida: rango.IdUnidadMedida || null,
+                tipoCalculo: rango.TipoCalculo || '',
+                unidadMedida: rango.UnidadMedida || '',
+            }))
+
+        let viajesForaneos = data.ViajesForaneos.map(viaje => ({
+            idViaje: viaje.IdViajeForaneo || getRandomId(),
+            idOrigen: viaje.IdOrigen || null,
+            idTipoMedida: viaje.IdTipoMedida || null,
+            idDestino: viaje.IdDestino || null,
+            grupos: data.Grupos.filter(i => i.IdViajeForaneo === viaje.IdViajeForaneo).map(grupo => ({
+                idGrupo: grupo.IdViajeForaneoGrupo || Math.floor(Math.random() * 10000),
+                nombre: grupo.Referencia || '',
+                zonas: data.Zonas.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(j => ({
+                    m_nIdZona: j.IdZonaOperativa,
+                    m_sCodigoZona: j.CodigoZona
+                })),
+                rangos: data.Conceptos.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(rango => ({
+                    id: rango?.IdTarifaConcepto || Math.floor(Math.random() * 10000),
+                    idConcepto: rango.IdConceptoFacturacion || null,
+                    concepto: rango.ConceptoFacturacion || '',
+                    importe: rango.Importe || 0,
+                    minimo: rango.Minimo || 0,
+                    maximo: rango.Maximo || 0,
+                    idTipoCalculo: rango.IdTipoCalculo || null,
+                    idUnidadMedida: rango.IdUnidadMedida || null,
+                    tipoCalculo: rango.TipoCalculo || '',
+                    unidadMedida: rango.UnidadMedida || '',
+                })),
+                productos: data.Productos.filter(i => i.IdViajeForaneoGrupo === grupo.IdViajeForaneoGrupo).map(j => ({
+                    m_nIdProducto: j.IdProducto,
+                    m_sDescripcion: j.Descripcion,
+                    m_nNoProducto: j.NoProducto,
+                    m_bActivo: j.Activo
+                })),
+            })),
+        }))
+        let tarifa = {
+            idTarifa: data.IdTarifa,
+            cliente: {
+                m_nIdCliente: data.IdCliente,
+                m_sNombreFiscal: data.Cliente
+            },
+            vigencia: data.Vigencia,
+            cuotaMensual: data.CuotaMensual,
+            viajesLocales: viajesLocales,
+            maniobras: maniobras,
+            viajesForaneos: viajesForaneos
+        }
+
+        return tarifa
+
+    }
+
+    const handleEliminar = (idTarifa) => {
+
+        var derecho;
+        validarPermisos(state).then(respuesta => {
+            derecho = respuesta.data;
+            if (derecho == false) {
+                showSuccess("El usuario no tiene derechos para realizar el proceso");
+                return;
+            }
+
+            eliminarTarifaRangos(idTarifa).then(respuesta => {
+                if (respuesta.data.Estatus){
+                    showSuccess("Registro eliminado con éxito.")
+                    getAllTarifas();
+                }
+            })
+        }).catch(err => {
+            showSuccess(err)
+        });
+    }
+
+    const getAllTarifas = () => {
+        obtenerTarifasRangos().then(respuesta => {
+            setState(state => {
+                return{
+                    ...state,
+                    tarifas: respuesta.data
+                }
+            })
+        })
+    }
+
+    const handleAgregarTarifa = (params) => {
+        agregarTarifaRangos(params).then(respuesta => {
+            console.log(respuesta.data)
+            if (respuesta.data.Estatus){
+                if (props.convenio){
+                    showSuccess("Se guardó el convenio con éxito");
+                }else{
+                    showSuccess("Se guardó la tarifa con éxito");
+                }
+                handleShowListado()
+            }else{
+                showSuccess("Hubo un error al guardar");
+            }
+        })
+    }
+    const handleModificarTarifa = (params) => {
+        modificarTarifaRangos(params.idTarifa,params).then(respuesta => {
+            console.log(respuesta.data)
+            if (respuesta.data.Estatus){
+                if (props.convenio){
+                    showSuccess("Se guardó el convenio con éxito");
+                }else{
+                    showSuccess("Se guardó la tarifa con éxito");
+                }
+                handleShowListado()
+            }else{
+                showSuccess("Hubo un error al guardar");
+            }
+        })
+    }
+
+    const filtrarTarifas =
+        props.convenio ?
+            state.tarifas.filter(i => i.IdCliente !== 3140)
+            : state.tarifas.filter(i => i.IdCliente === 3140)
+
+    return(
+        <section className="main-container">
+            <div className="container-fluid">
+                <ul className="nav navStatica nav-tabs">
+                    <li className="active">
+                        <a onClick={(event) => handleShowListado(event)}>
+                            <i className="fa fa-list"/> Listado
+                        </a>
+                    </li>
+                    <li >
+                        <a className= {(validarDerecho(9101347) && !props.convenio) || (validarDerecho(9101395) && props.convenio)? "":classes.disabled} onClick={(event) => handleShowAgregar()}>
+                            <i className="fa fa-plus-circle"/> {state.agregar}
+                        </a>
+                    </li>
+                </ul>
+
+                <div className="row tab-content">
+                    <div id="Listado" className="tab-pane fade in show">
+                        <div className="widget-wrap">
+                            <div className="widget-content">
+                                <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                                    <DataGrid
+                                        localeText={dataGridLocaleText}
+                                        rows={filtrarTarifas}
+                                        columns={state.columns}
+                                        density="compact"
+                                        pageSize={Math.floor((state.height - 310) / 30)}
+                                        getRowId={(row) => row.IdTarifa}
+                                        onRowSelected={(row) => {
+                                            setState({
+                                                ...state,
+                                                idTarifa: row.data.IdTarifa
+                                            })
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="Agregar" className="tab-pane fade">
+                        {
+                                state.pantalla === 2 &&
+                                    <CrearTarifaRangos
+                                        configuraciones={props.configuraciones}
+                                        selection={state.selected}
+                                        disabled={state.consult}
+                                        agregarTarifa={handleAgregarTarifa}
+                                        modificarTarifa={handleModificarTarifa}
+                                        convenio={props.convenio}
+                                        tarifasListado={props.convenio ? state.tarifas : filtrarTarifas}
+                                    />
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    )
+}

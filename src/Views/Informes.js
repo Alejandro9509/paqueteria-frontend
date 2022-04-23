@@ -1,8 +1,9 @@
 import React, {useEffect, useState, setData, useMemo, Component} from "react";
 import {cubicarGuias, remove_array_element} from "../Util/Util";
+import {validarDerecho} from "../Util/Util"
 import {
     ButtonBase,
-    Checkbox,
+    Checkbox, Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -151,6 +152,7 @@ function Informes({history}) {
                         <a
                             onClick={() => handleShowModificar(row.row.m_nIdInforme)}
                             className="btn btn-default btn-xs"
+                            disabled={!validarDerecho(9101433)}
                         >
                             <i
                                 className="fa fa-pencil-square-o"
@@ -160,12 +162,13 @@ function Informes({history}) {
                         <a
                             className="btn btn-default btn-xs"
                             onClick={() => handleShowConsultar(row.row.m_nIdInforme)}
+                            disabled={!validarDerecho(9101432)}
                         >
                             <i className="fa fa-eye" style={{color: "#F9A03E"}}/>
                         </a>
                         <Tooltip title="Reporte">
                             <a  className="btn btn-default btn-xs"
-                                onClick={() => generarReporte(row.row.m_nIdInforme, row.row.m_sFolioInforme)}><i className="zmdi zmdi-file"
+                                onClick={() => generarReporte(row.row.m_nIdInforme, row.row.m_sFolioInforme)} disabled={!validarDerecho(9101435)}><i className="zmdi zmdi-file"
                                                                                                            style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
@@ -173,6 +176,7 @@ function Informes({history}) {
                             href="#"
                             className="btn btn-default btn-xs"
                             onClick={() => handleEliminar(row.row.m_nIdInforme)}
+                            disabled={!validarDerecho(9101434)}
                         >
                             <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>
                         </a>
@@ -193,7 +197,23 @@ function Informes({history}) {
         {
             headerName: "Estatus",
             field: "m_sEstatusInforme",
-            width: 200,
+            width: 125,
+            renderCell: (row) => {
+                return (
+                    <div align={"center"} style={{width: "100%"}}>
+                        <Chip size="small" style={{
+                            backgroundColor: `${row.row.m_sColorEstatus}`,
+                            //color: row.row.m_nIdEstatusUnidad === 1 ? "black" : "white",
+                            padding: "1px"
+                        }} label={row.row.m_sEstatusInforme}/>
+                    </div>
+                )
+            }
+        },
+        {
+            headerName: "Ubicación actual",
+            field: "m_sUbicacionActual",
+            width: 150,
         },
         {
             headerName: "Viaje",
@@ -1031,6 +1051,7 @@ function Informes({history}) {
     }
 
     function handleShowAgregar() {
+        setDataParaAgregar()
         getEmptyState()
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
@@ -1093,6 +1114,11 @@ function Informes({history}) {
         });
     }
 
+    const setDataParaAgregar = () => {
+        console.log(dataUnidades)
+        setDataUnidades(dataUnidades.filter(m=>m.m_nIdentificador == 1 || m.m_nIdentificador == 4))
+    //    setDataUnidades()
+    }
     function handleEliminar(id) {
         var derecho;
         validarPermisos(state)
@@ -1376,8 +1402,8 @@ function Informes({history}) {
                                 <i className="fa fa-list"/> Listado
                             </a>
                         </li>
-                        <li>
-                            <a onClick={handleShowAgregar}>
+                        <li>                            
+                            <a className= {validarDerecho(9101431)? "":classes.disabled} onClick= {handleShowAgregar} >
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -1402,14 +1428,15 @@ function Informes({history}) {
                                 data-toggle="tab"
                                 href="#Cancelar"
                                 onClick={handleShowCancelar}
-                                className={state.IdInforme == 0 ? classes.disabled : ""}
+                                className={state.IdInforme == 0 && !validarDerecho(9101436)? classes.disabled : ""}
                             >
                                 <i className="fa fa-ban"/> Cancelar
                             </a>
                         </li>
 
                         <li>
-                            <a data-toggle="tab" href="#Cubicar" onClick={handleShowCubicar}>
+                            <a data-toggle="tab" href="#Cubicar" onClick={handleShowCubicar}
+                               className= {validarDerecho(9101437)? "":classes.disabled}>
                                 <i className="fa fa-adjust"/> Cubicar / Optimizar Rutas
                             </a>
                         </li>
@@ -1656,7 +1683,7 @@ function Informes({history}) {
                                                     <div
                                                         className="widget-header">
                                                         <div className="pull-left">
-                                                            <h3>Información De Envio</h3>
+                                                            <h3>Información De Envío</h3>
                                                         </div>
                                                     </div>
 
@@ -2273,7 +2300,7 @@ function Informes({history}) {
                                         <div className="widget-wrap">
                                             <div className="widget-header">
                                                 <div className="pull-left">
-                                                    <h3>Detalles de Guias</h3>
+                                                    <h3>Detalles de Guías</h3>
                                                 </div>
                                             </div>
                                             <div className="widget-container">
@@ -2590,7 +2617,7 @@ function Informes({history}) {
                                                                                     }}
                                                                                 >
                                                                                     <b style={{fontWeight: "bold"}}>
-                                                                                        Total Flete
+                                                                                        Total Flete:  ${dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(  curr.m_xTotal), 0)).toFixed(2)}` }
                                                                                     </b>
                                                                                 </Grid>
                                                                                 <Grid
@@ -2602,7 +2629,7 @@ function Informes({history}) {
                                                                                         textAlign: "right",
                                                                                     }}
                                                                                 >
-                                                                                    ${dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(  curr.m_xTotal), 0)).toFixed(2)}` }
+                                                                                   
                                                                                 </Grid>
 
                                                                             </Grid>
@@ -2620,8 +2647,8 @@ function Informes({history}) {
                                                                                 textAlign: "center",
                                                                             }}
                                                                         >
-                                                                            Peso total :{" "}
-                                                                            {dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xTotal), 0))/100).toFixed(2)}` } t
+                                                                            Peso total : {" "}
+                                                                            {dataGuias.filter((g) => g.select).length == 0 && 0}{dataGuias.filter((g) => g.select).length != 0 && `${(parseFloat(dataGuias.filter((g) => g.select).reduce((accumulator, curr) => +accumulator + +(curr.m_xPeso), 0))).toFixed(2)}` } kg
                                                                         </Grid>
 
                                                                     </Grid>
@@ -2645,6 +2672,7 @@ function Informes({history}) {
                                                 type="button"
                                                 onClick={handleShowListado}
                                                 className="btn btn-secondary secondary-btn"
+                                                disabled={!validarDerecho(9101436)}
                                             >
                                                 Cancelar
                                             </Button>
