@@ -2116,6 +2116,17 @@ function Recoleccion() {
             headerName: "Folio Recolección",
             field: "m_sFolioRecoleccion",
             width: 150,
+            renderCell:(row)=>{
+                return(
+                    <div>
+                     <Tooltip title= {row.row.m_sObservaciones}>
+                         <field>{row.row.m_sFolioRecoleccion}</field>
+                     </Tooltip>
+                </div>
+
+                );
+                
+            }
         },
         {
             headerName: "Estatus",
@@ -2311,6 +2322,7 @@ function Recoleccion() {
             obtenerFechaFinal().then((respuestaDos) => {
                 obtenerRecoleccionFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
                     setData(respuesta.data);
+                    console.log(respuesta.data)
                 })
             })
 

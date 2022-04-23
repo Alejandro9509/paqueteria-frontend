@@ -341,6 +341,17 @@ function Embarque(props) {
             headerName: "Folio Embarque",
             field: "m_nFolioEmbarque",
             width: 125,
+            renderCell:(row)=>{
+                return(
+                    <div>
+                     <Tooltip title= {row.row.m_sObservaciones}>
+                         <field>{row.row.m_nFolioEmbarque}</field>
+                     </Tooltip>
+                </div>
+
+                );
+                
+            }
         },
         {
             headerName: "Estatus de la Orden",

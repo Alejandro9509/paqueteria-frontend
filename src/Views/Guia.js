@@ -851,11 +851,11 @@ function Guia(props) {
             field: "m_sFolioEmbarque",
             width: 150,
         },
-        {
+        /* {
             headerName: "Observaciones",
             field: "m_sObservaciones",
             width: 150,
-        },
+        }, */
         {
             headerName: "Fecha de Cancelación",
             field: "m_dtFechaCancelacion",
