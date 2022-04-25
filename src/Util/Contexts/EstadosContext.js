@@ -57,5 +57,13 @@ function obtenerEstadosPais(id) {
         );
     return result
 }
+function obtenerAllEstados() {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Estados/GetListado`;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
+        );
+    return result
+}
 
-export { modificarEstados, agregarEstados, eliminarEstados, obtenerEstadosId, obtenerEstados, obtenerEstadosPais }
+export {obtenerAllEstados, modificarEstados, agregarEstados, eliminarEstados, obtenerEstadosId, obtenerEstados, obtenerEstadosPais }
