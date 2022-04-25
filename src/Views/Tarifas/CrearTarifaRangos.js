@@ -44,7 +44,11 @@ import AddIcon from '@material-ui/icons/AddBox';
 import Noty from "noty";
 import {agregarTarifaRangos, modificarTarifaRangos, obtenerTarifaRangosById} from "../../Util/Contexts/TarifasContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
-import {obtenerClienteById, obtenerClientePublicoGeneral} from "../../Util/Contexts/ClientesContext";
+import {
+    obtenerClienteById,
+    obtenerClientePublicoGeneral,
+    obtenerClienteTieneConvenio
+} from "../../Util/Contexts/ClientesContext";
 import {obtenerUnidadesMedida} from "../../Util/Contexts/UnidadesMedidaContext";
 
 function showSuccess(mensaje) {
@@ -52,7 +56,7 @@ function showSuccess(mensaje) {
         type: "information",
         layout: "topCenter",
         text: mensaje,
-        timeout: "3000"
+        timeout: "5000"
     }).show()
 }
 
@@ -153,7 +157,6 @@ export default function CrearTarifaRangos(props) {
         }
     }, [])
     useEffect(value => {
-        console.log(viajesLocalesListado)
     }, [viajesLocalesListado])
     const handleDialogVisible = (isVisible) => {
         setState({
@@ -162,13 +165,25 @@ export default function CrearTarifaRangos(props) {
         });
     };
 
+    /**Recibe el cliente seleccionado en el dialogo*/
     const handlePatrocinadorSelected = (row) => {
-        console.log(row)
+        if (props.convenio){
+            obtenerClienteTieneConvenio(row.data.m_nIdCliente).then(respuesta => {
+                if (respuesta.data.value){
+                    showSuccess("El cliente seleccionado ya tiene convenio activo.")
+                }else{
+                    setState(() => ({
+                        ...state,
+                        cliente: row.data,
+                    }))
+                }
+            })
+        }
         setState(() => ({
             ...state,
-            cliente: row.data,
             showDialogClientes: false,
         }))
+
     }
 
     const handleOnChange = (event) => {
@@ -620,8 +635,11 @@ export default function CrearTarifaRangos(props) {
                                 value={state.cliente?.m_sNombreFiscal}
                                 placeholder={"No. Cliente: Nombre fiscal"}
                                 InputLabelProps={{shrink: true}}
-                                onClick={(props.disabled || !props.convenio)?
-                                    ()=>{return}:(()=>{ setState({ ...state, showDialogClientes: true})
+                                onClick={(props.disabled || !props.convenio) ?
+                                    () => {
+                                        return
+                                    } : (() => {
+                                        setState({...state, showDialogClientes: true})
                                     })}
                                 disabled={props.disabled || !props.convenio}
                             />
