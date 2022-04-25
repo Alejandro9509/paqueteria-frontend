@@ -838,11 +838,11 @@ function Viajes() {
     const showSalidaDialog = (data) => {
           validarSalidaParada(data.m_nIdViaje).then((respuesta)=>{
               let encontrado = respuesta.data.find(parada=>parada.Timbrado==false)
-              let qr = respuesta.data.find(parada=>parada.QR==false)
+              let qr = respuesta.data.find(parada=>parada.Escaneado==false)
 
               if(encontrado){//si encontro valor falso en timbrado
                   showSuccess(`No se puede marcar salida ya que no se ha generado CFDI para el folio: ${encontrado.FolioInforme}`)
-              }
+              } 
 
               if(qr){//si encontro valor falso en qr
                 showSuccess(`No se puede marcar salida ya que no se ha escaneado los paquetes en el remolque: ${qr.FolioInforme}`)
