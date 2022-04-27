@@ -13,6 +13,7 @@ import {DataGrid} from "@material-ui/data-grid";
 import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
+import GetAppIcon from '@material-ui/icons/GetApp';
 import * as XLSX from "xlsx";
 import {
     obtenerSATEmbalajes, obtenerSATFraccionArancelaria, obtenerSATMaterialPeligroso, obtenerSATPaginado,
@@ -496,6 +497,11 @@ function ComplementosSAT(props) {
                             <PublishIcon style={{ fill: "blue", fontSize: "xx-large" }}/>
                         </IconButton>
                     </label>
+                </Grid>
+                <Grid item xs={1}>
+                    <IconButton onClick={handleOpenClick} style={{ padding: "0px" }} disabled={props.disabled}>
+                        <GetAppIcon style={{ fill: "green", fontSize: "xx-large" }} />
+                    </IconButton>
                 </Grid>
             </Grid>
 
