@@ -379,7 +379,11 @@ export default function CrearTarifaRangos(props) {
 
     const handleGuardarTarifa = (event) => {
         if (!validaCliente()){
-            showSuccess("El cliente es un dato necesario")
+            if (props.convenio){
+                showSuccess("El cliente es un dato necesario")
+            }else{
+                showSuccess("El cliente es un dato necesario. Verifique que se encuentra dado de alta un cliente con nombre \"PUBLICO EN GENERAL\" en el sistema")
+            }
             return
         }
         if (!validaVigencia()){
@@ -399,8 +403,19 @@ export default function CrearTarifaRangos(props) {
             return
         }
         const isConceptosEmpty = (element) => element.rangos.length === 0;
+        const isZonasEmpty = (element) => element.zonas.length === 0;
+        const isProductosEmpty = (element) => element.productos.length === 0;
+
         if (viajesLocalesListado.some(isConceptosEmpty)){
             showSuccess("No puede guardar una primera o última milla sin rangos")
+            return
+        }
+        if (viajesLocalesListado.some(isZonasEmpty)){
+            showSuccess("No puede guardar una primera o última milla sin zonas")
+            return
+        }
+        if (viajesLocalesListado.some(isProductosEmpty)){
+            showSuccess("No puede guardar una primera o última milla sin productos")
             return
         }
         if (props.configuraciones.CobroCargaDescargaTarifa){
@@ -413,10 +428,24 @@ export default function CrearTarifaRangos(props) {
             showSuccess("No puede guardar una tarifa sin milla intermedia")
             return
         }
-        const isGruposConceptosEmpty = (element) => element.rangos.length === 0;
-        const isGruposEmpty = (element) => element.grupos.length === 0 || element.grupos.some(isGruposConceptosEmpty);
+        const isGruposConceptosEmpty = (element) => element.grupos.some(grupo => grupo.rangos.length === 0);
+        const isGruposZonasEmpty = (element) => element.grupos.some(grupo => grupo.zonas.length === 0);
+        const isGruposProductosEmpty = (element) => element.grupos.some(grupo => grupo.productos.length === 0);
+        const isGruposEmpty = (element) => element.grupos.length === 0;
         if (viajesForaneosListado.some(isGruposEmpty)){
+            showSuccess("No puede guardar una milla intermedia sin grupos")
+            return
+        }
+        if (viajesForaneosListado.some(isGruposConceptosEmpty)){
             showSuccess("No puede guardar una milla intermedia sin rangos")
+            return
+        }
+        if (viajesForaneosListado.some(isGruposZonasEmpty)){
+            showSuccess("No puede guardar una milla intermedia sin zonas")
+            return
+        }
+        if (viajesForaneosListado.some(isGruposProductosEmpty)){
+            showSuccess("No puede guardar una milla intermedia sin productos")
             return
         }
         viajesLocalesListado.forEach(v => {

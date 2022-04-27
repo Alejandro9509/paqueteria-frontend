@@ -33,7 +33,7 @@ function eliminarConceptosFacturacion(id, idEliminadoPor){
 }
 
 function obtenerConceptosFacturacion(){
-    const url = `${process.env.REACT_APP_API_URL}/api/ConceptosFacturacion/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ConceptosFacturacion/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

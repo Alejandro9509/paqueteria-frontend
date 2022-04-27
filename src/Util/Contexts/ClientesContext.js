@@ -85,7 +85,7 @@ function obtenerClientePublicoGeneral(){
 }
 
 function obtenerClienteTieneConvenio(id){
-    const url = `${process.env.REACT_APP_API_URL}/api/Clientes/ValidarTieneConvenio/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/ValidarTieneConvenio/${id}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
