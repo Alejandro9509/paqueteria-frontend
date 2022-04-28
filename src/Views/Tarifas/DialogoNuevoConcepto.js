@@ -122,7 +122,7 @@ export default function DialogoNuevoConcepto(props) {
         })
         
        }
-       
+       debugger
        if(parseFloat(concepto.importe)<0){
         setErrores(errores=>{
             return{
@@ -143,7 +143,7 @@ export default function DialogoNuevoConcepto(props) {
         
        }
       
-        if (concepto.concepto !== null && concepto.importe>0){
+        if (concepto.concepto !== null && concepto.importe>=0){
             handleClose()
             console.log(concepto)
             props.agregarConcepto(concepto)
@@ -178,23 +178,25 @@ export default function DialogoNuevoConcepto(props) {
 
     /**Al seleccionar un concepto del listado del autocomplete*/
     const handleConceptoClick = (event, newValue) => {
-        if(newValue){
-            setErrores(errores=>{  
-                return {...errores,errorConcepto:false}}
-              
-                 )
-            if(newValue.m_cImporte && newValue.m_cImporte>0 ){
-                setErrores(errores=>{  
-                    return {...errores,errorImporte:false}}
-                  
-                     )
-            }else{
-                setErrores( {errorImporte:true, errorTextoImporte:"El importe debe ser mayor a 0"} )
-            }
+        if (newValue) {
+            setErrores(errores => {
+                return {...errores, errorConcepto: false}
+            })
+            // debugger
+            /*if (parseFloat(newValue.m_cImporte) >= 0) {
+                setErrores(errores => {
+                        return {...errores, errorImporte: false}
+                    }
+                )
+            } else {
+                setErrores({errorImporte: true, errorTextoImporte: "El importe debe ser mayor o igual a 0"})
+            }*/
         }
         obtenerImpuestosByConceptosFacturacion(newValue.m_nIdConceptosFacturacion).then(respuesta => {
             newValue.arClsDetalle = respuesta.data
             if (respuesta.data.length > 0){
+                let retiene = respuesta.data.find(i => i.m_bPredeterminado && !i.m_bTrasladado)?.m_nIdImpuesto || 0
+                let traslada = respuesta.data.find(i => i.m_bPredeterminado && i.m_bTrasladado)?.m_nIdImpuesto || 0
                 setConcepto(concepto =>{
                     return {
                         ...concepto,
@@ -203,8 +205,8 @@ export default function DialogoNuevoConcepto(props) {
                         importe: newValue.m_cImporte || 0,
                         nombreConcepto: newValue.m_sConcepto,
                         importeRet: newValue.m_cImporteRetiene || 0,
-                        retiene: respuesta.data.find(i => i.m_bPredeterminado && !i.m_bTrasladado).m_nIdImpuesto,
-                        traslada: respuesta.data.find(i => i.m_bPredeterminado && i.m_bTrasladado).m_nIdImpuesto,
+                        retiene: retiene,
+                        traslada: traslada,
                         importeIVA: newValue.m_cImporteIva || 0
                     }
                 })
@@ -215,12 +217,12 @@ export default function DialogoNuevoConcepto(props) {
     const handleChangePaquetev2 = (event) => {
         event.preventDefault()
         if (event.target.name === "importe") {
-            if(Number(event.target.value)<=0){
+            if(parseFloat(event.target.value)<0){
                 setErrores(errores=>{
                     return{ 
                         ...errores,
                         errorImporte:true,
-                        errorTextoImporte:"El importe debe ser mayor a 0"
+                        errorTextoImporte:"El importe debe ser mayor o igual a 0"
 
                     }
                  })
