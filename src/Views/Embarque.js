@@ -846,8 +846,8 @@ function Embarque(props) {
     }
 
     const validarCoordenadas = (coordenadas) => {
+        console.log("coordenadas"+coordenadas)
         /**Si es modificacion*/
-        debugger
         if (state.idEmbarque != 0){
             /**Si es entrega diferente domicilio y no hay coordenadas guardadas*/
             if(state.diferenteEntrega
@@ -1225,7 +1225,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-        if (state.idEmbarque != 0) {
+  /* if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1275,7 +1275,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }
+        }*/     
     };
 
     function handleSelectCP(id, cp) {

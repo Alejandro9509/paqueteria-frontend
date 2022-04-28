@@ -13,6 +13,8 @@ import {DataGrid} from "@material-ui/data-grid";
 import CrearConcepto from '../ConceptosFacturacion/CrearConcepto';
 import {dataGridLocaleText} from "../../Constants";
 import Noty from "noty";
+import GetAppIcon from '@material-ui/icons/GetApp';
+import ExcelFile from '../../Files/ImportarMateriales_Consolidado.xlsx'
 import * as XLSX from "xlsx";
 import {
     obtenerSATEmbalajes, obtenerSATFraccionArancelaria, obtenerSATMaterialPeligroso, obtenerSATPaginado,
@@ -483,19 +485,32 @@ function ComplementosSAT(props) {
                         <h2>Complementos SAT</h2>
                     </div>
                 </Grid>
-                <Grid item xs={5}/>
+                <Grid item xs={3}/>
                 <Grid item xs={1}>
+                <Tooltip title="Agregar Complemento" >
                     <IconButton onClick={handleOpenClick} style={{ padding: "0px" }} disabled={props.disabled}>
                         <AddBoxIcon style={{ fill: "green", fontSize: "xx-large" }} />
                     </IconButton>
+                </Tooltip>
                 </Grid>
                 <Grid item xs={1}>
                     <input id={"icon-button-file"} type={"file"} accept={"xlsx"} onChange={handleImportClick} onClick={handleCleanExcel} style={{ padding: "0px",display: "none" }} disabled={props.disabled}/>
                     <label htmlFor="icon-button-file">
+                    <Tooltip title="Cargar XML" >
                         <IconButton color="primary" aria-label="upload file" component="span" style={{ padding: "0px" }} disabled={props.disabled}>
                             <PublishIcon style={{ fill: "blue", fontSize: "xx-large" }}/>
                         </IconButton>
+                    </Tooltip>
                     </label>
+                </Grid>
+                <Grid item xs={1}>
+                    <Tooltip title="Descargar XML" >
+                    <IconButton style={{ padding: "0px" }} disabled={props.disabled}>
+                    <a href={ExcelFile} download="EstructuraComplementosSAT.xlsx"> 
+                    <GetAppIcon style={{ fill: "green", fontSize: "xx-large" }} /> 
+                    </a> 
+                    </IconButton>
+                    </Tooltip>
                 </Grid>
             </Grid>
 
