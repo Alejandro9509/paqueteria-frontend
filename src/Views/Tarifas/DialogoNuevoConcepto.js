@@ -122,7 +122,6 @@ export default function DialogoNuevoConcepto(props) {
         })
         
        }
-       debugger
        if(parseFloat(concepto.importe)<0){
         setErrores(errores=>{
             return{
@@ -182,15 +181,6 @@ export default function DialogoNuevoConcepto(props) {
             setErrores(errores => {
                 return {...errores, errorConcepto: false}
             })
-            // debugger
-            /*if (parseFloat(newValue.m_cImporte) >= 0) {
-                setErrores(errores => {
-                        return {...errores, errorImporte: false}
-                    }
-                )
-            } else {
-                setErrores({errorImporte: true, errorTextoImporte: "El importe debe ser mayor o igual a 0"})
-            }*/
         }
         obtenerImpuestosByConceptosFacturacion(newValue.m_nIdConceptosFacturacion).then(respuesta => {
             newValue.arClsDetalle = respuesta.data
@@ -291,24 +281,6 @@ export default function DialogoNuevoConcepto(props) {
                 }
             })
         }
-    }
-
-    const calcularDescuento = (event) => {
-        if (state.aplicarDescuentoA === "Concepto"){
-            setConcepto(concepto=>{
-                return {
-                    ...concepto,
-                    importeInicial: parseFloat(concepto.importe).toFixed(2)
-                }
-            })
-            calcularImpuestos(concepto.traslada, concepto.retiene, concepto.importe - (concepto.importe * (concepto.descuento/100)))
-        }else if (state.aplicarDescuentoA === "Total"){
-            /*dataPaquetes.forEach(item => {
-                item.importe = item.importe * (concepto.descuento/100)
-            })
-            onChangeList(dataPaquetes)*/
-        }
-
     }
 
     return (

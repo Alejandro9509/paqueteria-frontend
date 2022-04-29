@@ -1756,7 +1756,7 @@ function Recoleccion() {
                 fechaHoraRegistro: getCurrentDateTime(),
                 estatusRecoleccion: 1,
                 moneda: 1,
-                tipoCambio: '24',
+                tipoCambio: 0,
                 tipoCobro: '10',
                 idTipoSeguro: 5,
                 valorDeclarado: 0,
