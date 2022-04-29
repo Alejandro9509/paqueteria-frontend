@@ -116,14 +116,29 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                 }
             })
         }else if (target.name == 'idMunicipio'){
-            let municipio = dataMunicipio.find((i) => i.m_sCodigoMunicipio == target.value).m_sMunicipio
-            setState(state => {
-                return {
-                    ...state,
-                    [target.name]: target.value,
-                    municipio: municipio
-                }
-            })
+            let municipio
+            let codigoMunicipio
+            if (state.idPais === 1){
+                municipio = dataMunicipio.find((i) => i.m_sCodigoMunicipio == target.value).m_sMunicipio
+                setState(state => {
+                    return {
+                        ...state,
+                        [target.name]: target.value,
+                        municipio: municipio
+                    }
+                })
+            }else if (state.idPais === 2){
+                codigoMunicipio = dataMunicipio.find((i) => i.m_sMunicipio == target.value).m_sCodigoMunicipio
+                setState(state => {
+                    return {
+                        ...state,
+                        [target.name]: codigoMunicipio,
+                        municipio: target.value,
+                    }
+                })
+            }
+
+
         }else {
             setState(state => {
                 return {
@@ -318,7 +333,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                                 labelId={"idMunicipioLabel"}
                                 label={"Municipio"}
                                 className="form-control"
-                                value={state.idMunicipio}
+                                value={state.idPais === 1 ?state.idMunicipio: state.municipio}
                                 onChange={handleChangeState}
                                 id="idMunicipio"
                                 name="idMunicipio"
@@ -327,8 +342,8 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                             >
                                 {dataMunicipio.map((municipio) => (
                                     <MenuItem
-                                        key={municipio.m_sCodigoMunicipio}
-                                        value={municipio.m_sCodigoMunicipio}
+                                        key={state.idPais === 1 ? municipio.m_sCodigoMunicipio: municipio.m_sMunicipio}
+                                        value={state.idPais === 1 ? municipio.m_sCodigoMunicipio: municipio.m_sMunicipio}
                                     >
                                         {municipio.m_sMunicipio}
                                     </MenuItem>
