@@ -608,7 +608,7 @@ if(input=="codigoPostal"){
   }, [props.entregaDomicilioDestinatario])
 
   const handleEntregaEnDomicilioDestinatario = () =>{
-    if (props.entregaDomicilioDestinatario && !state.zonaOperativa){
+    if (props.entregaDomicilioDestinatario && !state.zonaOperativa && state.codigoPostal?.m_sCP){
       obtenerZonaOperativaByIdCodigoPostal(state.codigoPostal.m_sCP).then(( zonaOperativa ) => {
             setState((state) => ({
               ...state,
