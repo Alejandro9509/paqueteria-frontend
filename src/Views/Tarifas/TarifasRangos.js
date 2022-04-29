@@ -21,6 +21,7 @@ import {
 } from "../../Util/Contexts/TarifasContext";
 import Noty from "noty";
 import {getRandomId} from "../../Util/Util";
+import {obtenerClientePublicoGeneral} from "../../Util/Contexts/ClientesContext";
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -60,7 +61,8 @@ export default function TarifasRangos(props) {
         DerechoBorrar: 1, //TODO: Definir id
         dataSucursal: [],
         columns: [],
-        consult: false
+        consult: false,
+        clienteGenerico: null
     })
 
     useEffect(() => {
@@ -317,14 +319,30 @@ export default function TarifasRangos(props) {
     }
 
     const getAllTarifas = () => {
-        obtenerTarifasRangos().then(respuesta => {
-            setState(state => {
-                return{
-                    ...state,
-                    tarifas: respuesta.data
-                }
+        if (state.clienteGenerico === null){
+            obtenerClientePublicoGeneral().then(respuestaCliente => {
+                obtenerTarifasRangos().then(respuesta => {
+                    setState(state => {
+                        return{
+                            ...state,
+                            tarifas: respuesta.data,
+                            clienteGenerico: respuestaCliente.data
+                        }
+                    })
+                })
             })
-        })
+        }else{
+            obtenerTarifasRangos().then(respuesta => {
+                setState(state => {
+                    return{
+                        ...state,
+                        tarifas: respuesta.data
+                    }
+                })
+            })
+        }
+
+
     }
 
     const handleAgregarTarifa = (params) => {
@@ -360,8 +378,8 @@ export default function TarifasRangos(props) {
 
     const filtrarTarifas =
         props.convenio ?
-            state.tarifas.filter(i => i.IdCliente !== 3140)
-            : state.tarifas.filter(i => i.IdCliente === 3140)
+            state.tarifas.filter(i => i.IdCliente !== state.clienteGenerico.m_nIdCliente)
+            : state.tarifas.filter(i => i.IdCliente === state.clienteGenerico.m_nIdCliente)
 
     return(
         <section className="main-container">
