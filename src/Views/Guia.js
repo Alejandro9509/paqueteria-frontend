@@ -90,6 +90,7 @@ import Filtros from "./Filtros/Filtros";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import CambiarEstatus from "./Guia/CambiarEstatus";
 import AsignarTrayectos from "./Guia/AsignarTrayectos";
+import ImprimirEtiquetas2 from "./Guia/ImprimirEtiquetas2";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -1006,6 +1007,14 @@ function Guia(props) {
 
     }
 
+    const mostrarDialogoImpresion = (isVisible) => {
+        setState(state=>{
+            return {
+            ...state,
+            showDialogoImpresion: isVisible
+        }       
+        })
+    }
     var errorCallback = function (errorMessage) {
         alert("Error: " + errorMessage);
     }
@@ -1828,6 +1837,20 @@ function Guia(props) {
             <AsignarTrayectos submit={(id) => handleAsignarTrayectos(id)}
                             open={state.openAsignarTrayectos} dataGuia={data.find(i => i.m_nIdGuia === state.idGuia)}
                             close={() => setState({...state, openAsignarTrayectos: false})}/>
+            {state.showConfirmarUbicacion &&
+                <ImprimirEtiquetas2 confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
+                                    dataMunicipiosRecoleccionDD={dataMunicipiosRecoleccionDD}
+                                    mostrarDialogoMapa={mostrarDialogoMapa}
+                                    titulo={state.titulo}
+                                    recoleccion={true}
+                                    remitente={true}
+                                    direccion={remitente}
+                                    esDiferenteRecoleccion={state.diferenteRecoleccion}
+                                    esDiferenteEntrega={state.diferenteEntrega}
+                                    recoleccionDD={recoleccionDD}
+                                    >
+                </ImprimirEtiquetas2>
+               }
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}
