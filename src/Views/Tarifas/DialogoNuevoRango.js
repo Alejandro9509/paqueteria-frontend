@@ -110,12 +110,12 @@ export default function DialogoNuevoRango(props) {
             })
             valid = false
         }
-        if (!(parseFloat(rango.importe) > 0)){
+        if ((parseFloat(rango.importe) < 0)){
             setErrores(errores=>{
                 return {
                     ...errores,
                     importe: true,
-                    descripcionError: "El importe debe ser mayor a cero"
+                    descripcionError: "El importe debe ser igual o mayor a cero"
                 }
             })
             valid = false
@@ -131,18 +131,69 @@ export default function DialogoNuevoRango(props) {
             valid = false
         }
         props.rows.forEach(i => {
-            if (i.id != rango.id &&
-                i.idConcepto == rango.idConcepto &&
-                i.minimo == rango.minimo &&
-                i.maximo == rango.maximo &&
-                i.idTipoCalculo == rango.idTipoCalculo &&
-                i.idUnidadMedida == rango.idUnidadMedida
-                ){
+            if (i.id != rango.id
+                // && i.idConcepto == rango.idConcepto
+                && i.minimo == rango.minimo
+                && i.maximo == rango.maximo
+                // i.idTipoCalculo == rango.idTipoCalculo &&
+                // i.idUnidadMedida == rango.idUnidadMedida
+            ){
                 valid = false
                 showSuccess("Ese rango ya existe.")
             }
         })
+        props.rows.forEach(i => {
+            if (i.id != rango.id
+                // && i.idConcepto == rango.idConcepto
+                // i.idTipoCalculo == rango.idTipoCalculo &&
+                // i.idUnidadMedida == rango.idUnidadMedida
+            ){
+                if(isRangoOcupado(i, rango)){
+                    valid = false
+                    showSuccess("El concepto tiene un rango ya ocupado.")
+
+                }
+            }
+
+        })
         return valid
+    }
+
+    const isRangoOcupado = (conceptoUno, conceptoDos) => {
+        /**conceptoUno es un concepto del listado. conceptoDos es el concepto nuevo*/
+
+        let ocupado = false
+
+        conceptoUno.minimo = parseFloat(conceptoUno.minimo)
+        conceptoUno.maximo = parseFloat(conceptoUno.maximo)
+        conceptoDos.minimo = parseFloat(conceptoDos.minimo)
+        conceptoDos.maximo = parseFloat(conceptoDos.maximo)
+        if (conceptoDos.unidadMedida === "KILOGRAMOS"){
+            if (conceptoUno.unidadMedida === "TONELADAS"){
+                conceptoUno.minimo = conceptoUno.minimo*1000
+                conceptoUno.maximo = conceptoUno.maximo*1000
+            }
+        }
+        if (conceptoDos.unidadMedida === "TONELADAS"){
+            if (conceptoUno.unidadMedida === "KILOGRAMOS"){
+                conceptoUno.minimo = conceptoUno.minimo/1000
+                conceptoUno.maximo = conceptoUno.maximo/1000
+            }
+        }
+        if (conceptoDos.minimo >= conceptoUno.minimo && conceptoDos.minimo <= conceptoUno.maximo){
+            ocupado = true
+        }
+        if (conceptoDos.maximo >= conceptoUno.minimo && conceptoDos.maximo <= conceptoUno.maximo){
+            ocupado = true
+        }
+        if (conceptoUno.minimo >= conceptoDos.minimo && conceptoUno.minimo <= conceptoDos.maximo){
+            ocupado = true
+        }
+        if (conceptoUno.maximo >= conceptoDos.minimo && conceptoUno.maximo <= conceptoDos.maximo){
+            ocupado = true
+        }
+
+        return ocupado
     }
     const handleConfirmSelection = () => {
         if (validarData()){

@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a81bad31-5978-476b-9ec1-7cad7e3b2fb4" name="Default Changelist" comment="Error en validar escaner">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/DialogoNuevoConcepto.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/DialogoNuevoConcepto.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/TarifasRangos.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/TarifasRangos.js" afterDir="false" />
+    <list default="true" id="a81bad31-5978-476b-9ec1-7cad7e3b2fb4" name="Default Changelist" comment="*Se cambió validacion de listado de tarifas donde se usaba id de cliente fijo.&#10;*Se agregó soporte al agregar &#10;conceptos manualmente&#10;**Se ajusto validacion que recupera zona operativa al pasar recoleccion a embarque">
+      <change beforePath="$PROJECT_DIR$/src/Views/Tarifas/DialogoNuevoRango.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Views/Tarifas/DialogoNuevoRango.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
