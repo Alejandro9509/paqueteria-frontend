@@ -132,10 +132,10 @@ export default function DialogoNuevoRango(props) {
         }
         props.rows.forEach(i => {
             if (i.id != rango.id
-                // && i.idConcepto == rango.idConcepto
+                && i.idConcepto == rango.idConcepto
                 && i.minimo == rango.minimo
                 && i.maximo == rango.maximo
-                // i.idTipoCalculo == rango.idTipoCalculo &&
+                // && i.idTipoCalculo == rango.idTipoCalculo
                 // i.idUnidadMedida == rango.idUnidadMedida
             ){
                 valid = false
@@ -144,7 +144,7 @@ export default function DialogoNuevoRango(props) {
         })
         props.rows.forEach(i => {
             if (i.id != rango.id
-                // && i.idConcepto == rango.idConcepto
+                && i.idConcepto == rango.idConcepto
                 // i.idTipoCalculo == rango.idTipoCalculo &&
                 // i.idUnidadMedida == rango.idUnidadMedida
             ){
