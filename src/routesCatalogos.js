@@ -141,13 +141,13 @@ const catalogRoutes = [
     component: EmbalajesPage,
       visible: validarDerecho(9101225)
   },
-  {
+  /*{
     path: "/TiposViaje",
     name: "Tipos Viaje",
     icon: <TViajeIcon/>,
     component: TiposViaje,
       visible: validarDerecho(9101226)
-  },
+  },*/
   {
     path: "/TiposServicio",
     name: "Tipos de Servicio",
@@ -283,14 +283,14 @@ const catalogRoutes = [
     icon: <GeocercaIcon/>,
     component: ZonaOperativa,
       visible: validarDerecho(9101387)
-  },
+  },/*
   {
     path: "/ZonasTarifas",
     name: "Zonas Tarifas",
     icon: <ZonaTarifaIcon/>,
     component: ZonaTarifas,
       visible: validarDerecho(9101225)
-  }
+  }*/
 ];
 
 export default catalogRoutes;

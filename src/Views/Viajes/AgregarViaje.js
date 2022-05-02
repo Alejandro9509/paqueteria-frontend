@@ -265,7 +265,7 @@ class AgregarViaje extends Component {
                     viajeCliente: this.props.select.m_sNumViajeCliente,
                     CreadoPor: this.props.select.CreadoPor,
                     dataInformesAsignados: this.props.select.m_arrInformes,
-
+                    estatusViaje:this.props.m_sEstatusViaje,
                     esOperadorPermisionario: this.props.select.EsOperadorPermisionario,
                     licenciaPermisionario: this.props.select.LicenciaPermisionario,
                     nombrePermisionario: this.props.select.NombrePermisionario,
