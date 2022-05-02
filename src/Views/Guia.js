@@ -1838,16 +1838,13 @@ function Guia(props) {
                             open={state.openAsignarTrayectos} dataGuia={data.find(i => i.m_nIdGuia === state.idGuia)}
                             close={() => setState({...state, openAsignarTrayectos: false})}/>
             {state.showConfirmarUbicacion &&
-                <ImprimirEtiquetas2 confirmarUbicacion={confirmarUbicacion} open={state.showConfirmarUbicacion}
-                                    dataMunicipiosRecoleccionDD={dataMunicipiosRecoleccionDD}
-                                    mostrarDialogoMapa={mostrarDialogoMapa}
+                <ImprimirEtiquetas2 open={state.showConfirmarUbicacion}
+
                                     titulo={state.titulo}
                                     recoleccion={true}
                                     remitente={true}
-                                    direccion={remitente}
-                                    esDiferenteRecoleccion={state.diferenteRecoleccion}
                                     esDiferenteEntrega={state.diferenteEntrega}
-                                    recoleccionDD={recoleccionDD}
+
                                     >
                 </ImprimirEtiquetas2>
                }
