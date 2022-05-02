@@ -44,7 +44,11 @@ import AddIcon from '@material-ui/icons/AddBox';
 import Noty from "noty";
 import {agregarTarifaRangos, modificarTarifaRangos, obtenerTarifaRangosById} from "../../Util/Contexts/TarifasContext";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
-import {obtenerClienteById, obtenerClientePublicoGeneral} from "../../Util/Contexts/ClientesContext";
+import {
+    obtenerClienteById,
+    obtenerClientePublicoGeneral,
+    obtenerClienteTieneConvenio
+} from "../../Util/Contexts/ClientesContext";
 import {obtenerUnidadesMedida} from "../../Util/Contexts/UnidadesMedidaContext";
 
 function showSuccess(mensaje) {
@@ -52,7 +56,7 @@ function showSuccess(mensaje) {
         type: "information",
         layout: "topCenter",
         text: mensaje,
-        timeout: "3000"
+        timeout: "5000"
     }).show()
 }
 
@@ -153,7 +157,6 @@ export default function CrearTarifaRangos(props) {
         }
     }, [])
     useEffect(value => {
-        console.log(viajesLocalesListado)
     }, [viajesLocalesListado])
     const handleDialogVisible = (isVisible) => {
         setState({
@@ -162,13 +165,25 @@ export default function CrearTarifaRangos(props) {
         });
     };
 
+    /**Recibe el cliente seleccionado en el dialogo*/
     const handlePatrocinadorSelected = (row) => {
-        console.log(row)
+        if (props.convenio){
+            obtenerClienteTieneConvenio(row.data.m_nIdCliente).then(respuesta => {
+                if (respuesta.data.value){
+                    showSuccess("El cliente seleccionado ya tiene convenio activo.")
+                }else{
+                    setState(() => ({
+                        ...state,
+                        cliente: row.data,
+                    }))
+                }
+            })
+        }
         setState(() => ({
             ...state,
-            cliente: row.data,
             showDialogClientes: false,
         }))
+
     }
 
     const handleOnChange = (event) => {
@@ -302,6 +317,29 @@ export default function CrearTarifaRangos(props) {
         })
         return zonasDisponibles
     }
+    /**Filtra los productos para que solo queden los que no se han usado en otro viaje local con la misma sucursal, concepto y zona*/
+    const filtrarProductosViajeLocal = (viaje) => {
+        let productosDisponibles = []
+        productosListado.forEach(i => {
+            productosDisponibles.push(i)
+        })
+        let otrosViajes = viajesLocalesListado.filter(v => v.idViaje !== viaje.idViaje)
+        otrosViajes = otrosViajes.filter(v => v.idSucursal === viaje.idSucursal && v.idConcepto === viaje.idConcepto)
+
+        viaje.zonas.forEach(zonaViajeActual => {
+            otrosViajes.forEach(v => {
+                if (v.zonas.some(i => i.m_nIdZona === zonaViajeActual.m_nIdZona)){
+                    otrosViajes.forEach(v => {
+                        v.productos.forEach(z => {
+                            productosDisponibles = productosDisponibles.filter(j => j.m_nIdProducto !== z.m_nIdProducto)
+                        })
+                    })
+                }
+            })
+        })
+
+        return productosDisponibles
+    }
 
     /**Filtra los conceptos para que solo queden las que no se han usado en otro viaje local con la misma sucursal*/
     const filtrarConceptosViajeLocal = conceptosListado.filter(concepto => esConceptoViajeLocal(concepto))
@@ -341,7 +379,11 @@ export default function CrearTarifaRangos(props) {
 
     const handleGuardarTarifa = (event) => {
         if (!validaCliente()){
-            showSuccess("El cliente es un dato necesario")
+            if (props.convenio){
+                showSuccess("El cliente es un dato necesario")
+            }else{
+                showSuccess("El cliente es un dato necesario. Verifique que se encuentra dado de alta un cliente con nombre \"PUBLICO EN GENERAL\" en el sistema")
+            }
             return
         }
         if (!validaVigencia()){
@@ -361,8 +403,19 @@ export default function CrearTarifaRangos(props) {
             return
         }
         const isConceptosEmpty = (element) => element.rangos.length === 0;
+        const isZonasEmpty = (element) => element.zonas.length === 0;
+        const isProductosEmpty = (element) => element.productos.length === 0;
+
         if (viajesLocalesListado.some(isConceptosEmpty)){
             showSuccess("No puede guardar una primera o última milla sin rangos")
+            return
+        }
+        if (viajesLocalesListado.some(isZonasEmpty)){
+            showSuccess("No puede guardar una primera o última milla sin zonas")
+            return
+        }
+        if (viajesLocalesListado.some(isProductosEmpty)){
+            showSuccess("No puede guardar una primera o última milla sin productos")
             return
         }
         if (props.configuraciones.CobroCargaDescargaTarifa){
@@ -375,10 +428,24 @@ export default function CrearTarifaRangos(props) {
             showSuccess("No puede guardar una tarifa sin milla intermedia")
             return
         }
-        const isGruposConceptosEmpty = (element) => element.rangos.length === 0;
-        const isGruposEmpty = (element) => element.grupos.length === 0 || element.grupos.some(isGruposConceptosEmpty);
+        const isGruposConceptosEmpty = (element) => element.grupos.some(grupo => grupo.rangos.length === 0);
+        const isGruposZonasEmpty = (element) => element.grupos.some(grupo => grupo.zonas.length === 0);
+        const isGruposProductosEmpty = (element) => element.grupos.some(grupo => grupo.productos.length === 0);
+        const isGruposEmpty = (element) => element.grupos.length === 0;
         if (viajesForaneosListado.some(isGruposEmpty)){
+            showSuccess("No puede guardar una milla intermedia sin grupos")
+            return
+        }
+        if (viajesForaneosListado.some(isGruposConceptosEmpty)){
             showSuccess("No puede guardar una milla intermedia sin rangos")
+            return
+        }
+        if (viajesForaneosListado.some(isGruposZonasEmpty)){
+            showSuccess("No puede guardar una milla intermedia sin zonas")
+            return
+        }
+        if (viajesForaneosListado.some(isGruposProductosEmpty)){
+            showSuccess("No puede guardar una milla intermedia sin productos")
             return
         }
         viajesLocalesListado.forEach(v => {
@@ -597,8 +664,11 @@ export default function CrearTarifaRangos(props) {
                                 value={state.cliente?.m_sNombreFiscal}
                                 placeholder={"No. Cliente: Nombre fiscal"}
                                 InputLabelProps={{shrink: true}}
-                                onClick={(props.disabled || !props.convenio)?
-                                    ()=>{return}:(()=>{ setState({ ...state, showDialogClientes: true})
+                                onClick={(props.disabled || !props.convenio) ?
+                                    () => {
+                                        return
+                                    } : (() => {
+                                        setState({...state, showDialogClientes: true})
                                     })}
                                 disabled={props.disabled || !props.convenio}
                             />
@@ -667,9 +737,9 @@ export default function CrearTarifaRangos(props) {
                                 tiposCalculoListado={tiposCalculoListado}
                                 unidadesMedidaListado={unidadesMedidaListado}
                                 handleDeleteViajeLocal={handleDeleteViajeLocal}
-                                zonasListado={filtrarZonasViajeLocal(viaje)}
+                                zonasListado={zonasListado}
                                 onRequestZonasBySucursal={handleOnRequestZonasBySucursal}
-                                productosListado={productosListado}
+                                productosListado={filtrarProductosViajeLocal(viaje)}
                                 disabled={props.disabled}
                                 showDialogZonas={showDialogZonas}
                                 handleShowDialogZonas={handleShowDialogZonas}

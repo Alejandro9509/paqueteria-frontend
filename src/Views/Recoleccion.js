@@ -94,7 +94,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import ConfirmarUbicacion from "../Components/Map/ConfirmarUbicacion";
 import Paquetes from "./Paquetes/Paquetes";
 import {obtenerMunicipiosByIdEstado} from "../Util/Contexts/MunicipiosContext";
-import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
+import {obtenerAllEstados, obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
 import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
 import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
@@ -622,7 +622,7 @@ function Recoleccion() {
     }
 
     const getAllEstados = () => {
-        obtenerEstadosPais(1).then((respuesta) => {
+        obtenerAllEstados().then((respuesta) => {
             setDataEstados(respuesta.data);
         });
     }
@@ -1756,7 +1756,7 @@ function Recoleccion() {
                 fechaHoraRegistro: getCurrentDateTime(),
                 estatusRecoleccion: 1,
                 moneda: 1,
-                tipoCambio: '24',
+                tipoCambio: 0,
                 tipoCobro: '10',
                 idTipoSeguro: 5,
                 valorDeclarado: 0,

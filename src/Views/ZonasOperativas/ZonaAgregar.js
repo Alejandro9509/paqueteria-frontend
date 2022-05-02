@@ -34,7 +34,6 @@ function ZonaAgregar({idZona, consult}) {
 
     const handleAceptar = (e) =>{
         e.preventDefault()
-        console.log(state)
         let params = {
             m_nIdZona: state.idZona,
             m_sCodigoZona: state.codigoZona,
@@ -44,7 +43,8 @@ function ZonaAgregar({idZona, consult}) {
             m_sCodMunicipio: state.idMunicipio,
             m_sMunicipio: state.municipio,
             m_arrCP: state.selectedCP,
-            m_nIdOrigenDestino: state.idOrigenDestino
+            m_nIdOrigenDestino: state.idOrigenDestino,
+            m_nIdPais: state.idPais
         }
         console.log(JSON.stringify(params))
         if (state.idZona){

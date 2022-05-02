@@ -496,7 +496,7 @@ function ComplementosSAT(props) {
                 <Grid item xs={1}>
                     <input id={"icon-button-file"} type={"file"} accept={"xlsx"} onChange={handleImportClick} onClick={handleCleanExcel} style={{ padding: "0px",display: "none" }} disabled={props.disabled}/>
                     <label htmlFor="icon-button-file">
-                    <Tooltip title="Cargar XML" >
+                    <Tooltip title="Cargar Plantilla" >
                         <IconButton color="primary" aria-label="upload file" component="span" style={{ padding: "0px" }} disabled={props.disabled}>
                             <PublishIcon style={{ fill: "blue", fontSize: "xx-large" }}/>
                         </IconButton>
@@ -504,12 +504,12 @@ function ComplementosSAT(props) {
                     </label>
                 </Grid>
                 <Grid item xs={1}>
-                    <Tooltip title="Descargar XML" >
-                    <IconButton style={{ padding: "0px" }} disabled={props.disabled}>
-                    <a href={ExcelFile} download="EstructuraComplementosSAT.xlsx"> 
-                    <GetAppIcon style={{ fill: "green", fontSize: "xx-large" }} /> 
+                    <Tooltip title="Descargar Plantilla" >
+                    <Button style={{ padding: "0px" }} disabled={props.disabled}>
+                    <a href={ExcelFile} download="EstructuraComplementosSAT.xlsx">
+                        Descargar Plantilla
                     </a> 
-                    </IconButton>
+                    </Button>
                     </Tooltip>
                 </Grid>
             </Grid>

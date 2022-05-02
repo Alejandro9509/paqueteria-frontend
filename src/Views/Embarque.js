@@ -97,7 +97,7 @@ import ConfirmarUbicacion from "../Components/Map/ConfirmarUbicacion";
 import {obtenerMunicipiosByIdEstado} from "../Util/Contexts/MunicipiosContext";
 import {obtenerByIdZonaOperativa, obtenerZonaOperativaByIdCodigoPostal} from "../Util/Contexts/ZonaOperativaContext";
 import {obtenerByIdZonaTarifa, obtenerZonaTarifaByIdCodigoPostal} from "../Util/Contexts/ZonaTarifaContext";
-import {obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
+import {obtenerAllEstados, obtenerEstadosPais} from "../Util/Contexts/EstadosContext";
 import Paquetes from "./Paquetes/Paquetes";
 import {obtenerFechaInicio, obtenerFechaFinal} from "../Util/Contexts/UtileriasContext";
 import ReplayIcon from "@material-ui/icons/Replay";
@@ -823,7 +823,7 @@ function Embarque(props) {
     }
 
     const getAllEstados = () => {
-        obtenerEstadosPais(1).then((respuesta) => {
+        obtenerAllEstados().then((respuesta) => {
             setDataEstados(respuesta.data);
         });
     }
@@ -1225,7 +1225,7 @@ function Embarque(props) {
         console.log(params)
         console.log(JSON.stringify(params))
 
-  /* if (state.idEmbarque != 0) {
+   if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
                     showSuccess(respuesta.data);
@@ -1275,7 +1275,7 @@ function Embarque(props) {
                     console.log(err);
                     showSuccess(err);
                 });
-        }*/     
+        }
     };
 
     function handleSelectCP(id, cp) {
