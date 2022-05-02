@@ -82,13 +82,13 @@ class Cotizador extends Component {
                     conceptosCast.push({
                         id: Math.floor(Math.random() * 10000),
                         concepto: element,
-                        idConcepto: element.m_nIdConceptosFacturacion,
-                        importe: element.m_cImporte,
-                        retiene: element.m_nIdImpuestoRetiene,
-                        traslada: element.m_nIdImpuestoTraslada,
-                        importeIVA: element.m_cImporteIva,
-                        importeRet: element.m_cImporteRetiene,
-                        nombreConcepto: element.m_sConcepto,
+                        idConcepto: element.m_nIdConceptosFacturacion || 0,
+                        importe: element.m_cImporte || 0,
+                        retiene: element.m_nIdImpuestoRetiene || 0,
+                        traslada: element.m_nIdImpuestoTraslada || 0,
+                        importeIVA: element.m_cImporteIva || 0,
+                        importeRet: element.m_cImporteRetiene || 0,
+                        nombreConcepto: element.m_sConcepto || "",
                         descuento: element.m_c_Descuento || 0,
                     })
                 }
