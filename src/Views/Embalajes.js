@@ -400,6 +400,7 @@ function Embalaje() {
                                                                 required
                                                                 value={state.CodigoEmbalaje}
                                                                 readOnly={state.agregar == "Consultar"}
+                                                                disabled={state.agregar == "Consultar"}
                                                                 id="CodigoEmbalaje"
                                                                 error={codigoError}
                                                                 helperText={codigoError?"Menos de 10 digitos":""}
@@ -415,6 +416,7 @@ function Embalaje() {
                                                                 className="form-control"
                                                                 type="text"
                                                                 required
+                                                                disabled={state.agregar == "Consultar"}
                                                                 value={state.NombreEmbalaje}
                                                                 readOnly={state.agregar == "Consultar"}
                                                                 id="NombreEmbalaje"
@@ -429,6 +431,7 @@ function Embalaje() {
                                                                 className="form-control"
                                                                 type="text"
                                                                 required
+                                                                disabled={state.agregar == "Consultar"}
                                                                 value={state.DescripcionEmbalaje}
                                                                 readOnly={state.agregar == "Consultar"}
                                                                 id="DescripcionEmbalaje"
