@@ -1560,7 +1560,7 @@ function Recoleccion() {
                 //Cita de recoleccion
                 recoleccionConCita: respuesta.data.m_bRecoleccionConCita,
                 diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio,
-                fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
+                // fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
                 entregaEnSucursal:respuesta.data.m_bEntregaSucursal,
                 idSucursalEntrega:respuesta.data.m_nIdSucursalEntrega = 0 ? "" : respuesta.data.m_nIdSucursalEntrega
@@ -1612,7 +1612,7 @@ function Recoleccion() {
                     (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
                 ),
                 recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
-                fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion
+                // fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion
             });
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(type).addClass('active');
