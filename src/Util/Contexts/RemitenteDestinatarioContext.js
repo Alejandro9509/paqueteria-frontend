@@ -1,9 +1,6 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
 import { API_HEADERS } from "../../Constants";
-const XLocateClient = window.XLocateClient;
-var xlocate = new XLocateClient();
-xlocate.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 
 const headers = API_HEADERS
 
@@ -20,22 +17,17 @@ function modificarRemitentesDestinatarios(id, params){
 
 function obtenerUbicacion(city, address, subdistrict, number, code) {
     var result;
+    var addressComplete = address + ", " + subdistrict + ", " + city
+
     trackPromise(
         result = new Promise((resolve, reject) => {
-            xlocate.searchLocations({
-                "$type": "SearchByAddressRequest",
-                "address": {
-                    "city": city,
-                    "street": address,
-                    "subdistrict": subdistrict,
-                    "houseNumber": number,
-                    "postalCode": code
-                }
-            }, (location) => {
-                if (location) {
-                    if (location.results) {
-                        if (location.results.length !== 0) {
-                            resolve(location.results[0].location.referenceCoordinate)
+            axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
+                + addressComplete  + "&qq=houseNumber=" + number +"postalCode=" + code + "&apiKey="
+                + process.env.REACT_APP_HERE_API_TOEKN, {}).then(({data}) => {
+                if (data) {
+                    if (data.items) {
+                        if (data.items.length !== 0) {
+                            resolve( {x: data.items[0].position.lng, y: data.items[0].position.lat} )
                         } else {
                             resolve({x: 0.0, y: 0.0})
                         }
@@ -43,8 +35,8 @@ function obtenerUbicacion(city, address, subdistrict, number, code) {
                         resolve({x: 0.0, y: 0.0})
                     }
                 }
-                reject(null)
-            });
+            })
+
         })
     )
     return result

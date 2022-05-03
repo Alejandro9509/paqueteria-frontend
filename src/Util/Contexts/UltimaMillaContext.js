@@ -3,18 +3,14 @@ import {trackPromise} from "react-promise-tracker";
 import axios from "axios";
 import Tour from "../../Views/UltimaMilla/Tour";
 import moment from "moment";
-import { API_HEADERS } from "../../Constants";
+import {ACCESS_TOKEN, API_HEADERS} from "../../Constants";
 
 const headers = API_HEADERS
 
-
 const XTourClient = window.XTourClient;
-const XLocateClient = window.XLocateClient;
 const XRouteClient = window.XRouteClient;
 var xtour = new XTourClient();
 xtour.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
-var xlocate = new XLocateClient();
-xlocate.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 var xroute = new XRouteClient();
 xroute.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 
@@ -223,13 +219,12 @@ function calcularRutaUltimaMilla(points, sucursal, camion) {
 }
 
 async function searchLocationAddress(address) {
-    var location = await xlocate.searchLocations({
-        "$type": "SearchByTextRequest",
-        "text": address
-    })
-    if (location.results) {
-        if (location.results.length !== 0) {
-            return location.results[0].location.referenceCoordinate
+
+    var location = await axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q=" + address + "&apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, {})
+
+    if (location.data.items) {
+        if (location.data.items.length !== 0) {
+            return {x: location.data.items[0].position.lng, y: location.data.items[0].position.lat}
         } else {
             return {x: 0.0, y: 0.0}
         }
@@ -240,17 +235,13 @@ async function searchLocationAddress(address) {
 }
 
 async function searchLocationGuia(city, address, postalCode) {
-    var location = await xlocate.searchLocations({
-        "$type": "SearchByAddressRequest",
-        "address": {
-            "city": city,
-            "street": address,
-            "postalCode": postalCode
-        }
-    });
-    if (location.results) {
-        if (location.results.length !== 0) {
-            return location.results[0].location.referenceCoordinate
+    var addressComplete = address + ", " + city
+    var location = await axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
+        + addressComplete  + "&qq=postalCode=" + postalCode + "&apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, {})
+
+    if (location.data.items) {
+        if (location.data.items.length !== 0) {
+            return {x: location.data.items[0].position.lng, y: location.data.items[0].position.lat}
         } else {
             return {x: 0.0, y: 0.0}
         }
@@ -265,47 +256,40 @@ console.log("searching...")
 }
 function searchLocationWeb(city, address, subdistrict, number, code) {
     var result;
+    var addressComplete = address + ", " + subdistrict + ", " + city
+
     trackPromise(
         result = new Promise((resolve, reject) => {
-            xlocate.searchLocations({
-                "$type": "SearchByAddressRequest",
-                "address": {
-                    "city": city,
-                    "street": address,
-                    "subdistrict": subdistrict,
-                    "houseNumber": number,
-                    "postalCode" : code
+             axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
+                + addressComplete  + "&qq=houseNumber=" + number +"postalCode=" + code + "&apiKey="
+                 + process.env.REACT_APP_HERE_API_TOEKN, {}).then(({data}) => {
+                 if (data) {
+                     if (data.items) {
+                         if (data.items.length !== 0) {
+                             resolve( {x: data.items[0].position.lng, y: data.items[0].position.lat} )
+                         } else {
+                             resolve({x: 0.0, y: 0.0})
+                         }
+                     } else {
+                         resolve({x: 0.0, y: 0.0})
+                     }
+                 }
+             })
 
-                }
-            }, (location) => {
-                if (location) {
-                    if (location.results) {
-                        if (location.results.length !== 0) {
-                            resolve(location.results[0].location.referenceCoordinate)
-                        } else {
-                            resolve({x: 0.0, y: 0.0})
-                        }
-                    } else {
-                        resolve({x: 0.0, y: 0.0})
-                    }
-                }
-            });
         })
     )
     return result
 }
 
 async function searchLocation(city, address) {
-    var location = await xlocate.searchLocations({
-        "$type": "SearchByAddressRequest",
-        "address": {
-            "city": city,
-            "street": address,
-        }
-    });
-    if (location.results) {
-        if (location.results.length !== 0) {
-            return location.results[0].location.referenceCoordinate
+    var addressComplete = address + ", " + city
+    var location = await axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q="
+        + addressComplete + "&apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, {})
+
+
+    if (location.data.items) {
+        if (location.data.items.length !== 0) {
+            return {x: location.data.items[0].position.lng, y: location.data.items[0].position.lat}
         } else {
             return {x: 0.0, y: 0.0}
         }
