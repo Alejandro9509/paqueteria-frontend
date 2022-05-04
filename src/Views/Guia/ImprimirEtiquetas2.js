@@ -125,7 +125,7 @@ useEffect(()=>{
               aria-labelledby="range-slider"
               min={0}
               disabled={idsPaquetesSeleccionadas.indexOf(paquete) == -1}
-              max={paquete.ctd}
+              max={paquete.m_nCantidad}
             />
 
 </TableCell>
@@ -141,8 +141,16 @@ useEffect(()=>{
     </div>
     </DialogContent>
     <DialogActions>
+    <Box display="flex">
         <Button size="medium" type={"submit"} variant={"contained"} color={"primary"}
-                onClick={(e) =>props.closeEtiquetas()}>Imprimir</Button>
+                onClick={(e) =>{
+                  props.handleImprimirTodasEtiquetas()
+                  props.closeEtiquetas()
+                }} 
+                className={classes.botonesImprimir}>Imprimir Todas</Button>
+        <Button size="medium" type={"submit"} variant={"contained"} color={"primary"}
+                onClick={(e) =>props.closeEtiquetas()}  className={classes.botonesImprimir}>Imprimir</Button>
+    </Box>
     </DialogActions>
 </form>
   )
@@ -194,5 +202,8 @@ const useStyles = makeStyles((theme) => ({
   },
   tab:{
     width:'100%'
-  }
+  },
+botonesImprimir:{
+  margin:'0 10px'
+}
 }));

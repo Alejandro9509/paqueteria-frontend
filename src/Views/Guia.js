@@ -365,7 +365,11 @@ function Guia(props) {
 
         }
     }
-    const handleImprimirEtiquetas = (data) => {
+    const handleImprimirEtiquetas = (data) => {//TODO: LOGICA PARA IMPRIMIR ETIQUETAS PARCIALES
+        console.log("se envia"+JSON.stringify(data))
+    }
+
+    const handleImprimirTodasEtiquetas = (data) =>{//TODO: LOGICA PARA IMPRIMIR ETIQUETAS TODAS
         console.log("se envia"+JSON.stringify(data))
     }
     const handleEntregaOcurre = (dataOcurre) => {
@@ -1850,7 +1854,7 @@ function Guia(props) {
                 fullWidth maxWidth="md"
                 aria-labelledby="form-dialog-title"
             >
-            <ImprimirEtiquetas2 handleImprimirEtiquetas ={handleImprimirEtiquetas} open={state.openDialogEtiquetas} closeEtiquetas={() => {
+            <ImprimirEtiquetas2 handleImprimirEtiquetas ={handleImprimirEtiquetas} open={state.openDialogEtiquetas} handleImprimirTodasEtiquetas={handleImprimirTodasEtiquetas} closeEtiquetas={() => {
              setState({...state, openDialogEtiquetas: false})
              setShowDialogEtiqueta(false)
              }} detallesPaquetesEtiquetas={state.detallesPaquetesEtiquetas}/>
