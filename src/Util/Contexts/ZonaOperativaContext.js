@@ -5,7 +5,7 @@ const headers = API_HEADERS
 
 
 function modificarZonaOperativa(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/ZonaOperativa/Modificar/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -14,7 +14,7 @@ function modificarZonaOperativa(id, params) {
 }
 
 function agregarZonaOperativa(params) {
-    const url = `${process.env.REACT_APP_API_URL}/ZonaOperativa/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/ZonaOperativa/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })

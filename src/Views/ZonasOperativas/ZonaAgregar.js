@@ -49,16 +49,21 @@ function ZonaAgregar({idZona, consult}) {
         console.log(JSON.stringify(params))
         if (state.idZona){
             modificarZonaOperativa(state.idZona, params).then(({data}) => {
-                showSuccess(data)
-                setSelec({})
+                if (data.Estatus === true){
+                    showSuccess("Modificado con éxito")
+                    setSelec({})
+                }
+
             }).catch((err) => {
                 console.log(err);
                 showSuccess(err);
             });
         }else {
             agregarZonaOperativa(params).then(({data}) => {
-                showSuccess(data)
-                setSelec({})
+                if (data.Estatus === true){
+                    showSuccess("Agregado con éxito")
+                    setSelec({})
+                }
             }).catch((err) => {
                 console.log(err);
                 showSuccess(err);
