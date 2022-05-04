@@ -50,7 +50,7 @@ function obtenerEstatusInforme(){
     return result
 }
 function obtenerEstatusRecoleccion(){
-    const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoRecoleccion`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SisEstatus/getListadoRecoleccion`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
