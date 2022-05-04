@@ -275,10 +275,10 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                                 disabled={consult}
                             >
                                 <MenuItem key={1} value={1}>
-                                    México
+                                    MÉXICO
                                 </MenuItem>
                                 <MenuItem key={2} value={2}>
-                                    Estados Unidos
+                                    ESTADOS UNIDOS
                                 </MenuItem>
                             </Select>
                         </FormControl>
