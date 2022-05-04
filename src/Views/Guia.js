@@ -369,9 +369,6 @@ function Guia(props) {
         console.log("se envia"+JSON.stringify(data))
     }
 
-    const handleImprimirTodasEtiquetas = (data) =>{//TODO: LOGICA PARA IMPRIMIR ETIQUETAS TODAS
-        console.log("se envia"+JSON.stringify(data))
-    }
     const handleEntregaOcurre = (dataOcurre) => {
         let params = {
             nIdGuia: dataOcurre.idGuia,
@@ -1854,7 +1851,7 @@ function Guia(props) {
                 fullWidth maxWidth="md"
                 aria-labelledby="form-dialog-title"
             >
-            <ImprimirEtiquetas2 handleImprimirEtiquetas ={handleImprimirEtiquetas} open={state.openDialogEtiquetas} handleImprimirTodasEtiquetas={handleImprimirTodasEtiquetas} closeEtiquetas={() => {
+            <ImprimirEtiquetas2 handleImprimirEtiquetas ={handleImprimirEtiquetas} open={state.openDialogEtiquetas} closeEtiquetas={() => {
              setState({...state, openDialogEtiquetas: false})
              setShowDialogEtiqueta(false)
              }} detallesPaquetesEtiquetas={state.detallesPaquetesEtiquetas}/>

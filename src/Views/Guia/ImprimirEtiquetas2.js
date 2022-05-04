@@ -18,9 +18,7 @@ export default function ImprimirEtiquetas2(props) {
 
     setValue(newValue);
   };
-  const handleChangePages = (event, newValue) => {
-    setValuePage(newValue);
-  };
+
   const handleToggle = (value) =>{
     const currentIndex = idsPaquetesSeleccionadas.indexOf(value);
     let nuevoChecado = [...idsPaquetesSeleccionadas];
@@ -32,7 +30,23 @@ export default function ImprimirEtiquetas2(props) {
     }
     setIdsPaquetesSeleccionadas(nuevoChecado);
   };
-
+const imprimirTodasEtiquetas = (value) =>{
+  let arrayAux = props.detallesPaquetesEtiquetas.map((paquetes)=>{
+    let paquete = { 
+      "m_nIdEmbarqueDetalle":0,
+      "m_nCantidad":0,
+      "m_nRango":[0,0],
+      "m_sEmbalaje":""
+  }; 
+    paquete.m_nIdEmbarqueDetalle = paquetes.m_nIdEmbarqueDetalle
+    paquete.m_nCantidad = paquetes.ctd
+    paquete.m_nRango = [0,paquetes.ctd]
+    paquete.m_sEmbalaje = paquetes.m_sEmbalaje
+    return paquete
+  })
+  console.log(JSON.stringify(arrayAux))
+  setIdsPaquetesSeleccionadas(arrayAux)
+}
 
 useEffect(()=>{
  let arrayAux = props.detallesPaquetesEtiquetas.map((paquetes)=>{
@@ -144,7 +158,7 @@ useEffect(()=>{
     <Box display="flex">
         <Button size="medium" type={"submit"} variant={"contained"} color={"primary"}
                 onClick={(e) =>{
-                  props.handleImprimirTodasEtiquetas()
+                  imprimirTodasEtiquetas()
                   props.closeEtiquetas()
                 }} 
                 className={classes.botonesImprimir}>Imprimir Todas</Button>
