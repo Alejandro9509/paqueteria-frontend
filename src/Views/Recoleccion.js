@@ -1046,7 +1046,7 @@ function Recoleccion() {
             params.m_sDomicilioRemitente = remitente.domicilioRemitente
             params.m_sIdCodigoPostalRemitente = remitente.codigoPostalRemitente.m_nIdCP
             params.m_nIdCiudadRemitente = remitente.municipioRemitente
-            // m_sMunicipioRemitente: remitente.municipioRemitente,
+            params.m_sMunicipioRemitente = remitente.municipioRemitente
             params.m_sCorreoRemitente = remitente.correoRemitente
             params.m_sTelefonoRemitente = remitente.telefonoRemitente
             params.m_sContactoRemitente = remitente.contactoRemitente
@@ -1066,7 +1066,7 @@ function Recoleccion() {
             params.m_sDomicilioDestinatario = destinatario.domicilioDestinatario
             params.m_sIdCodigoPostalDestinatario = destinatario.codigoPostalDestinatario.m_nIdCP
             params.m_nIdCiudadDestinatario = destinatario.municipioDestinatario
-            // m_sMunicipioDestinatario: destinatario.municipioDestinatario,
+            params.m_sMunicipioDestinatario = destinatario.municipioDestinatario
             params.m_sCorreoDestinatario = destinatario.correoDestinatario
             params.m_sTelefonoDestinatario = destinatario.telefonoDestinatario
             params.m_sContactoDestinatario = destinatario.contactoDestinatario
@@ -1560,7 +1560,7 @@ function Recoleccion() {
                 //Cita de recoleccion
                 recoleccionConCita: respuesta.data.m_bRecoleccionConCita,
                 diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio,
-                fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
+                // fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
                 entregaEnSucursal:respuesta.data.m_bEntregaSucursal,
                 idSucursalEntrega:respuesta.data.m_nIdSucursalEntrega = 0 ? "" : respuesta.data.m_nIdSucursalEntrega

@@ -74,7 +74,9 @@ function RemitenteDestinatario(props) {
     numeroExt: "",
     colonia: "",
     estado: "",
+    estadoTexto: "",
     municipio: "",
+    municipioTexto: "",
     codigoPostal: "",
     correo: "",
     telefono: "",
@@ -126,7 +128,9 @@ function RemitenteDestinatario(props) {
     numeroExt: "",
     colonia: "",
     estado: "",
+    estadoTexto: "",
     municipio: "",
+    municipioTexto: "",
     codigoPostal: "",
     correo: "",
     telefono: "",
@@ -168,7 +172,9 @@ function RemitenteDestinatario(props) {
                   numeroExt: respuesta.data.m_sNoExtRemitente,
                   colonia: respuesta.data.m_sColoniaRemitente,
                   estado: estado || 0,
+                  estadoTexto: respuesta.data.m_sEstadoRemitente,
                   municipio: respuesta.data.m_nIdCiudadRemitente,
+                  municipioTexto: respuesta.data.m_sMunicipioRemitente,
                   correo: respuesta.data.m_sCorreoRemitente,
                   telefono: respuesta.data.m_sTelefonoRemitente,
                   contacto: respuesta.data.m_sContactoRemitente,
@@ -245,7 +251,9 @@ function RemitenteDestinatario(props) {
                 numeroExt: respuesta.data.m_sNoExtDestinatario,
                 colonia: respuesta.data.m_sColoniaDestinatario,
                 estado: estado || 0,
+                estadoTexto: respuesta.data.m_sEstadoDestinatario || "No especificado",
                 municipio: respuesta.data.m_nIdCiudadDestinatario,
+                municipioTexto: respuesta.data.m_sMunicipioDestinatario,
                 correo: respuesta.data.m_sCorreoDestinatario,
                 telefono: respuesta.data.m_sTelefonoDestinatario,
                 contacto: respuesta.data.m_sContactoDestinatario,
@@ -253,7 +261,6 @@ function RemitenteDestinatario(props) {
                 longitud:  "",
               };
             });
-      console.log(respuesta.data)
           obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
             setDataMunicipios(data);
           });
@@ -561,6 +568,7 @@ if(input=="codigoPostal"){
                             }
                             : "",
                     estado: estado || "",
+                    estadoTexto: row.data.m_sEstado || "No especificado",
                     municipio: row.data.m_nIdMunicipio || "",
                     correo: row.data.m_sCorreoElectronico || "",
                     telefono: row.data.m_sTelefono || 0,
@@ -821,7 +829,7 @@ if(input=="codigoPostal"){
         </div>
 
         <div className="col-sm-12 col-md-12  unit">
-          <label className="input select">
+          {/*<label className="input select">
             <FormControl fullWidth variant="outlined" margin="dense" required>
               <InputLabel id="idEstadoLabel">Estado</InputLabel>
               <Select
@@ -841,12 +849,21 @@ if(input=="codigoPostal"){
                 ))}
               </Select>
             </FormControl>
-          </label>
+          </label>*/}
+          <TextField
+              variant="outlined"
+              margin="dense"
+              className="form-control"
+              label="Estado"
+              value={state.estadoTexto}
+              disabled
+              name="estado"
+          />
         </div>
       </div>
       <div className="col-md-6">
         <div className="col-sm-12 col-md-12 unit">
-          <FormControl
+          {/*<FormControl
             className="input select"
             fullWidth
             variant="outlined"
@@ -874,7 +891,16 @@ if(input=="codigoPostal"){
                 </option>
               ))}
             </Select>
-          </FormControl>
+          </FormControl>*/}
+          <TextField
+              variant="outlined"
+              margin="dense"
+              className="form-control"
+              label="Municipio"
+              value={state.municipioTexto}
+              disabled
+              name="municipio"
+          />
         </div>
 
         <div className="col-sm-12 col-md-12 unit">
