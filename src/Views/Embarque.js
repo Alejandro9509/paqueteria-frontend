@@ -1645,37 +1645,23 @@ function Embarque(props) {
                         domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
                         entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
                         datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                        codigoPostalEnt: {
+                            m_nIdCP: respuesta.data.m_nIdCPDetalleEntrega,
+                            m_sCP: respuesta.data.m_sCodigoPostalEntrega,
+                            m_sColonia: respuesta.data.m_sColoniaEntrega,
+                            m_sLocalidad: respuesta.data.m_sLocalidadEntrega
+                        },
                     }
                 })
-                let estado = `${respuesta.data.m_nIdEstadoEntrega}`
-                obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+                obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoEntrega).then(({data}) =>{
                     setDataMunicipiosEntregaDD(data)
                 })
-                obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
-                    setEntregaDD(entregaDD =>{
-                        return {
-                            ...entregaDD,
-                            codigoPostalEnt: {
-                                m_nIdCP: cp.data.m_nIdCP,
-                                m_sCP: cp.data.m_sCP,
-                                m_sColonia: cp.data.m_sColonia
-                            },
-                        }
-                    })
-                })
+
                 obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
                     setEntregaDD(entregaDD => {
                         return {
                             ...entregaDD,
                             zonaOperativaEnt: data
-                        }
-                    })
-                })
-                obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifaEntrega).then(({data}) => {
-                    setEntregaDD(entregaDD => {
-                        return {
-                            ...entregaDD,
-                            zonaTarifaEnt: data
                         }
                     })
                 })
