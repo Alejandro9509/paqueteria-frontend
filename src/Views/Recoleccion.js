@@ -591,7 +591,14 @@ function Recoleccion() {
         if (input === "codigoPostalRec") {
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
                 if (data.length > 0){
+                    if (data.length === 1){
+                        setRecoleccionDD({
+                            ...recoleccionDD,
+                            zonaOperativaRec: data[0]
+                        })
+                    }
                     setDataZonasOperativasRecoleccionDD(data)
+
                 }else{
                     setRecoleccionDD(recoleccionDD => {
                         return{
@@ -602,7 +609,7 @@ function Recoleccion() {
                 }
                
             })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
+            /*obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
                 if (data.length > 0){ 
                     setDataZonasTarifaRecoleccionDD(data)
                 }else{
@@ -614,7 +621,7 @@ function Recoleccion() {
                     })
                 }
               
-            })
+            })*/
         }
     }
 
