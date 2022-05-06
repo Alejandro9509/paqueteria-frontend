@@ -1421,8 +1421,6 @@ function Recoleccion() {
         })
     }
     const setRecoleccionDataParaConsultaModificacion = (respuesta,operacion) => {
-        console.log("DATA DE RECOLECCION CONSULTA Y MODIFICACION")
-        console.log(respuesta)
         /**Este indicador se checa en el componente de RemitentesDestinatarios*/
         respuesta.data.recoleccionById = true
         setDataRecoleccionConsulta(respuesta)
@@ -1505,7 +1503,6 @@ function Recoleccion() {
             nombreConcepto: item.m_sConcepto,
             descuento: item.m_c_Descuento
         }))
-        //console.log("SETEANDO COBRO" +respuesta.data.m_nIdTipoDeCobro)
         setDataConceptos(conceptosCast)
         setState(state => {
             return {
