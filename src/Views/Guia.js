@@ -150,6 +150,7 @@ function Guia(props) {
     const [dataEmbarque, setDataEmbarque] = React.useState([])
     const [dataTipoServicio, setDataTipoServicio] = React.useState([])
     const [showDialogOcurre, setShowDialogOcurre] = useState(false)
+    const [showDialogEtiqueta, setShowDialogEtiqueta] = useState(false)
     const [dataOcurre, setDataOcurre] = useState()
     const [conceptosAdicionales, setConceptosAdicionales] = useState([])
     const [dataConceptosBase, setDataConceptosBase] = useState([])
@@ -278,7 +279,9 @@ function Guia(props) {
         modificadoPor: localStorage.getItem("UsuarioId"),
         creadoEl: "",
         modificadoEl: "",
-        openDialog: false
+        openDialog: false,
+        openDialogEtiquetas:false,
+        detallesPaquetesEtiquetas:[]
 
     })
 
@@ -361,6 +364,9 @@ function Guia(props) {
             });
 
         }
+    }
+    const handleImprimirEtiquetas = (data) => {//TODO: LOGICA PARA IMPRIMIR ETIQUETAS PARCIALES
+        console.log("se envia"+JSON.stringify(data))
     }
 
     const handleEntregaOcurre = (dataOcurre) => {
@@ -762,7 +768,7 @@ function Guia(props) {
                         </Tooltip>
                         <Tooltip title="Imprimir" disabled={!validarDerecho(9101464)}>
                             <a className="btn btn-default btn-xs"
-                               onClick={() => printTicket(row.row.m_nIdGuia)}><i className="zmdi zmdi-print"
+                               onClick={(event) => mostrarDialogoEtiqueta(event,row.row.m_nIdGuia)/* printTicket(row.row.m_nIdGuia)*/}><i className="zmdi zmdi-print"
                                                                                  style={{color: "#F9A03E"}}/></a>
 
                         </Tooltip>
@@ -1005,15 +1011,6 @@ function Guia(props) {
         })
 
 
-    }
-
-    const mostrarDialogoImpresion = (isVisible) => {
-        setState(state=>{
-            return {
-            ...state,
-            showDialogoImpresion: isVisible
-        }       
-        })
     }
     var errorCallback = function (errorMessage) {
         alert("Error: " + errorMessage);
@@ -1757,7 +1754,18 @@ function Guia(props) {
     function handleTabChange(event, newValue) {
         setState({...state, tab: newValue});
     }
-
+    const mostrarDialogoEtiqueta = (event,id)=>{
+        event.stopPropagation();
+        obtenerGuiaId(id).then(({data}) => {
+        var guia = data                
+        setState({
+            ...state,
+            openDialogEtiquetas: true,
+            detallesPaquetesEtiquetas: guia.m_arrClsDetalle
+        })
+        setShowDialogEtiqueta(true)
+        })
+    }
     const mostrarDialogoOcurre = (event, id) => {
         event.stopPropagation();
         getAllDataTipoPago()
@@ -1837,17 +1845,18 @@ function Guia(props) {
             <AsignarTrayectos submit={(id) => handleAsignarTrayectos(id)}
                             open={state.openAsignarTrayectos} dataGuia={data.find(i => i.m_nIdGuia === state.idGuia)}
                             close={() => setState({...state, openAsignarTrayectos: false})}/>
-            {state.showConfirmarUbicacion &&
-                <ImprimirEtiquetas2 open={state.showConfirmarUbicacion}
-
-                                    titulo={state.titulo}
-                                    recoleccion={true}
-                                    remitente={true}
-                                    esDiferenteEntrega={state.diferenteEntrega}
-
-                                    >
-                </ImprimirEtiquetas2>
-               }
+            <Dialog
+                open={state.openDialogEtiquetas}
+                onClose={() => setState({...state, openDialogEtiquetas: false})}
+                fullWidth maxWidth="md"
+                aria-labelledby="form-dialog-title"
+            >
+            <ImprimirEtiquetas2 handleImprimirEtiquetas ={handleImprimirEtiquetas} open={state.openDialogEtiquetas} closeEtiquetas={() => {
+             setState({...state, openDialogEtiquetas: false})
+             setShowDialogEtiqueta(false)
+             }} detallesPaquetesEtiquetas={state.detallesPaquetesEtiquetas}/>
+             </Dialog>
+               
             <Dialog
                 open={state.openDialog}
                 onClose={() => setState({...state, openDialog: false})}

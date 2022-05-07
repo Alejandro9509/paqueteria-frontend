@@ -537,7 +537,40 @@ class FiltersMap extends Component {
                                 variant="outlined"
                             />
                         </BootstrapTooltip>
-
+                        <BootstrapTooltip
+                            PopperProps={{
+                                disablePortal: false,
+                            }}
+                            onClose={() => this.setState({openConfiguration: false})}
+                            open={this.state.openConfiguration}
+                            disableFocusListener
+                            disableHoverListener
+                            disableTouchListener
+                            title={
+                                <Configuracion values={this.state}
+                                               changeValue={this.changeConfiguration}
+                                               changeConfigurationFullScreen={this.props.changeConfiguration}
+                                               fullScreenData={this.props.data}/>
+                            }>
+                            <Chip
+                                label="Configuración"
+                                icon={<SettingsIcon color={"primary"}/>}
+                                style={{
+                                    backgroundColor: "white",
+                                    margin: "1px",
+                                    boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+                                }}
+                                onClick={(e) => {this.setState({
+                                    openConfiguration: !this.state.openConfiguration, openSucursales: false,
+                                    openZona: false, openDate: false,
+                                    openUnidades: false,
+                                    openPaquetes: false,
+                                })
+                                this.props.closeResumenParada(e)
+                            }}
+                                variant="outlined"
+                            />
+                        </BootstrapTooltip>
                         {
                             !this.props.data.modoPlaneacion &&
                             <BootstrapTooltip
@@ -644,40 +677,7 @@ class FiltersMap extends Component {
                         </BootstrapTooltip>
 
 
-                        <BootstrapTooltip
-                            PopperProps={{
-                                disablePortal: false,
-                            }}
-                            onClose={() => this.setState({openConfiguration: false})}
-                            open={this.state.openConfiguration}
-                            disableFocusListener
-                            disableHoverListener
-                            disableTouchListener
-                            title={
-                                <Configuracion values={this.state}
-                                               changeValue={this.changeConfiguration}
-                                               changeConfigurationFullScreen={this.props.changeConfiguration}
-                                               fullScreenData={this.props.data}/>
-                            }>
-                            <Chip
-                                label="Configuración"
-                                icon={<SettingsIcon color={"primary"}/>}
-                                style={{
-                                    backgroundColor: "white",
-                                    margin: "1px",
-                                    boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-                                }}
-                                onClick={(e) => {this.setState({
-                                    openConfiguration: !this.state.openConfiguration, openSucursales: false,
-                                    openZona: false, openDate: false,
-                                    openUnidades: false,
-                                    openPaquetes: false,
-                                })
-                                this.props.closeResumenParada(e)
-                            }}
-                                variant="outlined"
-                            />
-                        </BootstrapTooltip>
+                        
 
                         <Tooltip title={"Generar Rutas"}>
                             <Chip
