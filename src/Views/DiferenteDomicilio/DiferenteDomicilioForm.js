@@ -36,11 +36,11 @@ export default function DiferenteDomicilioForm(props){
                 [event.target.name]: event.target.value,
             }
         });
-        if (event.target.name === "idEstado"){
+        /*if (event.target.name === "idEstado"){
             obtenerMunicipiosByIdEstado(event.target.value).then(({data}) =>{
                 setDataMunicipios(data)
             })
-        }
+        }*/
         if (event.target.name === "idMunicipio") {
             // setRepetirConceptos(true)
             /*obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoRec, event.target.value).then(({data}) => {
@@ -89,6 +89,15 @@ export default function DiferenteDomicilioForm(props){
     useEffect(() => {
        props.onChange(state)
     }, [state])
+
+    useEffect(() => {
+        if (props.value.idEstado && props.value.idEstado.length > 0){
+            obtenerMunicipiosByIdEstado(props.value.idEstado).then(({data}) =>{
+                setDataMunicipios(data)
+            })
+        }
+
+    }, [props.value.idEstado])
 
     return(
         <Grid container spacing={2}>

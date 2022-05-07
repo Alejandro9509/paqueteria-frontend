@@ -818,6 +818,7 @@ function Embarque(props) {
     };
 
     const handleOnChangeEntregaDD = (newValue) => {
+        setRepetirConceptos(true)
         setEntregaDD(entregaDD => {
             return{
                 ...entregaDD,
@@ -1734,6 +1735,60 @@ function Embarque(props) {
         });
     }
 
+    const mostrarDatosEntregaDiferenteDomicilio = (respuesta) => {
+        setEntregaDD(entregaDD => {
+            return {
+                ...entregaDD,
+                domicilioEnt: respuesta.data.DomicilioEntrega,
+                entregarEnEnt: respuesta.data.EntregarEn,
+                datosAdicionalesEnt: respuesta.data.DatosAdicionalesis,
+                estadoEnt: respuesta.data.m_nIdEstadoEntrega,
+                municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega,
+                latitudEnt: respuesta.data.m_sLatitud,
+                longitudEnt: respuesta.data.m_sLongitud,
+                codigoPostalEnt: {
+                    m_nIdCP: respuesta.data.m_nIdCodigoPostalEntrega,
+                    m_sCP: respuesta.data.m_sCodigoPostalEntrega,
+                    m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega
+                },
+                domicilio: respuesta.data.DomicilioEntrega,
+                detalles: respuesta.data.EntregarEn,
+                datosAdicionales: respuesta.data.DatosAdicionalesis,
+                idEstado: respuesta.data.m_nIdEstadoEntrega,
+                idMunicipio: respuesta.data.m_sCodigoMunicipioEntrega,
+                latitud: respuesta.data.m_sLatitud,
+                longitud: respuesta.data.m_sLongitud,
+                codigoPostal: {
+                    m_nIdCP: respuesta.data.m_nIdCodigoPostalEntrega,
+                    m_sCP: respuesta.data.m_sCodigoPostalEntrega,
+                    m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega
+                },
+                zonaOperativa: {
+                    m_nIdZona: respuesta.data.m_nIdZonaOperativa,
+                    m_sCodigoZona: respuesta.data.m_sZonaOperativa
+                }
+            }
+        })
+        setState(state => {
+            return {
+                ...state,
+                entregaEnSucursal: false,
+                diferenteEntrega: !respuesta.data.EntregarMismoDomicilio,
+            }
+        });
+        /*obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoEntrega).then(({data}) =>{
+            setDataMunicipiosEntregaDD(data)
+        })*/
+        obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+            setEntregaDD(entregaDD => {
+                return{
+                    ...entregaDD,
+                    zonaOperativaEnt: data
+                }
+            })
+        })
+    }
+
     //Funcion para mostrar datos de embarque para consultar o modificar
     const setDataParaConsultarModificar = (respuesta, duplicar,operacion) => {
         /**Este indicador se checa en el componente de RemitentesDestinatarios*/
@@ -1762,77 +1817,7 @@ function Embarque(props) {
             })
             /**Si es entrega es en diferente domicilio*/
         }else if (!respuesta.data.EntregarMismoDomicilio){
-            // let estado =  `${respuesta.data.m_nIdEstadoEntrega}`
-            setEntregaDD(entregaDD => {
-                return {
-                    ...entregaDD,
-                    domicilioEnt: respuesta.data.DomicilioEntrega,
-                    entregarEnEnt: respuesta.data.EntregarEn,
-                    datosAdicionalesEnt: respuesta.data.DatosAdicionalesis,
-                    estadoEnt: respuesta.data.m_nIdEstadoEntrega,
-                    municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega,
-                    latitudEnt: respuesta.data.m_sLatitud,
-                    longitudEnt: respuesta.data.m_sLongitud,
-                    codigoPostalEnt: {
-                        m_nIdCP: respuesta.data.m_nIdCodigoPostalEntrega,
-                        m_sCP: respuesta.data.m_sCodigoPostalEntrega,
-                        m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega
-                    },
-                    domicilio: respuesta.data.DomicilioEntrega,
-                    detalles: respuesta.data.EntregarEn,
-                    datosAdicionales: respuesta.data.DatosAdicionalesis,
-                    idEstado: respuesta.data.m_nIdEstadoEntrega,
-                    idMunicipio: respuesta.data.m_sCodigoMunicipioEntrega,
-                    latitud: respuesta.data.m_sLatitud,
-                    longitud: respuesta.data.m_sLongitud,
-                    codigoPostal: {
-                        m_nIdCP: respuesta.data.m_nIdCodigoPostalEntrega,
-                        m_sCP: respuesta.data.m_sCodigoPostalEntrega,
-                        m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega
-                    }
-                }
-            })
-            setState(state => {
-                return {
-                    ...state,
-                    entregaEnSucursal: false,
-                    diferenteEntrega: !respuesta.data.EntregarMismoDomicilio,
-                }
-            });
-            obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoEntrega).then(({data}) =>{
-                setDataMunicipiosEntregaDD(data)
-            })
-            /*obtenerCodigoPostalId(respuesta.data.m_sCodigoPostalEntrega).then((cp) => {
-                setEntregaDD(entregaDD => {
-                    return {
-                        ...entregaDD,
-                        codigoPostalEnt: cp.data,
-                    }
-                })
-
-            })*/
-            obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sCodigoPostalEntrega).then(({data}) => {
-                setDataZonasOperativasEntregaDD(data)
-            })
-            /*obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalEntrega).then(({data}) => {
-                setDataZonasTarifaEntregaDD(data)
-            })*/
-            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
-                setEntregaDD(entregaDD => {
-                    return{
-                        ...entregaDD,
-                        zonaOperativaEnt: data
-                    }
-                })
-            })
-            /*obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
-                setEntregaDD(entregaDD => {
-                    return{
-                        ...entregaDD,
-                        zonaTarifaEnt: data
-                    }
-                })
-            })*/
+            mostrarDatosEntregaDiferenteDomicilio(respuesta)
         }
 
         let totalPaquetes = 0
