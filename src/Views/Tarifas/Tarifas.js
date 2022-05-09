@@ -13,7 +13,13 @@ import $ from "jquery";
 import {API_HEADERS, dataGridLocaleText} from '../../Constants';
 import { Tooltip } from '@material-ui/core';
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
-import {agregarTarifa, eliminarTarifa, obtenerTarifaBy, obtenerTarifasByTipo} from "../../Util/Contexts/TarifasContext";
+import {
+    agregarTarifa,
+    eliminarTarifa,
+    modificarTarifa,
+    obtenerTarifaBy,
+    obtenerTarifasByTipo
+} from "../../Util/Contexts/TarifasContext";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import {ContentState, EditorState} from "draft-js";
 import htmlToDraft from "html-to-draftjs";
@@ -602,13 +608,16 @@ function Tarifa(props){
         console.log(params)
 
         if (state.edit) {
-            const url = `${process.env.REACT_APP_API_URL}/Tarifas/Modificar/` + state.selected.m_nIdTarifa;
-            axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
-                showSuccess(respuesta.data)
-                handleShowListado()
+            modificarTarifa(state.selected.m_nIdTarifa, params).then(respuesta => {
+                if (respuesta.data.Estatus){
+                    showSuccess("Modificado con éxito")
+                    handleShowListado()
+                }else {
+                    showSuccess("Hubo un error al agregar")
+                }
             }).catch(err => {
                 console.log(err)
-                showSuccess(err)
+                showSuccess("Hubo un error al agregar")
             });
         } else {
             agregarTarifa(params).then(respuesta => {
@@ -634,18 +643,21 @@ function Tarifa(props){
         if (event !== undefined){
             event.stopPropagation();
         }
-        setState({
-            ...state,
-            pantalla: 1,
-            edit: false,
-            consult: false,
-            openDialog:false,
-            agregar: "Agregar"
+        setState(state => {
+            return {
+                ...state,
+                pantalla: 1,
+                edit: false,
+                consult: false,
+                openDialog:false,
+                agregar: "Agregar"
+            }
         });
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Listado').addClass('in show');
+        definirColumnas()
         getTarifas(state.configuraciones.TipoTarifaTarifas);
     }
 
@@ -786,7 +798,7 @@ function Tarifa(props){
                 minWidth: 300,
             },
 
-            {
+            /*{
                 headerName: "Activo",
                 field: "m_bActivo",
                 width: 100,
@@ -807,7 +819,7 @@ function Tarifa(props){
                         </div>
                     );
                 },
-            },
+            },*/
         )
 
         setState(state => {

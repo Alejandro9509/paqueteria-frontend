@@ -4,16 +4,6 @@ import { API_HEADERS } from "../../Constants";
 
 const headers = API_HEADERS
 
-
-function modificarCorte(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/CorteCaja/Modificar/` + id;
-    let result;
-    trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers })
-    );
-    return result
-}
-
 function agregarTarifaRangos(params) {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/Agregar`;
     let result;
@@ -41,11 +31,20 @@ function eliminarTarifaRangos(id) {
     return result
 }
 
-function eliminarCorte(id, idEliminadoPor) {
-    const url = `${process.env.REACT_APP_API_URL}/CorteCaja/Eliminar/` + id + `/${idEliminadoPor}`;
+function obtenerTarifasRangos() {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetListado`;
     let result;
     trackPromise(
-        result =  axios.delete(url, { headers })
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+
+function obtenerTarifaRangosById(id) {
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetById/` + id;
+    let result;
+    trackPromise(
+        result =  axios.get(url, { headers })
     );
     return result
 }
@@ -86,12 +85,11 @@ function eliminarTarifa(idTarifa, idModificarPor) {
     return result
 }
 
-
-function obtenerTarifasRangos() {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetListado`;
+function modificarTarifa(id,params) {
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Tarifas/Modificar/`+ id;
     let result;
     trackPromise(
-        result =  axios.get(url, { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers })
     );
     return result
 }
@@ -104,13 +102,5 @@ function obtenerTarifaBy(id) {
     );
     return result
 }
-function obtenerTarifaRangosById(id) {
-    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetById/` + id;
-    let result;
-    trackPromise(
-        result =  axios.get(url, { headers })
-    );
-    return result
-}
 
-export {eliminarTarifa, obtenerTarifasByTipo,agregarTarifa,obtenerTarifaBy,obtenerTarifas,agregarTarifaRangos,obtenerTarifasRangos,obtenerTarifaRangosById,modificarTarifaRangos,eliminarTarifaRangos}
+export {modificarTarifa,eliminarTarifa, obtenerTarifasByTipo,agregarTarifa,obtenerTarifaBy,obtenerTarifas,agregarTarifaRangos,obtenerTarifasRangos,obtenerTarifaRangosById,modificarTarifaRangos,eliminarTarifaRangos}
