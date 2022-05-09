@@ -13,7 +13,7 @@ import $ from "jquery";
 import {API_HEADERS, dataGridLocaleText} from '../../Constants';
 import { Tooltip } from '@material-ui/core';
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
-import {agregarTarifa, obtenerTarifaBy, obtenerTarifasByTipo} from "../../Util/Contexts/TarifasContext";
+import {agregarTarifa, eliminarTarifa, obtenerTarifaBy, obtenerTarifasByTipo} from "../../Util/Contexts/TarifasContext";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import {ContentState, EditorState} from "draft-js";
 import htmlToDraft from "html-to-draftjs";
@@ -490,12 +490,12 @@ function Tarifa(props){
         DerechoBorrar: 1, //TODO: Definir id
         dataSucursal: [],
         columns: [],
-        configuraciones: null
+        mostrarColumnasPesoVolumen: false,
+        configuraciones: null,
     })
 
     useEffect(value => {
         definirColumnas()
-        getAllData()
         getParametrosConfiguracion()
     }, [])
 
@@ -537,18 +537,16 @@ function Tarifa(props){
     }
 
     const handleEliminar = (id) => {
-        var derecho;
+        let derecho;
         validarPermisos(state).then(respuesta => {
             derecho = respuesta.data;
             if (derecho == false) {
                 showSuccess("El usuario no tiene derechos para realizar el proceso");
                 return;
             }
-
-            const url = `${process.env.REACT_APP_API_URL}/Tarifas/Eliminar/` + id + `/${state.ModificadoPor}`;
-            axios.delete(url, { headers }).then(respuesta => {
-                console.log(respuesta);
-                getAllData();
+            eliminarTarifa(id,state.ModificadoPor).then(respuesta => {
+                showSuccess("Registro eliminado")
+                getTarifas(state.configuraciones.TipoTarifaTarifas);
             }).catch(err => {
                 showSuccess(err)
             });
@@ -558,7 +556,7 @@ function Tarifa(props){
     }
 
     const handleAceptar = (data) => {
-        var params = {
+        let params = {
             // m_nIdSucursal: data.sucursal,
             // m_nIdOrigen: data.origen,
             // m_nIdDestino: data.destino,
@@ -598,9 +596,11 @@ function Tarifa(props){
             productos: data.dataProductosSeleccionados,
             destinos: data.dataDestinosSeleccionados,
             creadoPor: localStorage.getItem("UsuarioId"),
+            tipo: state.configuraciones?.TipoTarifaTarifas,
         }
         console.log(JSON.stringify(params))
-        return
+        console.log(params)
+
         if (state.edit) {
             const url = `${process.env.REACT_APP_API_URL}/Tarifas/Modificar/` + state.selected.m_nIdTarifa;
             axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
@@ -646,7 +646,7 @@ function Tarifa(props){
         $('.nav-tabs li').eq(0).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Listado').addClass('in show');
-        getAllData()
+        getTarifas(state.configuraciones.TipoTarifaTarifas);
     }
 
     const getAllData = () => {
@@ -673,30 +673,77 @@ function Tarifa(props){
         });
     }
 
-    const getParametrosConfiguracion = () =>  {
-        obtenerParametrosConfiguracion().then(respuesta => {
-            setState({
-                configuraciones: {
-                    TipoTarifaTarifas: respuesta.data.TipoTarifaTarifas || 0,
-                    IdConceptoFlete: respuesta.data.IdConceptoFlete || 0,
-                    IdConceptoCarga: respuesta.data.IdConceptoCarga || 0,
-                    IdConceptoDescarga: respuesta.data.IdConceptoDescarga || 0,
-                    IdConceptoRecoleccion: respuesta.data.IdConceptoRecoleccion || 0,
-                    IdConceptoEntrega: respuesta.data.IdConceptoEntrega || 0,
-                    IdConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
-                    IdConceptoCita: respuesta.data.IdConceptoCita || 0,
-                    CobroCargaDescargaTarifa: respuesta.data.CobroCargaDescargaTarifa
+    const getTarifas = (idTipoTarifa) => {
+        obtenerTarifasByTipo(idTipoTarifa).then(respuesta => {
+            setState(state =>{
+                return {
+                    ...state,
+                    data: respuesta.data,
+                    agregar: "Agregar"
                 }
             })
-            if (respuesta.data.TipoTarifaTarifas !== 2){
-                getAllData()
-            }
+        })
+    }
+
+    const getParametrosConfiguracion = () =>  {
+        obtenerParametrosConfiguracion().then(respuesta => {
+            setState(state =>{
+                return{
+                    ...state,
+                    configuraciones: {
+                        TipoTarifaTarifas: respuesta.data.TipoTarifaTarifas || 0,
+                        IdConceptoFlete: respuesta.data.IdConceptoFlete || 0,
+                        IdConceptoCarga: respuesta.data.IdConceptoCarga || 0,
+                        IdConceptoDescarga: respuesta.data.IdConceptoDescarga || 0,
+                        IdConceptoRecoleccion: respuesta.data.IdConceptoRecoleccion || 0,
+                        IdConceptoEntrega: respuesta.data.IdConceptoEntrega || 0,
+                        IdConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
+                        IdConceptoCita: respuesta.data.IdConceptoCita || 0,
+                        CobroCargaDescargaTarifa: respuesta.data.CobroCargaDescargaTarifa
+                    }
+                }
+            })
+            getTarifas(respuesta.data.TipoTarifaTarifas)
         })
     }
 
     /**Se definen las columnas que se van a mostrar en el listado de tarifas*/
     const definirColumnas = () => {
-        let columnas = [
+
+        let columns = []
+        if (state.mostrarColumnasPesoVolumen){
+            columns.push(
+                {
+                    headerName: "Precio m³",
+                    field: "m_cPrecioM3",
+                    flex: 1,
+                    valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
+                    minWidth: 200,
+                },
+                {
+                    headerName: "Precio Kilo",
+                    field: "m_cPrecioKilo",
+                    flex: 1,
+                    valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
+                    minWidth: 125,
+                },
+                {
+                    headerName: "Flete mínimo",
+                    field: "m_cFleteMinimo",
+                    flex: 1,
+                    valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
+                    minWidth: 125,
+                },
+                {
+                    headerName: "Monto mínimo",
+                    field: "m_cMontoMinimo",
+                    flex: 1,
+                    valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
+                    minWidth: 125,
+                },
+            )
+        }
+        columns.push(
             {
                 headerName: "Acciones",
                 sortable: false, filterable: false,
@@ -705,7 +752,7 @@ function Tarifa(props){
                 renderCell: (row) => {
                     return (
                         <div>
-                            <Tooltip title="Modificar" disabled={(!validarDerecho(9101347) && !props.convenio) || (!validarDerecho(9101395) && props.convenio)}>
+                            <Tooltip title="Modificar" >
                                 <a href="#Agregar" role="tab" data-toggle="tab" onClick={() => (handleShowModificar(row.row.m_nIdTarifa))} className="btn btn-default btn-xs"><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                             </Tooltip>
@@ -713,7 +760,7 @@ function Tarifa(props){
                                 <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdTarifa))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                             </Tooltip>
-                            <Tooltip title="Eliminar" disabled={(!validarDerecho(9101348) && !props.convenio) || (!validarDerecho(9101396) && props.convenio)}>
+                            <Tooltip title="Eliminar">
                                 <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                             </Tooltip>
 
@@ -724,28 +771,25 @@ function Tarifa(props){
             {
                 headerName: "Código",
                 field: "m_sCodigo",
-                flex: 1,
-                minWidth: 300,
-            }, {
+                width: 300,
+            },
+            {
                 headerName: "Origen",
                 field: "m_sOrigen",
                 flex: 1,
                 minWidth: 300,
-            },{
+            },
+            {
                 headerName: "Destino",
                 field: "m_sDestino",
                 flex: 1,
                 minWidth: 300,
-            },{
-                headerName: "Tipo Tarifa",
-                field: "tipoTarifa",
-                minWidth: 200,
-                flex: 1,
-            },{
+            },
+
+            {
                 headerName: "Activo",
                 field: "m_bActivo",
-                minWidth: 200,
-                flex: 1,
+                width: 100,
                 renderCell: (row) => {
                     return (
                         <div
@@ -763,21 +807,13 @@ function Tarifa(props){
                         </div>
                     );
                 },
-            },/* {
-                headerName: "Precio m³",
-                field: "m_cPrecioM3",
-                flex: 1,
-                valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`,
-                minWidth: 200,
-            },*/
-
-
-        ]
+            },
+        )
 
         setState(state => {
             return{
                 ...state,
-                columns: columnas
+                columns: columns
             }
         })
     }
@@ -900,4 +936,4 @@ Tarifas.propTypes = {
 };
 
 /* export default Tarifas; */
-export default Tarifas;
+export default Tarifa;

@@ -77,6 +77,15 @@ function agregarTarifa(params){
     return result
 }
 
+function eliminarTarifa(idTarifa, idModificarPor) {
+    const url = `${process.env.REACT_APP_API_URL}/Tarifas/Eliminar/` + idTarifa + `/`+ idModificarPor;
+    let result;
+    trackPromise(
+        result =  axios.delete(url, { headers })
+    );
+    return result
+}
+
 
 function obtenerTarifasRangos() {
     const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Rangos/GetListado`;
@@ -104,4 +113,4 @@ function obtenerTarifaRangosById(id) {
     return result
 }
 
-export { obtenerTarifasByTipo,agregarTarifa,obtenerTarifaBy,obtenerTarifas,agregarTarifaRangos,obtenerTarifasRangos,obtenerTarifaRangosById,modificarTarifaRangos,eliminarTarifaRangos}
+export {eliminarTarifa, obtenerTarifasByTipo,agregarTarifa,obtenerTarifaBy,obtenerTarifas,agregarTarifaRangos,obtenerTarifasRangos,obtenerTarifaRangosById,modificarTarifaRangos,eliminarTarifaRangos}
