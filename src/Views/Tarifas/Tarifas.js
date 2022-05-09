@@ -13,12 +13,12 @@ import $ from "jquery";
 import {API_HEADERS, dataGridLocaleText} from '../../Constants';
 import { Tooltip } from '@material-ui/core';
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
-import {obtenerTarifaBy} from "../../Util/Contexts/TarifasContext";
+import {agregarTarifa, obtenerTarifaBy, obtenerTarifasByTipo} from "../../Util/Contexts/TarifasContext";
 import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConfiguracionContext";
 import {ContentState, EditorState} from "draft-js";
 import htmlToDraft from "html-to-draftjs";
 import TarifasRangos from "./TarifasRangos";
-import {validarDerecho} from "../../Util/Util"
+import {getCurrentDate, getCurrentDateTime, getCurrentTime, validarDerecho} from "../../Util/Util"
 import {makeStyles} from "@material-ui/core/styles";
 import { withStyles } from '@material-ui/core/styles';
 
@@ -242,21 +242,9 @@ class Tarifas extends Component {
     }
 
     handleAceptar(data) {
-        if(data.origen == 0 ){
-            showSuccess("No se pueden crear tarifas sin origen.")
-            return
-        }
 
-        if(data.dataDestinosSeleccionados.length === 0 ){
-            showSuccess("No se pueden crear tarifas sin destino.")
-            return
-        }
-        if(data.todosConceptos.length === 0 ){
-            showSuccess("No se pueden crear tarifas sin conceptos.")
-            return
-        }
-        var params = {
-            m_nIdSucursal: data.sucursal,
+        let params = {
+            /*m_nIdSucursal: data.sucursal,
             m_nIdOrigen: data.origen,
             m_nIdDestino: data.destino,
             m_cFleteMinimo: data.precioFlete,
@@ -287,9 +275,17 @@ class Tarifas extends Component {
             m_arrArDestinos: data.dataDestinosSeleccionados,
             m_nCreadoPOr: localStorage.getItem("UsuarioId"),
             m_nModificadoPor: localStorage.getItem("UsuarioId"),
-            m_sCodigo: data.codigoTarifa
+            m_sCodigo: data.codigoTarifa*/
+            idOrigen: data.origen,
+            fleteMinimo: data.precioFlete,
+            productos: data.dataProductosSeleccionados,
+            destinos: data.dataDestinosSeleccionados,
+            creadoPor: localStorage.getItem("UsuarioId"),
+            codigo: data.codigoTarifa,
+            tipo: this.state.configuraciones?.TipoTarifaTarifas,
         }
         console.log(JSON.stringify(params))
+        console.log(params)
         if (this.state.edit) {
             const url = `${process.env.REACT_APP_API_URL}/Tarifas/Modificar/` + this.state.selected.m_nIdTarifa;
             axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
@@ -305,7 +301,7 @@ class Tarifas extends Component {
                 showSuccess("err")
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Tarifas/Agregar`;
+            /*const url = `${process.env.REACT_APP_API_URL}/Tarifas/Agregar`;
             axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
                 showSuccess(respuesta.data)
                 this.getAllData()
@@ -317,7 +313,16 @@ class Tarifas extends Component {
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
-            });
+            });*/
+            agregarTarifa(params).then(respuesta => {
+                if (respuesta.data.Estatus){
+                    showSuccess("Agregado con éxito")
+                }else {
+                    showSuccess("Hubo un error al agregar")
+                }
+            }).catch(err => {
+                showSuccess("Hubo un error al agregar")
+            })
         }
 
     }
@@ -327,10 +332,13 @@ class Tarifas extends Component {
     }
 
     getAllData() {
-        const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetListado`;
+        /*const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetListado`;
         axios.get(url, { headers }).then(respuesta => {
             this.setState({ data: respuesta.data, agregar: "Agregar" })
-        });
+        });*/
+        obtenerTarifasByTipo().then(respuesta => {
+            this.setState({ data: respuesta.data, agregar: "Agregar" })
+        })
     }
 
     getParametrosConfiguracion() {
@@ -481,12 +489,14 @@ function Tarifa(props){
         selected: {},
         DerechoBorrar: 1, //TODO: Definir id
         dataSucursal: [],
-        columns: []
+        columns: [],
+        configuraciones: null
     })
 
     useEffect(value => {
         definirColumnas()
         getAllData()
+        getParametrosConfiguracion()
     }, [])
 
     const handleShowModificar = (id) => {
@@ -549,11 +559,11 @@ function Tarifa(props){
 
     const handleAceptar = (data) => {
         var params = {
-            m_nIdSucursal: data.sucursal,
-            m_nIdOrigen: data.origen,
-            m_nIdDestino: data.destino,
-            m_cFleteMinimo: data.precioFlete,
-            m_bActivo: data.activo ? 1 : 0,
+            // m_nIdSucursal: data.sucursal,
+            // m_nIdOrigen: data.origen,
+            // m_nIdDestino: data.destino,
+            // m_cFleteMinimo: data.precioFlete,
+            /*m_bActivo: data.activo ? 1 : 0,
             m_cMontoMinimo: data.precioMinimo,
             m_cPrecioKilo: data.precioKilo,
             m_cPrecioM3: data.precioM3,
@@ -575,14 +585,22 @@ function Tarifa(props){
                 m_xnRangoMaximo: c.rangoMaximo,
                 m_nIdAgregadoDesde: c.agregadoDesde,
                 m_nIdTipoMedida: c.tipoMedida
-            })),
-            m_arrArProductos: data.dataProductosSeleccionados,
-            m_arrArDestinos: data.dataDestinosSeleccionados,
-            m_nCreadoPOr: localStorage.getItem("UsuarioId"),
-            m_nModificadoPor: localStorage.getItem("UsuarioId"),
-            m_sCodigo: data.codigoTarifa
+            })),*/
+            // m_arrArProductos: data.dataProductosSeleccionados,
+            // m_arrArDestinos: data.dataDestinosSeleccionados,
+            // m_nCreadoPOr: localStorage.getItem("UsuarioId"),
+            // m_nModificadoPor: localStorage.getItem("UsuarioId"),
+            // m_sCodigo: data.codigoTarifa
+
+            codigo: data.codigoTarifa,
+            idOrigen: data.origen,
+            fleteMinimo: data.precioFlete,
+            productos: data.dataProductosSeleccionados,
+            destinos: data.dataDestinosSeleccionados,
+            creadoPor: localStorage.getItem("UsuarioId"),
         }
         console.log(JSON.stringify(params))
+        return
         if (state.edit) {
             const url = `${process.env.REACT_APP_API_URL}/Tarifas/Modificar/` + state.selected.m_nIdTarifa;
             axios.put(url, Object.assign({}, params), { headers }).then(respuesta => {
@@ -593,14 +611,21 @@ function Tarifa(props){
                 showSuccess(err)
             });
         } else {
-            const url = `${process.env.REACT_APP_API_URL}/Tarifas/Agregar`;
+            agregarTarifa(params).then(respuesta => {
+                if (respuesta.data.Estatus){
+                    showSuccess("Agregado con éxito")
+                }else {
+                    showSuccess("Hubo un error al agregar")
+                }
+            })
+            /*const url = `${process.env.REACT_APP_API_URL}/Tarifas/Agregar`;
             axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
                 showSuccess(respuesta.data)
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
-            });
+            });*/
         }
 
     }
@@ -646,6 +671,27 @@ function Tarifa(props){
                 }
             })
         });
+    }
+
+    const getParametrosConfiguracion = () =>  {
+        obtenerParametrosConfiguracion().then(respuesta => {
+            setState({
+                configuraciones: {
+                    TipoTarifaTarifas: respuesta.data.TipoTarifaTarifas || 0,
+                    IdConceptoFlete: respuesta.data.IdConceptoFlete || 0,
+                    IdConceptoCarga: respuesta.data.IdConceptoCarga || 0,
+                    IdConceptoDescarga: respuesta.data.IdConceptoDescarga || 0,
+                    IdConceptoRecoleccion: respuesta.data.IdConceptoRecoleccion || 0,
+                    IdConceptoEntrega: respuesta.data.IdConceptoEntrega || 0,
+                    IdConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
+                    IdConceptoCita: respuesta.data.IdConceptoCita || 0,
+                    CobroCargaDescargaTarifa: respuesta.data.CobroCargaDescargaTarifa
+                }
+            })
+            if (respuesta.data.TipoTarifaTarifas !== 2){
+                getAllData()
+            }
+        })
     }
 
     /**Se definen las columnas que se van a mostrar en el listado de tarifas*/
@@ -854,4 +900,4 @@ Tarifas.propTypes = {
 };
 
 /* export default Tarifas; */
-export default withStyles(useStyles)(Tarifas);
+export default Tarifas;
