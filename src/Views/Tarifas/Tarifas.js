@@ -507,13 +507,15 @@ function Tarifa(props){
 
     const handleShowAgregar = (event) => {
         event.stopPropagation();
-        setState({
-            ...state,
-            pantalla: 2,
-            edit: false,
-            consult: false,
-            agregar: "Agregar",
-            selected: null,
+        setState(state => {
+            return {
+                ...state,
+                pantalla: 2,
+                edit: false,
+                consult: false,
+                agregar: "Agregar",
+                selected: null,
+            }
         });
         $('.nav-tabs li ').removeClass('active');
         $('.nav-tabs li').eq(1).addClass('active');
@@ -523,15 +525,18 @@ function Tarifa(props){
 
     const handleShowModificar = (id) => {
         obtenerTarifaBy(id).then(respuesta => {
-            setState({
-                ...state,
-                pantalla: 2,
-                openDialog: true,
-                agregar: "Modificar",
-                edit: true,
-                consult: false,
-                selected: respuesta.data,
+            setState(state => {
+                return {
+                    ...state,
+                    pantalla: 2,
+                    openDialog: true,
+                    agregar: "Modificar",
+                    edit: true,
+                    consult: false,
+                    selected: respuesta.data,
+                }
             })
+            // mostrarDataTarifa(respuesta)
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(1).addClass('active');
             $('.tab-content div ').removeClass('in show');
@@ -541,21 +546,32 @@ function Tarifa(props){
 
     const handleShowConsultar = (id) => {
         obtenerTarifaBy(id).then(respuesta => {
-            console.log(respuesta.data)
-            setState({
-                ...state,
-                pantalla: 2,
-                agregar: "Consultar",
-                openDialog: true,
-                edit: true,
-                consult: true,
-                selected: respuesta.data,
+            setState(state => {
+                return {
+                    ...state,
+                    pantalla: 2,
+                    agregar: "Consultar",
+                    openDialog: true,
+                    edit: true,
+                    consult: true,
+                    selected: respuesta.data,
+                }
             })
+            // mostrarDataTarifa(respuesta)
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(1).addClass('active');
             $('.tab-content div ').removeClass('in show');
             $('#Agregar').addClass('in show');
         });
+    }
+
+    const mostrarDataTarifa = (respuesta) => {
+        setState(state => {
+            return {
+                ...state,
+                selected: respuesta.data,
+            }
+        })
     }
 
     const handleEliminar = (id) => {
@@ -619,6 +635,7 @@ function Tarifa(props){
             destinos: data.dataDestinosSeleccionados,
             creadoPor: localStorage.getItem("UsuarioId"),
             tipo: state.configuraciones?.TipoTarifaTarifas,
+            idCliente: data.cliente?.m_nIdCliente || 0,
         }
         console.log(JSON.stringify(params))
         console.log(params)
@@ -800,6 +817,10 @@ function Tarifa(props){
                 headerName: "Código",
                 field: "m_sCodigo",
                 width: 300,
+            },{
+                headerName: "Cliente",
+                field: "Cliente",
+                width: 500,
             },
             {
                 headerName: "Origen",
@@ -926,7 +947,7 @@ function Tarifa(props){
 
                         <div id="Agregar" className="tab-pane fade">
                             {
-                                state.pantalla == 2 &&
+                                (state.pantalla == 2 && state.configuraciones?.TipoTarifaTarifas > 0) &&
                                 <CrearTarifa edit={state.edit} consult={state.consult} select={state.selected}
                                              onSubmit={handleAceptar} onCancel={(event) => {
                                                 event.stopPropagation();

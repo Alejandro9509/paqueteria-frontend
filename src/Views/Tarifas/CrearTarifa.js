@@ -1,7 +1,19 @@
 import React, {Component, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import { AppBar, Box, FormControl, InputLabel, Select, Tab, Tabs, TextField, Typography, Checkbox } from '@material-ui/core';
+import {
+    AppBar,
+    Box,
+    FormControl,
+    InputLabel,
+    Select,
+    Tab,
+    Tabs,
+    TextField,
+    Typography,
+    Checkbox,
+    DialogContent, Dialog
+} from '@material-ui/core';
 import ConceptosAdicionales from './ConceptosAdicionales';
 import ConceptosAdicionalesManiobra from './ConceptosAdicionalesManiobra';
 import ConceptosAdicionalesEntrega from './ConceptosAdicionalesEntrega';
@@ -24,6 +36,9 @@ import {
     obtenerConceptosFacturacionManiobra
 } from "../../Util/Contexts/ConceptosFacturacionContext";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
+import {obtenerClientePublicoGeneral, obtenerClienteTieneConvenio} from "../../Util/Contexts/ClientesContext";
+import Noty from "noty";
+import DialogTableClientes from "../Clientes/DialogTableClientes";
 
 const headers = API_HEADERS
 
@@ -32,6 +47,15 @@ function a11yProps(index) {
         id: `simple-tab-${index}`,
         'aria-controls': `simple-tabpanel-${index}`,
     };
+}
+
+function showSuccess(mensaje) {
+    new Noty({
+        type: "information",
+        layout: "topCenter",
+        text: mensaje,
+        timeout: "5000"
+    }).show()
 }
 class CrearTarifa extends Component {
     constructor(props) {
@@ -1135,9 +1159,13 @@ function CrearTarifav2(props) {
         // ivaRetiene: [],
         // sucursal: props.edit ? props.select.m_nIdSucursal : "0",
         // destino: !props.consult && !props.select.m_bPorRegion ? props.select.m_arrArDestinos[0]?.m_nIdCiudad : "0",
+        showDialogClientes: false,
         origen: props.select?.m_nIdOrigen || null,
         codigoTarifa: props.select?.m_sCodigo || "",
-
+        cliente: {
+            m_nIdCliente : props.select?.m_nIdCliente,
+            m_sNombreFiscal : props.select?.m_sCliente,
+        },
         precioFlete: props.select?.m_cFleteMinimo || "0.00",
         // precioMinimo: props.edit ? props.select.m_cMontoMinimo : "",
         // precioKilo: props.edit ? props.select.m_cPrecioKilo : "",
@@ -1162,6 +1190,7 @@ function CrearTarifav2(props) {
     useEffect(() => {
         getAllCiudades()
         getAllProductos()
+        getClienteGenerico()
     }, [])
 
     const getAllCiudades = () => {
@@ -1214,6 +1243,17 @@ function CrearTarifav2(props) {
         });
     }
 
+    const getClienteGenerico = () => {
+        obtenerClientePublicoGeneral().then(respuesta => {
+            setState(state => {
+                return {
+                    ...state,
+                    cliente: respuesta.data
+                }
+            })
+        })
+    }
+
     const handleChange = (event) => {
         event.preventDefault()
         setState({
@@ -1258,6 +1298,26 @@ function CrearTarifav2(props) {
         });
     }
 
+    const handlePatrocinadorSelected = (row) => {
+        if (props.convenio){
+            obtenerClienteTieneConvenio(row.data.m_nIdCliente).then(respuesta => {
+                if (respuesta.data.value){
+                    showSuccess("El cliente seleccionado ya tiene convenio activo.")
+                }else{
+                    setState(() => ({
+                        ...state,
+                        cliente: row.data,
+                    }))
+                }
+            })
+        }
+        setState(() => ({
+            ...state,
+            showDialogClientes: false,
+        }))
+
+    }
+
     const actualizarDestinos = (todosDestinos, destinosSeleccionados) => {
         setState({
             ...state,
@@ -1274,72 +1334,108 @@ function CrearTarifav2(props) {
         })
     }
 
+    const handleDialogVisible = (isVisible) => {
+        setState({
+            ...state,
+            showDialogClientes: isVisible,
+        });
+    };
+
     const onSubmit = (event) =>  {
         event.preventDefault()
         props.onSubmit(state)
     }
 
     return(
-        <form className="j-forms" onSubmit={onSubmit}>
-            <div className="main-container" style={{ marginLeft: "0px", padding: "0px" }}>
-                <div className="row">
-                    <div className="col-md-3 col-sm-12">
-                        <div className="widget-wrap" style={{ margin: "0px", padding: "0px" }}>
-                            <div className="widget-content">
-                                <div className="row">
-                                    <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                        <h4>Agregando Tarifas</h4>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-
-                                        <div className="input">
-                                            <TextField variant="outlined" margin="dense"
-                                                       onChange={handleChange}
-                                                       className="form-control"
-                                                       label={"Código"}
-                                                       required
-                                                       disabled={props.consult}
-
-                                                       value={state.codigoTarifa}
-                                                       name="codigoTarifa"
-                                            />
+        <div>
+            <Dialog
+                open={state.showDialogClientes}
+                onClose={() => setState({...state, showDialogClientes: false})}
+                fullWidth maxWidth="md"
+            >
+                <DialogContent>
+                    <div className="row" style={{backgroundColor: '#FFFFFF'}}>
+                        <DialogTableClientes dialogVisible={handleDialogVisible } handlePatrocinadorSelected={handlePatrocinadorSelected}/>
+                    </div>
+                </DialogContent>
+            </Dialog>
+            <form className="j-forms" onSubmit={onSubmit}>
+                <div className="main-container" style={{ marginLeft: "0px", padding: "0px" }}>
+                    <div className="row">
+                        <div className="col-md-3 col-sm-12">
+                            <div className="widget-wrap" style={{ margin: "0px", padding: "0px" }}>
+                                <div className="widget-content">
+                                    <div className="row">
+                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                            <h4>Agregando Tarifas</h4>
                                         </div>
                                     </div>
-                                    <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                        <label className="input select" style={{ width: "100%" }}>
-                                            <FormControl fullWidth variant="outlined" margin="dense" required>
-                                                <InputLabel id="origenLabel">Origen (Bodega)</InputLabel>
-                                                <Select
-                                                    native
-                                                    className="form-control"
-                                                    label="Origen (Bodega)"
-                                                    disabled={props.consult}
-                                                    labelId="origenLabel"
-                                                    value={state.origen}
-                                                    onChange={handleChange}
-                                                    name="origen"
-                                                >
-                                                    <option
-                                                        key={"0"}
-                                                        value={"0"}
+                                    <div className="row">
+                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                            <TextField
+                                                variant="outlined"
+                                                label="Responsable de pago"
+                                                margin="dense"
+                                                required
+                                                value={state.cliente?.m_sNombreFiscal}
+                                                placeholder={"No. Cliente: Nombre fiscal"}
+                                                InputLabelProps={{shrink: true}}
+                                                onClick={(props.disabled || !props.convenio) ?
+                                                    () => {
+                                                        return
+                                                    } : (() => {
+                                                        setState({...state, showDialogClientes: true})
+                                                    })}
+                                                disabled={props.disabled || !props.convenio}
+                                            />
+                                        </div>
+                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                            <div className="input">
+                                                <TextField variant="outlined" margin="dense"
+                                                           onChange={handleChange}
+                                                           className="form-control"
+                                                           label={"Código"}
+                                                           required
+                                                           disabled={props.consult}
+
+                                                           value={state.codigoTarifa}
+                                                           name="codigoTarifa"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
+                                            <label className="input select" style={{ width: "100%" }}>
+                                                <FormControl fullWidth variant="outlined" margin="dense" required>
+                                                    <InputLabel id="origenLabel">Origen (Bodega)</InputLabel>
+                                                    <Select
+                                                        native
+                                                        className="form-control"
+                                                        label="Origen (Bodega)"
+                                                        disabled={props.consult}
+                                                        labelId="origenLabel"
+                                                        value={state.origen}
+                                                        onChange={handleChange}
+                                                        name="origen"
                                                     >
-                                                        Seleccionar
-                                                    </option>
-                                                    {state.ciudades.map((ciudad) => (
                                                         <option
-                                                            key={ciudad.m_nIdCiudad}
-                                                            value={ciudad.m_nIdCiudad}
+                                                            key={"0"}
+                                                            value={"0"}
                                                         >
-                                                            {ciudad.m_sCiudad}
+                                                            Seleccionar
                                                         </option>
-                                                    ))}
-                                                </Select>
-                                            </FormControl>
-                                        </label>
-                                    </div>
-                                    {/*{!porRegion &&
+                                                        {state.ciudades.map((ciudad) => (
+                                                            <option
+                                                                key={ciudad.m_nIdCiudad}
+                                                                value={ciudad.m_nIdCiudad}
+                                                            >
+                                                                {ciudad.m_sCiudad}
+                                                            </option>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </label>
+                                        </div>
+                                        {/*{!porRegion &&
                                     <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                         <label className="input select" style={{ width: "100%" }}>
                                             <FormControl fullWidth variant="outlined" margin="dense" required={!porRegion}>
@@ -1375,7 +1471,7 @@ function CrearTarifav2(props) {
                                     }*/}
 
 
-                                    {/*<div className="col-md-4 col-sm-4" style={{ padding: "5px" }}>
+                                        {/*<div className="col-md-4 col-sm-4" style={{ padding: "5px" }}>
                                         <label className="checkbox">
                                             Peso o Volumen
                                             <input type="checkbox"
@@ -1414,7 +1510,7 @@ function CrearTarifav2(props) {
                                         </label>
                                     </div>*/}
 
-                                    {/*{porPesoOVolumen &&
+                                        {/*{porPesoOVolumen &&
                                     <div>
                                         <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
                                             <label className="input select" style={{ width: "100%" }}>
@@ -1510,22 +1606,22 @@ function CrearTarifav2(props) {
 
                                     </div>
                                     }*/}
-                                    <div>
-                                        <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           onChange={handleChange}
-                                                           className="form-control"
-                                                           type="number"
-                                                           label="Flete Minimo"
-                                                           step="1"
-                                                           disabled={props.consult}
-                                                           value={state.precioFlete}
-                                                           name="precioFlete"
-                                                />
+                                        <div>
+                                            <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
+                                                <div className="input">
+                                                    <TextField variant="outlined" margin="dense"
+                                                               onChange={handleChange}
+                                                               className="form-control"
+                                                               type="number"
+                                                               label="Flete Minimo"
+                                                               step="1"
+                                                               disabled={props.consult}
+                                                               value={state.precioFlete}
+                                                               name="precioFlete"
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
-                                        {/*<div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
+                                            {/*<div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
                                             <div className="input">
                                                 <TextField variant="outlined" margin="dense"
                                                            onChange={handleChange}
@@ -1539,8 +1635,8 @@ function CrearTarifav2(props) {
                                                 />
                                             </div>
                                         </div>*/}
-                                    </div>
-                                    {/*{porPesoOVolumen &&
+                                        </div>
+                                        {/*{porPesoOVolumen &&
                                     <div>
 
                                         <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
@@ -1608,33 +1704,33 @@ function CrearTarifav2(props) {
                                     </div>
                                     }*/}
 
-                                    <div className="col-md-12 col-sm-12" style={{ padding: "5px", display: "inline-flex" }}>
-                                        <div className="form-footer " className="col-md-12" style={{ padding: "10px" }}>
-                                            <button
-                                                type="button"
-                                                className="btn btn-secondary secondary-btn"
-                                                onClick={props.onCancel}
-                                            >
-                                                Cancelar
-                                            </button>
-                                            {!props.consult &&
-                                            <button type="submit" className="btn btn-primary primary-btn">
-                                                Aceptar
-                                            </button>
-                                            }
+                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px", display: "inline-flex" }}>
+                                            <div className="form-footer " className="col-md-12" style={{ padding: "10px" }}>
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-secondary secondary-btn"
+                                                    onClick={props.onCancel}
+                                                >
+                                                    Cancelar
+                                                </button>
+                                                {!props.consult &&
+                                                <button type="submit" className="btn btn-primary primary-btn">
+                                                    Aceptar
+                                                </button>
+                                                }
 
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="col-md-9 col-sm-12" >
-                        <div className="widget-wrap" style={{ margin: "0px", padding: "0px" }}>
-                            <div className="widget-content">
+                        <div className="col-md-9 col-sm-12" >
+                            <div className="widget-wrap" style={{ margin: "0px", padding: "0px" }}>
+                                <div className="widget-content">
 
-                                {/*{this.state.porPesoOVolumen &&
+                                    {/*{this.state.porPesoOVolumen &&
                                 <div>
                                     <Tabs value={this.state.tab} onChange={this.handleTabChange}
                                           aria-label="simple tabs example" variant="scrollable"
@@ -1676,42 +1772,43 @@ function CrearTarifav2(props) {
                                     </TabPanel>
                                 </div>
                                 }*/}
-                                {props.idTipoTarifa === 3 &&
-                                <div>
-                                    <Tabs value={state.tab} onChange={handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
-                                        <Tab label="Destinos" {...a11yProps(0)} className={{ backgroundColor: "white !important" }} />
-                                        <Tab label="Productos" {...a11yProps(1)}/>
+                                    {props.idTipoTarifa === 3 &&
+                                    <div>
+                                        <Tabs value={state.tab} onChange={handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
+                                            <Tab label="Destinos" {...a11yProps(0)} className={{ backgroundColor: "white !important" }} />
+                                            <Tab label="Productos" {...a11yProps(1)}/>
 
-                                    </Tabs>
+                                        </Tabs>
 
-                                    <TabPanel value={state.tab} index={0}>
-                                        {/*el filtrado por agregadoDesde está demas*/}
-                                        <DestinosTarifa
-                                            destinos={state.dataDestinosTemp}
-                                            destinosSeleccionados={state.dataDestinosSeleccionados}
-                                            actualizarDestinos={actualizarDestinos}
-                                            consult={props.consult}
-                                        />
-                                    </TabPanel>
-                                    <TabPanel value={state.tab} index={1}>
-                                        <ProductosPrecios
-                                            dataList={state.dataProductosSeleccionados}
-                                            onChangeList={actualizarProductos}
-                                            mostrarRangos={false}
-                                            consult={props.consult}
-                                            ivaRetiene={[]}
-                                            ivaTraslada={[]}
-                                        />
-                                    </TabPanel>
+                                        <TabPanel value={state.tab} index={0}>
+                                            {/*el filtrado por agregadoDesde está demas*/}
+                                            <DestinosTarifa
+                                                destinos={state.dataDestinosTemp}
+                                                destinosSeleccionados={state.dataDestinosSeleccionados}
+                                                actualizarDestinos={actualizarDestinos}
+                                                consult={props.consult}
+                                            />
+                                        </TabPanel>
+                                        <TabPanel value={state.tab} index={1}>
+                                            <ProductosPrecios
+                                                dataList={state.dataProductosSeleccionados}
+                                                onChangeList={actualizarProductos}
+                                                mostrarRangos={false}
+                                                consult={props.consult}
+                                                ivaRetiene={[]}
+                                                ivaTraslada={[]}
+                                            />
+                                        </TabPanel>
 
+                                    </div>
+                                    }
                                 </div>
-                                }
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     )
 
 }

@@ -95,7 +95,7 @@ function modificarTarifa(id,params) {
 }
 
 function obtenerTarifaBy(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Tarifas/GetById/` + id;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Tarifas/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
