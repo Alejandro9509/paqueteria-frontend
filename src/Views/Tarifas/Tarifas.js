@@ -505,6 +505,22 @@ function Tarifa(props){
         getParametrosConfiguracion()
     }, [])
 
+    const handleShowAgregar = (event) => {
+        event.stopPropagation();
+        setState({
+            ...state,
+            pantalla: 2,
+            edit: false,
+            consult: false,
+            agregar: "Agregar",
+            selected: null,
+        });
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(1).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Agregar').addClass('in show');
+    }
+
     const handleShowModificar = (id) => {
         obtenerTarifaBy(id).then(respuesta => {
             setState({
@@ -606,8 +622,8 @@ function Tarifa(props){
         }
         console.log(JSON.stringify(params))
         console.log(params)
-
-        if (state.edit) {
+        // return
+        if (state.selected?.m_nIdTarifa > 0) {
             modificarTarifa(state.selected.m_nIdTarifa, params).then(respuesta => {
                 if (respuesta.data.Estatus){
                     showSuccess("Modificado con éxito")
@@ -863,15 +879,7 @@ function Tarifa(props){
                             </a>
                         </li>
                         <li >
-                            <a onClick={(event) => {
-                                event.stopPropagation();
-                                setState({
-                ...state,pantalla: 2, edit: false, consult: false, agregar: "Agregar"});
-                                $('.nav-tabs li ').removeClass('active');
-                                $('.nav-tabs li').eq(1).addClass('active');
-                                $('.tab-content div ').removeClass('in show');
-                                $('#Agregar').addClass('in show');
-                            }}>
+                            <a onClick={handleShowAgregar}>
                                 <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
@@ -931,6 +939,7 @@ function Tarifa(props){
                                                 $('#Listado').addClass('in show');
                                             }}
                                              listaCiudades={state.dataCiudades}
+                                             idTipoTarifa={state.configuraciones.TipoTarifaTarifas}
                                 />
                             }
 
