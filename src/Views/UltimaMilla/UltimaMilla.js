@@ -280,11 +280,11 @@ class UltimaMilla extends Component {
                 let guias = await obtenerGuiasUbicacion(data.paquetesSeleccionadas)
                 obtenerRutas(data.unidadesSeleccionadas, guias, data).then((results) => {
                     if (results) {
-                        if (results.vehicleIdsNotPlanned) {
+                        /*if (results.vehicleIdsNotPlanned) {
                             if (results.vehicleIdsNotPlanned.length > 0) {
                                 unidades = unidades.filter(u => results.vehicleIdsNotPlanned.find(t => t === ("vehicle" + u.m_nIdUnidad)) === undefined)
                             }
-                        }
+                        }*/
                         results.tours.map(t => t.color = randomColor(10))
 
                         console.log(guias)
@@ -417,7 +417,7 @@ class UltimaMilla extends Component {
                                           whenCreated={(map) => this.setState({map: map})}>
                                 <TileLayer style={{width: "100%", height: "100%"}}
                                            url="https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/reduced.day/{z}/{x}/{y}/512/png8?apiKey={token}&ppi=320"
-                                           token="IvndrliDyACVbUYMT17Kjd7b02haNOVJUK7iDPYpBSI"
+                                           token={process.env.REACT_APP_HERE_API_TOEKN}
                                 />
                                 {
                                     !this.state.fullScreen &&

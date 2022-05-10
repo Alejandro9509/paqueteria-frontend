@@ -8,11 +8,8 @@ import {ACCESS_TOKEN, API_HEADERS} from "../../Constants";
 const headers = API_HEADERS
 
 const XTourClient = window.XTourClient;
-const XRouteClient = window.XRouteClient;
 var xtour = new XTourClient();
 xtour.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
-var xroute = new XRouteClient();
-xroute.setCredentials("xtok", "51FA3E8E-8BF3-49EF-AB82-59D807A0645C")
 
 const Depot = (id, x, y, startDate, finishDate) => ({
     "$type": "DepotSite",
@@ -31,28 +28,38 @@ const Depot = (id, x, y, startDate, finishDate) => ({
     }]
 })
 
-async function convertData(trucks, guias, dateFilter) {
+async function convertData(trucks, guias) {
     var array = []
-    var location = await searchLocation(dateFilter.sucursalSeleccionada.m_sMunicipio, dateFilter.sucursalSeleccionada.m_sCalle)
-    array = array.concat((trucks.map(t => Depot(t.m_nIdUnidad, location.x, location.y, dateFilter.startDate + "T" + dateFilter.startTime + ":00+00:00", dateFilter.finishDate + "T" + dateFilter.finishTime + ":00+00:00"))));
     array = array.concat((guias.map((p, index) => (
         {
-            "$type": "CustomerSite",
-            "id": "Customer" + index,
-            "routeLocation": {
-                "$type": "OffRoadRouteLocation",
-                "offRoadCoordinate": {
-                    "x": p.lng,
-                    "y": p.lat
+            "id": index,
+            "tasks":
+                p.m_bEsRecoleccion ? {
+                    "pickups": [{
+                        "places": [{
+                            "location": {
+                                "lat": p.lat ,
+                                "lng": p.lng
+                            }
+                        }],
+                        "demand": [
+                            1
+                        ]
+                    }]
+                } : {
+                    "deliveries":[{
+                        "places": [{
+                            "location": {
+                                "lat": p.lat ,
+                                "lng": p.lng
+                            },
+                            "duration": 6000
+                        }],
+                        "demand": [
+                            1
+                        ]
+                    }]
                 }
-            },
-            "openingIntervals": [{
-                "$type": "StartEndInterval",
-                "start": dateFilter.startDate + "T" + dateFilter.startTime + ":00+00:00",
-                "end": dateFilter.finishDate + "T" + dateFilter.finishTime + ":00+00:00"
-            }
-            ],
-            "serviceTimePerStop": "600.0"
         }
     ))))
     return array
@@ -98,42 +105,55 @@ async function obtenerGuiasUbicacion(paquetes) {
 }
 
 async function obtenerRutas(truck, guias, data) {
+    var location = await searchLocation(data.sucursalSeleccionada.m_sMunicipio, data.sucursalSeleccionada.m_sCalle)
     var converData = await convertData(truck, guias, data)
     var result;
+    var object = Object.assign({},{
+        "plan": {
+            "jobs": converData
+        },
+        "fleet": {
+            "types":
+                truck.map(t => (
+                    {
+                        "id": ["vehicle" + t.m_nIdUnidad],
+                        "capacity": [
+                            100.0
+                        ],
+                        "shifts": [
+                            {
+                                "start": {
+                                    "time": data.startDate + "T" + data.startTime + ":00+00:00",
+                                    "location": {
+                                        "lat": location.y,
+                                        "lng": location.x
+                                    }
+                                },
+                                "end": {
+                                    "time": data.finishDate + "T" + data.finishTime + ":00+00:00",
+                                    "location": {
+                                        "lat": location.y,
+                                        "lng": location.x
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ))
+        }
+    } )
+    var token = await  axios.get(process.env.REACT_APP_API_URL_LOCAL + "/api/here/getToken",{})
+
     trackPromise(
         result = new Promise((resolve, reject) => {
-            xtour.planTours({
-                "locations": converData,
-                "orders":
-                    guias.map((p, index) => (
-                        {
-                            "$type": "VisitOrder",
-                            "id": index,
-                            "locationId": "Customer" + index,
-                        }
-                    )),
-                "fleet": {
-                    "vehicles":
-                        truck.map(t => (
-                            {
-                                "ids": ["vehicle" + t.m_nIdUnidad],
-                                "maximumQuantityScenarios": [{
-                                    "quantities": [100.0]
-                                }],
-                                "startLocationId": "Depo" + t.m_nIdUnidad,
-                                "endLocationId": "Depo" + t.m_nIdUnidad
-                            }
-                        ))
-                },
-                "distanceMode": {
-                    "$type": "DirectDistance"
-                }
-            }, (r, e) => resolve(r))
+            axios.post("https://tourplanning.hereapi.com/v3/problems" ,object, {headers: {'Content-Type': 'application/json','Authorization': 'Bearer ' + token.data}}).then(({data}) => {
+                 resolve(data)
+
+            })
+
         })
     )
     return result
-
-
 }
 
 function apiPoint(x, y) {
@@ -150,68 +170,28 @@ function apiPoint(x, y) {
 };
 
 function calcularRuta(points, sucursal) {
-    var array = []
-    array.push(apiPoint(sucursal.lng, sucursal.lat))
-    console.log(points)
-    array = array.concat(points.map(p => apiPoint(parseFloat(p.lng), parseFloat(p.lat))))
-    array.push(apiPoint(sucursal.lng, sucursal.lat))
     var result;
     trackPromise(
         result = new Promise((resolve, reject) => {
-            xroute.calculateRoute({
-                "waypoints": array,
-                "resultFields": {
-                    "polyline": true,
-                    "eventTypes": [
-                        "MANEUVER_EVENT"
-                    ],
-                    "encodedPath": true,
-                    "guidedNavigationRoute": false
-                },
-                "routeOptions": {
-                    "polylineOptions": {
-                        "elevations": true
-                    }
-                },
-                "requestProfile": {
-                    "userLanguage": "es"
-                }
+            axios.get(`https://router.hereapi.com/v8/routes?transportMode=car&origin=${sucursal.lat},${sucursal.lng}&destination=${sucursal.lat},${sucursal.lng}${points.map(p => `&via=${p.lat},${p.lng}`)}&return=polyline,summary,actions,instructions&apiKey=${process.env.REACT_APP_HERE_API_TOEKN}` , {}).then(({data}) => {
+                resolve(data)
 
-            }, (r, e) => resolve(r))
+            })
+
         })
     )
     return result
 
 }
 function calcularRutaUltimaMilla(points, sucursal, camion) {
-    var array = []
-    array.push(apiPoint(camion.lng, camion.lat))
-    console.log(points)
-    array = array.concat(points.map(p => apiPoint(parseFloat(p.lng), parseFloat(p.lat))))
-    array.push(apiPoint(sucursal.lng, sucursal.lat))
     var result;
     trackPromise(
         result = new Promise((resolve, reject) => {
-            xroute.calculateRoute({
-                "waypoints": array,
-                "resultFields": {
-                    "polyline": true,
-                    "eventTypes": [
-                        "MANEUVER_EVENT"
-                    ],
-                    "encodedPath": true,
-                    "guidedNavigationRoute": false
-                },
-                "routeOptions": {
-                    "polylineOptions": {
-                        "elevations": true
-                    }
-                },
-                "requestProfile": {
-                    "userLanguage": "es"
-                }
+            axios.get(`https://router.hereapi.com/v8/routes?transportMode=car&origin=${camion.lat},${camion.lng}&destination=${sucursal.lat},${sucursal.lng}${points.map(p => `&via=${p.lat},${p.lng}`)}&return=polyline,summary,actions,instructions&apiKey=${process.env.REACT_APP_HERE_API_TOEKN}` , {}).then(({data}) => {
+                resolve(data)
 
-            }, (r, e) => resolve(r))
+            })
+
         })
     )
     return result
@@ -219,7 +199,6 @@ function calcularRutaUltimaMilla(points, sucursal, camion) {
 }
 
 async function searchLocationAddress(address) {
-
     var location = await axios.get("https://geocode.search.hereapi.com/v1/geocode?languages=es-MX&q=" + address + "&apiKey=" + process.env.REACT_APP_HERE_API_TOEKN, {})
 
     if (location.data.items) {

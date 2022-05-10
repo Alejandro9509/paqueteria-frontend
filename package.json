@@ -1,5 +1,5 @@
 {
-  "homepage": "http://119.8.9.49:8080/",
+  "homepage": "https://c9e0-2806-2f0-1080-aa-e53c-a958-6720-f04f.ngrok.io",
   "name": "proyecto-paqueteria",
   "version": "0.1.0",
   "private": true,
@@ -33,6 +33,7 @@
     "moment": "2.26.0",
     "node-sass": "^5.0.0",
     "noty": "^3.2.0-beta-deprecated",
+    "polyline-encoded": "0.0.9",
     "qrcode.react": "^1.0.1",
     "re-carousel": "^2.4.0",
     "react": "^17.0.1",
@@ -70,6 +71,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "node": true
   },
   "eslintConfig": {
     "extends": [
