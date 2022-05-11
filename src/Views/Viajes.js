@@ -693,7 +693,7 @@ function Viajes() {
                         }
 
                         {
-                            !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_bTimbrado &&
+                            !viajeSeleccionado.m_bEsPermisionario && !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_bTimbrado &&
                             <Tooltip title="Generar CFDI">
                                 <a href="#" className="btn btn-default btn-xs"
                                    onClick={() => (generarCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme, row.row.m_nIdViaje, false))}><i className="zmdi zmdi-file-text"
@@ -702,7 +702,7 @@ function Viajes() {
                             </Tooltip>
                         }
                         {
-                            !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_bTimbrado &&
+                            !viajeSeleccionado.m_bEsPermisionario && !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_bTimbrado &&
                             <Tooltip title="Descargar XML">
                                 <a href="#" className="btn btn-default btn-xs"
                                    onClick={() => (descargarXMLCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme))}><i className="zmdi zmdi-download" style={{color: "#F9A03E"}}/></a>
