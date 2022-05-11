@@ -11,7 +11,7 @@ import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
 import {API_HEADERS, dataGridLocaleText} from '../../Constants';
-import { Tooltip } from '@material-ui/core';
+import {FormControl, InputLabel, MenuItem, Select, Tooltip} from '@material-ui/core';
 import { validarPermisos } from '../../Util/Contexts/UsuarioContext';
 import {
     agregarTarifa,
@@ -27,6 +27,8 @@ import TarifasRangos from "./TarifasRangos";
 import {getCurrentDate, getCurrentDateTime, getCurrentTime, validarDerecho} from "../../Util/Util"
 import {makeStyles} from "@material-ui/core/styles";
 import { withStyles } from '@material-ui/core/styles';
+import CrearTarifaRegion from "./CrearTarifaRegion";
+import TarifasRegion from "./TarifasRegion";
 
 window.jQuery = window.$ = $;
 const headers = API_HEADERS
@@ -395,89 +397,97 @@ class Tarifas extends Component {
                 <aside className="iconic-leftbar" style={{ minHeight: this.state.height }}>
                     <BarraLateralIzquierda />
                 </aside>
-
                 {
-                    configuraciones?.TipoTarifaTarifas === 2 ?
-                        <TarifasRangos
-                            configuraciones={configuraciones}
-                        />
-                        :
-                        <section className="main-container">
-                            <div className="container-fluid">
+                    configuraciones?.TipoTarifaTarifas === 1 &&
+                    <section className="main-container">
+                        <div className="container-fluid">
 
 
-                                <ul className="nav navStatica nav-tabs">
-                                    <li className="active">
-                                        <a onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
-                                            <i className="fa fa-list" /> Listado
-                                        </a>
-                                    </li>
-                                    <li >
-                                        <a className= {validarDerecho(9101346)? "":classes.disabled} onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
-                                            <i className="fa fa-plus-circle" /> {this.state.agregar}
-                                        </a>
-                                    </li>
+                            <ul className="nav navStatica nav-tabs">
+                                <li className="active">
+                                    <a onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 1, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}>
+                                        <i className="fa fa-list" /> Listado
+                                    </a>
+                                </li>
+                                <li >
+                                    <a className= {validarDerecho(9101346)? "":classes.disabled} onClick={(event) => { event.stopPropagation(); this.setState({ pantalla: 2, edit: false, consult: false, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(1).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Agregar').addClass('in show'); }}>
+                                        <i className="fa fa-plus-circle" /> {this.state.agregar}
+                                    </a>
+                                </li>
 
-                                    <li>
-                                        <a data_id="3">
-                                            <i className="fa fa-times-circle" /> Imprimir
-                                        </a>
-                                    </li>
+                                <li>
+                                    <a data_id="3">
+                                        <i className="fa fa-times-circle" /> Imprimir
+                                    </a>
+                                </li>
 
 
 
-                                    {/**<button className="topbar-right pull-right">Boton</button>*/}
-                                </ul>
+                                {/**<button className="topbar-right pull-right">Boton</button>*/}
+                            </ul>
 
 
-                                <div
-                                    className="row"
-                                    className="tab-content"
-                                    style={{ paddingLeft: "-15px" }}
-                                >
-                                    <div id="Listado" className="tab-pane fade in show">
-                                        <div className="widget-wrap">
-                                            <div className="widget-content">
-                                                <div className="row" style={{ height: this.state.height - 250, width: '100%' }}>
-                                                    <DataGrid
-                                                        localeText={dataGridLocaleText}
-                                                        rows={data}
-                                                        columns={columns}
-                                                        density="compact"
-                                                        pageSize={Math.floor((this.state.height - 310) / 30)}
-                                                        getRowId={(row) => row.m_nIdTarifa}
-                                                        onRowSelected={(row) => {
-                                                            this.setState({
-                                                                idTarifa: row.data.m_nIdTarifa
-                                                            })
-                                                        }}
-                                                    />
-                                                </div>
+                            <div
+                                className="row"
+                                className="tab-content"
+                                style={{ paddingLeft: "-15px" }}
+                            >
+                                <div id="Listado" className="tab-pane fade in show">
+                                    <div className="widget-wrap">
+                                        <div className="widget-content">
+                                            <div className="row" style={{ height: this.state.height - 250, width: '100%' }}>
+                                                <DataGrid
+                                                    localeText={dataGridLocaleText}
+                                                    rows={data}
+                                                    columns={columns}
+                                                    density="compact"
+                                                    pageSize={Math.floor((this.state.height - 310) / 30)}
+                                                    getRowId={(row) => row.m_nIdTarifa}
+                                                    onRowSelected={(row) => {
+                                                        this.setState({
+                                                            idTarifa: row.data.m_nIdTarifa
+                                                        })
+                                                    }}
+                                                />
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div id="Agregar" className="tab-pane fade">
-                                        {
-                                            this.state.pantalla == 2 &&
-                                            <CrearTarifa edit={edit} consult={consult} select={this.state.selected}
-                                                         onSubmit={this.handleAceptar} onCancel={(event) => {
-                                                event.stopPropagation();
-                                                this.setState({pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
-                                                $('.nav-tabs li ').removeClass('active');
-                                                $('.nav-tabs li').eq(0).addClass('active');
-                                                $('.tab-content div ').removeClass('in show');
-                                                $('#Listado').addClass('in show');
-                                            }}
-                                                         listaCiudades={this.state.dataCiudades}
-                                            />
-                                        }
-
-                                    </div>
+                                <div id="Agregar" className="tab-pane fade">
+                                    {
+                                        this.state.pantalla == 2 &&
+                                        <CrearTarifa edit={edit} consult={consult} select={this.state.selected}
+                                                     onSubmit={this.handleAceptar} onCancel={(event) => {
+                                            event.stopPropagation();
+                                            this.setState({pantalla: 1, edit: false, consult: false, agregar: "Agregar"});
+                                            $('.nav-tabs li ').removeClass('active');
+                                            $('.nav-tabs li').eq(0).addClass('active');
+                                            $('.tab-content div ').removeClass('in show');
+                                            $('#Listado').addClass('in show');
+                                        }}
+                                                     listaCiudades={this.state.dataCiudades}
+                                        />
+                                    }
 
                                 </div>
+
                             </div>
-                        </section>
+                        </div>
+                    </section>
+                }
+                {
+                    configuraciones?.TipoTarifaTarifas === 2 &&
+                        <TarifasRangos
+                            configuraciones={configuraciones}
+                        />
+
+                }
+                {
+                    configuraciones?.TipoTarifaTarifas === 3 &&
+                    <TarifasRegion
+                        configuraciones={configuraciones}
+                    />
                 }
 
             </div >
@@ -499,6 +509,7 @@ function Tarifa(props){
         columns: [],
         mostrarColumnasPesoVolumen: false,
         configuraciones: null,
+        idTipoTarifa: null
     })
 
     useEffect(value => {
@@ -695,7 +706,8 @@ function Tarifa(props){
                         IdConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
                         IdConceptoCita: respuesta.data.IdConceptoCita || 0,
                         CobroCargaDescargaTarifa: respuesta.data.CobroCargaDescargaTarifa
-                    }
+                    },
+                    idTipoTarifa: respuesta.data.TipoTarifaTarifas || 0,
                 }
             })
             getTarifas(respuesta.data.TipoTarifaTarifas)
@@ -817,6 +829,13 @@ function Tarifa(props){
         })
     }
 
+    const handleChange = (event) => {
+        setState({
+            ...state,
+            [event.target.name]: event.target.value
+        })
+    }
+
     return(
         <div >
             <header className="topbar clearfix">
@@ -838,79 +857,114 @@ function Tarifa(props){
             <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
                 <BarraLateralIzquierda />
             </aside>
-
-            <section className="main-container">
+            <section className="main-container" style={{marginTop: '10px'}}>
                 <div className="container-fluid">
+                    <FormControl fullWidth variant="outlined" margin="dense" required>
+                        <InputLabel id="origenLabel">Tipo de tarifa</InputLabel>
+                        <Select
+                            className="form-control"
+                            label="Tipo de tarifa"
+                            disabled={props.disabled}
+                            value={state.idTipoTarifa}
+                            onChange={handleChange}
+                            name="idTipoTarifa"
+                        >
+                            <MenuItem key={2} value={2}>POR RANGOS</MenuItem>
+                            <MenuItem key={3} value={3}>POR REGIÓN</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
+            </section>
 
 
-                    <ul className="nav navStatica nav-tabs">
-                        <li className="active">
-                            <a onClick={(event) => handleShowListado(event)}>
-                                <i className="fa fa-list"/> Listado
-                            </a>
-                        </li>
-                        <li >
-                            <a onClick={handleShowAgregar}>
-                                <i className="fa fa-plus-circle"/> {state.agregar}
-                            </a>
-                        </li>
-
-                        <li>
-                            <a data_id="3">
-                                <i className="fa fa-times-circle"/> Imprimir
-                            </a>
-                        </li>
+            {
+                state.idTipoTarifa === 1 &&
+                    <section className="main-container">
+                    <div className="container-fluid">
 
 
+                        <ul className="nav navStatica nav-tabs">
+                            <li className="active">
+                                <a onClick={(event) => handleShowListado(event)}>
+                                    <i className="fa fa-list"/> Listado
+                                </a>
+                            </li>
+                            <li >
+                                <a onClick={handleShowAgregar}>
+                                    <i className="fa fa-plus-circle"/> {state.agregar}
+                                </a>
+                            </li>
 
-                        {/**<button className="topbar-right pull-right">Boton</button>*/}
-                    </ul>
+                            <li>
+                                <a data_id="3">
+                                    <i className="fa fa-times-circle"/> Imprimir
+                                </a>
+                            </li>
 
 
-                    <div
-                        className="row"
-                        className="tab-content"
-                        style={{ paddingLeft: "-15px" }}
-                    >
-                        <div id="Listado" className="tab-pane fade in show">
-                            <div className="widget-wrap">
-                                <div className="widget-content">
-                                    <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                                        <DataGrid
-                                            localeText={dataGridLocaleText}
-                                            rows={state.data}
-                                            columns={state.columns}
-                                            density="compact"
-                                            pageSize={Math.floor((state.height - 310) / 30)}
-                                            getRowId={(row) => row.m_nIdTarifa}
-                                            onRowSelected={(row) => {
-                                                setState({
-                                                    ...state,
-                                                    idTarifa: row.data.m_nIdTarifa
-                                                })
-                                            }}
-                                        />
+
+                            {/**<button className="topbar-right pull-right">Boton</button>*/}
+                        </ul>
+
+
+                        <div
+                            className="row"
+                            className="tab-content"
+                            style={{ paddingLeft: "-15px" }}
+                        >
+                            <div id="Listado" className="tab-pane fade in show">
+                                <div className="widget-wrap">
+                                    <div className="widget-content">
+                                        <div className="row" style={{ height: state.height - 250, width: '100%' }}>
+                                            <DataGrid
+                                                localeText={dataGridLocaleText}
+                                                rows={state.data}
+                                                columns={state.columns}
+                                                density="compact"
+                                                pageSize={Math.floor((state.height - 310) / 30)}
+                                                getRowId={(row) => row.m_nIdTarifa}
+                                                onRowSelected={(row) => {
+                                                    setState({
+                                                        ...state,
+                                                        idTarifa: row.data.m_nIdTarifa
+                                                    })
+                                                }}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div id="Agregar" className="tab-pane fade">
+                                {
+                                    (state.pantalla == 2 && state.configuraciones?.TipoTarifaTarifas === 3) &&
+                                    <CrearTarifaRegion edit={state.edit} consult={state.consult} select={state.selected}
+                                                       onSubmit={handleAceptar}
+                                                       listaCiudades={state.dataCiudades}
+                                                       idTipoTarifa={state.configuraciones.TipoTarifaTarifas}
+                                                       disabled={state.agregar == "Consultar"}
+                                    />
+                                }
+
+                            </div>
+
                         </div>
-
-                        <div id="Agregar" className="tab-pane fade">
-                            {
-                                (state.pantalla == 2 && state.configuraciones?.TipoTarifaTarifas > 0) &&
-                                <CrearTarifa edit={state.edit} consult={state.consult} select={state.selected}
-                                             onSubmit={handleAceptar}
-                                             listaCiudades={state.dataCiudades}
-                                             idTipoTarifa={state.configuraciones.TipoTarifaTarifas}
-                                             disabled={state.agregar == "Consultar"}
-                                />
-                            }
-
-                        </div>
-
                     </div>
-                </div>
-            </section>
+                </section>
+            }
+            {
+                state.idTipoTarifa === 2 &&
+                    <TarifasRangos
+                        configuraciones={state.configuraciones}
+                    />
+            }
+            {
+                state.idTipoTarifa === 3 &&
+                    <TarifasRegion
+                        configuraciones={state.configuraciones}
+                    />
+            }
+
         </div >
     )
 }
