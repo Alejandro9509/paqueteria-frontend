@@ -41,12 +41,11 @@ function union(a, b) {
     return [...a, ...not(b, a)];
 }
 
-export default function DestinosTarifa({destinos = [], destinosSeleccionados = [], actualizarDestinos, consult}){
+export default function DestinosTarifa({destinos = [], destinosSeleccionados = [], actualizarDestinos, disabled}){
     const classes = useStyles();
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState(destinos);
     const [right, setRight] = React.useState(destinosSeleccionados);
-    // const [localConsult, setConsult] = useState(consult)
 
     const leftChecked = intersection(checked, left);
     const rightChecked = intersection(checked, right);
@@ -106,7 +105,7 @@ export default function DestinosTarifa({destinos = [], destinosSeleccionados = [
                         onClick={handleToggleAll(items)}
                         checked={numberOfChecked(items) === items.length && items.length !== 0}
                         indeterminate={numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0}
-                        disabled={items.length === 0 || consult}
+                        disabled={items.length === 0 || disabled}
                         inputProps={{ 'aria-label': 'all items selected' }}
                     />
                 }
@@ -118,13 +117,13 @@ export default function DestinosTarifa({destinos = [], destinosSeleccionados = [
                 {items.map((value) => {
                     const labelId = `transfer-list-all-item-${value}-label`;
                     return (
-                        <ListItem key={value.m_nIdCiudad} role="listitem" button onClick={handleToggle(value)} disabled={consult}>
+                        <ListItem key={value.m_nIdCiudad} role="listitem" button onClick={handleToggle(value)} disabled={disabled}>
                             <ListItemIcon>
                                 <Checkbox
                                     checked={checked.indexOf(value) !== -1}
                                     tabIndex={-1}
                                     disableRipple
-                                    disabled={consult}
+                                    disabled={disabled}
                                     inputProps={{ 'aria-labelledby': labelId }}
                                 />
                             </ListItemIcon>

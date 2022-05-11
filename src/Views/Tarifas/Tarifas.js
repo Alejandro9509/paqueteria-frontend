@@ -48,6 +48,7 @@ const styles = theme =>( {
 
 const useStyles = makeStyles(styles);
 
+/**OBSOLETO DESDE MAYO 2022*/
 class Tarifas extends Component {
     constructor(props) {
         super(props);
@@ -511,7 +512,6 @@ function Tarifa(props){
             return {
                 ...state,
                 pantalla: 2,
-                edit: false,
                 consult: false,
                 agregar: "Agregar",
                 selected: null,
@@ -531,8 +531,7 @@ function Tarifa(props){
                     pantalla: 2,
                     openDialog: true,
                     agregar: "Modificar",
-                    edit: true,
-                    consult: false,
+                    consult: true,
                     selected: respuesta.data,
                 }
             })
@@ -552,7 +551,6 @@ function Tarifa(props){
                     pantalla: 2,
                     agregar: "Consultar",
                     openDialog: true,
-                    edit: true,
                     consult: true,
                     selected: respuesta.data,
                 }
@@ -563,15 +561,6 @@ function Tarifa(props){
             $('.tab-content div ').removeClass('in show');
             $('#Agregar').addClass('in show');
         });
-    }
-
-    const mostrarDataTarifa = (respuesta) => {
-        setState(state => {
-            return {
-                ...state,
-                selected: respuesta.data,
-            }
-        })
     }
 
     const handleEliminar = (id) => {
@@ -595,39 +584,6 @@ function Tarifa(props){
 
     const handleAceptar = (data) => {
         let params = {
-            // m_nIdSucursal: data.sucursal,
-            // m_nIdOrigen: data.origen,
-            // m_nIdDestino: data.destino,
-            // m_cFleteMinimo: data.precioFlete,
-            /*m_bActivo: data.activo ? 1 : 0,
-            m_cMontoMinimo: data.precioMinimo,
-            m_cPrecioKilo: data.precioKilo,
-            m_cPrecioM3: data.precioM3,
-            m_bPorPesoVolumen: data.porPesoOVolumen,
-            m_bPorRango: data.porRangos,
-            m_bPorRegion: data.porRegion,
-            m_nFactorConversion: data.factorConversion,
-            m_arrArCobros: data.tiposCobroSeleccionado.map(c => ({ m_nIdTipoCobro: c.m_nIdTipoCobro })),
-            m_arrArServicios: data.tiposServicioSeleccionado.map(s => ({ m_nIdTipoServicio: s.m_nIdTipoServicio })),
-            m_arrArConceptos: data.todosConceptos.map(c => ({
-                m_nIdConceptosFacturacion: c.idConcepto,
-                m_cImporte: c.importe,
-                m_nIdImpuestoTraslada: c.traslada,
-                m_nIdImpuestoRetiene: c.retiene,
-                m_cImporteRetiene: c.importeRet,
-                m_cImporteIva: c.importeIVA,
-                m_nIdTipoCalculo: c.tipoCalculo,
-                m_xnRangoMinimo: c.rangoMinimo,
-                m_xnRangoMaximo: c.rangoMaximo,
-                m_nIdAgregadoDesde: c.agregadoDesde,
-                m_nIdTipoMedida: c.tipoMedida
-            })),*/
-            // m_arrArProductos: data.dataProductosSeleccionados,
-            // m_arrArDestinos: data.dataDestinosSeleccionados,
-            // m_nCreadoPOr: localStorage.getItem("UsuarioId"),
-            // m_nModificadoPor: localStorage.getItem("UsuarioId"),
-            // m_sCodigo: data.codigoTarifa
-
             codigo: data.codigoTarifa,
             idOrigen: data.origen,
             fleteMinimo: data.precioFlete,
@@ -639,7 +595,6 @@ function Tarifa(props){
         }
         console.log(JSON.stringify(params))
         console.log(params)
-        // return
         if (state.selected?.m_nIdTarifa > 0) {
             modificarTarifa(state.selected.m_nIdTarifa, params).then(respuesta => {
                 if (respuesta.data.Estatus){
@@ -664,14 +619,6 @@ function Tarifa(props){
                 console.log(err)
                 showSuccess("Hubo un error al agregar")
             });
-            /*const url = `${process.env.REACT_APP_API_URL}/Tarifas/Agregar`;
-            axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
-                showSuccess(respuesta.data)
-                handleShowListado()
-            }).catch(err => {
-                console.log(err)
-                showSuccess(err)
-            });*/
         }
 
     }
@@ -684,7 +631,6 @@ function Tarifa(props){
             return {
                 ...state,
                 pantalla: 1,
-                edit: false,
                 consult: false,
                 openDialog:false,
                 agregar: "Agregar"
@@ -953,18 +899,10 @@ function Tarifa(props){
                             {
                                 (state.pantalla == 2 && state.configuraciones?.TipoTarifaTarifas > 0) &&
                                 <CrearTarifa edit={state.edit} consult={state.consult} select={state.selected}
-                                             onSubmit={handleAceptar} onCancel={(event) => {
-                                                event.stopPropagation();
-                                                setState({
-                                                    ...state, pantalla: 1, edit: false, consult: false, agregar: "Agregar"
-                                                });
-                                                $('.nav-tabs li ').removeClass('active');
-                                                $('.nav-tabs li').eq(0).addClass('active');
-                                                $('.tab-content div ').removeClass('in show');
-                                                $('#Listado').addClass('in show');
-                                            }}
+                                             onSubmit={handleAceptar}
                                              listaCiudades={state.dataCiudades}
                                              idTipoTarifa={state.configuraciones.TipoTarifaTarifas}
+                                             disabled={state.agregar == "Consultar"}
                                 />
                             }
 

@@ -58,6 +58,8 @@ function showSuccess(mensaje) {
         timeout: "5000"
     }).show()
 }
+
+/**OBSOLETO DESDE MAYO 2022*/
 class CrearTarifa extends Component {
     constructor(props) {
         super(props);
@@ -1137,29 +1139,7 @@ CrearTarifa.propTypes = {
 function CrearTarifav2(props) {
     const [ciudades, setCiudadades] = useState([])
     const [state, setState] = useState({
-        // dataSucursal: [],
         ciudades: [],
-        tab: 0,
-        // todosConceptos: props.edit ? props.select.m_arrArCobros : [],
-        // conceptosAdicionales: [],
-        // conceptosManiobra: [],
-        // conceptosEntrega: [],
-        // conceptosRecoleccion: [],
-        // impuestos: [],
-        // tiposCobroSeleccionado: props.edit ? props.select.m_arrArCobros : [],
-        // tiposServicioSeleccionado: props.edit ? props.select.m_arrArServicios : [],
-        // tiposCobroAll: false,
-        // tiposServicioAll: false,
-        // activo: true,
-        // porPesoOVolumen: props.edit ? props.select.m_bPorPesoVolumen : false,
-        // porRangos: props.edit ? props.select.m_bPorRango : false,
-        // porRegion: props.edit ? props.select.m_bPorRegion : true,
-        // unidadPeso: props.edit ? props.select.m_sUnidadPeso : "Kg",
-        // factorConversion: props.edit ? props.select.m_nFactorConversion : 1,
-        // ivaTraslada: [],
-        // ivaRetiene: [],
-        // sucursal: props.edit ? props.select.m_nIdSucursal : "0",
-        // destino: !props.consult && !props.select.m_bPorRegion ? props.select.m_arrArDestinos[0]?.m_nIdCiudad : "0",
         showDialogClientes: false,
         origen: props.select?.m_nIdOrigen || null,
         codigoTarifa: props.select?.m_sCodigo || "",
@@ -1168,10 +1148,7 @@ function CrearTarifav2(props) {
             m_sNombreFiscal : props.select?.m_sCliente,
         },
         precioFlete: props.select?.m_cFleteMinimo || "0.00",
-        // precioMinimo: props.edit ? props.select.m_cMontoMinimo : "",
-        // precioKilo: props.edit ? props.select.m_cPrecioKilo : "",
-        // precioM3: props.edit ? props.select.m_cPrecioM3 : "",
-        // disabled: true,
+
         //Aqui se guardan todos los productos y no se modifican
         dataProductos: [],
         //Aqui se guardan todos los productos que no estan seleccionados
@@ -1203,7 +1180,7 @@ function CrearTarifav2(props) {
                     dataDestinosTemp: respuesta.data,
                 }
             });
-            if (!props.consult) {
+            if (props.consult) {
                 let dataDestinosTemp = respuesta.data
                 props.select?.m_arrArDestinos?.forEach((p) => {
                     dataDestinosTemp = dataDestinosTemp.filter((f) => f.m_nIdCiudad != p.m_nIdCiudad)
@@ -1227,7 +1204,7 @@ function CrearTarifav2(props) {
                     dataProductos: respuesta.data, dataProductosTemp: respuesta.data, agregar: "Agregar"
                 }
             })
-            if (!props.consult) {
+            if (props.consult) {
                 let dataProductosTemp = respuesta.data
                 props.select?.m_arrArProductos?.forEach((p) => {
                     dataProductosTemp = dataProductosTemp.filter((f) => f.m_nIdProducto != p.m_nIdProducto)
@@ -1261,42 +1238,7 @@ function CrearTarifav2(props) {
             ...state,
             [event.target.name]: event.target.value
         });
-        /*if (event.target.name == "destino"){
-            let destino = []
-            if (event.target.value != 0){
-                destino.push(this.state.ciudades.find((i) => i.m_nIdCiudad == event.target.value))
-            }
-            this.setState({
-                dataDestinosSeleccionados: destino
-            })
-        }
-        if (event.target.name == "sucursal"){
-            if (event.target.name == 0 || this.state.destino == 0 || this.origen == 0){
-                this.setState({disabled: true})
-            }else{
-                this.setState({disabled: false})
-            }
-        }else if (event.target.name == "destino"){
-            if (event.target.name == 0 || this.state.sucursal == 0 || this.state.origen == 0){
-                this.setState({disabled: true})
-            }else{
-                this.setState({disabled: false})
-            }
-        }else if (event.target.name == "origen"){
-            if (event.target.name == 0 || this.state.sucursal == 0 || this.state.destino == 0){
-                this.setState({disabled: true})
-            }else{
-                this.setState({disabled: false})
-            }
-        }*/
 
-    }
-
-    const handleTabChange = (event, newValue) => {
-        setState({
-            ...state,
-            tab: newValue
-        });
     }
 
     const handlePatrocinadorSelected = (row) => {
@@ -1395,7 +1337,7 @@ function CrearTarifav2(props) {
                                        className="form-control"
                                        label={"Código"}
                                        required
-                                       disabled={props.consult}
+                                       disabled={props.disabled}
                                        value={state.codigoTarifa}
                                        name="codigoTarifa"
                             />
@@ -1430,7 +1372,7 @@ function CrearTarifav2(props) {
                                        type="number"
                                        label="Flete Minimo"
                                        step="1"
-                                       disabled={props.consult}
+                                       disabled={props.disabled}
                                        value={state.precioFlete}
                                        name="precioFlete"
                             />
@@ -1513,7 +1455,7 @@ function CrearTarifav2(props) {
                         destinos={filtrarDestinos(state.dataDestinosTemp)}
                         destinosSeleccionados={state.dataDestinosSeleccionados}
                         actualizarDestinos={actualizarDestinos}
-                        consult={props.consult}
+                        disabled={props.disabled}
                     />
 
                     <div style={{marginTop:'20px', marginBottom: '20px'}}>
@@ -1522,6 +1464,7 @@ function CrearTarifav2(props) {
                             onChangeList={actualizarProductos}
                             mostrarRangos={false}
                             consult={props.consult}
+                            disabled={props.disabled}
                             ivaRetiene={[]}
                             ivaTraslada={[]}
                             mostrarTotal={false}
@@ -1537,7 +1480,7 @@ function CrearTarifav2(props) {
                         >
                             Cancelar
                         </Button>*/}
-                        <Button fullWidth type="submit" color={"primary"} variant={"contained"}>
+                        <Button fullWidth type="submit" color={"primary"} variant={"contained"} disabled={props.disabled}>
                             Guardar Tarifa
                         </Button>
                     </Grid>
