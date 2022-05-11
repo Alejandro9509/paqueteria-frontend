@@ -3597,7 +3597,7 @@ function Recoleccion() {
                         <div id="Agregar" className="tab-pane fade">
                             <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if(e.code === 13) {e.preventDefault()}}}>
                                 <div className="form-content">
-                                    <div
+                                    {/*<div
                                         className="wizard-breadcrumb number-style"
                                         style={{
                                             position: "sticky",
@@ -3620,7 +3620,7 @@ function Recoleccion() {
                                                 }
                                             </Stepper>
                                         </div>
-                                    </div>
+                                    </div>*/}
 
                                     <div className="widget-wrap2" id="informacionGeneral">
                                         <div className="widget-header">
