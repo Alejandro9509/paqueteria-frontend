@@ -12,7 +12,7 @@ import {
     TextField,
     Typography,
     Checkbox,
-    DialogContent, Dialog
+    DialogContent, Dialog, Grid, MenuItem, Paper
 } from '@material-ui/core';
 import ConceptosAdicionales from './ConceptosAdicionales';
 import ConceptosAdicionalesManiobra from './ConceptosAdicionalesManiobra';
@@ -39,6 +39,7 @@ import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {obtenerClientePublicoGeneral, obtenerClienteTieneConvenio} from "../../Util/Contexts/ClientesContext";
 import Noty from "noty";
 import DialogTableClientes from "../Clientes/DialogTableClientes";
+import Button from "@material-ui/core/Button";
 
 const headers = API_HEADERS
 
@@ -1346,6 +1347,10 @@ function CrearTarifav2(props) {
         props.onSubmit(state)
     }
 
+    const filtrarDestinos = (ciudades) => {
+        return ciudades.filter(i  => i.m_nIdCiudad !== state.origen)
+    }
+
     return(
         <div>
             <Dialog
@@ -1360,377 +1365,82 @@ function CrearTarifav2(props) {
                 </DialogContent>
             </Dialog>
             <form className="j-forms" onSubmit={onSubmit}>
-                <div className="main-container" style={{ marginLeft: "0px", padding: "0px" }}>
-                    <div className="row">
-                        <div className="col-md-3 col-sm-12">
-                            <div className="widget-wrap" style={{ margin: "0px", padding: "0px" }}>
-                                <div className="widget-content">
-                                    <div className="row">
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                            <h4>Agregando Tarifas</h4>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                            <TextField
-                                                variant="outlined"
-                                                label="Responsable de pago"
-                                                margin="dense"
-                                                required
-                                                value={state.cliente?.m_sNombreFiscal}
-                                                placeholder={"No. Cliente: Nombre fiscal"}
-                                                InputLabelProps={{shrink: true}}
-                                                onClick={(props.disabled || !props.convenio) ?
-                                                    () => {
-                                                        return
-                                                    } : (() => {
-                                                        setState({...state, showDialogClientes: true})
-                                                    })}
-                                                disabled={props.disabled || !props.convenio}
-                                            />
-                                        </div>
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           onChange={handleChange}
-                                                           className="form-control"
-                                                           label={"Código"}
-                                                           required
-                                                           disabled={props.consult}
+                <Paper style={{padding: '20px', marginBottom: '10px'}}>
 
-                                                           value={state.codigoTarifa}
-                                                           name="codigoTarifa"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                            <label className="input select" style={{ width: "100%" }}>
-                                                <FormControl fullWidth variant="outlined" margin="dense" required>
-                                                    <InputLabel id="origenLabel">Origen (Bodega)</InputLabel>
-                                                    <Select
-                                                        native
-                                                        className="form-control"
-                                                        label="Origen (Bodega)"
-                                                        disabled={props.consult}
-                                                        labelId="origenLabel"
-                                                        value={state.origen}
-                                                        onChange={handleChange}
-                                                        name="origen"
-                                                    >
-                                                        <option
-                                                            key={"0"}
-                                                            value={"0"}
-                                                        >
-                                                            Seleccionar
-                                                        </option>
-                                                        {state.ciudades.map((ciudad) => (
-                                                            <option
-                                                                key={ciudad.m_nIdCiudad}
-                                                                value={ciudad.m_nIdCiudad}
-                                                            >
-                                                                {ciudad.m_sCiudad}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </label>
-                                        </div>
-                                        {/*{!porRegion &&
-                                    <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                        <label className="input select" style={{ width: "100%" }}>
-                                            <FormControl fullWidth variant="outlined" margin="dense" required={!porRegion}>
-                                                <InputLabel id="destinoLabel">Destino (Bodega)</InputLabel>
-                                                <Select
-                                                    native
-                                                    className="form-control"
-                                                    label="Destino (Bodega)"
-                                                    disabled={this.props.consult}
-                                                    labelId="destinoLabel"
-                                                    value={this.state.destino}
-                                                    onChange={this.handleChange}
-                                                    name="destino"
-                                                >
-                                                    <option
-                                                        key={"0"}
-                                                        value={"0"}
-                                                    >
-                                                        Seleccionar
-                                                    </option>
-                                                    {this.state.ciudades.map((ciudad) => (
-                                                        <option
-                                                            key={ciudad.m_nIdCiudad}
-                                                            value={ciudad.m_nIdCiudad}
-                                                        >
-                                                            {ciudad.m_sCiudad}
-                                                        </option>
-                                                    ))}
-                                                </Select>
-                                            </FormControl>
-                                        </label>
-                                    </div>
-                                    }*/}
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <h4>Agregando Tarifas</h4>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <TextField
+                                variant="outlined"
+                                label="Responsable de pago"
+                                margin="dense"
+                                required
+                                value={state.cliente?.m_sNombreFiscal}
+                                placeholder={"No. Cliente: Nombre fiscal"}
+                                InputLabelProps={{shrink: true}}
+                                onClick={(props.disabled || !props.convenio) ?
+                                    () => {
+                                        return
+                                    } : (() => {
+                                        setState({...state, showDialogClientes: true})
+                                    })}
+                                disabled={props.disabled || !props.convenio}
+                            />
+                        </Grid>
+                        <Grid item xs={2}>
+                            <TextField variant="outlined" margin="dense"
+                                       onChange={handleChange}
+                                       className="form-control"
+                                       label={"Código"}
+                                       required
+                                       disabled={props.consult}
+                                       value={state.codigoTarifa}
+                                       name="codigoTarifa"
+                            />
+                        </Grid>
+                        <Grid item xs={2}>
+                            <FormControl fullWidth variant="outlined" margin="dense" required>
+                                <InputLabel id="origenLabel">Origen (Bodega)</InputLabel>
+                                <Select
+                                    className="form-control"
+                                    label="Origen (Bodega)"
+                                    disabled={props.disabled}
+                                    labelId="origenLabel"
+                                    value={state.origen}
+                                    onChange={handleChange}
+                                    name="origen"
+                                >
+                                    {state.ciudades.map((ciudad) => (
+                                        <MenuItem
+                                            key={ciudad.m_nIdCiudad}
+                                            value={ciudad.m_nIdCiudad}
+                                        >
+                                            {ciudad.m_sCiudad}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <TextField variant="outlined" margin="dense"
+                                       onChange={handleChange}
+                                       className="form-control"
+                                       type="number"
+                                       label="Flete Minimo"
+                                       step="1"
+                                       disabled={props.consult}
+                                       value={state.precioFlete}
+                                       name="precioFlete"
+                            />
+                        </Grid>
 
+                    </Grid>
+                    {/*<div className="widget-wrap" style={{ margin: "0px", padding: "20px" }}>
+                        <div className="widget-content">
 
-                                        {/*<div className="col-md-4 col-sm-4" style={{ padding: "5px" }}>
-                                        <label className="checkbox">
-                                            Peso o Volumen
-                                            <input type="checkbox"
-                                                   checked={this.state.porPesoOVolumen}
-                                                   onChange={this.handleChangeTipoTarifa}
-                                                   name="porPesoOVolumen"
-                                                   disabled={this.props.consult  || this.props.select.m_bPorRegion}
-                                            />
-                                            <i />
-                                        </label>
-                                    </div>
-
-                                    <div className="col-md-4 col-sm-4" style={{ padding: "5px" }}>
-                                        <label className="checkbox">
-                                            Rangos
-                                            <input type="checkbox"
-                                                   checked={this.state.porRangos}
-                                                   onChange={handleChangeTipoTarifa}
-                                                   name="porRangos"
-                                                   disabled={this.props.consult || this.props.select.m_bPorRegion}
-                                            />
-                                            <i />
-                                        </label>
-                                    </div>
-
-                                    <div className="col-md-4 col-sm-4" style={{ padding: "5px" }}>
-                                        <label className="checkbox">
-                                            Región
-                                            <input type="checkbox"
-                                                   checked={this.state.porRegion}
-                                                   onChange={this.handleChangeTipoTarifa}
-                                                   name="porRegion"
-                                                   disabled={this.props.consult || this.props.select.m_bPorRegion}
-                                            />
-                                            <i />
-                                        </label>
-                                    </div>*/}
-
-                                        {/*{porPesoOVolumen &&
-                                    <div>
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-                                            <label className="input select" style={{ width: "100%" }}>
-                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                    <InputLabel id="unidadPesoLabel">Unidad Peso</InputLabel>
-                                                    <Select
-                                                        native
-                                                        className="form-control"
-                                                        label="Unidad Peso"
-                                                        labelId="unidadPesoLabel"
-                                                        className="form-control"
-                                                        required
-                                                        disabled={this.props.consult}
-                                                        value={this.state.unidadPeso}
-                                                        onChange={handleChange}
-                                                        name="unidadPeso"
-                                                    >
-                                                        <option
-                                                            key={"0"}
-                                                            value={"Kg"}
-                                                        >
-                                                            Kilogramos
-                                                        </option>
-                                                        <option
-                                                            key={"1"}
-                                                            value={"Lb"}
-                                                        >
-                                                            Libras
-                                                        </option>
-                                                        <option
-                                                            key={"2"}
-                                                            value={"Ton"}
-                                                        >
-                                                            Toneladas
-                                                        </option>
-
-                                                    </Select>
-                                                </FormControl>
-                                            </label>
-                                        </div>
-
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px" }}>
-
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           onChange={handleChange}
-                                                           className="form-control"
-                                                           type="number"
-                                                           label={<div>{this.state.unidadPeso}/Kg</div>}
-                                                           required
-                                                           step="2"
-                                                           disabled={this.props.consult}
-
-                                                           value={this.state.factorConversion}
-                                                           name="factorConversion"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
-
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           onChange={handleChange}
-                                                           className="form-control"
-                                                           type="number"
-                                                           label={<div>Precio m<sup>3</sup></div>}
-                                                           step="1"
-                                                           disabled={this.props.consult}
-
-                                                           value={this.state.precioM3}
-                                                           name="precioM3"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
-
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           onChange={handleChange}
-                                                           className="form-control"
-                                                           type="number"
-                                                           label="Precio Kilo"
-                                                           required={this.state.porPesoOVolumen}
-                                                           step="2"
-                                                           disabled={this.props.consult}
-
-                                                           value={this.state.precioKilo}
-                                                           name="precioKilo"
-                                                />
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    }*/}
-                                        <div>
-                                            <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
-                                                <div className="input">
-                                                    <TextField variant="outlined" margin="dense"
-                                                               onChange={handleChange}
-                                                               className="form-control"
-                                                               type="number"
-                                                               label="Flete Minimo"
-                                                               step="1"
-                                                               disabled={props.consult}
-                                                               value={state.precioFlete}
-                                                               name="precioFlete"
-                                                    />
-                                                </div>
-                                            </div>
-                                            {/*<div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
-                                            <div className="input">
-                                                <TextField variant="outlined" margin="dense"
-                                                           onChange={handleChange}
-                                                           className="form-control"
-                                                           type="number"
-                                                           label="Precio Minimo"
-                                                           disabled={this.props.consult}
-                                                           step="2"
-                                                           value={this.state.precioMinimo}
-                                                           name="precioMinimo"
-                                                />
-                                            </div>
-                                        </div>*/}
-                                        </div>
-                                        {/*{porPesoOVolumen &&
-                                    <div>
-
-                                        <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
-                                            <label className="input select" style={{ width: "100%" }}>
-                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                    <InputLabel id="trasladaLabel">Traslada</InputLabel>
-                                                    <Select
-                                                        labelId="trasladaLabel"
-                                                        label="Traslada"
-                                                        className="form-control"
-                                                        value={this.state.traslada}
-                                                        onChange={handleChange}
-                                                        name="traslada"
-                                                        disabled={this.props.consult}
-                                                    >
-                                                        <option
-                                                            key={0}
-                                                            value={""}
-                                                        >
-                                                            Selecciona
-                                                        </option>
-                                                        {this.state.impuestos.filter(i => i.m_nTIpoImpuesto === 1).map((impuesto) => (
-                                                            <option
-                                                                key={impuesto.m_nIdImpuesto}
-                                                                value={impuesto.m_nIdImpuesto}
-                                                            >
-                                                                {impuesto.m_sImpuesto}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </label>
-                                        </div>
-                                        <div className="col-md-6 col-sm-6" style={{ padding: "5px" }}>
-                                            <label className="input select" style={{ width: "100%" }}>
-                                                <FormControl fullWidth variant="outlined" margin="dense">
-                                                    <InputLabel id="retieneLabel">Retiene</InputLabel>
-                                                    <Select
-                                                        labelId="retieneLabel"
-                                                        label="Retiene"
-                                                        className="form-control"
-                                                        onChange={handleChange}
-                                                        disabled={this.props.consult}
-                                                        name="retiene"
-                                                        value={this.state.retiene}
-                                                    >
-                                                        <option
-                                                            key={0}
-                                                            value={""}
-                                                        >
-                                                            Selecciona
-                                                        </option>
-                                                        {this.state.impuestos.filter(i => i.m_nTIpoImpuesto === 0).map((impuesto) => (
-                                                            <option
-                                                                key={impuesto.m_nIdImpuesto}
-                                                                value={impuesto.m_nIdImpuesto}
-                                                            >
-                                                                {impuesto.m_sImpuesto}
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    }*/}
-
-                                        <div className="col-md-12 col-sm-12" style={{ padding: "5px", display: "inline-flex" }}>
-                                            <div className="form-footer " className="col-md-12" style={{ padding: "10px" }}>
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-secondary secondary-btn"
-                                                    onClick={props.onCancel}
-                                                >
-                                                    Cancelar
-                                                </button>
-                                                {!props.consult &&
-                                                <button type="submit" className="btn btn-primary primary-btn">
-                                                    Aceptar
-                                                </button>
-                                                }
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-9 col-sm-12" >
-                            <div className="widget-wrap" style={{ margin: "0px", padding: "0px" }}>
-                                <div className="widget-content">
-
-                                    {/*{this.state.porPesoOVolumen &&
+                            {this.state.porPesoOVolumen &&
                                 <div>
                                     <Tabs value={this.state.tab} onChange={this.handleTabChange}
                                           aria-label="simple tabs example" variant="scrollable"
@@ -1771,42 +1481,67 @@ function CrearTarifav2(props) {
                                         </TipoServicio>
                                     </TabPanel>
                                 </div>
-                                }*/}
-                                    {props.idTipoTarifa === 3 &&
-                                    <div>
-                                        <Tabs value={state.tab} onChange={handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
-                                            <Tab label="Destinos" {...a11yProps(0)} className={{ backgroundColor: "white !important" }} />
-                                            <Tab label="Productos" {...a11yProps(1)}/>
+                                }
+                            {props.idTipoTarifa === 3 &&
+                            <div>
+                                <Tabs value={state.tab} onChange={handleTabChange} aria-label="simple tabs example" variant="scrollable" scrollButtons="auto">
+                                    <Tab label="Destinos" {...a11yProps(0)} className={{ backgroundColor: "white !important" }} />
+                                    <Tab label="Productos" {...a11yProps(1)}/>
 
-                                        </Tabs>
+                                </Tabs>
 
-                                        <TabPanel value={state.tab} index={0}>
-                                            {/*el filtrado por agregadoDesde está demas*/}
-                                            <DestinosTarifa
-                                                destinos={state.dataDestinosTemp}
-                                                destinosSeleccionados={state.dataDestinosSeleccionados}
-                                                actualizarDestinos={actualizarDestinos}
-                                                consult={props.consult}
-                                            />
-                                        </TabPanel>
-                                        <TabPanel value={state.tab} index={1}>
-                                            <ProductosPrecios
-                                                dataList={state.dataProductosSeleccionados}
-                                                onChangeList={actualizarProductos}
-                                                mostrarRangos={false}
-                                                consult={props.consult}
-                                                ivaRetiene={[]}
-                                                ivaTraslada={[]}
-                                            />
-                                        </TabPanel>
+                                <TabPanel value={state.tab} index={0}>
+                                    el filtrado por agregadoDesde está demas
 
-                                    </div>
-                                    }
-                                </div>
+                                </TabPanel>
+                                <TabPanel value={state.tab} index={1}>
+                                    <ProductosPrecios
+                                        dataList={state.dataProductosSeleccionados}
+                                        onChangeList={actualizarProductos}
+                                        mostrarRangos={false}
+                                        consult={props.consult}
+                                        ivaRetiene={[]}
+                                        ivaTraslada={[]}
+                                    />
+                                </TabPanel>
+
                             </div>
+                            }
                         </div>
+                    </div>*/}
+                    <DestinosTarifa
+                        destinos={filtrarDestinos(state.dataDestinosTemp)}
+                        destinosSeleccionados={state.dataDestinosSeleccionados}
+                        actualizarDestinos={actualizarDestinos}
+                        consult={props.consult}
+                    />
+
+                    <div style={{marginTop:'20px', marginBottom: '20px'}}>
+                        <ProductosPrecios
+                            dataList={state.dataProductosSeleccionados}
+                            onChangeList={actualizarProductos}
+                            mostrarRangos={false}
+                            consult={props.consult}
+                            ivaRetiene={[]}
+                            ivaTraslada={[]}
+                            mostrarTotal={false}
+                        />
                     </div>
-                </div>
+
+                    <Grid container item xs={12}>
+                        {/*<Button
+                            fullWidth
+                            type="button"
+                            className="btn btn-secondary secondary-btn"
+                            onClick={props.onCancel}
+                        >
+                            Cancelar
+                        </Button>*/}
+                        <Button fullWidth type="submit" color={"primary"} variant={"contained"}>
+                            Guardar Tarifa
+                        </Button>
+                    </Grid>
+                </Paper>
             </form>
         </div>
     )

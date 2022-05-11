@@ -141,26 +141,28 @@ export default function DestinosTarifa({destinos = [], destinosSeleccionados = [
         <Grid
             container
             spacing={2}
-            justifyContent="center"
+            justifyContent="space-between"
             alignItems="center"
             className={classes.root}
         >
-            <Grid item>{customList('Destinos (Bodegas)', left)}</Grid>
-            <Grid item>
+            <Grid item xs={5}>{customList('Destinos (Bodegas)', left)}</Grid>
+            <Grid item xs={2}>
                 <Grid container direction="column" alignItems="center">
                     <Button
                         variant="outlined"
-                        size="small"
+                        size="large"
                         className={classes.button}
                         onClick={handleCheckedRight}
                         disabled={leftChecked.length === 0}
                         aria-label="move selected right"
+                        fullWidth
                     >
                         &gt;
                     </Button>
                     <Button
+                        fullWidth
                         variant="outlined"
-                        size="small"
+                        size="large"
                         className={classes.button}
                         onClick={handleCheckedLeft}
                         disabled={rightChecked.length === 0}
@@ -170,7 +172,7 @@ export default function DestinosTarifa({destinos = [], destinosSeleccionados = [
                     </Button>
                 </Grid>
             </Grid>
-            <Grid item>{customList('Destinos de tarifa', right)}</Grid>
+            <Grid item xs={5}>{customList('Destinos de tarifa', right)}</Grid>
         </Grid>
     );
 }

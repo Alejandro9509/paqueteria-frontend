@@ -650,16 +650,20 @@ function Tarifa(props){
                 }
             }).catch(err => {
                 console.log(err)
-                showSuccess("Hubo un error al agregar")
+                showSuccess("Hubo un error al modificar")
             });
         } else {
             agregarTarifa(params).then(respuesta => {
                 if (respuesta.data.Estatus){
                     showSuccess("Agregado con éxito")
+                    handleShowListado()
                 }else {
                     showSuccess("Hubo un error al agregar")
                 }
-            })
+            }).catch(err => {
+                console.log(err)
+                showSuccess("Hubo un error al agregar")
+            });
             /*const url = `${process.env.REACT_APP_API_URL}/Tarifas/Agregar`;
             axios.post(url, Object.assign({}, params), { headers }).then(respuesta => {
                 showSuccess(respuesta.data)

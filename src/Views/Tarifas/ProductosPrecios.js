@@ -1,7 +1,18 @@
 import React, {Component, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import axios from "axios";
-import { Dialog, DialogActions, DialogContent, FormControl, IconButton, InputAdornment, InputLabel, Select, TextField } from '@material-ui/core';
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    FormControl,
+    Grid,
+    IconButton,
+    InputAdornment,
+    InputLabel,
+    Select,
+    TextField
+} from '@material-ui/core';
 import PageviewIcon from "@material-ui/icons/Pageview";
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -23,7 +34,7 @@ function not(a, b) {
     return a.filter((value) => value !== b);
 }
 
-export default function ProductosPrecios({dataList = [], onChangeList, consult,ivaRetiene,ivaTraslada}) {
+export default function ProductosPrecios({dataList = [], onChangeList, consult,ivaRetiene,ivaTraslada, mostrarTotal}) {
     const [state, setState] = useState({
         conceptos: [],
     })
@@ -105,13 +116,13 @@ export default function ProductosPrecios({dataList = [], onChangeList, consult,i
         <div>
             {
                 !consult &&
-                <div className="row">
-                    <div className="col-md-3 col-sm-6" style={{padding: "5px"}}>
-
+                <Grid container spacing={2}>
+                    <Grid item xs={2}>
                         <div className="input">
                             <Autocomplete
                                 value={dataProducto.producto}
                                 freeSolo
+                                fullWidth
                                 onChange={(event, newValue) => { handleChangeAutocomplete("producto", newValue)}}
                                 id="producto"
                                 disableClearable
@@ -119,7 +130,7 @@ export default function ProductosPrecios({dataList = [], onChangeList, consult,i
                                 disabled={state.agregar == "Consultar"}
                                 options={state.conceptos}
                                 getOptionLabel={(option) =>
-                                   option ? option.m_nIdProducto+'-'+option.m_sDescripcion : ''
+                                    option ? option.m_nIdProducto+'-'+option.m_sDescripcion : ''
                                 }
                                 variant="outlined"
                                 style={{
@@ -145,132 +156,33 @@ export default function ProductosPrecios({dataList = [], onChangeList, consult,i
                                 )}
                             />
                         </div>
-                    </div>
-                    <div className="col-md-3 col-sm-6" style={{padding: "5px"}}>
-
+                    </Grid>
+                    <Grid item xs={2}>
                         <div className="input">
-                            <TextField variant="outlined" margin="dense"
-                                       onChange={handleChange}
-                                       className="form-control"
-                                       type="number"
-                                       label="Importe"
-                                       style={{textAlign: "right"}}
-                                       step="1"
-                                       min="0"
-                                       value={dataProducto.m_cImporte}
-                                       name="m_cImporte"
-                            />
-                        </div>
+                        <TextField variant="outlined" margin="dense"
+                                   onChange={handleChange}
+                                   className="form-control"
+                                   type="number"
+                                   fullWidth
+                                   label="Importe"
+                                   style={{textAlign: "right"}}
+                                   step="1"
+                                   min="0"
+                                   value={dataProducto.m_cImporte}
+                                   name="m_cImporte"
+                        />
                     </div>
-
-                    {false &&
-                    <div>
-                        <div className="col-md-2 col-sm-6" style={{padding: "5px"}}>
-                            <label className="input select" style={{width: "100%"}}>
-                                <FormControl fullWidth variant="outlined" margin="dense">
-                                    <InputLabel id="trasladaLabel">Traslada</InputLabel>
-                                    <Select
-                                        labelId="trasladaLabel"
-                                        label="Traslada"
-                                        className="form-control"
-                                        value={state.traslada}
-                                        onChange={handleChange}
-                                        name="traslada"
-                                    >
-                                        <option
-                                            key={0}
-                                            value={""}
-                                        >
-                                            Selecciona
-                                        </option>
-                                        {state.concepto &&
-                                        state.impuestos.filter(i => state.concepto.arClsDetalle.find(c => c.m_nIdImpuesto === i.m_nIdImpuesto && c.m_bTrasladado === true)).map((impuesto) => (
-                                            <option
-                                                key={impuesto.m_nIdImpuesto}
-                                                value={impuesto.m_nIdImpuesto}
-                                            >
-                                                {impuesto.m_sImpuesto}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </label>
-                        </div>
-                        <div className="col-md-1 col-sm-6" style={{padding: "5px"}}>
-
-                            <div className="input">
-                                <TextField variant="outlined" margin="dense"
-                                           onChange={handleChange}
-                                           className="form-control"
-                                           type="number"
-                                           style={{textAlign: "right"}}
-                                           disabled
-                                           label="Importe IVA"
-                                           step="1"
-                                           min="0"
-                                           value={state.importeIVA}
-                                           name="importeIVA"
-                                />
-                            </div>
-                        </div>
-                        <div className="col-md-2 col-sm-6" style={{padding: "5px"}}>
-                            <label className="input select" style={{width: "100%"}}>
-                                <FormControl fullWidth variant="outlined" margin="dense">
-                                    <InputLabel id="retieneLabel">Retiene</InputLabel>
-                                    <Select
-                                        labelId="retieneLabel"
-                                        label="Retiene"
-                                        className="form-control"
-                                        onChange={handleChange}
-                                        name="retiene"
-                                        value={state.retiene}
-                                    >
-                                        <option
-                                            key={0}
-                                            value={""}
-                                        >
-                                            Selecciona
-                                        </option>
-                                        {state.concepto &&
-                                        state.impuestos.filter(i => state.concepto.arClsDetalle.find(c => c.m_nIdImpuesto === i.m_nIdImpuesto && c.m_bTrasladado === false)).map((impuesto) => (
-                                            <option
-                                                key={impuesto.m_nIdImpuesto}
-                                                value={impuesto.m_nIdImpuesto}
-                                            >
-                                                {impuesto.m_sImpuesto}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </label>
-                        </div>
-
-                        <div className="col-md-2 col-sm-6" style={{padding: "5px"}}>
-
-                            <div className="input">
-                                <TextField variant="outlined" margin="dense"
-                                           onChange={handleChange}
-                                           className="form-control"
-                                           type="number"
-                                           style={{textAlign: "right"}}
-                                           disabled
-                                           label="Importe Ret"
-                                           step="1"
-                                           min="0"
-                                           value={state.importeRet}
-                                           name="importeRet"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    }
-
-                    <div className="col-md-1 col-sm-6" style={{padding: "0px"}}>
+                    </Grid>
+                    <Grid item xs>
                         <IconButton onClick={onSubmit} style={{padding: "0px"}}>
                             <AddBoxIcon style={{fill: "green", fontSize: "xx-large"}}/>
                         </IconButton>
-                    </div>
-                </div>
+                    </Grid>
+                    {/*<Grid item></Grid>*/}
+
+
+
+                </Grid>
             }
 
             <div className="row">
@@ -318,60 +230,67 @@ export default function ProductosPrecios({dataList = [], onChangeList, consult,i
                     }
 
                 </div>
-                <div className="col-md-12 col-sm-12"
-                     style={{padding: "5px", backgroundColor: "white", backgroundClip: "content-box"}}>
 
-                    <div className="col-md-12 col-sm-12"
-                         style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
-                        <div style={{margin: "5px", padding: "5px"}}>Subtotal</div>
-                        <div style={{
-                            margin: "4px",
-                            padding: "4px",
-                            marginRight: "15px",
-                            backgroundColor: "white",
-                            backgroundClip: "border-box",
-                            borderStyle: "solid",
-                            borderColor: "gray",
-                            minWidth: "230px",
-                            textAlign: "right"
-                        }}> ${parseFloat(dataList.reduce((total, arg) => total + parseFloat(arg.m_cImporte), 0)).toFixed(2)}</div>
-                    </div>
-                    <div className="col-md-12 col-sm-12"
-                         style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
 
-                        {/*<div style={{
-                            margin: "4px",
-                            padding: "4px",
-                            marginRight: "15px",
-                            backgroundColor: "white",
-                            backgroundClip: "border-box",
-                            borderStyle: "solid",
-                            borderColor: "gray",
-                            minWidth: "230px",
-                            textAlign: "right"
-                        }}>  {ivaTraslada.map(t => (
-                            <div>{`${state.impuestos.length !== 0 ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : "" : ""} `} ${parseFloat(dataList.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br/>
-                            </div>))} {ivaRetiene.map(t => (
-                            <div>{`${state.impuestos.length !== 0 ? `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : ""}` : ""} `} ${parseFloat(dataList.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br/>
-                            </div>))} </div>*/}
-                    </div>
+            </div>
+            {
+                mostrarTotal &&
+                <div className="row">
                     <div className="col-md-12 col-sm-12"
-                         style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
-                        <div style={{margin: "5px", padding: "5px"}}>Total</div>
-                        <div style={{
-                            margin: "4px",
-                            padding: "4px",
-                            marginRight: "15px",
-                            backgroundColor: "white",
-                            backgroundClip: "border-box",
-                            borderStyle: "solid",
-                            borderColor: "gray",
-                            minWidth: "230px",
-                            textAlign: "right"
-                        }}> ${parseFloat(dataList.reduce((total, arg) => total + parseFloat(arg.m_cImporte), 0) + dataList.filter(c => ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) - dataList.filter(c => ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
+                         style={{padding: "5px", backgroundColor: "white", backgroundClip: "content-box"}}>
+
+                        <div className="col-md-12 col-sm-12"
+                             style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
+                            <div style={{margin: "5px", padding: "5px"}}>Subtotal</div>
+                            <div style={{
+                                margin: "4px",
+                                padding: "4px",
+                                marginRight: "15px",
+                                backgroundColor: "white",
+                                backgroundClip: "border-box",
+                                borderStyle: "solid",
+                                borderColor: "gray",
+                                minWidth: "230px",
+                                textAlign: "right"
+                            }}> ${parseFloat(dataList.reduce((total, arg) => total + parseFloat(arg.m_cImporte), 0)).toFixed(2)}</div>
+                        </div>
+                        <div className="col-md-12 col-sm-12"
+                             style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
+
+                            {/*<div style={{
+                                margin: "4px",
+                                padding: "4px",
+                                marginRight: "15px",
+                                backgroundColor: "white",
+                                backgroundClip: "border-box",
+                                borderStyle: "solid",
+                                borderColor: "gray",
+                                minWidth: "230px",
+                                textAlign: "right"
+                            }}>  {ivaTraslada.map(t => (
+                                <div>{`${state.impuestos.length !== 0 ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : "" : ""} `} ${parseFloat(dataList.filter(c => c.traslada === t).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0)).toFixed(2)}<br/>
+                                </div>))} {ivaRetiene.map(t => (
+                                <div>{`${state.impuestos.length !== 0 ? `${state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)) ? state.impuestos.find(i => i.m_nIdImpuesto === parseInt(t)).m_sImpuesto : ""}` : ""} `} ${parseFloat(dataList.filter(c => c.retiene === t).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}<br/>
+                                </div>))} </div>*/}
+                        </div>
+                        <div className="col-md-12 col-sm-12"
+                             style={{alignItems: "right", display: "inline-flex", justifyContent: "flex-end"}}>
+                            <div style={{margin: "5px", padding: "5px"}}>Total</div>
+                            <div style={{
+                                margin: "4px",
+                                padding: "4px",
+                                marginRight: "15px",
+                                backgroundColor: "white",
+                                backgroundClip: "border-box",
+                                borderStyle: "solid",
+                                borderColor: "gray",
+                                minWidth: "230px",
+                                textAlign: "right"
+                            }}> ${parseFloat(dataList.reduce((total, arg) => total + parseFloat(arg.m_cImporte), 0) + dataList.filter(c => ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeIVA), 0) - dataList.filter(c => ivaTraslada.find(t => t === c.traslada) != null).reduce((total, arg) => total + parseFloat(arg.importeRet), 0)).toFixed(2)}</div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
 
         </div>
     );
