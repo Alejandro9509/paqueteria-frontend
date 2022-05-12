@@ -697,7 +697,6 @@ class DetalleParadas extends Component {
                                                                     <IconButton disabled={!validarDerecho(9101454) || this.validarRutasCompletadas(tour)} aria-label="file" onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}>
                                                                         <CancelIcon style={{fill:"red"}} fontSize={"large"}/>
                                                                     </IconButton>
-                                                                    <Button onClick={()=>this.validarRutasCompletadas(tour)}>hola</Button>
                                                                     </>
                                                                     }
                                                                     {
