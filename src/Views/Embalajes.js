@@ -443,7 +443,7 @@ function Embalaje() {
                                                 </div>
                                                 <br></br>
                                                    <div className="form-footer" className="col-12 col-sm-9 col-md-7 unit">
-                                                      {  state.agregar != "Consultar" && <button type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }} className="btn btn-secondary secondary-btn"> Cancelar</button>}
+                                                     <button type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }} className="btn btn-secondary secondary-btn"> Cancelar</button>
                                                       {  state.agregar != "Consultar" && <button type="submit" form="formEmbalaje" className="btn btn-primary primary-btn">Aceptar</button>}
                                                 </div>
                                             </form>
