@@ -281,7 +281,7 @@ function Viajes() {
                 consult: false,
                 open: false,
                 idViaje: 0,
-                selectViaje: {}
+                selectViaje: null
             }
         })
     }
