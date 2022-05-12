@@ -185,23 +185,21 @@ export default function DialogoNuevoConcepto(props) {
         }
         obtenerImpuestosByConceptosFacturacion(newValue.m_nIdConceptosFacturacion).then(respuesta => {
             newValue.arClsDetalle = respuesta.data
-            if (respuesta.data.length > 0){
-                let retiene = respuesta.data.find(i => i.m_bPredeterminado && !i.m_bTrasladado)?.m_nIdImpuesto || 0
-                let traslada = respuesta.data.find(i => i.m_bPredeterminado && i.m_bTrasladado)?.m_nIdImpuesto || 0
-                setConcepto(concepto =>{
-                    return {
-                        ...concepto,
-                        concepto: newValue,
-                        idConcepto: newValue.m_nIdConceptosFacturacion,
-                        importe: newValue.m_cImporte || 0,
-                        nombreConcepto: newValue.m_sConcepto,
-                        importeRet: newValue.m_cImporteRetiene || 0,
-                        retiene: retiene,
-                        traslada: traslada,
-                        importeIVA: newValue.m_cImporteIva || 0
-                    }
-                })
-            }
+            let retiene = respuesta.data.find(i => i.m_bPredeterminado && !i.m_bTrasladado)?.m_nIdImpuesto || 0
+            let traslada = respuesta.data.find(i => i.m_bPredeterminado && i.m_bTrasladado)?.m_nIdImpuesto || 0
+            setConcepto(concepto =>{
+                return {
+                    ...concepto,
+                    concepto: newValue,
+                    idConcepto: newValue.m_nIdConceptosFacturacion,
+                    importe: newValue.m_cImporte || 0,
+                    nombreConcepto: newValue.m_sConcepto,
+                    importeRet: newValue.m_cImporteRetiene || 0,
+                    retiene: retiene,
+                    traslada: traslada,
+                    importeIVA: newValue.m_cImporteIva || 0
+                }
+            })
         });
     }
 
