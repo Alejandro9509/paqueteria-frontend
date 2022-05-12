@@ -329,10 +329,10 @@ class AgregarViaje extends Component {
                 estatus: this.state.estatusInforme,
                 horaEntrega: this.state.horaEntregaGeneral,
             },
-            EsOperadorPermisionario: this.state.EsOperadorPermisionario,
-            LicenciaPermisionario: this.state.LicenciaPermisionario,
-            NombrePermisionario: this.state.NombrePermisionario,
-            FechaVigenciaPermisionario: this.state.FechaVigenciaPermisionario,
+            EsOperadorPermisionario: this.state.esOperadorPermisionario,
+            LicenciaPermisionario: this.state.licenciaPermisionario,
+            NombrePermisionario: this.state.nombrePermisionario,
+            FechaVigenciaPermisionario: this.state.fechaVigenciaPermisionario,
         }
         //console.log(params)
        if (this.props.modificar) {
