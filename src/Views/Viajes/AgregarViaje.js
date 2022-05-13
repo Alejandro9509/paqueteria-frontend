@@ -703,7 +703,8 @@ class AgregarViaje extends Component {
                         estatusUnidad: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus,
                         colorUnidad: resultado.data instanceof String ? "" : resultado.data.m_sColor,
                         kms: newValue.m_nOdometro,
-                        horas: newValue.m_nHorasTrabajadasMotorNoGPS
+                        horas: newValue.m_nHorasTrabajadasMotorNoGPS,
+                        aplicaRemolque: newValue.m_bAplicaRemolque
                     })
                 }else{
                     this.setState({
@@ -1666,7 +1667,7 @@ class AgregarViaje extends Component {
                                                             <TextField
                                                                 label="Remolque 1"
                                                                 margin="dense"
-                                                                required
+                                                                required={this.state.aplicaRemolque}
                                                                 variant="outlined"
                                                                 {...params}
                                                             />
@@ -1822,7 +1823,7 @@ class AgregarViaje extends Component {
                                     </div>
                                     {
                                         !this.props.consult &&
-                                        <Button variant="contained" color="primary" disabled={this.props.select.m_sEstatusViaje != "Pendiente"} fullWidth onClick={(event) => this.handleShowDialog(event)}>
+                                        <Button variant="contained" color="primary" disabled={this.props.select ? this.props.select.m_sEstatusViaje != "Pendiente" : false} fullWidth onClick={(event) => this.handleShowDialog(event)}>
                                             Agregar informes
                                         </Button>
                                     }
