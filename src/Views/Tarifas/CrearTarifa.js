@@ -1243,7 +1243,7 @@ function CrearTarifav2(props) {
 
     const handlePatrocinadorSelected = (row) => {
         if (props.convenio){
-            obtenerClienteTieneConvenio(row.data.m_nIdCliente).then(respuesta => {
+            obtenerClienteTieneConvenio(row.data.m_nIdCliente,0).then(respuesta => {
                 if (respuesta.data.value){
                     showSuccess("El cliente seleccionado ya tiene convenio activo.")
                 }else{
@@ -1252,6 +1252,9 @@ function CrearTarifav2(props) {
                         cliente: row.data,
                     }))
                 }
+            }).catch(e => {
+                console.log(e)
+                showSuccess("No fue posible validad si el cliente tiene convenio. Intente de nuevo.")
             })
         }
         setState(() => ({

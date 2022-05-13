@@ -509,7 +509,7 @@ function Tarifa(props){
         columns: [],
         mostrarColumnasPesoVolumen: false,
         configuraciones: null,
-        idTipoTarifa: null
+        idTipoTarifa: ''
     })
 
     useEffect(value => {

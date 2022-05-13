@@ -18,6 +18,7 @@ import {dataGridLocaleText} from "../../Constants";
 import CrearTarifaRegion from "./CrearTarifaRegion";
 import $ from "jquery";
 import Noty from "noty";
+import {obtenerClientePublicoGeneral} from "../../Util/Contexts/ClientesContext";
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -29,7 +30,7 @@ function showSuccess(mensaje) {
     }).show()
 }
 
-function TarifasRegio(props){
+function TarifasRegion(props){
     const [state, setState] = useState({
         data: [],
         agregar: "Agregar",
@@ -43,11 +44,12 @@ function TarifasRegio(props){
         columns: [],
         mostrarColumnasPesoVolumen: false,
         configuraciones: null,
+        clienteGenerico: null,
     })
 
     useEffect(value => {
         definirColumnas()
-        getTarifas(props.configuraciones.TipoTarifaTarifas)
+        getTarifas(3)
     }, [])
 
     const handleShowAgregar = (event) => {
@@ -185,42 +187,36 @@ function TarifasRegio(props){
         $('.tab-content div ').removeClass('in show');
         $('#Listado').addClass('in show');
         definirColumnas()
-        getTarifas(props.configuraciones.TipoTarifaTarifas);
+        getTarifas(3);
     }
 
     const getTarifas = (idTipoTarifa) => {
-        obtenerTarifasByTipo(idTipoTarifa).then(respuesta => {
-            setState(state =>{
-                return {
-                    ...state,
-                    data: respuesta.data,
-                    agregar: "Agregar"
-                }
+        if (state.clienteGenerico == null){
+            obtenerClientePublicoGeneral().then(respuestaCliente => {
+                obtenerTarifasByTipo(idTipoTarifa).then(respuesta => {
+                    setState(state =>{
+                        return {
+                            ...state,
+                            data: respuesta.data,
+                            agregar: "Agregar",
+                            clienteGenerico: respuestaCliente.data
+                        }
+                    })
+                })
             })
-        })
-    }
-
-    /*const getParametrosConfiguracion = () =>  {
-        obtenerParametrosConfiguracion().then(respuesta => {
-            setState(state =>{
-                return{
-                    ...state,
-                    configuraciones: {
-                        TipoTarifaTarifas: respuesta.data.TipoTarifaTarifas || 0,
-                        IdConceptoFlete: respuesta.data.IdConceptoFlete || 0,
-                        IdConceptoCarga: respuesta.data.IdConceptoCarga || 0,
-                        IdConceptoDescarga: respuesta.data.IdConceptoDescarga || 0,
-                        IdConceptoRecoleccion: respuesta.data.IdConceptoRecoleccion || 0,
-                        IdConceptoEntrega: respuesta.data.IdConceptoEntrega || 0,
-                        IdConceptoSeguro: respuesta.data.IdConceptoSeguro || 0,
-                        IdConceptoCita: respuesta.data.IdConceptoCita || 0,
-                        CobroCargaDescargaTarifa: respuesta.data.CobroCargaDescargaTarifa
+        }else{
+            obtenerTarifasByTipo(idTipoTarifa).then(respuesta => {
+                setState(state =>{
+                    return {
+                        ...state,
+                        data: respuesta.data,
                     }
-                }
+                })
             })
-            getTarifas(respuesta.data.TipoTarifaTarifas)
-        })
-    }*/
+        }
+
+
+    }
 
     /**Se definen las columnas que se van a mostrar en el listado de tarifas*/
     const definirColumnas = () => {
@@ -337,6 +333,11 @@ function TarifasRegio(props){
         })
     }
 
+    const filtrarTarifas =
+        props.convenio ?
+            state.data.filter(i => i.m_nIdCliente !== state.clienteGenerico.m_nIdCliente)
+            : state.data.filter(i => i.m_nIdCliente === state.clienteGenerico.m_nIdCliente)
+
     return(
         <section className="main-container">
             <div className="container-fluid">
@@ -373,7 +374,7 @@ function TarifasRegio(props){
                                 <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                                     <DataGrid
                                         localeText={dataGridLocaleText}
-                                        rows={state.data}
+                                        rows={filtrarTarifas}
                                         columns={state.columns}
                                         density="compact"
                                         pageSize={Math.floor((state.height - 310) / 30)}
@@ -410,4 +411,4 @@ function TarifasRegio(props){
 }
 
 
-export default TarifasRegio;
+export default TarifasRegion;
