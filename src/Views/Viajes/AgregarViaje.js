@@ -1822,7 +1822,7 @@ class AgregarViaje extends Component {
                                     </div>
                                     {
                                         !this.props.consult &&
-                                        <Button variant="contained" color="primary" disabled={this.props.select?.m_sEstatusViaje != "Pendiente"} fullWidth onClick={(event) => this.handleShowDialog(event)}>
+                                        <Button variant="contained" color="primary" disabled={this.props.select ?  this.props.select.m_sEstatusViaje != "Pendiente" : false} fullWidth onClick={(event) => this.handleShowDialog(event)}>
                                             Agregar informes
                                         </Button>
                                     }
