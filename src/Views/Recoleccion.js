@@ -399,8 +399,8 @@ function Recoleccion() {
             })
         }
         if (input === "codigoPostalRec"){
-            obtenerCodigosPostalesPorEstadoMunicipio(recoleccionDD.estadoRec, recoleccionDD.municipioRec).then(({data}) => {
-                setDataCodigosPostalesRecoleccionDD(data)
+            obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoEnt, entregaDD.municipioEnt).then(({data}) => {
+                setDataCodigosPostalesEntregaDD(data)
             })
         }
     }
@@ -493,27 +493,20 @@ function Recoleccion() {
         }
         if (event.target.name === "municipioEnt") {
             setRepetirConceptos(true)
+            obtenerCodigosPostalesPorEstadoMunicipio(recoleccionDD.estadoRec, event.target.value).then(({data}) => {
+                setDataCodigosPostalesRecoleccionDD(data)
+            })
         }
     };
 
     const handleChangeAutocompleteEntregaDD = (input, newValue) => {
-        setEntregaDD(entregaDD => {
-            return {
-                ...entregaDD,
-                [input]: newValue
-            }
+        setEntregaDD({
+            ...entregaDD,
+            [input]: newValue
         })
         if (input === "codigoPostalEnt") {
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
                 if (data.length > 0){
-                    if (data.length === 1){
-                        setEntregaDD(entregaDD => {
-                            return {
-                                ...entregaDD,
-                                zonaOperativaEnt: data[0]
-                            }
-                        })
-                    }
                     setDataZonasOperativasEntregaDD(data)
                 }else{
                     setEntregaDD(entregaDD => {
@@ -524,6 +517,19 @@ function Recoleccion() {
                     })
                 }
                 
+            })
+            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
+                if (data.length > 0){ 
+                    setDataZonasTarifaEntregaDD(data)
+                }else{
+                    setEntregaDD(entregaDD => {
+                        return{
+                            ...entregaDD,
+                            zonaTarifaEnt: {}
+                        }
+                    })
+                }
+              
             })
         }
     }
@@ -573,30 +579,22 @@ function Recoleccion() {
         }
         if (event.target.name === "municipioRec") {
             setRepetirConceptos(true)
+            obtenerCodigosPostalesPorEstadoMunicipio(recoleccionDD.estadoRec, event.target.value).then(({data}) => {
+                setDataCodigosPostalesRecoleccionDD(data)
+            })
         }
     };
 
     const handleChangeAutocompleteRecoleccionDD = (input, newValue) => {
         setRepetirConceptos(true)
-        setRecoleccionDD(recoleccionDD => {
-            return {
-                ...recoleccionDD,
-                [input]: newValue
-            }
+        setRecoleccionDD({
+            ...recoleccionDD,
+            [input]: newValue
         })
         if (input === "codigoPostalRec") {
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
                 if (data.length > 0){
-                    if (data.length === 1){
-                        setRecoleccionDD(recoleccionDD => {
-                            return {
-                                ...recoleccionDD,
-                                zonaOperativaRec: data[0]
-                            }
-                        })
-                    }
                     setDataZonasOperativasRecoleccionDD(data)
-
                 }else{
                     setRecoleccionDD(recoleccionDD => {
                         return{
@@ -607,7 +605,7 @@ function Recoleccion() {
                 }
                
             })
-            /*obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
+            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
                 if (data.length > 0){ 
                     setDataZonasTarifaRecoleccionDD(data)
                 }else{
@@ -619,7 +617,7 @@ function Recoleccion() {
                     })
                 }
               
-            })*/
+            })
         }
     }
 
@@ -820,11 +818,11 @@ function Recoleccion() {
             showSuccess("El remitente es un dato requerido");
             return valid;
         }
-        /*if (!esDatoValido(remitente.codigoPostalRemitente?.m_nIdCP)){
+        if (!esDatoValido(remitente.codigoPostalRemitente?.m_nIdCP)){
             showSuccess("El código postal del remitente es un dato requerido");
             return valid;
-        }*/
-        if(!esDatoValido(remitente.correoRemitente)){
+        }
+        if (!esDatoValido(remitente.correoRemitente)){
             showSuccess("El correo del remitente es un dato requerido")
             return valid;
         }
@@ -838,11 +836,11 @@ function Recoleccion() {
             showSuccess("El destinatario es un dato requerido");
             return valid;
         }
-        /*if (!esDatoValido(destinatario.codigoPostalDestinatario?.m_nIdCP)){
+        if (!esDatoValido(destinatario.codigoPostalDestinatario?.m_nIdCP)){
             showSuccess("El código postal del destinatario es un dato requerido");
             return valid;
-        }*/
-        if(!esDatoValido(destinatario.correoDestinatario)){
+        }
+        if (!esDatoValido(destinatario.correoDestinatario)){
             showSuccess("El correo del destinatario es un dato requerido")
             return valid;
         }
@@ -871,21 +869,39 @@ function Recoleccion() {
                 showSuccess("La zona operativa de entrega es un dato requerido");
                 return valid;
             }
-         /*  if (!esDatoValido(entregaDD.zonaTarifaEnt?.m_nIdZona)){
-                showSuccess("La zona de la tarifa de entrega es un dato requerido");
+            if (!esDatoValido(entregaDD.domicilioEnt)){
+                showSuccess("El domicilio de entrega es un dato requerido");
                 return valid;
-            }*/ 
-
+            }
+            if (!esDatoValido(entregaDD.entregarEnEnt)){
+                showSuccess("El detalle de entrega es un dato requerido");
+                return valid;
+            }
         }else {
             /**Si es entrega en domicilio de destinatario*/
             if (!esDatoValido(destinatario.zonaOperativaDestinatario?.m_nIdZona)) {
                 showSuccess("Verificar la zona operativa de destinatario")
                 return valid;
             }
-          /*  else if (!esDatoValido(destinatario.zonaTarifaDestinatario?.m_nIdZona)) {
-                showSuccess("Verificar la zona tarifa de destinatario")
+        }
+        if (state.diferenteRecoleccion){
+            if (!esDatoValido(recoleccionDD.zonaOperativaRec?.m_nIdZona)){
+                showSuccess("La zona operativa de recolección es un dato requerido");
                 return valid;
-            }*/
+            }
+            if (!esDatoValido(recoleccionDD.domicilioRec)){
+                showSuccess("La dirección de recolección es un dato requerido");
+                return valid;
+            }
+            if (!esDatoValido(recoleccionDD.recogerEnRec)){
+                showSuccess("El detalle de recolección es un dato requerido");
+                return valid;
+            }
+        }else{
+            if (!esDatoValido(remitente.zonaOperativaRemitente?.m_nIdZona)){
+                showSuccess("La zona operativa de recolección es un dato requerido");
+                return valid;
+            }
         }
         if (state.entregaConCita){
             if (!state.citaPendiente){
@@ -904,7 +920,7 @@ function Recoleccion() {
             }
         }
         if (dataPaquetes.length === 0) {
-            showSuccess("Debe agregar al menos un paquete")
+            showSuccess("Debe agregar al menos un paquete o sobre")
             return
         }
 
@@ -926,80 +942,13 @@ function Recoleccion() {
         }
         let error = false
         let params = {}
-        if(state.diferenteEntrega){
-            /*if(entregaDD.zonaTarifaEnt?.m_nIdZona==undefined){
-                error = true
-                showSuccess("Verificar la zona operativa de diferente domicilio entrega")
-            }else */
-                if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
-                error = true
-                showSuccess("Verificar la zona operativa de diferente domicilio entrega")
-            }else if(entregaDD.domicilioEnt==""){
-                error = true
-                showSuccess("Verificar el domicilio de entrega")
-            }else if(entregaDD.entregarEnEnt==""){
-                error = true
-                showSuccess("Verificar la direccion a entregar en")
-            }else if(entregaDD.datosAdicionalesEnt==""){
-                error = true
-                showSuccess("Verificar los datos adicionales para la entrega")
-            }
-        }else if(destinatario.zonaOperativaDestinatario?.m_nIdZona==undefined){
-            error = true
-            showSuccess("Verificar la zona operativa de destinatario")
-         }
-        /*else if(destinatario.zonaTarifaDestinatario?.m_nIdZona==undefined){
-            error = true
-            showSuccess("Verificar la zona tarifa de destinatario")
-         }*/
-          else if(destinatario.correoDestinatario == ""){
-            error = true
-            showSuccess("Error al agregar recoleccion: El correo del destinatario es un campo requerido")
-        }
-
-         if(state.diferenteRecoleccion){
-            if(recoleccionDD.zonaOperativaRec?.m_nIdZona==undefined){
-                error = true
-                showSuccess("Verificar la zona operativa de diferente domicilio recoleccion")
-            }else
-               /* if(recoleccionDD.zonaTarifaRec?.m_nIdZona==undefined){
-                error = true
-                showSuccess("Verificar la zona tarifa de diferente domicilio recoleccion")
-            }else*/
-                if(recoleccionDD.domicilioRec==""){
-                error = true
-                showSuccess("Verificar el domicilio de recoleccion")
-            }else if(recoleccionDD.recogerEnRec==""){
-                error = true
-                showSuccess("Verificar la direccion a recoger en")
-            }else if(recoleccionDD.datosAdicionalesRec==""){
-                error = true
-                showSuccess("Verificar los datos adicionales para la recoleccion")
-            }
-        }else if(remitente.zonaOperativaRemitente?.m_nIdZona==undefined){
-            error = true
-            showSuccess("Verificar la zona operativa de remitente")
-        } else
-          /*  if(remitente.zonaTarifaRemitente?.m_nIdZona==undefined){
-            error = true
-            showSuccess("Verificar la zona tarifa de remitente")
-        } else*/
-            if(remitente.correoRemitente == "" ){
-            error = true
-            showSuccess("Error al agregar recoleccion: El correo del remitente es un campo requerido")
-        }
         if(!error){
-            console.log("entra y cierra")
         setState({
             ...state,
             showConfirmarUbicacion: false,
             showConfirmarUbicacionDestinatario:false
         })
         if (!validarCoordenadas(coordenadas)){
-            return
-        }
-        if (dataPaquetes.length === 0) {
-            showSuccess("Debe agregar al menos 1 paquete o sobre.")
             return
         }
         dataPaquetes.forEach(item => {
@@ -1048,7 +997,7 @@ function Recoleccion() {
             params.m_sDomicilioRemitente = remitente.domicilioRemitente
             params.m_sIdCodigoPostalRemitente = remitente.codigoPostalRemitente.m_nIdCP
             params.m_nIdCiudadRemitente = remitente.municipioRemitente
-            params.m_sMunicipioRemitente = remitente.municipioRemitente
+            // m_sMunicipioRemitente: remitente.municipioRemitente,
             params.m_sCorreoRemitente = remitente.correoRemitente
             params.m_sTelefonoRemitente = remitente.telefonoRemitente
             params.m_sContactoRemitente = remitente.contactoRemitente
@@ -1068,7 +1017,7 @@ function Recoleccion() {
             params.m_sDomicilioDestinatario = destinatario.domicilioDestinatario
             params.m_sIdCodigoPostalDestinatario = destinatario.codigoPostalDestinatario.m_nIdCP
             params.m_nIdCiudadDestinatario = destinatario.municipioDestinatario
-            params.m_sMunicipioDestinatario = destinatario.municipioDestinatario
+            // m_sMunicipioDestinatario: destinatario.municipioDestinatario,
             params.m_sCorreoDestinatario = destinatario.correoDestinatario
             params.m_sTelefonoDestinatario = destinatario.telefonoDestinatario
             params.m_sContactoDestinatario = destinatario.contactoDestinatario
@@ -1360,67 +1309,9 @@ function Recoleccion() {
         });
     }
     const [limpiarRemDes,setLimpiarRemDes] = React.useState()
-
-    const mostrarDatosRecoleccionDD = (respuesta) => {
-        setRecoleccionDD(recoleccionDD => {
-            return {
-                ...recoleccionDD,
-                estadoRec: respuesta.data.m_nIdEstadoRecoleccion || 0,
-                municipioRec: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
-                domicilioRec: respuesta.data.m_sDomicilioDetalleRecoleccion,
-                recogerEnRec: respuesta.data.m_sRecogerEnDetalleRecoleccion,
-                datosAdicionalesRec: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
-                latitudRec: respuesta.data.m_sLatitud || '',
-                longitudRec: respuesta.data.m_sLongitud || '',
-                codigoPostalRec: {
-                    m_nIdCP: respuesta.data.m_nIdCPDetalleRecoleccion,
-                    m_sCP: respuesta.data.m_sCodigoPostalRecoleccion,
-                    m_sColonia: respuesta.data.m_sColoniaRecoleccion ? respuesta.data.m_sColoniaRecoleccion : respuesta.data.m_sLocalidadRecoleccion
-                },
-            }
-        })
-        obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoRecoleccion).then(({data}) =>{
-            setDataMunicipiosRecoleccionDD(data)
-        })
-        obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
-            setRecoleccionDD(recoleccionDD => {
-                return {
-                    ...recoleccionDD,
-                    zonaOperativaRec: data
-                }
-            })
-        })
-    }
-
-    const mostrarDatosEntregaDD = (respuesta) => {
-        setEntregaDD(entregaDD =>{
-            return {
-                ...entregaDD,
-                estadoEnt: respuesta.data.m_nIdEstadoEntrega || 0,
-                municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega || 0,
-                domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
-                entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
-                datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-                codigoPostalEnt: {
-                    m_nIdCP: respuesta.data.m_nIdCPDetalleEntrega,
-                    m_sCP: respuesta.data.m_sCodigoPostalEntrega,
-                    m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega
-                },
-            }
-        })
-        obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoEntrega).then(({data}) =>{
-            setDataMunicipiosEntregaDD(data)
-        })
-        obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
-            setEntregaDD(entregaDD => {
-                return {
-                    ...entregaDD,
-                    zonaOperativaEnt: data
-                }
-            })
-        })
-    }
     const setRecoleccionDataParaConsultaModificacion = (respuesta,operacion) => {
+        console.log("DATA DE RECOLECCION CONSULTA Y MODIFICACION")
+        console.log(respuesta)
         /**Este indicador se checa en el componente de RemitentesDestinatarios*/
         respuesta.data.recoleccionById = true
         setDataRecoleccionConsulta(respuesta)
@@ -1464,7 +1355,50 @@ function Recoleccion() {
         })
         setDataComplementosSAT(respuesta.data.m_arrClsComplementoSAT)
         if (respuesta.data.m_bRecoleccionDiferenteDomicilio){
-            mostrarDatosRecoleccionDD(respuesta)
+            let estado = respuesta.data.m_nIdEstadoRecoleccion < 10 ? `0${respuesta.data.m_nIdEstadoRecoleccion}` :  respuesta.data.m_nIdEstadoRecoleccion
+            setRecoleccionDD(recoleccionDD => {
+                return {
+                    ...recoleccionDD,
+                    estadoRec: estado || 0,
+                    municipioRec: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
+                    domicilioRec: respuesta.data.m_sDomicilioDetalleRecoleccion,
+                    recogerEnRec: respuesta.data.m_sRecogerEnDetalleRecoleccion,
+                    datosAdicionalesRec: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+                    latitudRec: respuesta.data.m_sLatitud || '',
+                    longitudRec: respuesta.data.m_sLongitud || ''
+                }
+            })
+            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+                setDataMunicipiosRecoleccionDD(data)
+            })
+            obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleRecoleccion).then((cp) => {
+                setRecoleccionDD(recoleccionDD => {
+                    return {
+                        ...recoleccionDD,
+                        codigoPostalRec: {
+                            m_nIdCP: cp.data.m_nIdCP,
+                            m_sCP: cp.data.m_sCP,
+                            m_sColonia: cp.data.m_sColonia
+                        },
+                    }
+                })
+            })
+            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+                setRecoleccionDD(recoleccionDD => {
+                    return {
+                        ...recoleccionDD,
+                        zonaOperativaRec: data
+                    }
+                })
+            })
+            obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
+                setRecoleccionDD(recoleccionDD => {
+                    return {
+                        ...recoleccionDD,
+                        zonaTarifaRec: data
+                    }
+                })
+            })
         }
         if (respuesta.data.m_bEntregaEnSucursal){
             obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
@@ -1476,7 +1410,48 @@ function Recoleccion() {
                 })
             })
         }else if (respuesta.data.m_bEntregaDiferenteDomicilio){
-            mostrarDatosEntregaDD(respuesta)
+            setEntregaDD(entregaDD =>{
+                return {
+                    ...entregaDD,
+                    estadoEnt: respuesta.data.m_nIdEstadoEntrega || 0,
+                    municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega || 0,
+                    domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
+                    entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
+                    datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                }
+            })
+            let estado = respuesta.data.m_nIdEstadoEntrega < 10 ? `${respuesta.data.m_nIdEstadoEntrega}` : respuesta.data.m_nIdEstadoEntrega
+            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+                setDataMunicipiosEntregaDD(data)
+            })
+            obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
+                setEntregaDD(entregaDD =>{
+                    return {
+                        ...entregaDD,
+                        codigoPostalEnt: {
+                            m_nIdCP: cp.data.m_nIdCP,
+                            m_sCP: cp.data.m_sCP,
+                            m_sColonia: cp.data.m_sColonia
+                        },
+                    }
+                })
+            })
+            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
+                setEntregaDD(entregaDD => {
+                    return {
+                        ...entregaDD,
+                        zonaOperativaEnt: data
+                    }
+                })
+            })
+            obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifaEntrega).then(({data}) => {
+                setEntregaDD(entregaDD => {
+                    return {
+                        ...entregaDD,
+                        zonaTarifaEnt: data
+                    }
+                })
+            })
         }
         obtenerClienteId(respuesta.data.m_nIdCliente).then(({data}) => {
           //  console.log("Tiene seguro"+data.m_bTieneSeguro)
@@ -1503,6 +1478,7 @@ function Recoleccion() {
             nombreConcepto: item.m_sConcepto,
             descuento: item.m_c_Descuento
         }))
+        //console.log("SETEANDO COBRO" +respuesta.data.m_nIdTipoDeCobro)
         setDataConceptos(conceptosCast)
         setState(state => {
             return {
@@ -1587,7 +1563,7 @@ function Recoleccion() {
                     (o) => o.m_nIdOperador == respuesta.data.m_nIdOperador
                 ),
                 recogerEn: respuesta.data.m_sRecogerEnDetalleRecoleccion,
-                fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion
+                // fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion
             });
             $('.nav-tabs li ').removeClass('active');
             $('.nav-tabs li').eq(type).addClass('active');
@@ -3572,7 +3548,7 @@ function Recoleccion() {
                         <div id="Agregar" className="tab-pane fade">
                             <form className="j-forms" onSubmit={handleAceptar} onKeyDown={e => {if(e.code === 13) {e.preventDefault()}}}>
                                 <div className="form-content">
-                                    {/*<div
+                                    <div
                                         className="wizard-breadcrumb number-style"
                                         style={{
                                             position: "sticky",
@@ -3595,7 +3571,7 @@ function Recoleccion() {
                                                 }
                                             </Stepper>
                                         </div>
-                                    </div>*/}
+                                    </div>
 
                                     <div className="widget-wrap2" id="informacionGeneral">
                                         <div className="widget-header">
@@ -3738,12 +3714,12 @@ function Recoleccion() {
                                                                         id="estatusRecoleccion"
                                                                     >
                                                                         {dataEstatusRecoleccion.map((estatus) => (
-                                                                            <option
+                                                                            <MenuItem
                                                                                 key={estatus.m_nIdEstatusRecoleccion}
                                                                                 value={estatus.m_nIdEstatusRecoleccion}
                                                                             >
                                                                                 {estatus.m_sEstatus}
-                                                                            </option>
+                                                                            </MenuItem>
                                                                         ))}
                                                                     </Select>
                                                                 </FormControl>
@@ -3772,14 +3748,13 @@ function Recoleccion() {
                                                                         disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                                                         id="moneda"
                                                                     >
-                                                                        <option value="0">Seleccionar</option>
                                                                         {dataTipoMoneda.map((moneda) => (
-                                                                            <option
+                                                                            <MenuItem
                                                                                 key={moneda.m_nIdMoneda}
                                                                                 value={moneda.m_nIdMoneda}
                                                                             >
                                                                                 {moneda.m_sMoneda}
-                                                                            </option>
+                                                                            </MenuItem>
                                                                         ))}
                                                                     </Select>
                                                                 </FormControl>
@@ -3809,14 +3784,13 @@ function Recoleccion() {
                                                                         disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                                                         id="tipoCambio"
                                                                     >
-                                                                        <option value="0">Seleccionar</option>
                                                                         {dataTipoCambio.map((cambio) => (
-                                                                            <option
+                                                                            <MenuItem
                                                                                 key={cambio.m_nIdTipoCambio}
                                                                                 value={cambio.m_nIdTipoCambio}
                                                                             >
                                                                                 {cambio.m_cTipoCambio.toFixed(4)}
-                                                                            </option>
+                                                                            </MenuItem>
                                                                         ))}
                                                                     </Select>
                                                                 </FormControl>
@@ -3849,12 +3823,12 @@ function Recoleccion() {
                                                                         }}
                                                                     >
                                                                         {dataTipoCobro.filter(item => configuraciones.idsTiposCobroSeleccionArray.find(i => i == item.m_nCodigo)).map((tipoCobro) => (
-                                                                            <option
+                                                                            <MenuItem
                                                                                 key={tipoCobro.m_nIdTipoCobro}
                                                                                 value={tipoCobro.m_nIdTipoCobro}
                                                                             >
                                                                                 {tipoCobro.m_sDescripcion}
-                                                                            </option>
+                                                                            </MenuItem>
                                                                         ))}
                                                                     </Select>
                                                                 </FormControl>
@@ -3903,9 +3877,9 @@ function Recoleccion() {
                                                                         disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                                                     >
                                                                         {dataTiposSeguro.map((option) => (
-                                                                            <option key={option.m_nIdTipoSeguro} value={option.m_nIdTipoSeguro}>
+                                                                            <MenuItem key={option.m_nIdTipoSeguro} value={option.m_nIdTipoSeguro}>
                                                                                 {option.m_sDescripcion}
-                                                                            </option>
+                                                                            </MenuItem>
                                                                         ))}
                                                                     </TextField>
                                                                 </div>
@@ -4255,12 +4229,12 @@ function Recoleccion() {
                                                                             disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                                                         >
                                                                             {dataEstados.map((estado) => (
-                                                                                <MenuItem
+                                                                                <option
                                                                                     key={estado.m_nIdEstado}
                                                                                     value={estado.m_nIdEstado}
                                                                                 >
                                                                                     {estado.m_sEstado}
-                                                                                </MenuItem>
+                                                                                </option>
                                                                             ))}
                                                                         </Select>
                                                                     </FormControl>
@@ -4288,12 +4262,12 @@ function Recoleccion() {
                                                                             InputProps={{name: "municipioRec"}}
                                                                         >
                                                                             {dataMunicipiosRecoleccionDD.map((municipio) => (
-                                                                                <MenuItem
+                                                                                <option
                                                                                     key={municipio.m_sCodigoMunicipio}
                                                                                     value={municipio.m_sCodigoMunicipio}
                                                                                 >
                                                                                     {municipio.m_sMunicipio}
-                                                                                </MenuItem>
+                                                                                </option>
                                                                             ))}
                                                                         </Select>
                                                                     </FormControl>
@@ -4312,7 +4286,7 @@ function Recoleccion() {
                                                                             options={dataCodigosPostalesRecoleccionDD}
                                                                             getOptionLabel={(option) => (
                                                                                 option ?
-                                                                                    `${option.m_sCP} - ${option.m_sColonia ? option.m_sColonia : option.m_sLocalidad}`
+                                                                                    `${option.m_sCP} - ${option.m_sColonia}`
                                                                                     : ''
                                                                             )}
                                                                             style={{
@@ -4487,12 +4461,12 @@ function Recoleccion() {
                                                                             disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                                                         >
                                                                             {dataEstados.map((estado) => (
-                                                                                <MenuItem
+                                                                                <option
                                                                                     key={estado.m_nIdEstado}
                                                                                     value={estado.m_nIdEstado}
                                                                                 >
                                                                                     {estado.m_sEstado}
-                                                                                </MenuItem>
+                                                                                </option>
                                                                             ))}
                                                                         </Select>
                                                                     </FormControl>
@@ -4520,12 +4494,12 @@ function Recoleccion() {
                                                                             inputProps={{name: "municipioEnt"}}
                                                                         >
                                                                             {dataMunicipiosEntregaDD.map((municipio) => (
-                                                                                <MenuItem
+                                                                                <option
                                                                                     key={municipio.m_sCodigoMunicipio}
                                                                                     value={municipio.m_sCodigoMunicipio}
                                                                                 >
                                                                                     {municipio.m_sMunicipio}
-                                                                                </MenuItem>
+                                                                                </option>
                                                                             ))}
                                                                         </Select>
                                                                     </FormControl>
@@ -4544,7 +4518,7 @@ function Recoleccion() {
                                                                             options={dataCodigosPostalesEntregaDD}
                                                                             getOptionLabel={(option) => (
                                                                                 option ?
-                                                                                    `${option.m_sCP} - ${option.m_sColonia ? option.m_sColonia : option.m_sLocalidad}`
+                                                                                    `${option.m_sCP} - ${option.m_sColonia}`
                                                                                     : ''
                                                                             )}
                                                                             style={{
