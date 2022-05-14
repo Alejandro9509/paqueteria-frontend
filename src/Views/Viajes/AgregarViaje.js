@@ -703,7 +703,8 @@ class AgregarViaje extends Component {
                         estatusUnidad: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus,
                         colorUnidad: resultado.data instanceof String ? "" : resultado.data.m_sColor,
                         kms: newValue.m_nOdometro,
-                        horas: newValue.m_nHorasTrabajadasMotorNoGPS
+                        horas: newValue.m_nHorasTrabajadasMotorNoGPS,
+                        aplicaRemolque: newValue.m_bAplicaRemolque
                     })
                 }else{
                     this.setState({
@@ -1666,7 +1667,7 @@ class AgregarViaje extends Component {
                                                             <TextField
                                                                 label="Remolque 1"
                                                                 margin="dense"
-                                                                required
+                                                                required={this.state.aplicaRemolque === 1}
                                                                 variant="outlined"
                                                                 {...params}
                                                             />
