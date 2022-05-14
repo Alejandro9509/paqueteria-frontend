@@ -175,14 +175,11 @@ export default function CrearTarifaRangos(props) {
                     setState(() => ({
                         ...state,
                         cliente: row.data,
+                        showDialogClientes: false,
                     }))
                 }
             })
         }
-        setState(() => ({
-            ...state,
-            showDialogClientes: false,
-        }))
 
     }
 
