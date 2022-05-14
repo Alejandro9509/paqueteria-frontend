@@ -1667,7 +1667,7 @@ class AgregarViaje extends Component {
                                                             <TextField
                                                                 label="Remolque 1"
                                                                 margin="dense"
-                                                                required={this.state.aplicaRemolque}
+                                                                required={this.state.aplicaRemolque === 1}
                                                                 variant="outlined"
                                                                 {...params}
                                                             />
