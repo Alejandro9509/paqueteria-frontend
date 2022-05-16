@@ -690,7 +690,7 @@ function ParametrosConfiguracion2() {
                                                         onChange={handleChange}
                                                         value={configuraciones.tipoTarifa}
                                                     >
-                                                        <option value="1">Por peso o volumen</option>
+                                                        {/*<option value="1">Por peso o volumen</option>*/}
                                                         <option value="2">Por rango</option>
                                                         <option value="3">Por región</option>
                                                     </Select>

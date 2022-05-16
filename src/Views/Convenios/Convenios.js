@@ -19,6 +19,8 @@ import {obtenerParametrosConfiguracion} from "../../Util/Contexts/ParametrosConf
 import {validarDerecho} from "../../Util/Util"
 import {makeStyles} from "@material-ui/core/styles";
 import { withStyles } from '@material-ui/core/styles';
+import Tarifas from "../Tarifas/Tarifas";
+import TarifasRegion from "../Tarifas/TarifasRegion";
 window.jQuery = window.$ = $;
 
 const headers = API_HEADERS
@@ -261,13 +263,13 @@ function Convenios(){
             </aside>
             {/*Leftbar End Here*/}
             {
-                configuraciones?.TipoTarifaTarifas === 2 ?
+                configuraciones?.TipoTarifaTarifas === 2 &&
                     <TarifasRangos
                         configuraciones={configuraciones}
                         convenio={true}
                     />
-                    :
-                    <section className={"main-container"}>
+
+                    /*<section className={"main-container"}>
                         <div className={"content-fluid"}>
                             <ul className={"nav navStatica nav-tabs"}>
                                 <li className={"active"}>
@@ -281,11 +283,11 @@ function Convenios(){
                                         <i className="fa fa-plus-circle" /> {state.agregar}
                                     </a>
                                 </li>
-                                {/*<li>
+                                {/!*<li>
                                 <a  onClick={handleShowImprimir}>
                                     <i className="fa fa-print" /> Imprimir
                                 </a>
-                            </li>*/}
+                            </li>*!/}
                             </ul>
 
                             <div className={"row"} className={"tab-content"}>
@@ -315,7 +317,7 @@ function Convenios(){
                                 </div>
 
                                 <div id="Agregar" className="tab-pane fade">
-                                    {/*{
+                                    {/!*{
                                 this.state.pantalla == 2 &&
                                 <CrearTarifa edit={edit} consult={consult} select={this.state.selected}
                                              onSubmit={this.handleAceptar} onCancel={(event) => {
@@ -326,7 +328,7 @@ function Convenios(){
                                     $('.tab-content div ').removeClass('in show');
                                     $('#Listado').addClass('in show');
                                 }}></CrearTarifa>
-                            }*/}
+                            }*!/}
 
                                     <EscribirConvenio
                                         select={convenioSeleccionado}
@@ -338,7 +340,14 @@ function Convenios(){
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </section>*/
+            }
+            {
+                configuraciones?.TipoTarifaTarifas === 3 &&
+                <TarifasRegion
+                    configuraciones={configuraciones}
+                    convenio={true}
+                />
             }
         </div>
     )
