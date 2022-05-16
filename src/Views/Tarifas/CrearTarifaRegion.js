@@ -31,7 +31,6 @@ function showSuccess(mensaje) {
 }
 
 function CrearTarifaRegion(props) {
-    const [ciudades, setCiudadades] = useState([])
     const [state, setState] = useState({
         ciudades: [],
         showDialogClientes: false,
@@ -41,22 +40,6 @@ function CrearTarifaRegion(props) {
             m_nIdCliente : props.select?.cliente.m_nIdCliente,
             m_sNombreFiscal : props.select?.cliente.m_sNombreFiscal,
         },
-        // precioFlete: props.select?.m_cFleteMinimo || "0.00",
-/*
-        //Aqui se guardan todos los productos y no se modifican
-        dataProductos: [],
-        //Aqui se guardan todos los productos que no estan seleccionados
-        dataProductosTemp: [],
-        //Aqui pues el nombre de la variable ya es muy explicita
-        dataProductosSeleccionados: [],
-        //Aqui se guardan todos los destinos que no estan seleccionados
-        dataDestinosTemp: [],
-        //Aqui pues el nombre de la variable ya es muy explicita
-        dataDestinosSeleccionados: [],
-
-        dataConceptos: [],
-        dataConceptosBase: [],
-        dataConceptosBaseManiobra: []*/
         viajes: props.select?.viajes || []
     })
 
@@ -162,22 +145,6 @@ function CrearTarifaRegion(props) {
 
     }
 
-    const actualizarDestinos = (todosDestinos, destinosSeleccionados) => {
-        setState({
-            ...state,
-            dataDestinosTemp: todosDestinos,
-            dataDestinosSeleccionados: destinosSeleccionados
-        })
-    }
-
-    const actualizarProductos = (todosProductos, productosSeleccionados) => {
-        setState({
-            ...state,
-            dataProductosTemp: todosProductos,
-            dataProductosSeleccionados: productosSeleccionados
-        })
-    }
-
     const handleDialogVisible = (isVisible) => {
         setState({
             ...state,
@@ -188,10 +155,6 @@ function CrearTarifaRegion(props) {
     const onSubmit = (event) =>  {
         event.preventDefault()
         props.onSubmit(state)
-    }
-
-    const filtrarDestinos = (ciudades) => {
-        return ciudades.filter(i  => i.m_nIdCiudad !== state.origen)
     }
 
     const handleChangeViaje = (viaje) => {
@@ -301,53 +264,11 @@ function CrearTarifaRegion(props) {
                                 origenesDestinosListado={state.ciudades}
                                 handleChangeViajeForaneo={handleChangeViaje}
                                 handleDeleteViajeForaneo={handleDeleteViaje}
-                                // productosListado={productosListado}
                                 disabled={props.disabled}
-                                // tiposCalculoListado={tiposCalculoListado}
-                                // unidadesMedidaListado={unidadesMedidaListado}
-                                // zonasListado={zonasListado}
-                                // onRequestZonasByDestino={handleOnRequestZonasByDestino}
-                                // showDialogZonas={showDialogZonas}
-                                // handleShowDialogZonas={handleShowDialogZonas}
                             />
                         ))
                     }
-                    {/*<Region
-                        key={viaje.idViaje}
-                        viaje={viaje}
-                        origenesDestinosListado={origenesDestinosListado}
-                        handleChangeViajeForaneo={handleChangeViajeForaneo}
-                        tiposCalculoListado={tiposCalculoListado}
-                        unidadesMedidaListado={unidadesMedidaListado}
-                        handleDeleteViajeForaneo={handleDeleteViajeForaneo}
-                        zonasListado={zonasListado}
-                        onRequestZonasByDestino={handleOnRequestZonasByDestino}
-                        productosListado={productosListado}
-                        disabled={props.disabled}
-                        showDialogZonas={showDialogZonas}
-                        handleShowDialogZonas={handleShowDialogZonas}
-                    />*/}
-                    {/*<DestinosTarifa
-                        destinos={filtrarDestinos(state.dataDestinosTemp)}
-                        destinosSeleccionados={state.dataDestinosSeleccionados}
-                        actualizarDestinos={actualizarDestinos}
-                        disabled={props.disabled}
-                    />*/}
-
-                    {/*<div style={{marginTop:'20px', marginBottom: '20px'}}>
-                        <ProductosPrecios
-                            dataList={state.dataProductosSeleccionados}
-                            onChangeList={actualizarProductos}
-                            mostrarRangos={false}
-                            consult={props.consult}
-                            disabled={props.disabled}
-                            ivaRetiene={[]}
-                            ivaTraslada={[]}
-                            mostrarTotal={false}
-                        />
-                    </div>*/}
-
-                    <Grid container item xs={12}>
+                    <Grid container item xs={12} style={{margin: '20px'}}>
                         <Button fullWidth type="submit" color={"primary"} variant={"contained"} disabled={props.disabled}>
                             Guardar Tarifa
                         </Button>

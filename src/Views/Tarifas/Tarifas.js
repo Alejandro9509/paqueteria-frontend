@@ -509,7 +509,6 @@ function Tarifa(props){
         columns: [],
         mostrarColumnasPesoVolumen: false,
         configuraciones: null,
-        idTipoTarifa: ''
     })
 
     useEffect(value => {
@@ -707,7 +706,6 @@ function Tarifa(props){
                         IdConceptoCita: respuesta.data.IdConceptoCita || 0,
                         CobroCargaDescargaTarifa: respuesta.data.CobroCargaDescargaTarifa
                     },
-                    idTipoTarifa: respuesta.data.TipoTarifaTarifas || 0,
                 }
             })
             getTarifas(respuesta.data.TipoTarifaTarifas)
@@ -829,12 +827,6 @@ function Tarifa(props){
         })
     }
 
-    const handleChange = (event) => {
-        setState({
-            ...state,
-            [event.target.name]: event.target.value
-        })
-    }
 
     return(
         <div >
@@ -857,28 +849,10 @@ function Tarifa(props){
             <aside className="iconic-leftbar" style={{ minHeight: state.height }}>
                 <BarraLateralIzquierda />
             </aside>
-            <section className="main-container" style={{marginTop: '10px'}}>
-                <div className="container-fluid">
-                    <FormControl fullWidth variant="outlined" margin="dense" required>
-                        <InputLabel id="origenLabel">Tipo de tarifa</InputLabel>
-                        <Select
-                            className="form-control"
-                            label="Tipo de tarifa"
-                            disabled={props.disabled}
-                            value={state.idTipoTarifa}
-                            onChange={handleChange}
-                            name="idTipoTarifa"
-                        >
-                            <MenuItem key={2} value={2}>POR RANGOS</MenuItem>
-                            <MenuItem key={3} value={3}>POR REGIÓN</MenuItem>
-                        </Select>
-                    </FormControl>
-                </div>
-            </section>
 
 
             {
-                state.idTipoTarifa === 1 &&
+                state.configuraciones?.TipoTarifaTarifas === 1 &&
                     <section className="main-container">
                     <div className="container-fluid">
 
@@ -941,7 +915,6 @@ function Tarifa(props){
                                     <CrearTarifaRegion edit={state.edit} consult={state.consult} select={state.selected}
                                                        onSubmit={handleAceptar}
                                                        listaCiudades={state.dataCiudades}
-                                                       idTipoTarifa={state.configuraciones.TipoTarifaTarifas}
                                                        disabled={state.agregar == "Consultar"}
                                     />
                                 }
@@ -953,13 +926,13 @@ function Tarifa(props){
                 </section>
             }
             {
-                state.idTipoTarifa === 2 &&
+                state.configuraciones?.TipoTarifaTarifas === 2 &&
                     <TarifasRangos
                         configuraciones={state.configuraciones}
                     />
             }
             {
-                state.idTipoTarifa === 3 &&
+                state.configuraciones?.TipoTarifaTarifas === 3 &&
                     <TarifasRegion
                         configuraciones={state.configuraciones}
                     />
