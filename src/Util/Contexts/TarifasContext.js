@@ -59,7 +59,7 @@ function obtenerTarifas() {
 }
 
 function obtenerTarifasByTipo(idTipotarifa) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Tarifas/GetByTipo/` + idTipotarifa;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/GetByTipo/` + idTipotarifa;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -68,7 +68,7 @@ function obtenerTarifasByTipo(idTipotarifa) {
 }
 
 function agregarTarifa(params){
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Tarifas/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -86,7 +86,7 @@ function eliminarTarifa(idTarifa, idModificarPor) {
 }
 
 function modificarTarifa(id,params) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Tarifas/Modificar/`+ id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/Modificar/`+ id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -95,7 +95,7 @@ function modificarTarifa(id,params) {
 }
 
 function obtenerTarifaBy(id) {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Tarifas/GetById/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Tarifas/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
