@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
     list: {
         width: 400,
-        height: 400,
+        height: 200,
         backgroundColor: theme.palette.background.paper,
         overflow: 'auto',
     },

@@ -18,6 +18,8 @@ import DestinosTarifa from "./DestinosTarifa";
 import ProductosPrecios from "./ProductosPrecios";
 import Button from "@material-ui/core/Button";
 import Noty from "noty";
+import Region from "./Region";
+import {getRandomId} from "../../Util/Util";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -33,14 +35,14 @@ function CrearTarifaRegion(props) {
     const [state, setState] = useState({
         ciudades: [],
         showDialogClientes: false,
-        origen: props.select?.m_nIdOrigen || null,
+        // origen: props.select?.m_nIdOrigen || null,
         codigoTarifa: props.select?.m_sCodigo || "",
         cliente: {
-            m_nIdCliente : props.select?.m_nIdCliente,
-            m_sNombreFiscal : props.select?.m_sCliente,
+            m_nIdCliente : props.select?.cliente.m_nIdCliente,
+            m_sNombreFiscal : props.select?.cliente.m_sNombreFiscal,
         },
-        precioFlete: props.select?.m_cFleteMinimo || "0.00",
-
+        // precioFlete: props.select?.m_cFleteMinimo || "0.00",
+/*
         //Aqui se guardan todos los productos y no se modifican
         dataProductos: [],
         //Aqui se guardan todos los productos que no estan seleccionados
@@ -54,7 +56,8 @@ function CrearTarifaRegion(props) {
 
         dataConceptos: [],
         dataConceptosBase: [],
-        dataConceptosBaseManiobra: []
+        dataConceptosBaseManiobra: []*/
+        viajes: props.select?.viajes || []
     })
 
     useEffect(() => {
@@ -191,6 +194,51 @@ function CrearTarifaRegion(props) {
         return ciudades.filter(i  => i.m_nIdCiudad !== state.origen)
     }
 
+    const handleChangeViaje = (viaje) => {
+        let newViajes = []
+        state.viajes.forEach(i => {
+            newViajes.push(i)
+        })
+        newViajes.forEach(i => {
+            if (i.idViaje === viaje.idViaje ){
+                i.idOrigen = viaje.idOrigen
+                i.fleteMinimo = viaje.fleteMinimo
+                i.dataDestinosSeleccionados = viaje.dataDestinosSeleccionados
+                i.dataProductosSeleccionados = viaje.dataProductosSeleccionados
+            }
+        })
+        setState({
+            ...state,
+            viajes: newViajes
+        })
+    }
+
+    const handleDeleteViaje = (viaje) => {
+        let newViajes = []
+        state.viajes.forEach(i => {
+            newViajes.push(i)
+        })
+        setState({
+            ...state,
+            viajes: newViajes.filter(i => i.idViaje !== viaje.idViaje)
+        })
+    }
+
+    const handleOnAgregarViaje = () => {
+        let viajes = [...state.viajes]
+        viajes.push({
+            idViaje: getRandomId(),
+            idOrigen: null,
+            fleteMinimo: 0.00,
+            dataDestinosSeleccionados: [],
+            dataProductosSeleccionados: [],
+        })
+        setState({
+            ...state,
+            viajes: viajes
+        })
+    }
+
     return(
         <div>
             <Dialog
@@ -208,8 +256,11 @@ function CrearTarifaRegion(props) {
                 <Paper style={{padding: '20px', marginBottom: '10px'}}>
 
                     <Grid container spacing={2}>
-                        <Grid item xs={12}>
+                        <Grid item xs={10}>
                             <h4>Agregando Tarifas</h4>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <Button fullWidth color={"primary"} variant={"contained"} onClick={handleOnAgregarViaje}>Agregar viaje</Button>
                         </Grid>
                         <Grid item xs={3}>
                             <TextField
@@ -240,51 +291,50 @@ function CrearTarifaRegion(props) {
                                        name="codigoTarifa"
                             />
                         </Grid>
-                        <Grid item xs={2}>
-                            <FormControl fullWidth variant="outlined" margin="dense" required>
-                                <InputLabel id="origenLabel">Origen (Bodega)</InputLabel>
-                                <Select
-                                    className="form-control"
-                                    label="Origen (Bodega)"
-                                    disabled={props.disabled}
-                                    labelId="origenLabel"
-                                    value={state.origen}
-                                    onChange={handleChange}
-                                    name="origen"
-                                >
-                                    {state.ciudades.map((ciudad) => (
-                                        <MenuItem
-                                            key={ciudad.m_nIdCiudad}
-                                            value={ciudad.m_nIdCiudad}
-                                        >
-                                            {ciudad.m_sCiudad}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={2}>
-                            <TextField variant="outlined" margin="dense"
-                                       onChange={handleChange}
-                                       className="form-control"
-                                       type="number"
-                                       label="Flete Minimo"
-                                       step="1"
-                                       disabled={props.disabled}
-                                       value={state.precioFlete}
-                                       name="precioFlete"
-                            />
-                        </Grid>
 
                     </Grid>
-                    <DestinosTarifa
+                    {
+                        state.viajes.map(viaje => (
+                            <Region
+                                key={viaje.idViaje}
+                                viaje={viaje}
+                                origenesDestinosListado={state.ciudades}
+                                handleChangeViajeForaneo={handleChangeViaje}
+                                handleDeleteViajeForaneo={handleDeleteViaje}
+                                // productosListado={productosListado}
+                                disabled={props.disabled}
+                                // tiposCalculoListado={tiposCalculoListado}
+                                // unidadesMedidaListado={unidadesMedidaListado}
+                                // zonasListado={zonasListado}
+                                // onRequestZonasByDestino={handleOnRequestZonasByDestino}
+                                // showDialogZonas={showDialogZonas}
+                                // handleShowDialogZonas={handleShowDialogZonas}
+                            />
+                        ))
+                    }
+                    {/*<Region
+                        key={viaje.idViaje}
+                        viaje={viaje}
+                        origenesDestinosListado={origenesDestinosListado}
+                        handleChangeViajeForaneo={handleChangeViajeForaneo}
+                        tiposCalculoListado={tiposCalculoListado}
+                        unidadesMedidaListado={unidadesMedidaListado}
+                        handleDeleteViajeForaneo={handleDeleteViajeForaneo}
+                        zonasListado={zonasListado}
+                        onRequestZonasByDestino={handleOnRequestZonasByDestino}
+                        productosListado={productosListado}
+                        disabled={props.disabled}
+                        showDialogZonas={showDialogZonas}
+                        handleShowDialogZonas={handleShowDialogZonas}
+                    />*/}
+                    {/*<DestinosTarifa
                         destinos={filtrarDestinos(state.dataDestinosTemp)}
                         destinosSeleccionados={state.dataDestinosSeleccionados}
                         actualizarDestinos={actualizarDestinos}
                         disabled={props.disabled}
-                    />
+                    />*/}
 
-                    <div style={{marginTop:'20px', marginBottom: '20px'}}>
+                    {/*<div style={{marginTop:'20px', marginBottom: '20px'}}>
                         <ProductosPrecios
                             dataList={state.dataProductosSeleccionados}
                             onChangeList={actualizarProductos}
@@ -295,7 +345,7 @@ function CrearTarifaRegion(props) {
                             ivaTraslada={[]}
                             mostrarTotal={false}
                         />
-                    </div>
+                    </div>*/}
 
                     <Grid container item xs={12}>
                         <Button fullWidth type="submit" color={"primary"} variant={"contained"} disabled={props.disabled}>

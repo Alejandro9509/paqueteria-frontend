@@ -19,6 +19,7 @@ import CrearTarifaRegion from "./CrearTarifaRegion";
 import $ from "jquery";
 import Noty from "noty";
 import {obtenerClientePublicoGeneral} from "../../Util/Contexts/ClientesContext";
+import {getRandomId} from "../../Util/Util";
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -69,6 +70,25 @@ function TarifasRegion(props){
         $('#Agregar').addClass('in show');
     }
 
+    const formatearRespuesta = (respuesta) => {
+        let tarifa = {
+            m_nIdTarifa: respuesta.data.m_nIdTarifa
+        }
+        tarifa.m_sCodigo = respuesta.data.m_sCodigo
+        tarifa.cliente = {
+            m_nIdCliente : respuesta.data.m_nIdCliente,
+            m_sNombreFiscal : respuesta.data.m_sCliente,
+        }
+        tarifa.viajes = respuesta.data.m_arrArViajes.map(v => ({
+            idViaje: getRandomId(),
+            idOrigen: v.IdOrigen,
+            fleteMinimo: v.FleteMinimo,
+            destinos: respuesta.data.m_arrArDestinos.filter(d => d.IdTarifaViaje === v.IdTarifaViaje),
+            productos: respuesta.data.m_arrArProductos.filter(p => p.IdTarifaViaje === v.IdTarifaViaje),
+        }))
+        return tarifa
+    }
+
     const handleShowModificar = (id) => {
         obtenerTarifaBy(id).then(respuesta => {
             setState(state => {
@@ -78,7 +98,7 @@ function TarifasRegion(props){
                     openDialog: true,
                     agregar: "Modificar",
                     consult: true,
-                    selected: respuesta.data,
+                    selected: formatearRespuesta(respuesta),
                 }
             })
             // mostrarDataTarifa(respuesta)
@@ -98,7 +118,7 @@ function TarifasRegion(props){
                     agregar: "Consultar",
                     openDialog: true,
                     consult: true,
-                    selected: respuesta.data,
+                    selected: formatearRespuesta(respuesta),
                 }
             })
             // mostrarDataTarifa(respuesta)
@@ -131,13 +151,19 @@ function TarifasRegion(props){
     const handleAceptar = (data) => {
         let params = {
             codigo: data.codigoTarifa,
-            idOrigen: data.origen,
-            fleteMinimo: data.precioFlete,
-            productos: data.dataProductosSeleccionados,
-            destinos: data.dataDestinosSeleccionados,
+            // idOrigen: data.origen,
+            // fleteMinimo: data.precioFlete,
+            // productos: data.dataProductosSeleccionados,
+            // destinos: data.dataDestinosSeleccionados,
             creadoPor: localStorage.getItem("UsuarioId"),
             tipo: props.configuraciones?.TipoTarifaTarifas,
             idCliente: data.cliente?.m_nIdCliente || 0,
+            viajes: data.viajes.map(v => ({
+                idOrigen: v.idOrigen,
+                fleteMinimo: v.fleteMinimo,
+                destinos: v.dataDestinosSeleccionados,
+                productos: v.dataProductosSeleccionados
+            })) || []
         }
         console.log(JSON.stringify(params))
         console.log(params)
@@ -288,7 +314,7 @@ function TarifasRegion(props){
                 field: "Cliente",
                 width: 500,
             },
-            {
+            /*{
                 headerName: "Origen",
                 field: "m_sOrigen",
                 flex: 1,
@@ -301,7 +327,7 @@ function TarifasRegion(props){
                 minWidth: 300,
             },
 
-            /*{
+            {
                 headerName: "Activo",
                 field: "m_bActivo",
                 width: 100,
