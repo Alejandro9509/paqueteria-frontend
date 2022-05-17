@@ -12,7 +12,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import {ReactComponent as GClienteIcon} from "../../iconos/Catalogos/Icono Grupo Clientes/icono_grupo_cliente.svg";
 import GrupoClientePage from "../../Views/GrupoCliente";
 import {obtenerAtajosUsuario} from "../../Util/Contexts/AccesosDirectosContext";
-
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 function Cabecera({ titulo, children }) {
 
     const menu_items = [
@@ -85,12 +85,41 @@ function Cabecera({ titulo, children }) {
     }
 
     return (
-        <div>
+        <div style={{display:"flex"}}>
             {/*Topbar Left Branding With Logo Start*/}
-            <div className="topbar-left pull-left">
+            
+            <Hidden xsDown implementation="css">
+                <div className="topbar-left pull-left iconic-aside-container" style={{ backgroundColor: "#F9A03E", height: "60px" }}>
+                    <div style={{ display: "inline-block", verticalAlign: "middle", margin: "auto", marginLeft: "0px" }}>
+                        <h2 style={{ position: "absolute",marginLeft:"75px" }}>{titulo}</h2>
+                    </div>
+
+                </div>
+            </Hidden>
+         
+           <div className="user-profile clearfix" style={{flexGrow:1}}>
+            <div className="admin-user-info" >
+                                <ul style={{ listStyleType: "none"}}>
+                                    <li>
+                                        <a href="index.html">{localStorage.getItem("Nombre")}</a>
+                                    </li>
+                                    <li>
+                                       SUCURSAL: <a href="index.html">{localStorage.getItem("SucursalNombre")}</a>
+                                    </li>
+                                    <li>
+                                       CORREO: <a href="index.html">{localStorage.getItem("Email")}</a>
+                                    </li>
+                                    <li>
+                                       RFC: <a href="index.html">{localStorage.getItem("RFC")}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        
+            </div>
+            <div className="topbar-left pull-left" style={{height: "60px" }}>
                 <div className="clearfix">
                     <ul className="left-branding pull-left clickablemenu ttmenu dark-style menu-color-gradient">
-                        <li><span className="left-toggle-switch"><i className="zmdi zmdi-menu" /></span></li>
+                      
                         <li>
                             <div className="logo">
                                 <a href="index.html" title="Admin Template"><img src="iconos/LogoGM.png" alt="logo" /></a>
@@ -100,15 +129,6 @@ function Cabecera({ titulo, children }) {
                     </ul>
                 </div>
             </div>
-            <Hidden xsDown implementation="css">
-                <div className="topbar-left pull-left iconic-aside-container" style={{ backgroundColor: "white", height: "60px" }}>
-                    <div style={{ display: "inline-block", verticalAlign: "middle", margin: "auto", marginLeft: "0px" }}>
-                        <h2 style={{ position: "absolute" }}>{titulo}</h2>
-                    </div>
-
-                </div>
-            </Hidden>
-
             <div className="topbar-right pull-right iconic-aside-container"
                  style={
                      {
@@ -125,34 +145,17 @@ function Cabecera({ titulo, children }) {
                         </a>
                     </Tooltip>
                 </div>*/}
-                <div className="clearfix" style={{display:'block'}}>
-                    <div className="user-profile-container" style={{height: 40}}>
+
+                    <div style={{height: 40}}>
                         <div className="user-profile clearfix">
                             <div className="admin-user-thumb" style={{padding: '0px 0px 0px 0px'}}>
-                                <img src="images/avatar/jaman_01.jpg" alt="admin" />
+                                    <IconButton aria-label="delete" href="login" onClick={() => logout()}>
+                                      <ExitToAppIcon fontSize="large" />
+                                    </IconButton>
                             </div>
-                            <div className="admin-user-info">
-                                <ul>
-                                    <li>
-                                        <a href="index.html">{localStorage.getItem("Usuario")}</a>
-                                    </li>
-                                    <li>
-                                        <a href="index.html">{localStorage.getItem("Email")}</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div className="admin-bar">
-                            <ul>
-                                <li>
-                                    <a href="login" onClick={() => logout()}>
-                                        <i className="zmdi zmdi-power" />
-                                    </a>
-                                </li>
-                            </ul>
                         </div>
                     </div>
-                </div>
+        
                 {/*<div style={{position: "relative"}}>
                     <Tooltip title={"Shortcuts"}>
                         <IconButton
