@@ -818,10 +818,10 @@ function Recoleccion() {
             showSuccess("El remitente es un dato requerido");
             return valid;
         }
-        if (!esDatoValido(remitente.codigoPostalRemitente?.m_nIdCP)){
+        /*if (!esDatoValido(remitente.codigoPostal?.m_nIdCP)){
             showSuccess("El código postal del remitente es un dato requerido");
             return valid;
-        }
+        }*/
         if (!esDatoValido(remitente.correoRemitente)){
             showSuccess("El correo del remitente es un dato requerido")
             return valid;
@@ -832,11 +832,11 @@ function Recoleccion() {
         }
 
         /**DESTINATARIO*/
-        if (!esDatoValido(destinatario.idDestinatario)){
+       /* if (!esDatoValido(destinatario.idDestinatario)){
             showSuccess("El destinatario es un dato requerido");
             return valid;
-        }
-        if (!esDatoValido(destinatario.codigoPostalDestinatario?.m_nIdCP)){
+        }*/
+        if (!esDatoValido(destinatario.codigoPostal?.m_nIdCP)){
             showSuccess("El código postal del destinatario es un dato requerido");
             return valid;
         }
