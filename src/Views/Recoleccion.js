@@ -400,7 +400,7 @@ function Recoleccion() {
         }
         if (input === "codigoPostalRec"){
             obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoEnt, entregaDD.municipioEnt).then(({data}) => {
-                setDataCodigosPostalesEntregaDD(data)
+                setDataCodigosPostalesRecoleccionDD(data)
             })
         }
     }
