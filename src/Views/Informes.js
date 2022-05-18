@@ -1132,8 +1132,8 @@ function Informes({history}) {
                 }
 
                 eliminarInformes(id, state.CreadoPor)
-                    .then((respuesta) => {
-                        console.log(respuesta);
+                    .then(({data}) => {
+                        showSuccess(data)
                     })
                     .catch((err) => {
                         showSuccess(err);

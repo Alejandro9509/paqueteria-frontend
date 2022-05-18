@@ -49,7 +49,7 @@ function agregarInformes( params){
 }
 
 function eliminarInformes(id, idEliminadoPor){
-    const url = `${process.env.REACT_APP_API_URL}/Informe/Eliminar/` + id + `/${idEliminadoPor}`;
+    const url = `${process.env.REACT_APP_API_URL}/Informes/Eliminar/` + id + `/${idEliminadoPor}`;
     let result;
     trackPromise(
         result =  axios.delete(url, { headers })
