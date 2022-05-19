@@ -132,8 +132,8 @@ class FormatoImpresion extends Component {
         if (data.image.length != 0) {
             image = data.image[0]
         }
-        var startDate = new Date();
-        var dateStartString = (startDate.getDate() <= 9 ? '0' + startDate.getDate() : startDate.getDate())   + "-" + ((startDate.getMonth()+1) <= 9 ? "0" + (startDate.getMonth()+1) : (startDate.getMonth()+1) ) + "-" + startDate.getFullYear();
+        var today = new Date();
+        var dateStartString = today.getFullYear()+ "-" +   + (today.getMonth() + 1)+ "-"  +today.getDate() + " " + today.getHours() + ":" + today.getMinutes();
 
         var params = {
             formato: data.formato,

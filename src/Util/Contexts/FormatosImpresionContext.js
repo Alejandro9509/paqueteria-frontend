@@ -1,24 +1,34 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
-import { API_HEADERS } from "../../Constants";
+import {API_HEADERS, API_MULTIPART_HEADERS} from "../../Constants";
 
 const headers = API_HEADERS
+const headersMultipart = API_MULTIPART_HEADERS;
+
 
 
 function modificarFormatosImpresion(id, params){
     const url = `${process.env.REACT_APP_API_URL}/FormatosImpresion/Modificar/` + id;
     let result;
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers })
+        result =  axios.put(url, Object.assign({}, params), { headers: headersMultipart })
         );
     return result
 }
 
 function agregarFormatosImpresion( params, file, image){
-    const url = `${process.env.REACT_APP_API_URL}/Formato/Agregar`;
+    var bodyFormData = new FormData();
+
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Formato/Agregar`;
     let result;
+    var json = JSON.stringify({...params});
+    var blob = new Blob([json] , { type: 'application/json' });
+    bodyFormData.append("request", blob);
+    bodyFormData.append("file", file, file.name);
+    bodyFormData.append("image", image, image.name);
+
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers })
+        result =  axios.post(url, bodyFormData, { headers: headersMultipart })
         );
     return result
 }
