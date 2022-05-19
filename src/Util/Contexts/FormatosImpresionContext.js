@@ -14,7 +14,7 @@ function modificarFormatosImpresion(id, params){
     return result
 }
 
-function agregarFormatosImpresion( params){
+function agregarFormatosImpresion( params, file, image){
     const url = `${process.env.REACT_APP_API_URL}/Formato/Agregar`;
     let result;
     trackPromise(

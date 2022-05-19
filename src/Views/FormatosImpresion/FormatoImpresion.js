@@ -130,21 +130,19 @@ class FormatoImpresion extends Component {
         let file = await toBase64(data.file[0])
         var image = null
         if (data.image.length != 0) {
-            image = await toBase64(data.image[0])
+            image = data.image[0]
         }
+        var startDate = new Date();
+        var dateStartString = (startDate.getDate() <= 9 ? '0' + startDate.getDate() : startDate.getDate())   + "-" + ((startDate.getMonth()+1) <= 9 ? "0" + (startDate.getMonth()+1) : (startDate.getMonth()+1) ) + "-" + startDate.getFullYear();
 
         var params = {
-            m_sFormato: data.formato,
-            m_nTipoProceso: data.idTipoProcesoAgregar,
-            m_sFormatoWDE: file,
-            m_sNombreArchivo: data.nombre,
-            m_sImagen: image,
-            m_dActivo: 1,
-            "m_nCreadoPor": this.state.CreadoPor,
-            "m_nModificadoPor": this.state.ModificadoPor
+            formato: data.formato,
+            tipoProceso: data.idTipoProcesoAgregar,
+            idUsuario: this.state.CreadoPor,
+            fecha: dateStartString
         }
 
-        agregarFormatosImpresion(params).then(respuesta => {
+        agregarFormatosImpresion(params,data.file[0],image).then(respuesta => {
 
             showSuccess(respuesta.data)
             $('.nav-tabs li ').removeClass('active');
