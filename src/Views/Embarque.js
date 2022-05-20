@@ -1057,6 +1057,40 @@ function Embarque(props) {
         valid = true
         return valid;
     }
+
+    const esComplementoValido = (item) => {
+        let valid = true
+        if (!parseFloat(item.cantidad) > 0){
+            return false
+        }
+        if (!parseFloat(item.peso) > 0){
+            return false
+        }
+        if (!item.claveProducto?.length > 0){
+            return false
+        }
+        if (!item.claveUnidad?.length > 0){
+            return false
+        }
+        if (item.esPeligroso){
+            if (!item.claveFraccion?.length > 0){
+                return false
+            }
+            /*if (!item.comercioExterior?.length > 0){
+                return false
+            }*/
+            if (!item.claveMaterialPeligroso?.length > 0){
+                return false
+            }
+            if (!item.materialPeligrosoSAT?.length > 0){
+                return false
+            }
+            if (!item.claveEmbalaje?.length > 0){
+                return false
+            }
+        }
+        return valid
+    }
  
     const handleAceptar = (e, coordenadas) => {
         e.preventDefault();
@@ -1096,21 +1130,20 @@ function Embarque(props) {
 
             packs.push(p)
         })
-
+        if (dataComplementosSAT.some(i => !esComplementoValido(i))){
+            showSuccess("Verifique los complementos SAT registrados.")
+            return;
+        }
         dataComplementosSAT.forEach(item => {
             item.m_nCantidad = item.cantidad
             item.m_sClaveProductoServicio = item.claveProducto
-            // item.m_sProductoServicio = item.ProductoSAT
             item.m_sClaveUnidad = item.claveUnidad
-            // item.m_sUnidad = item.UnidadSAT
             item.m_sClaveFraccionArancelaria = item.claveFraccion
-            // item.m_sFraccionArancelaria = item.fraccionSAT
             item.m_sUUIDComercioExterior = item.comercioExterior
             item.m_sClaveMaterialPeligroso = item.claveMaterialPeligroso
             item.m_sMaterialPeligroso = item.materialPeligrosoSAT
             item.m_bEsMaterialPeligroso = item.esPeligroso
             item.m_sClaveEmbalaje = item.claveEmbalaje
-            // item.m_sTipoEmbalaje = item.embalajeSAT
             item.m_sDescripcionEmbalaje = item.descripcionEmbalajeSAT
             item.m_xPeso = item.peso
         })
@@ -1241,7 +1274,6 @@ function Embarque(props) {
         params.m_nIdRuta = state.idRuta
         console.log(params)
         console.log(JSON.stringify(params))
-
    if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {

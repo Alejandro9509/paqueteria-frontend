@@ -328,7 +328,10 @@ function ComplementosSAT(props) {
 
     const handleAceptar = (data)=>{
         let error = false
-        console.log( dataComplemento)
+        if(!dataComplemento.ProductoSAT  || !dataComplemento.claveProducto ){
+            showSuccess("Se requiere seleccionar Producto")
+            error = true
+        }
         if(!dataComplemento.UnidadSAT  || !dataComplemento.claveUnidad ){
             showSuccess("Se requiere seleccionar Unidad de medida")
             error = true
@@ -342,20 +345,6 @@ function ComplementosSAT(props) {
             showSuccess("Se requiere seleccionar Embalaje")
             error = true
         }
-    /*    if(dataComplemento?.cantidad){
-        if(dataComplemento.cantidad<=0){      
-            error = true
-        }else
-        if(Number(dataComplemento.cantidad)<=0){
-           error = true
-          }
-        if(isNaN(Number(dataComplemento.cantidad))){
-           error = true
-       }
-    }else{
-        showSuccess("Se requiere cantidad")
-        error = true
-    }*/
         if(!error){
         if (dataComplemento.id === 0){
             const item = dataComplemento
@@ -388,7 +377,7 @@ function ComplementosSAT(props) {
 
 
         resetDataComplemento()
-        showSuccess("Complemento Agregado!")
+        showSuccess("Complemento Agregado.")
         dialogVisible(false)
     }
 
