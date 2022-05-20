@@ -1,4 +1,4 @@
-import { IconButton, TextField, Tooltip } from '@material-ui/core';
+import { Dialog, DialogContent, IconButton, TextField, Tooltip } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
 import React, { useEffect, useState, useMemo } from "react";
 import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquierda";
@@ -7,7 +7,10 @@ import RestartAltIcon from "@material-ui/icons/Refresh";
 import Noty from 'noty';
 import { dataGridLocaleText } from "../../Constants";
 import SearchIcon from "@material-ui/icons/Search";
-import { obtenerRemitentesDestinatariosPaginado } from '../../Util/Contexts/RemitenteDestinatarioContext';
+import { obtenerClientesPaginado, obtenerRemitentesDestinatariosPaginado } from '../../Util/Contexts/RemitenteDestinatarioContext';
+import DialogAsignarSeguros from './DialogAsignarSeguros';
+import axios from "axios";
+import {API_HEADERS} from "../../Constants";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -19,19 +22,14 @@ function showSuccess(mensaje) {
     
 
 let rowSelect
+const headers = API_HEADERS
 function Seguros() {
     const [data, setData] = React.useState([])
+    const [dataTiposSeguro, setDataTiposSeguro] = useState([])
     const [state, setState] = React.useState({
-        showPopUp: false,
-        IdEmbalaje: 0,
-        CodigoEmbalaje: undefined,
-        NombreEmbalaje: "",
-        DerechoBorrar: 87,
-        DescripcionEmbalaje: "",
-        agregar: "Agregar",
+        idCliente: 0,  
         height: window.innerHeight,
-        CreadoPor: localStorage.getItem("UsuarioId"),
-        ModificadoPor: localStorage.getItem("UsuarioId")
+        openDialog: false,
     })
     const [pagina, setPagina] = React.useState(0);
     const [busqueda, setBusqueda] = React.useState("");
@@ -46,42 +44,45 @@ function Seguros() {
                 return (
                     <div>
                         <Tooltip title="Asignar seguro">
-                            <a  onClick={()=>{}} className="btn btn-default btn-xs"
+                            <a  onClick={()=>{handleClickModal()}} className="btn btn-default btn-xs"
                           ><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
-                        <Tooltip title="Editar seguro">
-                            <a  className="btn btn-default btn-xs" onClick={()=>{}}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
-                        </Tooltip>
-                        <Tooltip title="Cancelar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={()=>{}}
-                           ><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
-
-                        </Tooltip>
                     </div>
                 )
             }
-        },
+            },
             {
-              headerName: "No. Remitente / Destinatario",
-              field: "m_nNumero",
+              headerName: "No. Cliente",
+              field: "m_nNumeroCliente",
               width: 150,
             },
             {
               headerName: "Nombre",
-              field: "m_sNombre",
+              field: "m_sNombreFiscal",
                 width: 500,
             },
             {
-                headerName: "Domicilio",
-                field: "m_sDomicilio",
+                headerName: "Tipo de seguro",
+                field: "m_sTipoSeguro",
+                renderCell: (row) => {
+                    return (
+                        <>
+                            { row.row.m_sTipoSeguro}
+                        </>
+                    )
+                },
                 width: 500,
               }
 
     ]);
 
-    
+    async function getAllTiposSeguro() {
+        axios.get(`${process.env.REACT_APP_REPORT_URL}/api/TipoSeguros/GetListado`, {headers}).then(({data}) => {
+            setDataTiposSeguro(data)
+        })
+    }
     useEffect(value => {
         if (localStorage.getItem("UsuarioId") === null || localStorage.getItem("UsuarioId") <= 0) {
             showSuccess("Es necesario iniciar sesion para acceder a este proceso");
@@ -91,16 +92,31 @@ function Seguros() {
         cargarDesdeServidor(pagina,registros);
     }, [pagina,registros]);
 
+    useEffect(() => {
+        getAllTiposSeguro()
+      }, [1])
+
     function cargarDesdeServidor(pagina,registros){
-        return new obtenerRemitentesDestinatariosPaginado(pagina,registros, busqueda).then((respuesta)=>{
+        return new obtenerClientesPaginado(pagina,registros, busqueda).then((respuesta)=>{
             setData(respuesta.data)
         })
       }
       function limpiarBuscador(pagina,registros){
-        return new obtenerRemitentesDestinatariosPaginado(pagina,registros, "").then((respuesta)=>{
+        return new obtenerClientesPaginado(pagina,registros, "").then((respuesta)=>{
             setData(respuesta.data)
         })
       }
+
+      const dialogVisible = (isVisible) => {
+        setState(() => ({
+          ...state,
+          openDialog: isVisible,
+        }));
+      };
+
+      const handleClickModal = (event) => {
+        setState({ ...state, openDialog: true });
+      };
   return (
     <div>
            <header className="topbar clearfix">
@@ -125,23 +141,35 @@ function Seguros() {
             {/*Leftbar End Here*/}
             <section className="main-container">
 
-<div className="container-fluid">
-
-
-
-    <ul className="nav navStatica nav-tabs">
-        <li className="active">
-        <a>
-                <i className="fa fa-list" /> Listado
-</a>
-        </li>
-
-    </ul>
+        <Dialog
+          open={state.openDialog}
+          onClose={() => setState({ ...state, openDialog: false })}
+          fullWidth
+          maxWidth="md"
+        >
+          <DialogContent>
+            <DialogAsignarSeguros
+              dialogVisible={dialogVisible}
+              openDialog={state.openDialog}
+              idCliente={rowSelect}
+              dataTiposSeguro={dataTiposSeguro}
+              recargarClientes={()=>cargarDesdeServidor(pagina, registros)}
+            />
+          </DialogContent>
+        </Dialog>
+            <div className="container-fluid">
+             <ul className="nav navStatica nav-tabs">
+              <li className="active">
+                <a>
+                 <i className="fa fa-list" /> Listado
+                </a>
+              </li>
+             </ul>
 
     <div className="row" className="tab-content">
         <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
             <div className="widget-wrap">
-                <div style={{marginLeft:"65%"}}>
+                <div style={{marginLeft:"55%"}}>
                
             <TextField
             variant="standard"
@@ -188,7 +216,7 @@ function Seguros() {
                                  localeText={dataGridLocaleText}
                                  columns={columns}
                                  rows={data}
-                                 getRowId={((row) => row.m_nNumero)}
+                                 getRowId={((row) => row.m_nNumeroCliente)}
                                  onRowSelected={(row) => {
                                      rowSelect = row;
                                  }}
@@ -202,6 +230,7 @@ function Seguros() {
                                      setPagina(newPage.page)
                                      console.log(newPage)
                                  }}
+                                 
                              />
                          </div>
                         ) : (
