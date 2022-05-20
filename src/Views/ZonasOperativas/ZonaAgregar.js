@@ -53,7 +53,6 @@ function ZonaAgregar({idZona, consult}) {
                     showSuccess("Modificado con éxito")
                     setSelec({})
                 }
-
             }).catch((err) => {
                 console.log(err);
                 showSuccess(err);

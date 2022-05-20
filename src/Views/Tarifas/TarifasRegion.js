@@ -27,7 +27,7 @@ function showSuccess(mensaje) {
         type: "information",
         layout: "topCenter",
         text: mensaje,
-        timeout: "3000"
+        timeout: "6000"
     }).show()
 }
 
@@ -148,7 +148,31 @@ function TarifasRegion(props){
         });
     }
 
+    const isTarifaValida = (tarifa) => {
+        let valid = true
+        if (!tarifa.codigoTarifa){
+            showSuccess("El código es un campo necesario.")
+            return false
+        }
+        if (tarifa.viajes.some(i => !(parseInt(i.idOrigen) > 0))){
+            showSuccess("Todos los viajes deben tener un origen.")
+            return false
+        }
+        if (tarifa.viajes.some(i => i.dataDestinosSeleccionados.length === 0)){
+            showSuccess("Todos los viajes deben tener al menos un destino.")
+            return false
+        }
+        if (tarifa.viajes.some(i => i.dataProductosSeleccionados.length === 0)){
+            showSuccess("Todos los viajes deben tener al menos un producto.")
+            return false
+        }
+        return valid
+    }
+
     const handleAceptar = (data) => {
+        if (!isTarifaValida(data)){
+            return
+        }
         let params = {
             codigo: data.codigoTarifa,
             // idOrigen: data.origen,
