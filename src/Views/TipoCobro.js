@@ -7,12 +7,14 @@ import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { TextField, Tooltip } from "@material-ui/core";
+import {Checkbox, FormControlLabel, MenuItem, TextField, Tooltip} from "@material-ui/core";
 import { agregarTipoCobro, eliminarTipoCobro, modificarTipoCobro, obtenerTipoCobroId, obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import {validarDerecho} from "../Util/Util"
 import {makeStyles} from "@material-ui/core/styles";
-
+import Grid from "@material-ui/core/Grid";
+import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
+import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -33,10 +35,14 @@ const useStyles = makeStyles(styles);
 function TipoCobro() {
     const classes = useStyles();
     const [data, setData] = React.useState([])
+    const [dataTipoPago, setDataTipoPago] = React.useState([])
     const [state, setState] = React.useState({
         idTipoCobro: 0,
         codigo: "",
         descripcion: "",
+        idTipoPago: '',
+        bloqueaUM: false,
+        solicitaMonto: false,
         DerechoBorrar: 126,
         agregar: "Agregar",
         height: window.innerHeight,
@@ -50,6 +56,9 @@ function TipoCobro() {
 
             "Codigo": state.codigo,
             "Descripcion": state.descripcion,
+            "IdTipoPago": state.descripcion,
+            "BloqueaUltimaMilla": state.descripcion,
+            "SolicitaMonto": state.descripcion,
             "CreadoPor": state.CreadoPor,
             "ModificadoPor": state.ModificadoPor
         }
@@ -121,10 +130,16 @@ function TipoCobro() {
     }
 
     const handleChange = event => {
-        console.log(event.target.value)
         setState({
             ...state,
-            [event.target.id]: event.target.value
+            [event.target.name]: event.target.value
+        });
+    };
+
+    const handleChangeCheckbox = event => {
+        setState({
+            ...state,
+            [event.target.name]: event.target.checked
         });
     };
 
@@ -190,6 +205,7 @@ function TipoCobro() {
             return;
         }
         getAllData();
+        getAllTipoPago()
     }, []);
 
     function getAllData() {
@@ -197,8 +213,14 @@ function TipoCobro() {
             setData(respuesta.data)
         });
     };
-const handleClickCancelar = () =>{
-    getAllData();
+    const getAllTipoPago = () => {
+        obtenerTiposPago().then(({data}) => {
+            setDataTipoPago(data)
+        })
+    }
+
+    const handleClickCancelar = () =>{
+        getAllData();
 }
 
 
@@ -279,33 +301,91 @@ const handleClickCancelar = () =>{
                                         <div className="col-md-12">
                                             <form className="j-forms" onSubmit={handleAceptar}>
                                                 <div className="form-content">
-
-                                                    <div className="col-sm-12 col-md-12 unit">
-                                                        <div className="input">
+                                                    <Grid container spacing={1} style={{margin:'20px'}}>
+                                                        <Grid item xs={12} sm={2}>
                                                             <TextField variant="outlined" margin="dense" label="Código"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="number"
-                                                                required={true}
-                                                                value={state.codigo}
-                                                                id="codigo"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="number"
+                                                                       required={true}
+                                                                       value={state.codigo}
+                                                                       name="codigo"
                                                             />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-sm-12 col-md-12 unit">
-                                                        <div className="input">
+                                                        </Grid>
+                                                        <Grid item xs={12} sm={2}>
                                                             <TextField variant="outlined" margin="dense" label="Descripción"
-                                                                onChange={handleChange}
-                                                                className="form-control"
-                                                                type="text"
-                                                                maxLenght="125"
-                                                                required={true}
-                                                                value={state.descripcion}
-                                                                id="descripcion"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       type="text"
+                                                                       maxLenght="125"
+                                                                       required={true}
+                                                                       value={state.descripcion}
+                                                                       name="descripcion"
                                                             />
-                                                        </div>
-                                                    </div>
+                                                        </Grid>
+                                                        <Grid item xs={12} sm={2}>
+                                                            <TextField variant="outlined" margin="dense" label="Tipo de pago por defecto"
+                                                                       onChange={handleChange}
+                                                                       className="form-control"
+                                                                       required={true}
+                                                                       value={state.idTipoPago}
+                                                                       name="idTipoPago"
+                                                                       select
+                                                            >
+                                                                {
+                                                                    dataTipoPago.map(i => (
+                                                                        <MenuItem key={i.m_nIdTipoPago} value={i.m_nIdTipoPago}>{i.m_sTipoPago}</MenuItem>
+                                                                    ))
+                                                                }
+                                                            </TextField>
+                                                        </Grid>
+                                                        <Grid item xs={12} sm={1}>
+                                                            <Tooltip title="El tipo de pago seleccionado se le asignará automaticamente a la guia al pagarla si se registra con este tipo de cobro.">
+                                                                <HelpOutlineOutlinedIcon/>
+                                                            </Tooltip>
+                                                        </Grid>
+                                                        <Grid item xs={12} sm={5}/>
+                                                        <Grid item xs={12} sm={1}>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        checked={state.bloqueaUM}
+                                                                        onChange={handleChangeCheckbox}
+                                                                        name="bloqueaUM"
+                                                                        color="primary"
+                                                                    />
+                                                                }
+                                                                label="Bloquea Última Milla"
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={12} sm={1}>
+                                                            <Tooltip title="En caso de que la guia no esté pagada y tenga registrado este tipo de cobro no se podrá agregar a un proceso de última milla">
+                                                                <HelpOutlineOutlinedIcon/>
+                                                            </Tooltip>
+                                                        </Grid>
+                                                        <Grid item xs={12} sm={10}/>
+                                                        <Grid item xs={12} sm={1}>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        checked={state.solicitaMonto}
+                                                                        onChange={handleChangeCheckbox}
+                                                                        name="solicitaMonto"
+                                                                        color="primary"
+                                                                    />
+                                                                }
+                                                                label="Solicita monto"
+                                                            />
+                                                        </Grid>
+                                                        <Grid item xs={12} sm={1}>
+                                                            <Tooltip title="Si la guia tiene este tipo de cobro se solicitará el tipo de pago para finalizar el viaje la guia.">
+                                                                <HelpOutlineOutlinedIcon/>
+                                                            </Tooltip>
+                                                        </Grid>
+
+                                                    </Grid>
+
+
 
                                                 </div>
                                                 <br></br>
