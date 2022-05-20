@@ -310,7 +310,7 @@ class AgregarViaje extends Component {
             m_arrInformes: this.state.dataInformesAsignados,
             m_nIdOrigen: this.state.idCiudadOrigen.m_nIdCiudad,
             m_nDestino: this.state.idCiudadDestino.m_nIdCiudad,
-            IdRemolque1: this.state.IdRemolque1.m_nIdUnidad,
+            IdRemolque1: this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0,
             IdRemolque2: this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0,
             IdDolly: this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0,
             m_nIdRuta: this.state.idRuta,
