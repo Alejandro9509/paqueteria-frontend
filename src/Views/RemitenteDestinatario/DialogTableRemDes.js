@@ -5,8 +5,10 @@ import { dataGridLocaleText } from "../../Constants";
 import {Dialog, DialogActions, DialogContent, TextField} from "@material-ui/core";
 import {obtenerRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado} from "../../Util/Contexts/RemitenteDestinatarioContext";
 import SearchIcon from "@material-ui/icons/Search";
+
 //---------------------------->funcion para mostrar un mensaje<-----------------------------------------------------
 function showSuccess(mensaje) {
+  
   new Noty({
     type: "information",
     layout: "topCenter",
