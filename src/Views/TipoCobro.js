@@ -52,15 +52,15 @@ function TipoCobro() {
 
     const handleAceptar = (e) => {
         e.preventDefault()
-        var params = {
+        let params = {
 
-            "Codigo": state.codigo,
-            "Descripcion": state.descripcion,
-            "IdTipoPago": state.descripcion,
-            "BloqueaUltimaMilla": state.descripcion,
-            "SolicitaMonto": state.descripcion,
-            "CreadoPor": state.CreadoPor,
-            "ModificadoPor": state.ModificadoPor
+            "codigo": state.codigo,
+            "descripcion": state.descripcion,
+            "idTipoPago": state.idTipoPago,
+            "bloqueaUltimaMilla": state.bloqueaUM,
+            "solicitaMonto": state.solicitaMonto,
+            "creadoPor": state.CreadoPor,
+            "modificadoPor": state.ModificadoPor
         }
         console.log(params)
         if (state.idTipoCobro != 0) {
