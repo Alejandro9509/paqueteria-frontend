@@ -15,6 +15,10 @@ import {makeStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
+import $ from "jquery";
+import Button from "@material-ui/core/Button";
+window.jQuery = window.$ = $;
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -66,7 +70,7 @@ function TipoCobro() {
         if (state.idTipoCobro != 0) {
             modificarTipoCobro(state.idTipoCobro, params).then(respuesta => {
                 showSuccess(respuesta.data)
-                getAllData();
+                handleShowListado();
             }).catch(err => {
                 console.log(err)
                 showSuccess("err")
@@ -74,7 +78,7 @@ function TipoCobro() {
         } else {
             agregarTipoCobro(params).then(respuesta => {
                 showSuccess(respuesta.data)
-                getAllData();
+                handleShowListado();
             }).catch(err => {
                 console.log(err)
                 showSuccess(err)
@@ -95,38 +99,15 @@ function TipoCobro() {
             }
 
             eliminarTipoCobro(id, state.ModificadoPor).then(respuesta => {
-                showSuccess(respuesta)
+                showSuccess(respuesta.data)
                 getAllData();
             }).catch(err => {
+                console.log(err)
                 showSuccess(err)
             });
         }).catch(err => {
             showSuccess(err)
         });
-    }
-
-    function handleShowModificar(id) {
-        obtenerTipoCobroId(id).then(respuesta => {
-            console.log(respuesta.data)
-            setState({
-                ...state,
-                agregar: "Modificar",
-                showPopUp: true,
-                idTipoCobro: id,
-                codigo: respuesta.data.m_nCodigo,
-                descripcion: respuesta.data.m_sDescripcion,
-            })
-        });
-    }
-
-    function handleShowAgregar() {
-        setState({
-            ...state,
-            idTipoCobro: 0,
-            codigo: "",
-            descripcion: "",
-            agregar: "Agregar",
-        })
     }
 
     const handleChange = event => {
@@ -158,7 +139,7 @@ function TipoCobro() {
 
                         </Tooltip>
                         <Tooltip title="Consultar">
-                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowModificar(row.row.m_nIdTipoCobro))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
+                            <a href="#Agregar" role="tab" data-toggle="tab" className="btn btn-default btn-xs" onClick={() => (handleShowConsultar(row.row.m_nIdTipoCobro))}><i className="fa fa-eye" style={{ color: "#F9A03E" }} /></a>
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
@@ -178,24 +159,39 @@ function TipoCobro() {
             headerName: "Descripción",
             field: "m_sDescripcion",
             width: 300
-        }, {
-            headerName: "Creado El",
-            field: "m_sCreadoEl",
+        },{
+            headerName: "Tipo de Pago",
+            field: "m_sTipoPago",
             width: 200
         }, {
-            headerName: "Creado Por",
-            field: "m_sCreadoPor",
-            width: 100
+            headerName: "Bloquea última milla",
+            field: "m_bBloquearUltimaMilla",
+            width: 100,
+            renderCell: (row) => {
+                return (
+                    <div>
+                        {row.row.m_bBloquearUltimaMilla ?
+                            <div>Sí</div> :
+                            <div>No</div>
+                        }
+                    </div>
+                )
+            }
         }, {
-            headerName: "Modificado El",
-            field: "m_sModificadoEl",
-            width: 200
-        }, {
-            headerName: "Modificado Por",
-            field: "m_sModificadoPor",
-            width: 100
+            headerName: "Solicita monto",
+            field: "m_bSolicitarMonto",
+            width: 100,
+            renderCell: (row) => {
+                return (
+                    <div>
+                        {row.row.m_bSolicitarMonto ?
+                            <div>Sí</div> :
+                            <div>No</div>
+                        }
+                    </div>
+                )
+            }
         }
-
     ]);
 
     useEffect(value => {
@@ -208,11 +204,12 @@ function TipoCobro() {
         getAllTipoPago()
     }, []);
 
-    function getAllData() {
+    const getAllData = () => {
         obtenerTipoCobro().then(respuesta => {
             setData(respuesta.data)
         });
-    };
+    }
+
     const getAllTipoPago = () => {
         obtenerTiposPago().then(({data}) => {
             setDataTipoPago(data)
@@ -221,8 +218,100 @@ function TipoCobro() {
 
     const handleClickCancelar = () =>{
         getAllData();
-}
+    }
 
+    const showTab = (index) => {
+        switch (index) {
+            case 0:
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(index).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
+                break;
+            case 1:
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(index).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Agregar').addClass('in show');
+                break;
+            default:
+                $('.nav-tabs li ').removeClass('active');
+                $('.nav-tabs li').eq(0).addClass('active');
+                $('.tab-content div ').removeClass('in show');
+                $('#Listado').addClass('in show');
+                break;
+        }
+    }
+
+    const handleShowListado = (event) => {
+        if (event !== undefined){
+            event.stopPropagation();
+        }
+        setState(state => {
+            return {
+                ...state,
+                agregar: "Agregar",
+            }
+        })
+        showTab(0)
+        getAllData()
+        limpiarInputsAgregar()
+    }
+
+    const handleShowAgregar = (event) => {
+        if (event !== undefined){
+            event.stopPropagation();
+        }
+        setState(state => {
+            return {
+                ...state,
+                agregar: "Agregar",
+            }
+        })
+        showTab(1);
+    }
+
+    const handleShowModificar = (id) => {
+        obtenerTipoCobroId(id).then(respuesta => {
+            mostrarDataConsulta(respuesta, "Modificar")
+        });
+    }
+
+    const handleShowConsultar = (id) => {
+        obtenerTipoCobroId(id).then(respuesta => {
+            mostrarDataConsulta(respuesta, "Consultar")
+        });
+    }
+
+    const mostrarDataConsulta = (respuesta, accion) => {
+        setState(state => {
+            return {
+                ...state,
+                agregar: accion,
+                idTipoCobro: respuesta.data.IdTipoCobro,
+                codigo: respuesta.data.Codigo,
+                descripcion: respuesta.data.Descripcion,
+                idTipoPago: respuesta.data.IdTipoPago,
+                bloqueaUM: respuesta.data.BloquearUltimaMilla,
+                solicitaMonto: respuesta.data.SolicitarMonto,
+            }
+        })
+        showTab(1)
+    }
+
+    const limpiarInputsAgregar = () => {
+        setState(state => {
+            return {
+                ...state,
+                idTipoCobro: 0,
+                codigo: "",
+                descripcion: "",
+                idTipoPago: "",
+                bloqueaUM: false,
+                solicitaMonto: false,
+            }
+        })
+    }
 
     return (
         <div >
@@ -255,46 +344,42 @@ function TipoCobro() {
 
                     <ul className="nav navStatica nav-tabs">
                         <li className="active">
-                            <a data-toggle="tab" href="#Listado">
+                            <a onClick={(event) => handleShowListado(event)}>
                                 <i className="fa fa-list" /> Listado
             </a>
                         </li>
                         <li>
-                            <a className= {validarDerecho(9101350)? "":classes.disabled} data-toggle="tab" href="#Agregar" onClick={handleShowAgregar}>
-                                <i className="fa fa-plus-circle" /> {state.agregar}
+                            <a onClick={(event) => handleShowAgregar(event)} className={validarDerecho(9101350) ? "" : classes.disabled} data-toggle="tab">
+                                <i className="fa fa-plus-circle"/> {state.agregar}
                             </a>
                         </li>
                     </ul>
 
                     <div className="row" className="tab-content">
-                        <div className="widget-wrap" id="Listado" className="tab-pane fade in active">
+                        <div id="Listado" className="tab-pane fade in show">
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>
-                                        {data.length != 0 ? (
-                                            <DataGrid
-                                                localeText={dataGridLocaleText}
-                                                rows={data}
-                                                columns={columns}
-                                                density="compact"
-                                                pageSize={Math.floor((state.height - 310) / 30)}
-                                                getRowId={(row) => row.m_nIdTipoCobro}
-                                                onRowSelected={(row) => {
-                                                    setState({
-                                                        ...state,
-                                                        idTipoCobro: row.data.m_nIdTipoCobro
-                                                    })
-                                                }}
-                                            />
-                                        ) : (
-                                            <div>No se encontró ningún registro</div>
-                                        )}
+                                        <DataGrid
+                                            localeText={dataGridLocaleText}
+                                            rows={data}
+                                            columns={columns}
+                                            density="compact"
+                                            pageSize={Math.floor((state.height - 310) / 30)}
+                                            getRowId={(row) => row.m_nIdTipoCobro}
+                                            onRowSelected={(row) => {
+                                                setState({
+                                                    ...state,
+                                                    idTipoCobro: row.data.m_nIdTipoCobro
+                                                })
+                                            }}
+                                        />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="widget-wrap" id="Agregar" className="tab-pane fade">
+                        <div id="Agregar" className="tab-pane fade">
                             <div className="widget-wrap">
                                 <div className="widget-content">
                                     <div className="row">
@@ -309,6 +394,7 @@ function TipoCobro() {
                                                                        type="number"
                                                                        required={true}
                                                                        value={state.codigo}
+                                                                       disabled={state.agregar === "Consultar"}
                                                                        name="codigo"
                                                             />
                                                         </Grid>
@@ -321,6 +407,7 @@ function TipoCobro() {
                                                                        required={true}
                                                                        value={state.descripcion}
                                                                        name="descripcion"
+                                                                       disabled={state.agregar === "Consultar"}
                                                             />
                                                         </Grid>
                                                         <Grid item xs={12} sm={2}>
@@ -331,6 +418,7 @@ function TipoCobro() {
                                                                        value={state.idTipoPago}
                                                                        name="idTipoPago"
                                                                        select
+                                                                       disabled={state.agregar === "Consultar"}
                                                             >
                                                                 {
                                                                     dataTipoPago.map(i => (
@@ -345,7 +433,7 @@ function TipoCobro() {
                                                             </Tooltip>
                                                         </Grid>
                                                         <Grid item xs={12} sm={5}/>
-                                                        <Grid item xs={12} sm={1}>
+                                                        <Grid item xs={12} sm={2}>
                                                             <FormControlLabel
                                                                 control={
                                                                     <Checkbox
@@ -353,6 +441,7 @@ function TipoCobro() {
                                                                         onChange={handleChangeCheckbox}
                                                                         name="bloqueaUM"
                                                                         color="primary"
+                                                                        disabled={state.agregar === "Consultar"}
                                                                     />
                                                                 }
                                                                 label="Bloquea Última Milla"
@@ -363,8 +452,8 @@ function TipoCobro() {
                                                                 <HelpOutlineOutlinedIcon/>
                                                             </Tooltip>
                                                         </Grid>
-                                                        <Grid item xs={12} sm={10}/>
-                                                        <Grid item xs={12} sm={1}>
+                                                        <Grid item xs={12} sm={9}/>
+                                                        <Grid item xs={12} sm={2}>
                                                             <FormControlLabel
                                                                 control={
                                                                     <Checkbox
@@ -372,6 +461,7 @@ function TipoCobro() {
                                                                         onChange={handleChangeCheckbox}
                                                                         name="solicitaMonto"
                                                                         color="primary"
+                                                                        disabled={state.agregar === "Consultar"}
                                                                     />
                                                                 }
                                                                 label="Solicita monto"
@@ -389,11 +479,8 @@ function TipoCobro() {
 
                                                 </div>
                                                 <br></br>
-                                                <div className="form-footer" className="col-md-12">
-                                                    <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn" onClick={handleClickCancelar}
-                                                    >
-                                                        Cancelar</button>
-                                                    <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
+                                                <div className="form-footer" >
+                                                    <Button fullWidth type="submit" className="btn btn-primary primary-btn">Guardar</Button>
                                                 </div>
                                             </form>
                                         </div>
