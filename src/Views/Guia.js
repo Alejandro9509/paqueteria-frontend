@@ -1773,14 +1773,16 @@ function Guia(props) {
             var guia = data
             if (guia.m_nIdEstatusGuia == 7) {
                 if (!guia.m_nClienteBloqueado) {
-
+                    debugger
                     let importeTotal = 0
                     guia.m_arClsGuiaConceptos.forEach((c) => importeTotal += parseFloat(c.m_cTotal))
+                    let tipoCobro = dataTipoCobro.find(i => i.m_nIdTipoCobro == guia.m_nIdTIpoCobro)
+                    let tipoPago = tipoCobro.m_nIdTipoPago || dataTipoPago[0]?.m_nIdTipoPago
                     setDataOcurre({
                         idGuia: guia.m_nIdGuia,
                         tipoCobroOcurre: guia.m_nIdTIpoCobro,
                         importeTotal: importeTotal,
-                        tipoPago: guia.m_nIdTIpoCobro == 11 ? 5 : 0
+                        tipoPago: tipoPago
                     })
                     setState({
                         ...state,
@@ -1866,11 +1868,16 @@ function Guia(props) {
                 {showDialogOcurre && <p style={{marginTop: '30px', marginLeft: '30px'}}>Ocurre</p>}
                 {
                     dataOcurre &&
-                    <Ocurre handleEntregaOcurre={handleEntregaOcurre} closeOcurre={() => {
-                        setState({...state, openDialog: false});
-                        setShowDialogOcurre(false)
-                    }} dataTipoPago={dataTipoPago} dataOcurre={dataOcurre} dataTipoCobro={dataTipoCobro}
-                            showDialogOcurre={showDialogOcurre}/>
+                    <Ocurre
+                        handleEntregaOcurre={handleEntregaOcurre}
+                        closeOcurre={() => {
+                            setState({...state, openDialog: false});
+                            setShowDialogOcurre(false)
+                        }}
+                        dataTipoPago={dataTipoPago}
+                        dataOcurre={dataOcurre}
+                        dataTipoCobro={dataTipoCobro}
+                        showDialogOcurre={showDialogOcurre}/>
                 }
 
             </Dialog>
