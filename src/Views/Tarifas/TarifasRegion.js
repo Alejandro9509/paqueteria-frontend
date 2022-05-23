@@ -74,7 +74,6 @@ function TarifasRegion(props){
         let tarifa = {
             m_nIdTarifa: respuesta.data.m_nIdTarifa
         }
-        tarifa.m_sCodigo = respuesta.data.m_sCodigo
         tarifa.cliente = {
             m_nIdCliente : respuesta.data.m_nIdCliente,
             m_sNombreFiscal : respuesta.data.m_sCliente,
@@ -150,10 +149,6 @@ function TarifasRegion(props){
 
     const isTarifaValida = (tarifa) => {
         let valid = true
-        if (!tarifa.codigoTarifa){
-            showSuccess("El código es un campo necesario.")
-            return false
-        }
         if (!tarifa.viajes.length > 0){
             showSuccess("Debe haber al menos un viaje.")
             return false
@@ -178,11 +173,6 @@ function TarifasRegion(props){
             return
         }
         let params = {
-            codigo: data.codigoTarifa,
-            // idOrigen: data.origen,
-            // fleteMinimo: data.precioFlete,
-            // productos: data.dataProductosSeleccionados,
-            // destinos: data.dataDestinosSeleccionados,
             creadoPor: localStorage.getItem("UsuarioId"),
             tipo: props.configuraciones?.TipoTarifaTarifas,
             idCliente: data.cliente?.m_nIdCliente || 0,
@@ -332,51 +322,11 @@ function TarifasRegion(props){
                         </div>
                     )
                 }
-            },
-            {
-                headerName: "Código",
-                field: "m_sCodigo",
-                width: 300,
             },{
                 headerName: "Cliente",
                 field: "Cliente",
                 width: 500,
             },
-            /*{
-                headerName: "Origen",
-                field: "m_sOrigen",
-                flex: 1,
-                minWidth: 300,
-            },
-            {
-                headerName: "Destino",
-                field: "m_sDestino",
-                flex: 1,
-                minWidth: 300,
-            },
-
-            {
-                headerName: "Activo",
-                field: "m_bActivo",
-                width: 100,
-                renderCell: (row) => {
-                    return (
-                        <div
-                            style={{
-                                width: "100%",
-                                textAlign: "center",
-                                color: row.row.m_bActivo == 'true' ? "green" : "red",
-                            }}
-                        >
-                            {row.row.m_bActivo ? (
-                                <SvgIcon component={Activo} />
-                            ) : (
-                                <SvgIcon component={NoActivo} />
-                            )}
-                        </div>
-                    );
-                },
-            },*/
         )
 
         setState(state => {
