@@ -41,7 +41,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    Grid,
+    Grid, MenuItem,
     Step,
     StepLabel,
     Stepper,
@@ -800,9 +800,9 @@ function Embarque(props) {
         }
         if (event.target.name === "municipioEnt") {
             setRepetirConceptos(true)
-            obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoRec, event.target.value).then(({data}) => {
+            /*obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoRec, event.target.value).then(({data}) => {
                 setDataCodigosPostalesEntregaDD(data)
-            })
+            })*/
         }
     };
 
@@ -814,11 +814,28 @@ function Embarque(props) {
         })
         if (input === "codigoPostalEnt"){
             obtenerZonaOperativaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
-                setDataZonasOperativasEntregaDD(data)
+                if (data.length > 0){
+                    if (data.length === 1){
+                        setEntregaDD(entregaDD => {
+                            return {
+                                ...entregaDD,
+                                zonaOperativaEnt: data[0]
+                            }
+                        })
+                    }
+                    setDataZonasOperativasEntregaDD(data)
+                }else{
+                    setEntregaDD(entregaDD => {
+                        return{
+                            ...entregaDD,
+                            zonaOperativaEnt: {}
+                        }
+                    })
+                }
             })
-            obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
+            /*obtenerZonaTarifaByIdCodigoPostal(newValue.m_sCP).then(({data}) => {
                 setDataZonasTarifaEntregaDD(data)
-            })
+            })*/
         }
     }
 
@@ -917,7 +934,7 @@ function Embarque(props) {
 
     const esEmbarqueValido = () => {
         let valid = false;
-        /**INFORMACION GENERAÑ*/
+        /**INFORMACION GENERAl*/
         if (!esDatoValido(state.idTipoSeguro)){
             showSuccess("El tipo de seguro es un dato requerido");
             return valid;
@@ -940,10 +957,10 @@ function Embarque(props) {
             showSuccess("El remitente es un dato requerido");
             return valid;
         }
-        if (!esDatoValido(remitente.codigoPostalRemitente?.m_nIdCP)){
+        /*if (!esDatoValido(remitente.codigoPostalRemitente?.m_nIdCP)){
             showSuccess("El cÓdigo postal del remitente es un dato requerido");
             return valid;
-        }
+        }*/
         if(!esDatoValido(remitente.correoRemitente)){
             showSuccess("El correo del remitente es un dato requerido")
             return valid;
@@ -958,10 +975,10 @@ function Embarque(props) {
             showSuccess("El destinatario es un dato requerido");
             return valid;
         }
-        if (!esDatoValido(destinatario.codigoPostalDestinatario?.m_nIdCP)){
+        /*if (!esDatoValido(destinatario.codigoPostalDestinatario?.m_nIdCP)){
             showSuccess("El código postal del destinatario es un dato requerido");
             return valid;
-        }
+        }*/
         if(!esDatoValido(destinatario.correoDestinatario)){
             showSuccess("El correo del destinatario es un dato requerido")
             return valid;
@@ -1628,37 +1645,23 @@ function Embarque(props) {
                         domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
                         entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
                         datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                        codigoPostalEnt: {
+                            m_nIdCP: respuesta.data.m_nIdCPDetalleEntrega,
+                            m_sCP: respuesta.data.m_sCodigoPostalEntrega,
+                            m_sColonia: respuesta.data.m_sColoniaEntrega,
+                            m_sLocalidad: respuesta.data.m_sLocalidadEntrega
+                        },
                     }
                 })
-                let estado = `${respuesta.data.m_nIdEstadoEntrega}`
-                obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+                obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoEntrega).then(({data}) =>{
                     setDataMunicipiosEntregaDD(data)
                 })
-                obtenerCodigoPostalId(respuesta.data.m_nIdCPDetalleEntrega).then((cp) => {
-                    setEntregaDD(entregaDD =>{
-                        return {
-                            ...entregaDD,
-                            codigoPostalEnt: {
-                                m_nIdCP: cp.data.m_nIdCP,
-                                m_sCP: cp.data.m_sCP,
-                                m_sColonia: cp.data.m_sColonia
-                            },
-                        }
-                    })
-                })
+
                 obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
                     setEntregaDD(entregaDD => {
                         return {
                             ...entregaDD,
                             zonaOperativaEnt: data
-                        }
-                    })
-                })
-                obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifaEntrega).then(({data}) => {
-                    setEntregaDD(entregaDD => {
-                        return {
-                            ...entregaDD,
-                            zonaTarifaEnt: data
                         }
                     })
                 })
@@ -1720,17 +1723,22 @@ function Embarque(props) {
             })
             /**Si es entrega es en diferente domicilio*/
         }else if (!respuesta.data.EntregarMismoDomicilio){
-            let estado =  `${respuesta.data.m_nIdEstadoEntrega}`
+            // let estado =  `${respuesta.data.m_nIdEstadoEntrega}`
             setEntregaDD(entregaDD => {
                 return {
                     ...entregaDD,
                     domicilioEnt: respuesta.data.DomicilioEntrega,
                     entregarEnEnt: respuesta.data.EntregarEn,
                     datosAdicionalesEnt: respuesta.data.DatosAdicionalesis,
-                    estadoEnt: estado,
+                    estadoEnt: respuesta.data.m_nIdEstadoEntrega,
                     municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega,
                     latitudEnt: respuesta.data.m_sLatitud,
-                    longitudEnt: respuesta.data.m_sLongitud
+                    longitudEnt: respuesta.data.m_sLongitud,
+                    codigoPostalEnt: {
+                        m_nIdCP: respuesta.data.m_nIdCodigoPostalEntrega,
+                        m_sCP: respuesta.data.m_sCodigoPostalEntrega,
+                        m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega
+                    }
                 }
             })
             setState(state => {
@@ -1740,23 +1748,24 @@ function Embarque(props) {
                     diferenteEntrega: !respuesta.data.EntregarMismoDomicilio,
                 }
             });
-            obtenerMunicipiosByIdEstado(estado).then(({data}) =>{
+            obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoEntrega).then(({data}) =>{
                 setDataMunicipiosEntregaDD(data)
             })
-            obtenerCodigoPostalId(respuesta.data.m_sCodigoPostalEntrega).then((cp) => {
+            /*obtenerCodigoPostalId(respuesta.data.m_sCodigoPostalEntrega).then((cp) => {
                 setEntregaDD(entregaDD => {
                     return {
                         ...entregaDD,
                         codigoPostalEnt: cp.data,
                     }
                 })
-                obtenerZonaOperativaByIdCodigoPostal(cp.data.m_sCP).then(({data}) => {
-                    setDataZonasOperativasEntregaDD(data)
-                })
-                obtenerZonaTarifaByIdCodigoPostal(cp.data.m_sCP).then(({data}) => {
-                    setDataZonasTarifaEntregaDD(data)
-                })
+
+            })*/
+            obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sCodigoPostalEntrega).then(({data}) => {
+                setDataZonasOperativasEntregaDD(data)
             })
+            /*obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalEntrega).then(({data}) => {
+                setDataZonasTarifaEntregaDD(data)
+            })*/
             obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
                 setEntregaDD(entregaDD => {
                     return{
@@ -1765,14 +1774,14 @@ function Embarque(props) {
                     }
                 })
             })
-            obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
+            /*obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
                 setEntregaDD(entregaDD => {
                     return{
                         ...entregaDD,
                         zonaTarifaEnt: data
                     }
                 })
-            })
+            })*/
         }
 
         let totalPaquetes = 0
@@ -3687,12 +3696,12 @@ function Embarque(props) {
                                                                                 disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                                                             >
                                                                                 {dataEstados.map((estado) => (
-                                                                                    <option
+                                                                                    <MenuItem
                                                                                         key={estado.m_nIdEstado}
                                                                                         value={estado.m_nIdEstado}
                                                                                     >
                                                                                         {estado.m_sEstado}
-                                                                                    </option>
+                                                                                    </MenuItem>
                                                                                 ))}
                                                                             </Select>
                                                                         </FormControl>
@@ -3719,12 +3728,12 @@ function Embarque(props) {
                                                                                 InputProps={{name: "municipioEnt"}}
                                                                             >
                                                                                 {dataMunicipiosEntregaDD.map((municipio) => (
-                                                                                    <option
+                                                                                    <MenuItem
                                                                                         key={municipio.m_sCodigoMunicipio}
                                                                                         value={municipio.m_sCodigoMunicipio}
                                                                                     >
                                                                                         {municipio.m_sMunicipio}
-                                                                                    </option>
+                                                                                    </MenuItem>
                                                                                 ))}
                                                                             </Select>
                                                                         </FormControl>
@@ -3743,7 +3752,7 @@ function Embarque(props) {
                                                                                 options={dataCodigosPostalesEntregaDD}
                                                                                 getOptionLabel={(option) => (
                                                                                     option ?
-                                                                                        `${option.m_sCP} - ${option.m_sColonia}`
+                                                                                        `${option.m_sCP} - ${option.m_sColonia ? option.m_sColonia : option.m_sLocalidad}`
                                                                                         : ''
                                                                                 )}
                                                                                 style={{

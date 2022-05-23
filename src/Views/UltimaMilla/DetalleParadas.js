@@ -388,7 +388,9 @@ class DetalleParadas extends Component {
             pdfWindow.document.title = "Última Milla";
         })
     }
-
+    validarRutasCompletadas(tour){
+        return tour.m_arrClsProGuia.some(g=> g.m_sEstatusUltimaMilla == "Completado")
+    }
     cancelarRutaAccion(e, id) {
         e.preventDefault()
         e.stopPropagation()
@@ -691,9 +693,11 @@ class DetalleParadas extends Component {
                                                                 <Grid item sm={2}>
                                                                     {
                                                                         tour.m_bActiva &&
-                                                                    <IconButton disabled={!validarDerecho(9101454)} aria-label="file" onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}>
+                                                                        <>
+                                                                    <IconButton disabled={!validarDerecho(9101454) || this.validarRutasCompletadas(tour)} aria-label="file" onClick={(e) => this.cancelarRutaAccion(e,tour.m_nIdParadaUltimaMilla)}>
                                                                         <CancelIcon style={{fill:"red"}} fontSize={"large"}/>
                                                                     </IconButton>
+                                                                    </>
                                                                     }
                                                                     {
                                                                         !tour.m_bActiva &&
