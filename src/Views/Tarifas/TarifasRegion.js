@@ -154,6 +154,10 @@ function TarifasRegion(props){
             showSuccess("El código es un campo necesario.")
             return false
         }
+        if (!tarifa.viajes.length > 0){
+            showSuccess("Debe haber al menos un viaje.")
+            return false
+        }
         if (tarifa.viajes.some(i => !(parseInt(i.idOrigen) > 0))){
             showSuccess("Todos los viajes deben tener un origen.")
             return false
