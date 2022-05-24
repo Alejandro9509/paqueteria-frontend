@@ -128,7 +128,7 @@ function CrearConceptoSAT(props) {
 
                     </DialogContent>
                 </Dialog>
-            <form className="j-forms">
+            <form className="j-forms" onSubmit={e => {e.preventDefault(); e.stopPropagation()}}>
                 <div className="form-content">
                     <div className="main-container" style={{margin: "0px", padding: "0px"}}>
                         <div className="row" style={{margin: "0px"}}>
