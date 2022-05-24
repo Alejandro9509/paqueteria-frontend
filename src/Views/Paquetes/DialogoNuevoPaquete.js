@@ -649,7 +649,7 @@ export default function DialogoNuevoPaquete(props) {
                                         forcePopupIcon={false}
                                         options={dataProductos}
                                         disabled={props.disabled}
-                                        getOptionLabel={(option) => `${option.m_nNoProducto}-${option.m_sDescripcion}`}
+                                        getOptionLabel={(option) => `${option.m_nIdProducto}-${option.m_sDescripcion}`}
                                         variant="outlined"
                                         name={"producto"}
                                         style={{transform: "translate(14px, 10px) scale(1) !important"}}

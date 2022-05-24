@@ -148,6 +148,7 @@ function CrearConceptoSAT(props) {
                                     margin="dense"
                                     type="number"
                                     label="Cantidad"
+                                    required
                                     disabled={props.consulta}
                                     value={props.dataComplemento.cantidad}
                                     onChange={handleChange}
@@ -161,6 +162,7 @@ function CrearConceptoSAT(props) {
                                     type="number"
                                     className="form-control"
                                     label="Peso"
+                                    required
                                     disabled={props.consulta}
                                     value={props.dataComplemento.peso}
                                     onChange={handleChange}

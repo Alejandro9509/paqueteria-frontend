@@ -327,25 +327,31 @@ function ComplementosSAT(props) {
     }
 
     const handleAceptar = (data)=>{
-        let error = false
+        if(!parseFloat(dataComplemento.cantidad) > 0){
+            showSuccess("La cantidad debe ser mayor a cero.")
+            return
+        }
+        if(!parseFloat(dataComplemento.peso) > 0){
+            showSuccess("El peso debe ser mayor a cero.")
+            return
+        }
         if(!dataComplemento.ProductoSAT  || !dataComplemento.claveProducto ){
             showSuccess("Se requiere seleccionar Producto")
-            error = true
+            return
         }
         if(!dataComplemento.UnidadSAT  || !dataComplemento.claveUnidad ){
             showSuccess("Se requiere seleccionar Unidad de medida")
-            error = true
+            return
         }
         if((!dataComplemento.materialPeligrosoSAT || !dataComplemento.claveMaterialPeligroso) && dataComplemento.esPeligroso){
             showSuccess("Se requiere seleccionar material peligroso")
-            error = true
+            return
         }
 
         if((!dataComplemento.embalajeSAT || !dataComplemento.claveEmbalaje) && dataComplemento.esPeligroso ){
             showSuccess("Se requiere seleccionar Embalaje")
-            error = true
+            return
         }
-        if(!error){
         if (dataComplemento.id === 0){
             const item = dataComplemento
             item.id = Math.floor(Math.random() * 10000)
@@ -379,7 +385,6 @@ function ComplementosSAT(props) {
         resetDataComplemento()
         showSuccess("Complemento Agregado.")
         dialogVisible(false)
-    }
 
     }
 

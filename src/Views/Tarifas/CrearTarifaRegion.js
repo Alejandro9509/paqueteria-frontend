@@ -34,8 +34,6 @@ function CrearTarifaRegion(props) {
     const [state, setState] = useState({
         ciudades: [],
         showDialogClientes: false,
-        // origen: props.select?.m_nIdOrigen || null,
-        codigoTarifa: props.select?.m_sCodigo || "",
         cliente: {
             m_nIdCliente : props.select?.cliente.m_nIdCliente,
             m_sNombreFiscal : props.select?.cliente.m_sNombreFiscal,
@@ -241,17 +239,6 @@ function CrearTarifaRegion(props) {
                                         setState({...state, showDialogClientes: true})
                                     })}
                                 disabled={props.disabled || !props.convenio}
-                            />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <TextField variant="outlined" margin="dense"
-                                       onChange={handleChange}
-                                       className="form-control"
-                                       label={"Código"}
-                                       required
-                                       disabled={props.disabled}
-                                       value={state.codigoTarifa}
-                                       name="codigoTarifa"
                             />
                         </Grid>
 
