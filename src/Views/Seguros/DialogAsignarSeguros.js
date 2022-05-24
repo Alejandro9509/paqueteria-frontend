@@ -66,7 +66,7 @@ function DialogAsignarSeguros(props) {
     }
 
     function modificarSeguroCliente(idTipoSeguro,idCliente,porcentajeSeguro,aplicaSeguro, aseguradora, poliza){
-        const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Clientes/ModificarSeguro`;
+        const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/ModificarSeguro`;
         let result;
         trackPromise(
             result =  axios.post(url, Object.assign({}, {idTipoSeguro: idTipoSeguro, idCliente: idCliente,
