@@ -76,7 +76,7 @@ const configurationRoutes = [
     icon:  <GFormatosIcon/>,
     component: FormatoImpresionPage,
     isDialog: false
-  },*/
+  },
   {
     path: "/Folios",
     name: "Folios",
@@ -84,7 +84,7 @@ const configurationRoutes = [
     component: Folios,
     isDialog: false,
     visible: validarDerecho(9101209)
-  },
+  },*/
   {
     path: "/TipoDeCambio",
     name: "Tipo de Cambio",
