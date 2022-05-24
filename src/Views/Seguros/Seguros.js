@@ -10,6 +10,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import { obtenerClientesPaginado, obtenerRemitentesDestinatariosPaginado } from '../../Util/Contexts/RemitenteDestinatarioContext';
 import DialogAsignarSeguros from './DialogAsignarSeguros';
 import axios from "axios";
+import EditIcon from '@material-ui/icons/Edit';
 import {API_HEADERS} from "../../Constants";
 function showSuccess(mensaje) {
     new Noty({
@@ -30,9 +31,9 @@ function Seguros() {
         idCliente: 0,  
         height: window.innerHeight,
         openDialog: false,
+        busqueda:""
     })
     const [pagina, setPagina] = React.useState(0);
-    const [busqueda, setBusqueda] = React.useState("");
     let registros=10
 
     const columns = React.useMemo(() => [
@@ -44,8 +45,10 @@ function Seguros() {
                 return (
                     <div>
                         <Tooltip title="Asignar seguro">
-                            <a  onClick={()=>{handleClickModal()}} className="btn btn-default btn-xs"
-                          ><i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} /></a>
+                            <IconButton component="span"  onClick={(e)=>{openDialog(row)}}
+                          >
+                                <i className="fa fa-pencil-square-o" style={{ color: "#F9A03E" }} />
+                            </IconButton>
 
                         </Tooltip>
 
@@ -56,12 +59,12 @@ function Seguros() {
             {
               headerName: "No. Cliente",
               field: "m_nNumeroCliente",
-              width: 150,
+              width: 100,
             },
             {
               headerName: "Nombre",
               field: "m_sNombreFiscal",
-                width: 500,
+                width: 350,
             },
             {
                 headerName: "Tipo de seguro",
@@ -73,11 +76,24 @@ function Seguros() {
                         </>
                     )
                 },
-                width: 500,
+                width: 250,
+              },
+            {
+                headerName: "Aseguradora",
+                field: "m_sAseguradora",
+                width: 250,
+              },
+            {
+                headerName: "Aseguradora",
+                field: "m_sPoliza",
+                width: 250,
               }
 
     ]);
 
+    function openDialog(row){
+        handleClickModal(row.row)
+    }
     async function getAllTiposSeguro() {
         axios.get(`${process.env.REACT_APP_REPORT_URL}/api/TipoSeguros/GetListado`, {headers}).then(({data}) => {
             setDataTiposSeguro(data)
@@ -97,7 +113,7 @@ function Seguros() {
       }, [1])
 
     function cargarDesdeServidor(pagina,registros){
-        return new obtenerClientesPaginado(pagina,registros, busqueda).then((respuesta)=>{
+        return new obtenerClientesPaginado(pagina,registros, state.busqueda).then((respuesta)=>{
             setData(respuesta.data)
         })
       }
@@ -114,12 +130,38 @@ function Seguros() {
         }));
       };
 
-      const handleClickModal = (event) => {
-        setState({ ...state, openDialog: true });
+    function handleBusquedaChange(e){
+        e.preventDefault();
+        setState({...state, busqueda: e.target.value})
+    }
+      const handleClickModal = (row) => {
+        setState({ ...state, openDialog: true, select: row });
       };
   return (
     <div>
-           <header className="topbar clearfix">
+        {
+            state.openDialog &&
+            <Dialog
+                open={state.openDialog}
+                onClose={(e) => {e.preventDefault();setState({ ...state, openDialog: false })}}
+                fullWidth
+                maxWidth="md"
+            >
+                <DialogContent>
+                    <DialogAsignarSeguros
+                        dialogVisible={dialogVisible}
+                        openDialog={state.openDialog}
+                        idCliente={rowSelect}
+
+                        select={state.select}
+                        dataTiposSeguro={dataTiposSeguro}
+                        recargarClientes={()=>cargarDesdeServidor(pagina, registros)}
+                    />
+                </DialogContent>
+            </Dialog>
+        }
+
+        <header className="topbar clearfix">
                 <Cabecera titulo="Seguros" >
                     <div className="page-header">
                         <ul className="list-page-breadcrumb">
@@ -141,22 +183,6 @@ function Seguros() {
             {/*Leftbar End Here*/}
             <section className="main-container">
 
-        <Dialog
-          open={state.openDialog}
-          onClose={() => setState({ ...state, openDialog: false })}
-          fullWidth
-          maxWidth="md"
-        >
-          <DialogContent>
-            <DialogAsignarSeguros
-              dialogVisible={dialogVisible}
-              openDialog={state.openDialog}
-              idCliente={rowSelect}
-              dataTiposSeguro={dataTiposSeguro}
-              recargarClientes={()=>cargarDesdeServidor(pagina, registros)}
-            />
-          </DialogContent>
-        </Dialog>
             <div className="container-fluid">
              <ul className="nav navStatica nav-tabs">
               <li className="active">
@@ -169,46 +195,47 @@ function Seguros() {
     <div className="row" className="tab-content">
         <div className="widget-wrap" id="Listado" className="tab-pane fade in show">
             <div className="widget-wrap">
-                <div style={{marginLeft:"55%"}}>
-               
-            <TextField
-            variant="standard"
-            value={busqueda}
-            onChange={(e) => {e.stopPropagation();setBusqueda( e.target.value)}}
-            placeholder
-            onKeyDown={e => {if (e.code === "Enter" ) {
-                cargarDesdeServidor(0, registros)
-                setPagina(0)
-            }}}
-            style={{width:'60ch'}}
-        />
-         <IconButton aria-label="delete">  
-                <SearchIcon style={{
-                    color: "#F9A03E",
-                    fontSize: 32,
-                    paddingInlineEnd: 0,
-                    paddingRight: 0,
-                    paddingBlockEnd: 0,
-                    paddingLeft: 0,
-                    paddingBlock: 0,
-                    marginRight: '10px'
-                }} onClick={() => {
-                    cargarDesdeServidor(0, registros)
-                    setPagina(0)
-                }} />
-                  Buscar
-                 </IconButton>
-                 <IconButton aria-label="delete" onClick={() => {
-                            setBusqueda("")
+
+            
+                <div className="widget-content">
+                    <div style={{marginLeft:"55%"}}>
+
+                        <TextField
+                            id={"search_client"}
+                            name={"search_client"}
+                            key={"search_client"}
+                            variant="standard"
+                            value={state.busqueda}
+                            onChange={handleBusquedaChange}
+                            style={{width:'60ch'}}
+                        />
+                        <IconButton aria-label="delete" onClick={(e) => {
+                            e.preventDefault();
+                            cargarDesdeServidor(0, registros)
+                            setPagina(0)
+                        }}>
+                            <SearchIcon style={{
+                                color: "#F9A03E",
+                                fontSize: 32,
+                                paddingInlineEnd: 0,
+                                paddingRight: 0,
+                                paddingBlockEnd: 0,
+                                paddingLeft: 0,
+                                paddingBlock: 0,
+                                marginRight: '10px'
+                            }}  />
+                            Buscar
+                        </IconButton>
+                        <IconButton aria-label="delete" onClick={(e) => {
+                            e.preventDefault();
+                            setState({...state,busqueda:""})
                             limpiarBuscador(0,registros);
                             setPagina(0)
                         }}>
                             <RestartAltIcon fontSize={"large"} style={{marginRight: '10px'}}/>
                             Limpiar filtros
                         </IconButton>
-                </div>
-            
-                <div className="widget-content">
+                    </div>
                     <div className="row" style={{ height: state.height - 250, width: '100%' }}>
                         {data.length != 0 ? (
                              <div style={{height: "500px", padding: "5px"}}>
