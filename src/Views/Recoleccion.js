@@ -1727,6 +1727,8 @@ function Recoleccion() {
             porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
             aplicaSeguro: row.data.m_bTieneSeguro,
             tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
+            observaciones: row.data.m_nIdTipoSeguro === 1 ? ("Aseguradora: " + row.data.m_sAseguradora + ", Poliza: " + row.data.m_sPoliza) : "",
+
             openDialog: false,
         }))
     }
