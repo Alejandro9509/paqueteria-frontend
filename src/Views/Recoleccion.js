@@ -1649,8 +1649,8 @@ function Recoleccion() {
         setState(() => ({
             ...state,
             clientePaga: row.data,
-            idTipoSeguro: row.data.m_bTieneSeguro ? row.data.m_nIdTipoSeguro : 5,
-            porcentajeSeguro: row.data.m_bTieneSeguro ? row.data.m_cPorcentajeSeguro : 0,
+            idTipoSeguro: row.data.m_nIdTipoSeguro === 0 ? row.data.m_nIdTipoSeguro : 5,
+            porcentajeSeguro:  row.data.m_cPorcentajeSeguro,
             aplicaSeguro: row.data.m_bTieneSeguro,
             tipoCobro: configuraciones.detectarTipoCobro ? row.data.m_bSinCredito ? "10" : "11" : state.tipoCobro,
             openDialog: false,
