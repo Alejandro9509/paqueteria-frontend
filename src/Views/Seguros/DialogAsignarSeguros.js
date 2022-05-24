@@ -154,7 +154,7 @@ function DialogAsignarSeguros(props) {
                   <Grid item xs={6}>
                       <TextField variant="outlined" margin="dense"
                                  className="form-control"
-                                 type="number"
+                                 type="text"
                                  required
                                  label="Poliza"
                                  onChange={(e) => {e.preventDefault();setState({...state, poliza: e.target.value})}}
