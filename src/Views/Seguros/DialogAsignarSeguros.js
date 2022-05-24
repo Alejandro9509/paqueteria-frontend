@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Noty from "noty";
 import { DataGrid } from "@material-ui/data-grid";
 import { dataGridLocaleText } from "../../Constants";
-import {Dialog, DialogActions, DialogContent, Grid, TextField} from "@material-ui/core";
+import {Dialog, DialogActions, DialogContent, Grid, MenuItem, TextField} from "@material-ui/core";
 import axios from "axios";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { trackPromise } from "react-promise-tracker";
@@ -21,13 +21,16 @@ function DialogAsignarSeguros(props) {
     let {dialogVisible,idCliente,dataTiposSeguro,recargarClientes} = props
     const headers = API_HEADERS
     const [state, setState] = React.useState({
-        idTipoSeguro:0,
-        porcentajeSeguro:0,
+        idTipoSeguro: props.select.m_nIdTipoSeguro || 0,
+        porcentajeSeguro: props.select.m_cPorcentajeSeguro || 0,
         valorDeclarado:0,
-        aplicaSeguro:false
+        aplicaSeguro: props.select.m_bSeguroObligatorio || false,
+        aseguradora:props.select.m_sAseguradora || "" ,
+        poliza:props.select.m_sPoliza || ""
     })
    
     const handleChangeTipoSeguro = (event) => {
+        event.preventDefault();
         setState({
             ...state,
             idTipoSeguro: event.target.value,
@@ -37,14 +40,15 @@ function DialogAsignarSeguros(props) {
         });
     }
     const handleChangePorcentajeSeguro = (event) => {
+        event.preventDefault();
         setState({
             ...state,
             porcentajeSeguro: event.target.value,
         });
     };
 
-    const handleAceptar = (event) =>{
-       modificarSeguroCliente(state.idTipoSeguro,idCliente.data.m_nIdCliente,state.porcentajeSeguro,state.aplicaSeguro)
+    const handleAceptar = () =>{
+       modificarSeguroCliente(state.idTipoSeguro,idCliente.data.m_nIdCliente,state.porcentajeSeguro,state.aplicaSeguro,state.aseguradora, state.poliza)
         .then((respuesta) => {
             if(state.idTipoSeguro==5){
                 showSuccess("Se ha desasignado el tipo de seguro exitosamente");
@@ -61,11 +65,12 @@ function DialogAsignarSeguros(props) {
         }); 
     }
 
-    function modificarSeguroCliente(idTipoSeguro,idCliente,porcentajeSeguro,aplicaSeguro){
-        const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/ModificarSeguro/${idTipoSeguro}/${idCliente}/${porcentajeSeguro}/${aplicaSeguro}`;
+    function modificarSeguroCliente(idTipoSeguro,idCliente,porcentajeSeguro,aplicaSeguro, aseguradora, poliza){
+        const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/ModificarSeguro`;
         let result;
         trackPromise(
-            result =  axios.post(url, Object.assign({}, {}), { headers })
+            result =  axios.post(url, Object.assign({}, {idTipoSeguro: idTipoSeguro, idCliente: idCliente,
+                porcentajeSeguro:porcentajeSeguro, aplicaSeguro: aplicaSeguro,aseguradora: aseguradora, poliza: poliza }), { headers })
             );
         return result
     }
@@ -100,9 +105,9 @@ function DialogAsignarSeguros(props) {
                        variant="outlined"
                    >
                        {dataTiposSeguro.map((option) => (
-                           <option key={option.m_nIdTipoSeguro} value={option.m_nIdTipoSeguro}>
+                           <MenuItem key={option.m_nIdTipoSeguro} value={option.m_nIdTipoSeguro}>
                                {option.m_sDescripcion}
-                           </option>
+                           </MenuItem>
                        ))}
                    </TextField>
                </div>
@@ -127,6 +132,41 @@ function DialogAsignarSeguros(props) {
 
 
                  </Grid>
+              {
+                  state.idTipoSeguro === 1 &&
+                  <Grid item xs={6}>
+
+                      <TextField variant="outlined" margin="dense"
+                                 className="form-control"
+                                 type="text"
+                                 required
+                                 label="Aseguradora"
+                                 onChange={(e) => {e.preventDefault();setState({...state, aseguradora: e.target.value})}}
+                                 value={state.aseguradora}
+                                 id="aseguradora"
+                                 name="aseguradora"
+                      />
+
+                  </Grid>
+              }
+              {
+                  state.idTipoSeguro === 1 &&
+                  <Grid item xs={6}>
+                      <TextField variant="outlined" margin="dense"
+                                 className="form-control"
+                                 type="number"
+                                 required
+                                 label="Poliza"
+                                 onChange={(e) => {e.preventDefault();setState({...state, poliza: e.target.value})}}
+                                 value={state.poliza}
+                                 id="poliza"
+                                 name="poliza"
+                      />
+
+
+                  </Grid>
+              }
+
 
 
                
@@ -134,14 +174,16 @@ function DialogAsignarSeguros(props) {
            
             <DialogActions style={{justifyContent: "rigth"}}>
                    <button
-                    onClick={() => {
+                    onClick={(e) => {
+                        e.preventDefault();
                         dialogVisible(false)}}
                     className="btn btn-secondary secondary-btn"
                 >
                     Cerrar
                 </button>
                 <button
-                    onClick={() => {
+                    onClick={(e) => {
+                        e.preventDefault();
                         handleAceptar() 
                     }}
                     className="btn btn-primary primary-btn"
