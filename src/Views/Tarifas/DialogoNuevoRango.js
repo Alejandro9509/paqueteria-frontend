@@ -130,32 +130,49 @@ export default function DialogoNuevoRango(props) {
             })
             valid = false
         }
-        props.rows.forEach(i => {
-            if (i.id != rango.id
-                && i.idConcepto == rango.idConcepto
-                && i.minimo == rango.minimo
-                && i.maximo == rango.maximo
-                // && i.idTipoCalculo == rango.idTipoCalculo
-                // i.idUnidadMedida == rango.idUnidadMedida
-            ){
-                valid = false
-                showSuccess("Ese rango ya existe.")
-            }
-        })
-        props.rows.forEach(i => {
-            if (i.id != rango.id
-                && i.idConcepto == rango.idConcepto
-                // i.idTipoCalculo == rango.idTipoCalculo &&
-                // i.idUnidadMedida == rango.idUnidadMedida
-            ){
-                if(isRangoOcupado(i, rango)){
+        if (props.seccionPadre === 'MANIOBRAS'){
+            props.rows.forEach(i => {
+                if (i.id != rango.id
+                    && i.idConcepto == rango.idConcepto
+                    && i.minimo == rango.minimo
+                    && i.maximo == rango.maximo
+                ){
                     valid = false
-                    showSuccess("El concepto tiene un rango ya ocupado.")
-
+                    showSuccess("Ese rango ya existe.")
                 }
-            }
+            })
+            props.rows.forEach(i => {
+                if (i.id != rango.id && i.idConcepto == rango.idConcepto){
+                    if(isRangoOcupado(i, rango)){
+                        valid = false
+                        showSuccess("El concepto tiene un rango ya ocupado.")
 
-        })
+                    }
+                }
+
+            })
+        }else{
+            props.rows.forEach(i => {
+                if (i.id != rango.id
+                    && i.minimo == rango.minimo
+                    && i.maximo == rango.maximo
+                ){
+                    valid = false
+                    showSuccess("Ese rango ya existe.")
+                }
+            })
+            props.rows.forEach(i => {
+                if (i.id != rango.id){
+                    if(isRangoOcupado(i, rango)){
+                        valid = false
+                        showSuccess("El concepto tiene un rango ya ocupado.")
+
+                    }
+                }
+
+            })
+        }
+
         return valid
     }
 
@@ -219,6 +236,11 @@ export default function DialogoNuevoRango(props) {
                 ...rango,
                 [event.target.name]: event.target.value,
                 concepto: props.conceptosListado.find(i => i.m_nIdConceptosFacturacion == event.target.value).m_sConcepto
+            })
+        }else if (event.target.name === 'minimo' || event.target.name === 'maximo'){
+            setRango({
+                ...rango,
+                [event.target.name]: parseFloat(event.target.value),
             })
         }else{
             setRango({
