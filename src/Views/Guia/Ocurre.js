@@ -15,7 +15,17 @@ class MyComponent extends Component {
     constructor(props) {
         super(props);
         this.state ={
-            ...this.props.dataOcurre
+            ...this.props.dataOcurre,
+            dataBancos:[
+            {m_nIdBanco:1,
+             m_sNombreBanco:"Santander"
+            },{
+             m_nIdBanco:2,
+             m_sNombreBanco:"BBVA"
+            },{
+             m_nIdBanco:3,
+             m_sNombreBanco:"Scotiabank"
+            }]
         }
         this.handleFechaOcurre = this.handleFechaOcurre.bind(this)
         this.handleHoraOcurre = this.handleHoraOcurre.bind(this)
@@ -158,6 +168,48 @@ class MyComponent extends Component {
                                     ))}
                                 </Select>
                             </FormControl>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <FormControl fullWidth variant="outlined" margin="dense">
+                                <InputLabel id="idBancoproveniente">Banco proveniente</InputLabel>
+                                <Select
+                                    labelId={"idBancoproveniente"}
+                                    label={"Banco proveniente"}
+                                    key={"idBancoproveniente"}
+                                    className="form-control"
+                                    value={this.state.tipoPago}
+                                    onChange={(event) => this.handleChangeDataOcurre(event)}
+                                    id="Bancoproveniente"
+                                    InputProps={{
+                                        id: "Bancoproveniente",
+                                        name: "Bancoproveniente"
+                                    }}
+                                    name={"Bancoproveniente"}
+                                >
+                                    {this.state.dataBancos.map((banco) => (
+                                        <option
+                                            key={banco.m_nIdBanco}
+                                            value={banco.m_nIdBanco}
+                                        >
+                                            {banco.m_sNombreBanco}
+                                        </option>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={6}>
+                        <TextField
+                                variant="outlined"
+                                id="Fechapago"
+                                name="Fechapago"
+                                label="Fecha de pago"
+                                type="date"
+                                onChange={this.handleFechaOcurre}
+                                value={this.state.fechaOcurre}
+                                className={"form-control"}
+                                InputLabelProps={{shrink: true,}}
+                                required={this.props.showDialogOcurre}
+                            />
                         </Grid>
                         {(this.state.tipoPago == 1) &&
                         <Grid item xs={6}>
