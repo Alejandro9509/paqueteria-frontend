@@ -2,36 +2,46 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {
     Button,
+    Checkbox,
     DialogActions,
     DialogContent,
     FormControl,
+    FormControlLabel,
     Grid,
     InputLabel,
     Select,
     TextField
 } from "@material-ui/core";
+import { obtenerBancos } from '../../Util/Contexts/GuiaContext';
 
 class MyComponent extends Component {
     constructor(props) {
         super(props);
         this.state ={
             ...this.props.dataOcurre,
-            dataBancos:[
-            {m_nIdBanco:1,
-             m_sNombreBanco:"Santander"
-            },{
-             m_nIdBanco:2,
-             m_sNombreBanco:"BBVA"
-            },{
-             m_nIdBanco:3,
-             m_sNombreBanco:"Scotiabank"
-            }]
+            dataBancos:[],
+            aplicaDetalle:false,
+            idBancoproveniente:0
+
         }
         this.handleFechaOcurre = this.handleFechaOcurre.bind(this)
         this.handleHoraOcurre = this.handleHoraOcurre.bind(this)
         this.handleChangeDataOcurre = this.handleChangeDataOcurre.bind(this)
+        this.handleChangeChecked = this.handleChangeChecked.bind(this)
+        this.handleFechaPago = this.handleFechaPago.bind(this)
 
     }
+
+    componentDidMount(){
+        obtenerBancos().then(respuesta=>{
+            this.setState({
+                dataBancos:respuesta.data
+            })
+        }).catch(function (err){
+            console.log("Error al ejecutar el query"+err.data)
+        })
+    }
+
     componentDidUpdate(){
         console.log("Se refresca el componente Ocurre")
     }
@@ -40,6 +50,12 @@ class MyComponent extends Component {
         event.preventDefault()
         this.setState({
             fechaOcurre: event.target.value,
+        })
+    }
+    handleFechaPago(event) {
+        event.preventDefault()
+        this.setState({
+            fechaPago: event.target.value,
         })
     }
 
@@ -57,10 +73,16 @@ class MyComponent extends Component {
             [event.target.name]: event.target.value
         })
     }
+    handleChangeChecked(event){
+        this.setState({
+            [event.target.name]: event.target.checked
+        })
+    }
 
     render() {
         return (
-            <form onSubmit={(e) => {e.preventDefault();this.props.handleEntregaOcurre(this.state)}}>
+            <form onSubmit={(e) => {e.preventDefault();
+            this.props.handleEntregaOcurre(this.state)}}>
                 <DialogContent>
                     <Grid container spacing={3}>
                         <Grid item xs={6}>
@@ -169,6 +191,17 @@ class MyComponent extends Component {
                                 </Select>
                             </FormControl>
                         </Grid>
+                        <Grid item xs={12}>
+                        <FormControlLabel
+                         control={
+                         <Checkbox checked={this.state.aplicaDetalle}
+                         onChange={this.handleChangeChecked} 
+                         name="aplicaDetalle" />}
+                         label="Aplica detalle de pago"
+                         />
+                        </Grid>
+
+                        {this.state.aplicaDetalle && <>
                         <Grid item xs={6}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="idBancoproveniente">Banco proveniente</InputLabel>
@@ -177,21 +210,21 @@ class MyComponent extends Component {
                                     label={"Banco proveniente"}
                                     key={"idBancoproveniente"}
                                     className="form-control"
-                                    value={this.state.tipoPago}
+                                    value={this.state.Bancoproveniente}
                                     onChange={(event) => this.handleChangeDataOcurre(event)}
-                                    id="Bancoproveniente"
+                                    id="idBancoproveniente"
                                     InputProps={{
-                                        id: "Bancoproveniente",
-                                        name: "Bancoproveniente"
+                                        id: "idBancoproveniente",
+                                        name: "idBancoproveniente"
                                     }}
-                                    name={"Bancoproveniente"}
+                                    name={"idBancoproveniente"}
                                 >
                                     {this.state.dataBancos.map((banco) => (
                                         <option
                                             key={banco.m_nIdBanco}
                                             value={banco.m_nIdBanco}
                                         >
-                                            {banco.m_sNombreBanco}
+                                            {banco.m_sBanco}
                                         </option>
                                     ))}
                                 </Select>
@@ -201,16 +234,18 @@ class MyComponent extends Component {
                         <TextField
                                 variant="outlined"
                                 id="Fechapago"
-                                name="Fechapago"
+                                name="fechaPago"
                                 label="Fecha de pago"
                                 type="date"
-                                onChange={this.handleFechaOcurre}
-                                value={this.state.fechaOcurre}
+                                onChange={this.handleFechaPago}
+                                value={this.state.fechaPago}
                                 className={"form-control"}
                                 InputLabelProps={{shrink: true,}}
                                 required={this.props.showDialogOcurre}
                             />
                         </Grid>
+                        </>
+                        }
                         {(this.state.tipoPago == 1) &&
                         <Grid item xs={6}>
                             <TextField variant="outlined" margin="dense" label="Importe recibido"
