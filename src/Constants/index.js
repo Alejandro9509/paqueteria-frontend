@@ -26,9 +26,8 @@ export const API_BASIC_HEADERS = {
     'Authorization': 'Bearer ' + localStorage.getItem(ACCESS_TOKEN),
 };
 export const API_MULTIPART_HEADERS = {
-    'Accept': 'application/vnd.certuit-' + API_VERSION + '+json',
     'Content-Type': 'multipart/form-data',
-    'Authorization': 'Bearer ' + localStorage.getItem(ACCESS_TOKEN),
+    'RFC': `${localStorage.getItem("RFC")}`
 };
 
 export function TABLE_OPTIONS(filename, searchOpen = true, onRowClick) {
