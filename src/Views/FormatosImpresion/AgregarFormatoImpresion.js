@@ -114,10 +114,10 @@ class AgregarFormatoImpresion extends Component {
                                                 label="Tipo de Proceso"
                                             >
                                                 <option
-                                                    key={1}
-                                                    value={1}
+                                                    key={42}
+                                                    value={42}
                                                 >
-                                                    Prueba
+                                                    Viajes Paqueteria
                                                 </option>
                                             </Select>
                                         </FormControl>

@@ -48,7 +48,7 @@ class FormatoImpresion extends Component {
                     renderCell: (row) => {
                         return (
                             <div>
-                                <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdFolio))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                <a className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdFolio))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                             </div>
                         )
                     }
