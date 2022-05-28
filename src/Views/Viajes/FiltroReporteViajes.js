@@ -4,7 +4,6 @@ import {Button, Grid, Typography} from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import MultiSelect from "@kenshooui/react-multi-select";
-import "@kenshooui/react-multi-select/dist/style.css"
 import {imprimirFormatosId} from "../../Util/Contexts/FormatosImpresionContext";
 import Noty from "noty";
 
