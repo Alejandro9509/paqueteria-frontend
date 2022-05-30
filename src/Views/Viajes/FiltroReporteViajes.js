@@ -31,9 +31,7 @@ class FiltroReporteViajes extends Component {
     }
 
     componentDidMount() {
-        obtenerSucursales().then(({data}) => {
-            this.setState({sucursales: data})
-        })
+
     }
 
     handleChange(event) {
@@ -119,7 +117,7 @@ class FiltroReporteViajes extends Component {
                                         selectAllMessage: "Seleccionar todos",
                                         clearAllMessage: "Limpiar todos",
                                     }}
-                                    items={this.state.sucursales.map(s => ({id:s.m_nIdSucursal, label:s.m_sSucursal}))}
+                                    items={this.props.sucursales.map(s => ({id:s.m_nIdSucursal, label:s.m_sSucursal}))}
                                     selectedItems={this.state.sucursalesSeleccionadas}
                                     onChange={this.handleChangeSucursales}
                                 />

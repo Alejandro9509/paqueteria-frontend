@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {ButtonBase, Grid, Paper, Typography} from "@material-ui/core";
 import {obtenerFormatosImpresion, obtenerFormatosImpresionProceso} from "../../Util/Contexts/FormatosImpresionContext";
 import FiltroReporteViajes from "./FiltroReporteViajes";
+import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 
 class ReportesViajes extends Component {
     constructor(props) {
@@ -10,7 +11,8 @@ class ReportesViajes extends Component {
         this.state = {
             reportes: [],
             pantalla:1,
-            reporteSeleccionado: null
+            reporteSeleccionado: null,
+            sucursales: [],
         }
         this.abrirPantalla = this.abrirPantalla.bind(this)
     }
@@ -21,6 +23,9 @@ class ReportesViajes extends Component {
             this.setState({
                 reportes: data
             })
+        })
+        obtenerSucursales().then(({data}) => {
+            this.setState({sucursales: data})
         })
     }
 
@@ -50,7 +55,7 @@ class ReportesViajes extends Component {
                             }
                         </Grid>
                     }
-                    <FiltroReporteViajes visible={ this.state.pantalla === 2} select={this.state.reporteSeleccionado} abrirPantalla={this.abrirPantalla}/>
+                    <FiltroReporteViajes sucursales={this.state.sucursales} visible={ this.state.pantalla === 2} select={this.state.reporteSeleccionado} abrirPantalla={this.abrirPantalla}/>
 
 
 
