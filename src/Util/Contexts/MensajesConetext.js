@@ -1,7 +1,7 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
 import { API_HEADERS } from "../../Constants";
-
+import moment from "moment";
 const headers = API_HEADERS
 
 
@@ -9,8 +9,8 @@ const headers = API_HEADERS
 function obtenerMensajes(id,fecha){
     const url = `${process.env.REACT_APP_REPORT_URL}/api/UltimaMilla/Chat/Operador`;
     let result;
-    console.log(fecha)
-    var dateString =  fecha.format("yyyy-MM-DD")
+    console.log(moment(fecha).format("yyyy-MM-DD"))
+    var dateString =  moment(fecha).format("yyyy-MM-DD")
     trackPromise(
         result =  axios.get(url, { headers:headers,params:{idOperador: id, fecha: dateString} })
     );
