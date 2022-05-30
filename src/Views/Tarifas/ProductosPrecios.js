@@ -36,7 +36,8 @@ function not(a, b) {
 
 export default function ProductosPrecios({dataList = [], onChangeList, disabled,ivaRetiene,ivaTraslada, mostrarTotal}) {
     const [state, setState] = useState({
-        conceptos: [],
+        allProductos: [],
+        productosDisponibles: []
     })
 
     const [dataProducto, setDataProducto] = useState({
@@ -54,9 +55,23 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
     const getAllProductos = () => {
         obtenerProductos().then(respuesta => {
             setState(state => {
-                return {...state, conceptos: respuesta.data}
+                return {
+                    ...state,
+                    allProductos: respuesta.data,
+                }
             })
         });
+    }
+
+
+    const getProductosNoSeleccionados = () => {
+        let productosDisponibles =[]
+        state.allProductos.forEach(x => productosDisponibles.push(x))
+        dataList.forEach(i => {
+            productosDisponibles = productosDisponibles.filter(j => parseInt(j.m_nIdProducto) !== parseInt(i.m_nIdProducto))
+
+        })
+        return productosDisponibles
     }
 
     const handleChange = (event) => {
@@ -128,7 +143,7 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
                                 disableClearable
                                 forcePopupIcon={false}
                                 disabled={disabled}
-                                options={state.conceptos}
+                                options={getProductosNoSeleccionados()}
                                 getOptionLabel={(option) =>
                                     option ? option.m_nIdProducto+'-'+option.m_sDescripcion : ''
                                 }
@@ -202,7 +217,7 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
                             </tr>
                             {
                                 dataList.map((c, index) => (
-                                    <tr onDoubleClick={(e) => handleRowClick(e, index, c)}>
+                                    <tr onDoubleClick={(e) => handleRowClick(e, index, c)} key={c.m_nIdProducto}>
                                         <td style={{textAlign: "left"}}>{c.m_nIdProducto+'-'+c.m_sDescripcion}</td>
                                         <td style={{textAlign: "left"}}>${parseFloat(c.m_cImporte).toFixed(2)}</td>
                                         {/*{mostrarRangos && <td style={{textAlign: "left"}}>{c.rangoMinimo} Kg</td>}
