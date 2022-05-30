@@ -472,7 +472,8 @@ function Embarque(props) {
         tipoCobro:0,
         limpiarProducto: false,
         idsTiposCobroSeleccionArray: [],
-        idsTiposCobroSeleccionString: ''
+        idsTiposCobroSeleccionString: '',
+        idConceptoFlete: 0,
     })
     const [state, setState] = React.useState({
         //==VARIABLES DE LISTADO==
@@ -627,7 +628,8 @@ function Embarque(props) {
             tipoCobro:0,
             limpiarProducto: false,
             idsTiposCobroSeleccionArray: [],
-            idsTiposCobroSeleccionString: ''
+            idsTiposCobroSeleccionString: '',
+            idConceptoFlete: 0
         })
     }
 
@@ -1049,7 +1051,10 @@ function Embarque(props) {
             showSuccess("Debe agregar al menos un paquete")
             return
         }
-
+        if (dataConceptos.find(i => parseInt(i.idConcepto) === parseInt(configuraciones.idConceptoFlete)) === undefined){
+            showSuccess("El embarque debe incluir el concepto flete")
+            return;
+        }
         if (dataConceptos.length === 0){
             showSuccess("No se han agregado conceptos de facturación")
             return;
@@ -2114,6 +2119,7 @@ function Embarque(props) {
                     tipoCobro: respuesta.data.TipoCobro,
                     idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
                     idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
+                    idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
                 }
             })
         })

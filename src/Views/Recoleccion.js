@@ -194,7 +194,8 @@ function Recoleccion() {
         tipoCobro:0,
         limpiarProducto: false,
         idsTiposCobroSeleccionArray: [],
-        idsTiposCobroSeleccionString: ''
+        idsTiposCobroSeleccionString: '',
+        idConceptoFlete: 0,
     })
     const [state, setState] = React.useState({
         // ===VARIABLES DE LISTADO===
@@ -717,6 +718,7 @@ function Recoleccion() {
                     tipoCobro: respuesta.data.TipoCobro,
                     idsTiposCobroSeleccionString: respuesta.data.TiposCobroActivos,
                     idsTiposCobroSeleccionArray: respuesta.data.TiposCobroActivos ? respuesta.data.TiposCobroActivos.split(',') : [],
+                    idConceptoFlete: respuesta.data.IdConceptoFlete || 0,
                 }
             })
         })
@@ -929,7 +931,10 @@ function Recoleccion() {
             showSuccess("Debe agregar al menos un paquete o sobre")
             return
         }
-
+        if (dataConceptos.find(i => parseInt(i.idConcepto) === parseInt(configuraciones.idConceptoFlete)) === undefined){
+            showSuccess("El embarque debe incluir el concepto flete")
+            return;
+        }
         if (dataConceptos.length === 0){
             showSuccess("No se han agregado conceptos de facturación")
             return;
