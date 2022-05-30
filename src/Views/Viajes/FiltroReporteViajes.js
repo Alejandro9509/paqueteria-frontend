@@ -66,7 +66,7 @@ class FiltroReporteViajes extends Component {
     
     render() {
         return (
-            <form className="j-forms row" onSubmit={this.imprimirFormato}>
+            <form onSubmit={this.imprimirFormato}>
                 <Typography variant={"h3"}>{this.props.select.m_sFormato} </Typography> <br/>
                 <Grid container spacing={1}>
                     <Grid item md={6}>

@@ -31,7 +31,7 @@ class ReportesViajes extends Component {
     render() {
         return (
             <div className="widget-wrap">
-                <div className="widget-content">
+                <div className="widget-content j-forms row">
                     {
                         this.state.pantalla ===1 &&
                         <Grid container style={{padding:"10px"}} justifyContent="space-between" alignItems="stretch">
@@ -51,7 +51,7 @@ class ReportesViajes extends Component {
                         </Grid>
                     }
                     {
-                        this.state.pantalla ===2 &&
+                        this.state.pantalla === 2 &&
                         <FiltroReporteViajes select={this.state.reporteSeleccionado} abrirPantalla={this.abrirPantalla}/>
                     }
 
