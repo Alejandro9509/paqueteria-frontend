@@ -10,7 +10,7 @@ class ReportesViajes extends Component {
         super(props);
         this.state = {
             reportes: [],
-            pantalla:1,
+            pantalla:2,
             reporteSeleccionado: null,
             sucursales: [],
         }
@@ -21,7 +21,8 @@ class ReportesViajes extends Component {
     componentDidMount() {
         obtenerFormatosImpresionProceso(42).then(({data}) => {
             this.setState({
-                reportes: data
+                reportes: data,
+                pantalla: 1
             })
         })
         obtenerSucursales().then(({data}) => {

@@ -67,7 +67,7 @@ class FiltroReporteViajes extends Component {
                 {
                     this.props.visible &&
                     <>
-                        <Typography variant={"h3"}>{this.props.select.m_sFormato} </Typography> <br/>
+                        <Typography variant={"h3"}>{this.props.select ? this.props.select.m_sFormato : ""} </Typography> <br/>
                         <Grid container spacing={1}>
                             <Grid item md={6}>
                                 <TextField
