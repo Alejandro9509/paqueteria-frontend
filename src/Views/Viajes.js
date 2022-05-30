@@ -228,6 +228,13 @@ function Viajes() {
         $('.nav-tabs li').eq(2).addClass('active');
         $('.tab-content div ').removeClass('in show');
         $('#Imprimir').addClass('in show');
+
+        setState(state => {
+            return {
+                ...state,
+                openImprimir: true
+            }
+        })
     }
     function handleShowAgregar() {
         clearData()
@@ -1409,7 +1416,11 @@ function Viajes() {
 
                         </div>
                         <div className="widget-wrap tab-pane fade" id="Imprimir">
-                            <ReportesViajes tipo={2}/>
+                            {
+                                state.openImprimir &&
+                                <ReportesViajes tipo={2}/>
+                            }
+
                         </div>
 
                         <div id="Cancelar" className="tab-pane fade">
