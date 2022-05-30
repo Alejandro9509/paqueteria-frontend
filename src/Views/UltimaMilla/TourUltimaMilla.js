@@ -11,7 +11,6 @@ import IconButton from "@material-ui/core/IconButton";
 import {obtenerGuiaReporte} from "../../Util/Contexts/GuiaContext";
 import {obtenerRecoleccionReporte} from "../../Util/Contexts/RecoleccionContext";
 import {decodePolyline} from "../../Util/HereDecoading";
-var polyUtil = require('polyline-encoded');
 
 class TourUltimaMilla extends Component {
     constructor(props) {
