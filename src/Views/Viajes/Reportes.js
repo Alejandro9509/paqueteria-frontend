@@ -50,10 +50,8 @@ class ReportesViajes extends Component {
                             }
                         </Grid>
                     }
-                    {
-                        this.state.pantalla === 2 &&
-                        <FiltroReporteViajes select={this.state.reporteSeleccionado} abrirPantalla={this.abrirPantalla}/>
-                    }
+                    <FiltroReporteViajes visible={ this.state.pantalla === 2} select={this.state.reporteSeleccionado} abrirPantalla={this.abrirPantalla}/>
+
 
 
 
