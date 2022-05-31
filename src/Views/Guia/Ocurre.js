@@ -210,6 +210,7 @@ class MyComponent extends Component {
                                     label={"Banco proveniente"}
                                     key={"idBancoproveniente"}
                                     className="form-control"
+                                    required={this.props.showDialogOcurre}
                                     value={this.state.Bancoproveniente}
                                     onChange={(event) => this.handleChangeDataOcurre(event)}
                                     id="idBancoproveniente"

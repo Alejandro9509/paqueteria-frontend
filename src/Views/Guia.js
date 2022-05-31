@@ -373,17 +373,18 @@ function Guia(props) {
         let params = {
             nIdGuia: dataOcurre.idGuia,
             m_nIdUsuarioEntregaOcurre: localStorage.getItem("Usuario"),
-            m_sFechaOcurre: dataOcurre.fechaOcurre,
+            m_sFechaOcurre: dataOcurre.aplicaDetalle?dataOcurre.fechaOcurre:"",
             m_sHoraOcurre: dataOcurre.horaOcurre,
             m_sComentariosOcurre: dataOcurre.comentariosOcurre??"",
             m_sMontoRecibidoOcurre: dataOcurre.importeOcurre,
             m_nIdTipoPago: dataOcurre.tipoPago,
-            m_nIdBanco:dataOcurre.idBancoproveniente,
-            m_dFechaPago:dataOcurre.fechaPago
+            m_nIdBanco:dataOcurre.aplicaDetalle?dataOcurre.idBancoproveniente:0,
+            m_dFechaPago:dataOcurre.fechaPago,
+            m_nAplicaDetalle:dataOcurre.aplicaDetalle?1:0
 
         }
         console.log(params)
-    /*    entregaOcurreGuia(dataOcurre.idGuia, params).then(respuesta => {
+        entregaOcurreGuia(dataOcurre.idGuia, params).then(respuesta => {
             showSuccess(respuesta.data)
             getAllData()
             setDataOcurre({})
@@ -392,7 +393,7 @@ function Guia(props) {
             console.log(err)
             showSuccess(err)
         });
-    */
+    
     }
 
     function handleEliminar(id) {
