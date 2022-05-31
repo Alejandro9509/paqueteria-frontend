@@ -71,6 +71,8 @@ import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/For
 import Filtros from "./Filtros/Filtros";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
 import Button from "@material-ui/core/Button";
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
 function showSuccess(mensaje) {
     new Noty({
@@ -111,6 +113,7 @@ function Informes({history}) {
     const [dataOperadores, setDataOperadores] = React.useState([]);
     const [dataOrigenes, setDataOrigenes] = React.useState([]);
     const [dataUnidades, setDataUnidades] = React.useState([]);
+    const [ordenAscendente, setOrdenAscendente] = React.useState(true);
     const [dataFormatos, setFormatosImpresion] = React.useState([]);
     const [dataGuias, setDataGuias] = React.useState([]);
 
@@ -119,6 +122,35 @@ function Informes({history}) {
             ...state,
             [event.target.id]: event.target.value,
         });
+    };
+
+    const handleChangeOrden = () => {
+
+        if (!ordenAscendente){
+            setDataGuias(dataGuias.sort(function (a, b) {
+                if (a.m_nFolioGuia > b.m_nFolioGuia) {
+                    return -1;
+                }
+                if (a.m_nFolioGuia < b.m_nFolioGuia) {
+                    return 1;
+                }
+                // a must be equal to b
+                return 0;
+            }))
+        }else{
+            setDataGuias(dataGuias.sort(function (a, b) {
+                if (a.m_nFolioGuia > b.m_nFolioGuia) {
+                    return 1;
+                }
+                if (a.m_nFolioGuia < b.m_nFolioGuia) {
+                    return -1;
+                }
+                // a must be equal to b
+                return 0;
+            }))
+        }
+
+        setOrdenAscendente(!ordenAscendente)
     };
 
     function handleSelectCP(id, dobleClick, e) {
@@ -2321,6 +2353,21 @@ function Informes({history}) {
                                                                         }
                                                                         label="Seleccionar todas"
                                                                     />
+                                                                    <IconButton aria-label="delete" className={classes.margin} onClick={handleChangeOrden}>
+                                                                        {
+                                                                            ordenAscendente ?
+                                                                                <ArrowUpwardIcon fontSize="default" />
+                                                                                :
+                                                                                <ArrowDownwardIcon fontSize="default" />
+                                                                        }
+                                                                        {
+                                                                            ordenAscendente ?
+                                                                                "Ordenar ascendentemente"
+                                                                                :
+                                                                                "Ordenar descendentemente"
+                                                                        }
+
+                                                                    </IconButton>
                                                                     <div style={{
                                                                         padding: "10px",
                                                                         maxHeight: "500px",
