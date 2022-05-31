@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {Button, Grid, Typography} from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
@@ -32,9 +31,7 @@ class FiltroReporteViajes extends Component {
     }
 
     componentDidMount() {
-        obtenerSucursales().then(({data}) => {
-            this.setState({sucursales: data})
-        })
+
     }
 
     handleChange(event) {
@@ -66,72 +63,78 @@ class FiltroReporteViajes extends Component {
     
     render() {
         return (
-            <form className="j-forms row" onSubmit={this.imprimirFormato}>
-                <Typography variant={"h3"}>{this.props.select.m_sFormato} </Typography> <br/>
-                <Grid container spacing={1}>
-                    <Grid item md={6}>
-                        <TextField
-                            variant="outlined" margin="dense"
-                            onChange={this.handleChange}
-                            className="form-control"
-                            type="date"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            inputProps={{
-                                max:this.state.fechaFinal
-                            }}
-                            fullWidth
-                            label="Fecha inicial"
-                            value={this.state.fechaInicial}
-                            id="fechaInicial"
-                            name="fechaInicial"/>
-                    </Grid>
-                    <Grid item md={6}>
-                        <TextField
-                            variant="outlined" margin="dense"
-                            onChange={this.handleChange}
-                            className="form-control"
-                            type="date"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            inputProps={{
-                                min:this.state.fechaInicial
-                            }}
-                            fullWidth
-                            label="Fecha final"
-                            value={this.state.fechaFinal}
-                            id="fechaFinal"
-                            name="fechaFinal"/>
-                    </Grid>
-                    <Grid item md={12}>
-                        <Typography variant={"h4"}>Sucursales:</Typography>
-                        <MultiSelect
-                            showSelectedItems={false}
-                            messages= {{
-                                searchPlaceholder: "Buscar...",
-                                noItemsMessage: "Sin datos...",
-                                noneSelectedMessage: "Ninguno seleccionado",
-                                selectedMessage: "Seleccionado",
-                                selectAllMessage: "Seleccionar todos",
-                                clearAllMessage: "Limpiar todos",
-                            }}
-                            items={this.state.sucursales.map(s => ({id:s.m_nIdSucursal, label:s.m_sSucursal}))}
-                            selectedItems={this.state.sucursalesSeleccionadas}
-                            onChange={this.handleChangeSucursales}
-                        />
-                    </Grid>
+            <form onSubmit={this.imprimirFormato}>
+                {
+                    this.props.visible &&
+                    <>
+                        <Typography variant={"h3"}>{this.props.select ? this.props.select.m_sFormato : ""} </Typography> <br/>
+                        <Grid container spacing={1}>
+                            <Grid item md={6}>
+                                <TextField
+                                    variant="outlined" margin="dense"
+                                    onChange={this.handleChange}
+                                    className="form-control"
+                                    type="date"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    inputProps={{
+                                        max:this.state.fechaFinal
+                                    }}
+                                    fullWidth
+                                    label="Fecha inicial"
+                                    value={this.state.fechaInicial}
+                                    id="fechaInicial"
+                                    name="fechaInicial"/>
+                            </Grid>
+                            <Grid item md={6}>
+                                <TextField
+                                    variant="outlined" margin="dense"
+                                    onChange={this.handleChange}
+                                    className="form-control"
+                                    type="date"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    inputProps={{
+                                        min:this.state.fechaInicial
+                                    }}
+                                    fullWidth
+                                    label="Fecha final"
+                                    value={this.state.fechaFinal}
+                                    id="fechaFinal"
+                                    name="fechaFinal"/>
+                            </Grid>
+                            <Grid item md={12}>
+                                <Typography variant={"h4"}>Sucursales:</Typography>
+                                <MultiSelect
+                                    showSelectedItems={false}
+                                    messages= {{
+                                        searchPlaceholder: "Buscar...",
+                                        noItemsMessage: "Sin datos...",
+                                        noneSelectedMessage: "Ninguno seleccionado",
+                                        selectedMessage: "Seleccionado",
+                                        selectAllMessage: "Seleccionar todos",
+                                        clearAllMessage: "Limpiar todos",
+                                    }}
+                                    items={this.props.sucursales.map(s => ({id:s.m_nIdSucursal, label:s.m_sSucursal}))}
+                                    selectedItems={this.state.sucursalesSeleccionadas}
+                                    onChange={this.handleChangeSucursales}
+                                />
+                            </Grid>
 
-                    <Grid item md={12}>
-                        <button type={"submit"}
-                                className="btn btn-primary primary-btn">Imprimir
-                        </button>
-                        <button onClick={() => this.props.abrirPantalla(1, null)}
-                                className="btn btn-secondary secondary-btn">Regresar
-                        </button>
-                    </Grid>
-                </Grid>
+                            <Grid item md={12}>
+                                <button type={"submit"}
+                                        className="btn btn-primary primary-btn">Imprimir
+                                </button>
+                                <button onClick={() => this.props.abrirPantalla(1, null)}
+                                        className="btn btn-secondary secondary-btn">Regresar
+                                </button>
+                            </Grid>
+                        </Grid>
+                    </>
+                }
+
             </form>
         );
     }

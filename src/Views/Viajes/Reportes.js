@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import {ButtonBase, Grid, Paper, Typography} from "@material-ui/core";
 import {obtenerFormatosImpresion, obtenerFormatosImpresionProceso} from "../../Util/Contexts/FormatosImpresionContext";
 import FiltroReporteViajes from "./FiltroReporteViajes";
+import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 
 class ReportesViajes extends Component {
     constructor(props) {
         super(props);
         this.state = {
             reportes: [],
-            pantalla:1,
-            reporteSeleccionado: null
+            pantalla:2,
+            reporteSeleccionado: null,
+            sucursales: [],
         }
         this.abrirPantalla = this.abrirPantalla.bind(this)
     }
@@ -19,8 +21,12 @@ class ReportesViajes extends Component {
     componentDidMount() {
         obtenerFormatosImpresionProceso(42).then(({data}) => {
             this.setState({
-                reportes: data
+                reportes: data,
+                pantalla: 1
             })
+        })
+        obtenerSucursales().then(({data}) => {
+            this.setState({sucursales: data})
         })
     }
 
@@ -31,7 +37,7 @@ class ReportesViajes extends Component {
     render() {
         return (
             <div className="widget-wrap">
-                <div className="widget-content">
+                <div className="widget-content j-forms row">
                     {
                         this.state.pantalla ===1 &&
                         <Grid container style={{padding:"10px"}} justifyContent="space-between" alignItems="stretch">
@@ -50,10 +56,8 @@ class ReportesViajes extends Component {
                             }
                         </Grid>
                     }
-                    {
-                        this.state.pantalla ===2 &&
-                        <FiltroReporteViajes select={this.state.reporteSeleccionado} abrirPantalla={this.abrirPantalla}/>
-                    }
+                    <FiltroReporteViajes sucursales={this.state.sucursales} visible={ this.state.pantalla === 2} select={this.state.reporteSeleccionado} abrirPantalla={this.abrirPantalla}/>
+
 
 
 
