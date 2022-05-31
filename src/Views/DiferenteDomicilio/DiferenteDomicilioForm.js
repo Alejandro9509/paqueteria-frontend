@@ -24,7 +24,7 @@ export default function DiferenteDomicilioForm(props){
         idMunicipio: props.value.idMunicipio || null,
         codigoPostal: props.value.codigoPostal || null,
         zonaOperativa: props.value.zonaOperativa || null,
-        domicilio: props.value.calle || null,
+        domicilio: props.value.domicilio || null,
         detalles: props.value.detalles || null,
         datosAdicionales: props.value.datosAdicionales || null,
         latitud: props.value.latitud || null,
