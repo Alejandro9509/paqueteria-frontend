@@ -456,7 +456,7 @@ class DetalleParadas extends Component {
                     <EnvioCorreoDialogo onSubmit={this.envioCorreoAction} open={this.state.openEnvioCorreo} close={()=> {this.props.refresh();this.obtenerPDFCFDI(this.state.idParada,this.state.esRecoleccion,this.state.folio);this.setState({openEnvioCorreo:false});}}/>
                 }
                 {this.state.openCancelarSAT &&
-                    <CancelarSAT open={this.state.openCancelarSAT} onSubmit={this.cancelarCFDI} data={{folioSustituye: this.state.paqueteSeleccionado.m_sFolioFiscalUUID,m_sFolio: this.state.paqueteSeleccionado.m_sFolio, folioCancelar: this.state.paqueteSeleccionado.m_sFolioFiscalUUIDSustituido || this.state.paqueteSeleccionado.m_sFolioFiscalUUID
+                    <CancelarSAT ultimaMilla={true} open={this.state.openCancelarSAT} onSubmit={this.cancelarCFDI} data={{folioSustituye: this.state.paqueteSeleccionado.m_sFolioFiscalUUID,m_sFolio: this.state.paqueteSeleccionado.m_sFolio, folioCancelar: this.state.paqueteSeleccionado.m_sFolioFiscalUUIDSustituido || this.state.paqueteSeleccionado.m_sFolioFiscalUUID
                     }} close={() => this.setState({openCancelarSAT: false})}/>
                 }
                 {
