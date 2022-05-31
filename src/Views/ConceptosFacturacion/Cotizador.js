@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import ConceptosFacturacionGuias from "../Tarifas/ConceptosFacturacionGuias";
 import {obtenerCotizacion} from "../../Util/Contexts/CotizadorContext";
 import {obtenerConceptosFacturacion} from "../../Util/Contexts/ConceptosFacturacionContext";
-import {getUniqueListBy} from "../../Util/Util";
+import {currencyFormatter, getUniqueListBy} from "../../Util/Util";
 import Noty from "noty";
 import {Dialog, DialogActions, DialogContent, DialogTitle, IconButton} from "@material-ui/core";
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import DialogContentText from "@material-ui/core/DialogContentText";
 import Button from "@material-ui/core/Button";
+import ListRoundedIcon from '@material-ui/icons/ListRounded';
 
 function showSuccess(mensaje) {
     new Noty({
@@ -28,12 +29,16 @@ class Cotizador extends Component {
             ivaRetiene: [],
             ivaTraslada: [],
             showErrorIconButton: false,
+            showJustificacionIconButton: false,
             showDialogError: false,
-            errores: []
+            showDialogJustificacion: false,
+            errores: [],
+            justificaciones: []
         }
         this.handleChangeListConceptos = this.handleChangeListConceptos.bind(this)
         this.calcularTarifa = this.calcularTarifa.bind(this)
         this.handleShowDialogError = this.handleShowDialogError.bind(this)
+        this.handleShowDialogJustificacion = this.handleShowDialogJustificacion.bind(this)
     }
 
     componentDidMount() {
@@ -75,7 +80,9 @@ class Cotizador extends Component {
             let ivaTraslada = []
             let ivaRetiene = []
             let errores = []
-            let errorConceptos = false
+            let justificaciones = []
+            let showErrorConceptos = false
+            let showJustificacionConceptos = false
             data.forEach((element) => {
                 if (element.m_nIdConceptosFacturacion > 0){
                     this.props.saveIdCotizacion(element.m_nIdCotizacion)
@@ -90,23 +97,32 @@ class Cotizador extends Component {
                         importeRet: element.m_cImporteRetiene || 0,
                         nombreConcepto: element.m_sConcepto || "",
                         descuento: element.m_c_Descuento || 0,
+                        esJustificacion: element.m_bJustificacion,
+                        conceptoPorConvenio: element.m_bConceptoPorConvenio
                     })
                 }
                 if (element.m_bError){
-                    errorConceptos = true
+                    showErrorConceptos = true
                     errores.push(element)
+                }
+                if (element.m_bJustificacion){
+                    showJustificacionConceptos = true
+                    justificaciones.push(element)
                 }
             })
 
-            ivaTraslada = getUniqueListBy(conceptosCast, "traslada").map(i => i.traslada);
-            ivaRetiene = getUniqueListBy(conceptosCast, "retiene").map(i => i.retiene);
-            this.props.onChangeConceptosList(conceptosCast)
+            let conceptosOnly = conceptosCast.filter(i => !i.esJustificacion)
+            ivaTraslada = getUniqueListBy(conceptosOnly, "traslada").map(i => i.traslada);
+            ivaRetiene = getUniqueListBy(conceptosOnly, "retiene").map(i => i.retiene);
+            this.props.onChangeConceptosList(conceptosOnly)
             this.setState({
                 mostarConceptos: true,
                 ivaRetiene: ivaRetiene,
                 ivaTraslada: ivaTraslada,
-                showErrorIconButton: errorConceptos,
-                errores: errores
+                showErrorIconButton: showErrorConceptos,
+                showJustificacionIconButton: showJustificacionConceptos,
+                errores: errores,
+                justificaciones: justificaciones
             })
             this.props.mostrarCotizadorRec(true)
 
@@ -124,6 +140,12 @@ class Cotizador extends Component {
         })
     }
 
+    handleShowDialogJustificacion(show){
+        this.setState({
+            showDialogJustificacion: show
+        })
+    }
+
     render() {
         return (
             <div className="widget-wrap">
@@ -131,6 +153,11 @@ class Cotizador extends Component {
                     open={this.state.showDialogError}
                     setShowDialogError={this.handleShowDialogError}
                     errores={this.state.errores}
+                />
+                <AlertDialogJustificaciones
+                    open={this.state.showDialogJustificacion}
+                    setShowDialogJustificacion={this.handleShowDialogJustificacion}
+                    justificaciones={this.state.justificaciones}
                 />
                 <div className="widget-container">
                     <div className="widget-content">
@@ -141,6 +168,12 @@ class Cotizador extends Component {
                                         (this.props.embarque.mostrarCotizador && this.state.showErrorIconButton) &&
                                         <IconButton onClick={() => this.handleShowDialogError(true)}>
                                             <InfoOutlinedIcon color={"error"} fontSize={"large"} />
+                                        </IconButton>
+                                    }
+                                    {
+                                        (this.props.embarque.mostrarCotizador && this.state.showJustificacionIconButton) &&
+                                        <IconButton onClick={() => this.handleShowDialogJustificacion(true)}>
+                                            <ListRoundedIcon color={"primary"} fontSize={"large"} />
                                         </IconButton>
                                     }
                                 </h2>
@@ -206,6 +239,44 @@ function AlertDialog(props) {
                         props.errores.map(e => (
                             <DialogContentText id="alert-dialog-description" style={{fontSize: '12px'}}>
                                 {e.m_sDetalles}
+                            </DialogContentText>
+                        ))
+                    }
+
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary" autoFocus>
+                        Aceptar
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </div>
+    );
+}
+
+function AlertDialogJustificaciones(props) {
+
+    const handleClickOpen = () => {
+    };
+
+    const handleClose = () => {
+        props.setShowDialogJustificacion(false);
+    };
+
+    return (
+        <div>
+            <Dialog
+                open={props.open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Justificaciones al calcular tarifa"}</DialogTitle>
+                <DialogContent>
+                    {
+                        props.justificaciones.map(e => (
+                            <DialogContentText id="alert-dialog-description" style={{fontSize: '12px'}}>
+                                {`${e.m_sConcepto}, ${currencyFormatter.format(Number(e.m_cImporte))}, ${e.m_bConceptoPorConvenio ? "CONVENIO ":"PUBLICO GENERAL"}`}
                             </DialogContentText>
                         ))
                     }

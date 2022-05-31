@@ -265,3 +265,8 @@ if (!JSON.parse(localStorage.getItem("Permisos"))){
 }
     return (JSON.parse(localStorage.getItem("Permisos")).map(d => d.IdProceso).includes(idDerecho) || parseInt(localStorage.getItem("TipoUsuario")) === 1)
 }
+
+export const currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
