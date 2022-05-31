@@ -8,15 +8,18 @@ import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import {obtenerZonaOperativaByIdCodigoPostal} from "../../Util/Contexts/ZonaOperativaContext";
 import {obtenerCodigosPostalesPorEstadoMunicipio} from "../../Util/Contexts/CodigoPostalContext";
+import {obtenerPaises} from "../../Util/Contexts/PaisesContext";
 
 export default function DiferenteDomicilioForm(props){
 
     const [dataEstados, setDataEstados] = useState([])
+    const [dataPaises, setDataPaises] = useState([])
     const [dataMunicipios, setDataMunicipios] = useState([])
     const [dataZonasOperativas, setDataZonasOperativas] = useState([])
     const [dataCodigosPostales, setDataCodigosPostales] = useState([])
 
     const [state, setState] = useState({
+        idPais: props.value.idPais || null,
         idEstado: props.value.idEstado || null,
         idMunicipio: props.value.idMunicipio || null,
         codigoPostal: props.value.codigoPostal || null,
@@ -30,22 +33,47 @@ export default function DiferenteDomicilioForm(props){
 
     const handleOnChange = (event) => {
         event.preventDefault();
-        setState(state => {
-            return{
-                ...state,
-                [event.target.name]: event.target.value,
-            }
-        });
-        /*if (event.target.name === "idEstado"){
-            obtenerMunicipiosByIdEstado(event.target.value).then(({data}) =>{
-                setDataMunicipios(data)
-            })
-        }*/
-        if (event.target.name === "idMunicipio") {
-            // setRepetirConceptos(true)
-            /*obtenerCodigosPostalesPorEstadoMunicipio(entregaDD.estadoRec, event.target.value).then(({data}) => {
-                setDataCodigosPostalesEntregaDD(data)
-            })*/
+        switch (event.target.name) {
+            case 'idPais':
+                setState(state => {
+                    return{
+                        ...state,
+                        [event.target.name]: event.target.value,
+                        idEstado: null,
+                        idMunicipio: null,
+                        codigoPostal: null,
+                        zonaOperativa: null,
+                    }
+                });
+                break;
+            case 'idEstado':
+                setState(state => {
+                    return{
+                        ...state,
+                        [event.target.name]: event.target.value,
+                        idMunicipio: null,
+                        codigoPostal: null,
+                        zonaOperativa: null,
+                    }
+                });
+                break;
+            case 'idMunicipio':
+                setState(state => {
+                    return{
+                        ...state,
+                        [event.target.name]: event.target.value,
+                        codigoPostal: null,
+                        zonaOperativa: null,
+                    }
+                });
+                break;
+            default:
+                setState(state => {
+                    return{
+                        ...state,
+                        [event.target.name]: event.target.value,
+                    }
+                });
         }
     }
     const handleChangeAutocomplete = (input, newValue) => {
@@ -86,6 +114,18 @@ export default function DiferenteDomicilioForm(props){
         }
     }
 
+    const getPaises = () => {
+        if (!dataPaises.length > 0){
+            obtenerPaises().then(respuesta => {
+                setDataPaises(respuesta.data)
+            })
+        }
+    }
+
+    useEffect(() => {
+        getPaises()
+    }, [])
+
     useEffect(() => {
        props.onChange(state)
     }, [state])
@@ -108,6 +148,35 @@ export default function DiferenteDomicilioForm(props){
                     margin="dense"
                     required={props.required}>
                     <InputLabel
+                        id="idEstadoLabel">País</InputLabel>
+                    <Select
+                        fullWidth
+                        labelId="idEstadoLabel"
+                        label="País"
+                        className="form-control"
+                        value={props.value.idPais}
+                        onChange={handleOnChange}
+                        name="idPais"
+                        disabled={props.disabled}
+                    >
+                        {dataPaises.map((pais) => (
+                            <MenuItem
+                                key={pais.m_nIdPais}
+                                value={pais.m_nIdPais}
+                            >
+                                {pais.m_sPais}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </Grid>
+            <Grid item xs={3}>
+                <FormControl
+                    className="input select"
+                    fullWidth variant="outlined"
+                    margin="dense"
+                    required={props.required}>
+                    <InputLabel
                         id="idEstadoLabel">Estado</InputLabel>
                     <Select
                         fullWidth
@@ -119,7 +188,7 @@ export default function DiferenteDomicilioForm(props){
                         name="idEstado"
                         disabled={props.disabled}
                     >
-                        {props.dataEstados.map((estado) => (
+                        {props.dataEstados.filter(i => parseInt(i.m_nIdPais) === parseInt(props.value.idPais)).map((estado) => (
                             <MenuItem
                                 key={estado.m_nIdEstado}
                                 value={estado.m_nIdEstado}

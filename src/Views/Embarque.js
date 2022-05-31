@@ -749,7 +749,7 @@ function Embarque(props) {
     };
 
     const [entregaDD, setEntregaDD] = useState({
-        estadoEnt: '',
+        /*estadoEnt: '',
         municipioEnt: '',
         codigoPostalEnt: '',
         zonaOperativaEnt: '',
@@ -759,7 +759,8 @@ function Embarque(props) {
         datosAdicionalesEnt: '',
         latitudEnt: '',
         longitudEnt: '',
-
+*/
+        idPais: '',
         idEstado: '',
         idMunicipio: '',
         codigoPostal: '',
@@ -773,7 +774,7 @@ function Embarque(props) {
 
     const resetEntregaDD = () =>{
         setEntregaDD({
-            estadoEnt: '',
+            /*estadoEnt: '',
             municipioEnt: '',
             codigoPostalEnt: '',
             zonaOperativaEnt: '',
@@ -782,7 +783,18 @@ function Embarque(props) {
             datosAdicionalesEnt: '',
             entregarEnEnt: '',
             latitudEnt: '',
-            longitudEnt: ''
+            longitudEnt: '',
+*/
+            idPais: '',
+            idEstado: '',
+            idMunicipio: '',
+            codigoPostal: '',
+            zonaOperativa: '',
+            domicilio: '',
+            detalles: '',
+            datosAdicionales: '',
+            latitud: '',
+            longitud: ''
         })
     }
 
@@ -822,6 +834,7 @@ function Embarque(props) {
         setEntregaDD(entregaDD => {
             return{
                 ...entregaDD,
+                idPais: newValue.idPais,
                 idEstado: newValue.idEstado,
                 idMunicipio: newValue.idMunicipio,
                 codigoPostal: newValue.codigoPostal,
@@ -1681,6 +1694,7 @@ function Embarque(props) {
                             m_sLocalidad: respuesta.data.m_sLocalidadEntrega
                         },
                         idEstado: respuesta.data.m_nIdEstadoEntrega || 0,
+                        idPais: respuesta.data.m_nIdPaisEntrega || 0,
                         idMunicipio: respuesta.data.m_sCodigoMunicipioEntrega || 0,
                         domicilio: respuesta.data.m_sDomicilioDetalleEntrega,
                         detalles: respuesta.data.m_sEntregarEnDetalleEntrega,
@@ -1739,23 +1753,12 @@ function Embarque(props) {
         setEntregaDD(entregaDD => {
             return {
                 ...entregaDD,
-                domicilioEnt: respuesta.data.DomicilioEntrega,
-                entregarEnEnt: respuesta.data.EntregarEn,
-                datosAdicionalesEnt: respuesta.data.DatosAdicionalesis,
-                estadoEnt: respuesta.data.m_nIdEstadoEntrega,
-                municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega,
-                latitudEnt: respuesta.data.m_sLatitud,
-                longitudEnt: respuesta.data.m_sLongitud,
-                codigoPostalEnt: {
-                    m_nIdCP: respuesta.data.m_nIdCodigoPostalEntrega,
-                    m_sCP: respuesta.data.m_sCodigoPostalEntrega,
-                    m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega
-                },
+                idPais: respuesta.data.m_nIdPaisEntrega,
+                idEstado: respuesta.data.m_nIdEstadoEntrega,
+                idMunicipio: respuesta.data.m_sCodigoMunicipioEntrega,
                 domicilio: respuesta.data.DomicilioEntrega,
                 detalles: respuesta.data.EntregarEn,
                 datosAdicionales: respuesta.data.DatosAdicionalesis,
-                idEstado: respuesta.data.m_nIdEstadoEntrega,
-                idMunicipio: respuesta.data.m_sCodigoMunicipioEntrega,
                 latitud: respuesta.data.m_sLatitud,
                 longitud: respuesta.data.m_sLongitud,
                 codigoPostal: {
@@ -1779,14 +1782,14 @@ function Embarque(props) {
         /*obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoEntrega).then(({data}) =>{
             setDataMunicipiosEntregaDD(data)
         })*/
-        obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+        /*obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
             setEntregaDD(entregaDD => {
                 return{
                     ...entregaDD,
                     zonaOperativaEnt: data
                 }
             })
-        })
+        })*/
     }
 
     //Funcion para mostrar datos de embarque para consultar o modificar
@@ -3700,7 +3703,7 @@ function Embarque(props) {
                                         </div>
                                     </div>
 
-                                    <div className="row">
+                                    {/*<div className="row">
 
                                         {state.diferenteEntrega ? (
                                             <div className="widget-wrap" id="detallesRecoleccion">
@@ -3936,7 +3939,7 @@ function Embarque(props) {
                                         ) : (
                                             <div/>
                                         )}
-                                    </div>
+                                    </div>*/}
                                     <div className="row">
 
                                         {state.diferenteEntrega ? (
