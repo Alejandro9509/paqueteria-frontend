@@ -782,7 +782,8 @@ class AgregarViaje extends Component {
 
     handleChangeAutocomplete = (input, value) => {
         this.setState({
-            [input]: value
+            [input]: value,
+            esOperadorPermisionario: value.m_bEsPermisionario
         });
     }
 
@@ -1577,6 +1578,7 @@ class AgregarViaje extends Component {
                                                         onChange={this.handleChangeDataPermisionario}
                                                         name="esOperadorPermisionario"
                                                         color="primary"
+                                                        disabled
                                                         size={"medium"}
                                                     />
                                                 }
