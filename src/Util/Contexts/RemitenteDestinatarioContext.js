@@ -109,5 +109,14 @@ function obtenerRemitentesDestinatariosPaginado(pagina,registros, busqueda){
         );
     return result
 }
+
+function obtenerClientesPaginado(pagina,registros, busqueda){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Client/GetListadoPaginado/${pagina}/${registros}`;
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, {busqueda: busqueda}), { headers })
+        );
+    return result
+}
 export {modificarRemitentesDestinatarios, agregarRemitentesDestinatarios, eliminarRemitentesDestinatarios, obtenerRemitentesDestinatarios,
-    obtenerRemitentesDestinatariosId, validarNumeroRemitente, obtenerUbicacion, actualizarRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado}
+    obtenerRemitentesDestinatariosId, validarNumeroRemitente, obtenerUbicacion, actualizarRemitentesDestinatarios,obtenerRemitentesDestinatariosPaginado,obtenerClientesPaginado}

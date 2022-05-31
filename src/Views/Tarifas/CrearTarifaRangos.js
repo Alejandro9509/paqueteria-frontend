@@ -168,7 +168,7 @@ export default function CrearTarifaRangos(props) {
     /**Recibe el cliente seleccionado en el dialogo*/
     const handlePatrocinadorSelected = (row) => {
         if (props.convenio){
-            obtenerClienteTieneConvenio(row.data.m_nIdCliente).then(respuesta => {
+            obtenerClienteTieneConvenio(row.data.m_nIdCliente, 2).then(respuesta => {
                 if (respuesta.data.value){
                     showSuccess("El cliente seleccionado ya tiene convenio activo.")
                 }else{
