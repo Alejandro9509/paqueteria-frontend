@@ -65,8 +65,13 @@ function DialogAsignarSeguros(props) {
         }); 
     }
 
+<<<<<<< HEAD
     function modificarSeguroCliente(idTipoSeguro,idCliente,porcentajeSeguro,aplicaSeguro, aseguradora, poliza){
         const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/ModificarSeguro`;
+=======
+    function modificarSeguroCliente(idTipoSeguro,idCliente,porcentajeSeguro,aplicaSeguro){
+        const url = `${process.env.REACT_APP_REPORT_URL}/api/Clientes/ModificarSeguro/${idTipoSeguro}/${idCliente}/${porcentajeSeguro}/${aplicaSeguro}`;
+>>>>>>> feature/SeguroPorCliente
         let result;
         trackPromise(
             result =  axios.post(url, Object.assign({}, {idTipoSeguro: idTipoSeguro, idCliente: idCliente,
