@@ -442,7 +442,7 @@ function ParametrosConfiguracion2() {
                                 </Box>
                                 <Box width="40%" p={1} my={0.5} display="flex">
                                     <Box width="40%" p={1} my={0.5}>
-                                        <div className={classes.subtitulo}>Modenada predeterminada</div>
+                                        <div className={classes.subtitulo}>Moneda predeterminada</div>
                                     </Box>
                                     <Box width="60%" p={1} my={0.5}>
                                         <FormControl fullWidth variant="outlined"
