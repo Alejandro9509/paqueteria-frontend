@@ -65,14 +65,20 @@ class CancelarSAT extends Component {
                                         name: "idCancelacionSAT"
                                     }}
                                 >
-                                    {this.state.catalogoSAT.map((estatus) => (
+                                    {
+                                        this.state.catalogoSAT.map((estatus) => {
+                                        if (estatus.m_nid == "01" && this.props.ultimaMilla){
+                                         return null
+                                        }
+                                        return (
                                         <option
                                             key={estatus.m_nid}
                                             value={estatus.m_nid}
                                         >
                                             {estatus.m_sDescripcion}
                                         </option>
-                                    ))}
+                                    )})
+                                    }
                                 </Select>
                             </FormControl>
                         </label>
