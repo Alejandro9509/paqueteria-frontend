@@ -1800,6 +1800,8 @@ function Recoleccion() {
                 unidad: '',
                 fechaHoraSalida: '',
                 fechaHoraLlegada: '',
+                zonaOperativaSucursal: null,
+                idSucursalEntrega: ''
             }
         });
         setDataPaquetes([])
@@ -4130,45 +4132,58 @@ function Recoleccion() {
                                                     <div className="widget-container">
                                                         <div className="widget-content">
                                                             <div className="row">
-                                                                <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                                    <label className="input select">
-                                                                        <FormControl
-                                                                            fullWidth
-                                                                            variant="outlined"
-                                                                            margin="dense"
-                                                                            required={state.entregaEnSucursal}
-                                                                        >
-                                                                            <InputLabel id="idSucursalEntrega">
-                                                                                Sucursal de Entrega
-                                                                            </InputLabel>
-                                                                            <Select
-                                                                                labelId={"idSucursalEntrega"}
-                                                                                label="Sucursal de Entrega"
-                                                                                className="form-control"
+                                                                <Grid container spacing={1}>
+                                                                    <Grid item xs={12} sm={6}>
+                                                                        <label className="input select">
+                                                                            <FormControl
+                                                                                fullWidth
+                                                                                variant="outlined"
+                                                                                margin="dense"
                                                                                 required={state.entregaEnSucursal}
-                                                                                onChange={handleChangeSucursalEntrega}
-                                                                                value={state.idSucursalEntrega}
-                                                                                disabled={state.agregar === "Consultar"}
-                                                                                id="idSucursalEntrega"
-                                                                                name="idSucursalEntrega"
-                                                                                inputProps={{
-                                                                                    name: "idSucursalEntrega",
-                                                                                }}
                                                                             >
-                                                                                {dataSucursal.map((sucursal) => (
-                                                                                    <option
-                                                                                        key={sucursal.m_nIdSucursal}
-                                                                                        value={sucursal.m_nIdSucursal}
+                                                                                <InputLabel id="idSucursalEntrega">
+                                                                                    Sucursal de Entrega
+                                                                                </InputLabel>
+                                                                                <Select
+                                                                                    labelId={"idSucursalEntrega"}
+                                                                                    label="Sucursal de Entrega"
+                                                                                    className="form-control"
+                                                                                    required={state.entregaEnSucursal}
+                                                                                    onChange={handleChangeSucursalEntrega}
+                                                                                    value={state.idSucursalEntrega}
+                                                                                    disabled={state.agregar === "Consultar"}
+                                                                                    id="idSucursalEntrega"
+                                                                                    name="idSucursalEntrega"
+                                                                                    inputProps={{
+                                                                                        name: "idSucursalEntrega",
+                                                                                    }}
+                                                                                >
+                                                                                    {dataSucursal.map((sucursal) => (
+                                                                                        <MenuItem
+                                                                                            key={sucursal.m_nIdSucursal}
+                                                                                            value={sucursal.m_nIdSucursal}
 
-                                                                                        // value={sucursal}
-                                                                                    >
-                                                                                        {sucursal.m_sSucursal}
-                                                                                    </option>
-                                                                                ))}
-                                                                            </Select>
-                                                                        </FormControl>
-                                                                    </label>
-                                                                </div>
+                                                                                            // value={sucursal}
+                                                                                        >
+                                                                                            {sucursal.m_sSucursal}
+                                                                                        </MenuItem>
+                                                                                    ))}
+                                                                                </Select>
+                                                                            </FormControl>
+                                                                        </label>
+                                                                    </Grid>
+                                                                    <Grid item xs={12} sm={6}>
+                                                                        <TextField variant="outlined"
+                                                                                   margin="dense"
+                                                                                   className="form-control"
+                                                                                   type="text"
+                                                                                   label="Zona operativa"
+                                                                                   value={state.zonaOperativaSucursal?.m_sCodigoZona || "NO DETERMINDADA"}
+                                                                                   disabled
+                                                                        />
+                                                                    </Grid>
+
+                                                                </Grid>
                                                             </div>
                                                         </div>
                                                     </div>
