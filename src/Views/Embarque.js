@@ -581,6 +581,7 @@ function Embarque(props) {
                 entregaEnSucursal: false,
                 diferenteEntrega: false,
                 idSucursalEntrega: '',
+                zonaOperativaSucursal: null,
 
                 //Cita de recoleccion
                 entregaConCita: false,
@@ -1222,7 +1223,6 @@ function Embarque(props) {
             m_arrClsComplementoSAT: dataComplementosSAT,
             CreadoPor: state.CreadoPor,
             ModificadoPor: state.ModificadoPor,
-            m_bEntregaEnSucursal: state.entregaEnSucursal,
 
             // IdCiudadEntrega: state.ciudadDestinatario,
             CodigoPostalEntrega: destinatario.codigoPostalDestinatario.m_nIdCP,
@@ -1231,31 +1231,37 @@ function Embarque(props) {
             //Cita de recoleccion
             m_bEmbarqueConCita: state.entregaConCita,
         }
-
+            params.m_bEntregaEnSucursal = state.entregaEnSucursal
         /**Si es entrega en sucursal*/
         if (state.entregaEnSucursal) {
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
             params.EntregarMismoDomicilio = false
-            /**Si es entrega en direfente domicilio*/
-        }else if (state.diferenteEntrega) {
-            params.m_bEntregaEnSucursal = false
-            params.CodigoPostalEntrega = entregaDD.codigoPostalEnt.m_nIdCP
-            params.DomicilioEntrega = entregaDD.domicilioEnt
-            params.EntregarEn = entregaDD.entregarEnEnt
-            params.m_nIdEstadoEntrega = entregaDD.estadoEnt
-            params.m_sCodigoMunicipioEntrega = entregaDD.municipioEnt
-            params.DatosAdicionales = entregaDD.datosAdicionalesEnt
-            params.m_nIdZonaOperativa = entregaDD.zonaOperativaEnt.m_nIdZona
-            params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
-            params.m_sLatitudD = coordenadas ? coordenadas.lat : entregaDD.latitudEnt
-            params.m_sLongitudD = coordenadas ? coordenadas.lng : entregaDD.longitudEnt
+            params.m_nIdZonaOperativa = state.zonaOperativaSucursal.m_nIdZona
+
         }else{
-            /**Si es entrega en domicilio de destinatario*/
-            params.m_nIdZonaOperativa = destinatario.zonaOperativaDestinatario ? destinatario.zonaOperativaDestinatario.m_nIdZona : 0
-            params.m_nIdZonaTarifa = destinatario.zonaTarifaDestinatario ? destinatario.zonaTarifaDestinatario.m_nIdZona : 0
-            params.m_sLatitudD = coordenadas ? coordenadas.lat : destinatario.latitudD
-            params.m_sLongitudD = coordenadas ? coordenadas.lng : destinatario.longitudD
+            params.m_nIdSucursalEntrega = 0
+            /**Si es entrega en direfente domicilio*/
+            if (state.diferenteEntrega) {
+                params.m_bEntregaEnSucursal = false
+                params.CodigoPostalEntrega = entregaDD.codigoPostalEnt.m_nIdCP
+                params.DomicilioEntrega = entregaDD.domicilioEnt
+                params.EntregarEn = entregaDD.entregarEnEnt
+                params.m_nIdEstadoEntrega = entregaDD.estadoEnt
+                params.m_sCodigoMunicipioEntrega = entregaDD.municipioEnt
+                params.DatosAdicionales = entregaDD.datosAdicionalesEnt
+                params.m_nIdZonaOperativa = entregaDD.zonaOperativaEnt.m_nIdZona
+                params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
+                params.m_sLatitudD = coordenadas ? coordenadas.lat : entregaDD.latitudEnt
+                params.m_sLongitudD = coordenadas ? coordenadas.lng : entregaDD.longitudEnt
+            }else{
+                /**Si es entrega en domicilio de destinatario*/
+                params.m_nIdZonaOperativa = destinatario.zonaOperativaDestinatario ? destinatario.zonaOperativaDestinatario.m_nIdZona : 0
+                params.m_nIdZonaTarifa = destinatario.zonaTarifaDestinatario ? destinatario.zonaTarifaDestinatario.m_nIdZona : 0
+                params.m_sLatitudD = coordenadas ? coordenadas.lat : destinatario.latitudD
+                params.m_sLongitudD = coordenadas ? coordenadas.lng : destinatario.longitudD
+            }
         }
+
         if (state.entregaConCita) {
             params.m_bCitaPendiente = state.citaPendiente
             if (!state.citaPendiente){
@@ -1670,6 +1676,14 @@ function Embarque(props) {
                     idSucursalEntrega: respuesta.data.m_nIdSucursalEntrega,
                     diferenteEntrega: false,
                 }
+            })
+            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
+                setState(state => {
+                    return {
+                        ...state,
+                        zonaOperativaSucursal: data
+                    }
+                })
             })
         }else{
             //ENTREGA EN DIFERENTE DOMICILIO
@@ -3641,39 +3655,52 @@ function Embarque(props) {
                                                 {state.entregaEnSucursal ?
 
                                                     <div className="row">
-                                                        <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                                                            <label className="input select">
-                                                                <FormControl fullWidth variant="outlined"
-                                                                             margin="dense">
-                                                                    <InputLabel id="idSucursalEntrega">Sucursal de
-                                                                        Entrega</InputLabel>
-                                                                    <Select
-                                                                        labelId={"idSucursalEntrega"}
-                                                                        label="Sucursal de Entrega"
-                                                                        className="form-control"
-                                                                        required={state.entregaEnSucursal}
-                                                                        onChange={handleChangeSucursalEntrega}
-                                                                        value={state.idSucursalEntrega}
-                                                                        disabled={state.agregar === "Consultar" || state.embarqueConGuia}
-                                                                        id="idSucursalEntrega"
-                                                                        name="idSucursalEntrega"
-                                                                        inputProps={{
-                                                                            name: "idSucursalEntrega"
-                                                                        }}
-                                                                    >
-                                                                        {dataSucursal.map((sucursal) => (
-                                                                            <option
-                                                                                key={sucursal.m_nIdSucursal}
-                                                                                value={sucursal.m_nIdSucursal}
-                                                                                // value={sucursal}
-                                                                            >
-                                                                                {sucursal.m_sSucursal}
-                                                                            </option>
-                                                                        ))}
-                                                                    </Select>
-                                                                </FormControl>
-                                                            </label>
-                                                        </div>
+                                                        <Grid container spacing={1}>
+                                                            <Grid item xs={12} sm={6}>
+                                                                <label className="input select">
+                                                                    <FormControl fullWidth variant="outlined"
+                                                                                 margin="dense">
+                                                                        <InputLabel id="idSucursalEntrega">Sucursal de
+                                                                            Entrega</InputLabel>
+                                                                        <Select
+                                                                            labelId={"idSucursalEntrega"}
+                                                                            label="Sucursal de Entrega"
+                                                                            className="form-control"
+                                                                            required={state.entregaEnSucursal}
+                                                                            onChange={handleChangeSucursalEntrega}
+                                                                            value={state.idSucursalEntrega}
+                                                                            disabled={state.agregar === "Consultar" || state.embarqueConGuia}
+                                                                            id="idSucursalEntrega"
+                                                                            name="idSucursalEntrega"
+                                                                            inputProps={{
+                                                                                name: "idSucursalEntrega"
+                                                                            }}
+                                                                        >
+                                                                            {dataSucursal.map((sucursal) => (
+                                                                                <MenuItem
+                                                                                    key={sucursal.m_nIdSucursal}
+                                                                                    value={sucursal.m_nIdSucursal}
+                                                                                    // value={sucursal}
+                                                                                >
+                                                                                    {sucursal.m_sSucursal}
+                                                                                </MenuItem>
+                                                                            ))}
+                                                                        </Select>
+                                                                    </FormControl>
+                                                                </label>
+                                                            </Grid>
+                                                            <Grid item xs={12} sm={6}>
+                                                                <TextField variant="outlined"
+                                                                           margin="dense"
+                                                                           className="form-control"
+                                                                           type="text"
+                                                                           label="Zona operativa"
+                                                                           value={state.zonaOperativaSucursal?.m_sCodigoZona || "NO DETERMINDADA"}
+                                                                           disabled
+                                                                />
+                                                            </Grid>
+
+                                                        </Grid>
                                                     </div>
 
                                                     :

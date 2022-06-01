@@ -1084,26 +1084,23 @@ function Recoleccion() {
             params.m_bEntregaEnSucursal = state.entregaEnSucursal;
             if (state.entregaEnSucursal){
                 params.m_nIdSucursalEntrega = state.idSucursalEntrega;
+                params.m_nIdZonaOperativaEntrega = state.zonaOperativaSucursal.m_nIdZona
             }else{
                 params.m_nIdSucursalEntrega = 0;
+                if (state.diferenteEntrega) {
+                    params.m_nIdCPDetalleEntrega = entregaDD.codigoPostalEnt.m_nIdCP
+                    params.m_sDomicilioDetalleEntrega = entregaDD.domicilioEnt
+                    params.m_sEntregarEnDetalleEntrega = entregaDD.entregarEnEnt
+                    params.m_sDatosAdicionalesDetalleEntrega = entregaDD.datosAdicionalesEnt
+                    params.m_nIdZonaOperativaEntrega = entregaDD.zonaOperativaEnt.m_nIdZona
+                    params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt? entregaDD.zonaTarifaEnt.m_nIdZona : 0
+                    params.m_nIdEstadoEntrega = entregaDD.estadoEnt
+                    params.m_sCodigoMunicipioEntrega = entregaDD.municipioEnt
+                } else {
+                    params.m_nIdZonaOperativaEntrega = destinatario.zonaOperativaDestinatario.m_nIdZona
+                    params.m_nIdZonaTarifaEntrega = destinatario.zonaTarifaDestinatario ? destinatario.zonaTarifaDestinatario.m_nIdZona : 0
+                }
             }
-
-            if (state.diferenteEntrega) {
-                params.m_nIdCPDetalleEntrega = entregaDD.codigoPostalEnt.m_nIdCP
-                params.m_sDomicilioDetalleEntrega = entregaDD.domicilioEnt
-                params.m_sEntregarEnDetalleEntrega = entregaDD.entregarEnEnt
-                params.m_sDatosAdicionalesDetalleEntrega = entregaDD.datosAdicionalesEnt
-                params.m_nIdZonaOperativaEntrega = entregaDD.zonaOperativaEnt.m_nIdZona
-                params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt? entregaDD.zonaTarifaEnt.m_nIdZona : 0
-                params.m_nIdEstadoEntrega = entregaDD.estadoEnt
-                params.m_sCodigoMunicipioEntrega = entregaDD.municipioEnt
-            } else {
-                params.m_nIdZonaOperativaEntrega = destinatario.zonaOperativaDestinatario.m_nIdZona
-                params.m_nIdZonaTarifaEntrega = destinatario.zonaTarifaDestinatario ? destinatario.zonaTarifaDestinatario.m_nIdZona : 0
-            }
-
-
-
             if (state.recoleccionConCita) {
                 params.m_bCitaPendiente = state.citaPendiente
                 if (!state.citaPendiente){
