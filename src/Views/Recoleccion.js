@@ -758,7 +758,6 @@ function Recoleccion() {
 
                 return false
                 /**Si es recoleccion en el domicilio del remitente y no hay coordenadas*/
-                debugger;
             }else if (!state.diferenteRecoleccion
                 && !isValidText(remitente.latitudR)
                 && !isValidText(remitente.longitudR)
@@ -1083,7 +1082,11 @@ function Recoleccion() {
                 params.m_sLongitudR = coordenadas ? coordenadas.lng : remitente.longitudR
             }
             params.m_bEntregaEnSucursal = state.entregaEnSucursal;
-            params.m_nIdSucursalEntrega = state.idSucursalEntrega;
+            if (state.entregaEnSucursal){
+                params.m_nIdSucursalEntrega = state.idSucursalEntrega;
+            }else{
+                params.m_nIdSucursalEntrega = 0;
+            }
 
             if (state.diferenteEntrega) {
                 params.m_nIdCPDetalleEntrega = entregaDD.codigoPostalEnt.m_nIdCP
@@ -1422,7 +1425,14 @@ function Recoleccion() {
         if (respuesta.data.m_bRecoleccionDiferenteDomicilio){
             mostrarDatosRecoleccionDD(respuesta)
         }
-        if (respuesta.data.m_bEntregaEnSucursal){
+        if (respuesta.data.m_bEntregaSucursal){
+            setState(state => {
+                return {
+                    ...state,
+                    entregaEnSucursal:respuesta.data.m_bEntregaSucursal,
+                    idSucursalEntrega:respuesta.data.m_nIdSucursalEntrega
+                }
+            })
             obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
                 setState(state => {
                     return {
@@ -1431,6 +1441,7 @@ function Recoleccion() {
                     }
                 })
             })
+
         }else if (respuesta.data.m_bEntregaDiferenteDomicilio){
             mostrarDatosEntregaDD(respuesta)
         }
@@ -1493,9 +1504,6 @@ function Recoleccion() {
                 diferenteRecoleccion: respuesta.data.m_bRecoleccionDiferenteDomicilio,
                 // fechaRecoleccion: respuesta.data.m_dFechaDetalleRecoleccion + "T" + respuesta.data.m_tHoraDetalleRecoleccion.slice(0, 5),
                 diferenteEntrega: respuesta.data.m_bEntregaDiferenteDomicilio,
-                entregaEnSucursal:respuesta.data.m_bEntregaSucursal,
-                idSucursalEntrega:respuesta.data.m_nIdSucursalEntrega = 0 ? "" : respuesta.data.m_nIdSucursalEntrega
-
 
             }
         });
