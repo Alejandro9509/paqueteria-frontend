@@ -1287,10 +1287,14 @@ function Viajes() {
                                                                         <ListItemText primary={`Ruta: ${p.m_sRuta}`} />
                                                                         {
                                                                             ((!p.m_nIdSalida || p.m_bSalidaCancelada) && !p.deshabilitado)  &&
-
+                                                                            
+                                                                            <>
+                                                                           <p style={{margin:"5px"}}> Se requiere de timbrar todos los informes para habilitar esta opcion: </p> 
                                                                             <Link  style={{cursor: "pointer"}}
-                                                                                  onClick={() => showSalidaDialog(p)}>Marcar
+                                                                                  className={informesFiltrados.filter(informe=> informe.m_bTimbrado == true).length != informesFiltrados.length? classes.disabled : ""}
+                                                                                  onClick={() => showSalidaDialog(p)} disabled={informesFiltrados.filter(informe=> informe.m_bTimbrado == true).length != informesFiltrados.length}>Marcar
                                                                                 Salida</Link>
+                                                                                </>
                                                                         }
                                                                         {
                                                                             p.m_nIdSalida && !p.m_nIdLlegada && !p.m_bSalidaCancelada && !p.deshabilitado  &&
