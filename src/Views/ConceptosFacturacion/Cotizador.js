@@ -19,6 +19,13 @@ function showSuccess(mensaje) {
         timeout: "3000",
     }).show();
 }
+const esDatoValido = (dato) => {
+    return dato
+        && dato !== ''
+        && dato !== 0
+        && dato !== "0";
+
+}
 class Cotizador extends Component {
     constructor(props) {
         super(props);
@@ -68,6 +75,22 @@ class Cotizador extends Component {
         if (this.props.paquetes.length === 0){
             showSuccess("No se puede crear cotización sin paquetes.")
             return
+        }
+        if (this.props.embarque.entregaConCita || this.props.embarque.recoleccionConCita){
+            if (!this.props.embarque.citaPendiente){
+                if (!esDatoValido(this.props.embarque.fechaCita)){
+                    showSuccess("La fecha de la cita es un dato requerido");
+                    return;
+                }
+                if (!esDatoValido(this.props.embarque.horaCitaMinima)){
+                    showSuccess("La hora mínima de la cita es un dato requerido");
+                    return;
+                }
+                if (!esDatoValido(this.props.embarque.horaCitaMaxima)){
+                    showSuccess("La hora máxima de la cita es un dato requerido");
+                    return;
+                }
+            }
         }
         this.setState(state => {
             return {

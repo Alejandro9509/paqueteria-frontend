@@ -52,7 +52,7 @@ export default function Citas(props){
                 <div className="widget-content">
                     <div className="row">
                         <Grid container spacing={3}>
-                            <Grid item xs={2}>
+                            <Grid item xs={12} sm={2}>
                                 <FormControlLabel
                                     style={{fontSize: '20px'}}
                                     control={
@@ -68,8 +68,7 @@ export default function Citas(props){
                                     label="Cita pendiente"
                                 />
                             </Grid>
-                            <Grid item xs={10}/>
-                            <Grid item xs={4}>
+                            <Grid item xs={12} sm={2}>
                                 <TextField
                                     variant="outlined"
                                     id="fechaCita"
@@ -82,9 +81,10 @@ export default function Citas(props){
                                     disabled={props.disabled}
                                     InputLabelProps={{shrink: true,}}
                                     required={!state.citaPendiente}
+                                    onKeyDown={(e) => e.preventDefault()}
                                 />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={12} sm={2}>
                                 <TextField
                                     variant="outlined"
                                     id="horaCitaMinima"
@@ -98,9 +98,10 @@ export default function Citas(props){
                                     InputLabelProps={{shrink: true,}}
                                     inputProps={{step: 300,}}
                                     required={!state.citaPendiente}
+                                    onKeyDown={(e) => e.preventDefault()}
                                 />
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={12} sm={2}>
                                 <TextField
                                     variant="outlined"
                                     id="horaCitaMaxima"
@@ -114,6 +115,7 @@ export default function Citas(props){
                                     inputProps={{step: 300,}}
                                     disabled={props.disabled}
                                     required={!state.citaPendiente}
+                                    onKeyDown={(e) => e.preventDefault()}
                                 />
                             </Grid>
                         </Grid>
