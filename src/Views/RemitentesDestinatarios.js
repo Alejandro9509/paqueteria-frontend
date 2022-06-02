@@ -37,7 +37,7 @@ function showSuccess(mensaje) {
     type: "information",
     layout: "topCenter",
     text: mensaje,
-    timeout: "3000",
+    timeout: "5000",
   }).show();
 }
 
@@ -56,8 +56,6 @@ function showSuccess(mensaje) {
  * handleClickCiudad={funcion} : funcion que se llama cuando se clickea el input de origen/destino (opcional).
  * */
 function RemitenteDestinatario(props) {
-  const [dataRemitenteDestinatario, setDataRemitenteDestinatario] =
-    React.useState([]);
   const [dataEstados, setDataEstados] = React.useState([]);
   const [dataCodigosPostales, setDataCodigosPostales] = React.useState([]);
   const [dataZonasOperativas, setDataZonasOperativas] = React.useState([]);
@@ -565,63 +563,46 @@ if(input=="codigoPostal"){
 
   const handleChangeAutoCompleteRemitenteDestinatario = (row) => {
     props.seCalculaTarifa()
-    let estado = row.data.m_nIdEstado;
-
-      obtenerMunicipiosByIdEstado(estado).then(({ data }) => {
-        setDataMunicipios(data);
-      });
       obtenerZonaOperativaByIdCodigoPostal(row.data.m_sCodigoPostal).then(
           ( zonaOperativa ) => {
-            obtenerZonaTarifaByIdCodigoPostal(row.data.m_sCodigoPostal).then(
-                ( zonaTarifa ) => {
-                  setState((state) => ({
-                    ...state,
-                    id: row.data.m_nIdRemitenteDestinatario,
-                    alias: row.data.m_sAlias,
-                    nombre: row.data.m_sNombre,
-                    RFC: row.data.m_sRFC,
-                    domicilio: row.data.m_sDomicilio || "No especificado",
-                    codigoPostal:
-                        {
-                          m_sCP: row.data.m_sCodigoPostal,
-                          m_sColonia: row.data.m_sColonia || "No especificado",
-                        },
-                    estado: estado || "",
-                    estadoTexto: row.data.m_sEstado || "No especificado",
-                    municipio: row.data.m_nIdMunicipio || "",
-                    correo: row.data.m_sCorreoElectronico || "",
-                    telefono: row.data.m_sTelefono || 0,
-                    contacto: row.data.m_sContacto || row.data.m_sNombre,
-                    calle: row.data.m_sCalle || "No especificado",
-                    municipioTexto: row.data.m_sMunicipio || "No especificado",
-                    numeroExt: row.data.m_sNoExterior || 0,
-                    numeroInt: row.data.m_sNoInterior || 0,
-                    colonia: row.data.m_sColonia || "No especificado",
-                    latitud: row.data.m_sLatitud,
-                    longitud: row.data.m_sLongitud,
-                    origen: zonaOperativa.data.length !== 0  ? {m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino, m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino} : null,
-                    destino: zonaOperativa.data.length !== 0  ? {m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino, m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino} : null,
-                    openDialog: false,
-                    zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
-                    zonaTarifa: zonaTarifa.data.length !== 0  ? zonaTarifa.data[0] : null
-                  }));
+            setState((state) => ({
+              ...state,
+              id: row.data.m_nIdRemitenteDestinatario,
+              alias: row.data.m_sAlias,
+              nombre: row.data.m_sNombre,
+              RFC: row.data.m_sRFC,
+              domicilio: row.data.m_sDomicilio || "No especificado",
+              codigoPostal:
+                  {
+                    m_sCP: row.data.m_sCodigoPostal,
+                    m_sColonia: row.data.m_sColonia || "No especificado",
+                  },
+              estado: row.data.m_nIdEstado || "",
+              estadoTexto: row.data.m_sEstado || "No especificado",
+              municipio: row.data.m_nIdMunicipio || "",
+              correo: row.data.m_sCorreoElectronico || "",
+              telefono: row.data.m_sTelefono || 0,
+              contacto: row.data.m_sContacto || row.data.m_sNombre,
+              calle: row.data.m_sCalle || "No especificado",
+              municipioTexto: row.data.m_sMunicipio || "No especificado",
+              numeroExt: row.data.m_sNoExterior || 0,
+              numeroInt: row.data.m_sNoInterior || 0,
+              colonia: row.data.m_sColonia || row.data.m_sLocalidad || "No especificado",
+              latitud: row.data.m_sLatitud,
+              longitud: row.data.m_sLongitud,
+              origen: zonaOperativa.data.length !== 0  ? {m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino, m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino} : null,
+              destino: zonaOperativa.data.length !== 0  ? {m_nIdCiudad: zonaOperativa.data[0].m_nIdOrigenDestino, m_sCiudad: zonaOperativa.data[0].m_sOrigenDestino} : null,
+              openDialog: false,
+              zonaOperativa: zonaOperativa.data.length !== 0 ? zonaOperativa.data[0] : null,
+            }));
 
-                  if (zonaOperativa.data.length === 0){
-                    if (props.remitente){
-                      showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa.")
-                    }else if (props.destinatario){
-                      showSuccess("El codigo postal del destinatario no está registrado en ninguna zona operativa.")
-                    }
-                  }
-                  /*if (zonaTarifa.data.length === 0){
-                    if (props.remitente){
-                      showSuccess("El codigo postal del remitente no está registrado en ninguna zona de tarifa.")
-                    }else if (props.destinatario){
-                      showSuccess("El codigo postal del destinatario no está registrado en ninguna zona de tarifa.")
-                    }
-                  }*/
-                }
-            );
+            if (zonaOperativa.data.length === 0){
+              if (props.remitente){
+                showSuccess("El codigo postal del remitente no está registrado en ninguna zona operativa.")
+              }else if (props.destinatario){
+                showSuccess("El codigo postal del destinatario no está registrado en ninguna zona operativa.")
+              }
+            }
 
           }
       );
@@ -839,7 +820,7 @@ if(input=="codigoPostal"){
               className="form-control"
               type="text"
               required
-              label="Colonia"
+              label="Colonia / Localidad"
               value={state.colonia}
               disabled={props.consulta || props.modificar || props.agregar}
               name="colonia"

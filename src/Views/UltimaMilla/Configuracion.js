@@ -30,9 +30,10 @@ class Configuracion extends Component {
                             <Grid item>
                                 <FormControlLabel value="1" control={<Radio/>} label="Kilómetros"/>
                             </Grid>
-                            <Grid item>
+                            {/*<Grid item>
                                 <FormControlLabel value="2" control={<Radio/>} label="Millas"/>
                             </Grid>
+                             */}
                         </Grid>
                     </RadioGroup>
                 </Grid>
@@ -40,9 +41,10 @@ class Configuracion extends Component {
                     <Typography variant={"h4"}>Optimizar</Typography>
                     <RadioGroup aria-label="optimizar" name="optimizar" value={this.props.values.optimizar}>
                         <Grid container>
-                            <Grid item>
+                         {/*   <Grid item>
                                 <FormControlLabel value="1" control={<Radio/>} label="Distancia"/>
                             </Grid>
+                         */}
                             <Grid item>
                                 <FormControlLabel value="2" control={<Radio/>} label="Tiempo"/>
                             </Grid>

@@ -90,6 +90,7 @@ function ParametrosConfiguracion2() {
         estatusGuia: 0,
         tipoTarifa: 0,
         cobroCargaDescarga: false,
+        cobroCargaDescargaDisabled: false,
         cobrarCita: false,
         costoCita: "0",
         detectarTipoCobro: false,
@@ -108,6 +109,19 @@ function ParametrosConfiguracion2() {
     })
     //--------------------------------------------------HANDLERS---------------------------------------------------------
     const handleChange = (event) => {
+        if (event.target.name === "tipoTarifa"){
+            if (parseInt(event.target.value) === 3){
+                onSeleccionaTarifaRegion()
+            }else{
+                setConfiguraciones((config) => {
+                    return {
+                        ...config,
+                        cobroCargaDescarga: false,
+                        cobroCargaDescargaDisabled: false
+                    }
+                })
+            }
+        }
         setConfiguraciones((config) => {
             return {
                 ...config,
@@ -115,6 +129,17 @@ function ParametrosConfiguracion2() {
             }
         })
     }
+
+    const onSeleccionaTarifaRegion = () => {
+        setConfiguraciones((config) => {
+            return {
+                ...config,
+                cobroCargaDescarga: false,
+                cobroCargaDescargaDisabled: true
+            }
+        })
+    }
+
     const handleChecked = (event) => {
         setConfiguraciones((config) => {
             return {
@@ -195,6 +220,10 @@ function ParametrosConfiguracion2() {
                     validarInforme: respuesta.data.validarQR
                 }
             })
+
+            if (parseInt(respuesta.data.TipoTarifaTarifas) === 3){
+                onSeleccionaTarifaRegion()
+            }
         })
     }
 
@@ -690,7 +719,7 @@ function ParametrosConfiguracion2() {
                                                         onChange={handleChange}
                                                         value={configuraciones.tipoTarifa}
                                                     >
-                                                        <option value="1">Por peso o volumen</option>
+                                                        {/*<option value="1">Por peso o volumen</option>*/}
                                                         <option value="2">Por rango</option>
                                                         <option value="3">Por región</option>
                                                     </Select>
@@ -736,6 +765,7 @@ function ParametrosConfiguracion2() {
                                                     style={{transform: "scale(2)"}}
                                                     inputProps={{'aria-label': 'primary checkbox'}}
                                                     name="cobroCargaDescarga"
+                                                    disabled={configuraciones.cobroCargaDescargaDisabled}
                                                 />
                                             </Box>
                                         </Box>

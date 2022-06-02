@@ -128,7 +128,7 @@ function CrearConceptoSAT(props) {
 
                     </DialogContent>
                 </Dialog>
-            <form className="j-forms">
+            <form className="j-forms" onSubmit={e => {e.preventDefault(); e.stopPropagation()}}>
                 <div className="form-content">
                     <div className="main-container" style={{margin: "0px", padding: "0px"}}>
                         <div className="row" style={{margin: "0px"}}>
@@ -142,98 +142,88 @@ function CrearConceptoSAT(props) {
                         </div>
 
                         <Grid container spacing={1}>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} sm={6}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
-                                    type="text"
+                                    type="number"
                                     label="Cantidad"
+                                    required
                                     disabled={props.consulta}
                                     value={props.dataComplemento.cantidad}
                                     onChange={handleChange}
                                     name="cantidad"
-                                   /* helperText={(errores.errorCantidad || props.dataComplemento.cantidad == "0")?errores.errorTexto:""}
-                                    error={errores.errorCantidad || props.dataComplemento.cantidad == "0"}*/
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} sm={6}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
                                     type="number"
                                     className="form-control"
                                     label="Peso"
+                                    required
                                     disabled={props.consulta}
                                     value={props.dataComplemento.peso}
                                     onChange={handleChange}
                                     name="peso"
                                 />
                             </Grid>
-                            <Grid item xs={2}>
+                            <Grid item xs={12} sm={2}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
                                     type="text"
                                     className="form-control"
                                     label="Clave SAT"
-                                    disabled={props.consulta}
                                     value={props.dataComplemento.claveProducto}
-                                    onChange={handleChange}
                                     name="unidadMedia"
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
+                                    required
+                                    aria-readonly={true}
+                                    disabled={props.consulta}
                                 />
                             </Grid>
-                            <Grid item xs>
+                            <Grid item xs={12} sm={8}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
                                     type="text"
                                     className="form-control"
                                     label="Producto o Servicio"
-                                    disabled={props.consulta}
                                     value={props.dataComplemento.ProductoSAT}
-                                    onChange={handleChange}
                                     name="unidadMedia"
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
+                                    required
+                                    aria-readonly={true}
                                 />
                             </Grid>
-                            <Grid item xs={2}>
-                                <button
+                            <Grid item xs={12} sm={2}>
+                                <Button
                                     type="button"
+                                    fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
                                     onClick={() => setState({...state,catalogo: "c_ClaveProdServCP", busqueda: "", complementoSAT: 1,titulo:"Producto o Servicio"})}>
                                     Seleccionar
-                                </button>
+                                </Button>
                             </Grid>
-                        </Grid>
-
-                        <Grid container spacing={1}>
-                            <Grid item xs={2}>
+                            <Grid item xs={12} sm={2}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
                                     type="text"
                                     className="form-control"
                                     label="Clave SAT"
+                                    required
                                     disabled={props.consulta}
                                     value={props.dataComplemento.claveUnidad}
-                                    onChange={handleChange}
                                     name="unidadMedia"
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
+                                    aria-readonly={true}
                                 />
                             </Grid>
-                            <Grid item xs>
+                            <Grid item xs={12} sm={8}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
-                                    onChange={handleChange}
                                     className="form-control"
                                     type="text"
                                     label="Unidad Medida"
@@ -241,14 +231,13 @@ function CrearConceptoSAT(props) {
                                     required
                                     value={props.dataComplemento.UnidadSAT}
                                     name="unidadMedida"
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
+                                    aria-readonly={true}
                                 />
                             </Grid>
-                            <Grid item xs={2}>
-                                <button
+                            <Grid item xs={12} sm={2}>
+                                <Button
                                     type="button"
+                                    fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
                                     onClick={() =>
@@ -256,25 +245,9 @@ function CrearConceptoSAT(props) {
                                     }
                                 >
                                     Seleccionar
-                                </button>
+                                </Button>
                             </Grid>
-                        </Grid>
-
-                        <Grid container spacing={1}>
-                            {/*<Grid item xs>
-                                <TextField
-                                    variant="outlined"
-                                    margin="dense"
-                                    type="text"
-                                    className="form-control"
-                                    label="UUID Comercio exterior"
-                                    disabled={props.consulta}
-                                    value={props.dataComplemento.comercioExterior}
-                                    onChange={handleChange}
-                                    name="comercioExterior"
-                                />
-                            </Grid>*/}
-                            <Grid item xs>
+                            <Grid item xs={12} sm={3}>
                                 <FormControlLabel
                                     control={
                                         <Checkbox
@@ -292,7 +265,7 @@ function CrearConceptoSAT(props) {
 
                         {props.dataComplemento.esPeligroso &&
                         <Grid container spacing={1}>
-                            <Grid item xs={2}>
+                            <Grid item xs={12} sm={2}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
@@ -300,11 +273,12 @@ function CrearConceptoSAT(props) {
                                     className="form-control"
                                     label="Clave SAT"
                                     aria-readonly={true}
+                                    required
                                     value={props.dataComplemento.claveMaterialPeligroso}
                                     name="claveMaterialPeligroso"
                                 />
                             </Grid>
-                            <Grid item xs>
+                            <Grid item xs={12} sm={8}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
@@ -317,20 +291,18 @@ function CrearConceptoSAT(props) {
                                     name="materialPeligroso"
                                 />
                             </Grid>
-                            <Grid item xs={2}>
-                                <button
+                            <Grid item xs={12} sm={2}>
+                                <Button
                                     type="button"
+                                    fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
                                     onClick={() => setState({...state,catalogo: "c_MaterialPeligroso", busqueda: "", complementoSAT: 5,titulo:"Material peligroso"})}>
                                     Seleccionar
-                                </button>
+                                </Button>
                             </Grid>
-                        </Grid>
-                        }
-                        {props.dataComplemento.esPeligroso &&
-                        <Grid container spacing={1}>
-                            <Grid item xs={2}>
+
+                            <Grid item xs={12} sm={2}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
@@ -338,11 +310,12 @@ function CrearConceptoSAT(props) {
                                     className="form-control"
                                     label="Clave SAT"
                                     aria-readonly={true}
+                                    required
                                     value={props.dataComplemento.claveEmbalaje}
                                     name="claveSATEmbalaje"
                                 />
                             </Grid>
-                            <Grid item xs>
+                            <Grid item xs={12} sm={4}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
@@ -355,7 +328,7 @@ function CrearConceptoSAT(props) {
                                     name="descripcionEmbalaje"
                                 />
                             </Grid>
-                            <Grid item xs>
+                            <Grid item xs={12} sm={4}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
@@ -368,20 +341,18 @@ function CrearConceptoSAT(props) {
                                     name="descripcionEmbalajeSAT"
                                 />
                             </Grid>
-                            <Grid item xs={2}>
-                                <button
+                            <Grid item xs={12} sm={2}>
+                                <Button
                                     type="button"
+                                    fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
                                     onClick={() => setState({...state,catalogo: "c_TipoEmbalaje", busqueda: "", complementoSAT: 3,titulo:"Embalaje"})}>
                                     Seleccionar
-                                </button>
+                                </Button>
                             </Grid>
-                        </Grid>
-                        }
-                        {props.dataComplemento.esPeligroso &&
-                        <Grid container spacing={1}>
-                            <Grid item xs={2}>
+
+                            <Grid item xs={12} sm={2}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
@@ -393,7 +364,7 @@ function CrearConceptoSAT(props) {
                                     name="claveFrraccion"
                                 />
                             </Grid>
-                            <Grid item xs>
+                            <Grid item xs={12} sm={8}>
                                 <TextField
                                     variant="outlined"
                                     margin="dense"
@@ -405,43 +376,40 @@ function CrearConceptoSAT(props) {
                                     name="fraccionSAT"
                                 />
                             </Grid>
-                            <Grid item xs={2}>
-                                <button
+                            <Grid item xs={12} sm={2}>
+                                <Button
                                     type="button"
+                                    fullWidth
                                     className="btn btn-primary primary-btn"
                                     style={{margin: "0px"}}
                                     onClick={() => setState({...state,catalogo: "c_FraccionArancelaria", busqueda: "", complementoSAT: 4,titulo:"Fracción arancelaria"})}>
                                     Seleccionar
-                                </button>
+                                </Button>
                             </Grid>
                         </Grid>
                         }
 
-
-
                     </div>
                 </div>
                 {props.children}
-            </form>
+
             <DialogActions>
-                <div style={{display: "flex", justifyContent: "space-between"}}>
-                    <button
-                        type="button"
-                        onClick={() => props.dialogVisible(false)}
-                        className="btn btn-secondary secondary-btn"
-                        style={{marginRight: "20px"}}
-                    >
-                        Cancelar
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => props.handleAceptar(state)}
-                        className="btn btn-primary primary-btn"
-                    >
-                        Aceptar
-                    </button>
-                </div>
+                <Button
+                    onClick={() => props.dialogVisible(false)}
+                    style={{marginRight: "20px"}}
+                    color={"secondary"}
+                >
+                    Cancelar
+                </Button>
+                <Button
+                    type={"submit"}
+                    onClick={() => props.handleAceptar(state)}
+                    color={"primary"}
+                >
+                    Aceptar
+                </Button>
             </DialogActions>
+        </form>
         </div>
     )
 }

@@ -189,6 +189,7 @@ class AgregarViaje extends Component {
     }
 
     componentWillMount() {
+       
         this.getAllCiudades()
         //this.getAllRutas()
         //this.getAllCodigosPostales()
@@ -309,7 +310,7 @@ class AgregarViaje extends Component {
             m_arrInformes: this.state.dataInformesAsignados,
             m_nIdOrigen: this.state.idCiudadOrigen.m_nIdCiudad,
             m_nDestino: this.state.idCiudadDestino.m_nIdCiudad,
-            IdRemolque1: this.state.IdRemolque1.m_nIdUnidad,
+            IdRemolque1: this.state.IdRemolque1 ? this.state.IdRemolque1.m_nIdUnidad : 0,
             IdRemolque2: this.state.IdRemolque2 ? this.state.IdRemolque2.m_nIdUnidad : 0,
             IdDolly: this.state.IdDolly ? this.state.IdDolly.m_nIdUnidad : 0,
             m_nIdRuta: this.state.idRuta,
@@ -328,10 +329,10 @@ class AgregarViaje extends Component {
                 estatus: this.state.estatusInforme,
                 horaEntrega: this.state.horaEntregaGeneral,
             },
-            EsOperadorPermisionario: this.state.EsOperadorPermisionario,
-            LicenciaPermisionario: this.state.LicenciaPermisionario,
-            NombrePermisionario: this.state.NombrePermisionario,
-            FechaVigenciaPermisionario: this.state.FechaVigenciaPermisionario,
+            EsOperadorPermisionario: this.state.esOperadorPermisionario,
+            LicenciaPermisionario: this.state.licenciaPermisionario,
+            NombrePermisionario: this.state.nombrePermisionario,
+            FechaVigenciaPermisionario: this.state.fechaVigenciaPermisionario,
         }
         //console.log(params)
        if (this.props.modificar) {
@@ -702,7 +703,8 @@ class AgregarViaje extends Component {
                         estatusUnidad: resultado.data instanceof String  ? "" : resultado.data.m_sEstatus,
                         colorUnidad: resultado.data instanceof String ? "" : resultado.data.m_sColor,
                         kms: newValue.m_nOdometro,
-                        horas: newValue.m_nHorasTrabajadasMotorNoGPS
+                        horas: newValue.m_nHorasTrabajadasMotorNoGPS,
+                        aplicaRemolque: newValue.m_bAplicaRemolque
                     })
                 }else{
                     this.setState({
@@ -1665,7 +1667,7 @@ class AgregarViaje extends Component {
                                                             <TextField
                                                                 label="Remolque 1"
                                                                 margin="dense"
-                                                                required
+                                                                required={this.state.aplicaRemolque === 1}
                                                                 variant="outlined"
                                                                 {...params}
                                                             />
@@ -1821,7 +1823,7 @@ class AgregarViaje extends Component {
                                     </div>
                                     {
                                         !this.props.consult &&
-                                        <Button variant="contained" color="primary" fullWidth onClick={(event) => this.handleShowDialog(event)}>
+                                        <Button variant="contained" color="primary" disabled={this.props.select ?  this.props.select.m_sEstatusViaje != "Pendiente" : false} fullWidth onClick={(event) => this.handleShowDialog(event)}>
                                             Agregar informes
                                         </Button>
                                     }
