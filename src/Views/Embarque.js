@@ -1052,11 +1052,11 @@ function Embarque(props) {
             return
         }
         if (dataConceptos.find(i => parseInt(i.idConcepto) === parseInt(configuraciones.idConceptoFlete)) === undefined){
-            showSuccess("El embarque debe incluir el concepto flete")
+            showSuccess("La cotización debe incluir el concepto flete.")
             return;
         }
         if (dataConceptos.length === 0){
-            showSuccess("No se han agregado conceptos de facturación")
+            showSuccess("No se han agregado conceptos de facturación. Genere una cotización.")
             return;
         }
         valid = true
