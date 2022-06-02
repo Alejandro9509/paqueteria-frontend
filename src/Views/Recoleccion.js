@@ -651,7 +651,9 @@ function Recoleccion() {
     }, [state.tipoUnidad])
 
     useEffect((value) => {
-
+        obtenerFormatosImpresion().then(({data}) => {
+            setFormatosImpresion(data)
+        })
         if (
             localStorage.getItem("UsuarioId") === null ||
             localStorage.getItem("UsuarioId") <= 0
@@ -668,10 +670,12 @@ function Recoleccion() {
 
     const getDataParaListado = () => {
         // getAllSucursales();
+
     }
 
     const getDataParaEditar = (operacion) => {
         getAllSucursales();
+
         getAllTipoCobro();
         getAllTipoMoneda();
         getTipoCambio()
@@ -1877,8 +1881,12 @@ function Recoleccion() {
     };
 
     const handleImprimir = () => {
-        imprimirFormatosId(state.formatoSeleccionado).then((response) => {
-            window.open(new Blob([response.data]));
+        imprimirFormatosId(state.formatoSeleccionado).then(({data}) => {
+            console.log(data)
+            let pdfWindow = window.open("");
+            pdfWindow.document.write("<embed  width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(data)+"'/>");
+            pdfWindow.document.body.style.margin = "0px";
+            pdfWindow.document.title = "Archivo" ;
         })
 
     }
@@ -3434,7 +3442,7 @@ function Recoleccion() {
                             </a>
                         </li>
 
-                        <li className="hide">
+                        <li >
                             <a onClick={(event) => {
                                 event.stopPropagation();
                                 setState({
