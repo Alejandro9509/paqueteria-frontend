@@ -181,7 +181,6 @@ export default function ProductosPrecios({dataList = [], onChangeList, disabled,
                                    fullWidth
                                    label="Importe"
                                    style={{textAlign: "right"}}
-                                   step="1"
                                    min="0"
                                    value={dataProducto.m_cImporte}
                                    name="m_cImporte"
