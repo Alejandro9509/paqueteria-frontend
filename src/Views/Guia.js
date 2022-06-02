@@ -373,7 +373,7 @@ function Guia(props) {
         let params = {
             nIdGuia: dataOcurre.idGuia,
             m_nIdUsuarioEntregaOcurre: localStorage.getItem("Usuario"),
-            m_sFechaOcurre: dataOcurre.aplicaDetalle?dataOcurre.fechaOcurre:"",
+            m_sFechaOcurre: dataOcurre.aplicaDetalle?dataOcurre.fechaOcurre:"2022-01-01",
             m_sHoraOcurre: dataOcurre.horaOcurre,
             m_sComentariosOcurre: dataOcurre.comentariosOcurre??"",
             m_sMontoRecibidoOcurre: dataOcurre.importeOcurre,
