@@ -105,6 +105,7 @@ import {obtenerInformeReporte} from "../Util/Contexts/InformesContext";
 import Filtros from "./Filtros/Filtros";
 import Citas from "./Citas/Citas";
 import Cotizador from "./ConceptosFacturacion/Cotizador";
+import DiferenteDomicilioForm from "./DiferenteDomicilio/DiferenteDomicilioForm";
 
 let timer;
 
@@ -454,26 +455,30 @@ function Recoleccion() {
     };
 
     const [entregaDD, setEntregaDD] = useState({
-        estadoEnt: '',
-        municipioEnt: '',
-        codigoPostalEnt: '',
-        zonaOperativaEnt: '',
-        zonaTarifaEnt: '',
-        domicilioEnt: '',
-        entregarEnEnt: '',
-        datosAdicionalesEnt: ''
+        idPais: '',
+        idEstado: '',
+        idMunicipio: '',
+        codigoPostal: '',
+        zonaOperativa: '',
+        domicilio: '',
+        detalles: '',
+        datosAdicionales: '',
+        latitud: '',
+        longitud: ''
     })
 
     const resetEntregaDD = () => {
         setEntregaDD({
-            estadoEnt: '',
-            municipioEnt: '',
-            codigoPostalEnt: '',
-            zonaOperativaEnt: '',
-            zonaTarifaEnt: '',
-            domicilioEnt: '',
-            entregarEnEnt: '',
-            datosAdicionalesEnt: ''
+            idPais: '',
+            idEstado: '',
+            idMunicipio: '',
+            codigoPostal: '',
+            zonaOperativa: '',
+            domicilio: '',
+            detalles: '',
+            datosAdicionales: '',
+            latitud: '',
+            longitud: ''
         })
     }
 
@@ -859,15 +864,15 @@ function Recoleccion() {
             }
             /**Si es entrega en direfente domicilio*/
         }else if(state.diferenteEntrega){
-            if (!esDatoValido(entregaDD.codigoPostalEnt?.m_nIdCP)){
+            if (!esDatoValido(entregaDD.codigoPostal?.m_nIdCP)){
                 showSuccess("El código postal de entrega es un dato requerido");
                 return valid;
             }
-            if (!esDatoValido(entregaDD.estadoEnt)){
+            if (!esDatoValido(entregaDD.idEstado)){
                 showSuccess("El estado de entrega es un dato requerido");
                 return valid;
             }
-            if (!esDatoValido(entregaDD.zonaOperativaEnt?.m_nIdZona)){
+            if (!esDatoValido(entregaDD.zonaOperativa?.m_nIdZona)){
                 showSuccess("La zona operativa de entrega es un dato requerido");
                 return valid;
             }
@@ -931,16 +936,16 @@ function Recoleccion() {
                 error = true
                 showSuccess("Verificar la zona operativa de diferente domicilio entrega")
             }else */
-                if(entregaDD.zonaOperativaEnt?.m_nIdZona==undefined){
+                if(entregaDD.zonaOperativa?.m_nIdZona==undefined){
                 error = true
                 showSuccess("Verificar la zona operativa de diferente domicilio entrega")
-            }else if(entregaDD.domicilioEnt==""){
+            }else if(entregaDD.domicilio==""){
                 error = true
                 showSuccess("Verificar el domicilio de entrega")
-            }else if(entregaDD.entregarEnEnt==""){
+            }else if(entregaDD.detalles==""){
                 error = true
                 showSuccess("Verificar la direccion a entregar en")
-            }else if(entregaDD.datosAdicionalesEnt==""){
+            }else if(entregaDD.datosAdicionales==""){
                 error = true
                 showSuccess("Verificar los datos adicionales para la entrega")
             }
@@ -1130,14 +1135,13 @@ function Recoleccion() {
             params.m_nIdSucursalEntrega = state.idSucursalEntrega;
 
          if (state.diferenteEntrega) {
-            params.m_nIdCPDetalleEntrega = entregaDD.codigoPostalEnt.m_nIdCP
-            params.m_sDomicilioDetalleEntrega = entregaDD.domicilioEnt
-            params.m_sEntregarEnDetalleEntrega = entregaDD.entregarEnEnt
-            params.m_sDatosAdicionalesDetalleEntrega = entregaDD.datosAdicionalesEnt
-            params.m_nIdZonaOperativaEntrega = entregaDD.zonaOperativaEnt.m_nIdZona
-            params.m_nIdZonaTarifaEntrega = entregaDD.zonaTarifaEnt? entregaDD.zonaTarifaEnt.m_nIdZona : 0
-            params.m_nIdEstadoEntrega = entregaDD.estadoEnt
-            params.m_sCodigoMunicipioEntrega = entregaDD.municipioEnt
+            params.m_nIdCPDetalleEntrega = entregaDD.codigoPostal.m_nIdCP
+            params.m_sDomicilioDetalleEntrega = entregaDD.domicilio
+            params.m_sEntregarEnDetalleEntrega = entregaDD.detalles
+            params.m_sDatosAdicionalesDetalleEntrega = entregaDD.datosAdicionales
+            params.m_nIdZonaOperativaEntrega = entregaDD.zonaOperativa.m_nIdZona
+            params.m_nIdEstadoEntrega = entregaDD.idEstado
+            params.m_sCodigoMunicipioEntrega = entregaDD.idMunicipio
         } else {
             params.m_nIdZonaOperativaEntrega = destinatario.zonaOperativaDestinatario.m_nIdZona
             params.m_nIdZonaTarifaEntrega = destinatario.zonaTarifaDestinatario ? destinatario.zonaTarifaDestinatario.m_nIdZona : 0
@@ -1396,15 +1400,17 @@ function Recoleccion() {
         setEntregaDD(entregaDD =>{
             return {
                 ...entregaDD,
-                estadoEnt: respuesta.data.m_nIdEstadoEntrega || 0,
-                municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega || 0,
-                domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
-                entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
-                datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-                codigoPostalEnt: {
+                idPais: respuesta.data.m_nIdPaisEntrega,
+                idEstado: respuesta.data.m_nIdEstadoEntrega || 0,
+                idMunicipio: respuesta.data.m_sCodigoMunicipioEntrega || 0,
+                domicilio: respuesta.data.m_sDomicilioDetalleEntrega,
+                detalles:respuesta.data.m_sEntregarEnDetalleEntrega,
+                datosAdicionales: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                codigoPostal: {
                     m_nIdCP: respuesta.data.m_nIdCPDetalleEntrega,
                     m_sCP: respuesta.data.m_sCodigoPostalEntrega,
-                    m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega
+                    m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega,
+                    m_sLocalidad: respuesta.data.m_sLocalidadEntrega
                 },
             }
         })
@@ -1415,7 +1421,8 @@ function Recoleccion() {
             setEntregaDD(entregaDD => {
                 return {
                     ...entregaDD,
-                    zonaOperativaEnt: data
+                    zonaOperativa: data
+
                 }
             })
         })
@@ -3113,6 +3120,25 @@ function Recoleccion() {
         });
     }
 
+    const handleOnChangeEntregaDD = (newValue) => {
+        setRepetirConceptos(true)
+        setEntregaDD(entregaDD => {
+            return{
+                ...entregaDD,
+                idPais: newValue.idPais,
+                idEstado: newValue.idEstado,
+                idMunicipio: newValue.idMunicipio,
+                codigoPostal: newValue.codigoPostal,
+                zonaOperativa: newValue.zonaOperativa,
+                domicilio: newValue.domicilio,
+                detalles: newValue.detalles,
+                datosAdicionales: newValue.datosAdicionales,
+                latitud: newValue.latitud,
+                longitud: newValue.longitud,
+            }
+        });
+    }
+
     return (
         <div>
             {/*Dialogo para cuando se elija una entrega en diferente domicilio en remitente*/}
@@ -4466,7 +4492,7 @@ function Recoleccion() {
                                                 <div className="widget-container">
                                                     <div className="widget-content">
                                                         <div className="row">
-                                                            <div className="col-md-12">
+                                                            {/*<div className="col-md-12">
                                                                 <div className="col-sm-6 col-md-4  unit">
                                                                     <FormControl
                                                                         className="input select"
@@ -4683,7 +4709,14 @@ function Recoleccion() {
                                                                     </div>
                                                                 </div>
                                                                                                                
-                                                            </div>
+                                                            </div>*/}
+                                                            <DiferenteDomicilioForm
+                                                                value={entregaDD}
+                                                                onChange={handleOnChangeEntregaDD}
+                                                                disabled={false}
+                                                                requiered={false}
+                                                                dataEstados={dataEstados}
+                                                            />
                                                         </div>
                                                     </div>
                                                 </div>

@@ -1682,17 +1682,6 @@ function Embarque(props) {
                 setEntregaDD(entregaDD =>{
                     return {
                         ...entregaDD,
-                        estadoEnt: respuesta.data.m_nIdEstadoEntrega || 0,
-                        municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega || 0,
-                        domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
-                        entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
-                        datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-                        codigoPostalEnt: {
-                            m_nIdCP: respuesta.data.m_nIdCPDetalleEntrega,
-                            m_sCP: respuesta.data.m_sCodigoPostalEntrega,
-                            m_sColonia: respuesta.data.m_sColoniaEntrega,
-                            m_sLocalidad: respuesta.data.m_sLocalidadEntrega
-                        },
                         idEstado: respuesta.data.m_nIdEstadoEntrega || 0,
                         idPais: respuesta.data.m_nIdPaisEntrega || 0,
                         idMunicipio: respuesta.data.m_sCodigoMunicipioEntrega || 0,
@@ -1702,7 +1691,7 @@ function Embarque(props) {
                         codigoPostal: {
                             m_nIdCP: respuesta.data.m_nIdCPDetalleEntrega,
                             m_sCP: respuesta.data.m_sCodigoPostalEntrega,
-                            m_sColonia: respuesta.data.m_sColoniaEntrega,
+                            m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega,
                             m_sLocalidad: respuesta.data.m_sLocalidadEntrega
                         },
                     }
@@ -1715,7 +1704,7 @@ function Embarque(props) {
                     setEntregaDD(entregaDD => {
                         return {
                             ...entregaDD,
-                            zonaOperativaEnt: data
+                            zonaOperativa: data
                         }
                     })
                 })
