@@ -44,9 +44,9 @@ class ConfirmarUbicacion extends Component {
         if(this.props.recoleccion){
         if (this.props.remitente) {//si es recoleccion entrara y evaluara si es informacion solo de recoleccion de remitente o si es de diferente direccion de recoleccion
             if (this.props.esDiferenteRecoleccion) {//si es diferente de recoleccion consulta los valores de recoleccionDD
-                let municipioTexto = this.props.dataMunicipiosRecoleccionDD.filter(m => m.m_sCodigoMunicipio == this.props.recoleccionDD.municipioRec)[0].m_sMunicipio
+                let municipioTexto = this.props.dataMunicipiosRecoleccionDD.filter(m => m.m_sCodigoMunicipio == this.props.recoleccionDD.idMunicipio)[0]?.m_sMunicipio
                 //this.props.recoleccionDD.domicilioRec es calle y numero
-                searchLocationGuia(`${municipioTexto}`,`${this.props.recoleccionDD.domicilioRec} ${this.props.recoleccionDD.codigoPostalRec.m_sColonia}`,`${this.props.recoleccionDD.codigoPostalRec.m_sCP}`).then(data => {
+                searchLocationGuia(`${municipioTexto}`,`${this.props.recoleccionDD.domicilio} ${this.props.recoleccionDD.codigoPostal.m_sColonia}`,`${this.props.recoleccionDD.codigoPostal.m_sCP}`).then(data => {
 
                     this.setState({
                         coordenadas: {lat: data.y, lng: data.x}
@@ -180,7 +180,7 @@ class ConfirmarUbicacion extends Component {
                         {!this.props.ultimaMilla &&
                             <Grid item sm={12}>
                                 <Typography
-                                    variant={"h3"}>Dirección:{this.props.remitente ? (this.props.esDiferenteRecoleccion ? this.props.recoleccionDD.domicilioRec : (`${this.props.direccion.calleRemitente},${this.props.direccion.numeroExtRemitente},${this.props.direccion.coloniaRemitente} `)) : (this.props.esDiferenteEntrega ? this.props.entregaDD.domicilio : (`${this.props.direccion.calleDestinatario},${this.props.direccion.numeroExtDestinatario},${this.props.direccion.coloniaDestinatario} `))}
+                                    variant={"h3"}>Dirección:{this.props.remitente ? (this.props.esDiferenteRecoleccion ? this.props.recoleccionDD.domicilio : (`${this.props.direccion.calleRemitente},${this.props.direccion.numeroExtRemitente},${this.props.direccion.coloniaRemitente} `)) : (this.props.esDiferenteEntrega ? this.props.entregaDD.domicilio : (`${this.props.direccion.calleDestinatario},${this.props.direccion.numeroExtDestinatario},${this.props.direccion.coloniaDestinatario} `))}
                                 </Typography>
                             </Grid>
                         }

@@ -535,30 +535,30 @@ function Recoleccion() {
     }
 
     const [recoleccionDD, setRecoleccionDD] = useState({
-        estadoRec: '',
-        municipioRec: '',
-        codigoPostalRec: '',
-        zonaOperativaRec: '',
-        zonaTarifaRec: '',
-        domicilioRec: '',
-        recogerEnRec: '',
-        datosAdicionalesRec: '',
-        latitudRec: '',
-        longitudRec: ''
+        idPais: '',
+        idEstado: '',
+        idMunicipio: '',
+        codigoPostal: '',
+        zonaOperativa: '',
+        domicilio: '',
+        detalles: '',
+        datosAdicionales: '',
+        latitud: '',
+        longitud: ''
     })
 
     const resetRecoleccionDD = () => {
         setRecoleccionDD({
-            estadoRec: '',
-            municipioRec: '',
-            codigoPostalRec: '',
-            zonaOperativaRec: '',
-            zonaTarifaRec: '',
-            domicilioRec: '',
-            recogerEnRec: '',
-            datosAdicionalesRec: '',
-            latitudRec: '',
-            longitudRec: ''
+            idPais: '',
+            idEstado: '',
+            idMunicipio: '',
+            codigoPostal: '',
+            zonaOperativa: '',
+            domicilio: '',
+            detalles: '',
+            datosAdicionales: '',
+            latitud: '',
+            longitud: ''
         })
     }
 
@@ -878,11 +878,11 @@ function Recoleccion() {
                 showSuccess("La zona operativa de entrega es un dato requerido");
                 return valid;
             }
-            if (!esDatoValido(entregaDD.domicilioEnt)){
+            if (!esDatoValido(entregaDD.domicilio)){
                 showSuccess("El domicilio de entrega es un dato requerido");
                 return valid;
             }
-            if (!esDatoValido(entregaDD.entregarEnEnt)){
+            if (!esDatoValido(entregaDD.detalles)){
                 showSuccess("El detalle de entrega es un dato requerido");
                 return valid;
             }
@@ -894,15 +894,15 @@ function Recoleccion() {
             }
         }
         if (state.diferenteRecoleccion){
-            if (!esDatoValido(recoleccionDD.zonaOperativaRec?.m_nIdZona)){
+            if (!esDatoValido(recoleccionDD.zonaOperativa?.m_nIdZona)){
                 showSuccess("La zona operativa de recolección es un dato requerido");
                 return valid;
             }
-            if (!esDatoValido(recoleccionDD.domicilioRec)){
+            if (!esDatoValido(recoleccionDD.domicilio)){
                 showSuccess("La dirección de recolección es un dato requerido");
                 return valid;
             }
-            if (!esDatoValido(recoleccionDD.recogerEnRec)){
+            if (!esDatoValido(recoleccionDD.detalles)){
                 showSuccess("El detalle de recolección es un dato requerido");
                 return valid;
             }
@@ -1071,16 +1071,15 @@ function Recoleccion() {
             params.m_nCreadoPor = state.CreadoPor
             params.m_nModificadoPor = state.ModificadoPor
             if (state.diferenteRecoleccion) {
-                params.m_nIdCPDetalleRecoleccion = recoleccionDD.codigoPostalRec.m_nIdCP
-                params.m_sDomicilioDetalleRecoleccion = recoleccionDD.domicilioRec
-                params.m_sRecogerEnDetalleRecoleccion = recoleccionDD.recogerEnRec
-                params.m_sDatosAdicionalesDetalleRecoleccion = recoleccionDD.datosAdicionalesRec
-                params.m_nIdZonaOperativa = recoleccionDD.zonaOperativaRec.m_nIdZona
-                params.m_nIdZonaTarifa = recoleccionDD.zonaTarifaRec? recoleccionDD.zonaTarifaRec.m_nIdZona : 0
-                params.m_nIdEstadoRecoleccion = recoleccionDD.estadoRec
-                params.m_sCodigoMunicipioRecoleccion = recoleccionDD.municipioRec
-                params.m_sLatitudR = coordenadas ? coordenadas.lat : recoleccionDD.latitudRec
-                params.m_sLongitudR = coordenadas ? coordenadas.lng : recoleccionDD.longitudRec
+                params.m_nIdCPDetalleRecoleccion = recoleccionDD.codigoPostal.m_nIdCP
+                params.m_sDomicilioDetalleRecoleccion = recoleccionDD.domicilio
+                params.m_sRecogerEnDetalleRecoleccion = recoleccionDD.detalles
+                params.m_sDatosAdicionalesDetalleRecoleccion = recoleccionDD.datosAdicionales
+                params.m_nIdZonaOperativa = recoleccionDD.zonaOperativa.m_nIdZona
+                params.m_nIdEstadoRecoleccion = recoleccionDD.idEstado
+                params.m_sCodigoMunicipioRecoleccion = recoleccionDD.idMunicipio
+                params.m_sLatitudR = coordenadas ? coordenadas.lat : recoleccionDD.latitud
+                params.m_sLongitudR = coordenadas ? coordenadas.lng : recoleccionDD.longitud
             } else {
                 params.m_nIdZonaOperativa = remitente.zonaOperativaRemitente.m_nIdZona
                 params.m_nIdZonaTarifa = remitente.zonaTarifaRemitente? remitente.zonaTarifaRemitente.m_nIdZona : 0
@@ -1325,18 +1324,19 @@ function Recoleccion() {
         setRecoleccionDD(recoleccionDD => {
             return {
                 ...recoleccionDD,
-                estadoRec: respuesta.data.m_nIdEstadoRecoleccion || 0,
-                municipioRec: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
-                domicilioRec: respuesta.data.m_sDomicilioDetalleRecoleccion,
-                recogerEnRec: respuesta.data.m_sRecogerEnDetalleRecoleccion,
-                datosAdicionalesRec: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
-                latitudRec: respuesta.data.m_sLatitud || '',
-                longitudRec: respuesta.data.m_sLongitud || '',
-                codigoPostalRec: {
+                idPais: respuesta.data.m_nIdPaisRecoleccion || 0,
+                idEstado: respuesta.data.m_nIdEstadoRecoleccion || 0,
+                idMunicipio: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
+                codigoPostal: {
                     m_nIdCP: respuesta.data.m_nIdCPDetalleRecoleccion,
                     m_sCP: respuesta.data.m_sCodigoPostalRecoleccion,
                     m_sColonia: respuesta.data.m_sColoniaRecoleccion ? respuesta.data.m_sColoniaRecoleccion : respuesta.data.m_sLocalidadRecoleccion
                 },
+                domicilio: respuesta.data.m_sDomicilioDetalleRecoleccion,
+                detalles: respuesta.data.m_sRecogerEnDetalleRecoleccion,
+                datosAdicionales: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+                latitud: respuesta.data.m_sLatitud || '',
+                longitud: respuesta.data.m_sLongitud || '',
             }
         })
         obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoRecoleccion).then(({data}) =>{
@@ -1346,7 +1346,7 @@ function Recoleccion() {
             setRecoleccionDD(recoleccionDD => {
                 return {
                     ...recoleccionDD,
-                    zonaOperativaRec: data
+                    zonaOperativa: data
                 }
             })
         })
@@ -3096,6 +3096,24 @@ function Recoleccion() {
             }
         });
     }
+    const handleOnChangeRecoleccionDD = (newValue) => {
+        setRepetirConceptos(true)
+        setRecoleccionDD(recoleccionDD => {
+            return{
+                ...recoleccionDD,
+                idPais: newValue.idPais,
+                idEstado: newValue.idEstado,
+                idMunicipio: newValue.idMunicipio,
+                codigoPostal: newValue.codigoPostal,
+                zonaOperativa: newValue.zonaOperativa,
+                domicilio: newValue.domicilio,
+                detalles: newValue.detalles,
+                datosAdicionales: newValue.datosAdicionales,
+                latitud: newValue.latitud,
+                longitud: newValue.longitud,
+            }
+        });
+    }
 
     return (
         <div>
@@ -4216,223 +4234,13 @@ function Recoleccion() {
                                                     <div className="widget-container">
                                                         <div className="widget-content">
                                                             <div className="row">
-                                                                <div className="col-md-12">
-                                                                    <div className="col-sm-6 col-md-4  unit">
-                                                                        <FormControl
-                                                                            className="input select"
-                                                                            fullWidth variant="outlined"
-                                                                            margin="dense"
-                                                                            required={state.diferenteRecoleccion}>
-                                                                            <InputLabel
-                                                                                id="idEstadoLabel">Estado</InputLabel>
-                                                                            <Select
-                                                                                fullWidth
-                                                                                labelId="idEstadoLabel"
-                                                                                label="Estado"
-                                                                                className="form-control"
-                                                                                value={recoleccionDD.estadoRec}
-                                                                                onChange={handleChangeRecoleccionDD}
-                                                                                id="estadoRec"
-                                                                                name="estadoRec"
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                            >
-                                                                                {dataEstados.map((estado) => (
-                                                                                    <MenuItem
-                                                                                        key={estado.m_nIdEstado}
-                                                                                        value={estado.m_nIdEstado}
-                                                                                    >
-                                                                                        {estado.m_sEstado}
-                                                                                    </MenuItem>
-                                                                                ))}
-                                                                            </Select>
-                                                                        </FormControl>
-                                                                    </div>
-                                                                    <div className="col-sm-6 col-md-4  unit">
-                                                                        <FormControl
-                                                                            className="input select"
-                                                                            fullWidth
-                                                                            variant="outlined"
-                                                                            margin="dense"
-                                                                            required={state.diferenteRecoleccion}>
-                                                                            <InputLabel
-                                                                                id="idMunicipioLabel">Municipio</InputLabel>
-                                                                            <Select
-                                                                                fullWidth
-                                                                                labelId={"idMunicipioLabel"}
-                                                                                label={"Municipio"}
-                                                                                className="form-control"
-                                                                                value={recoleccionDD.municipioRec}
-                                                                                onChange={handleChangeRecoleccionDD}
-                                                                                // onSelect={handleClickCiudad}
-                                                                                id="municipioRec"
-                                                                                name="municipioRec"
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                                InputProps={{name: "municipioRec"}}
-                                                                            >
-                                                                                {dataMunicipiosRecoleccionDD.map((municipio) => (
-                                                                                    <MenuItem
-                                                                                        key={municipio.m_sCodigoMunicipio}
-                                                                                        value={municipio.m_sCodigoMunicipio}
-                                                                                    >
-                                                                                        {municipio.m_sMunicipio}
-                                                                                    </MenuItem>
-                                                                                ))}
-                                                                            </Select>
-                                                                        </FormControl>
-                                                                    </div>
-                                                                    <div className="col-sm-6 col-md-4  unit">
-                                                                        <div className="input">
-                                                                            <Autocomplete
-                                                                                freeSolo
-                                                                                onChange={(event, newValue) => handleChangeAutocompleteRecoleccionDD("codigoPostalRec", newValue)}
-                                                                                value={recoleccionDD.codigoPostalRec}
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                                id="codigoPostalRec"
-                                                                                name="codigoPostalRec"
-                                                                                disableClearable
-                                                                                forcePopupIcon={false}
-                                                                                options={dataCodigosPostalesRecoleccionDD}
-                                                                                getOptionLabel={(option) => (
-                                                                                    option ?
-                                                                                        `${option.m_sCP} - ${option.m_sColonia ? option.m_sColonia : option.m_sLocalidad}`
-                                                                                        : ''
-                                                                                )}
-                                                                                style={{
-                                                                                    transform: "translate(14px, 10px) scale(1) !important"
-                                                                                }}
-                                                                                renderInput={(params) => (
-                                                                                    <div>
-                                                                                        <TextField
-                                                                                            label="Código Postal"
-                                                                                            margin="dense"
-                                                                                            variant="outlined"
-                                                                                            onClick={(e) => handleClickCodigosPostalesInput("codigoPostalRec")}
-                                                                                            required={state.diferenteRecoleccion}
-                                                                                            {...params}
-                                                                                        />
-                                                                                    </div>
-                                                                                )}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div className="col-sm-6 col-md-6 unit">
-                                                                        <div className="input">
-                                                                            <Autocomplete
-                                                                                value={recoleccionDD.zonaOperativaRec}
-                                                                                freeSolo
-                                                                                onChange={(event, newValue) => handleChangeAutocompleteRecoleccionDD("zonaOperativaRec", newValue)}
-                                                                                id="zonaOperativaRec"
-                                                                                disableClearable
-                                                                                forcePopupIcon={false}
-                                                                                options={dataZonasOperativasRecoleccionDD}
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                                getOptionLabel={(option) => (
-                                                                                    option ?
-                                                                                        option.m_sCodigoZona || 'Código Postal sin zona asignada'
-                                                                                        : ''
-                                                                                )}
-                                                                                variant="outlined"
-                                                                                name={"zonaOperativaRec"}
-                                                                                style={{transform: "translate(14px, 10px) scale(1) !important"}}
-                                                                                renderInput={(params) =>
-                                                                                    <TextField
-                                                                                        variant="outlined"
-                                                                                        label="Zona Operativa"
-                                                                                        margin="dense"
-                                                                                        required
-                                                                                        // onClick={handleClickZona}
-                                                                                        {...params}
-                                                                                    />
-                                                                                }
-                                                                            />
-                                                                        </div>
-
-                                                                    </div>
-                                                                    { false && <div className="col-sm-6 col-md-6 unit">
-                                                                        <div className="input">
-                                                                            <Autocomplete
-                                                                                value={recoleccionDD.zonaTarifaRec}
-                                                                                freeSolo
-                                                                                id="zonaTarifaRec"
-                                                                                disableClearable
-                                                                                forcePopupIcon={false}
-                                                                                onChange={(event, newValue) => handleChangeAutocompleteRecoleccionDD("zonaTarifaRec", newValue)}
-                                                                                disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                                options={dataZonasTarifaRecoleccionDD}
-                                                                                getOptionLabel={(option) => (
-                                                                                    option ?
-                                                                                        option.m_sCodigoZona || 'Código Postal sin zona asignada'
-                                                                                        : ''
-                                                                                )}
-                                                                                variant="outlined"
-                                                                                name={"zonaTarifaRec"}
-                                                                                style={{transform: "translate(14px, 10px) scale(1) !important"}}
-                                                                                renderInput={(params) =>
-                                                                                    <TextField
-                                                                                        variant="outlined"
-                                                                                        label="Zona Tarifa"
-                                                                                        margin="dense"
-                                                                                        required
-                                                                                        // onClick={handleClickZona}
-                                                                                        {...params}
-                                                                                    />
-                                                                                }
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                    }
-
-                                                                    <div className="col-sm-6 col-md-4  unit">
-                                                                        <div className="input">
-                                                                            <TextField variant="outlined"
-                                                                                       margin="dense"
-                                                                                       onChange={handleChangeRecoleccionDD}
-                                                                                       className="form-control"
-                                                                                       type="text"
-                                                                                       label="Calle y número"
-                                                                                       value={recoleccionDD.domicilioRec}
-                                                                                       disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                                       id="domicilioRec"
-                                                                                       name="domicilioRec"
-                                                                                       required={state.diferenteRecoleccion}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-sm-6 col-md-4  unit">
-                                                                        <div className="input">
-                                                                            <TextField variant="outlined"
-                                                                                       margin="dense"
-                                                                                       onChange={handleChangeRecoleccionDD}
-                                                                                       className="form-control"
-                                                                                       type="text"
-                                                                                       label="Recoger En"
-                                                                                       value={recoleccionDD.recogerEnRec}
-                                                                                       disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                                       id="recogerEnRec"
-                                                                                       name="recogerEnRec"
-                                                                                       required={state.diferenteRecoleccion}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="col-sm-6 col-md-4  unit">
-                                                                        <div className="input">
-                                                                            <TextField variant="outlined"
-                                                                                       margin="dense"
-                                                                                       onChange={handleChangeRecoleccionDD}
-                                                                                       className="form-control"
-                                                                                       type="text"
-                                                                                       label="Datos Adicionales para la Recolección"
-                                                                                       value={recoleccionDD.datosAdicionalesRec}
-                                                                                       disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                                       id="datosAdicionalesRec"
-                                                                                       name="datosAdicionalesRec"
-                                                                                       required={state.diferenteRecoleccion}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
+                                                                <DiferenteDomicilioForm
+                                                                    value={recoleccionDD}
+                                                                    onChange={handleOnChangeRecoleccionDD}
+                                                                    disabled={false}
+                                                                    requiered={false}
+                                                                    dataEstados={dataEstados}
+                                                                />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -4443,229 +4251,11 @@ function Recoleccion() {
                                         <div className="widget-wrap" id="detallesRecoleccion">
                                             <div>
                                                 <div className="widget-header">
-                                                    <h2>Detalles de la Entrega</h2>
+                                                    <h2>Entrega en diferente domicilio</h2>
                                                 </div>
                                                 <div className="widget-container">
                                                     <div className="widget-content">
                                                         <div className="row">
-                                                            {/*<div className="col-md-12">
-                                                                <div className="col-sm-6 col-md-4  unit">
-                                                                    <FormControl
-                                                                        className="input select"
-                                                                        fullWidth variant="outlined"
-                                                                        margin="dense"
-                                                                        required={state.diferenteEntrega}>
-                                                                        <InputLabel
-                                                                            id="idEstadoLabel">Estado</InputLabel>
-                                                                        <Select
-                                                                            fullWidth
-                                                                            labelId="idEstadoLabel"
-                                                                            label="Estado"
-                                                                            className="form-control"
-                                                                            value={entregaDD.estadoEnt}
-                                                                            onChange={handleChangeEntregaDD}
-                                                                            id="estadoEnt"
-                                                                            name="estadoEnt"
-                                                                            disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                        >
-                                                                            {dataEstados.map((estado) => (
-                                                                                <MenuItem
-                                                                                    key={estado.m_nIdEstado}
-                                                                                    value={estado.m_nIdEstado}
-                                                                                >
-                                                                                    {estado.m_sEstado}
-                                                                                </MenuItem>
-                                                                            ))}
-                                                                        </Select>
-                                                                    </FormControl>
-                                                                </div>
-                                                                <div className="col-sm-6 col-md-4  unit">
-                                                                    <FormControl
-                                                                        className="input select"
-                                                                        fullWidth
-                                                                        variant="outlined"
-                                                                        margin="dense"
-                                                                        required={state.diferenteEntrega}>
-                                                                        <InputLabel
-                                                                            id="idMunicipioLabel">Municipio</InputLabel>
-                                                                        <Select
-                                                                            fullWidth
-                                                                            labelId={"idMunicipioLabel"}
-                                                                            label={"Municipio"}
-                                                                            className="form-control"
-                                                                            value={entregaDD.municipioEnt}
-                                                                            onChange={handleChangeEntregaDD}
-                                                                            // onSelect={handleClickCiudad}
-                                                                            id="municipioEnt"
-                                                                            name="municipioEnt"
-                                                                            disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                            inputProps={{name: "municipioEnt"}}
-                                                                        >
-                                                                            {dataMunicipiosEntregaDD.map((municipio) => (
-                                                                                <MenuItem
-                                                                                    key={municipio.m_sCodigoMunicipio}
-                                                                                    value={municipio.m_sCodigoMunicipio}
-                                                                                >
-                                                                                    {municipio.m_sMunicipio}
-                                                                                </MenuItem>
-                                                                            ))}
-                                                                        </Select>
-                                                                    </FormControl>
-                                                                </div>
-                                                                <div className="col-sm-6 col-md-4  unit">
-                                                                    <div className="input">
-                                                                        <Autocomplete
-                                                                            freeSolo
-                                                                            onChange={(event, newValue) => handleChangeAutocompleteEntregaDD("codigoPostalEnt", newValue)}
-                                                                            value={entregaDD.codigoPostalEnt}
-                                                                            disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                            id="codigoPostalEnt"
-                                                                            name="codigoPostalEnt"
-                                                                            disableClearable
-                                                                            forcePopupIcon={false}
-                                                                            options={dataCodigosPostalesEntregaDD}
-                                                                            getOptionLabel={(option) => (
-                                                                                option ?
-                                                                                    `${option.m_sCP} - ${option.m_sColonia ? option.m_sColonia : option.m_sLocalidad}`
-                                                                                    : ''
-                                                                            )}
-                                                                            style={{
-                                                                                transform: "translate(14px, 10px) scale(1) !important"
-                                                                            }}
-                                                                            renderInput={(params) => (
-                                                                                <div>
-                                                                                    <TextField
-                                                                                        label="Código Postal"
-                                                                                        margin="dense"
-                                                                                        variant="outlined"
-                                                                                        onClick={(e) => handleClickCodigosPostalesInput("codigoPostalEnt")}
-                                                                                        required={state.diferenteEntrega}
-                                                                                        {...params}
-                                                                                    />
-                                                                                </div>
-                                                                            )}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-
-                                                                <div className="col-sm-6 col-md-6 unit">
-                                                                    <div className="input">
-                                                                        <Autocomplete
-                                                                            value={entregaDD.zonaOperativaEnt}
-                                                                            freeSolo
-                                                                            onChange={(event, newValue) => handleChangeAutocompleteEntregaDD("zonaOperativaEnt", newValue)}
-                                                                            id="zonaOperativaEnt"
-                                                                            disableClearable
-                                                                            forcePopupIcon={false}
-                                                                            options={dataZonasOperativasEntregaDD}
-                                                                            disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                            getOptionLabel={(option) => (
-                                                                                option ?
-                                                                                    option.m_sCodigoZona || 'Código Postal sin zona asignada'
-                                                                                    : ''
-                                                                            )}
-                                                                            variant="outlined"
-                                                                            name={"zonaOperativaEnt"}
-                                                                            style={{transform: "translate(14px, 10px) scale(1) !important"}}
-                                                                            renderInput={(params) =>
-                                                                                <TextField
-                                                                                    variant="outlined"
-                                                                                    label="Zona Operativa"
-                                                                                    margin="dense"
-                                                                                    required={state.diferenteEntrega}
-                                                                                    // onClick={handleClickZona}
-                                                                                    {...params}
-                                                                                />
-                                                                            }
-                                                                        />
-                                                                    </div>
-
-                                                                </div>
-                                                               { false && <div className="col-sm-6 col-md-6 unit">
-                                                                    <div className="input">
-                                                                        <Autocomplete
-                                                                            value={entregaDD.zonaTarifaEnt}
-                                                                            freeSolo
-                                                                            id="zonaTarifaEnt"
-                                                                            disableClearable
-                                                                            onChange={(event, newValue) => handleChangeAutocompleteEntregaDD("zonaTarifaEnt", newValue)}
-                                                                            forcePopupIcon={false}
-                                                                            options={dataZonasTarifaEntregaDD}
-                                                                            disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                            getOptionLabel={(option) => (
-                                                                                option ?
-                                                                                    option.m_sCodigoZona || 'Código Postal sin zona asignada'
-                                                                                    : ''
-                                                                            )}
-                                                                            variant="outlined"
-                                                                            name={"zonaTarifaEnt"}
-                                                                            style={{transform: "translate(14px, 10px) scale(1) !important"}}
-                                                                            renderInput={(params) =>
-                                                                                <TextField
-                                                                                    variant="outlined"
-                                                                                    label="Zona Tarifa"
-                                                                                    margin="dense"
-                                                                                    required={state.diferenteEntrega}
-                                                                                    // onClick={handleClickZona}
-                                                                                    {...params}
-                                                                                />
-                                                                            }
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                    }
-
-                                                                <div className="col-sm-6 col-md-4  unit">
-
-                                                                    <div className="input">
-                                                                        <TextField variant="outlined"
-                                                                                   margin="dense"
-                                                                                   onChange={handleChangeEntregaDD}
-                                                                                   className="form-control"
-                                                                                   type="text"
-                                                                                   label="Domicilio"
-                                                                                   value={entregaDD.domicilioEnt}
-                                                                                   disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                                   id="domicilioEnt"
-                                                                                   name="domicilioEnt"
-                                                                                   required={state.diferenteEntrega}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-sm-6 col-md-4  unit">
-                                                                    <div className="input">
-                                                                        <TextField variant="outlined"
-                                                                                   margin="dense"
-                                                                                   onChange={handleChangeEntregaDD}
-                                                                                   className="form-control"
-                                                                                   type="text"
-                                                                                   label="Entregar En"
-                                                                                   value={entregaDD.entregarEnEnt}
-                                                                                   disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                                   id="entregarEnEnt"
-                                                                                   name="entregarEnEnt"
-                                                                                   required={state.diferenteEntrega}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-sm-6 col-md-4  unit">
-                                                                    <div className="input">
-                                                                        <TextField variant="outlined"
-                                                                                   margin="dense"
-                                                                                   onChange={handleChangeEntregaDD}
-                                                                                   className="form-control"
-                                                                                   type="text"
-                                                                                   label="Datos Adicionales para la Entrega"
-                                                                                   value={entregaDD.datosAdicionalesEnt}
-                                                                                   disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
-                                                                                   id="datosAdicionalesEnt"
-                                                                                   name="datosAdicionalesEnt"
-                                                                                   required={state.diferenteEntrega}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                                                               
-                                                            </div>*/}
                                                             <DiferenteDomicilioForm
                                                                 value={entregaDD}
                                                                 onChange={handleOnChangeEntregaDD}
@@ -4679,340 +4269,6 @@ function Recoleccion() {
                                             </div>
                                         </div>
                                         }
-
-                                        {/*<div className="widget-wrap" id="detallesRecoleccion">
-
-
-
-
-                                            {state.diferenteRecoleccion || state.diferenteEntrega ? (
-                                                <div >
-
-
-
-                                                </div>
-                                            ) : (
-                                                <div></div>
-                                            )}
-                                        </div>*/}
-
-                                        {/* <div className="widget-wrap" id="detallesOperacion">
-                                            <div className="row">
-                                                <div className="col-md-12">
-                                                    <div className="widget-header">
-                                                        <h2>Detalles de la Operación</h2>
-                                                    </div>
-                                                    <div className="widget-container">
-                                                        <div className="widget-content">
-                                                            <div className="row">
-                                                                 --------------------------------------- Operador -------------------------------------------------
-                                                                <div className="col-sm-4 col-md-4 unit">
-                                                                    <div className="input">
-                                                                        <Autocomplete
-                                                                            freeSolo
-                                                                            onChange={(event, newValue) =>
-                                                                                setState({
-                                                                                    ...state,
-                                                                                    operador: newValue,
-                                                                                })
-                                                                            }
-                                                                            value={state.operador}
-                                                                            id="operador"
-
-
-                                                                            disableClearable
-                                                                            forcePopupIcon={false}
-                                                                            options={dataOperador}
-                                                                            disabled
-                                                                            getOptionLabel={(option) =>
-                                                                                option.m_sNombreCompleto
-                                                                            }
-                                                                            variant="outlined"
-                                                                            style={{
-                                                                                transform: "translate(14px, 10px) scale(1) !important"
-                                                                            }}
-                                                                            renderInput={(params) => (
-                                                                                <div>
-                                                                                    <TextField
-                                                                                        variant="outlined"
-                                                                                        label="Operador"
-                                                                                        margin="dense"
-                                                                                        className="form-control"
-                                                                                        {...params}
-                                                                                        InputProps={{
-                                                                                            ...params.InputProps,
-                                                                                            style: {
-                                                                                                height: "33px",
-                                                                                                fontSize: "14px"
-                                                                                            },
-                                                                                            type: "search",
-                                                                                            disabled: state.agregar === "Consultar",
-                                                                                            disableUnderline: true,
-                                                                                            endAdornment: (
-                                                                                                <InputAdornment
-                                                                                                    position="end">
-                                                                                                    <IconButton
-                                                                                                        padding="0px"
-                                                                                                        style={{
-                                                                                                            paddingRight: "0px",
-                                                                                                        }}
-                                                                                                        disabled={state.agregar === "Consultar"}
-                                                                                                        onClick={() => {
-                                                                                                            setState({
-                                                                                                                ...state,
-                                                                                                                identificadorModal:
-                                                                                                                    "operador",
-                                                                                                                tipoModal: 2,
-                                                                                                                openDialog: true
-                                                                                                            });
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        <PageviewIcon
-                                                                                                            style={{
-                                                                                                                color: "#F9A03E",
-                                                                                                                fontSize: 32,
-                                                                                                                paddingInlineEnd: 0,
-                                                                                                                paddingRight: 0,
-                                                                                                                paddingBlockEnd: 0,
-                                                                                                                paddingLeft: 0,
-                                                                                                                paddingBlock: 0,
-                                                                                                            }}
-                                                                                                        />
-                                                                                                    </IconButton>
-                                                                                                </InputAdornment>
-                                                                                            ),
-                                                                                        }}
-                                                                                    />
-                                                                                </div>
-                                                                            )}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                 --------------------------------------- TipoUnidad -------------------------------------------------
-                                                                <div className="col-sm-4 col-md-4 unit">
-
-                                                                    <div className="input">
-                                                                        <Autocomplete
-                                                                            freeSolo
-                                                                            onChange={(event, newValue) => {
-                                                                                console.log('tipoUnidad select: ', newValue)
-                                                                                setState({
-                                                                                    ...state,
-                                                                                    tipoUnidad: newValue,
-                                                                                })
-                                                                            }
-
-                                                                            }
-                                                                            value={state.tipoUnidad}
-                                                                            id="tipoUnidad"
-                                                                            disableClearable
-                                                                            forcePopupIcon={false}
-                                                                            options={dataTipoUnidad}
-                                                                            disabled
-                                                                            getOptionLabel={(option) =>
-                                                                                option.m_sTipoUnidad
-                                                                            }
-                                                                            variant="outlined"
-                                                                            style={{
-                                                                                transform: "translate(14px, 10px) scale(1) !important"
-                                                                            }}
-                                                                            renderInput={(params) => (
-                                                                                <div>
-                                                                                    <TextField
-                                                                                        variant="outlined"
-                                                                                        label="Tipo de Unidad"
-                                                                                        margin="dense"
-                                                                                        className="form-control"
-                                                                                        {...params}
-                                                                                        InputProps={{
-                                                                                            ...params.InputProps,
-                                                                                            style: {
-                                                                                                height: "33px",
-                                                                                                fontSize: "14px"
-                                                                                            },
-                                                                                            type: "search",
-                                                                                            disabled: state.agregar === "Consultar",
-                                                                                            disableUnderline: true,
-                                                                                            endAdornment: (
-                                                                                                <InputAdornment
-                                                                                                    position="end">
-                                                                                                    <IconButton
-                                                                                                        padding="0px"
-                                                                                                        style={{
-                                                                                                            paddingRight: "0px",
-                                                                                                        }}
-                                                                                                        disabled={state.agregar === "Consultar"}
-                                                                                                        onClick={() => {
-                                                                                                            setState({
-                                                                                                                ...state,
-                                                                                                                identificadorModal:
-                                                                                                                    "tipoUnidad",
-                                                                                                                tipoModal: 3,
-                                                                                                                openDialog: true
-                                                                                                            });
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        <PageviewIcon
-                                                                                                            style={{
-                                                                                                                color: "#F9A03E",
-                                                                                                                fontSize: 32,
-                                                                                                                paddingInlineEnd: 0,
-                                                                                                                paddingRight: 0,
-                                                                                                                paddingBlockEnd: 0,
-                                                                                                                paddingLeft: 0,
-                                                                                                                paddingBlock: 0,
-                                                                                                            }}
-                                                                                                        />
-                                                                                                    </IconButton>
-                                                                                                </InputAdornment>
-                                                                                            ),
-                                                                                        }}
-                                                                                    />
-                                                                                </div>
-                                                                            )}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                 --------------------------------------- Unidad -------------------------------------------------
-                                                                <div className="col-sm-4 col-md-4 unit">
-                                                                    <div className="input">
-                                                                        <Autocomplete
-                                                                            freeSolo
-                                                                            onChange={(event, newValue) =>
-                                                                                setState({
-                                                                                    ...state,
-                                                                                    unidad: newValue,
-                                                                                })
-                                                                            }
-                                                                            id="unidad"
-                                                                            disableClearable
-                                                                            forcePopupIcon={false}
-                                                                            options={dataUnidad}
-                                                                            value={state.unidad}
-                                                                            disabled
-                                                                            getOptionLabel={(option) =>
-                                                                                option.m_sDescripcion
-                                                                            }
-                                                                            variant="outlined"
-                                                                            style={{
-                                                                                transform: "translate(14px, 10px) scale(1) !important"
-                                                                            }}
-                                                                            renderInput={(params) => (
-                                                                                <div>
-                                                                                    <TextField
-                                                                                        variant="outlined"
-                                                                                        label="Unidad"
-                                                                                        margin="dense"
-                                                                                        className="form-control"
-                                                                                        {...params}
-                                                                                        InputProps={{
-                                                                                            ...params.InputProps,
-                                                                                            style: {
-                                                                                                height: "33px",
-                                                                                                fontSize: "14px"
-                                                                                            },
-                                                                                            type: "search",
-                                                                                            disabled: state.agregar === "Consultar",
-                                                                                            disableUnderline: true,
-                                                                                            endAdornment: (
-                                                                                                <InputAdornment
-                                                                                                    position="end">
-                                                                                                    <IconButton
-                                                                                                        padding="0px"
-                                                                                                        style={{
-                                                                                                            paddingRight: "0px",
-                                                                                                        }}
-                                                                                                        disabled={state.agregar === "Consultar"}
-                                                                                                        onClick={() => {
-                                                                                                            setState({
-                                                                                                                ...state,
-                                                                                                                identificadorModal:
-                                                                                                                    "unidad",
-                                                                                                                tipoModal: 4,
-                                                                                                                openDialog: true
-                                                                                                            });
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        <PageviewIcon
-                                                                                                            style={{
-                                                                                                                color: "#F9A03E",
-                                                                                                                fontSize: 32,
-                                                                                                                paddingInlineEnd: 0,
-                                                                                                                paddingRight: 0,
-                                                                                                                paddingBlockEnd: 0,
-                                                                                                                paddingLeft: 0,
-                                                                                                                paddingBlock: 0,
-                                                                                                            }}
-                                                                                                        />
-                                                                                                    </IconButton>
-                                                                                                </InputAdornment>
-                                                                                            ),
-                                                                                        }}
-                                                                                    />
-                                                                                </div>
-                                                                            )}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <div className="widget-header">
-                                                        <h2>Salida para la Recolección</h2>
-                                                    </div>
-                                                    <div className="widget-container">
-                                                        <div className="widget-content">
-                                                            <div className="col-md-12">
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                        onChange={handleChange}
-                                                                        className="form-control"
-                                                                        type="datetime-local"
-                                                                        readOnly
-                                                                        InputLabelProps={{
-                                                                            shrink: true,
-                                                                        }}
-                                                                        label="Fecha y Hora"
-                                                                        value={state.fechaHoraSalida}
-                                                                        disabled={state.agregar === "Consultar"}
-                                                                        id="fechaHoraSalida"
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    <div className="widget-header">
-                                                        <h2>Llegada de la Recolección</h2>
-                                                    </div>
-                                                    <div className="widget-container">
-                                                        <div className="widget-content">
-                                                            <div className="col-md-12">
-                                                                <div className="input">
-                                                                    <TextField variant="outlined" margin="dense"
-                                                                        onChange={handleChange}
-                                                                        className="form-control"
-                                                                        type="datetime-local"
-                                                                        readOnly
-                                                                        InputLabelProps={{
-                                                                            shrink: true,
-                                                                        }}
-                                                                        label="Fecha y Hora"
-                                                                        value={state.fechaHoraLlegada}
-                                                                        disabled={state.agregar === "Consultar"}
-                                                                        id="fechaHoraLlegada"
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>*/}
 
                                     </div>
 
