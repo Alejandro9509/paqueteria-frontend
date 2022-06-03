@@ -215,7 +215,7 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
 function obtenerGuiasFiltroCorteCaja(fecha, destino, idMoneda, idTipoPago) {
 
     const url =
-        `${process.env.REACT_APP_API_URL}/Guias/GetListadoFiltrosCorteCaja/` +
+        `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetListadoFiltrosCorteCaja/` +
         fecha +
         "/" +
         destino +
