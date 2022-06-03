@@ -167,7 +167,7 @@ function ultimoFolioGuia() {
 }
 
 function obtenerGuiaId(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + id;
+    const url = `${process.env.REACT_APP_API_URL}/api/Guia/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
