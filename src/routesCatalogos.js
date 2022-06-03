@@ -30,7 +30,7 @@ import PlantillaCorreo from './Views/PlantillaCorreo';
 import CondicionesRecepcionEntrega from './Views/CondicionesRecepcionEntrega/CondicionesRecepcionEntrega';
 import Productos from "./Views/Productos/Productos";
 import Convenios from "./Views/Convenios/Convenios";
-
+import Seguros from "./Views/Seguros/Seguros"
 import {ReactComponent as TServicioIcon} from './iconos/Catalogos/Icono Tipos Servicio/icono_tipo_servicio.svg';
 
 import {ReactComponent as EDocumentosIcon} from './iconos/Catalogos/Icono Estatus Documento/icono_estatus_documento.svg';
@@ -134,6 +134,14 @@ const catalogRoutes = [
     icon: <EUnidadIcon/>,
     component: EstatusUnidadPage,
   },*/
+  {
+    path: "/Seguros",
+    name: "Seguros",
+    icon: <BancoIcon/>,
+    component: Seguros,
+    visible: true
+  }
+  ,
   {
     path: "/Embalajes",
     name: "Embalajes",

@@ -167,7 +167,7 @@ function ultimoFolioGuia() {
 }
 
 function obtenerGuiaId(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
@@ -215,7 +215,7 @@ function obtenerGuiasFiltro(fechaInicial, fechaFinal, sucursalListado, estatusLi
 function obtenerGuiasFiltroCorteCaja(fecha, destino, idMoneda, idTipoPago) {
 
     const url =
-        `${process.env.REACT_APP_API_URL}/Guias/GetListadoFiltrosCorteCaja/` +
+        `${process.env.REACT_APP_REPORT_URL}/api/Guias/GetListadoFiltrosCorteCaja/` +
         fecha +
         "/" +
         destino +
