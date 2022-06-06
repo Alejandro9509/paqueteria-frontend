@@ -7,7 +7,17 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Noty from 'noty';
-import {Checkbox, FormControl, FormControlLabel, Grid, InputLabel, Radio, RadioGroup, Select} from "@material-ui/core";
+import {
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    Grid,
+    InputLabel,
+    MenuItem,
+    Radio,
+    RadioGroup,
+    Select
+} from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
@@ -627,12 +637,12 @@ export default function DialogoNuevoPaquete(props) {
                                             id="m_nIdTipo"
                                             name="m_nIdTipo"
                                         >
-                                            <option key={2} value={2}>
+                                            <MenuItem key={2} value={2}>
                                                 Paquete
-                                            </option>
-                                            <option key={1} value={1}>
+                                            </MenuItem>
+                                            {/*<option key={1} value={1}>
                                                 Sobre
-                                            </option>
+                                            </option>*/}
                                         </Select>
                                     </FormControl>
                                 </label>
