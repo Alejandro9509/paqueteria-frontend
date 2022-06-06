@@ -7,7 +7,7 @@ const headers = API_HEADERS
 
 
 function obtenerTiposPago() {
-    const url = `${process.env.REACT_APP_API_URL}/TiposPago/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/TiposPago/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
