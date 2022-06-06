@@ -24,7 +24,7 @@ function obtenerEstatusEmbarque(){
 }
 
 function obtenerEstatusGuia(){
-    const url = `${process.env.REACT_APP_API_URL}/EstatusGuia/GetListado`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/EstatusGuia/GetListado`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

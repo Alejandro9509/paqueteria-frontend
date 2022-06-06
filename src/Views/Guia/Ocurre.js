@@ -163,6 +163,7 @@ class MyComponent extends Component {
                                 />
                             </FormControl>
                         </Grid>
+
                         <Grid item xs={12}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="idTipoPagoLabel">Tipo Pago</InputLabel>
@@ -171,6 +172,7 @@ class MyComponent extends Component {
                                     label={"Tipo Pago"}
                                     key={"idTipoPagoOcurre"}
                                     className="form-control"
+                                    disabled={!this.props.dataTipoCobro.find(i => i.m_nIdTipoCobro == this.props.dataOcurre.tipoCobroOcurre)?.m_bSolicitarMonto}
                                     value={this.state.tipoPago}
                                     onChange={(event) => this.handleChangeDataOcurre(event)}
                                     id="tipoPago"
