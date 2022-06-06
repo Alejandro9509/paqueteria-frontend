@@ -131,6 +131,7 @@ class MyComponent extends Component {
                                 />
                             </FormControl>
                         </Grid>
+
                         <Grid item xs={12}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="idTipoPagoLabel">Tipo Pago</InputLabel>
@@ -139,6 +140,7 @@ class MyComponent extends Component {
                                     label={"Tipo Pago"}
                                     key={"idTipoPagoOcurre"}
                                     className="form-control"
+                                    disabled={!this.props.dataTipoCobro.find(i => i.m_nIdTipoCobro == this.props.dataOcurre.tipoCobroOcurre)?.m_bSolicitarMonto}
                                     value={this.state.tipoPago}
                                     onChange={(event) => this.handleChangeDataOcurre(event)}
                                     id="tipoPago"
@@ -159,7 +161,7 @@ class MyComponent extends Component {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        {(this.state.tipoPago == 1) &&
+                        {/*{(this.props.dataTipoCobro.find(i => i.m_nIdTipoCobro == this.props.dataOcurre.tipoCobroOcurre)?.m_bSolicitarMonto) &&
                         <Grid item xs={6}>
                             <TextField variant="outlined" margin="dense" label="Importe recibido"
                                        onChange={(event) => this.handleChangeDataOcurre(event)}
@@ -177,7 +179,7 @@ class MyComponent extends Component {
                                 marginTop: '5px'
                             }}> {`Cambio: $${this.state.importeOcurre ? parseFloat(this.state.importeTotal) - parseFloat(this.state.importeOcurre) : 0.0}`}</p>
                         </Grid>
-                        }
+                        }*/}
                         <Grid item xs={6}>
                             <p> {`Importe a pagar: $${parseFloat(this.state.importeTotal)}`}</p>
                         </Grid>
