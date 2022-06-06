@@ -179,7 +179,53 @@ function Recoleccion() {
         correo:false
     })
     const [repetirConceptos,setRepetirConceptos] = React.useState(false)
-    //variables de valores por defecto
+    const [filtros, setFiltros] = useState({
+        fechaInicial: 0,
+        fechaFinal: 0,
+        estatusListado: 0,
+        sucursalListado: 0,
+        folio: '',
+        OrigenListado:0,
+        DestinoListado:0,
+    })
+    const [sortModel, setSortModel] = React.useState([
+        {
+            field: 'm_sFechaHora',
+            sort: 'asc',
+        },
+    ]);
+    const resetFiltros = () => {
+        setFiltros({
+            fechaInicial: 0,
+            fechaFinal: 0,
+            estatusListado: 0,
+            sucursalListado: 0,
+            folio: '',
+            OrigenListado:0,
+            DestinoListado:0,
+        })
+    }
+    const [fileUploaded, setFileUploaded] = React.useState([]);
+    const [selectedFile, setSelectedFile] = useState();
+    const [isFilePicked, setIsFilePicked] = useState(false);
+    const [stepActive, setStepActive] = React.useState(1);
+    // const [Modal, open, close, isOpen] = useModal("root", {
+    //     preventScroll: true,
+    // });
+    const [dataTiposSeguro, setDataTiposSeguro] = useState([])
+    const [dataPaquetes, setDataPaquetes] = useState([])
+    const [dataEstados, setDataEstados] = useState([])
+    const [dataMunicipiosRecoleccionDD, setDataMunicipiosRecoleccionDD] = useState([])
+    const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
+    const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
+    const [dataZonasTarifaEntregaDD, setDataZonasTarifaEntregaDD] = useState([])
+    const [dataZonasOperativasRecoleccionDD, setDataZonasOperativasRecoleccionDD] = useState([])
+    const [dataZonasTarifaRecoleccionDD, setDataZonasTarifaRecoleccionDD] = useState([])
+    const [dataRecoleccionConsulta, setDataRecoleccionConsulta] = useState();
+    const [tabActiva, setTabActiva] = useState(0);
+    const [isAgregar, setIsAgregar] = useState(false);
+    const [isModificar, setIsModificar] = useState(false);
+    const [pagina, setPagina] = useState(0);
     const [configuraciones, setConfiguraciones] = React.useState({
         estatusRecoleccion: 0,
         estatusEmbarque: 0,
@@ -285,54 +331,6 @@ function Recoleccion() {
         recoleccionConEmbarque: false,
 
     });
-
-    const [filtros, setFiltros] = useState({
-        fechaInicial: 0,
-        fechaFinal: 0,
-        estatusListado: 0,
-        sucursalListado: 0,
-        folio: '',
-        OrigenListado:0,
-        DestinoListado:0,
-    })
-    const [sortModel, setSortModel] = React.useState([
-        {
-            field: 'm_sFechaHora',
-            sort: 'asc',
-        },
-    ]);
-    const resetFiltros = () => {
-        setFiltros({
-            fechaInicial: 0,
-            fechaFinal: 0,
-            estatusListado: 0,
-            sucursalListado: 0,
-            folio: '',
-            OrigenListado:0,
-            DestinoListado:0,
-        })
-    }
-    const [fileUploaded, setFileUploaded] = React.useState([]);
-    const [selectedFile, setSelectedFile] = useState();
-    const [isFilePicked, setIsFilePicked] = useState(false);
-    const [stepActive, setStepActive] = React.useState(1);
-    // const [Modal, open, close, isOpen] = useModal("root", {
-    //     preventScroll: true,
-    // });
-    const [dataTiposSeguro, setDataTiposSeguro] = useState([])
-    const [dataPaquetes, setDataPaquetes] = useState([])
-    const [dataEstados, setDataEstados] = useState([])
-    const [dataMunicipiosRecoleccionDD, setDataMunicipiosRecoleccionDD] = useState([])
-    const [dataMunicipiosEntregaDD, setDataMunicipiosEntregaDD] = useState([])
-    const [dataZonasOperativasEntregaDD, setDataZonasOperativasEntregaDD] = useState([])
-    const [dataZonasTarifaEntregaDD, setDataZonasTarifaEntregaDD] = useState([])
-    const [dataZonasOperativasRecoleccionDD, setDataZonasOperativasRecoleccionDD] = useState([])
-    const [dataZonasTarifaRecoleccionDD, setDataZonasTarifaRecoleccionDD] = useState([])
-    const [dataRecoleccionConsulta, setDataRecoleccionConsulta] = useState();
-    const [tabActiva, setTabActiva] = useState(0);
-    const [isAgregar, setIsAgregar] = useState(false);
-    const [isModificar, setIsModificar] = useState(false);
-    const [pagina, setPagina] = useState(0);
     const [remitente, setRemitente] = useState({
         idRemitente: '',
         aliasRemitente: '',

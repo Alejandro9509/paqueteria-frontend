@@ -505,7 +505,7 @@ function Embarque(props) {
         tipoCambio: '',
         tipoCobro: '',
         clientePaga: {},
-        observaciones: '', 
+        observaciones: '',
         valorDeclarado:0,
         idTipoSeguro:5,
         porcentajeSeguro: 0,
@@ -606,6 +606,7 @@ function Embarque(props) {
                 idRuta: 0,
                 esConsultaRuta: false,
                 height: window.innerHeight,
+                observaciones: '',
             }
         })
         setDataEmbarqueConsulta(undefined)
