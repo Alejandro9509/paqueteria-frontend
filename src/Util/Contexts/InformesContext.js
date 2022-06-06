@@ -67,7 +67,7 @@ function obtenerInformes(){
 }
 
 function obtenerInformesEstatus(idEstatus){
-    const url = `${process.env.REACT_APP_API_URL}/Informes/GetListadoEstatus/${idEstatus}`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Informes/GetListadoEstatus/${idEstatus}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

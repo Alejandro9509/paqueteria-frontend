@@ -116,7 +116,7 @@ function obtenerReporteCFDIViaje(id){
 }
 
 function obtenerViajesEstatus(idEstatus){
-    const url = `${process.env.REACT_APP_API_URL}/Viajes/GetListadoEstatus/${idEstatus}`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Viajes/GetListadoEstatus/${idEstatus}`;
     let result;
     trackPromise(
         result =  axios.get(url,  { headers })

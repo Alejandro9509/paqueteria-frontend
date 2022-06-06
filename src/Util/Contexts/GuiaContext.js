@@ -130,7 +130,7 @@ function actualizarCoordenadasGuia(idGuia, latitud, longitud) {
 }
 
 function obtenerGuiaPendientes(idOrigen, idDestino) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/GetListadoPendientes/` +
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Guia/GetListadoPendientes/` +
         idOrigen +
         "/" +
         idDestino
