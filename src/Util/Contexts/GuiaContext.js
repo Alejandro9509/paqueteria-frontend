@@ -24,7 +24,7 @@ function entregaOcurreGuia(id, params) {
 }
 
 function agregarGuia(params) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Agregar`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Guia/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
