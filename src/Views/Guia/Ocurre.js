@@ -161,7 +161,7 @@ class MyComponent extends Component {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        {(this.props.dataTipoCobro.find(i => i.m_nIdTipoCobro == this.props.dataOcurre.tipoCobroOcurre)?.m_bSolicitarMonto) &&
+                        {/*{(this.props.dataTipoCobro.find(i => i.m_nIdTipoCobro == this.props.dataOcurre.tipoCobroOcurre)?.m_bSolicitarMonto) &&
                         <Grid item xs={6}>
                             <TextField variant="outlined" margin="dense" label="Importe recibido"
                                        onChange={(event) => this.handleChangeDataOcurre(event)}
@@ -179,7 +179,7 @@ class MyComponent extends Component {
                                 marginTop: '5px'
                             }}> {`Cambio: $${this.state.importeOcurre ? parseFloat(this.state.importeTotal) - parseFloat(this.state.importeOcurre) : 0.0}`}</p>
                         </Grid>
-                        }
+                        }*/}
                         <Grid item xs={6}>
                             <p> {`Importe a pagar: $${parseFloat(this.state.importeTotal)}`}</p>
                         </Grid>

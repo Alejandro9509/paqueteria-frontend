@@ -15,7 +15,7 @@ function modificarGuia(id, params) {
 }
 
 function entregaOcurreGuia(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/EntregaOcurre/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/EntregaOcurre/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
