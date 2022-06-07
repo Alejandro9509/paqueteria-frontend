@@ -241,7 +241,7 @@ function obtenerValidacionGuia(id){
 }
 
 function obtenerBancos() {
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Guia/GetBancos`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/GetBancos`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })

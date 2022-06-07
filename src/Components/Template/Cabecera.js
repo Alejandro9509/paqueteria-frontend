@@ -89,8 +89,8 @@ function Cabecera({ titulo, children }) {
             {/*Topbar Left Branding With Logo Start*/}
             
             <Hidden xsDown implementation="css">
-                <div className="topbar-left pull-left iconic-aside-container" style={{ backgroundColor: "#F9A03E", height: "60px", position:"fixed" }}>
-                    <div style={{ display: "inline-block", verticalAlign: "middle", margin: "auto", marginLeft: "0px" }}>
+                <div className="topbar-left pull-left" style={{ backgroundColor: "#F9A03E", height: "60px" }}>
+                    <div style={{ margin: "auto", marginLeft: "0px" }}>
                         <h2 style={{ position: "absolute",marginLeft:"75px" }}>{titulo}</h2>
                     </div>
 
@@ -129,7 +129,7 @@ function Cabecera({ titulo, children }) {
                     </ul>
                 </div>
             </div>
-            <div className="topbar-right pull-right iconic-aside-container"
+            <div className="topbar-right pull-right"
                  style={
                      {
                          display:'flex',
