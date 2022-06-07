@@ -19,10 +19,9 @@ class FiltroReporteViajes extends Component {
     constructor(props) {
         super(props);
         var today = new Date();
-        var lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
         this.state = {
             fechaInicial: today.getFullYear() + "-" + ((today.getMonth() + 1) <= 9 ? ("0" + (today.getMonth() + 1)) : (today.getMonth() + 1)) + "-01",
-            fechaFinal: today.getFullYear() + "-" + ((today.getMonth() +1) <= 9 ? ("0"+(today.getMonth() +1)) : (today.getMonth() +1)) + "-" + (lastDayOfMonth.getDate() <= 9 ? ("0"+lastDayOfMonth.getDate()) : lastDayOfMonth.getDate()),
+            fechaFinal: today.getFullYear() + "-" + ((today.getMonth() +1) <= 9 ? ("0"+(today.getMonth() +1)) : (today.getMonth() +1)) + "-" + (today.getDate() <= 9 ? ("0"+today.getDate()) : today.getDate()),
             sucursales: [],
             sucursalesSeleccionadas: []
         }
