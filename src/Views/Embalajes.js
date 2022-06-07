@@ -442,9 +442,9 @@ function Embalaje() {
 
                                                 </div>
                                                 <br></br>
-                                                <div className="form-footer" className="col-12 col-sm-9 col-md-7 unit">
-                                                    <button type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }} className="btn btn-secondary secondary-btn"> Cancelar</button>
-                                                    <button type="submit" form="formEmbalaje" className="btn btn-primary primary-btn">Aceptar</button>
+                                                   <div className="form-footer" className="col-12 col-sm-9 col-md-7 unit">
+                                                      {  state.agregar != "Consultar" && <button type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }} className="btn btn-secondary secondary-btn"> Cancelar</button>}
+                                                      {  state.agregar != "Consultar" && <button type="submit" form="formEmbalaje" className="btn btn-primary primary-btn">Aceptar</button>}
                                                 </div>
                                             </form>
                                         </div>
@@ -470,7 +470,7 @@ function Embalaje() {
                                                 <div className="col-xs-6 col-sm-3 col-md-2 col-lg-2-5 unit">
                                                     <button className="btn btn-default btn-block ex-noty" data-layout="topCenter" data-type="information">Notificación</button>
                                                     <button data-layout="topCenter" data-type="information" className="btn btn-secondary secondary-btn"> Cancelar</button>
-                                                    <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
+                                                  <button onClick={handleAceptar} className="btn btn-primary primary-btn">Aceptar</button>
                                                 </div>
                                             </form>
                                         </div>
