@@ -129,7 +129,7 @@ function Cabecera({ titulo, children }) {
                     </ul>
                 </div>
             </div>
-            <div className="topbar-right pull-right iconic-aside-container"
+            <div className="topbar-right pull-right"
                  style={
                      {
                          display:'flex',
