@@ -1823,7 +1823,7 @@ class AgregarViaje extends Component {
                                     {
                                        
                                         (!this.props.consult && this.props.modificar) &&
-                                        <Button variant="contained" color="primary" disabled={this.props.viajeSeleccionado.some(p=>
+                                        <Button variant="contained" color="primary" disabled={this.props.viajeSeleccionado.m_arrTrayectos.some(p=>
                                             (p.m_nIdSalida && !p.m_bSalidaCancelada && !p.m_nIdLlegada && !p.deshabilitado))} fullWidth onClick={(event) => this.handleShowDialog(event)}>
                                             Agregar informes
                                         </Button>

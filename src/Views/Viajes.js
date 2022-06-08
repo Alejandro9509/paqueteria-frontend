@@ -1403,7 +1403,7 @@ function Viajes() {
                                     consult={state.agregar === "Consultar"}
                                     modificar={state.agregar === "Modificar"}
                                     select={state.selectViaje}
-                                    viajeSeleccionado={viajeSeleccionado.m_arrTrayectos}
+                                    viajeSeleccionado={viajeSeleccionado}
                                     cancel={() => handleShowListado()}
                                     id={state.idViaje}/>
 
