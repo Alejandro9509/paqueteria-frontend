@@ -2669,8 +2669,8 @@ function Embarque(props) {
             "IdSucursal": state.idSucursalAgregar,
             "ValorDeclarado": state.valorDeclarado,
             // "idTipoServicio": state.idTipoServicio,
-            "m_dFecha": state.fechaHoraRegistro.substr(0, 10),
-            "m_sHora": state.fechaHoraRegistro.substr(state.fechaHoraRegistro.length - 5),
+            "m_dFecha": getCurrentDateTime().substr(0, 10),
+            "m_sHora": getCurrentDateTime().substr(getCurrentDateTime().length - 5),
 
             "arClsGuiaConceptos": dataConceptos.map(c => ({
                 m_nIdConceptosFacturacion: c.idConcepto,
