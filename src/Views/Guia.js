@@ -869,18 +869,17 @@ function Guia(props) {
             width: 150,
         }, */
         {
-            headerName: "Fecha de Cancelación",
-            field: "m_dtFechaCancelacion",
-            width: 200,
-        },
-        {
             field: 'Fecha de Cancelación',
             headerName: 'Fecha de Cancelación',
             width: 200,
-            valueGetter: (params) =>
-              `${params.getValue(params.m_nFolioGuia, 'm_dtFechaCancelacion') || ''} ${
-                params.getValue(params.m_nFolioGuia, 'm_sHoraCancelacion') || ''
-              }`,
+            renderCell: (row) => {
+                return (
+                    <>
+                    {row.row.m_dtFechaCancelacion?row.row.m_dtFechaCancelacion.substring(0,10)+" ":""}{row.row.m_sHoraCancelacion}
+                    
+                    </>
+                )
+            },
           },
         {
             headerName: "Usuario de Cancelación",
@@ -1025,6 +1024,7 @@ function Guia(props) {
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
                 obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
+                    
                     setData(respuesta.data);
                 })
             })
@@ -3147,6 +3147,7 @@ function Guia(props) {
                                                                        }}
                                                                        value={state.folioGuia}
                                                                        id="folioGuia"
+                                                                       disabled
                                                                        name="folioGuia"
                                                                        readOnly
                                                             />
@@ -3160,6 +3161,7 @@ function Guia(props) {
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
+                                                                       disabled
                                                                        value={state.sucursalCancelacion}
                                                                        id="sucursalCancelacion"
                                                                        name="sucursalCancelacion"
@@ -3178,6 +3180,7 @@ function Guia(props) {
                                                                        InputLabelProps={{
                                                                            shrink: true,
                                                                        }}
+                                                                       disabled
                                                                        value={state.fechaCancelado}
                                                                        id="fechaCancelado"
                                                                        name="fechaCancelado"
@@ -3193,6 +3196,7 @@ function Guia(props) {
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
+                                                                       disabled
                                                                        InputLabelProps={{
                                                                            shrink: true,
                                                                        }}
@@ -3211,6 +3215,7 @@ function Guia(props) {
                                                                        onChange={handleChange}
                                                                        className="form-control"
                                                                        type="text"
+                                                                       disabled
                                                                        InputLabelProps={{
                                                                            shrink: true,
                                                                        }}
