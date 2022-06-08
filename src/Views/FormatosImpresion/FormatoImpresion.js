@@ -48,7 +48,7 @@ class FormatoImpresion extends Component {
                     renderCell: (row) => {
                         return (
                             <div>
-                                <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdFolio))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                <a className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdFolio))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                             </div>
                         )
                     }
@@ -130,21 +130,19 @@ class FormatoImpresion extends Component {
         let file = await toBase64(data.file[0])
         var image = null
         if (data.image.length != 0) {
-            image = await toBase64(data.image[0])
+            image = data.image[0]
         }
+        var today = new Date();
+        var dateStartString = today.getFullYear()+ "-" +   + (today.getMonth() + 1)+ "-"  +today.getDate() + " " + today.getHours() + ":" + today.getMinutes();
 
         var params = {
-            m_sFormato: data.formato,
-            m_nTipoProceso: data.idTipoProcesoAgregar,
-            m_sFormatoWDE: file,
-            m_sNombreArchivo: data.nombre,
-            m_sImagen: image,
-            m_dActivo: 1,
-            "m_nCreadoPor": this.state.CreadoPor,
-            "m_nModificadoPor": this.state.ModificadoPor
+            formato: data.formato,
+            tipoProceso: data.idTipoProcesoAgregar,
+            idUsuario: this.state.CreadoPor,
+            fecha: dateStartString
         }
 
-        agregarFormatosImpresion(params).then(respuesta => {
+        agregarFormatosImpresion(params,data.file[0],image).then(respuesta => {
 
             showSuccess(respuesta.data)
             $('.nav-tabs li ').removeClass('active');

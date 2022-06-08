@@ -75,6 +75,7 @@ import CancelarSAT from "./SAT/CancelarSAT";
 import {cancelarInformeCFDI, enviarCorreoCFDIViaje} from "../Util/Contexts/SATContext";
 import EnvioCorreoDialogo from "./SAT/EnvioCorreoDialogo";
 import CancelarTrayecto from "./Viajes/CancelarTrayecto";
+import ReportesViajes from "./Viajes/Reportes";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -221,7 +222,20 @@ function Viajes() {
             })
         });
     }
+    function handleShowReportes() {
+        clearData()
+        $('.nav-tabs li ').removeClass('active');
+        $('.nav-tabs li').eq(2).addClass('active');
+        $('.tab-content div ').removeClass('in show');
+        $('#Imprimir').addClass('in show');
 
+        setState(state => {
+            return {
+                ...state,
+                openImprimir: true
+            }
+        })
+    }
     function handleShowAgregar() {
         clearData()
         setState(state => {
@@ -1205,16 +1219,8 @@ function Viajes() {
                             </a>
                         </li>
                         <li>
-                            <a className= {validarDerecho(9101444)? "":classes.disabled} onClick={() => {
-                                setState({
-                                    ...state,
-                                    identificadorModal:
-                                        "imprimir",
-                                    tipoModal: 6,
-                                    openDialog: true
-                                });
-                            }}>
-                                <i className="fa fa-print"/> Imprimir
+                            <a className= {validarDerecho(9101444)? "":classes.disabled} onClick={handleShowReportes}>
+                                <i className="fa fa-print"/> Reportes
                             </a>
                         </li>
                         <li>
@@ -1406,6 +1412,13 @@ function Viajes() {
                                     cancel={() => handleShowListado()}
                                     id={state.idViaje}/>
 
+                            }
+
+                        </div>
+                        <div className="widget-wrap tab-pane fade" id="Imprimir">
+                            {
+                                state.openImprimir &&
+                                <ReportesViajes tipo={2}/>
                             }
 
                         </div>

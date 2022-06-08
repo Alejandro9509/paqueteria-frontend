@@ -13,6 +13,7 @@ import Themes from "./Assets/themes";
 import {MuiPickersUtilsProvider} from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import IdleTimer from 'react-idle-timer'
+import "@kenshooui/react-multi-select/dist/style.css"
 
 const hist = createBrowserHistory();
 

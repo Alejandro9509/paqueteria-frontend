@@ -70,13 +70,13 @@ const configurationRoutes = [
      component: ZonasPage,
      isDialog: false
    }, */
-  /*{
+  {
     path: "/FormatosImpresion",
     name: "Formatos Impresión",
     icon:  <GFormatosIcon/>,
     component: FormatoImpresionPage,
-    isDialog: false
-  },*/
+    visible: true
+  },
   {
     path: "/Folios",
     name: "Folios",
