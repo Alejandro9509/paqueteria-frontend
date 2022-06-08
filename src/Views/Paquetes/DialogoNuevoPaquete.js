@@ -137,6 +137,8 @@ export default function DialogoNuevoPaquete(props) {
                         props.agregar(paquete)
                         resetPaquete()
                     }
+                }else{
+                    showSuccess("El producto no se encuentra en la lista")
                 }
             }
         //    Si es sobre
