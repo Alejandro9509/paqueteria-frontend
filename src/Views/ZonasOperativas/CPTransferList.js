@@ -21,7 +21,7 @@ function intersection(a, b) {
     return a.filter((value) => b.indexOf(value) !== -1);
 }
 
-export default function CPTransferList({allItems = [],selectedItems = [],onChange, consult, seleccion}) {
+export default function CPTransferList({allItems = [],selectedItems = [],onChange, consult}) {
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState(allItems);
     const [right, setRight] = React.useState(selectedItems);
@@ -81,7 +81,7 @@ export default function CPTransferList({allItems = [],selectedItems = [],onChang
     };
 
 
-    const customList = (items,seleccion) => (
+    const customList = (items) => (
        
         <Paper style={{ width: '100%', height: 500, overflow: 'auto' }}>
             <List dense component="div" role="list">
@@ -105,7 +105,7 @@ export default function CPTransferList({allItems = [],selectedItems = [],onChang
                                     }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={`${value.m_sCP} - ${value.m_sColonia?value.m_sColonia: value.m_sLocalidad} - ${seleccion.m_sMunicipio}`} />
+                            <ListItemText id={labelId} primary={`${value.m_sCP} - ${value.m_sColonia?value.m_sColonia: value.m_sLocalidad} - ${value.m_sMunicipio}`} />
                         </ListItem>
                     );
                 })}
@@ -118,7 +118,7 @@ export default function CPTransferList({allItems = [],selectedItems = [],onChang
         <div align={'center'}>                
             <Grid container spacing={2} justifyContent="center" alignItems="center">
                 
-                <Grid item xs={5}><Typography variant="h3" component="h2"> Códigos postales disponibles para relacionar</Typography>{customList(left,seleccion)}</Grid>
+                <Grid item xs={5}><Typography variant="h3" component="h2"> Códigos postales disponibles para relacionar</Typography>{customList(left)}</Grid>
                 <Grid item xs={1}>
                     <Grid container direction="column" alignItems="center">
                         <Button
@@ -163,7 +163,7 @@ export default function CPTransferList({allItems = [],selectedItems = [],onChang
                         </Button>
                     </Grid>
                 </Grid>
-                <Grid item xs={5}><Typography variant="h3" component="h2">Códigos postales ya relacionados a la zona</Typography>{customList(right,seleccion)}</Grid>
+                <Grid item xs={5}><Typography variant="h3" component="h2">Códigos postales ya relacionados a la zona</Typography>{customList(right)}</Grid>
 
             </Grid>
         </div>
