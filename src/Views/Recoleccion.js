@@ -1135,8 +1135,9 @@ function Recoleccion() {
                         limpiarInputsAgregar()
                     })
                     .catch((err) => {
-                        // console.log(err);
-                        showSuccess(err);
+                        console.log(err);
+                        // debugger
+                        showSuccess(err.response.data);
                     });
             } else {
                 console.log("ENTRO")
@@ -1175,7 +1176,7 @@ function Recoleccion() {
                                     })
                                     .catch((err) => {
                                         //   console.log(err);
-                                        showSuccess(err);
+                                        showSuccess(err.response.data);
                                     });
                             }
                         },
