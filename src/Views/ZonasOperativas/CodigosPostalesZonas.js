@@ -346,6 +346,7 @@ function CodigosPostalesZonas({seleccion, onChange,consult, tarifa = false}) {
                 <CPTransferList
                     onChange={onChangeList}
                     allItems={allCP}
+                    seleccion={seleccion}
                     selectedItems={state.selectedCP}
                     consult={consult}
                 />
