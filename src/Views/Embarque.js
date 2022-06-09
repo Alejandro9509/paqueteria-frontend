@@ -1279,7 +1279,6 @@ function Embarque(props) {
         params.m_nIdRuta = state.idRuta
         console.log(params)
         console.log(JSON.stringify(params))
-        return;
    if (state.idEmbarque != 0) {
             modificarEmbarques(state.idEmbarque, params)
                 .then((respuesta) => {
@@ -1291,7 +1290,7 @@ function Embarque(props) {
                 })
                 .catch((err) => {
                     console.log(err);
-                    showSuccess("El Usuario no tiene derecho para modificar");
+                    showSuccess(err.response.data);
                 });
         } else {
             agregarEmbarques(params)
@@ -1328,7 +1327,7 @@ function Embarque(props) {
                 })
                 .catch((err) => {
                     console.log(err);
-                    showSuccess(err);
+                    showSuccess(err.response.data);
                 });
         }
     };
