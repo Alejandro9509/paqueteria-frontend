@@ -2141,7 +2141,7 @@ function Guia(props) {
                                                                                 <option key={embarque.m_nIdEmbarque}
                                                                                         value={embarque.m_nIdEmbarque}>
                                                                                     {
-                                                                                        embarque.m_nFolioEmbarque
+                                                                                        embarque.m_sFolioEmbarque
                                                                                     }
                                                                                 </option>
                                                                             )

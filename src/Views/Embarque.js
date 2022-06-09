@@ -339,13 +339,13 @@ function Embarque(props) {
         },
         {
             headerName: "Folio Embarque",
-            field: "m_nFolioEmbarque",
+            field: "m_sFolioEmbarque",
             width: 125,
             renderCell:(row)=>{
                 return(
                     <div>
                      <Tooltip title= {row.row.m_sObservaciones}>
-                         <field>{row.row.m_nFolioEmbarque}</field>
+                         <field>{row.row.m_sFolioEmbarque}</field>
                      </Tooltip>
                 </div>
 
@@ -1157,7 +1157,7 @@ function Embarque(props) {
             m_nIdEmbarque: state.idEmbarque,
             m_nIdRecoleccion: state.idRecoleccion,
             idSucursal: state.idSucursalAgregar,
-            m_nFolioEmbarque: state.folioEmbarque,
+            m_sFolioEmbarque: state.folioEmbarque,
             m_nFolioGuia: state.folioGuia,
             m_nIdEmbarqueRelacionado: state.idEmbarqueRelacionado,
             m_nFolioInforme: state.folioInforme,
@@ -1296,10 +1296,10 @@ function Embarque(props) {
         } else {
             agregarEmbarques(params)
                 .then((respuesta) => {
-                    if (respuesta.data.m_nFolioEmbarque.length === 0){
+                    if (respuesta.data.m_sFolioEmbarque.length === 0){
                         return
                     }
-                    showSuccess("Embarque creado con folio: "+respuesta.data.m_nFolioEmbarque);
+                    showSuccess("Embarque creado con folio: "+respuesta.data.m_sFolioEmbarque);
 
                     console.log(respuesta.data);
                     // handleShowListado();
@@ -1307,7 +1307,7 @@ function Embarque(props) {
                         return{
                             ...state,
                             idEmbarque: respuesta.data.m_nIdEmbarque,
-                            folioEmbarque: respuesta.data.m_nFolioEmbarque,
+                            folioEmbarque: respuesta.data.m_sFolioEmbarque,
                         }
                     })
                     mostrarCotizadorRec(false)
@@ -1714,7 +1714,7 @@ function Embarque(props) {
                 idCotizacion: respuesta.data.m_nIdCotizacion,
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-                folioEmbarque: respuesta.data.m_nFolioEmbarque,
+                folioEmbarque: respuesta.data.m_sFolioEmbarque,
                 fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,
