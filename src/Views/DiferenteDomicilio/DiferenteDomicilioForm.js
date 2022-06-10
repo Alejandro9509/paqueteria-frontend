@@ -117,7 +117,7 @@ export default function DiferenteDomicilioForm(props){
     const getPaises = () => {
         if (!dataPaises.length > 0){
             obtenerPaises().then(respuesta => {
-                setDataPaises(respuesta.data)
+                setDataPaises(respuesta.data.filter(i => i.m_sCodigo === "MEX" || i.m_sCodigo === "USA"))
             })
         }
     }
