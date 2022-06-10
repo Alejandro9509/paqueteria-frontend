@@ -3545,6 +3545,7 @@ function Embarque(props) {
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.embarqueConGuia}
                                             cliente={state.clientePaga}
+                                            seCalculaTarifa={seCalculaTarifa}
                                             LimpiarProducto={configuraciones.limpiarProducto}
                                         />
 
