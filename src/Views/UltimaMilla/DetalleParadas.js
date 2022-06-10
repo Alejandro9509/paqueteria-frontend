@@ -484,7 +484,7 @@ class DetalleParadas extends Component {
                 <RemplazarPaqueteUltimaMilla open={this.state.openRemplazar} multiples={false}
                                              onSubmit={this.onSubmitRemplazarPaquete}
                                              close={() => this.setState({openRemplazar: false})}
-                                             data={this.state.paquetes}/>
+                                             data={this.state.paquetes.filter(i => i.m_sFolio !== this.state.paqueteSeleccionado.m_sFolio)}/>
 
                 {this.state.openParciales &&
                 <PaquetesParcialesGuia open={this.state.openParciales} multiples={false}
