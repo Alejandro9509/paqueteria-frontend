@@ -79,7 +79,7 @@ function obtenerCodigosPostalesPorCiudad(id){
 }
 
 function obtenerCodigosPostalesPorEstadoMunicipio(estado, municipio){
-    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/CodigoPostal/GetByEstadoMunicipio/${estado}/${municipio}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/CodigoPostal/GetByEstadoMunicipio/${estado}/${municipio}`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
