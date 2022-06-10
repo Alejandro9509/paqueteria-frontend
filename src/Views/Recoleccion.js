@@ -3041,8 +3041,6 @@ function Recoleccion() {
 
     }
     const handleListPaquetesChange = (newList) => {
-        console.log("ENTRA PAQUETES")
-        setRepetirConceptos(true)
         setDataPaquetes(newList)
     }
 
@@ -4009,6 +4007,7 @@ function Recoleccion() {
                                         </div>
                                         <Paquetes
                                             dataPaquetes={dataPaquetes}
+                                            seCalculaTarifa={seCalculaTarifa}
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                             cliente={state.clientePaga}
