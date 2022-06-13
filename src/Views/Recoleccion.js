@@ -1135,8 +1135,9 @@ function Recoleccion() {
                         limpiarInputsAgregar()
                     })
                     .catch((err) => {
-                        // console.log(err);
-                        showSuccess(err);
+                        console.log(err);
+                        // debugger
+                        showSuccess(err.response.data);
                     });
             } else {
                 console.log("ENTRO")
@@ -1175,7 +1176,7 @@ function Recoleccion() {
                                     })
                                     .catch((err) => {
                                         //   console.log(err);
-                                        showSuccess(err);
+                                        showSuccess(err.response.data);
                                     });
                             }
                         },
@@ -3040,8 +3041,6 @@ function Recoleccion() {
 
     }
     const handleListPaquetesChange = (newList) => {
-        console.log("ENTRA PAQUETES")
-        setRepetirConceptos(true)
         setDataPaquetes(newList)
     }
 
@@ -4008,6 +4007,7 @@ function Recoleccion() {
                                         </div>
                                         <Paquetes
                                             dataPaquetes={dataPaquetes}
+                                            seCalculaTarifa={seCalculaTarifa}
                                             onChangeList={handleListPaquetesChange}
                                             disabled={state.agregar === "Consultar" || state.recoleccionConEmbarque}
                                             cliente={state.clientePaga}

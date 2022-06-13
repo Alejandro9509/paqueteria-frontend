@@ -82,14 +82,14 @@ export default function CPTransferList({allItems = [],selectedItems = [],onChang
 
 
     const customList = (items) => (
+       
         <Paper style={{ width: '100%', height: 500, overflow: 'auto' }}>
             <List dense component="div" role="list">
-                {items.map((value) => {
+                {items.map((value,index) => {
                     const labelId = `transfer-list-item-${value.m_nIdCP}-label`;
-
                     return (
                         <ListItem
-                            key={value.m_nIdCP}
+                            key={index}
                             role="listitem"
                             button
                             onClick={handleToggle(value)}
@@ -105,7 +105,7 @@ export default function CPTransferList({allItems = [],selectedItems = [],onChang
                                     }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={`${value.m_sCP} - ${value.m_sColonia?value.m_sColonia: value.m_sLocalidad}`} />
+                            <ListItemText id={labelId} primary={`${value.m_sCP} - ${value.m_sColonia?value.m_sColonia: value.m_sLocalidad} - ${value.m_sMunicipio}`} />
                         </ListItem>
                     );
                 })}

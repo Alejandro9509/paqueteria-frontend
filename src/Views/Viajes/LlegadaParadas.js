@@ -49,7 +49,7 @@ export default function LlegadaParadas(props){
         operador: props.viaje.m_sOperador,
         liquidacion: "",
         unidad: props.viaje.m_sUnidad,
-        idEstatusUnidad: 0,
+        idEstatusUnidad: 1,
         remolqueUno: props.viaje.m_sRemolque1,
         kmsRemolqueUno: "",
         millasRemolqueUno: "",
@@ -113,6 +113,7 @@ export default function LlegadaParadas(props){
     }
 
     const handleLiquidacion = (e) => {
+        if(e.target.value > 100 || e.target.value < 0 ){return}
         setData({
             ...data,
             liquidacion: e.target.value
@@ -324,6 +325,9 @@ export default function LlegadaParadas(props){
                     <TextField
                         id={"liquidacion"}
                         margin={"dense"}
+                        type={"number"}
+                        min={"0"} 
+                        max={"100"}
                         label={"Liquidación"}
                         InputProps={{
                             endAdornment: <InputAdornment position="end">%</InputAdornment>,
@@ -352,6 +356,7 @@ export default function LlegadaParadas(props){
                         label={"Estatus"}
                         InputProps={{readOnly: true}}
                         select
+                        disabled
                         variant={"outlined"}
                         value={data.idEstatusUnidad}
                         onChange={handleEstatusUnidad}
