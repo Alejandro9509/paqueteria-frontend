@@ -480,11 +480,15 @@ class DetalleParadas extends Component {
                                                close={() => this.setState({openAgregar: false})}
                                                open={this.state.openAgregar} paquetes={this.state.paquetes}/>
                 }
+                {
+                    this.state.openRemplazar &&
+                    <RemplazarPaqueteUltimaMilla open={this.state.openRemplazar} multiples={false}
+                                                 onSubmit={this.onSubmitRemplazarPaquete}
+                                                 close={() => this.setState({openRemplazar: false})}
+                                                 data={this.state.paquetes.filter(i => i.m_sFolio !== this.state.paqueteSeleccionado.m_sFolio)}/>
 
-                <RemplazarPaqueteUltimaMilla open={this.state.openRemplazar} multiples={false}
-                                             onSubmit={this.onSubmitRemplazarPaquete}
-                                             close={() => this.setState({openRemplazar: false})}
-                                             data={this.state.paquetes}/>
+                }
+
 
                 {this.state.openParciales &&
                 <PaquetesParcialesGuia open={this.state.openParciales} multiples={false}
