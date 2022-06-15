@@ -9,7 +9,7 @@ import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { TextField, Tooltip } from "@material-ui/core";
+import { Button, Grid, TextField, Tooltip } from "@material-ui/core";
 import { agregarMonedas, eliminarMonedas, modificarMonedas, obtenerMonedas, obtenerMonedasId } from "../Util/Contexts/MonedaContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import {validarDerecho} from "../Util/Util"
@@ -367,12 +367,20 @@ function Moneda() {
 
                                                 </div>
                                                 <br></br>
-                                                <div className="form-footer" className="col-md-12">
-                                                    <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+
+                                                <div className="form-footer col-md-12">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                        <Button fullWidth href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
                                                     >
-                                                        Cancelar</button>
-                                                    <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
-                                                </div>
+                                                      CANCELAR
+                                        </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                        <Button fullWidth type="submit" className="btn btn-primary primary-btn">GUARDAR MONEDA</Button>
+                                        </Grid>
+                                    </Grid>
+                                </div>
                                             </form>
                                         </div>
                                     </div>

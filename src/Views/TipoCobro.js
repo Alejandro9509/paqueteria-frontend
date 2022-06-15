@@ -7,7 +7,7 @@ import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { TextField, Tooltip } from "@material-ui/core";
+import { Button, Grid, TextField, Tooltip } from "@material-ui/core";
 import { agregarTipoCobro, eliminarTipoCobro, modificarTipoCobro, obtenerTipoCobroId, obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import {validarDerecho} from "../Util/Util"
@@ -309,12 +309,20 @@ const handleClickCancelar = () =>{
 
                                                 </div>
                                                 <br></br>
-                                                <div className="form-footer" className="col-md-12">
-                                                    <button href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn" onClick={handleClickCancelar}
+                                                <div className="form-footer ol-md-12">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                        <Button fullWidth href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn" onClick={handleClickCancelar}
                                                     >
-                                                        Cancelar</button>
-                                                    <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
-                                                </div>
+                                                        CANCELAR
+                                        </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                        <Button fullWidth type="submit" className="btn btn-primary primary-btn">AGREGAR TIPO DE COBRO</Button>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+
                                             </form>
                                         </div>
                                     </div>
