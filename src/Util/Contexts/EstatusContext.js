@@ -15,7 +15,7 @@ function obtenerEstatusDocumentos(){
 }
 
 function obtenerEstatusEmbarque(){
-    const url = `${process.env.REACT_APP_API_URL}/SisEstatus/GetListadoEmbarque`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/SisEstatus/GetListadoEmbarque`;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
