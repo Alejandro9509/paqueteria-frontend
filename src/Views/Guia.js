@@ -3049,14 +3049,28 @@ function Guia(props) {
                                                         >
                                                             Cancelar
                                                         </button>*/}
-                                        <Grid container spacing={2}>
-                                            <Grid item xs>
-                                                <Button fullWidth type="submit" className="btn btn-primary primary-btn"
+                                        <div className="form-footer ol-md-12">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                            <Button fullWidth color={"secondary"} variant={"contained"} onClick={(event) => {
+                                                event.stopPropagation();
+                                                setState({...state, agregar: "Agregar"});
+                                                $('.nav-tabs li ').removeClass('active');
+                                                $('.nav-tabs li').eq(0).addClass('active');
+                                                $('.tab-content div ').removeClass('in show');
+                                                $('#Listado').addClass('in show');
+                                            }} style={{color: "white"}}>
+                                                Cancelar
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                        <Button fullWidth type="submit" className="btn btn-primary primary-btn"
                                                         disabled={state.agregar === "Consultar"}>
                                                     Guardar guía
                                                 </Button>
-                                            </Grid>
                                         </Grid>
+                                    </Grid>
+                                </div>
                                     </div>
 
                                 </div>
