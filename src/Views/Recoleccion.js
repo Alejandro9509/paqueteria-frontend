@@ -4327,22 +4327,33 @@ function Recoleccion() {
                                                    }))} />
                                     </div>
 
-                                    <div className="form-footer col-md-12">
-                                        {/*<button
-                                            onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }}
-                                            className="btn btn-secondary secondary-btn"
-                                        >
-                                            Cancelar
-                                        </button>*/}
-                                        <button
+                                    <div className="form-footer ol-md-12">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                            <Button fullWidth color={"secondary"} variant={"contained"} onClick={(event) => {
+                                                event.stopPropagation();
+                                                setState({...state, agregar: "Agregar"});
+                                                $('.nav-tabs li ').removeClass('active');
+                                                $('.nav-tabs li').eq(0).addClass('active');
+                                                $('.tab-content div ').removeClass('in show');
+                                                $('#Listado').addClass('in show');
+                                            }} style={{color: "white"}}>
+                                                Cancelar
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                        <Button fullWidth
                                             type="submit"
                                             className="btn btn-primary primary-btn"
                                             disabled={state.agregar === "Consultar"}
                                         >
-                                            Aceptar
-                                        </button>
+                                            GUARDAR RECOLECCIÓN
+                                        </Button>
 
-                                    </div>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+
 
                                 </div>
                             </form>
