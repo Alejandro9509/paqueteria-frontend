@@ -156,7 +156,9 @@ class AgregarViaje extends Component {
             entregado: false,
             estatusInforme: "",
             dataOperadores: [],
-            openDialogInformes:false
+            openDialogInformes:false,
+            Remolque2Select:false,
+            dollySelect:false
         }
 
         this.getAllCiudades = this.getAllCiudades.bind(this);
@@ -271,6 +273,8 @@ class AgregarViaje extends Component {
                     licenciaPermisionario: this.props.select.LicenciaPermisionario,
                     nombrePermisionario: this.props.select.NombrePermisionario,
                     fechaVigenciaPermisionario: this.props.select.FechaVigenciaPermisionario,
+                    dollySelect:this.props.select.m_nIdDolly?true:false,
+                    Remolque2Select:this.props.select.m_nIdRemolque2?true:false
 
                 }
             })
@@ -293,6 +297,16 @@ class AgregarViaje extends Component {
         }
         if (this.state.dataInformesAsignados.length === 0){
             showSuccess("No puede guardar un viaje sin informes.")
+            return
+        }
+
+        if(this.state.Remolque2Select && !this.state.dollySelect){
+            showSuccess("Al seleccionar Remolque 2, se requiere dolly")
+            return
+        }
+
+        if(!this.state.Remolque2Select && this.state.dollySelect){
+            showSuccess("Al seleccionar dolly, se requiere Remolque 2")
             return
         }
 
@@ -644,7 +658,8 @@ class AgregarViaje extends Component {
                             IdRemolque2: null,
                             placasRemolque2: "",
                             colorRemolque2: "",
-                            estatusRemolque2: ""
+                            estatusRemolque2: "",
+                            Remolque2Select:false
                         })
                         return
                     }
@@ -652,7 +667,9 @@ class AgregarViaje extends Component {
                         IdRemolque2: newValue,
                         placasRemolque2: newValue.m_sPlacas,
                         colorRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sColor,
-                        estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus
+                        estatusRemolque2: resultado.data instanceof String ? "" : resultado.data.m_sEstatus,
+                        Remolque2Select:true
+
                     })
                 }else{
                     showSuccess("La unidad seleccionada no está disponible")
@@ -675,7 +692,8 @@ class AgregarViaje extends Component {
                 IdRemolque2: null,
                 placasRemolque2: "",
                 colorRemolque2: "",
-                estatusRemolque2: ""
+                estatusRemolque2: "",
+                Remolque2Select:false
             })
         }
     }
@@ -741,17 +759,23 @@ class AgregarViaje extends Component {
 
     handleDollyFiltro(event, newValue) {
         event.preventDefault();
+        if (newValue){
         if (!this.isUnidadAvailable(newValue, "DOLLY")){
             showSuccess("La unidad elegida ya se encuentra seleccionada.");
             return
         }
-        this.setState({IdDolly: newValue, placasDolly: newValue.m_sPlacas})
+        this.setState({IdDolly: newValue, placasDolly: newValue.m_sPlacas,dollySelect:true})
         if (this.state.idRuta.m_nIdRuta && this.state.origen.m_nIdCiudad && this.state.destino.m_nIdCiudad && this.state.IdRemolque1.m_nIdUnidad && this.state.IdRemolque2.m_nIdUnidad && newValue.m_nIdUnidad) {
 
             this.getInformesByFiltro(this.state.idRuta.m_nIdRuta, this.state.origen.m_nIdCiudad, this.state.destino.m_nIdCiudad,
                 this.state.IdRemolque1.m_nIdUnidad, this.state.IdRemolque2.m_nIdUnidad, newValue.m_nIdUnidad)
         }
+        }
+        else{
+            this.setState({IdDolly: null, placasDolly: "",dollySelect:false})
+        }
     }
+
 
     handleAgregarInforme(id) {
         if (this.state.dataInformesAsignados.find(i => i.m_nIdInforme === id) === undefined){
