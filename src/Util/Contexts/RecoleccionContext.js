@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarRecoleccion(id, params) {
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Modificar/${id}`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Modificar/${id}`;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -25,7 +25,7 @@ function obtenerRecoleccionReporte(id) {
 
 
 function agregarRecoleccion(params) {
-    const url = `${process.env.REACT_APP_API_URL}/Recoleccion/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Recoleccion/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })

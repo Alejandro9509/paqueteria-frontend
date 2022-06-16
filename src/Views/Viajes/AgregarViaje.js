@@ -49,6 +49,7 @@ import {obtenerOperadores, obtenerOperadoresId} from "../../Util/Contexts/Operad
 import {obtenerSucursales} from "../../Util/Contexts/SucursalContext";
 import {obtenerRutasByOrigenDestinoPublicoGeneral, obtenerTrayectosByRuta} from "../../Util/Contexts/RutasContext";
 import SeleccionarRuta from "../Rutas/SeleccionarRuta";
+import {obtenerEstatusViaje} from "../../Util/Contexts/EstatusContext";
 
 const headers = API_HEADERS
 
@@ -509,8 +510,7 @@ class AgregarViaje extends Component {
     }
 
     getAllEstatusViaje() {
-        const url = `${process.env.REACT_APP_API_URL}/SisEstatus/getListadoViajes`;
-        axios.get(url, {headers}).then((respuesta) => {
+        obtenerEstatusViaje().then((respuesta) => {
             this.setState({dataEstatusViaje: respuesta.data})
         });
     }

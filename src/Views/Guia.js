@@ -91,6 +91,7 @@ import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfigu
 import CambiarEstatus from "./Guia/CambiarEstatus";
 import AsignarTrayectos from "./Guia/AsignarTrayectos";
 import ImprimirEtiquetas2 from "./Guia/ImprimirEtiquetas2";
+import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -373,7 +374,7 @@ function Guia(props) {
     const handleEntregaOcurre = (dataOcurre) => {
         let params = {
             nIdGuia: dataOcurre.idGuia,
-            m_nIdUsuarioEntregaOcurre: localStorage.getItem("Usuario"),
+            m_nIdUsuarioEntregaOcurre: parseInt(localStorage.getItem("UsuarioId")),
             m_sFechaOcurre: dataOcurre.fechaOcurre,
             m_sHoraOcurre: dataOcurre.horaOcurre,
             m_sComentariosOcurre: dataOcurre.comentariosOcurre,
@@ -1355,7 +1356,7 @@ function Guia(props) {
         if (dataTipoPago.length > 0) {
             return
         }
-        axios.get(`${process.env.REACT_APP_API_URL}/TiposPago/GetListado`, {headers}).then(({data}) => {
+        obtenerTiposPago().then(({data}) => {
             setDataTipoPago(data)
         });
     };
@@ -1774,14 +1775,17 @@ function Guia(props) {
             var guia = data
             if (guia.m_nIdEstatusGuia == 7) {
                 if (!guia.m_nClienteBloqueado) {
-
                     let importeTotal = 0
                     guia.m_arClsGuiaConceptos.forEach((c) => importeTotal += parseFloat(c.m_cTotal))
+                    let tipoCobro = dataTipoCobro.find(i => i.m_nIdTipoCobro == guia.m_nIdTIpoCobro)
+                    let tipoPago = tipoCobro.m_nIdTipoPago || dataTipoPago[0]?.m_nIdTipoPago
                     setDataOcurre({
                         idGuia: guia.m_nIdGuia,
                         tipoCobroOcurre: guia.m_nIdTIpoCobro,
-                        importeTotal: importeTotal,
-                        tipoPago: guia.m_nIdTIpoCobro == 11 ? 5 : 0
+                        importeTotal: importeTotal.toFixed(2),
+                        tipoPago: tipoPago,
+                        fechaOcurre: getCurrentDate(),
+                        horaOcurre: getCurrentTime()
                     })
                     setState({
                         ...state,
@@ -1867,11 +1871,16 @@ function Guia(props) {
                 {showDialogOcurre && <p style={{marginTop: '30px', marginLeft: '30px'}}>Ocurre</p>}
                 {
                     dataOcurre &&
-                    <Ocurre handleEntregaOcurre={handleEntregaOcurre} closeOcurre={() => {
-                        setState({...state, openDialog: false});
-                        setShowDialogOcurre(false)
-                    }} dataTipoPago={dataTipoPago} dataOcurre={dataOcurre} dataTipoCobro={dataTipoCobro}
-                            showDialogOcurre={showDialogOcurre}/>
+                    <Ocurre
+                        handleEntregaOcurre={handleEntregaOcurre}
+                        closeOcurre={() => {
+                            setState({...state, openDialog: false});
+                            setShowDialogOcurre(false)
+                        }}
+                        dataTipoPago={dataTipoPago}
+                        dataOcurre={dataOcurre}
+                        dataTipoCobro={dataTipoCobro}
+                        showDialogOcurre={showDialogOcurre}/>
                 }
 
             </Dialog>
@@ -2133,7 +2142,7 @@ function Guia(props) {
                                                                                 <option key={embarque.m_nIdEmbarque}
                                                                                         value={embarque.m_nIdEmbarque}>
                                                                                     {
-                                                                                        embarque.m_nFolioEmbarque
+                                                                                        embarque.m_sFolioEmbarque
                                                                                     }
                                                                                 </option>
                                                                             )

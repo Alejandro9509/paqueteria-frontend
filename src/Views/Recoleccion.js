@@ -997,7 +997,7 @@ function Recoleccion() {
             params.m_rTipoCambio = state.tipoCambio
             params.m_nIdTipoDeCobro = state.tipoCobro
             params.m_nIdCliente = state.clientePaga.m_nIdCliente
-            params.ValorDeclarado = state.valorDeclarado
+            params.valorDeclarado = state.valorDeclarado
             params.m_sObservaciones = state.observaciones
             params.m_nIdTipoSeguro = state.idTipoSeguro
             params.m_xPorcentajeSeguro = state.porcentajeSeguro
@@ -1134,8 +1134,9 @@ function Recoleccion() {
                         limpiarInputsAgregar()
                     })
                     .catch((err) => {
-                        // console.log(err);
-                        showSuccess(err);
+                        console.log(err);
+                        // debugger
+                        showSuccess(err.response.data);
                     });
             } else {
                 console.log("ENTRO")
@@ -1174,7 +1175,7 @@ function Recoleccion() {
                                     })
                                     .catch((err) => {
                                         //   console.log(err);
-                                        showSuccess(err);
+                                        showSuccess(err.response.data);
                                     });
                             }
                         },
