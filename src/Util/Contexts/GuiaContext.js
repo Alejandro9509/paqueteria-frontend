@@ -24,7 +24,7 @@ function entregaOcurreGuia(id, params) {
 }
 
 function agregarGuia(params) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/Agregar`;
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Guia/Agregar`;
     let result;
     trackPromise(
         result =  axios.post(url, Object.assign({}, params), { headers })
@@ -167,7 +167,7 @@ function ultimoFolioGuia() {
 }
 
 function obtenerGuiaId(id) {
-    const url = `${process.env.REACT_APP_API_URL}/Guia/GetById/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Guia/GetById/` + id;
     let result;
     trackPromise(
         result =  axios.get(url, { headers })
