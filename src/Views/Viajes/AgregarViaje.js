@@ -1183,7 +1183,7 @@ class AgregarViaje extends Component {
                                                 id="origenRemitente"
                                                 disableClearable
                                                 forcePopupIcon={false}
-                                                options={this.state.dataCiudad.filter(c => this.props.select ? (this.props.select.m_arrIdRutas.filter(t => !t.Terminado && !t.Iniciado)[0]).IdOrigen == c.m_nIdCiudad : true)}
+                                                options={this.state.dataCiudad.filter(c => this.props.select ? this.props.select.m_arrIdRutas.filter(t => !t.Terminado && !t.Iniciado).map(t => t.IdOrigen).includes(c.m_nIdCiudad) : true)}
                                                 getOptionLabel={(option) =>
                                                     option.m_sCiudad
                                                 }
@@ -1848,7 +1848,7 @@ class AgregarViaje extends Component {
                                         <h2 color={'#717171'}>Detalle de paradas</h2>
                                     </div>
                                     {
-                                       
+
                                         (!this.props.consult && this.props.modificar) &&
                                         <Button variant="contained" color="primary" disabled={this.props.viajeSeleccionado.m_arrTrayectos.some(p=>
                                             (p.m_nIdSalida && !p.m_bSalidaCancelada && !p.m_nIdLlegada && !p.deshabilitado))} fullWidth onClick={(event) => this.handleShowDialog(event)}>
