@@ -116,6 +116,17 @@ import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfigu
 import {obtenerRutasId} from "../Util/Contexts/RutasContext";
 import DiferenteDomicilioForm from "./DiferenteDomicilio/DiferenteDomicilioForm";
 
+
+import {
+    useLocation
+  } from "react-router-dom";
+
+function useQuery() {
+    const { search } = useLocation();
+  
+    return React.useMemo(() => new URLSearchParams(search), [search]);
+  }
+
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -552,6 +563,7 @@ function Embarque(props) {
         height: window.innerHeight,
         embarqueConGuia: false
     });
+    let query = useQuery();
     //Limpia todos los campos. Se usa al pasar del listado a consultar o modificar un registro
     function limpiarCamposAgregar() {
         setState(state => {
@@ -1488,6 +1500,10 @@ function Embarque(props) {
 
     //Se checa si se entró a embarque por una recoleccion
     useEffect(async (value) => {
+        
+        if(query.get("id")){
+            handleShowConsultar(query.get("id"))
+            }
         if (props.location.idRecoleccion !== undefined) {
         obtenerRecoleccionId(props.location.idRecoleccion)
             .then((respuesta) => {
