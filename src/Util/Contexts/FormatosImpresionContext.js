@@ -1,24 +1,45 @@
 import axios from "axios";
 import { trackPromise } from "react-promise-tracker";
-import { API_HEADERS } from "../../Constants";
+import {API_HEADERS, API_MULTIPART_HEADERS} from "../../Constants";
 
 const headers = API_HEADERS
+const headersMultipart = API_MULTIPART_HEADERS;
 
 
-function modificarFormatosImpresion(id, params){
-    const url = `${process.env.REACT_APP_API_URL}/FormatosImpresion/Modificar/` + id;
+
+function modificarFormatosImpresion(id, params, file, image){
+    var bodyFormData = new FormData();
+
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/Modificar/${id}`;
     let result;
+    var json = JSON.stringify({...params});
+    var blob = new Blob([json] , { type: 'application/json' });
+    bodyFormData.append("request", blob);
+    bodyFormData.append("file", file, file.name);
+    if (image){
+        bodyFormData.append("image", image, image.name);
+    }
+
     trackPromise(
-        result =  axios.put(url, Object.assign({}, params), { headers })
-        );
+        result =  axios.pust(url, bodyFormData, { headers: headersMultipart })
+    );
     return result
 }
 
-function agregarFormatosImpresion( params){
-    const url = `${process.env.REACT_APP_API_URL}/Formato/Agregar`;
+function agregarFormatosImpresion( params, file, image){
+    var bodyFormData = new FormData();
+
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/Agregar`;
     let result;
+    var json = JSON.stringify({...params});
+    var blob = new Blob([json] , { type: 'application/json' });
+    bodyFormData.append("request", blob);
+    bodyFormData.append("file", file, file.name);
+    if (image){
+        bodyFormData.append("image", image, image.name);
+    }
     trackPromise(
-        result =  axios.post(url, Object.assign({}, params), { headers })
+        result =  axios.post(url, bodyFormData, { headers: headersMultipart })
         );
     return result
 }
@@ -49,13 +70,22 @@ function obtenerFormatosImpresionId(id){
         );
     return result
 }
-function imprimirFormatosId(id){
-    const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
+function obtenerFormatosImpresionProceso(id){
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Formato/Proceso/${id}`;
     let result;
     trackPromise(
-        result =  axios.get(url, { headers, responseType:"arraybuffer" })
+        result =  axios.get(url, { headers })
+    );
+    return result
+}
+function imprimirFormatosId(id, fechaInicial, fechaFinal, sucursales){
+    const url = `${process.env.REACT_APP_API_URL}/ImprimirFormato/${id}`;
+    console.log(sucursales)
+    let result;
+    trackPromise(
+        result =  axios.post(url,Object.assign({}, {fechaInicial: fechaInicial, fechaFinal: fechaFinal, sucursales: sucursales.map(s => s.id).join(",")}), { headers})
         );
     return result
 }
 
-export {modificarFormatosImpresion, agregarFormatosImpresion, eliminarFormatosImpresion, obtenerFormatosImpresionId, obtenerFormatosImpresion, imprimirFormatosId}
+export {modificarFormatosImpresion, agregarFormatosImpresion, eliminarFormatosImpresion, obtenerFormatosImpresionId, obtenerFormatosImpresion, imprimirFormatosId,obtenerFormatosImpresionProceso}

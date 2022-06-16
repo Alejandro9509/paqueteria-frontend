@@ -113,14 +113,12 @@ class AgregarFormatoImpresion extends Component {
                                                 name={"idTipoProcesoAgregar"}
                                                 label="Tipo de Proceso"
                                             >
-                                                {this.state.dataTipoDocumento.map((tipoDocumento) => (
-                                                    <option
-                                                        key={tipoDocumento.m_nIdTipoDocumento}
-                                                        value={tipoDocumento.m_nIdTipoDocumento}
-                                                    >
-                                                        {tipoDocumento.m_sTipoDocumento}
-                                                    </option>
-                                                ))}
+                                                <option
+                                                    key={42}
+                                                    value={42}
+                                                >
+                                                    Viajes Paqueteria
+                                                </option>
                                             </Select>
                                         </FormControl>
                                     </label>
@@ -157,27 +155,6 @@ class AgregarFormatoImpresion extends Component {
                                         />
                                     </label>
                                 </div>
-
-                                <div className="col-sm-6 col-md-6 col-lg-6 unit">
-                                    <div className="input">
-                                    
-                                        <TextField variant="outlined" margin="dense"
-                                                   onChange={this.handleChange}
-                                                   className="form-control"
-                                                   type="text"
-                                                   required
-                                                   label="Nombre del Archivo WDE"
-                                                   value={this.state.nombre}
-                                                   name={"nombre"}
-                                                   id="nombre"
-
-
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="row">
 
                                 <div className="col-sm-6 col-md-6 col-lg-6 unit">
                                     <div className="input">

@@ -339,13 +339,13 @@ function Embarque(props) {
         },
         {
             headerName: "Folio Embarque",
-            field: "m_nFolioEmbarque",
+            field: "m_sFolioEmbarque",
             width: 125,
             renderCell:(row)=>{
                 return(
                     <div>
                      <Tooltip title= {row.row.m_sObservaciones}>
-                         <field>{row.row.m_nFolioEmbarque}</field>
+                         <field>{row.row.m_sFolioEmbarque}</field>
                      </Tooltip>
                 </div>
 
@@ -1129,9 +1129,9 @@ function Embarque(props) {
             p.ctd = p.m_nCantidad
             p.m_cValorDeclarado = p.m_cyValorDeclarado
             p.m_nTipo = p.m_nIdTipo
-            p.ClaveSATProducto = p.m_nClaveSATProducto
-            p.ClaveSATUnidad = p.m_nClaveSATUnidad
-            p.ClaveEmbalaje = p.m_sClaveEmbalaje
+            p.claveSATProducto = p.m_nClaveSATProducto
+            p.claveSATUnidad = p.m_nClaveSATUnidad
+            p.claveEmbalaje = p.m_sClaveEmbalaje
 
             packs.push(p)
         })
@@ -1156,8 +1156,8 @@ function Embarque(props) {
         const params = {
             m_nIdEmbarque: state.idEmbarque,
             m_nIdRecoleccion: state.idRecoleccion,
-            IdSucursal: state.idSucursalAgregar,
-            m_nFolioEmbarque: state.folioEmbarque,
+            idSucursal: state.idSucursalAgregar,
+            m_sFolioEmbarque: state.folioEmbarque,
             m_nFolioGuia: state.folioGuia,
             m_nIdEmbarqueRelacionado: state.idEmbarqueRelacionado,
             m_nFolioInforme: state.folioInforme,
@@ -1168,7 +1168,7 @@ function Embarque(props) {
             m_dFecha: getCurrentDateTime().substr(0, 10),
             m_sHora: getCurrentDateTime().substr(getCurrentDateTime().length - 5),
             m_nIdCliente: state.clientePaga.m_nIdCliente,
-            ValorDeclarado: state.valorDeclarado,
+            valorDeclarado: state.valorDeclarado,
             m_sObservaciones: state.observaciones, 
             m_nIdTipoSeguro: state.idTipoSeguro,
             m_xPorcentajeSeguro: state.porcentajeSeguro,
@@ -1220,14 +1220,14 @@ function Embarque(props) {
             m_nNoSobres: state.sobres.length,
             m_arrClsDetalle: packs,
             m_arrClsComplementoSAT: dataComplementosSAT,
-            CreadoPor: state.CreadoPor,
-            ModificadoPor: state.ModificadoPor,
+            creadoPor: state.CreadoPor,
+            modificadoPor: state.ModificadoPor,
             m_bEntregaEnSucursal: state.entregaEnSucursal,
 
             // IdCiudadEntrega: state.ciudadDestinatario,
-            CodigoPostalEntrega: destinatario.codigoPostalDestinatario.m_nIdCP,
-            DomicilioEntrega: destinatario.domicilioDestinatario,
-            EntregarMismoDomicilio: !state.diferenteEntrega,
+            codigoPostalEntrega: destinatario.codigoPostalDestinatario.m_nIdCP,
+            domicilioEntrega: destinatario.domicilioDestinatario,
+            entregarMismoDomicilio: !state.diferenteEntrega,
             //Cita de recoleccion
             m_bEmbarqueConCita: state.entregaConCita,
         }
@@ -1235,16 +1235,16 @@ function Embarque(props) {
         /**Si es entrega en sucursal*/
         if (state.entregaEnSucursal) {
             params.m_nIdSucursalEntrega = state.idSucursalEntrega
-            params.EntregarMismoDomicilio = false
+            params.entregarMismoDomicilio = false
             /**Si es entrega en direfente domicilio*/
         }else if (state.diferenteEntrega) {
             params.m_bEntregaEnSucursal = false
-            params.CodigoPostalEntrega = entregaDD.codigoPostalEnt.m_nIdCP
-            params.DomicilioEntrega = entregaDD.domicilioEnt
-            params.EntregarEn = entregaDD.entregarEnEnt
+            params.codigoPostalEntrega = entregaDD.codigoPostalEnt.m_nIdCP
+            params.domicilioEntrega = entregaDD.domicilioEnt
+            params.entregarEn = entregaDD.entregarEnEnt
             params.m_nIdEstadoEntrega = entregaDD.estadoEnt
             params.m_sCodigoMunicipioEntrega = entregaDD.municipioEnt
-            params.DatosAdicionales = entregaDD.datosAdicionalesEnt
+            params.datosAdicionales = entregaDD.datosAdicionalesEnt
             params.m_nIdZonaOperativa = entregaDD.zonaOperativaEnt.m_nIdZona
             params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
             params.m_sLatitudD = coordenadas ? coordenadas.lat : entregaDD.latitudEnt
@@ -1290,15 +1290,15 @@ function Embarque(props) {
                 })
                 .catch((err) => {
                     console.log(err);
-                    showSuccess("El Usuario no tiene derecho para modificar");
+                    showSuccess(err.response.data);
                 });
         } else {
             agregarEmbarques(params)
                 .then((respuesta) => {
-                    if (respuesta.data.m_nFolioEmbarque.length === 0){
+                    if (respuesta.data.m_sFolioEmbarque.length === 0){
                         return
                     }
-                    showSuccess("Embarque creado con folio: "+respuesta.data.m_nFolioEmbarque);
+                    showSuccess("Embarque creado con folio: "+respuesta.data.m_sFolioEmbarque);
 
                     console.log(respuesta.data);
                     // handleShowListado();
@@ -1306,7 +1306,7 @@ function Embarque(props) {
                         return{
                             ...state,
                             idEmbarque: respuesta.data.m_nIdEmbarque,
-                            folioEmbarque: respuesta.data.m_nFolioEmbarque,
+                            folioEmbarque: respuesta.data.m_sFolioEmbarque,
                         }
                     })
                     mostrarCotizadorRec(false)
@@ -1327,7 +1327,7 @@ function Embarque(props) {
                 })
                 .catch((err) => {
                     console.log(err);
-                    showSuccess(err);
+                    showSuccess(err.response.data);
                 });
         }
     };
@@ -1713,7 +1713,7 @@ function Embarque(props) {
                 idCotizacion: respuesta.data.m_nIdCotizacion,
                 idSucursalAgregar: localStorage.getItem("Sucursal"),
                 folioRecoleccion: respuesta.data.m_sFolioRecoleccion,
-                folioEmbarque: respuesta.data.m_nFolioEmbarque,
+                folioEmbarque: respuesta.data.m_sFolioEmbarque,
                 fechaHoraCreacion: today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear() + " " + today.getHours() + ":" + today.getMinutes(),
                 moneda: respuesta.data.m_nMoneda,
                 tipoCambio: respuesta.data.m_rTipoCambio,

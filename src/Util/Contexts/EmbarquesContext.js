@@ -6,7 +6,7 @@ const headers = API_HEADERS
 
 
 function modificarEmbarques(id, params){
-    const url = `${process.env.REACT_APP_API_URL}/Embarques/Modificar/` + id;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarques/Modificar/` + id;
     let result;
     trackPromise(
         result =  axios.put(url, Object.assign({}, params), { headers })
@@ -24,7 +24,7 @@ function obtenerEmbarqueReporte(id) {
 }
 
 function agregarEmbarques( params){
-    const url = `${process.env.REACT_APP_API_URL}/Embarques/Agregar`;
+    const url = `${process.env.REACT_APP_REPORT_URL}/api/Embarques/Agregar`;
     let result;
     console.log()
     trackPromise(
