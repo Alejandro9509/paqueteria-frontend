@@ -4,6 +4,7 @@ import BarraLateralIzquierda from "../../Components/Template/BarraLateralIzquier
 import { DataGrid } from "@material-ui/data-grid";
 import Noty from "noty";
 import {
+  Button,
   FormControl,
   Grid,
   InputLabel,
@@ -583,23 +584,32 @@ console.log(params)
                             </Grid>
                           </Grid>
                         </Grid>
-                            <Grid item xs={2}>
-                              <div className="form-footer">
-                                <button
+                            <Grid item xs={12}>
+                              <div className="form-footer ol-md-12">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                        <Button
+                                        fullWidth
                                   onClick={handleShowListado}
                                   className="btn btn-secondary secondary-btn"
                                   disabled={state.agregar == "Consultar"}
                                 >
-                                  Cancelar
-                                </button>
-                                <button
+                                  CANCELAR
+                                </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                        <Button
+                                        fullWidth
                                   type="submit"
                                   className="btn btn-primary primary-btn"
                                   disabled={state.agregar == "Consultar"}
                                 >
-                                  Aceptar
-                                </button>
-                              </div>
+                                  AGREGAR PRODUCTO
+                                </Button>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+
                             </Grid>
                           </Grid>
                       </form>

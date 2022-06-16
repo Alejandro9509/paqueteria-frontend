@@ -9,7 +9,7 @@ import { ReactComponent as Activo } from "../../iconos/Menu/palomita.svg";
 import { ReactComponent as NoActivo } from "../../iconos/Menu/cruz.svg";
 import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid} from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -160,11 +160,16 @@ class AgregarClasificacionViaje extends Component {
                 </div>
 
                 <div className={"row"}>
-                    <div className="col-sm-12 col-md-12 col-lg-12 unit">
-                    <button className="btn btn-secondary secondary-btn" onClick={this.props.onClose}>Cancelar</button>
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                        <Button fullWidth className="btn btn-secondary secondary-btn" onClick={this.props.onClose}>CANCELAR</Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                        <Button fullWidth className="btn btn-primary primary-btn" type={"submit"} >AGREGAR CLASIFICACIÓN VIAJE</Button>
+                                        </Grid>
+                                    </Grid>
+                                
 
-                    <button className="btn btn-primary primary-btn" type={"submit"} >Aceptar</button>
-                    </div>
                 </div>
                         </div>
                     </div>

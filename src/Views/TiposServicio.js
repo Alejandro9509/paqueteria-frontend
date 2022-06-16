@@ -10,7 +10,7 @@ import { DataGrid } from '@material-ui/data-grid';
 
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { TextField, Tooltip } from "@material-ui/core";
+import { Button, Grid, TextField, Tooltip } from "@material-ui/core";
 import { agregarTipoServicio, eliminarTipoServicio, modificarTipoServicio, obtenerTipoServicio, obtenerTipoServicioId } from "../Util/Contexts/TipoServiciosContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import $ from "jquery";
@@ -556,14 +556,22 @@ function TiposServicio() {
                                                 <br></br>
                                                 
                                             </form> 
-                                           <div style={{display:"flex", justifyContent: "flex-end",margin:'5px'}}>
-                                                    <button className="btn btn-secondary secondary-btn" style={{marginRight:'5px'}} disabled={state.agregar == "Consultar"} onClick={handleShowListado}>
-                                                        Cancelar
-                                                    </button>
-                                                    <button type="submit" form="formulario" disabled={state.agregar == "Consultar"}
-                                                            className="btn btn-primary primary-btn">Aceptar
-                                                    </button>
-                                                </div>
+                     
+                                                <div className="form-footer ol-md-12">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                        <Button fullWidth className="btn btn-secondary secondary-btn" style={{marginRight:'5px'}} disabled={state.agregar == "Consultar"} onClick={handleShowListado}>
+                                                        CANCELAR
+                                        </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                        <Button fullWidth type="submit" form="formulario" disabled={state.agregar == "Consultar"}
+                                                            className="btn btn-primary primary-btn">AGREGAR TIPO DE SERVICIO
+                                        </Button>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+
                                         </div>
                                     </div>
                                 </div>

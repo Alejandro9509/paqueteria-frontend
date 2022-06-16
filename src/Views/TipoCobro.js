@@ -479,9 +479,20 @@ function TipoCobro() {
 
                                                 </div>
                                                 <br></br>
-                                                <div className="form-footer" >
-                                                    <Button fullWidth type="submit" className="btn btn-primary primary-btn">Guardar</Button>
-                                                </div>
+                                                <div className="form-footer ol-md-12">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                        <Button fullWidth href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn" onClick={handleClickCancelar}
+                                                    >
+                                                        CANCELAR
+                                        </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                        <Button fullWidth type="submit" className="btn btn-primary primary-btn">AGREGAR TIPO DE COBRO</Button>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+
                                             </form>
                                         </div>
                                     </div>
