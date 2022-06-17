@@ -318,17 +318,18 @@ function Guia(props) {
             return
         }
         let params = {
-            "TIpoCambio": state.tipoCambio,
-            "FolioGuia": state.folioGuia,
-            "IdEstatusGuia": state.idEstatusGuia,
-            "IdEmbarque": state.idEmbarque,
-            "IdMoneda": state.idMoneda,
+            "m_nTIpoCambio": state.tipoCambio,
+            "m_sFolioGuia": state.folioGuia,
+            "m_nIdEstatusGuia": state.idEstatusGuia,
+            "m_nIdEmbarque": state.idEmbarque,
+            "m_nIdMoneda": state.idMoneda,
 
-            "CreadoPor": state.creadoPor,
-            "ModificadoPor": state.modificadoPor,
-            "IdSucursal": state.idSucursalAgregar,
-            "ValorDeclarado": state.ValorDeclarado,
-            "idTipoServicio": state.idTipoServicio,
+            "m_nCreadoPor": state.creadoPor,
+            "m_nModificadoPor": state.modificadoPor,
+            "m_nIdSucursal": state.idSucursalAgregar,
+            "m_nValorDeclarado": state.ValorDeclarado,
+            "m_nidTipoServicio": state.idTipoServicio,
+
             "m_dFecha": getCurrentDateTime().substr(0, 10),
             "m_sHora": getCurrentDateTime().substr(getCurrentDateTime().length - 5),
 
