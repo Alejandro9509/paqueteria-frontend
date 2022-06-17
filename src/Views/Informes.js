@@ -1765,7 +1765,42 @@ function Informes({history}) {
                                                                         </div>
                                                                     </div>
                                                                     {/*****************************************Hora*******************************************************/}
+ {/*****************************************Estatus de Entrega*************************************************/}
+ <div className="col-sm-6 col-md-6 unit">
 
+<label className="input select">
+    <FormControl required fullWidth
+                 variant="outlined"
+                 margin="dense">
+        <InputLabel
+            id="EstatusInformeLabel">Estatus</InputLabel>
+        <Select
+            labelId="EstatusInformeLabel"
+            label="Estatus"
+            className="form-control"
+            required
+            onChange={handleSelectEstatus}
+            value={state.EstatusInforme}
+            id="EstatusInforme"
+            disabled={state.agregar === "Agregar" || state.agregar === "Consultar"}
+        >
+            <option
+                value="">Seleccionar
+            </option>
+            {dataEstatusInformes.map(
+                    (EstatusInforme) => (
+                        <option
+                            key={EstatusInforme.m_nIdEstatusInforme}
+                            value={EstatusInforme.m_nIdEstatusInforme}
+                        >{EstatusInforme.m_sEstatus}
+                        </option>
+                    )
+                )
+            }
+        </Select>
+    </FormControl>
+</label>
+</div>
                                                                     {/*****************************************Oficina Emisora***************************************************/}
                                                                     <div className="col-sm-6 col-md-6 unit">
 
@@ -1805,82 +1840,47 @@ function Informes({history}) {
                                                                             </FormControl>
                                                                         </label>
                                                                     </div>
-                                                                    {/*****************************************Oficina Receptora*************************************************/}
-                                                                    <div className="col-sm-6 col-md-6 unit">
+                                                                   
+                                                                   
+ {/*****************************************Oficina Receptora*************************************************/}
+ <div className="col-sm-6 col-md-6 unit">
 
-                                                                        <label className="input select">
-                                                                            <FormControl fullWidth
-                                                                                         variant="outlined"
-                                                                                         margin="dense" required>
-                                                                                <InputLabel
-                                                                                    id="sucursalReceptoraLabel">Oficina
-                                                                                    Receptora</InputLabel>
-                                                                                <Select
-                                                                                    labelId="sucursalReceptoraLabel"
-                                                                                    label="Oficina Receptora"
-                                                                                    className="form-control"
-                                                                                    required
-                                                                                    value={state.sucursalReceptora}
-                                                                                    id="sucursalReceptora"
-                                                                                    onChange={handleSelectSucursalReceptora}
-                                                                                >
-                                                                                    {dataSucursal.map(
-                                                                                        (sucursalReceptora) => (
-                                                                                            <option
-                                                                                                key={
-                                                                                                    sucursalReceptora.m_nIdSucursal
-                                                                                                }
-                                                                                                value={
-                                                                                                    sucursalReceptora.m_nIdSucursal
-                                                                                                }
-                                                                                            >
-                                                                                                {
-                                                                                                    sucursalReceptora.m_sSucursal
-                                                                                                }
-                                                                                            </option>
-                                                                                        )
-                                                                                    )}
-                                                                                </Select>
-                                                                            </FormControl>
-                                                                        </label>
-                                                                    </div>
-                                                                    {/*****************************************Estatus de Entrega*************************************************/}
-                                                                    <div className="col-sm-6 col-md-6 unit">
-
-                                                                        <label className="input select">
-                                                                            <FormControl required fullWidth
-                                                                                         variant="outlined"
-                                                                                         margin="dense">
-                                                                                <InputLabel
-                                                                                    id="EstatusInformeLabel">Estatus</InputLabel>
-                                                                                <Select
-                                                                                    labelId="EstatusInformeLabel"
-                                                                                    label="Estatus"
-                                                                                    className="form-control"
-                                                                                    required
-                                                                                    onChange={handleSelectEstatus}
-                                                                                    value={state.EstatusInforme}
-                                                                                    id="EstatusInforme"
-                                                                                    disabled={state.agregar === "Agregar" || state.agregar === "Consultar"}
-                                                                                >
-                                                                                    <option
-                                                                                        value="">Seleccionar
-                                                                                    </option>
-                                                                                    {dataEstatusInformes.map(
-                                                                                            (EstatusInforme) => (
-                                                                                                <option
-                                                                                                    key={EstatusInforme.m_nIdEstatusInforme}
-                                                                                                    value={EstatusInforme.m_nIdEstatusInforme}
-                                                                                                >{EstatusInforme.m_sEstatus}
-                                                                                                </option>
-                                                                                            )
-                                                                                        )
-                                                                                    }
-                                                                                </Select>
-                                                                            </FormControl>
-                                                                        </label>
-                                                                    </div>
-
+<label className="input select">
+    <FormControl fullWidth
+                 variant="outlined"
+                 margin="dense" required>
+        <InputLabel
+            id="sucursalReceptoraLabel">Oficina
+            Receptora</InputLabel>
+        <Select
+            labelId="sucursalReceptoraLabel"
+            label="Oficina Receptora"
+            className="form-control"
+            required
+            value={state.sucursalReceptora}
+            id="sucursalReceptora"
+            onChange={handleSelectSucursalReceptora}
+        >
+            {dataSucursal.map(
+                (sucursalReceptora) => (
+                    <option
+                        key={
+                            sucursalReceptora.m_nIdSucursal
+                        }
+                        value={
+                            sucursalReceptora.m_nIdSucursal
+                        }
+                    >
+                        {
+                            sucursalReceptora.m_sSucursal
+                        }
+                    </option>
+                )
+            )}
+        </Select>
+    </FormControl>
+</label>
+</div>
 
                                                                     {/*****************************************Operador*************************************************/}
 
