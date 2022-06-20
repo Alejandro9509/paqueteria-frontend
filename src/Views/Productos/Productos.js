@@ -139,13 +139,6 @@ function Productos() {
       width: 300,
     },
     {
-      headerName: "Predeterminado",
-      field: "m_bPredeterminado",
-      width: 300,
-      valueFormatter: (params) => params.value ? "Sí" : "No",
-
-    },
-    {
       headerName: "Activo",
       field: "m_bActivo",
       width: 300,
