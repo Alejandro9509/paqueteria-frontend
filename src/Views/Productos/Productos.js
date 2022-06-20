@@ -5,6 +5,7 @@ import { DataGrid } from "@material-ui/data-grid";
 import Noty from "noty";
 import {
   Button,
+  Checkbox,
   FormControl,
   Grid,
   InputLabel,
@@ -537,12 +538,12 @@ console.log(params)
                                   <label className="label">Estatus</label>
                                 </Grid>
                                 <Grid item xs={2}>
-                                  <input
+                                  <Checkbox
                                     className="col-sm"
-                                    type="checkbox"
+                                    inputProps={{ 'aria-label': 'primary checkbox' }}
                                     onChange={handleChecked}
                                     checked={form.Activo}
-                                    style={{ height: "20px" }}
+                                    color="primary"
                                     id="Activo"
                                     name="Activo"
                                     disabled={state.agregar == "Consultar"}
@@ -559,31 +560,6 @@ console.log(params)
                                 </Grid>
                               </Grid>
                             </Grid>
-                        <Grid item xs={2}>
-                          <Grid container>
-                            <Grid item xs={2}>
-                              <input
-                                  className="col-sm"
-                                  type="checkbox"
-                                  onChange={handleChecked}
-                                  checked={form.predeterminado}
-                                  style={{ height: "20px" }}
-                                  id="predeterminado"
-                                  name="predeterminado"
-                                  disabled={state.agregar == "Consultar"}
-                              />
-                              <i />
-                            </Grid>
-                            <Grid item xs={4}>
-                              <label
-                                  className="checkbox"
-                                  style={{ padding: "10px 0 0px 3px" }}
-                              >
-                                Predeterminado
-                              </label>
-                            </Grid>
-                          </Grid>
-                        </Grid>
                             <Grid item xs={12}>
                               <div className="form-footer ol-md-12">
                                     <Grid container spacing={1}>
