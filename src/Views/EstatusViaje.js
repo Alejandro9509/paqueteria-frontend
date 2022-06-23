@@ -14,6 +14,7 @@ import { agregarEstatusViaje, eliminarEstatusViaje, modificarEstatusViaje, obten
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import $ from "jquery";
 import {validarDerecho} from "../Util/Util"
+import { confirmAlert } from "react-confirm-alert";
 window.jQuery = window.$ = $;
 function showSuccess(mensaje) {
     new Noty({
@@ -199,7 +200,19 @@ function EstatusViaje() {
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdEstatusViaje))}
+                            <a href="#" className="btn btn-default btn-xs" onClick={() =>  confirmAlert({
+                                                        title: 'Confirmar Eliminar',
+                                                        message: '¿Está seguro de eliminar estatus viaje?',
+                                                        buttons: [
+                                                            {
+                                                                label: 'Si',
+                                                                onClick: () =>  (handleEliminar(row.row.m_nIdEstatusViaje))
+                                                            },
+                                                            {
+                                                                label: 'No',
+                                                            }
+                                                        ]
+                                                    }) }
                             disabled={!validarDerecho(9101326)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>

@@ -24,7 +24,8 @@ import {
   obtenerProductos,
   obtenerProductoById,
   agregarProducto,
-  modificarProducto
+  modificarProducto,
+  eliminarProducto
 } from "../../Util/Contexts/ProductosContext";
 function showSuccess(mensaje) {
   new Noty({
@@ -97,7 +98,7 @@ function Productos() {
                 <i className={"fa fa-eye"} style={{ color: "#F9A03E" }} />
               </a>
             </Tooltip>
-            {/*<Tooltip title={"Eliminar"}>
+            <Tooltip title={"Eliminar"}>
               <a
                 className="btn btn-default btn-xs"
                 onClick={() =>
@@ -118,7 +119,7 @@ function Productos() {
               >
                 <i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} />
               </a>
-            </Tooltip>*/}
+            </Tooltip>
           </div>
         );
       },
@@ -172,7 +173,14 @@ function Productos() {
   }
 
   function handleEliminar(row) {
-
+    eliminarProducto(row.m_nIdProducto).then((respuesta) => {
+      showSuccess("Producto Eliminado");
+      handleShowListado();
+    })
+    .catch((err) => {
+      console.log(err);
+      showSuccess("El Usuario no tiene derecho para modificar");
+    });
   }
 
   function handleShowConsultar(row) {
