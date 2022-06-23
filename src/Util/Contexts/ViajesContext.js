@@ -167,7 +167,16 @@ function validarSalidaParada(id){
     return result
 }
 
+function eliminarViaje(idViaje,idEstatus){
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Viajes/Eliminar/${idViaje}/${idEstatus}`
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({},{}), { headers })
+    );
+    return result
+}
+
 
 
 export {obtenerViajesByFiltro,agregarViaje,agregarViajeSalida,agregarViajeLlegada, obetenerViajeId, modificarViaje,cancelarTrayecto,
-    obtenerViajes, obtenerViajesEstatus, obtenerXML,obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje,cancelarCFDI,cancelarViaje,validarSalidaParada}
+    obtenerViajes, obtenerViajesEstatus, obtenerXML,obtenerCFDI, obtenerReporteCFDI, obtenerReporteCFDIViaje,cancelarCFDI,cancelarViaje,validarSalidaParada,eliminarViaje}

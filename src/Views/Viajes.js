@@ -53,7 +53,8 @@ import {
     obtenerReporteCFDIViaje,
     cancelarViaje,
     validarSalidaParada,
-    cancelarTrayecto
+    cancelarTrayecto,
+    eliminarViaje
 } from "../Util/Contexts/ViajesContext";
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -76,6 +77,8 @@ import {cancelarInformeCFDI, enviarCorreoCFDIViaje} from "../Util/Contexts/SATCo
 import EnvioCorreoDialogo from "./SAT/EnvioCorreoDialogo";
 import CancelarTrayecto from "./Viajes/CancelarTrayecto";
 import ReportesViajes from "./Viajes/Reportes";
+import { RowingSharp } from "@material-ui/icons";
+import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 function showSuccess(mensaje) {
     new Noty({
         type: "information",
@@ -153,27 +156,28 @@ function Viajes() {
 
 
 
-    function handleEliminar(id) {
-        // var derecho;
-        // const urlDelete = `${process.env.REACT_APP_API_URL}/Utilerias/ValidaDerechos/${state.CreadoPor}/${state.DerechoBorrar}/3`;
-        // axios.get(urlDelete, { headers }).then(respuesta => {
-        //   derecho = respuesta.data;
-        //   if (derecho == false)
-        //   {
-        //     showSuccess ("El usuario no tiene derechos para realizar el proceso");
-        //     return;
-        //   }
-        //
-        // const url = `${process.env.REACT_APP_API_URL}/Departamento/Eliminar/` + id;
-        // axios.delete(url, { headers }).then(respuesta => {
-        //   console.log(respuesta);
-        //   getAllData();
-        // }).catch(err => {
-        //   showSuccess(err)
-        // });
-        // }).catch(err => {
-        // showSuccess(err)
-        // });
+    function handleEliminar(id,idEstatus) {
+        var derecho;
+        validarPermisos(state).then(respuesta => {
+            //showSuccess(respuesta.data)
+
+            derecho = respuesta.data;
+            if (derecho == false) {
+                showSuccess("El usuario no tiene derechos para realizar el proceso");
+                return;
+            }
+        
+        eliminarViaje(id,idEstatus).then(respuesta => {
+           console.log(respuesta);
+           getAllData();
+         }).catch(err => {
+           showSuccess(err)
+         })
+        }).catch(err => {
+            showSuccess(err)
+        });
+        
+    
     }
 
     function handleShowModificar(id) {
@@ -337,7 +341,19 @@ function Viajes() {
 
                         <Tooltip title="Eliminar">
                             <a href="#" className="btn btn-default btn-xs"
-                               onClick={() => (handleEliminar(row.row.m_nIdViaje))}
+                               onClick={() => confirmAlert({
+                                title: 'Confirmar Eliminar',
+                                message: '¿Está seguro de eliminar viaje?',
+                                buttons: [
+                                    {
+                                        label: 'Si',
+                                        onClick: () => (handleEliminar(row.row.m_nIdViaje,row.row.m_nIdEstatusViaje))
+                                    },
+                                    {
+                                        label: 'No',
+                                    }
+                                ]
+                            })}
                                disabled={!validarDerecho(9101442)}><i className="zmdi zmdi-delete"
                                                                                        style={{color: "#F30B0B"}}/></a>
 

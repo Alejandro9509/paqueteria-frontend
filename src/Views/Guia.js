@@ -782,7 +782,19 @@ function Guia(props) {
                         </Tooltip>
                         <Tooltip title="Eliminar" disabled={!validarDerecho(9101458)}>
                             <a className="btn btn-default btn-xs"
-                               onClick={() => (handleEliminar(row.row.m_nIdGuia))}><i className="zmdi zmdi-delete"
+                               onClick={() =>confirmAlert({
+                                title: 'Confirmar Eliminar',
+                                message: '¿Está seguro de eliminar guia?',
+                                buttons: [
+                                    {
+                                        label: 'Si',
+                                        onClick: () =>(handleEliminar(row.row.m_nIdGuia))
+                                    },
+                                    {
+                                        label: 'No',
+                                    }
+                                ]
+                            }) }><i className="zmdi zmdi-delete"
                                                                                       style={{color: "#F30B0B"}}/></a>
 
                         </Tooltip>

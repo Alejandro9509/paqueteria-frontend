@@ -17,6 +17,7 @@ import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
 import $ from "jquery";
 import Button from "@material-ui/core/Button";
+import { confirmAlert } from "react-confirm-alert";
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -143,7 +144,19 @@ function TipoCobro() {
 
                         </Tooltip>
                         <Tooltip title="Eliminar">
-                            <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTipoCobro))}
+                            <a href="#" className="btn btn-default btn-xs" onClick={() => confirmAlert({
+                                                        title: 'Confirmar Eliminar',
+                                                        message: '¿Está seguro de eliminar tipo de cobro?',
+                                                        buttons: [
+                                                            {
+                                                                label: 'Si',
+                                                                onClick: () =>  handleEliminar(row.row.m_nIdTipoCobro)
+                                                            },
+                                                            {
+                                                                label: 'No',
+                                                            }
+                                                        ]
+                                                    }) }
                             disabled={!validarDerecho(9101352)}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
 
                         </Tooltip>

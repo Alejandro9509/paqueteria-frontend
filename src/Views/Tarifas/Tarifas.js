@@ -29,6 +29,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import { withStyles } from '@material-ui/core/styles';
 import CrearTarifaRegion from "./CrearTarifaRegion";
 import TarifasRegion from "./TarifasRegion";
+import { confirmAlert } from 'react-confirm-alert';
 
 window.jQuery = window.$ = $;
 const headers = API_HEADERS
@@ -135,7 +136,19 @@ class Tarifas extends Component {
 
                             </Tooltip>
                             <Tooltip title="Eliminar">
-                                <a href="#" className="btn btn-default btn-xs" onClick={() => (this.handleEliminar(row.row.m_nIdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                <a href="#" className="btn btn-default btn-xs" onClick={() =>    confirmAlert({
+                                                        title: 'Confirmar Eliminar',
+                                                        message: '¿Está seguro de eliminar tarifa?',
+                                                        buttons: [
+                                                            {
+                                                                label: 'Si',
+                                                                onClick: () => (this.handleEliminar(row.row.m_nIdTarifa))
+                                                            },
+                                                            {
+                                                                label: 'No',
+                                                            }
+                                                        ]
+                                                    })}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                             </Tooltip>
 
                         </div>
@@ -766,7 +779,19 @@ function Tarifa(props){
 
                             </Tooltip>
                             <Tooltip title="Eliminar">
-                                <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.m_nIdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                <a href="#" className="btn btn-default btn-xs" onClick={() => confirmAlert({
+                                                        title: 'Confirmar Eliminar',
+                                                        message: '¿Está seguro de eliminar tarifa?',
+                                                        buttons: [
+                                                            {
+                                                                label: 'Si',
+                                                                onClick: () => handleEliminar(row.row.m_nIdTarifa)
+                                                            },
+                                                            {
+                                                                label: 'No',
+                                                            }
+                                                        ]
+                                                    })}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                             </Tooltip>
 
                         </div>

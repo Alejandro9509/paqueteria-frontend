@@ -103,6 +103,15 @@ function  agregarProducto(params){
         );
     return result
 }
+
+function eliminarProducto(idProducto){
+    const url = `${process.env.REACT_APP_API_URL_LOCAL}/api/Productos/Eliminar/${idProducto}`
+    let result;
+    trackPromise(
+        result =  axios.put(url, Object.assign({}, {}), { headers })
+        );
+    return result
+}
 /*function obtenerCodigosPostalesPorCiudad(id){
     const url = `${process.env.REACT_APP_API_URL}/CodigoPostal/GetListadoPorCiudad/${id}`;
     let result;
@@ -111,4 +120,4 @@ function  agregarProducto(params){
     );
     return result
 }*/
-export {obtenerProductoById,obtenerProductos,modificarProducto,agregarProducto,obtenerProductosByConvenioCliente}
+export {obtenerProductoById,obtenerProductos,modificarProducto,agregarProducto,obtenerProductosByConvenioCliente,eliminarProducto}

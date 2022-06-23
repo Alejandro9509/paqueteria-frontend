@@ -71,6 +71,7 @@ import {imprimirFormatosId, obtenerFormatosImpresion} from "../Util/Contexts/For
 import Filtros from "./Filtros/Filtros";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
 import Button from "@material-ui/core/Button";
+import { confirmAlert } from "react-confirm-alert";
 
 function showSuccess(mensaje) {
     new Noty({
@@ -175,7 +176,19 @@ function Informes({history}) {
                         <a
                             href="#"
                             className="btn btn-default btn-xs"
-                            onClick={() => handleEliminar(row.row.m_nIdInforme)}
+                            onClick={() => confirmAlert({
+                                title: 'Confirmar Eliminar',
+                                message: '¿Está seguro de eliminar informe?',
+                                buttons: [
+                                    {
+                                        label: 'Si',
+                                        onClick: () => handleEliminar(row.row.m_nIdInforme)
+                                    },
+                                    {
+                                        label: 'No',
+                                    }
+                                ]
+                            })}
                             disabled={!validarDerecho(9101434)}
                         >
                             <i className="zmdi zmdi-delete" style={{color: "#F30B0B"}}/>
@@ -759,7 +772,19 @@ function Informes({history}) {
                                             href="#"
                                             className="btn btn-default btn-sm m-user-delete"
                                             onClick={() =>
-                                                handleEliminar(row.original.m_nIdRecoleccion)
+                                                confirmAlert({
+                                                    title: 'Confirmar Eliminar',
+                                                    message: '¿Está seguro de eliminar Embarque?',
+                                                    buttons: [
+                                                        {
+                                                            label: 'Si',
+                                                            onClick: () => handleEliminar(row.original.m_nIdRecoleccion)
+                                                        },
+                                                        {
+                                                            label: 'No',
+                                                        }
+                                                    ]
+                                                })
                                             }
                                         >
                                             <i
@@ -771,7 +796,19 @@ function Informes({history}) {
                                             href="#"
                                             className="btn btn-default btn-sm m-user-delete"
                                             onClick={() =>
-                                                handleEliminar(row.original.m_nIdRecoleccion)
+                                                confirmAlert({
+                                                    title: 'Confirmar Eliminar',
+                                                    message: '¿Está seguro de eliminar Embarque?',
+                                                    buttons: [
+                                                        {
+                                                            label: 'Si',
+                                                            onClick: () => handleEliminar(row.original.m_nIdRecoleccion)
+                                                        },
+                                                        {
+                                                            label: 'No',
+                                                        }
+                                                    ]
+                                                })
                                             }
                                         >
                                             <i className="fa fa-eye" style={{color: "#F9A03E"}}/>

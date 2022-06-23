@@ -22,6 +22,7 @@ import {
 import Noty from "noty";
 import {getRandomId} from "../../Util/Util";
 import {obtenerClientePublicoGeneral} from "../../Util/Contexts/ClientesContext";
+import { confirmAlert } from 'react-confirm-alert';
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -90,7 +91,19 @@ export default function TarifasRangos(props) {
 
                             </Tooltip>
                             <Tooltip title="Eliminar" disabled={(!validarDerecho(9101348) && !props.convenio) || (!validarDerecho(9101396) && props.convenio)}>
-                                <a href="#" className="btn btn-default btn-xs" onClick={() => (handleEliminar(row.row.IdTarifa))}><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
+                                <a href="#" className="btn btn-default btn-xs" onClick={() =>  confirmAlert({
+                                                        title: 'Confirmar Eliminar',
+                                                        message: '¿Está seguro de eliminar Convenio?',
+                                                        buttons: [
+                                                            {
+                                                                label: 'Si',
+                                                                onClick: () =>  (handleEliminar(row.row.IdTarifa))
+                                                            },
+                                                            {
+                                                                label: 'No',
+                                                            }
+                                                        ]
+                                                    }) }><i className="zmdi zmdi-delete" style={{ color: "#F30B0B" }} /></a>
                             </Tooltip>
 
                         </div>
