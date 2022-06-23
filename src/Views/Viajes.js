@@ -708,7 +708,7 @@ function Viajes() {
 
                         {
                             !viajeSeleccionado.m_bEsPermisionario && !viajeSeleccionado.m_bUnidadPermisionario && !row.row.m_bTimbrado &&
-                            <Tooltip title="Generar CFDI">
+                            <Tooltip title="Generar CFDI"  disabled={row.row.m_arrClsProGuia?row.row.m_arrClsProGuia.some(g=>g.m_sTimbrado == false):false}>
                                 <a href="#" className="btn btn-default btn-xs"
                                    onClick={() => (generarCFDI(row.row.m_nIdInforme, row.row.m_sFolioInforme, row.row.m_nIdViaje, false))}><i className="zmdi zmdi-file-text"
                                                                                                                                              style={{color: "#F9A03E"}}/></a>
