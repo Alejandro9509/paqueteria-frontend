@@ -1327,10 +1327,14 @@ function Recoleccion() {
         setRecoleccionDD(recoleccionDD => {
             return {
                 ...recoleccionDD,
-                idPais: respuesta.data.m_nIdPaisRecoleccion || 0,
-                idEstado: respuesta.data.m_nIdEstadoRecoleccion || 0,
-                idMunicipio: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
-                codigoPostal: {
+                estadoRec:"0"+respuesta.data.m_nIdEstadoRecoleccion || 0,
+                municipioRec: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
+                domicilioRec: respuesta.data.m_sDomicilioDetalleRecoleccion,
+                recogerEnRec: respuesta.data.m_sRecogerEnDetalleRecoleccion,
+                datosAdicionalesRec: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+                latitudRec: respuesta.data.m_sLatitud || '',
+                longitudRec: respuesta.data.m_sLongitud || '',
+                codigoPostalRec: {
                     m_nIdCP: respuesta.data.m_nIdCPDetalleRecoleccion,
                     m_sCP: respuesta.data.m_sCodigoPostalRecoleccion,
                     m_sColonia: respuesta.data.m_sColoniaRecoleccion ? respuesta.data.m_sColoniaRecoleccion : respuesta.data.m_sLocalidadRecoleccion
