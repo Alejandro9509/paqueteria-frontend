@@ -1326,7 +1326,7 @@ function Recoleccion() {
         setRecoleccionDD(recoleccionDD => {
             return {
                 ...recoleccionDD,
-                estadoRec: respuesta.data.m_nIdEstadoRecoleccion || 0,
+                estadoRec:"0"+respuesta.data.m_nIdEstadoRecoleccion || 0,
                 municipioRec: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
                 domicilioRec: respuesta.data.m_sDomicilioDetalleRecoleccion,
                 recogerEnRec: respuesta.data.m_sRecogerEnDetalleRecoleccion,
