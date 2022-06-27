@@ -77,14 +77,14 @@ const configurationRoutes = [
     component: FormatoImpresionPage,
     visible: true
   },
-  {
+ /* {
     path: "/Folios",
     name: "Folios",
     icon:  <GFoliosIcon/>,
     component: Folios,
     isDialog: false,
     visible: validarDerecho(9101209)
-  },
+  },*/
   {
     path: "/TipoDeCambio",
     name: "Tipo de Cambio",
