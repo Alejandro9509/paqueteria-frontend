@@ -417,6 +417,7 @@ function Guia(props) {
                     getAllData()
             }).catch(function (err) {
                 console.log(err.data)
+                console.log(err.data)
             });
                }else{
                    showSuccess("La guia no puede ser eliminada a menos que se cancele")
