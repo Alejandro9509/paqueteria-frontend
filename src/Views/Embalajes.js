@@ -10,7 +10,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import $ from "jquery";
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { TextField, Tooltip } from "@material-ui/core";
+import { Button, Grid, TextField, Tooltip } from "@material-ui/core";
 import { agregarEmbalajes, modificarEmbalajes, eliminarEmbalajes, obtenerEmbalajesId, obtenerEmbalajes,validarEliminarEmbalajes } from "../Util/Contexts/EmbalajesContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import { confirmAlert } from "react-confirm-alert";
@@ -442,10 +442,14 @@ function Embalaje() {
 
                                                 </div>
                                                 <br></br>
-                                                   <div className="form-footer" className="col-12 col-sm-9 col-md-7 unit">
-                                                      {  state.agregar != "Consultar" && <button type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }} className="btn btn-secondary secondary-btn"> Cancelar</button>}
-                                                      {  state.agregar != "Consultar" && <button type="submit" form="formEmbalaje" className="btn btn-primary primary-btn">Aceptar</button>}
-                                                </div>
+                                                   <div className="form-footer" className="ol-md-12">
+                                                   <Grid container spacing={1}>
+                                  
+                                    
+                                                      {  state.agregar != "Consultar" &&  <Grid item xs> <Button fullWidth type="button" onClick={(event) => { event.stopPropagation(); setState({ ...state, agregar: "Agregar" }); $('.nav-tabs li ').removeClass('active'); $('.nav-tabs li').eq(0).addClass('active'); $('.tab-content div ').removeClass('in show'); $('#Listado').addClass('in show'); }} className="btn btn-secondary secondary-btn"> Cancelar</Button></Grid>}
+                                                      {  state.agregar != "Consultar" && <Grid item xs> <Button fullWidth type="submit" form="formEmbalaje" className="btn btn-primary primary-btn">Aceptar</Button></Grid>}
+                                                    </Grid> 
+                                                    </div>
                                             </form>
                                         </div>
                                     </div>

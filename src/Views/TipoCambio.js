@@ -9,7 +9,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import {confirmAlert} from 'react-confirm-alert'; // Import
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
-import { TextField, Tooltip } from "@material-ui/core";
+import { Button, Grid, TextField, Tooltip } from "@material-ui/core";
 import { agregarTipoCambio, eliminarTipoCambio, modificarTipoCambio, obtenerTipoCambio, obtenerTipoCambioId } from "../Util/Contexts/TipoCambioContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import {validarDerecho} from "../Util/Util"
@@ -420,12 +420,20 @@ function TipoCambio() {
 
                                                 </div>
                                                 <br></br>
-                                                <div className="form-footer" className="col-md-12">
-                                                    <button href="#Listado" role="tab" data-toggle="tab" href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
+    
+                                                <div className="form-footer col-md-12">
+                                        <Grid container spacing={1}>
+                                        <Grid item xs>
+                                        <Button fullWidth href="#Listado" role="tab" data-toggle="tab" href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn"
                                                     >
-                                                        Cancelar</button>
-                                                    <button type="submit" className="btn btn-primary primary-btn">Aceptar</button>
-                                                </div>
+                                                        Cancelar
+                                        </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                        <Button fullWidth type="submit" className="btn btn-primary primary-btn">Aceptar</Button>
+                                        </Grid>
+                                    </Grid>
+                                </div>
                                             </form>
                                         </div>
                                     </div>

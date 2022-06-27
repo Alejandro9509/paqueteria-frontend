@@ -8,15 +8,14 @@ import { DataGrid } from '@material-ui/data-grid';
 import Noty from 'noty';
 import { dataGridLocaleText } from "../Constants";
 import {Checkbox, FormControlLabel, MenuItem, TextField, Tooltip} from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import { agregarTipoCobro, eliminarTipoCobro, modificarTipoCobro, obtenerTipoCobroId, obtenerTipoCobro } from "../Util/Contexts/TipoCobroContext";
 import { validarPermisos } from "../Util/Contexts/UsuarioContext";
 import {validarDerecho} from "../Util/Util"
 import {makeStyles} from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
 import {obtenerTiposPago} from "../Util/Contexts/TipoPagoContext";
 import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
 import $ from "jquery";
-import Button from "@material-ui/core/Button";
 window.jQuery = window.$ = $;
 
 function showSuccess(mensaje) {
@@ -479,9 +478,20 @@ function TipoCobro() {
 
                                                 </div>
                                                 <br></br>
-                                                <div className="form-footer" >
-                                                    <Button fullWidth type="submit" className="btn btn-primary primary-btn">Guardar</Button>
-                                                </div>
+                                                <div className="form-footer ol-md-12">
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                        <Button fullWidth href="#Listado" role="tab" data-toggle="tab" className="btn btn-secondary secondary-btn" onClick={handleClickCancelar}
+                                                    >
+                                                        CANCELAR
+                                        </Button>
+                                        </Grid>
+                                        <Grid item xs>
+                                        <Button fullWidth type="submit" className="btn btn-primary primary-btn">AGREGAR TIPO DE COBRO</Button>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+
                                             </form>
                                         </div>
                                     </div>
