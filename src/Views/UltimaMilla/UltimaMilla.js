@@ -456,7 +456,7 @@ class UltimaMilla extends Component {
                                 }
                                 {
                                     !this.state.modoEdicion && (this.state.fullScreen === false || this.state.chatFullscreen) &&
-                                    <Mensajes tour={this.state.ultimaMilla}/>
+                                    <Mensajes tour={this.state.ultimaMilla} fecha={this.state.fechaUltimaMilla}/>
                                 }
                                 {
                                     !this.state.modoEdicion && this.state.ultimaMilla && (this.state.fullScreen === false || this.state.resumenFullscreen) &&
