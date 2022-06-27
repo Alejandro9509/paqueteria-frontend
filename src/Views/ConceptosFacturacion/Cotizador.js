@@ -62,6 +62,18 @@ class Cotizador extends Component {
             })
             this.props.mostrarCotizadorRec(true)
         }
+        if (prevProps.embarque.mostrarCotizador !== this.props.embarque.mostrarCotizador){
+            if (!this.props.embarque.mostrarCotizador){
+                this.setState(state => {
+                    return {
+                        showErrorIconButton: false,
+                        errores: [],
+                        showJustificacionIconButton: false,
+                        justificaciones: []
+                    }
+                })
+            }
+        }
     }
 
     calcularTarifa() {
@@ -72,7 +84,9 @@ class Cotizador extends Component {
         this.setState(state => {
             return {
                 showErrorIconButton: false,
-                errores: []
+                errores: [],
+                showJustificacionIconButton: false,
+                justificaciones: []
             }
         })
         obtenerCotizacion(this.props.embarque, this.props.paquetes, this.props.remitente, this.props.destinatario,this.props.recoleccion,this.props.entregaDiferenteDom,this.props.recoleccionDiferenteDom).then(({data}) => {
@@ -120,8 +134,8 @@ class Cotizador extends Component {
                 ivaRetiene: ivaRetiene,
                 ivaTraslada: ivaTraslada,
                 showErrorIconButton: showErrorConceptos,
-                showJustificacionIconButton: showJustificacionConceptos,
                 errores: errores,
+                showJustificacionIconButton: showJustificacionConceptos,
                 justificaciones: justificaciones
             })
             this.props.mostrarCotizadorRec(true)
