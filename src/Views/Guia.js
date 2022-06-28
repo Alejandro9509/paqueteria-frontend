@@ -374,7 +374,7 @@ function Guia(props) {
     const handleEntregaOcurre = (dataOcurre) => {
         let params = {
             nIdGuia: dataOcurre.idGuia,
-            m_nIdUsuarioEntregaOcurre: localStorage.getItem("Usuario"),
+            m_nIdUsuarioEntregaOcurre: parseInt(localStorage.getItem("UsuarioId")),
             m_sFechaOcurre: dataOcurre.aplicaDetalle?dataOcurre.fechaOcurre:"",
             m_sHoraOcurre: dataOcurre.horaOcurre,
             m_sComentariosOcurre: dataOcurre.comentariosOcurre??"",
