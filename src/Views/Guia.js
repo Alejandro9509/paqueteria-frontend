@@ -377,7 +377,7 @@ function Guia(props) {
             m_nIdUsuarioEntregaOcurre: parseInt(localStorage.getItem("UsuarioId")),
             m_sFechaOcurre: dataOcurre.aplicaDetalle?dataOcurre.fechaOcurre:"",
             m_sHoraOcurre: dataOcurre.horaOcurre,
-            m_sComentariosOcurre: dataOcurre.comentariosOcurre??"",
+            m_sComentariosOcurre: dataOcurre.comentariosOcurre || "",
             m_sMontoRecibidoOcurre: dataOcurre.importeOcurre,
             m_nIdTipoPago: dataOcurre.tipoPago,
             m_nIdBanco:dataOcurre.aplicaDetalle?dataOcurre.idBancoproveniente:0,
