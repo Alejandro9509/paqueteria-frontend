@@ -2673,17 +2673,17 @@ function Embarque(props) {
             return
         }
         let params = {
-            "TIpoCambio": state.tipoCambio,
-            "FolioGuia": state.folioGuia,
-            "IdEstatusGuia": 4,
-            "idTipoServicio": 2,
-            "IdEmbarque": idEmbarque,
-            "IdMoneda": state.moneda,
+            "m_nTIpoCambio": state.tipoCambio,
+            "m_sFolioGuia": state.folioGuia,
+            "m_nIdEstatusGuia": 4,
+            "m_nidTipoServicio": 2,
+            "m_nIdEmbarque": idEmbarque,
+            "m_nIdMoneda": state.moneda,
 
-            "CreadoPor": state.CreadoPor,
-            "ModificadoPor": state.ModificadoPor,
-            "IdSucursal": state.idSucursalAgregar,
-            "ValorDeclarado": state.valorDeclarado,
+            "m_nCreadoPor": state.CreadoPor,
+            "m_nModificadoPor": state.ModificadoPor,
+            "m_nIdSucursal": state.idSucursalAgregar,
+            "m_nValorDeclarado": state.valorDeclarado,
             // "idTipoServicio": state.idTipoServicio,
             "m_dFecha": getCurrentDateTime().substr(0, 10),
             "m_sHora": getCurrentDateTime().substr(getCurrentDateTime().length - 5),
