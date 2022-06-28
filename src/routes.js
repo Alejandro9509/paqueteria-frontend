@@ -81,7 +81,7 @@ const dashboardRoutes = [
     component: EmbarquePage,
     single: true,
     child:[],
-    visible: validarDerecho(9101198)
+    visible:false
   },
   {
     path: "/Guia",
