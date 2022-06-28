@@ -2708,7 +2708,7 @@ function Embarque(props) {
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
-                showSuccess(err)
+                showSuccess(err.response?.data)
                 handleShowListado()
             });
         } else {

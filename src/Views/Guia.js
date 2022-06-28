@@ -353,7 +353,7 @@ function Guia(props) {
                 handleShowListado()
             }).catch(err => {
                 console.log(err)
-                showSuccess(err)
+                showSuccess(err.response?.data)
             });
         } else {
             modificarGuia(state.idGuia, params).then(respuesta => {
