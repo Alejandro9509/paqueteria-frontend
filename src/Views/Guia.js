@@ -374,8 +374,8 @@ function Guia(props) {
     const handleEntregaOcurre = (dataOcurre) => {
         let params = {
             nIdGuia: dataOcurre.idGuia,
-            m_nIdUsuarioEntregaOcurre: localStorage.getItem("Usuario"),
-            m_sFechaOcurre: dataOcurre.aplicaDetalle?dataOcurre.fechaOcurre:"2022-01-01",
+            m_nIdUsuarioEntregaOcurre: parseInt(localStorage.getItem("UsuarioId")),
+            m_sFechaOcurre: dataOcurre.aplicaDetalle?dataOcurre.fechaOcurre:"",
             m_sHoraOcurre: dataOcurre.horaOcurre,
             m_sComentariosOcurre: dataOcurre.comentariosOcurre??"",
             m_sMontoRecibidoOcurre: dataOcurre.importeOcurre,
@@ -395,7 +395,7 @@ function Guia(props) {
             console.log(err)
             showSuccess(err)
         });
-
+    
     }
 
     function handleEliminar(id) {
@@ -889,7 +889,7 @@ function Guia(props) {
                 return (
                     <>
                     {row.row.m_dtFechaCancelacion?row.row.m_dtFechaCancelacion.substring(0,10)+" ":""}{row.row.m_sHoraCancelacion}
-                    
+
                     </>
                 )
             },
@@ -1037,7 +1037,6 @@ function Guia(props) {
         obtenerFechaInicio().then((respuestaUno) => {
             obtenerFechaFinal().then((respuestaDos) => {
                 obtenerGuiasFiltro(respuestaUno.data[0].Fecha, respuestaDos.data[0].Fecha,0,0,0, 0, 0,0).then((respuesta) => {
-                    
                     setData(respuesta.data);
                 })
             })

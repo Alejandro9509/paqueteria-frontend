@@ -164,7 +164,7 @@ class MyComponent extends Component {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12}>
+                        <Grid item xs={6}>
                             <FormControl fullWidth variant="outlined" margin="dense">
                                 <InputLabel id="idTipoPagoLabel">Tipo Pago</InputLabel>
                                 <Select
