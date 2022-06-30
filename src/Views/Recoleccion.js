@@ -1323,6 +1323,38 @@ function Recoleccion() {
     }
     const [limpiarRemDes,setLimpiarRemDes] = React.useState()
 
+    const mostrarDatosRecoleccionDD = (respuesta) => {
+        setRecoleccionDD(recoleccionDD => {
+            return {
+                ...recoleccionDD,
+                idPais: respuesta.data.m_nIdPaisRecoleccion || 0,
+                idEstado: respuesta.data.m_nIdEstadoRecoleccion || 0,
+                idMunicipio: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
+                codigoPostal: {
+                    m_nIdCP: respuesta.data.m_nIdCPDetalleRecoleccion,
+                    m_sCP: respuesta.data.m_sCodigoPostalRecoleccion,
+                    m_sColonia: respuesta.data.m_sColoniaRecoleccion ? respuesta.data.m_sColoniaRecoleccion : respuesta.data.m_sLocalidadRecoleccion
+                },
+                domicilio: respuesta.data.m_sDomicilioDetalleRecoleccion,
+                detalles: respuesta.data.m_sRecogerEnDetalleRecoleccion,
+                datosAdicionales: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
+                latitud: respuesta.data.m_sLatitud || '',
+                longitud: respuesta.data.m_sLongitud || '',
+            }
+        })
+        obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoRecoleccion).then(({data}) =>{
+            setDataMunicipiosRecoleccionDD(data)
+        })
+        obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+            setRecoleccionDD(recoleccionDD => {
+                return {
+                    ...recoleccionDD,
+                    zonaOperativa: data
+                }
+            })
+        })
+    }
+
     const mostrarDatosEntregaDD = (respuesta) => {
         setEntregaDD(entregaDD =>{
             return {
@@ -1350,42 +1382,6 @@ function Recoleccion() {
                     ...entregaDD,
                     zonaOperativa: data
 
-                }
-            })
-        })
-    }
-
-    const mostrarDatosRecoleccionDD = (respuesta) => {
-        setRecoleccionDD(recoleccionDD => {
-            return {
-                ...recoleccionDD,
-                estadoRec:"0"+respuesta.data.m_nIdEstadoRecoleccion || 0,
-                municipioRec: respuesta.data.m_sCodigoMunicipioRecoleccion || 0,
-                domicilioRec: respuesta.data.m_sDomicilioDetalleRecoleccion,
-                recogerEnRec: respuesta.data.m_sRecogerEnDetalleRecoleccion,
-                datosAdicionalesRec: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
-                latitudRec: respuesta.data.m_sLatitud || '',
-                longitudRec: respuesta.data.m_sLongitud || '',
-                codigoPostalRec: {
-                    m_nIdCP: respuesta.data.m_nIdCPDetalleRecoleccion,
-                    m_sCP: respuesta.data.m_sCodigoPostalRecoleccion,
-                    m_sColonia: respuesta.data.m_sColoniaRecoleccion ? respuesta.data.m_sColoniaRecoleccion : respuesta.data.m_sLocalidadRecoleccion
-                },
-                domicilio: respuesta.data.m_sDomicilioDetalleRecoleccion,
-                detalles: respuesta.data.m_sRecogerEnDetalleRecoleccion,
-                datosAdicionales: respuesta.data.m_sDatosAdicionalesDetalleRecoleccion,
-                latitud: respuesta.data.m_sLatitud || '',
-                longitud: respuesta.data.m_sLongitud || '',
-            }
-        })
-        obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoRecoleccion).then(({data}) =>{
-            setDataMunicipiosRecoleccionDD(data)
-        })
-        obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
-            setRecoleccionDD(recoleccionDD => {
-                return {
-                    ...recoleccionDD,
-                    zonaOperativa: data
                 }
             })
         })
