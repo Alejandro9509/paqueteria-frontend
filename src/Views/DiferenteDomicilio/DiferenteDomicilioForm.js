@@ -118,7 +118,16 @@ export default function DiferenteDomicilioForm(props){
         if (!dataPaises.length > 0){
             obtenerPaises().then(respuesta => {
                 setDataPaises(respuesta.data.filter(i => i.m_sCodigo === "MEX" || i.m_sCodigo === "USA"))
+                if (!(props.value.idPais > 0)){
+                    setState(state => {
+                        return {
+                            ...state,
+                            idPais: respuesta.data.find(i => i.m_sCodigo === "MEX").m_nIdPais
+                        }
+                    })
+                }
             })
+
         }
     }
 
