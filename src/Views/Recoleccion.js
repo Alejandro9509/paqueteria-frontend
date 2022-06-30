@@ -1323,6 +1323,38 @@ function Recoleccion() {
     }
     const [limpiarRemDes,setLimpiarRemDes] = React.useState()
 
+    const mostrarDatosEntregaDD = (respuesta) => {
+        setEntregaDD(entregaDD =>{
+            return {
+                ...entregaDD,
+                idPais: respuesta.data.m_nIdPaisEntrega,
+                idEstado: respuesta.data.m_nIdEstadoEntrega || 0,
+                idMunicipio: respuesta.data.m_sCodigoMunicipioEntrega || 0,
+                domicilio: respuesta.data.m_sDomicilioDetalleEntrega,
+                detalles:respuesta.data.m_sEntregarEnDetalleEntrega,
+                datosAdicionales: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                codigoPostal: {
+                    m_nIdCP: respuesta.data.m_nIdCPDetalleEntrega,
+                    m_sCP: respuesta.data.m_sCodigoPostalEntrega,
+                    m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega,
+                    m_sLocalidad: respuesta.data.m_sLocalidadEntrega
+                },
+            }
+        })
+        obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoEntrega).then(({data}) =>{
+            setDataMunicipiosEntregaDD(data)
+        })
+        obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
+            setEntregaDD(entregaDD => {
+                return {
+                    ...entregaDD,
+                    zonaOperativa: data
+
+                }
+            })
+        })
+    }
+
     const mostrarDatosRecoleccionDD = (respuesta) => {
         setRecoleccionDD(recoleccionDD => {
             return {
@@ -1355,37 +1387,6 @@ function Recoleccion() {
         })
     }
 
-    const mostrarDatosEntregaDD = (respuesta) => {
-        setEntregaDD(entregaDD =>{
-            return {
-                ...entregaDD,
-                idPais: respuesta.data.m_nIdPaisEntrega,
-                idEstado: respuesta.data.m_nIdEstadoEntrega || 0,
-                idMunicipio: respuesta.data.m_sCodigoMunicipioEntrega || 0,
-                domicilio: respuesta.data.m_sDomicilioDetalleEntrega,
-                detalles:respuesta.data.m_sEntregarEnDetalleEntrega,
-                datosAdicionales: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-                codigoPostal: {
-                    m_nIdCP: respuesta.data.m_nIdCPDetalleEntrega,
-                    m_sCP: respuesta.data.m_sCodigoPostalEntrega,
-                    m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega,
-                    m_sLocalidad: respuesta.data.m_sLocalidadEntrega
-                },
-            }
-        })
-        obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoEntrega).then(({data}) =>{
-            setDataMunicipiosEntregaDD(data)
-        })
-        obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativaEntrega).then(({data}) => {
-            setEntregaDD(entregaDD => {
-                return {
-                    ...entregaDD,
-                    zonaOperativa: data
-
-                }
-            })
-        })
-    }
     const setRecoleccionDataParaConsultaModificacion = (respuesta,operacion) => {
         /**Este indicador se checa en el componente de RemitentesDestinatarios*/
         respuesta.data.recoleccionById = true
