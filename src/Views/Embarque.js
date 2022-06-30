@@ -114,6 +114,7 @@ import Citas from "./Citas/Citas";
 import SeleccionarRuta from "./Rutas/SeleccionarRuta";
 import {obtenerParametrosConfiguracion} from "../Util/Contexts/ParametrosConfiguracionContext";
 import {obtenerRutasId} from "../Util/Contexts/RutasContext";
+import DiferenteDomicilioForm from "./DiferenteDomicilio/DiferenteDomicilioForm";
 
 
 import {
@@ -122,7 +123,7 @@ import {
 
 function useQuery() {
     const { search } = useLocation();
-  
+
     return React.useMemo(() => new URLSearchParams(search), [search]);
   }
 
@@ -763,7 +764,7 @@ function Embarque(props) {
     };
 
     const [entregaDD, setEntregaDD] = useState({
-        estadoEnt: '',
+        /*estadoEnt: '',
         municipioEnt: '',
         codigoPostalEnt: '',
         zonaOperativaEnt: '',
@@ -772,12 +773,23 @@ function Embarque(props) {
         entregarEnEnt: '',
         datosAdicionalesEnt: '',
         latitudEnt: '',
-        longitudEnt: ''
+        longitudEnt: '',
+*/
+        idPais: '',
+        idEstado: '',
+        idMunicipio: '',
+        codigoPostal: '',
+        zonaOperativa: '',
+        domicilio: '',
+        detalles: '',
+        datosAdicionales: '',
+        latitud: '',
+        longitud: ''
     })
 
     const resetEntregaDD = () =>{
         setEntregaDD({
-            estadoEnt: '',
+            /*estadoEnt: '',
             municipioEnt: '',
             codigoPostalEnt: '',
             zonaOperativaEnt: '',
@@ -786,7 +798,18 @@ function Embarque(props) {
             datosAdicionalesEnt: '',
             entregarEnEnt: '',
             latitudEnt: '',
-            longitudEnt: ''
+            longitudEnt: '',
+*/
+            idPais: '',
+            idEstado: '',
+            idMunicipio: '',
+            codigoPostal: '',
+            zonaOperativa: '',
+            domicilio: '',
+            detalles: '',
+            datosAdicionales: '',
+            latitud: '',
+            longitud: ''
         })
     }
 
@@ -820,6 +843,25 @@ function Embarque(props) {
             })*/
         }
     };
+
+    const handleOnChangeEntregaDD = (newValue) => {
+        setRepetirConceptos(true)
+        setEntregaDD(entregaDD => {
+            return{
+                ...entregaDD,
+                idPais: newValue.idPais,
+                idEstado: newValue.idEstado,
+                idMunicipio: newValue.idMunicipio,
+                codigoPostal: newValue.codigoPostal,
+                zonaOperativa: newValue.zonaOperativa,
+                domicilio: newValue.domicilio,
+                detalles: newValue.detalles,
+                datosAdicionales: newValue.datosAdicionales,
+                latitud: newValue.latitud,
+                longitud: newValue.longitud,
+            }
+        });
+    }
 
     const handleChangeAutocompleteEntregaDD = (input, newValue) => {
         setRepetirConceptos(true)
@@ -1011,15 +1053,15 @@ function Embarque(props) {
             }
             /**Si es entrega en direfente domicilio*/
         }else if(state.diferenteEntrega){
-            if (!esDatoValido(entregaDD.codigoPostalEnt?.m_nIdCP)){
+            if (!esDatoValido(entregaDD.codigoPostal?.m_nIdCP)){
                 showSuccess("El código postal de entrega es un dato requerido");
                 return valid;
             }
-            if (!esDatoValido(entregaDD.estadoEnt)){
+            if (!esDatoValido(entregaDD.idEstado)){
                 showSuccess("El estado de entrega es un dato requerido");
                 return valid;
             }
-            if (!esDatoValido(entregaDD.zonaOperativaEnt?.m_nIdZona)){
+            if (!esDatoValido(entregaDD.zonaOperativa?.m_nIdZona)){
                 showSuccess("La zona operativa de entrega es un dato requerido");
                 return valid;
             }
@@ -1252,16 +1294,16 @@ function Embarque(props) {
             /**Si es entrega en direfente domicilio*/
         }else if (state.diferenteEntrega) {
             params.m_bEntregaEnSucursal = false
-            params.codigoPostalEntrega = entregaDD.codigoPostalEnt.m_nIdCP
-            params.domicilioEntrega = entregaDD.domicilioEnt
-            params.entregarEn = entregaDD.entregarEnEnt
-            params.m_nIdEstadoEntrega = entregaDD.estadoEnt
-            params.m_sCodigoMunicipioEntrega = entregaDD.municipioEnt
-            params.datosAdicionales = entregaDD.datosAdicionalesEnt
-            params.m_nIdZonaOperativa = entregaDD.zonaOperativaEnt.m_nIdZona
-            params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
-            params.m_sLatitudD = coordenadas ? coordenadas.lat : entregaDD.latitudEnt
-            params.m_sLongitudD = coordenadas ? coordenadas.lng : entregaDD.longitudEnt
+            params.codigoPostalEntrega = entregaDD.codigoPostal.m_nIdCP
+            params.domicilioEntrega = entregaDD.domicilio
+            params.entregarEn = entregaDD.detalles
+            params.m_nIdEstadoEntrega = entregaDD.idEstado
+            params.m_sCodigoMunicipioEntrega = entregaDD.idMunicipio
+            params.datosAdicionales = entregaDD.datosAdicionales
+            params.m_nIdZonaOperativa = entregaDD.zonaOperativa.m_nIdZona
+            // params.m_nIdZonaTarifa = entregaDD.zonaTarifaEnt.m_nIdZona
+            params.m_sLatitudD = coordenadas ? coordenadas.lat : entregaDD.latitud
+            params.m_sLongitudD = coordenadas ? coordenadas.lng : entregaDD.longitud
         }else{
             /**Si es entrega en domicilio de destinatario*/
             params.m_nIdZonaOperativa = destinatario.zonaOperativaDestinatario ? destinatario.zonaOperativaDestinatario.m_nIdZona : 0
@@ -1452,7 +1494,7 @@ function Embarque(props) {
 
     //Se checa si se entró a embarque por una recoleccion
     useEffect(async (value) => {
-        
+
         if(query.get("id")){
             handleShowConsultar(query.get("id"))
             }
@@ -1694,15 +1736,16 @@ function Embarque(props) {
                 setEntregaDD(entregaDD =>{
                     return {
                         ...entregaDD,
-                        estadoEnt: respuesta.data.m_nIdEstadoEntrega || 0,
-                        municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega || 0,
-                        domicilioEnt: respuesta.data.m_sDomicilioDetalleEntrega,
-                        entregarEnEnt: respuesta.data.m_sEntregarEnDetalleEntrega,
-                        datosAdicionalesEnt: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
-                        codigoPostalEnt: {
+                        idEstado: respuesta.data.m_nIdEstadoEntrega || 0,
+                        idPais: respuesta.data.m_nIdPaisEntrega || 0,
+                        idMunicipio: respuesta.data.m_sCodigoMunicipioEntrega || 0,
+                        domicilio: respuesta.data.m_sDomicilioDetalleEntrega,
+                        detalles: respuesta.data.m_sEntregarEnDetalleEntrega,
+                        datosAdicionales: respuesta.data.m_sDatosAdicionalesDetalleEntrega,
+                        codigoPostal: {
                             m_nIdCP: respuesta.data.m_nIdCPDetalleEntrega,
                             m_sCP: respuesta.data.m_sCodigoPostalEntrega,
-                            m_sColonia: respuesta.data.m_sColoniaEntrega,
+                            m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega,
                             m_sLocalidad: respuesta.data.m_sLocalidadEntrega
                         },
                     }
@@ -1715,7 +1758,7 @@ function Embarque(props) {
                     setEntregaDD(entregaDD => {
                         return {
                             ...entregaDD,
-                            zonaOperativaEnt: data
+                            zonaOperativa: data
                         }
                     })
                 })
@@ -1749,6 +1792,49 @@ function Embarque(props) {
         });
     }
 
+    const mostrarDatosEntregaDiferenteDomicilio = (respuesta) => {
+        setEntregaDD(entregaDD => {
+            return {
+                ...entregaDD,
+                idPais: respuesta.data.m_nIdPaisEntrega,
+                idEstado: respuesta.data.m_nIdEstadoEntrega,
+                idMunicipio: respuesta.data.m_sCodigoMunicipioEntrega,
+                domicilio: respuesta.data.DomicilioEntrega,
+                detalles: respuesta.data.EntregarEn,
+                datosAdicionales: respuesta.data.DatosAdicionalesis,
+                latitud: respuesta.data.m_sLatitud,
+                longitud: respuesta.data.m_sLongitud,
+                codigoPostal: {
+                    m_nIdCP: respuesta.data.m_nIdCodigoPostalEntrega,
+                    m_sCP: respuesta.data.m_sCodigoPostalEntrega,
+                    m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega
+                },
+                zonaOperativa: {
+                    m_nIdZona: respuesta.data.m_nIdZonaOperativa,
+                    m_sCodigoZona: respuesta.data.m_sZonaOperativa
+                }
+            }
+        })
+        setState(state => {
+            return {
+                ...state,
+                entregaEnSucursal: false,
+                diferenteEntrega: !respuesta.data.EntregarMismoDomicilio,
+            }
+        });
+        /*obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoEntrega).then(({data}) =>{
+            setDataMunicipiosEntregaDD(data)
+        })*/
+        /*obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
+            setEntregaDD(entregaDD => {
+                return{
+                    ...entregaDD,
+                    zonaOperativaEnt: data
+                }
+            })
+        })*/
+    }
+
     //Funcion para mostrar datos de embarque para consultar o modificar
     const setDataParaConsultarModificar = (respuesta, duplicar,operacion) => {
         /**Este indicador se checa en el componente de RemitentesDestinatarios*/
@@ -1777,65 +1863,7 @@ function Embarque(props) {
             })
             /**Si es entrega es en diferente domicilio*/
         }else if (!respuesta.data.EntregarMismoDomicilio){
-            // let estado =  `${respuesta.data.m_nIdEstadoEntrega}`
-            setEntregaDD(entregaDD => {
-                return {
-                    ...entregaDD,
-                    domicilioEnt: respuesta.data.DomicilioEntrega,
-                    entregarEnEnt: respuesta.data.EntregarEn,
-                    datosAdicionalesEnt: respuesta.data.DatosAdicionalesis,
-                    estadoEnt: respuesta.data.m_nIdEstadoEntrega,
-                    municipioEnt: respuesta.data.m_sCodigoMunicipioEntrega,
-                    latitudEnt: respuesta.data.m_sLatitud,
-                    longitudEnt: respuesta.data.m_sLongitud,
-                    codigoPostalEnt: {
-                        m_nIdCP: respuesta.data.m_nIdCodigoPostalEntrega,
-                        m_sCP: respuesta.data.m_sCodigoPostalEntrega,
-                        m_sColonia: respuesta.data.m_sColoniaEntrega ? respuesta.data.m_sColoniaEntrega : respuesta.data.m_sLocalidadEntrega
-                    }
-                }
-            })
-            setState(state => {
-                return {
-                    ...state,
-                    entregaEnSucursal: false,
-                    diferenteEntrega: !respuesta.data.EntregarMismoDomicilio,
-                }
-            });
-            obtenerMunicipiosByIdEstado(respuesta.data.m_nIdEstadoEntrega).then(({data}) =>{
-                setDataMunicipiosEntregaDD(data)
-            })
-            /*obtenerCodigoPostalId(respuesta.data.m_sCodigoPostalEntrega).then((cp) => {
-                setEntregaDD(entregaDD => {
-                    return {
-                        ...entregaDD,
-                        codigoPostalEnt: cp.data,
-                    }
-                })
-
-            })*/
-            obtenerZonaOperativaByIdCodigoPostal(respuesta.data.m_sCodigoPostalEntrega).then(({data}) => {
-                setDataZonasOperativasEntregaDD(data)
-            })
-            /*obtenerZonaTarifaByIdCodigoPostal(respuesta.data.m_sCodigoPostalEntrega).then(({data}) => {
-                setDataZonasTarifaEntregaDD(data)
-            })*/
-            obtenerByIdZonaOperativa(respuesta.data.m_nIdZonaOperativa).then(({data}) => {
-                setEntregaDD(entregaDD => {
-                    return{
-                        ...entregaDD,
-                        zonaOperativaEnt: data
-                    }
-                })
-            })
-            /*obtenerByIdZonaTarifa(respuesta.data.m_nIdZonaTarifa).then(({data}) => {
-                setEntregaDD(entregaDD => {
-                    return{
-                        ...entregaDD,
-                        zonaTarifaEnt: data
-                    }
-                })
-            })*/
+            mostrarDatosEntregaDiferenteDomicilio(respuesta)
         }
 
         let totalPaquetes = 0
@@ -3720,7 +3748,7 @@ function Embarque(props) {
                                         </div>
                                     </div>
 
-                                    <div className="row">
+                                    {/*<div className="row">
 
                                         {state.diferenteEntrega ? (
                                             <div className="widget-wrap" id="detallesRecoleccion">
@@ -3950,6 +3978,35 @@ function Embarque(props) {
                                                             </div>
                                                         </div>
                                                     </div>
+
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div/>
+                                        )}
+                                    </div>*/}
+                                    <div className="row">
+
+                                        {state.diferenteEntrega ? (
+                                            <div className="widget-wrap" id="detallesRecoleccion">
+                                                <div>
+                                                    <div className="widget-header">
+                                                        <h2>Entrega en diferente domicilio</h2>
+                                                    </div>
+                                                    <div className="widget-container">
+                                                        <div className="widget-content">
+                                                            <div className="row">
+                                                                <DiferenteDomicilioForm
+                                                                    value={entregaDD}
+                                                                    onChange={handleOnChangeEntregaDD}
+                                                                    disabled={false}
+                                                                    requiered={false}
+                                                                    dataEstados={dataEstados}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                         ) : (
