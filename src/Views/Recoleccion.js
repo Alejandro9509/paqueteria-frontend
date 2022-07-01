@@ -1660,10 +1660,6 @@ function Recoleccion() {
 
         })
 
-
-
-
-
     }
 
     const handlePatrocinadorSelected = (row) => {
@@ -1680,18 +1676,6 @@ function Recoleccion() {
         }))
     }
 
-    const handleClickResponsablePago = (event) => {
-        event.preventDefault();
-        if (dataClientes.length === 0) {
-            getAllClientes()
-        }
-    }
-
-    /*  const getCurrentDateTime = () => {
-          return `${new Date().getFullYear()}-${`${new Date().getMonth() +
-          1}`.padStart(2, 0)}-${`${new Date().getDate()}`.padStart(2, 0)}T${`${new Date().getHours()}`.padStart(2, 0)}:${`${new Date().getMinutes()}`.padStart(2, 0)}`
-      }*/
-
     //Limpia todos los inputs
     const limpiarInputsAgregar = () => {
         setState(state => {
@@ -1705,7 +1689,7 @@ function Recoleccion() {
                 fechaHoraRegistro: getCurrentDateTime(),
                 estatusRecoleccion: configuraciones.estatusRecoleccion,
                 moneda: configuraciones.monedaPredeterminadaEmbarque,
-                tipoCambio: configuraciones.tipoCambio,
+                tipoCambio: configuraciones.tipoCambioEmbarque,
                 tipoCobro: configuraciones.tipoCobro,
                 idTipoSeguro: 5,
                 valorDeclarado: 0,
@@ -1713,62 +1697,12 @@ function Recoleccion() {
                 porcentajeSeguro: 0,
                 clientePaga: {m_nNumeroCliente: 'No. Cliente', m_sNombreFiscal: 'Nombre fiscal'},
                 showConfirmarUbicacion:false,
-                //Remitente
-                /*nombreRemitente: {m_sNombre: "Nombre", m_sAlias: "Alias"},
-                RFCRemitente: '',
-                domicilioRemitente: '',
-                ciudadRemitente: '',
-                codigoPostalRemitente: '',
-                correoRemitente: '',
-                telefonoRemitente: '',
-                contactoRemitente: '',
-                origenRemitente: '',
-                zonaRemitente: {},
-                idRemitente: '',
-                aliasRemitente: '',
-                calleRemitente: '',
-                numeroIntRemitente: '0',
-                numeroExtRemitente: '',
-                coloniaRemitente: '',*/
 
-                //Destinatario
-                /*nombreDestinatario: {m_sNombre: "Nombre", m_sAlias: "Alias"},
-                RFCDestinatario: '',
-                domicilioDestinatario: '',
-                ciudadDestinatario: '',
-                codigoPostalDestinatario: '',
-                correoDestinatario: '',
-                telefonoDestinatario: '',
-                contactoDestinatario: '',
-                destinoDestinatario: '',
-                zonaDestinatario: {},
-                idDestinatario: '',
-                aliasDestinatario: '',
-                calleDestinatario: '',
-                numeroIntDestinatario: '0',
-                numeroExtDestinatario: '',
-                coloniaDestinatario: '',*/
-
-                //Paquetes/Sobres
                 countPaquetes: 1,
                 countSobres: 1,
                 mismoPaquete: false,
                 mismoSobre: false,
-                paquetes: [
-                    /*{
-                        m_rPeso: "",
-                        m_nId: 1,
-                        m_rLargo: "",
-                        m_rAncho: "",
-                        m_rAlto: "",
-                        m_rVolumen: "",
-                        m_nIdTipoEmbalaje: "",
-                        m_cyValorDeclarado: "",
-                        m_sDescripcion: "",
-                        m_nCantidad: "",
-                        m_sObservaciones: "",
-                    },*/
-                ],
+                paquetes: [],
                 sobres: [
                     {
                         m_sDescripcion: "",
@@ -1785,22 +1719,9 @@ function Recoleccion() {
                 //Entrega
                 diferenteEntrega: false,
                 entregaEnSucursal:false,
-                /*ciudadEntrega: '',
-                codigoPostalEntrega: '',
-                zonaEntrega: '',
-                domicilioEntrega: '',
-                entregaEn: '',
-                datosAdicionalesEntrega: '',*/
 
                 //Recoleccion
                 diferenteRecoleccion: false,
-                /*fechaRecoleccion: '',
-                ciudadRecoleccion: '',
-                codigoPostalRecoleccion: '',
-                zonaRecoleccion: '',
-                domicilioRecoleccion: '',
-                recogerEn: '',
-                datosAdicionalesRecoleccion: '',*/
 
                 //Operador
                 operador: '',
@@ -1820,69 +1741,7 @@ function Recoleccion() {
         setDataRecoleccionConsulta(undefined)
         setRepetirConceptos(false)
     }
-    const handleChangeFiltros = (event) => {
-        event.preventDefault()
-        const {target} = event
-        setFiltros(filtros => {
-            return {
-                ...filtros,
-                [target.name]: target.value
-            }
-        })
-        if (target.name === "fechaInicial"){
-            obtenerRecoleccionFiltro(target.value, filtros.fechaFinal,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }else if (target.name === "fechaFinal"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, target.value,filtros.sucursalListado,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "sucursalListado"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,target.value,filtros.estatusListado,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "estatusListado"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, target.value,filtros.folio,filtros.OrigenListado,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "OrigenListado"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,target.value,filtros.DestinoListado).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-        else if (target.name === "DestinoListado"){
-            obtenerRecoleccionFiltro(filtros.fechaInicial, filtros.fechaFinal,filtros.sucursalListado, filtros.estatusListado,filtros.folio,filtros.OrigenListado,target.value).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
-    }
+
     const handleChange = (event) => {
         event.preventDefault();
         if(event.target.id == "porcentajeSeguro"){
@@ -1964,34 +1823,6 @@ function Recoleccion() {
     };
     const handleListComplementosSATChange = (newList) => {
         setDataComplementosSAT(newList)
-    }
-    //Maneja filtrado de listado embarque
-    const handleFolioRecoleccionFiltro = async (event) => {
-        if (event.keyCode == 13) {
-            const {target} = event
-            let value = target.value
-            if (event.target.value == '') {
-                value = 0
-            }
-            setFiltros(filtros => {
-                return {
-                    ...filtros,
-                    [target.name]: target.value
-                }
-            })
-            /*setState({
-                ...state,
-                folioRecoleccion: event.target.value,
-            })*/
-            const {fechaInicial, fechaFinal, sucursalListado, estatusListado} = filtros
-            obtenerRecoleccionFiltro(fechaInicial, fechaFinal, sucursalListado, estatusListado, value).then(respuesta => {
-                if (respuesta.data == "Vacio") {
-                    setData([])
-                } else {
-                    setData(respuesta.data)
-                }
-            })
-        }
     }
 
     const columns = React.useMemo(() => [
