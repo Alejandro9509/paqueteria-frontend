@@ -1006,7 +1006,7 @@ class EscribirConvenio extends Component {
                     </DialogContent>
                     }
                 </Dialog>
-                <form className="j-forms">
+                <form className="j-forms" onKeyDown={e => {if (e.code === 13){e.preventDefault()}}}>
                     <div className="main-container" style={{ marginLeft: "0px", padding: "0px" }}>
                         <div className="row">
                             <div className="col-md-3 col-sm-12">
