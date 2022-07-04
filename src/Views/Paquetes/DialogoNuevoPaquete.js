@@ -686,7 +686,7 @@ export default function DialogoNuevoPaquete(props) {
                                                label="Cantidad"
                                                required
                                                value={paquete.m_nCantidad}
-                                               disabled={props.disabled}
+                                               disabled={props.disabled || !paquete.producto}
                                                placeholder="Cantidad"
                                                name="m_nCantidad"
                                                helperText={errores.errorCantidad?errores.errorTexto:""}
@@ -705,7 +705,7 @@ export default function DialogoNuevoPaquete(props) {
                                             labelId="m_nIdTipoEmbalajeLabel"
                                             className="form-control"
                                             value={paquete.m_nIdTipoEmbalaje}
-                                            disabled={props.disabled}
+                                            disabled={props.disabled || !paquete.producto}
                                             required
                                             onChange={(event) => handleChangePaquetev2(event)}
                                             id="m_nIdTipoEmbalaje"
@@ -730,7 +730,7 @@ export default function DialogoNuevoPaquete(props) {
                                                label="Peso"
                                                required
                                                value={paquete.m_rPeso}
-                                               disabled={props.disabled}
+                                               disabled={props.disabled || !paquete.producto}
                                                placeholder="kg"
                                                name="m_rPeso"
                                                helperText={errores.errorPeso?errores.errorTexto:""}
@@ -748,7 +748,7 @@ export default function DialogoNuevoPaquete(props) {
                                                label="Largo"
                                                required
                                                value={paquete.m_rLargo}
-                                               disabled={props.disabled}
+                                               disabled={props.disabled || !paquete.producto}
                                                placeholder="cms"
                                                name="m_rLargo"
                                                helperText={errores.errorLargo?errores.errorTexto:""}
@@ -766,7 +766,7 @@ export default function DialogoNuevoPaquete(props) {
                                                required
                                                label="Ancho"
                                                value={paquete.m_rAncho}
-                                               disabled={props.disabled}
+                                               disabled={props.disabled || !paquete.producto}
                                                placeholder="cms"
                                                name="m_rAncho"
                                                helperText={errores.errorAncho?errores.errorTexto:""}
@@ -784,7 +784,7 @@ export default function DialogoNuevoPaquete(props) {
                                                value={paquete.m_rAlto}
                                                label="Alto"
                                                required
-                                               disabled={props.disabled}
+                                               disabled={props.disabled || !paquete.producto}
                                                placeholder="cms"
                                                name="m_rAlto"
                                                helperText={errores.errorAlto?errores.errorTexto:""}
@@ -818,7 +818,7 @@ export default function DialogoNuevoPaquete(props) {
                                                required
                                                label="Descripción"
                                                value={paquete.m_sDescripcion}
-                                               disabled={props.disabled}
+                                               disabled={props.disabled || !paquete.producto}
                                                placeholder="Descripción"
                                                name="m_sDescripcion"
                                     />
@@ -834,7 +834,7 @@ export default function DialogoNuevoPaquete(props) {
                                                type="text"
                                                label="Observaciones"
                                                value={paquete.m_sObservaciones}
-                                               disabled={props.disabled}
+                                               disabled={props.disabled || !paquete.producto}
                                                placeholder="Observaciones"
                                                name="m_sObservaciones"
                                     />
